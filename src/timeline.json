@@ -1,0 +1,15 @@
+{
+  "fps": 30,
+  "comment": "Scene start frames and lengths. 120 BPM => 1 beat = 15 frames, 1 bar = 60 frames. make_music.py reads this file too.",
+  "scenes": [
+    {"id": "hook",     "from": 0,   "duration": 90},
+    {"id": "memories", "from": 90,  "duration": 120},
+    {"id": "steps",    "from": 210, "duration": 120},
+    {"id": "print",    "from": 330, "duration": 240},
+    {"id": "reveal",   "from": 570, "duration": 150},
+    {"id": "gift",     "from": 720, "duration": 120},
+    {"id": "cta",      "from": 840, "duration": 150}
+  ],
+  "proofSceneDuration": 90,
+  "print": {"start": 24, "end": 204, "swapEvery": 9}
+}

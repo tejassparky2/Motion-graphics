@@ -1,0 +1,23 @@
+{
+  "name": "sparky3dcraft-ad",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sparky3dcraft Mini Me miniature ad – motion graphics built with Remotion",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render MiniMeAd out/sparky3dcraft-minime-9x16.mp4",
+    "audio": "python3 scripts/make_music.py"
+  },
+  "dependencies": {
+    "@fontsource/fredoka": "^5.3.0",
+    "@fontsource/nunito": "^5.3.0",
+    "@remotion/cli": "4.0.530",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.530"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
