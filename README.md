@@ -56,10 +56,10 @@ pinned comment). Every render writes three files to `out/`:
 | Episode | File | Length |
 |---|---|---|
 | 1. The Pumpkin Trick | `videos/pumpkin_trick.py` | 51 s |
-| 2. The $5 Lucky Charm | `videos/lucky_charm.py` | 35 s |
+| 2. The Secret of His Wife | `videos/secret_wife.py` | 34 s |
 
 ```bash
-python render.py --video lucky_charm
+python render.py --video secret_wife
 ```
 
 Shared shot tools (camera moves, headlines, stamps, flying props, sepia flashbacks, confetti, whip transitions)
@@ -73,7 +73,7 @@ a style match, not a clone of anyone's voice.
 
 ```bash
 pip install -r requirements.txt   # the first render also downloads the Piper voice and a Whisper model
-python render.py --video lucky_charm   # full video -> out/lucky_charm.mp4 (+ preview + upload sheet)
+python render.py --video secret_wife   # full video -> out/secret_wife.mp4 (+ preview + upload sheet)
 python render.py --still 12.5    # one frame   -> build/still_12.5.png
 python render.py --sheet 1       # contact sheet, one thumbnail per second -> build/sheet.png
 python render.py --no-voice      # music + sound effects only
