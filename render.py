@@ -19,6 +19,11 @@ from motion.timeline import Timeline
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
+# Output hygiene: no container metadata, no encoder/version tags, and no x264 settings SEI in the video stream.
+CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+         "-flags:a", "+bitexact", "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name=",
+         "-metadata:s:a", "handler_name="]
+
 
 def ffmpeg_bin():
     try:
@@ -58,7 +63,7 @@ def render_video(out, audio=True, voice=True):
     os.makedirs(os.path.dirname(silent), exist_ok=True)
     cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
-           "-movflags", "+faststart", silent]
+           *([] if audio else CLEAN), "-movflags", "+faststart", silent]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
     for i in range(n):
@@ -76,8 +81,17 @@ def render_video(out, audio=True, voice=True):
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None)
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
-                               "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out])
+                               "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
     print(f"wrote {out}", file=sys.stderr)
+    # smaller copy that's easy to send to a phone
+    preview = out[:-4] + "_preview.mp4"
+    tmp = os.path.join(ROOT, "build", "preview_tmp.mp4")
+    subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", out, "-c:v", "libx264", "-crf", "27",
+                           "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", *CLEAN, tmp])
+    # a stream-copy pass drops the encoder tag that re-encoding writes back
+    subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN,
+                           "-movflags", "+faststart", preview])
+    print(f"wrote {preview}", file=sys.stderr)
 
 
 def render_still(t, out):

@@ -49,6 +49,11 @@ python render.py --no-audio      # silent video
 
 ffmpeg comes from the `imageio-ffmpeg` wheel, so you don't need a system install.
 
+Every render also writes `out/pumpkin_trick_preview.mp4`, a smaller copy for phones. Both files are written with all
+container metadata removed: no encoder or version tags and no x264 settings block. Nothing in this pipeline adds a
+watermark in the first place. The frames are drawn by Cairo, the voice comes from Piper, and the music and sound effects
+are generated with numpy.
+
 ## Layout
 
 | File | What it does |
