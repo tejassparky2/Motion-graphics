@@ -57,6 +57,11 @@ pinned comment). Every render writes three files to `out/`:
 |---|---|---|
 | 1. The Pumpkin Trick | `videos/pumpkin_trick.py` | 51 s |
 | 2. The Secret of His Wife | `videos/secret_wife.py` | 34 s |
+| 3. The Zombie Ant | `videos/zombie_ant.py` | 38 s |
+| 4. The Great Emu War | `videos/emu_war.py` | 40 s |
+| 5. The 40-Year Lottery Ticket | `videos/lottery_ticket.py` | 38 s |
+
+The next episodes are planned in `out/content_calendar.md`.
 
 ```bash
 python render.py --video secret_wife

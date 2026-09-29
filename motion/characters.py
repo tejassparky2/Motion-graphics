@@ -51,6 +51,11 @@ CAST = {
                     kind="uniform", hair="slouch", hair_col=hexc("#6b5a3a"), moustache=True, seed=91),
     "farmer": dict(skin=hexc("#e8b48a"), shirt=hexc("#c0504d"), pants=DENIM, bw=96, bh=104, head=40,
                    kind="plaid", hair="strawhat", hair_col=hexc("#e8c46a"), seed=97),
+    # "The 40-Year Lottery Ticket" cast
+    "oldman": dict(skin=hexc("#e8b48a"), shirt=hexc("#8a6f4d"), pants=hexc("#6b6f78"), bw=94, bh=100, head=40,
+                   kind="cardigan", hair="gray", hair_col=hexc("#d8d4cc"), glasses=True, seed=103),
+    "owner": dict(skin=SKIN_MID, shirt=hexc("#5b7c99"), pants=hexc("#3b3f4a"), bw=100, bh=108, head=40,
+                  kind="apron", hair="bald", hair_col=hexc("#d8d4cc"), glasses=True, moustache=True, seed=109),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),
@@ -231,6 +236,17 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                                 (-bw / 4, 4), (-bw / 2 - 4, -6)], 14), c["shirt"], seed, amp=1.6)
             shape(cr, rrect_pts(12, top + 40, 22, 20, 4, 10), hexc("#c49a5c"), seed + 1, amp=0.8, lw=2.5)   # patch
             line(cr, [(-26, top + 30), (-14, top + 38)], 2.5, INK, seed + 2, amp=0.6)
+        elif kind == "cardigan":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
+            shape(cr, [(-14, top + 4), (14, top + 4), (0, top + 40)], hexc("#f4efe1"), seed + 1, amp=0.4, lw=3)
+            line(cr, [(0, top + 40), (0, top + bh - 6)], 3, INK, seed + 2, amp=0.3)
+            for k in range(3):
+                dot(cr, 6, top + 52 + k * 16, 3.5, hexc("#f2b632"))
+        elif kind == "apron":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
+            shape(cr, rrect_pts(-bw / 2 + 14, top + 22, bw - 28, bh - 26, 12, 16), hexc("#f4efe1"), seed + 1, amp=0.6,
+                  lw=3)
+            shape(cr, rrect_pts(-16, top + 60, 32, 22, 4, 10), hexc("#e3dccb"), seed + 2, amp=0.4, lw=2.5)
         elif kind == "uniform":
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 22), c["shirt"], seed, amp=1.0)
             line(cr, [(0, top + 6), (0, top + bh - 6)], 3, INK, seed + 1, amp=0.4)
@@ -278,6 +294,14 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
         elif hair == "scruffy":
             shape(cr, [(-hr - 4, hy), (-hr - 2, hy - hr + 2), (-10, hy - hr - 10), (hr - 4, hy - hr - 6), (hr + 6, hy - 2),
                        (hr - 6, hy - 14), (-4, hy - 22), (-hr + 8, hy - 10)], hc, seed + 6, amp=1.8, lw=3)
+        elif hair == "gray":   # tufts over the ears, bald on top
+            for sx in (-1, 1):
+                blob(cr, sx * (hr - 4), hy - 14, 14, 16, hc, seed + 6 + sx, amp=1.0, lw=3)
+            line(cr, [(-10, hy - hr + 4), (0, hy - hr - 4), (8, hy - hr + 2)], 3, hc, seed + 8, amp=0.6)
+        elif hair == "bald":
+            for sx in (-1, 1):
+                blob(cr, sx * (hr - 2), hy - 6, 10, 14, hc, seed + 6 + sx, amp=0.8, lw=3)
+            blob(cr, -8, hy - hr + 12, 10, 5, hexc("#ffffff", 0.45), seed + 8, amp=0.3, lw=0, stroke=None)
         elif hair == "slouch":   # wide-brimmed army hat, one side pinned up
             shape(cr, [(-hr - 28, hy - 18), (hr + 24, hy - 22), (hr + 30, hy - 12), (-hr - 30, hy - 8)], hc, seed + 6,
                   amp=0.8, lw=3.5)
@@ -305,6 +329,11 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                   CAP_RED, seed + 6, amp=0.8, lw=3.5)
             shape(cr, rrect_pts(-hr - 26, hy - 16, 34, 12, 6, 12), CAP_RED, seed + 7, amp=0.5, lw=3.5)
         _eyes(cr, eyes, fx, hy + 2, t, seed, sun=(who == "seth" or c.get("shades", False)))
+        if c.get("glasses"):
+            for sx in (-1, 1):
+                blob(cr, fx + sx * 15, hy + 2, 13, 12, hexc("#ffffff", 0.0), seed + 40 + sx, amp=0.4, lw=3,
+                     stroke=INK)
+            line(cr, [(fx - 3, hy + 1), (fx + 3, hy + 1)], 3, INK, seed + 42, amp=0.2)
         if c.get("lashes") and eyes in ("dot", "wide", "sly", "happy"):
             for sx in (-1, 1):
                 line(cr, [(fx + sx * 15 + 5 * sx, hy - 6), (fx + sx * 15 + 10 * sx, hy - 11)], 2.5, INK, seed + sx, amp=0.2)
