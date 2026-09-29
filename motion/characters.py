@@ -46,6 +46,11 @@ CAST = {
                 kind="dress", hair="long", hair_col=hexc("#5a2e1c"), lashes=True, blush=True, seed=63),
     "beggar": dict(skin=SKIN_TAN, shirt=hexc("#9a7a52"), pants=hexc("#6b5a45"), bw=90, bh=98, head=40, kind="ragged",
                    hair="scruffy", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), seed=77),
+    # "The Great Emu War" cast
+    "soldier": dict(skin=SKIN_LIGHT, shirt=hexc("#9a8a55"), pants=hexc("#7d6f44"), bw=92, bh=104, head=38,
+                    kind="uniform", hair="slouch", hair_col=hexc("#6b5a3a"), moustache=True, seed=91),
+    "farmer": dict(skin=hexc("#e8b48a"), shirt=hexc("#c0504d"), pants=DENIM, bw=96, bh=104, head=40,
+                   kind="plaid", hair="strawhat", hair_col=hexc("#e8c46a"), seed=97),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),
@@ -226,6 +231,20 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                                 (-bw / 4, 4), (-bw / 2 - 4, -6)], 14), c["shirt"], seed, amp=1.6)
             shape(cr, rrect_pts(12, top + 40, 22, 20, 4, 10), hexc("#c49a5c"), seed + 1, amp=0.8, lw=2.5)   # patch
             line(cr, [(-26, top + 30), (-14, top + 38)], 2.5, INK, seed + 2, amp=0.6)
+        elif kind == "uniform":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 22), c["shirt"], seed, amp=1.0)
+            line(cr, [(0, top + 6), (0, top + bh - 6)], 3, INK, seed + 1, amp=0.4)
+            for k in range(3):
+                dot(cr, 6, top + 22 + k * 22, 3.5, hexc("#c9a64a"))
+            shape(cr, rrect_pts(-bw / 2 + 10, top + 30, 26, 20, 4, 10), hexc("#8a7a48"), seed + 2, amp=0.5, lw=2.5)
+            line(cr, [(-bw / 2 + 2, top + bh - 22), (bw / 2 - 2, top + bh - 22)], 7, hexc("#5a4a2c"), seed + 3, amp=0.4)
+        elif kind == "plaid":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
+            for k in range(1, 4):
+                line(cr, [(-bw / 2 + 4, top + k * bh / 4), (bw / 2 - 4, top + k * bh / 4)], 3, hexc("#8e2f2c"), seed + k,
+                     amp=0.5)
+                line(cr, [(-bw / 2 + k * bw / 4, top + 4), (-bw / 2 + k * bw / 4, top + bh - 4)], 3, hexc("#8e2f2c"),
+                     seed + 10 + k, amp=0.5)
         elif kind == "suit":
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
             shape(cr, [(-16, top + 4), (16, top + 4), (0, top + 50)], WHITE, seed + 1, amp=0.5, lw=3)
@@ -259,6 +278,18 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
         elif hair == "scruffy":
             shape(cr, [(-hr - 4, hy), (-hr - 2, hy - hr + 2), (-10, hy - hr - 10), (hr - 4, hy - hr - 6), (hr + 6, hy - 2),
                        (hr - 6, hy - 14), (-4, hy - 22), (-hr + 8, hy - 10)], hc, seed + 6, amp=1.8, lw=3)
+        elif hair == "slouch":   # wide-brimmed army hat, one side pinned up
+            shape(cr, [(-hr - 28, hy - 18), (hr + 24, hy - 22), (hr + 30, hy - 12), (-hr - 30, hy - 8)], hc, seed + 6,
+                  amp=0.8, lw=3.5)
+            shape(cr, [(-hr + 4, hy - 18), (-hr + 10, hy - hr - 8), (hr - 8, hy - hr - 6), (hr - 2, hy - 20)], hc, seed + 7,
+                  amp=0.8, lw=3.5)
+            line(cr, [(-hr + 8, hy - 24), (hr - 4, hy - 26)], 4, hexc("#3a2a1e"), seed + 8, amp=0.3)
+            shape(cr, [(-hr - 28, hy - 18), (-hr - 20, hy - 46), (-hr - 4, hy - 30)], hc, seed + 9, amp=0.5, lw=3)
+        elif hair == "strawhat":
+            blob(cr, 0, hy - 20, hr + 30, 9, hc, seed + 6, amp=0.8, lw=3.5)
+            shape(cr, [(-hr + 6, hy - 22), (-hr + 12, hy - hr - 10), (hr - 12, hy - hr - 10), (hr - 6, hy - 22)], hc,
+                  seed + 7, amp=0.8, lw=3.5)
+            line(cr, [(-hr + 8, hy - 30), (hr - 8, hy - 30)], 5, hexc("#c0504d"), seed + 8, amp=0.3)
         elif hair == "slick" or who == "seth":
             # slick hair + side part
             shape(cr, [(-hr, hy - 4), (-hr + 4, hy - hr * 0.7), (-10, hy - hr - 6), (hr * 0.6, hy - hr - 2),
@@ -277,6 +308,9 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
         if c.get("lashes") and eyes in ("dot", "wide", "sly", "happy"):
             for sx in (-1, 1):
                 line(cr, [(fx + sx * 15 + 5 * sx, hy - 6), (fx + sx * 15 + 10 * sx, hy - 11)], 2.5, INK, seed + sx, amp=0.2)
+        if c.get("moustache"):
+            line(cr, [(fx - 18, hy + 14), (fx - 6, hy + 10), (fx, hy + 13), (fx + 6, hy + 10), (fx + 18, hy + 14)], 4.5,
+                 hexc("#5a3a22"), seed + 9, amp=0.4)
         if who in ("seth", "ramu"):
             # moustache
             mw = 22 if who == "seth" else 15
@@ -400,8 +434,9 @@ def crate(cr, x, y, w=86, h=58, seed=0, full=True):
     line(cr, [(x - w / 2 + 6, y - h + 4), (x + w / 2 - 6, y - 4)], 3, WOOD_D, seed + 8, amp=0.5)
 
 
-def truck(cr, x, y, t, crates=0, wheel=0.0, facing=-1, driver=None):
-    """Delivery truck; (x, y) = ground under the middle. facing -1 = cab on the left."""
+def truck(cr, x, y, t, crates=0, wheel=0.0, facing=-1, driver=None, color=None):
+    """Delivery truck; (x, y) = ground under the middle. facing -1 = cab on the left. color = (body, dark)."""
+    TEAL, TEAL_D = color or (globals()["TEAL"], globals()["TEAL_D"])
     with at(cr, x, y, 1.0, flip=facing > 0):
         # bed
         bed_x0, bed_x1 = -40, 200
