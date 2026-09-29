@@ -78,3 +78,20 @@ To make a new video, write a new `SCRIPT` and scene functions keyed to it with `
 `mouth=`, `walk=`, `item=` and similar arguments, so most acting is done by changing arguments over time.
 
 Font: [Kalam](https://fonts.google.com/specimen/Kalam), licensed under the SIL Open Font License (`assets/fonts/OFL.txt`).
+
+## Brand: Interestingly Strange (`out/brand/`)
+
+The mascot is a curious one-eyed creature. Its curled antenna and round body together form a **question mark**, and one
+raised eyebrow gives it an "hm, that's odd" look. It's drawn with the same hand-drawn helpers as the videos
+(`motion/brand.py`), so it can be animated in intros and appear in episodes. The palette is purple on sunflower yellow,
+with ink outlines.
+
+| File | Use |
+|---|---|
+| `avatar.png` / `avatar.svg` | Profile picture, 800×800. It is designed for the circle crop and still reads at 40 px |
+| `mark.png` | Mascot alone on transparent, for thumbnails and watermarking your own videos |
+| `lockup_light.png` / `lockup_light.svg` | Mascot + wordmark for light backgrounds |
+| `lockup_dark.png` | The same for dark backgrounds |
+| `preview.png` | How it looks at real YouTube sizes on light and dark themes |
+
+Regenerate with `python make_logo.py`.
