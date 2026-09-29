@@ -18,8 +18,8 @@ from .engine import (CREAM, GROUND, INK, RED, WHITE, W, at, blob, cue, ease_in, 
 # ---------------------------------------------------------------- script
 # [spoken|shown] = what the narrator says | what the captions show.
 SCRIPT = [
-    dict(id="h1", scene="village", text="Why would a rich man pay [a thousand rupees|₹1000] for a [seventy rupee|₹70] pumpkin?"),
-    dict(id="h2", scene="village", text="He wouldn't. Unless it's a trap. Here's the trick.", gap=0.15),
+    dict(id="h1", scene="village", text="Why would a rich man pay [a thousand rupees|₹1000] for a [seventy rupee|₹70] pumpkin?", pace=0.94),
+    dict(id="h2", scene="village", text="He wouldn't. Unless it's a trap. Here's the trick.", gap=0.15, pace=0.9),
     dict(id="v1", scene="village", text="Day one, he offers [a hundred rupees|₹100] per pumpkin."),
     dict(id="v2", scene="village", text="Market price is [seventy,|₹70,] so that's [thirty|₹30] profit! The farmer sells."),
     dict(id="v3", scene="village", text="He buys [a hundred and twenty.|120.] Pays [twelve thousand,|₹12,000,] cash."),
@@ -32,11 +32,12 @@ SCRIPT = [
          text="But the assistant whispers: buy mine at [seven hundred,|₹700,] sell to my boss at [a thousand!|₹1000!]",
          speaker="chotu", speaker_from="buy"),
     dict(id="v9", scene="village", text="Easy money, right? So the village buys back all [six hundred and twenty.|620.]"),
-    dict(id="v10", scene="village", text="But the boss never comes back. Neither does the assistant.", gap=0.2),
+    dict(id="v10", scene="village", text="But the boss never comes back. Neither does the assistant.", gap=0.2,
+         pace=0.92),
     dict(id="v11", scene="village", text="The price crashes to [fifty.|₹50.] They lose [six hundred and fifty|₹650] on every pumpkin."),
     dict(id="e1", scene="city", text="Meanwhile in the city: bought for [one point six two lakh,|₹1.62 L,] sold for [four point three four.|₹4.34 L.]"),
-    dict(id="e2", scene="city", text="Profit? [Two point seven two lakh!|₹2.72 Lakh!]", gap=0.15),
-    dict(id="e3", scene="outro", text="So next time a price makes no sense, ask yourself:", gap=0.2),
+    dict(id="e2", scene="city", text="Profit? [Two point seven two lakh!|₹2.72 Lakh!]", gap=0.15, pace=0.9),
+    dict(id="e3", scene="outro", text="So next time a price makes no sense, ask yourself:", gap=0.2, pace=0.95),
 ]
 
 # ---------------------------------------------------------------- layout

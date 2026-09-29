@@ -32,6 +32,7 @@ class Beat:
     speaker: str = None   # character whose mouth moves (from the word `speaker_from` on)
     speaker_from: str = None
     gap: float = 0.18     # silence before this beat
+    pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
     units: list = field(default_factory=list)
     start: float = 0.0
     end: float = 0.0
@@ -66,8 +67,8 @@ class Timeline:
         for i, spec in enumerate(script):
             b = Beat(**spec)
             b.units = parse(b.text)
-            b.audio = voice.synth(b.spoken_text)
-            wt = voice.word_times(b.spoken_text, b.audio)
+            b.audio = voice.synth(b.spoken_text, b.pace)
+            wt = voice.word_times(b.spoken_text, b.audio, b.pace)
             if i:
                 t += b.gap
             b.start = t

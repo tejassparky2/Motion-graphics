@@ -22,7 +22,13 @@ It is built for retention, following the research in [`reports/Shorts retention 
 | Ending | Payoff, one line, then back to the hook frame: *"...ask yourself:"* flows into *"Why would a rich man..."* | Loop ending, no outro |
 | Mix | −14 LUFS, −1 dBFS peak. 124 BPM music ~22 dB under the voice; heavy hits only on the plot turns | Same |
 
-The narration is generated offline with [Piper](https://github.com/rhasspy/piper) text-to-speech (voice `en_US-ryan-high`).
+The narration is generated offline with [Kokoro-82M](https://huggingface.co/hexgrad/Kokoro-82M) text-to-speech (Apache-2.0),
+using the voice `am_michael` at speed 1.2. The voice was picked by measuring the candidates against the reference Short's narrator.
+At about 225 wpm it transcribed 100% correctly, and its pitch variation (3.7 semitones SD, 8.8 range) is close to the reference's
+(3.1 SD, 8.0 range). The previous Piper voice swung much wider (4.6 SD, 11.6 range). Other voices are compared in
+`out/voice_samples.m4a`: `am_michael`, then `af_heart`, then `bm_george`. Hook, twist and payoff lines are read slightly
+slower (`pace=` in `SCRIPT`) for emphasis. "Lakh" is given its Indian-English pronunciation ("laakh") with a phoneme
+override in `motion/voice.py`.
 Word timestamps come from [faster-whisper](https://github.com/SYSTRAN/faster-whisper) run over the synthesized speech.
 **The whole video's timing follows the voice.** Each line is synthesized and trimmed, and its internal pauses are capped
 at 0.22 s. The lines are then laid end to end with 0.15–0.3 s gaps, and every animation beat is keyed to *the moment a word is spoken*.
@@ -33,8 +39,9 @@ The script is the `SCRIPT` list at the top of `motion/scenes.py`. `[spoken words
 in the captions, e.g. `[a hundred rupees|₹100]`. Scenes find their timing with `tl.at("v3", "₹12,000")`, which returns the
 moment that number is spoken. If you edit a line, everything keyed to it moves with it. Lines are cached in `build/tts/`.
 
-- Different voice: `NARRATOR_VOICE=en_US-lessac-high python render.py` (any [Piper voice](https://huggingface.co/rhasspy/piper-voices); it downloads on first use)
-- Faster or slower speech: `NARRATOR_PACE=0.75 python render.py` (Piper length scale; below 1 is faster, and the default is 0.8)
+- Different voice: `NARRATOR_VOICE=af_heart python render.py` (any [Kokoro voice](https://huggingface.co/hexgrad/Kokoro-82M/blob/main/VOICES.md); British voices start with `b`)
+- Faster or slower speech: `NARRATOR_SPEED=1.3 python render.py` (the default is 1.2; higher is faster)
+- The old Piper voice: `NARRATOR_ENGINE=piper python render.py`
 
 ## Rendering
 

@@ -1,6 +1,12 @@
-"""Voice-over narration with Piper (offline neural text-to-speech) + word timings.
+"""Voice-over narration (offline neural text-to-speech) + word timings.
 
-- The voice model (~120 MB) downloads on first use into build/voices/.
+Engines:
+- kokoro (default): Kokoro-82M (Apache-2.0), noticeably more natural and expressive. Default voice `am_michael`,
+  chosen by measurement: 100% Whisper intelligibility at ~225 wpm, and pitch variation (3.7 st SD, 8.8 st range)
+  close to the reference creator's narrator (3.1 st, 8.0 st). No watermarking in its code.
+- piper: the earlier Piper voice (`NARRATOR_ENGINE=piper`).
+
+- Models download on first use (Kokoro from Hugging Face; Piper into build/voices/).
 - Every line is cached in build/tts/ so re-renders only synthesize lines that changed.
 - Leading/trailing silence is trimmed so lines can be butted together with tight, controlled gaps.
 - Word timestamps come from running faster-whisper over the synthesized audio (also cached), so on-screen
@@ -20,9 +26,15 @@ import numpy as np
 
 from .engine import ROOT
 
-VOICE = os.environ.get("NARRATOR_VOICE", "en_US-ryan-high")
-# Piper length scale: <1 speaks faster. 0.8 lands the ryan voice at ~230 wpm (research target 200-240).
-LENGTH_SCALE = float(os.environ.get("NARRATOR_PACE", "0.8"))
+ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
+if ENGINE == "kokoro":
+    VOICE = os.environ.get("NARRATOR_VOICE", "am_michael")
+    # Kokoro speed: >1 speaks faster. 1.2 puts am_michael at ~230 wpm in the video (research target 200-240).
+    SPEED = float(os.environ.get("NARRATOR_SPEED", "1.2"))
+else:
+    VOICE = os.environ.get("NARRATOR_VOICE", "en_US-ryan-high")
+    # Piper length scale: <1 speaks faster. 0.8 lands the ryan voice at ~230 wpm.
+    SPEED = 1 / float(os.environ.get("NARRATOR_PACE", "0.8"))
 VOICE_BASE = "https://huggingface.co/rhasspy/piper-voices/resolve/main"
 SR = 44100
 TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
@@ -33,7 +45,7 @@ def _voice_path():
     d = os.path.join(ROOT, "build", "voices")
     os.makedirs(d, exist_ok=True)
     model = os.path.join(d, f"{VOICE}.onnx")
-    lang, name, quality = VOICE.split("-")
+    lang, name, quality = VOICE.split("-")  # piper voice names look like en_US-ryan-high
     url = f"{VOICE_BASE}/{lang.split('_')[0]}/{lang}/{name}/{quality}/{VOICE}.onnx"
     for path, src in ((model, url), (model + ".json", url + ".json")):
         if not os.path.exists(path):
@@ -89,18 +101,50 @@ def _squeeze(a):
     return a[keep]
 
 
-def _key(text):
-    return hashlib.sha1(f"{VOICE}|{LENGTH_SCALE}|{text}".encode()).hexdigest()[:16]
+# Pronunciation fixes for words the English voices don't know (Kokoro/misaki phoneme markup).
+# "lakh" defaults to a short "lock"; Indian English says "laakh" with a long vowel.
+PRONOUNCE = {"lakh": "[lakh](/lˈɑːk/)"}
 
 
-def synth(text):
-    """Speech for one line as float samples at 44.1 kHz, silence-trimmed (cached)."""
-    out = os.path.join(ROOT, "build", "tts", f"{_key(text)}.wav")
+def _pronounce(text):
+    if ENGINE != "kokoro":
+        return text
+    for word, markup in PRONOUNCE.items():
+        text = re.sub(rf"\b{word}\b", markup, text, flags=re.I)
+    return text
+
+
+def _key(text, pace=1.0):
+    return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
+
+
+_kokoro = {}
+
+
+def _kokoro_wav(text, speed, out):
+    import soundfile
+    from scipy.signal import resample_poly
+    if not _kokoro:
+        from kokoro import KPipeline
+        _kokoro["pipe"] = KPipeline(lang_code=VOICE[0], repo_id="hexgrad/Kokoro-82M")
+    audio = np.concatenate([r.audio.numpy() for r in _kokoro["pipe"](text, voice=VOICE, speed=speed)])
+    soundfile.write(out, resample_poly(audio, 147, 80), SR, subtype="PCM_16")  # 24 kHz -> 44.1 kHz
+
+
+def synth(text, pace=1.0):
+    """Speech for one line as float samples at 44.1 kHz, silence-trimmed (cached).
+
+    `pace` scales the speed for this line only (e.g. 0.9 to land a punchline a touch slower)."""
+    out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
     if not os.path.exists(out):
-        model = _voice_path()
         os.makedirs(os.path.dirname(out), exist_ok=True)
-        subprocess.run([sys.executable, "-m", "piper", "-m", model, "-f", out, "--length-scale", str(LENGTH_SCALE)],
-                       input=text.encode(), check=True, stderr=subprocess.DEVNULL)
+        if ENGINE == "kokoro":
+            _kokoro_wav(_pronounce(text), SPEED * pace, out)
+        else:
+            model = _voice_path()
+            subprocess.run([sys.executable, "-m", "piper", "-m", model, "-f", out,
+                            "--length-scale", str(1 / (SPEED * pace))],
+                           input=text.encode(), check=True, stderr=subprocess.DEVNULL)
     return _squeeze(_trim(_read_wav(out)))
 
 
@@ -111,13 +155,13 @@ def _norm(w):
     return re.sub(r"[^a-z0-9]", "", w.lower())
 
 
-def word_times(text, audio):
+def word_times(text, audio, pace=1.0):
     """[(start, end)] for each whitespace-separated word of `text`, relative to the start of `audio`.
 
     Whisper's timestamps are matched to the script by sequence alignment; words Whisper heard differently
     (e.g. "seventy" -> "70") get times interpolated from their neighbours by character length.
     """
-    cache = os.path.join(ROOT, "build", "tts", f"{_key(text)}.p{MAX_PAUSE}.words.json")
+    cache = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.p{MAX_PAUSE}.words.json")
     if os.path.exists(cache):
         return [tuple(x) for x in json.load(open(cache))]
     global _whisper
