@@ -28,9 +28,13 @@ from .engine import ROOT
 
 ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
 if ENGINE == "kokoro":
-    VOICE = os.environ.get("NARRATOR_VOICE", "am_michael")
-    # Kokoro speed: >1 speaks faster. 1.2 puts am_michael at ~230 wpm in the video (research target 200-240).
-    SPEED = float(os.environ.get("NARRATOR_SPEED", "1.2"))
+    # Channel default narrator: am_fenrir, the stock voice measured closest to the reference narrator the user chose
+    # (speaker similarity 0.72, the best of 12; median pitch 142 vs 154 Hz; pitch SD 5.0 vs 6.4 semitones).
+    # Speed 0.95 lands at ~200 wpm overall in a finished video (the reference narrator: 167 overall, 190 while
+    # speaking), a little brisker than the reference to keep the retention-friendly pace.
+    # Videos can override via NARRATOR in their module.
+    VOICE = os.environ.get("NARRATOR_VOICE", "am_fenrir")
+    SPEED = float(os.environ.get("NARRATOR_SPEED", "0.95"))
 else:
     VOICE = os.environ.get("NARRATOR_VOICE", "en_US-ryan-high")
     # Piper length scale: <1 speaks faster. 0.8 lands the ryan voice at ~230 wpm.
@@ -38,7 +42,18 @@ else:
 VOICE_BASE = "https://huggingface.co/rhasspy/piper-voices/resolve/main"
 SR = 44100
 TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
-MAX_PAUSE = 0.22  # pauses inside a line (at commas, colons, full stops) are shortened to this
+MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference narrator's breaths are ~0.32 s)
+
+
+def configure(voice=None, speed=None, max_pause=None):
+    """Per-video narrator settings (environment variables still win, so you can audition voices)."""
+    global VOICE, SPEED, MAX_PAUSE
+    if voice and "NARRATOR_VOICE" not in os.environ:
+        VOICE = voice
+    if speed and "NARRATOR_SPEED" not in os.environ:
+        SPEED = speed
+    if max_pause is not None:
+        MAX_PAUSE = max_pause
 
 
 def _voice_path():
@@ -124,10 +139,10 @@ _kokoro = {}
 def _kokoro_wav(text, speed, out):
     import soundfile
     from scipy.signal import resample_poly
-    if not _kokoro:
+    if VOICE[0] not in _kokoro:
         from kokoro import KPipeline
-        _kokoro["pipe"] = KPipeline(lang_code=VOICE[0], repo_id="hexgrad/Kokoro-82M")
-    audio = np.concatenate([r.audio.numpy() for r in _kokoro["pipe"](text, voice=VOICE, speed=speed)])
+        _kokoro[VOICE[0]] = KPipeline(lang_code=VOICE[0], repo_id="hexgrad/Kokoro-82M")
+    audio = np.concatenate([r.audio.numpy() for r in _kokoro[VOICE[0]](text, voice=VOICE, speed=speed)])
     soundfile.write(out, resample_poly(audio, 147, 80), SR, subtype="PCM_16")  # 24 kHz -> 44.1 kHz
 
 

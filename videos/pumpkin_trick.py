@@ -9,11 +9,31 @@ Pacing rules (see reports/Shorts retention for animated explainers.md):
 """
 import math
 
-from . import characters as ch
-from .captions import captions
-from .characters import person, stall, truck, exhaust, crate, money_pile, pumpkin, cash
-from .engine import (CREAM, GROUND, INK, RED, WHITE, W, at, blob, cue, ease_in, ease_out, hexc, line, pop, seg,
+from motion import characters as ch
+from motion.captions import captions
+from motion.characters import person, stall, truck, exhaust, crate, money_pile, pumpkin, cash
+from motion.engine import (CREAM, GROUND, INK, RED, WHITE, W, at, blob, cue, ease_in, ease_out, hexc, line, pop, seg,
                      shape, sharp_shape, smooth, lerp, write, write_t)
+
+# narrator used for this video (it was made before the channel default changed)
+NARRATOR = dict(voice="am_michael", speed=1.2, max_pause=0.22)
+
+METADATA = dict(
+    title="The Pumpkin Pump & Dump 🎃 How the Rich Trick You",
+    alt_titles=["Why Would a Rich Man Pay 14x for a Pumpkin? 🎃", "Pump and Dump Explained with Pumpkins 🎃"],
+    description="""A rich man offers a village way too much for their pumpkins… then more… then even more. Everyone sells. Then his assistant sells the same pumpkins back to them — and nobody ever returns. 🎃
+
+This is how a pump and dump works: hype a price, sell at the top, and leave everyone else holding the loss. The same trick shows up in stocks, crypto, sneakers and collectibles.
+
+Next time a price makes no sense, ask yourself: who is selling to me?
+
+💬 Have you ever seen a pump and dump happen for real? Tell me in the comments.
+
+🔔 Interestingly Strange: weird animals, bizarre history, mind-bending paradoxes and money tricks, hand-drawn in under a minute.""",
+    hashtags=["#PumpAndDump", "#MoneyLessons", "#Animation"],
+    tags=["pump and dump", "pump and dump explained", "market manipulation", "how the rich get richer",
+          "economic bubble", "speculation", "investing for beginners", "money lesson", "animated explainer"],
+)
 
 # ---------------------------------------------------------------- script
 # [spoken|shown] = what the narrator says | what the captions show.

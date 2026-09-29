@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
-"""Render "The Pumpkin Trick" to MP4.
+"""Render a video from videos/<name>.py to MP4 (+ a phone preview and a title/description/tags sheet).
 
-  python render.py                      # full video -> out/pumpkin_trick.mp4
+  python render.py --video lucky_charm  # -> out/lucky_charm.mp4, out/lucky_charm_preview.mp4, out/lucky_charm_metadata.md
+  python render.py                      # default video: pumpkin_trick
   python render.py --still 12.5         # single frame PNG at t=12.5s (for checking layouts)
   python render.py --sheet 1            # contact sheet, one thumbnail per second
   python render.py --no-audio           # skip the synthesized soundtrack
   python render.py --no-voice           # music + sound effects only, no narration
 """
 import argparse
+import importlib
 import os
 import subprocess
 import sys
 
-from motion import engine
+from motion import engine, voice as narrator
 from motion.engine import FPS, H, W, cairo
-from motion.scenes import SCRIPT, draw as draw_scene
 from motion.timeline import Timeline
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -34,14 +35,43 @@ def ffmpeg_bin():
 
 
 _tl = []
+VIDEO = {}
+
+
+def load(name):
+    mod = importlib.import_module(f"videos.{name}")
+    VIDEO.update(name=name, mod=mod)
+    narrator.configure(**getattr(mod, "NARRATOR", {}))
+    return mod
 
 
 def timeline():
     """Synthesize (or load cached) narration and lay out the whole video around it."""
     if not _tl:
-        _tl.append(Timeline(SCRIPT))
+        _tl.append(Timeline(VIDEO["mod"].SCRIPT))
         _tl[0].report()
     return _tl[0]
+
+
+def write_metadata(path):
+    """Title, description, hashtags and tags for the upload, next to the video."""
+    m = getattr(VIDEO["mod"], "METADATA", None)
+    if not m:
+        return
+    tl = timeline()
+    with open(path, "w") as f:
+        f.write(f"# Upload sheet: {VIDEO['name']}\n\n")
+        f.write(f"**Title** ({len(m['title'])} characters)\n```\n{m['title']}\n```\n\n")
+        if m.get("alt_titles"):
+            f.write("**Alternative titles to test**\n" + "".join(f"- `{x}`\n" for x in m["alt_titles"]) + "\n")
+        f.write("**Description**\n```\n" + m["description"].strip() + "\n\n" + " ".join(m["hashtags"]) + "\n```\n\n")
+        f.write("**Tags** (paste into YouTube Studio > Tags)\n```\n" + ", ".join(m["tags"]) + "\n```\n\n")
+        if m.get("pinned_comment"):
+            f.write(f"**Pinned comment**\n```\n{m['pinned_comment']}\n```\n\n")
+        words = sum(len(u.spoken) for b in tl.beats for u in b.units)
+        f.write(f"**Video facts:** {tl.total:.1f} s, {words} words of narration, voice `{narrator.VOICE}` at speed "
+                f"{narrator.SPEED}. Made for kids: **No**.\n")
+    print(f"wrote {path}", file=sys.stderr)
 
 
 def total_duration():
@@ -52,7 +82,7 @@ def draw(surface, frame):
     t = frame / FPS
     engine.set_frame(frame)
     cr = cairo.Context(surface)
-    draw_scene(cr, t, timeline())
+    VIDEO["mod"].draw(cr, t, timeline())
     surface.flush()
 
 
@@ -92,6 +122,7 @@ def render_video(out, audio=True, voice=True):
     subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN,
                            "-movflags", "+faststart", preview])
     print(f"wrote {preview}", file=sys.stderr)
+    write_metadata(out[:-4] + "_metadata.md")
 
 
 def render_still(t, out):
@@ -129,15 +160,17 @@ def render_sheet(step, out, cols=8, thumb=180):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default=os.path.join(ROOT, "out", "pumpkin_trick.mp4"))
+    ap.add_argument("--video", default="pumpkin_trick", help="module name in videos/")
+    ap.add_argument("--out")
     ap.add_argument("--still", type=float)
     ap.add_argument("--sheet", type=float)
     ap.add_argument("--no-audio", action="store_true")
     ap.add_argument("--no-voice", action="store_true")
     a = ap.parse_args()
+    load(a.video)
     if a.still is not None:
-        render_still(a.still, a.out if a.out.endswith(".png") else os.path.join(ROOT, "build", f"still_{a.still}.png"))
+        render_still(a.still, a.out or os.path.join(ROOT, "build", f"{a.video}_still_{a.still}.png"))
     elif a.sheet:
-        render_sheet(a.sheet, a.out if a.out.endswith(".png") else os.path.join(ROOT, "build", "sheet.png"))
+        render_sheet(a.sheet, a.out or os.path.join(ROOT, "build", f"{a.video}_sheet.png"))
     else:
-        render_video(a.out, audio=not a.no_audio, voice=not a.no_voice)
+        render_video(a.out or os.path.join(ROOT, "out", f"{a.video}.mp4"), audio=not a.no_audio, voice=not a.no_voice)

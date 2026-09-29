@@ -43,11 +43,37 @@ moment that number is spoken. If you edit a line, everything keyed to it moves w
 - Faster or slower speech: `NARRATOR_SPEED=1.3 python render.py` (the default is 1.2; higher is faster)
 - The old Piper voice: `NARRATOR_ENGINE=piper python render.py`
 
+## Episodes
+
+Each video is one file in `videos/`. It holds the script (`SCRIPT`), the scenes (`draw`), an optional narrator
+override (`NARRATOR`), and the upload sheet (`METADATA`: title, alternative titles, description, hashtags, tags,
+pinned comment). Every render writes three files to `out/`:
+
+- `<name>.mp4`: full quality
+- `<name>_preview.mp4`: a small copy for phones
+- `<name>_metadata.md`: the upload sheet, ready to paste into YouTube Studio
+
+| Episode | File | Length |
+|---|---|---|
+| 1. The Pumpkin Trick | `videos/pumpkin_trick.py` | 51 s |
+| 2. The $5 Lucky Charm | `videos/lucky_charm.py` | 35 s |
+
+```bash
+python render.py --video lucky_charm
+```
+
+Shared shot tools (camera moves, headlines, stamps, flying props, sepia flashbacks, confetti, whip transitions)
+live in `motion/kit.py`.
+
+**Channel narrator:** Kokoro `am_fenrir` at speed 0.95. It is a stock voice picked to match the delivery of a reference
+narrator the channel chose (speaker similarity 0.72, the best of 12 voices; similar pitch and expressiveness). It is
+a style match, not a clone of anyone's voice.
+
 ## Rendering
 
 ```bash
 pip install -r requirements.txt   # the first render also downloads the Piper voice and a Whisper model
-python render.py                 # full video  -> out/pumpkin_trick.mp4
+python render.py --video lucky_charm   # full video -> out/lucky_charm.mp4 (+ preview + upload sheet)
 python render.py --still 12.5    # one frame   -> build/still_12.5.png
 python render.py --sheet 1       # contact sheet, one thumbnail per second -> build/sheet.png
 python render.py --no-voice      # music + sound effects only

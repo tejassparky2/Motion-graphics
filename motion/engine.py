@@ -245,7 +245,7 @@ def text_width(cr, runs, size, bold=False):
     return sum(cr.text_extents(s).x_advance for s, _ in runs)
 
 
-def write(cr, runs, x, y, size, progress=1.0, align="left", bold=False, underline=False):
+def write(cr, runs, x, y, size, progress=1.0, align="left", bold=False, underline=False, halo=None):
     """Handwritten text that 'writes on' left-to-right as progress goes 0 -> 1.
 
     runs: list of (text, color) or a plain string (drawn in INK).
@@ -267,6 +267,16 @@ def write(cr, runs, x, y, size, progress=1.0, align="left", bold=False, underlin
     cr.translate(r.uniform(-0.6, 0.6), r.uniform(-0.6, 0.6))
     cr.rectangle(x - 10, y - size * 1.4, (total + 20) * clamp01(progress), size * 2.0)
     cr.clip()
+    if halo is not None:   # soft outline so text stays readable over busy backgrounds
+        cx = x
+        for s, _ in runs:
+            cr.move_to(cx, y)
+            cr.text_path(s)
+            cx += cr.text_extents(s).x_advance
+        cr.set_source_rgba(*halo)
+        cr.set_line_width(size * 0.22)
+        cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        cr.stroke()
     cx = x
     for s, col in runs:
         cr.set_source_rgba(*col)

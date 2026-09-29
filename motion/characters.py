@@ -39,6 +39,16 @@ CAST = {
     "seth": dict(skin=SKIN_LIGHT, shirt=PURPLE, pants=PURPLE_D, bw=118, bh=118, head=40, kind="belly"),
     "ramu": dict(skin=SKIN_TAN, shirt=GREEN, pants=DHOTI, bw=96, bh=104, head=40, kind="box"),
     "chotu": dict(skin=SKIN_MID, shirt=YELLOW, pants=DENIM, bw=74, bh=92, head=36, kind="slim"),
+    # "The $5 Lucky Charm" cast
+    "sam": dict(skin=SKIN_MID, shirt=hexc("#6f8fb0"), pants=DENIM, bw=92, bh=102, head=40, kind="hoodie",
+                hair="messy", hair_col=hexc("#3a2a22"), blush=True, seed=51),
+    "mia": dict(skin=hexc("#f0c29c"), shirt=hexc("#e0487a"), pants=hexc("#f0c29c"), bw=78, bh=112, head=38,
+                kind="dress", hair="long", hair_col=hexc("#5a2e1c"), lashes=True, blush=True, seed=63),
+    "beggar": dict(skin=SKIN_TAN, shirt=hexc("#9a7a52"), pants=hexc("#6b5a45"), bw=90, bh=98, head=40, kind="ragged",
+                   hair="scruffy", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), seed=77),
+    "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
+                       kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
+                       seed=77),
 }
 
 # hand targets relative to the shoulder, for the arm on the facing side ("front")
@@ -149,7 +159,7 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
            item=None, bob=True, shake=0.0, tears=False, sweat=False, scale=1.0, jump=0.0, lean=0.0):
     """Draw a character. `walk` is a phase in cycles (None = standing). `arms` = (front, back)."""
     c = CAST[who]
-    seed = {"seth": 11, "ramu": 23, "chotu": 37}[who]
+    seed = c.get("seed") or {"seth": 11, "ramu": 23, "chotu": 37}[who]
     skin, bw, bh, hr = c["skin"], c["bw"], c["bh"], c["head"]
     legs = 26
     with at(cr, x, y - jump, scale, flip=facing < 0):
@@ -196,34 +206,83 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
             line(cr, [(6, top + 12), (6, top + 60)], 3, GREEN_D, seed + 1, amp=0.6)
             for k in range(3):
                 dot(cr, 12, top + 22 + k * 14, 3, INK)
+        elif kind == "hoodie":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 30), c["shirt"], seed, amp=1.2)
+            shape(cr, [(-24, top + 4), (0, top + 20), (24, top + 4)], None, seed + 1, amp=0.4, lw=3, closed=False)
+            line(cr, [(-6, top + 18), (-8, top + 44)], 2.5, INK, seed + 2, amp=0.3)   # drawstrings
+            line(cr, [(6, top + 18), (8, top + 44)], 2.5, INK, seed + 3, amp=0.3)
+            shape(cr, rrect_pts(-28, top + bh - 44, 56, 24, 8, 14), hexc("#5d7a98"), seed + 4, amp=0.5, lw=3)
+        elif kind == "dress":
+            shape(cr, poly_pts([(-bw / 2 + 12, top + 6), (bw / 2 - 12, top + 6), (bw / 2 + 16, 0), (-bw / 2 - 16, 0)], 14),
+                  c["shirt"], seed, amp=1.0)
+            line(cr, [(-bw / 2 + 4, top + 44), (0, top + 50), (bw / 2 - 4, top + 44)], 4, hexc("#b8325e"), seed + 1,
+                 amp=0.4)
+            dot(cr, 0, top + 16, 5, hexc("#fff3c4"))   # pendant
+            line(cr, [(-14, top + 4), (0, top + 16), (14, top + 4)], 2, hexc("#f2b632"), seed + 2, amp=0.3)
+        elif kind == "ragged":
+            pts = rrect_pts(-bw / 2, top, bw, bh - 10, 22)
+            pts += [(-bw / 2 + 8, -2), (-bw / 2 + 22, -14)]
+            shape(cr, poly_pts([(-bw / 2, top + 10), (bw / 2, top + 10), (bw / 2 + 4, -6), (bw / 4, 4), (0, -8),
+                                (-bw / 4, 4), (-bw / 2 - 4, -6)], 14), c["shirt"], seed, amp=1.6)
+            shape(cr, rrect_pts(12, top + 40, 22, 20, 4, 10), hexc("#c49a5c"), seed + 1, amp=0.8, lw=2.5)   # patch
+            line(cr, [(-26, top + 30), (-14, top + 38)], 2.5, INK, seed + 2, amp=0.6)
+        elif kind == "suit":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
+            shape(cr, [(-16, top + 4), (16, top + 4), (0, top + 50)], WHITE, seed + 1, amp=0.5, lw=3)
+            sharp_shape(cr, [(-4, top + 10), (4, top + 10), (7, top + 38), (0, top + 48), (-7, top + 38)], GOLD,
+                        seed + 2, amp=0.4, lw=2.5)
+            dot(cr, 24, top + 26, 4, GOLD)
         else:
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 24), c["shirt"], seed, amp=1.2)
             line(cr, [(-bw / 2 + 4, top + 50), (bw / 2 - 4, top + 50)], 5, hexc("#e8a93b"), seed + 1, amp=0.6)
         # ---- head
         hy = top - hr + 12
+        hair = c.get("hair")
+        hc = c.get("hair_col", INK)
+        if hair == "long":   # hair behind the head, down to the shoulders
+            shape(cr, [(-hr - 10, hy - 10), (-hr - 4, hy - hr), (0, hy - hr - 10), (hr + 4, hy - hr), (hr + 12, hy - 6),
+                       (hr + 16, hy + 50), (hr - 4, hy + 62), (-hr + 4, hy + 62), (-hr - 14, hy + 50)], hc, seed + 12,
+                  amp=0.8, lw=3.5)
         blob(cr, 0, hy, hr, hr * 0.95, skin, seed + 5, amp=0.9)
         fx = 7  # face shifted toward facing side
-        if who == "seth":
+        if c.get("beard"):
+            shape(cr, [(-hr + 8, hy + 14), (fx - 8, hy + 20), (fx + 10, hy + 20), (hr - 6, hy + 14), (hr - 10, hy + 32),
+                       (fx, hy + hr + 6), (-hr + 14, hy + 32)], c["beard"], seed + 13, amp=1.2, lw=3)
+        if hair == "messy":
+            shape(cr, [(-hr - 2, hy - 4), (-hr, hy - hr + 4), (-hr + 10, hy - hr - 10), (-8, hy - hr - 4), (0, hy - hr - 16),
+                       (12, hy - hr - 4), (26, hy - hr - 12), (hr + 2, hy - hr + 2), (hr + 4, hy - 8), (hr - 8, hy - 18),
+                       (4, hy - 24), (-16, hy - 18)], hc, seed + 6, amp=0.9, lw=3)
+        elif hair == "long":
+            shape(cr, [(-hr - 2, hy - 2), (-hr + 2, hy - hr * 0.7), (-6, hy - hr - 6), (hr * 0.7, hy - hr + 2), (hr + 4, hy - 6),
+                       (hr - 4, hy - 16), (8, hy - 22), (-hr + 14, hy - 16)], hc, seed + 6, amp=0.8, lw=3)
+            dot(cr, fx - hr + 4, hy + 16, 4, GOLD)   # earring
+        elif hair == "scruffy":
+            shape(cr, [(-hr - 4, hy), (-hr - 2, hy - hr + 2), (-10, hy - hr - 10), (hr - 4, hy - hr - 6), (hr + 6, hy - 2),
+                       (hr - 6, hy - 14), (-4, hy - 22), (-hr + 8, hy - 10)], hc, seed + 6, amp=1.8, lw=3)
+        elif hair == "slick" or who == "seth":
             # slick hair + side part
             shape(cr, [(-hr, hy - 4), (-hr + 4, hy - hr * 0.7), (-10, hy - hr - 6), (hr * 0.6, hy - hr - 2),
                        (hr + 2, hy - 12), (hr - 6, hy - 18), (-6, hy - hr + 12), (-hr + 10, hy - 14)],
                   INK, seed + 6, amp=0.7, lw=3)
-        elif who == "ramu":
+        elif hair == "turban" or who == "ramu":
             shape(cr, [(-hr - 4, hy - 8), (-hr + 2, hy - hr - 6), (0, hy - hr - 20), (hr - 2, hy - hr - 6),
                        (hr + 4, hy - 8), (0, hy - 14)], TURBAN, seed + 6, amp=0.9, lw=3.5)
             line(cr, [(-hr + 6, hy - 24), (-4, hy - hr - 6), (hr - 8, hy - 30)], 3, WOOD_D, seed + 7, amp=0.6)
             line(cr, [(-hr + 12, hy - 12), (6, hy - hr + 4), (hr - 2, hy - 16)], 3, WOOD_D, seed + 8, amp=0.6)
-        else:
+        elif hair is None:
             shape(cr, [(-hr - 2, hy - 6), (-hr + 4, hy - hr - 2), (hr - 6, hy - hr - 2), (hr + 2, hy - 8)],
                   CAP_RED, seed + 6, amp=0.8, lw=3.5)
             shape(cr, rrect_pts(-hr - 26, hy - 16, 34, 12, 6, 12), CAP_RED, seed + 7, amp=0.5, lw=3.5)
-        _eyes(cr, eyes, fx, hy + 2, t, seed, sun=(who == "seth"))
+        _eyes(cr, eyes, fx, hy + 2, t, seed, sun=(who == "seth" or c.get("shades", False)))
+        if c.get("lashes") and eyes in ("dot", "wide", "sly", "happy"):
+            for sx in (-1, 1):
+                line(cr, [(fx + sx * 15 + 5 * sx, hy - 6), (fx + sx * 15 + 10 * sx, hy - 11)], 2.5, INK, seed + sx, amp=0.2)
         if who in ("seth", "ramu"):
             # moustache
             mw = 22 if who == "seth" else 15
             line(cr, [(fx - mw, hy + 14), (fx - 8, hy + 10), (fx, hy + 13), (fx + 8, hy + 10), (fx + mw, hy + 14)],
                  5 if who == "seth" else 4, INK, seed + 9, amp=0.5)
-        if eyes not in ("rupee",) and who != "seth":
+        if eyes not in ("rupee",) and who != "seth" and c.get("blush", who in ("ramu", "chotu")):
             dot(cr, fx - 26, hy + 12, 6, BLUSH)
             dot(cr, fx + 26, hy + 12, 6, BLUSH)
         _mouth(cr, mouth, fx, hy + 24, seed + 10, t)
@@ -247,12 +306,24 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
         if arms[0] == "thumb":
             line(cr, [(hfx - 2, hfy - 6), (hfx - 1, hfy - 20)], 7, INK, seed, amp=0.3)
             line(cr, [(hfx - 2, hfy - 6), (hfx - 1, hfy - 19)], 3.5, skin, seed, amp=0.3)
+        if facing < 0 and item:
+            # keep text on props readable when the character faces left: un-mirror around the hand
+            cr.translate(2 * hfx, 0)
+            cr.scale(-1, 1)
         if item == "cash":
             cash(cr, hfx + 8, hfy - 6, 0.8)
         elif item == "cash_big":
             cash(cr, hfx + 18, hfy - 10, 1.3)
         elif item == "briefcase":
             briefcase(cr, hfx, hfy + 8)
+        elif item == "phone":
+            phone(cr, hfx + 4, hfy - 30, 0.2)
+        elif item == "note5":
+            dollar(cr, hfx + 16, hfy - 6, 0.7)
+        elif item == "ticket":
+            ticket(cr, hfx + 14, hfy - 10, 0.6)
+        elif item == "binoculars":
+            binoculars(cr, hfx + 6, hfy - 8, 0.9)
     return
 
 
@@ -426,3 +497,46 @@ def money_pile(cr, x, y, s=1.0, seed=600):
                 write(cr, [("₹", CASH_D)], dx, dy, 24, bold=True, align="center")
         for i, dx in enumerate((-120, -60, 70, 128)):
             cash(cr, dx, -6, 0.7, seed=seed + i, rot=0.2 * (i % 2 * 2 - 1))
+
+
+# ---------------------------------------------------------------- props for "The $5 Lucky Charm"
+DOLLAR = hexc("#8cc084")
+DOLLAR_D = hexc("#4f7d4a")
+
+
+def dollar(cr, x, y, s=1.0, amount="$5", rot=-0.12, seed=5):
+    with at(cr, x, y, s, rot):
+        sharp_shape(cr, [(-44, -22), (44, -22), (44, 22), (-44, 22)], DOLLAR, seed=seed, amp=0.8, lw=3.5)
+        blob(cr, 0, 0, 14, 16, hexc("#cfe6c6"), seed=seed + 1, amp=0.4, lw=2.5)
+        write(cr, [(amount, DOLLAR_D)], -28, 10, 22, align="center", bold=True)
+        write(cr, [(amount, DOLLAR_D)], 30, 10, 22, align="center", bold=True)
+
+
+def phone(cr, x, y, s=1.0, screen=None, seed=8):
+    """Phone centred at (x, y); `screen(cr)` draws into a 180x320 screen box centred on the origin."""
+    with at(cr, x, y, s):
+        shape(cr, rrect_pts(-110, -190, 220, 380, 30, 20), INK, seed=seed, amp=0.6, lw=4)
+        shape(cr, rrect_pts(-96, -168, 192, 336, 16, 20), hexc("#dfe9f2"), seed=seed + 1, amp=0.4, lw=0, stroke=None)
+        if screen:
+            cr.save()
+            cr.rectangle(-96, -168, 192, 336)
+            cr.clip()
+            screen(cr)
+            cr.restore()
+        dot(cr, 0, -178, 4, hexc("#555555"))
+
+
+def ticket(cr, x, y, s=1.0, nums="07 13 21 34 42", seed=9):
+    with at(cr, x, y, s, rot=-0.08):
+        sharp_shape(cr, [(-80, -44), (80, -44), (80, 44), (-80, 44)], hexc("#fff3c4"), seed=seed, amp=0.8, lw=3.5)
+        sharp_shape(cr, [(-80, -44), (80, -44), (80, -18), (-80, -18)], hexc("#e0483f"), seed=seed + 1, amp=0.6, lw=3)
+        write(cr, [("LOTTO", WHITE)], 0, -24, 24, align="center", bold=True)
+        write(cr, [(nums, INK)], 0, 20, 22, align="center", bold=True)
+
+
+def binoculars(cr, x, y, s=1.0, seed=10):
+    with at(cr, x, y, s):
+        for dx in (-17, 17):
+            shape(cr, rrect_pts(dx - 14, -22, 28, 44, 10, 12), hexc("#3a3140"), seed=seed + dx, amp=0.5, lw=3.5)
+            blob(cr, dx, -20, 11, 6, hexc("#9fd3f0"), seed=seed + dx + 1, amp=0.3, lw=2.5)
+        sharp_shape(cr, [(-4, -8), (4, -8), (4, 8), (-4, 8)], hexc("#3a3140"), seed=seed, amp=0.3, lw=2.5)
