@@ -278,9 +278,9 @@ def stall(cr, x, y, stock=1.0, sign="KADDU MANDI"):
     w = 320
     # back posts + awning
     for px in (x - w / 2 + 14, x + w / 2 - 14):
-        sharp_shape(cr, [(px - 8, y - 330), (px + 8, y - 330), (px + 8, y - 60), (px - 8, y - 60)], WOOD_D,
+        sharp_shape(cr, [(px - 8, y - 280), (px + 8, y - 280), (px + 8, y - 60), (px - 8, y - 60)], WOOD_D,
                     seed=int(px), amp=0.8, lw=3.5)
-    aw_y = y - 350
+    aw_y = y - 300
     stripes = 7
     sw = (w + 40) / stripes
     for i in range(stripes):

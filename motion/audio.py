@@ -37,7 +37,7 @@ def note(name):
 
 
 def music(total):
-    bpm = 104
+    bpm = 124  # >=120 BPM (TikTok creative guidance: faster tracks tend to lift watch-through)
     beat = 60 / bpm
     chords = [["C3", "E4", "G4", "C5"], ["G2", "D4", "G4", "B4"], ["A2", "E4", "A4", "C5"], ["F2", "C4", "F4", "A4"]]
     out = np.zeros(int(total * SR) + SR)
@@ -70,6 +70,14 @@ def sfx(name, dur):
         hp = np.diff(noise, prepend=0)  # crude high-pass -> pencil scratch
         strokes = 0.55 + 0.45 * np.sign(np.sin(2 * np.pi * 7.5 * np.arange(n) / SR + _rng.uniform(0, 6)))
         return hp * strokes * _env(n, 0.02) * np.linspace(1, 0.6, n) * 0.07
+    if name == "hit":
+        # full-weight impact for the big plot turns: low boom + noise burst
+        n = int(0.45 * SR)
+        f = np.linspace(110, 40, n)
+        boom = np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.002, 0.18)
+        m = int(0.08 * SR)
+        boom[:m] += _rng.uniform(-1, 1, m) * np.exp(-np.arange(m) / (0.015 * SR)) * 0.5
+        return boom * 0.6
     if name == "thud":
         n = int(0.18 * SR)
         f = np.linspace(160, 60, n)
@@ -115,41 +123,55 @@ def sfx(name, dur):
     return np.zeros(1)
 
 
-def build_soundtrack(events, total, path, narration=None):
-    """Mix music + sound effects (+ optional voice-over schedule [(t, text)]) into a stereo WAV."""
-    bed = music(total)
-    fx = np.zeros_like(bed)
+GAINS = {"pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
+         "fall": 0.8, "laugh": 0.0}
+
+
+def build_soundtrack(events, total, path, clips=None):
+    """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV."""
+    import pyloudnorm
+    n = int(total * SR)
+    bed = music(total)[:n]
+    fx = np.zeros(n)
     seen = set()
     for at, name, dur in events:
-        key = (round(at, 3), name)
-        if key in seen:
+        key = (round(at, 2), name)
+        if key in seen or GAINS.get(name, 1.0) == 0:
             continue
         seen.add(key)
-        s = sfx(name, dur)
+        s = sfx(name, dur) * GAINS.get(name, 1.0)
         i = int(at * SR)
-        if i >= len(fx):
-            continue
-        s = s[: len(fx) - i]
-        fx[i:i + len(s)] += s
-    if narration:
+        if 0 <= i < n:
+            s = s[: n - i]
+            fx[i:i + len(s)] += s
+    rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
+    if clips:
         from .voice import narration_track
-        voice, speaking = narration_track(narration, total)
-        n = min(len(bed), len(voice))
+        voice, speaking = narration_track(clips, total)
         voice, speaking = voice[:n], speaking[:n]
-        bed, fx = bed[:n], fx[:n]
-        # duck the music hard and the effects a little while the narrator talks
-        mix = bed * (1 - 0.7 * speaking) + fx * (1 - 0.35 * speaking) + voice * 0.55
+        loud = speaking > 0.5
+        v_rms = rms(voice[loud])
+        # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
+        bed *= (v_rms * 10 ** (-10 / 20)) / rms(bed)
+        mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
     else:
         mix = bed + fx
-    # gentle fade in/out + soft limiter
-    fade = int(0.5 * SR)
-    mix[:fade] *= np.linspace(0, 1, fade)
-    mix[-fade:] *= np.linspace(1, 0, fade)
-    mix = np.tanh(mix * 2.2) * 0.9
-    pcm = (mix * 32767).astype(np.int16)
+    # very short fades so the Short loops cleanly
+    a, b = int(0.03 * SR), int(0.12 * SR)
+    mix[:a] *= np.linspace(0, 1, a)
+    mix[-b:] *= np.linspace(1, 0, b)
+    # loudness-normalise to -14 LUFS, then keep peaks under -1 dBFS with a soft clip
+    meter = pyloudnorm.Meter(SR)
+    mix = pyloudnorm.normalize.loudness(mix, meter.integrated_loudness(mix), -14.0)
+    ceiling = 10 ** (-1 / 20)
+    mix = np.where(np.abs(mix) > 0.8 * ceiling,
+                   np.sign(mix) * (0.8 * ceiling + 0.2 * ceiling * np.tanh((np.abs(mix) - 0.8 * ceiling) / (0.2 * ceiling))),
+                   mix)
+    pcm = (np.clip(mix, -1, 1) * 32767).astype(np.int16)
     stereo = np.repeat(pcm[:, None], 2, axis=1)
     with wave.open(path, "wb") as w:
         w.setnchannels(2)
         w.setsampwidth(2)
         w.setframerate(SR)
         w.writeframes(stereo.tobytes())
+    return meter.integrated_loudness(pcm.astype(np.float64) / 32767)

@@ -14,7 +14,8 @@ import sys
 
 from motion import engine
 from motion.engine import FPS, H, W, cairo
-from motion.scenes import scene_at, total_duration
+from motion.scenes import SCRIPT, draw as draw_scene
+from motion.timeline import Timeline
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -27,12 +28,26 @@ def ffmpeg_bin():
         return "ffmpeg"
 
 
+_tl = []
+
+
+def timeline():
+    """Synthesize (or load cached) narration and lay out the whole video around it."""
+    if not _tl:
+        _tl.append(Timeline(SCRIPT))
+        _tl[0].report()
+    return _tl[0]
+
+
+def total_duration():
+    return timeline().total
+
+
 def draw(surface, frame):
     t = frame / FPS
-    fn, lt, start = scene_at(t)
-    engine.set_frame(frame, start)
+    engine.set_frame(frame)
     cr = cairo.Context(surface)
-    fn(cr, lt)
+    draw_scene(cr, t, timeline())
     surface.flush()
 
 
@@ -57,9 +72,9 @@ def render_video(out, audio=True, voice=True):
     print(file=sys.stderr)
     if audio:
         from motion.audio import build_soundtrack
-        from motion.scenes import narration_schedule
         wav = os.path.join(ROOT, "build", "soundtrack.wav")
-        build_soundtrack(engine.EVENTS, n / FPS, wav, narration_schedule() if voice else None)
+        lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None)
+        print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out])
     print(f"wrote {out}", file=sys.stderr)

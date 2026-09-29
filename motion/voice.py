@@ -1,10 +1,16 @@
-"""Voice-over narration with Piper (offline neural text-to-speech).
+"""Voice-over narration with Piper (offline neural text-to-speech) + word timings.
 
-The voice model (~120 MB) is downloaded on first use into build/voices/, and every
-line is cached in build/tts/ so re-renders only synthesize lines that changed.
+- The voice model (~120 MB) downloads on first use into build/voices/.
+- Every line is cached in build/tts/ so re-renders only synthesize lines that changed.
+- Leading/trailing silence is trimmed so lines can be butted together with tight, controlled gaps.
+- Word timestamps come from running faster-whisper over the synthesized audio (also cached), so on-screen
+  numbers and captions land on the spoken word.
 """
+import difflib
 import hashlib
+import json
 import os
+import re
 import subprocess
 import sys
 import urllib.request
@@ -15,9 +21,12 @@ import numpy as np
 from .engine import ROOT
 
 VOICE = os.environ.get("NARRATOR_VOICE", "en_US-ryan-high")
-LENGTH_SCALE = float(os.environ.get("NARRATOR_PACE", "1.0"))  # >1 = slower speech
+# Piper length scale: <1 speaks faster. 0.8 lands the ryan voice at ~230 wpm (research target 200-240).
+LENGTH_SCALE = float(os.environ.get("NARRATOR_PACE", "0.8"))
 VOICE_BASE = "https://huggingface.co/rhasspy/piper-voices/resolve/main"
 SR = 44100
+TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
+MAX_PAUSE = 0.22  # pauses inside a line (at commas, colons, full stops) are shortened to this
 
 
 def _voice_path():
@@ -45,35 +54,118 @@ def _read_wav(path):
     return a
 
 
+def _trim(a):
+    env = np.convolve(np.abs(a), np.ones(441) / 441, mode="same")
+    loud = np.nonzero(env > 0.012)[0]
+    if not len(loud):
+        return a
+    pad = int(TRIM_PAD * SR)
+    return a[max(0, loud[0] - pad): loud[-1] + pad]
+
+
+def _squeeze(a):
+    """Shorten any internal silence longer than MAX_PAUSE (like a jump-cut editor removing dead air)."""
+    win = int(0.01 * SR)
+    n = len(a) // win
+    if n < 3:
+        return a
+    env = np.abs(a[: n * win]).reshape(n, win).max(axis=1)
+    quiet = env < 0.02
+    keep = np.ones(len(a), bool)
+    limit = int(MAX_PAUSE / 0.01)
+    i = 0
+    while i < n:
+        if not quiet[i]:
+            i += 1
+            continue
+        j = i
+        while j < n and quiet[j]:
+            j += 1
+        if j - i > limit:
+            cut0 = i + limit // 2
+            cut1 = j - (limit - limit // 2)
+            keep[cut0 * win: cut1 * win] = False
+        i = j
+    return a[keep]
+
+
+def _key(text):
+    return hashlib.sha1(f"{VOICE}|{LENGTH_SCALE}|{text}".encode()).hexdigest()[:16]
+
+
 def synth(text):
-    """Speech for one line as float samples at 44.1 kHz (cached)."""
-    model = _voice_path()
-    key = hashlib.sha1(f"{VOICE}|{LENGTH_SCALE}|{text}".encode()).hexdigest()[:16]
-    out = os.path.join(ROOT, "build", "tts", f"{key}.wav")
+    """Speech for one line as float samples at 44.1 kHz, silence-trimmed (cached)."""
+    out = os.path.join(ROOT, "build", "tts", f"{_key(text)}.wav")
     if not os.path.exists(out):
+        model = _voice_path()
         os.makedirs(os.path.dirname(out), exist_ok=True)
         subprocess.run([sys.executable, "-m", "piper", "-m", model, "-f", out, "--length-scale", str(LENGTH_SCALE)],
                        input=text.encode(), check=True, stderr=subprocess.DEVNULL)
-    return _read_wav(out)
+    return _squeeze(_trim(_read_wav(out)))
 
 
-def narration_track(schedule, total):
-    """Mix all lines into one track. Returns (track, speaking) where speaking is a 0..1 envelope for ducking."""
+_whisper = None
+
+
+def _norm(w):
+    return re.sub(r"[^a-z0-9]", "", w.lower())
+
+
+def word_times(text, audio):
+    """[(start, end)] for each whitespace-separated word of `text`, relative to the start of `audio`.
+
+    Whisper's timestamps are matched to the script by sequence alignment; words Whisper heard differently
+    (e.g. "seventy" -> "70") get times interpolated from their neighbours by character length.
+    """
+    cache = os.path.join(ROOT, "build", "tts", f"{_key(text)}.p{MAX_PAUSE}.words.json")
+    if os.path.exists(cache):
+        return [tuple(x) for x in json.load(open(cache))]
+    global _whisper
+    if _whisper is None:
+        from faster_whisper import WhisperModel
+        _whisper = WhisperModel(os.environ.get("ALIGN_MODEL", "small.en"), device="cpu", compute_type="int8")
+    a16 = np.interp(np.arange(int(len(audio) * 16000 / SR)) * SR / 16000, np.arange(len(audio)), audio)
+    segs, _ = _whisper.transcribe(a16.astype(np.float32), language="en", word_timestamps=True,
+                                  initial_prompt=text)
+    heard = [(w.word, w.start, w.end) for s in segs for w in s.words]
+    script = text.split()
+    a = [_norm(w) for w in script]
+    b = [_norm(w) for w, _, _ in heard]
+    times = [None] * len(script)
+    for blk in difflib.SequenceMatcher(None, a, b, autojunk=False).get_matching_blocks():
+        for k in range(blk.size):
+            times[blk.a + k] = (heard[blk.b + k][1], heard[blk.b + k][2])
+    dur = len(audio) / SR
+    i = 0
+    while i < len(script):
+        if times[i] is not None:
+            i += 1
+            continue
+        j = i
+        while j < len(script) and times[j] is None:
+            j += 1
+        t0 = times[i - 1][1] if i > 0 else 0.0
+        t1 = times[j][0] if j < len(script) else dur
+        weights = [max(1, len(a[k])) for k in range(i, j)]
+        tot = sum(weights)
+        acc = t0
+        for k, wgt in zip(range(i, j), weights):
+            span = (t1 - t0) * wgt / tot
+            times[k] = (acc, acc + span)
+            acc += span
+        i = j
+    json.dump(times, open(cache, "w"))
+    return times
+
+
+def narration_track(clips, total):
+    """Mix [(start, samples)] into one track. Returns (track, speaking) — speaking is a 0..1 ducking envelope."""
     track = np.zeros(int(total * SR))
-    busy_until = 0.0
-    for at, text in sorted(schedule):
-        clip = synth(text)
-        if at < busy_until:
-            print(f"warning: line at {at:.2f}s overlaps the previous one (ends {busy_until:.2f}s): {text!r}",
-                  file=sys.stderr)
-        busy_until = at + len(clip) / SR
-        if busy_until > total:
-            print(f"warning: line at {at:.2f}s runs past the end of the video: {text!r}", file=sys.stderr)
+    for at, clip in clips:
         i = int(at * SR)
         clip = clip[: max(0, len(track) - i)]
         track[i:i + len(clip)] += clip
-    # speaking envelope: rectified voice, smoothed, with a slow release so music doesn't pump between words
     env = (np.abs(track) > 0.01).astype(np.float64)
-    k = int(0.35 * SR)
+    k = int(0.3 * SR)  # ~300 ms release so the music doesn't pump between words
     env = np.convolve(env, np.ones(k) / k, mode="same")
     return track, np.clip(env * 4, 0, 1)

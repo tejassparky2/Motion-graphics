@@ -2,3 +2,5 @@ numpy
 pycairo
 imageio-ffmpeg
 piper-tts
+faster-whisper
+pyloudnorm

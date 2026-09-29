@@ -6,33 +6,41 @@ No After Effects or other animation software is needed.
 
 ## The Pumpkin Trick (`out/pumpkin_trick.mp4`)
 
-An 82-second vertical short (720×1280, 30 fps) with a voice-over narrator. It that retells the classic speculator parable:
+A 49-second vertical Short (720×1280, 30 fps). It retells the classic speculator parable with original characters: a rich
+man inflates the price of pumpkins, and his assistant sells the villagers' own pumpkins back to them before the price crashes.
 
-1. A rich man offers ₹100 per pumpkin (market price is ₹70), and the farmer happily sells 120.
-2. He raises the offer to ₹300, and the whole village sells him 500 more.
-3. He offers ₹1000, but there are none left. He leaves for the city, and his assistant stays behind to buy.
-4. The assistant quietly sells the villagers' own pumpkins back to them at ₹700 each.
-5. Neither of them ever returns, and the price crashes to ₹50.
-6. Their ledger shows they bought 620 for ₹1.62 L, sold 620 for ₹4.34 L, and made ₹2.72 L profit.
+It is built for retention, following the research in [`reports/Shorts retention for animated explainers.md`](reports/Shorts%20retention%20for%20animated%20explainers.md):
+
+| | This video | Target from the research |
+|---|---|---|
+| Hook | Frame 0 shows a ₹1000 note beside a ₹70-tagged pumpkin, with the question *"Why would a rich man pay ₹1000 for a ₹70 pumpkin?"* | Conflict and a question in the first 1–2 s |
+| Speech rate | ~239 wpm while speaking | 200–240 wpm |
+| Dead air | Longest silence in the voice track: 0.22 s. Speech covers 94% of the runtime | Gaps ≤0.25 s, coverage ≥90% |
+| Visual change | One every 0.97 s (measured with ffmpeg scene detection), never more than 2 s without one | ~1 s (the reference Short measured 0.92 s) |
+| Numbers | Every price is handwritten on screen on the spoken word | On-word number pops |
+| Captions | Word-by-word, 1–3 words, current word highlighted | Kinetic captions in the safe zone |
+| Ending | Payoff, one line, then back to the hook frame: *"...ask yourself:"* flows into *"Why would a rich man..."* | Loop ending, no outro |
+| Mix | −14 LUFS, −1 dBFS peak. 124 BPM music ~22 dB under the voice; heavy hits only on the plot turns | Same |
 
 The narration is generated offline with [Piper](https://github.com/rhasspy/piper) text-to-speech (voice `en_US-ryan-high`).
-The music and sound effects are synthesized too: a plucked-string loop, pops, scribbles, truck engines and a
-cash-register "ka-ching". The music ducks automatically whenever the narrator speaks.
+Word timestamps come from [faster-whisper](https://github.com/SYSTRAN/faster-whisper) run over the synthesized speech.
+**The whole video's timing follows the voice.** Each line is synthesized and trimmed, and its internal pauses are capped
+at 0.22 s. The lines are then laid end to end with 0.15–0.3 s gaps, and every animation beat is keyed to *the moment a word is spoken*.
 
-### Changing the narration
+### Changing the script
 
-The script is the `NARRATION` list at the bottom of `motion/scenes.py`. Each entry says which scene a line belongs to,
-when it starts (in seconds from the start of that scene) and what is said. The render prints a warning if two lines overlap or a
-line runs past the end. Lines are cached in `build/tts/`, so only edited lines get re-synthesized.
+The script is the `SCRIPT` list at the top of `motion/scenes.py`. `[spoken words|shown]` says one thing and shows another
+in the captions, e.g. `[a hundred rupees|₹100]`. Scenes find their timing with `tl.at("v3", "₹12,000")`, which returns the
+moment that number is spoken. If you edit a line, everything keyed to it moves with it. Lines are cached in `build/tts/`.
 
-- Different voice: `NARRATOR_VOICE=en_US-lessac-high python render.py` (any [Piper voice](https://huggingface.co/rhasspy/piper-voices) name works; it downloads on first use)
-- Slower or faster speech: `NARRATOR_PACE=1.1 python render.py` (above 1 is slower)
+- Different voice: `NARRATOR_VOICE=en_US-lessac-high python render.py` (any [Piper voice](https://huggingface.co/rhasspy/piper-voices); it downloads on first use)
+- Faster or slower speech: `NARRATOR_PACE=0.75 python render.py` (Piper length scale; below 1 is faster, and the default is 0.8)
 
 ## Rendering
 
 ```bash
-pip install -r requirements.txt
-python render.py                 # full video  -> out/pumpkin_trick.mp4 (~1 min)
+pip install -r requirements.txt   # the first render also downloads the Piper voice and a Whisper model
+python render.py                 # full video  -> out/pumpkin_trick.mp4
 python render.py --still 12.5    # one frame   -> build/still_12.5.png
 python render.py --sheet 1       # contact sheet, one thumbnail per second -> build/sheet.png
 python render.py --no-voice      # music + sound effects only
@@ -47,12 +55,14 @@ ffmpeg comes from the `imageio-ffmpeg` wheel, so you don't need a system install
 |---|---|
 | `motion/engine.py` | Easing and timing, wobbly hand-drawn shapes, handwritten write-on text, sound cues |
 | `motion/characters.py` | The cast (Seth, Ramu, Chotu) with poses and expressions, plus the stall, truck, crates, cash and speech bubbles |
-| `motion/scenes.py` | The storyboard: one function per scene, plus the `SCENES` timeline |
+| `motion/scenes.py` | The script (`SCRIPT`) and the scenes, keyed to spoken words; camera punch-ins |
+| `motion/timeline.py` | Narration-driven timeline: synthesizes lines, lays them end to end, answers "when is this word spoken?" |
+| `motion/captions.py` | Word-by-word kinetic captions |
 | `motion/audio.py` | The synthesized music and sound effects, plus the final mix with ducking |
-| `motion/voice.py` | The Piper voice-over: downloads the voice, synthesizes and caches each line, builds the narration track |
+| `motion/voice.py` | Piper voice-over: synthesis, silence trimming and pause squeezing, Whisper word timestamps, the narration track |
 | `render.py` | Renders frames and pipes them to ffmpeg |
 
-To make a new video, write new scene functions and list them in `SCENES`. Characters take `arms=`, `eyes=`,
+To make a new video, write a new `SCRIPT` and scene functions keyed to it with `tl.at(...)`. Characters take `arms=`, `eyes=`,
 `mouth=`, `walk=`, `item=` and similar arguments, so most acting is done by changing arguments over time.
 
 Font: [Kalam](https://fonts.google.com/specimen/Kalam), licensed under the SIL Open Font License (`assets/fonts/OFL.txt`).
