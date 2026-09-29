@@ -115,8 +115,10 @@ def sfx(name, dur):
     return np.zeros(1)
 
 
-def build_soundtrack(events, total, path):
-    mix = music(total)
+def build_soundtrack(events, total, path, narration=None):
+    """Mix music + sound effects (+ optional voice-over schedule [(t, text)]) into a stereo WAV."""
+    bed = music(total)
+    fx = np.zeros_like(bed)
     seen = set()
     for at, name, dur in events:
         key = (round(at, 3), name)
@@ -125,10 +127,20 @@ def build_soundtrack(events, total, path):
         seen.add(key)
         s = sfx(name, dur)
         i = int(at * SR)
-        if i >= len(mix):
+        if i >= len(fx):
             continue
-        s = s[: len(mix) - i]
-        mix[i:i + len(s)] += s
+        s = s[: len(fx) - i]
+        fx[i:i + len(s)] += s
+    if narration:
+        from .voice import narration_track
+        voice, speaking = narration_track(narration, total)
+        n = min(len(bed), len(voice))
+        voice, speaking = voice[:n], speaking[:n]
+        bed, fx = bed[:n], fx[:n]
+        # duck the music hard and the effects a little while the narrator talks
+        mix = bed * (1 - 0.7 * speaking) + fx * (1 - 0.35 * speaking) + voice * 0.55
+    else:
+        mix = bed + fx
     # gentle fade in/out + soft limiter
     fade = int(0.5 * SR)
     mix[:fade] *= np.linspace(0, 1, fade)

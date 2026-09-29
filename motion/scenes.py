@@ -203,52 +203,53 @@ def s_price_300(cr, t):
 def s_price_1000(cr, t):
     background(cr)
     stall(cr, STALL_X, STALL_Y, 0.0)
-    leaving = t > 6.4
-    sx = lerp(SETH_X, -160, seg(t, 6.4, 8.0))
+    leaving = t > 7.2
+    sx = lerp(SETH_X, -160, seg(t, 7.2, 8.8))
     person(cr, "seth", sx, FEET, t, facing=-1 if leaving else 1, walk=(sx / 95) if leaving else None,
            arms=("down", "wave") if leaving else ("point", "hip"), item="briefcase" if leaving else None,
-           mouth="grin" if t < 6.4 else "smirk")
+           mouth="grin" if t < 7.2 else "smirk")
     person(cr, "ramu", RAMU_X, FEET, t, facing=-1, arms=("chin", "hip") if t > 1.4 else ("hip", "hip"),
            eyes="sad" if t > 1.4 else "wide", mouth="wobble" if t > 1.4 else "o", sweat=t > 1.4)
     write_t(cr, [("Per pumpkin = ", INK), ("₹1000!!", RED)], W / 2, 175, 62, t, 0.3, align="center", bold=True)
     write_t(cr, "...but there are none left", W / 2, 250, 44, t, 1.4, align="center")
-    if 2.4 < t < 4.2:
-        cue("pop", t, 2.4)
-        bubble(cr, 230, 520, 320, 96, SETH_MOUTH, [("Bring me more!", INK)], s=pop(t, 2.4), size=38,
-               progress=seg(t, 2.6, 3.2))
-    if 4.3 < t < 6.6:
-        cue("pop", t, 4.3)
-        bubble(cr, 290, 520, 440, 140, SETH_MOUTH, None, s=pop(t, 4.3), size=34, progress=seg(t, 4.5, 5.6),
+    if 3.9 < t < 5.0:
+        cue("pop", t, 3.9)
+        bubble(cr, 230, 520, 320, 96, SETH_MOUTH, [("Bring me more!", INK)], s=pop(t, 3.9), size=38,
+               progress=seg(t, 4.0, 4.6))
+    if 5.1 < t < 7.2:
+        cue("pop", t, 5.1)
+        bubble(cr, 290, 520, 440, 140, SETH_MOUTH, None, s=pop(t, 5.1), size=34, progress=seg(t, 5.2, 6.4),
                lines=[[("I'm off to the city.", INK)], [("My ", INK), ("assistant", RED), (" will buy.", INK)]])
 
 
 def s_assistant(cr, t):
     background(cr)
-    n_fly = [7.2, 7.5, 7.8, 8.1, 8.4]
+    n_fly = [9.2, 9.5, 9.8, 10.1, 10.4]
     stall(cr, STALL_X, STALL_Y, min(1.0, 0.2 * sum(t >= s + 0.55 for s in n_fly)))
-    tx, wheel = drive(t, 0.0, 1.5, 8.9, 10.2, x_park=420)
+    tx, wheel = drive(t, 0.0, 1.5, 10.9, 12.2, x_park=420)
     cue("engine", t, 0.0, 1.5)
-    cue("engine", t, 8.9, 1.3)
+    cue("engine", t, 10.9, 1.3)
     on_truck = 5 - sum(t >= s for s in n_fly)
     # Chotu hops down from the truck and strolls over
     cx = lerp(430, 250, seg(t, 1.5, 2.6))
-    if t > 9.0:
-        cx = lerp(250, -140, seg(t, 9.0, 10.4))
-    walking = 1.5 < t < 2.6 or t > 9.0
-    deal = 5.4 < t < 7.2
-    got_cash = t > 7.0
+    if t > 11.0:
+        cx = lerp(250, -140, seg(t, 11.0, 12.4))
+    walking = 1.5 < t < 2.6 or t > 11.0
+    deal = 6.1 < t < 8.3
+    got_cash = t > 9.0
     if got_cash:
-        cue("kaching", t, 7.0)
-    person(cr, "chotu", cx, FEET, t, facing=-1 if t > 9.0 else 1, walk=(cx / 80) if walking else None,
-           arms=("point" if 2.8 < t < 5.3 else "hold" if got_cash else "hip", "hip"),
-           item="cash_big" if got_cash else None, eyes="sly" if t < 7 else "happy",
-           mouth="smirk" if t < 7 else "grin")
+        cue("kaching", t, 9.0)
+    talking = 2.8 < t < 5.3 or 6.1 < t < 8.2
+    person(cr, "chotu", cx, FEET, t, facing=-1 if t > 11.0 else 1, walk=(cx / 80) if walking else None,
+           arms=("point" if talking else "hold" if got_cash else "hip", "hip"),
+           item="cash_big" if got_cash else None, eyes="sly" if t < 9 else "happy",
+           mouth="smirk" if t < 9 else "grin")
     person(cr, "ramu", RAMU_X, FEET, t, facing=-1,
-           arms=("give" if 6.3 < t < 7.1 else "rub" if deal else "chin" if t < 5.4 else "hip", "hip"),
-           item="cash_big" if 6.3 < t < 7.1 else None,
-           eyes="rupee" if t > 5.4 else "wide" if t > 2.8 else "sad", mouth="grin" if t > 5.4 else "flat")
+           arms=("give" if 8.3 < t < 9.1 else "rub" if deal else "chin" if t < 6.1 else "hip", "hip"),
+           item="cash_big" if 8.3 < t < 9.1 else None,
+           eyes="rupee" if t > 6.1 else "wide" if t > 2.8 else "sad", mouth="grin" if t > 6.1 else "flat")
     truck(cr, tx, TRUCK_Y, t, crates=on_truck, wheel=wheel, driver=ch.SKIN_TAN)
-    if t < 1.5 or t > 8.9:
+    if t < 1.5 or t > 10.9:
         exhaust(cr, tx + 210, TRUCK_Y - 40, t)
     for i, s in enumerate(n_fly):
         slot = truck_slot(4 - i, tx)
@@ -260,12 +261,12 @@ def s_assistant(cr, t):
         cue("pop", t, 2.8)
         bubble(cr, 330, 520, 420, 140, mouth, None, s=pop(t, 2.8), size=34, progress=seg(t, 3.0, 4.2),
                lines=[[("Psst... buy these", INK)], [("from me at ", INK), ("₹700", RED)]])
-    if 5.4 < t < 7.3:
-        cue("pop", t, 5.4)
-        bubble(cr, 330, 520, 420, 140, mouth, None, s=pop(t, 5.4), size=34, progress=seg(t, 5.6, 6.6),
+    if 6.1 < t < 8.2:
+        cue("pop", t, 6.1)
+        bubble(cr, 330, 520, 420, 140, mouth, None, s=pop(t, 6.1), size=34, progress=seg(t, 6.3, 7.3),
                lines=[[("...and sell them to", INK)], [("my boss at ", INK), ("₹1000!", RED)]])
-    write_t(cr, "The village buys back", W / 2, 150, 50, t, 6.2, align="center")
-    write_t(cr, [("620", RED), (" pumpkins @ ", INK), ("₹700", RED)], W / 2, 225, 54, t, 7.0, align="center",
+    write_t(cr, "The village buys back", W / 2, 150, 50, t, 8.2, align="center")
+    write_t(cr, [("620", RED), (" pumpkins @ ", INK), ("₹700", RED)], W / 2, 225, 54, t, 8.9, align="center",
             bold=True)
 
 
@@ -357,24 +358,24 @@ def s_city(cr, t):
     rise = ease_out(seg(t, 0.0, 0.8))
     money_pile(cr, 360, 1240 + (1 - rise) * 200, 1.55)
     cue("kaching", t, 0.4)
-    laugh = t > 3.4
+    laugh = t > 8.5
     person(cr, "seth", 300, 1040 + (1 - rise) * 200, t, facing=1, arms=("cheer" if laugh else "hold", "hip"),
            item="cash_big", mouth="laugh" if laugh else "grin", jump=abs(math.sin(t * 9)) * 6 if laugh else 0)
     person(cr, "chotu", 460, 1060 + (1 - rise) * 200, t, facing=-1, arms=("thumb", "hip"),
            eyes="closed" if laugh else "happy", mouth="laugh" if laugh else "grin",
            jump=abs(math.sin(t * 9 + 1)) * 6 if laugh else 0)
     if laugh:
-        cue("laugh", t, 3.4, 2.0)
+        cue("laugh", t, 8.5, 2.0)
         for i, (hx, hy) in enumerate([(150, 640), (560, 620), (120, 760)]):
-            s = pop(t, 3.5 + i * 0.25)
+            s = pop(t, 8.6 + i * 0.25)
             if s:
-                with at(cr, hx, hy - (t - 3.5) * 8, s, rot=0.2 * (i - 1)):
+                with at(cr, hx, hy - (t - 8.6) * 8, s, rot=0.2 * (i - 1)):
                     write(cr, [("HA HA!", RED)], 0, 0, 44, align="center", bold=True)
     # the ledger
     shape(cr, [(90, 70), (630, 70), (630, 310), (90, 310)], hexc("#fbf8ef", 0.92), seed=790, amp=1.0, lw=3.5)
     write_t(cr, [("Bought 620 for ", INK), ("₹1.62 L", RED)], W / 2, 135, 44, t, 0.8, align="center")
-    write_t(cr, [("Sold 620 for ", INK), ("₹4.34 L", RED)], W / 2, 200, 44, t, 1.7, align="center")
-    write_t(cr, [("Profit = ", INK), ("₹2.72 Lakh", RED)], W / 2, 282, 56, t, 2.6, align="center", bold=True,
+    write_t(cr, [("Sold 620 for ", INK), ("₹4.34 L", RED)], W / 2, 200, 44, t, 3.3, align="center")
+    write_t(cr, [("Profit = ", INK), ("₹2.72 Lakh", RED)], W / 2, 282, 56, t, 6.4, align="center", bold=True,
             underline=True)
 
 
@@ -397,22 +398,51 @@ def s_moral(cr, t):
                     blob(cr, 18, -56, 6, 8, INK, seed=961, amp=0, lw=0, stroke=None)
                     line(cr, [(-18, -34), (1, -24), (20, -34)], 4.5, INK, seed=962, amp=0.3)
         cue("pop", t, 3.9)
-    if t > 5.4:
-        cr.set_source_rgba(*CREAM[:3], seg(t, 5.4, 6.0))
+    if t > 6.0:
+        cr.set_source_rgba(*CREAM[:3], seg(t, 6.0, 6.6))
         cr.paint()
 
 
 SCENES = [
     (5.9, s_intro),
-    (7.6, s_offer),
+    (8.2, s_offer),
     (7.8, s_first_haul),
     (9.8, s_price_300),
-    (8.0, s_price_1000),
-    (10.4, s_assistant),
-    (9.6, s_crash),
-    (6.4, s_city),
-    (6.0, s_moral),
+    (8.8, s_price_1000),
+    (12.4, s_assistant),
+    (12.0, s_crash),
+    (10.6, s_city),
+    (6.6, s_moral),
 ]
+
+# Voice-over: (scene, local start time, line). Timed so no two lines overlap.
+NARRATION = [
+    (s_intro, 0.3, "A rich man arrives in a small village. He wants to buy... pumpkins!"),
+    (s_offer, 0.4, "He offers a hundred rupees for each one."),
+    (s_offer, 3.0, "The market price is only seventy. That's thirty rupees profit! The farmer happily agrees."),
+    (s_first_haul, 1.6, "He buys a hundred and twenty pumpkins, and pays twelve thousand rupees, in cash."),
+    (s_price_300, 0.3, "The next day, he raises the price to three hundred!"),
+    (s_price_300, 3.2, "The whole village rushes to sell. Five hundred more pumpkins. One and a half lakh rupees!"),
+    (s_price_1000, 0.3, "Now he offers a thousand rupees per pumpkin! But there are none left."),
+    (s_price_1000, 3.9, "He tells them: bring me more. I'm off to the city. My assistant will buy for me."),
+    (s_assistant, 2.8, "Then the assistant whispers: buy these from me at seven hundred."),
+    (s_assistant, 6.1, "And sell them to my boss for a thousand!"),
+    (s_assistant, 8.3, "The village buys back all six hundred and twenty pumpkins."),
+    (s_crash, 0.6, "Days pass... and nobody comes back."),
+    (s_crash, 6.6, "The price falls back to just fifty rupees. They lose six hundred and fifty on every single one."),
+    (s_city, 0.6, "Meanwhile, in the city: they bought for one point six two lakh, and sold for four point three four lakh."),
+    (s_city, 6.4, "A profit of two point seven two lakh!"),
+    (s_moral, 0.3, "So when prices rise for no reason... ask yourself: who is selling to you?"),
+]
+
+
+def narration_schedule():
+    """[(absolute start time, text)] for the voice-over."""
+    starts, acc = {}, 0.0
+    for d, fn in SCENES:
+        starts[fn] = acc
+        acc += d
+    return [(starts[fn] + lt, text) for fn, lt, text in NARRATION]
 
 
 def total_duration():

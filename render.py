@@ -5,6 +5,7 @@
   python render.py --still 12.5         # single frame PNG at t=12.5s (for checking layouts)
   python render.py --sheet 1            # contact sheet, one thumbnail per second
   python render.py --no-audio           # skip the synthesized soundtrack
+  python render.py --no-voice           # music + sound effects only, no narration
 """
 import argparse
 import os
@@ -35,7 +36,7 @@ def draw(surface, frame):
     surface.flush()
 
 
-def render_video(out, audio=True):
+def render_video(out, audio=True, voice=True):
     os.makedirs(os.path.dirname(out), exist_ok=True)
     n = int(round(total_duration() * FPS))
     silent = out if not audio else os.path.join(ROOT, "build", "video_silent.mp4")
@@ -56,8 +57,9 @@ def render_video(out, audio=True):
     print(file=sys.stderr)
     if audio:
         from motion.audio import build_soundtrack
+        from motion.scenes import narration_schedule
         wav = os.path.join(ROOT, "build", "soundtrack.wav")
-        build_soundtrack(engine.EVENTS, n / FPS, wav)
+        build_soundtrack(engine.EVENTS, n / FPS, wav, narration_schedule() if voice else None)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", out])
     print(f"wrote {out}", file=sys.stderr)
@@ -102,10 +104,11 @@ if __name__ == "__main__":
     ap.add_argument("--still", type=float)
     ap.add_argument("--sheet", type=float)
     ap.add_argument("--no-audio", action="store_true")
+    ap.add_argument("--no-voice", action="store_true")
     a = ap.parse_args()
     if a.still is not None:
         render_still(a.still, a.out if a.out.endswith(".png") else os.path.join(ROOT, "build", f"still_{a.still}.png"))
     elif a.sheet:
         render_sheet(a.sheet, a.out if a.out.endswith(".png") else os.path.join(ROOT, "build", "sheet.png"))
     else:
-        render_video(a.out, audio=not a.no_audio)
+        render_video(a.out, audio=not a.no_audio, voice=not a.no_voice)
