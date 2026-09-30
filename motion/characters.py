@@ -73,6 +73,8 @@ CAST = {
                      hair="messy", hair_col=hexc("#1f1a18"), beard=hexc("#1f1a18"), seed=167),
     "lustig": dict(skin=hexc("#f0c29c"), shirt=hexc("#2b2d3a"), pants=hexc("#1f2029"), bw=90, bh=112, head=39,
                    kind="suit", hair="slick", hair_col=hexc("#1f1a18"), moustache=True, seed=173),
+    "gangster": dict(skin=hexc("#e8b48a"), shirt=hexc("#4a4f63"), pants=hexc("#2b2d3a"), bw=104, bh=110, head=42,
+                     kind="suit", hair="fedora", hair_col=hexc("#2b2d3a"), seed=181),
     # classroom cast (The Backbencher)
     "teacher": dict(skin=hexc("#f0c29c"), shirt=hexc("#f4efe1"), pants=hexc("#555a66"), bw=94, bh=110, head=40,
                     kind="shirt_tie", hair="slick", hair_col=hexc("#3a2a22"), glasses=True, moustache=True, seed=121),
@@ -346,6 +348,11 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                   amp=0.8, lw=3.5)
             line(cr, [(-hr + 8, hy - 24), (hr - 4, hy - 26)], 4, hexc("#3a2a1e"), seed + 8, amp=0.3)
             shape(cr, [(-hr - 28, hy - 18), (-hr - 20, hy - 46), (-hr - 4, hy - 30)], hc, seed + 9, amp=0.5, lw=3)
+        elif hair == "fedora":   # 1920s fedora with a band
+            blob(cr, 0, hy - hr + 4, hr + 26, 9, hc, seed + 6, amp=0.6, lw=3.5)
+            shape(cr, [(-hr + 4, hy - hr + 2), (-hr + 10, hy - hr - 34), (0, hy - hr - 28), (hr - 10, hy - hr - 34),
+                       (hr - 4, hy - hr + 2)], hc, seed + 7, amp=0.6, lw=3.5)
+            line(cr, [(-hr + 6, hy - hr - 6), (hr - 6, hy - hr - 6)], 6, hexc("#8e2f2c"), seed + 8, amp=0.2)
         elif hair == "kofia":   # round embroidered cap
             shape(cr, rrect_pts(-hr + 4, hy - hr - 12, 2 * hr - 8, 30, 8, 12), hc, seed + 6, amp=0.6, lw=3.5)
             for k in range(4):
