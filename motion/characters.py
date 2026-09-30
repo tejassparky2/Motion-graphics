@@ -59,6 +59,13 @@ CAST = {
     # game-show host (The Monty Hall Problem)
     "host": dict(skin=hexc("#e8b48a"), shirt=hexc("#c9a227"), pants=hexc("#2b2d3a"), bw=96, bh=108, head=40,
                  kind="suit", hair="slick", hair_col=hexc("#3a2a22"), seed=113),
+    # The Shortest War / Hilbert's Hotel
+    "claimant": dict(skin=SKIN_TAN, shirt=hexc("#f4efe1"), pants=hexc("#f4efe1"), bw=92, bh=112, head=40, kind="robe",
+                     hair="kofia", hair_col=hexc("#2f6f5e"), moustache=True, seed=141),
+    "successor": dict(skin=SKIN_MID, shirt=hexc("#e9dcc0"), pants=hexc("#e9dcc0"), bw=92, bh=112, head=40, kind="robe",
+                      hair="kofia", hair_col=hexc("#8e2f2c"), beard=hexc("#3a3a3a"), seed=149),
+    "hilbert": dict(skin=hexc("#f0c29c"), shirt=hexc("#4a4f63"), pants=hexc("#2b2d3a"), bw=92, bh=110, head=40,
+                    kind="suit", hair="gray", hair_col=hexc("#d8d3c4"), glasses=True, beard=hexc("#b9b4a6"), seed=151),
     # classroom cast (The Backbencher)
     "teacher": dict(skin=hexc("#f0c29c"), shirt=hexc("#f4efe1"), pants=hexc("#555a66"), bw=94, bh=110, head=40,
                     kind="shirt_tie", hair="slick", hair_col=hexc("#3a2a22"), glasses=True, moustache=True, seed=121),
@@ -248,6 +255,11 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                                 (-bw / 4, 4), (-bw / 2 - 4, -6)], 14), c["shirt"], seed, amp=1.6)
             shape(cr, rrect_pts(12, top + 40, 22, 20, 4, 10), hexc("#c49a5c"), seed + 1, amp=0.8, lw=2.5)   # patch
             line(cr, [(-26, top + 30), (-14, top + 38)], 2.5, INK, seed + 2, amp=0.6)
+        elif kind == "robe":   # long robe down to the ankles, embroidered collar
+            shape(cr, poly_pts([(-bw / 2 + 4, top), (bw / 2 - 4, top), (bw / 2 + 8, legs - 6), (-bw / 2 - 8, legs - 6)], 14),
+                  c["shirt"], seed, amp=1.0)
+            line(cr, [(-14, top + 4), (0, top + 18), (14, top + 4)], 3.5, GOLD, seed + 1, amp=0.4)
+            line(cr, [(0, top + 18), (0, top + 60)], 3, GOLD, seed + 2, amp=0.4)
         elif kind == "shirt_tie":
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 24), c["shirt"], seed, amp=1.0)
             shape(cr, [(-16, top + 2), (0, top + 16), (16, top + 2)], hexc("#e3dccb"), seed + 1, amp=0.3, lw=3)
@@ -327,6 +339,10 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                   amp=0.8, lw=3.5)
             line(cr, [(-hr + 8, hy - 24), (hr - 4, hy - 26)], 4, hexc("#3a2a1e"), seed + 8, amp=0.3)
             shape(cr, [(-hr - 28, hy - 18), (-hr - 20, hy - 46), (-hr - 4, hy - 30)], hc, seed + 9, amp=0.5, lw=3)
+        elif hair == "kofia":   # round embroidered cap
+            shape(cr, rrect_pts(-hr + 4, hy - hr - 12, 2 * hr - 8, 30, 8, 12), hc, seed + 6, amp=0.6, lw=3.5)
+            for k in range(4):
+                dot(cr, -hr + 16 + k * (2 * hr - 32) / 3, hy - hr + 2, 3, GOLD)
         elif hair == "strawhat":
             blob(cr, 0, hy - 20, hr + 30, 9, hc, seed + 6, amp=0.8, lw=3.5)
             shape(cr, [(-hr + 6, hy - 22), (-hr + 12, hy - hr - 10), (hr - 12, hy - hr - 10), (hr - 6, hy - 22)], hc,
