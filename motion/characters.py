@@ -66,6 +66,13 @@ CAST = {
                       hair="kofia", hair_col=hexc("#8e2f2c"), beard=hexc("#3a3a3a"), seed=149),
     "hilbert": dict(skin=hexc("#f0c29c"), shirt=hexc("#4a4f63"), pants=hexc("#2b2d3a"), bw=92, bh=110, head=40,
                     kind="suit", hair="gray", hair_col=hexc("#d8d3c4"), glasses=True, beard=hexc("#b9b4a6"), seed=151),
+    # batch 3: a 1970s garage band, and a 1920s con man
+    "rocker_a": dict(skin=hexc("#f0c29c"), shirt=hexc("#6a45b5"), pants=DENIM, bw=86, bh=106, head=38, kind="slim",
+                     hair="long", hair_col=hexc("#8e4a1e"), seed=161),
+    "rocker_b": dict(skin=SKIN_MID, shirt=hexc("#e8a93b"), pants=hexc("#5a3e2b"), bw=90, bh=104, head=40, kind="slim",
+                     hair="messy", hair_col=hexc("#1f1a18"), beard=hexc("#1f1a18"), seed=167),
+    "lustig": dict(skin=hexc("#f0c29c"), shirt=hexc("#2b2d3a"), pants=hexc("#1f2029"), bw=90, bh=112, head=39,
+                   kind="suit", hair="slick", hair_col=hexc("#1f1a18"), moustache=True, seed=173),
     # classroom cast (The Backbencher)
     "teacher": dict(skin=hexc("#f0c29c"), shirt=hexc("#f4efe1"), pants=hexc("#555a66"), bw=94, bh=110, head=40,
                     kind="shirt_tie", hair="slick", hair_col=hexc("#3a2a22"), glasses=True, moustache=True, seed=121),
