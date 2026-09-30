@@ -1,21 +1,31 @@
 # Interestingly Strange: 2-week content calendar
 
-**Slots:** Slot A at **9:30 PM IST** (12:00 PM ET) and Slot B at **4:30 AM IST** (7:00 PM ET). After **Nov 1** (US clock
-change), use **10:30 PM** and **5:30 AM IST**. Slot B reaches US prime time, so it gets the stronger video of the day.
+**Slots (3 a day):**
 
-**Mix:** twist stories, weird animals and insects, weird history, and money tricks, alternated so the two videos of a day
-never repeat a category.
+| Slot | Until Oct 31 (IST) | From Nov 1 (IST) | US Eastern | US Pacific | Gets |
+|---|---|---|---|---|---|
+| A | **9:30 PM** | 10:30 PM | 12:00 PM (lunch) | 9:00 AM | a solid video |
+| B | **1:30 AM** | 2:30 AM | 4:00 PM (after school/work) | 1:00 PM | a solid video |
+| C | **4:30 AM** | 5:30 AM | 7:00 PM (prime time) | 4:00 PM | **the strongest video of the day** |
+
+US clocks go back on Sun 1 Nov 2026, so every slot moves 1 hour later in IST from then on. Schedule everything in
+YouTube Studio (Upload → Visibility → Schedule), set in IST.
+
+**Mix:** twist stories and riddles, weird animals and insects, weird history, and paradoxes/theories, rotated so the three
+videos of a day are always three different categories.
 
 **Fact rule:** every fact topic is checked against sources before it's animated. The "Check" column lists what to confirm.
 Anything disputed gets left out, the way the Emu War kill counts were.
 
 ## Ready to post (already rendered, each with its upload sheet in `out/`)
 
-| Day | Slot A (9:30 PM IST) | Slot B (4:30 AM IST) |
-|---|---|---|
-| 1 | The Secret of His Wife (twist story) | The Zombie Ant (weird insect) |
-| 2 | The 40-Year Lottery Ticket (twist story) | The Great Emu War (weird history) |
-| 3 | The Pumpkin Trick, needs a **US version** (dollars + new voice) | ↓ new episode from the list below |
+| Day | A: 9:30 PM IST | B: 1:30 AM IST | C: 4:30 AM IST |
+|---|---|---|---|
+| 1 | The Zombie Ant (weird insect) | The Monty Hall Problem (paradox) | The Last Row Kid vs The Teacher (riddles) |
+| 2 | The Shortest War in History (weird history) | Hilbert's Infinite Hotel (paradox) | The Secret of His Wife (twist story) |
+| 3 | The Great Emu War (weird history) | *new episode needed* | The 40-Year Lottery Ticket (twist story) |
+
+The Pumpkin Trick still needs its US version (dollars instead of rupees) before it can go out.
 
 ## Next up (to produce)
 
