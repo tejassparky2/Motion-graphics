@@ -75,6 +75,8 @@ CAST = {
                    kind="suit", hair="slick", hair_col=hexc("#1f1a18"), moustache=True, seed=173),
     "gangster": dict(skin=hexc("#e8b48a"), shirt=hexc("#4a4f63"), pants=hexc("#2b2d3a"), bw=104, bh=110, head=42,
                      kind="suit", hair="fedora", hair_col=hexc("#2b2d3a"), seed=181),
+    "kid_d": dict(skin=hexc("#f0c29c"), shirt=hexc("#6a45b5"), pants=DENIM, bw=78, bh=90, head=36, kind="slim",
+                  hair="long", hair_col=hexc("#e8c46a"), lashes=True, blush=True, seed=191),
     # classroom cast (The Backbencher)
     "teacher": dict(skin=hexc("#f0c29c"), shirt=hexc("#f4efe1"), pants=hexc("#555a66"), bw=94, bh=110, head=40,
                     kind="shirt_tie", hair="slick", hair_col=hexc("#3a2a22"), glasses=True, moustache=True, seed=121),
