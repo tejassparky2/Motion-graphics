@@ -59,6 +59,15 @@ CAST = {
     # game-show host (The Monty Hall Problem)
     "host": dict(skin=hexc("#e8b48a"), shirt=hexc("#c9a227"), pants=hexc("#2b2d3a"), bw=96, bh=108, head=40,
                  kind="suit", hair="slick", hair_col=hexc("#3a2a22"), seed=113),
+    # classroom cast (The Backbencher)
+    "teacher": dict(skin=hexc("#f0c29c"), shirt=hexc("#f4efe1"), pants=hexc("#555a66"), bw=94, bh=110, head=40,
+                    kind="shirt_tie", hair="slick", hair_col=hexc("#3a2a22"), glasses=True, moustache=True, seed=121),
+    "kid_a": dict(skin=hexc("#f0c29c"), shirt=hexc("#e0487a"), pants=DENIM, bw=78, bh=90, head=36, kind="slim",
+                  hair="long", hair_col=hexc("#3a2a22"), lashes=True, blush=True, seed=127),
+    "kid_b": dict(skin=SKIN_TAN, shirt=hexc("#79b061"), pants=DENIM, bw=80, bh=90, head=36, kind="slim",
+                  hair="messy", hair_col=hexc("#1f1a18"), blush=True, seed=131),
+    "kid_c": dict(skin=SKIN_MID, shirt=hexc("#4fb3e8"), pants=DENIM, bw=80, bh=90, head=36, kind="slim",
+                  hair="slick", hair_col=hexc("#5a2e1c"), blush=True, seed=137),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),
@@ -239,6 +248,12 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                                 (-bw / 4, 4), (-bw / 2 - 4, -6)], 14), c["shirt"], seed, amp=1.6)
             shape(cr, rrect_pts(12, top + 40, 22, 20, 4, 10), hexc("#c49a5c"), seed + 1, amp=0.8, lw=2.5)   # patch
             line(cr, [(-26, top + 30), (-14, top + 38)], 2.5, INK, seed + 2, amp=0.6)
+        elif kind == "shirt_tie":
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 24), c["shirt"], seed, amp=1.0)
+            shape(cr, [(-16, top + 2), (0, top + 16), (16, top + 2)], hexc("#e3dccb"), seed + 1, amp=0.3, lw=3)
+            sharp_shape(cr, [(-5, top + 14), (5, top + 14), (9, top + 60), (0, top + 72), (-9, top + 60)], hexc("#c0504d"),
+                        seed + 2, amp=0.4, lw=3)
+            shape(cr, rrect_pts(bw / 2 - 30, top + 22, 18, 16, 3, 8), hexc("#e3dccb"), seed + 3, amp=0.3, lw=2.5)
         elif kind == "cardigan":
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
             shape(cr, [(-14, top + 4), (14, top + 4), (0, top + 40)], hexc("#f4efe1"), seed + 1, amp=0.4, lw=3)
