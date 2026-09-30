@@ -56,6 +56,9 @@ CAST = {
                    kind="cardigan", hair="gray", hair_col=hexc("#d8d4cc"), glasses=True, seed=103),
     "owner": dict(skin=SKIN_MID, shirt=hexc("#5b7c99"), pants=hexc("#3b3f4a"), bw=100, bh=108, head=40,
                   kind="apron", hair="bald", hair_col=hexc("#d8d4cc"), glasses=True, moustache=True, seed=109),
+    # game-show host (The Monty Hall Problem)
+    "host": dict(skin=hexc("#e8b48a"), shirt=hexc("#c9a227"), pants=hexc("#2b2d3a"), bw=96, bh=108, head=40,
+                 kind="suit", hair="slick", hair_col=hexc("#3a2a22"), seed=113),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),
@@ -385,6 +388,9 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
             dollar(cr, hfx + 16, hfy - 6, 0.7)
         elif item == "ticket":
             ticket(cr, hfx + 14, hfy - 10, 0.6)
+        elif item == "mic":
+            line(cr, [(hfx + 2, hfy), (hfx + 6, hfy - 30)], 7, INK, 0, amp=0.2)
+            blob(cr, hfx + 7, hfy - 38, 11, 12, hexc("#8a8f96"), 0, amp=0.4, lw=3)
         elif item == "binoculars":
             binoculars(cr, hfx + 6, hfy - 8, 0.9)
     return

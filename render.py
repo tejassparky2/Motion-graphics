@@ -48,7 +48,7 @@ def load(name):
 def timeline():
     """Synthesize (or load cached) narration and lay out the whole video around it."""
     if not _tl:
-        _tl.append(Timeline(VIDEO["mod"].SCRIPT))
+        _tl.append(Timeline(VIDEO["mod"].SCRIPT, tail=getattr(VIDEO["mod"], "TAIL", 0.35)))
         _tl[0].report()
     return _tl[0]
 

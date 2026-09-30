@@ -155,3 +155,42 @@ def lewis_gun(cr, x, y, s=1.0, facing=1, recoil=0.0, seed=0):
         blob(cr, 10, -110, 34, 10, hexc("#6b7178"), seed=seed + 3, amp=0.4, lw=3.5)   # drum magazine
         sharp_shape(cr, [(-60, -92), (-96, -80), (-96, -64), (-60, -74)], hexc("#8e4a1e"), seed=seed + 4, amp=0.4,
                     lw=3)   # stock
+
+
+def goat(cr, x, y, t, s=1.0, facing=1, bleat=False, seed=0):
+    """Cartoon goat standing at (x, y), ~200 units tall at s=1."""
+    with at(cr, x, y, s, flip=facing < 0):
+        for lx in (-50, -24, 28, 52):   # legs
+            line(cr, [(lx, -60), (lx + 2, -6)], 9, INK, seed=seed + lx, amp=0.3)
+            line(cr, [(lx, -60), (lx + 2, -6)], 5, hexc("#f4efe1"), seed=seed + lx, amp=0.3)
+        blob(cr, 0, -90, 78, 42, hexc("#f4efe1"), seed=seed + 1, amp=1.6, lw=4)   # body
+        line(cr, [(-74, -100), (-92, -118)], 5, INK, seed=seed + 2, amp=0.3)     # tail
+        with at(cr, 70, -130, 1.0, rot=-0.25 + (0.12 * math.sin(t * 14) if bleat else 0)):
+            blob(cr, 0, 0, 30, 24, hexc("#f4efe1"), seed=seed + 3, amp=0.8, lw=4)   # head
+            line(cr, [(-10, -18), (-26, -48), (-14, -58)], 6, hexc("#8e7a5a"), seed=seed + 4, amp=0.3)   # horns
+            line(cr, [(6, -20), (2, -52), (16, -60)], 6, hexc("#8e7a5a"), seed=seed + 5, amp=0.3)
+            shape(cr, [(-26, -6), (-50, -2), (-30, 8)], hexc("#e3dccb"), seed=seed + 6, amp=0.3, lw=3)   # ear
+            dot(cr, 10, -4, 4.5, INK)
+            line(cr, [(18, 18), (14, 38), (22, 36)], 4, hexc("#d9d0bb"), seed=seed + 7, amp=0.4)   # beard
+            if bleat:
+                blob(cr, 26, 10, 7, 8 + 3 * abs(math.sin(t * 14)), hexc("#7a2b35"), seed=seed + 8, amp=0.4, lw=2.5)
+
+
+def car(cr, x, y, t, s=1.0, facing=1, color=None, seed=0):
+    """Shiny cartoon sports car, ground at (x, y), ~380 units long at s=1."""
+    body = color or hexc("#e0483f")
+    with at(cr, x, y, s, flip=facing < 0):
+        shape(cr, [(-190, -40), (-180, -90), (-80, -100), (-30, -150), (80, -150), (130, -100), (190, -90),
+                   (196, -40)], body, seed=seed, amp=0.8, lw=4.5)
+        shape(cr, [(-20, -140), (70, -140), (110, -100), (-60, -100)], hexc("#bfe6ef"), seed=seed + 1, amp=0.5, lw=3.5)
+        line(cr, [(30, -140), (30, -100)], 4, INK, seed=seed + 2, amp=0.2)
+        line(cr, [(0, -132), (-20, -108)], 5, WHITE, seed=seed + 3, amp=0.2)
+        for wx in (-110, 120):
+            blob(cr, wx, -36, 36, 36, hexc("#2b2530"), seed=seed + wx, amp=0.5, lw=4)
+            blob(cr, wx, -36, 16, 16, hexc("#c7c2cc"), seed=seed + wx + 1, amp=0.3, lw=3)
+        blob(cr, 180, -74, 10, 7, hexc("#ffe28a"), seed=seed + 4, amp=0.3, lw=2.5)
+        sparkle_n = int(t * 3) % 3
+        for k, (sx, sy) in enumerate([(-120, -170), (60, -190), (170, -140)]):
+            if k == sparkle_n:
+                line(cr, [(sx - 10, sy), (sx + 10, sy)], 4, hexc("#ffd23f"), seed=seed + 20 + k, amp=0.1)
+                line(cr, [(sx, sy - 10), (sx, sy + 10)], 4, hexc("#ffd23f"), seed=seed + 30 + k, amp=0.1)
