@@ -77,6 +77,8 @@ CAST = {
                      kind="suit", hair="fedora", hair_col=hexc("#2b2d3a"), seed=181),
     "kid_d": dict(skin=hexc("#f0c29c"), shirt=hexc("#6a45b5"), pants=DENIM, bw=78, bh=90, head=36, kind="slim",
                   hair="long", hair_col=hexc("#e8c46a"), lashes=True, blush=True, seed=191),
+    "pujol": dict(skin=hexc("#f0c29c"), shirt=hexc("#6b5a45"), pants=hexc("#3b3f4a"), bw=90, bh=108, head=39,
+                  kind="suit", hair="slick", hair_col=hexc("#2b1c14"), moustache=True, seed=197),
     # classroom cast (The Backbencher)
     "teacher": dict(skin=hexc("#f0c29c"), shirt=hexc("#f4efe1"), pants=hexc("#555a66"), bw=94, bh=110, head=40,
                     kind="shirt_tie", hair="slick", hair_col=hexc("#3a2a22"), glasses=True, moustache=True, seed=121),
