@@ -17,15 +17,27 @@ videos of a day are always three different categories.
 **Fact rule:** every fact topic is checked against sources before it's animated. The "Check" column lists what to confirm.
 Anything disputed gets left out, the way the Emu War kill counts were.
 
-## Ready to post (already rendered, each with its upload sheet in `out/`)
+## Upload schedule (IST); already live or booked: Pumpkin, Secret of His Wife, Lottery Ticket, Monty Hall, Backbencher
 
-| Day | A: 9:30 PM IST | B: 1:30 AM IST | C: 4:30 AM IST |
-|---|---|---|---|
-| 1 | The Zombie Ant (weird insect) | The Monty Hall Problem (paradox) | The Last Row Kid vs The Teacher (riddles) |
-| 2 | The Shortest War in History (weird history) | Hilbert's Infinite Hotel (paradox) | The Secret of His Wife (twist story) |
-| 3 | The Great Emu War (weird history) | *new episode needed* | The 40-Year Lottery Ticket (twist story) |
+| # | Date (IST) | Time | Video (file) | Title |
+|---|---|---|---|---|
+| 1 | Thu Oct 1 | 9:30 PM | zombie_ant | This Fungus Turns Ants Into Zombies 🧟🐜 |
+| 2 | Fri Oct 2 | 1:30 AM | infinite_hotel | This Hotel Is FULL… But Always Has Room ∞🏨 |
+| 3 | Fri Oct 2 | 4:30 AM | class_of_scammers | The Teacher Bluffed… and the Whole Class Confessed 😳 |
+| 4 | Fri Oct 2 | 9:30 PM | shortest_war | The Shortest War in History Lasted 38 Minutes ⏱️ |
+| 5 | Sat Oct 3 | 1:30 AM | excuses | 3 Students, 3 Fake Excuses… Then the Teacher Got Caught 😂 |
+| 6 | Sat Oct 3 | 4:30 AM | eiffel_con | The Man Who Sold the Eiffel Tower… TWICE 🗼😳 |
+| 7 | Sat Oct 3 | 9:30 PM | bombardier_beetle | This Beetle Has a Boiling Cannon in Its Butt 🪲🔥 |
+| 8 | Sun Oct 4 | 1:30 AM | bootstrap_paradox | This Song Has No Songwriter 🎸 (The Bootstrap Paradox) |
+| 9 | Sun Oct 4 | 4:30 AM | kevin_chat | The Mystery Kid in the Class Group Chat Was… 😳 |
+| 10 | Sun Oct 4 | 9:30 PM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
+| 11 | Mon Oct 5 | 1:30 AM | perfect_attendance | He Never Missed a Day of School… His Secret Was Genius 😂 |
+| 12 | Mon Oct 5 | 4:30 AM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
+| 13 | Mon Oct 5 | 9:30 PM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
+| 14 | Tue Oct 6 | 1:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
+| 15 | Tue Oct 6 | 4:30 AM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
 
-The Pumpkin Trick still needs its US version (dollars instead of rupees) before it can go out.
+Each day mixes three categories, and the 4:30 AM slot (7 PM US Eastern) always gets a twist story or a clever-history video.
 
 ## Next up (to produce)
 
