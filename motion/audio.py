@@ -36,23 +36,51 @@ def note(name):
     return 440.0 * 2 ** (semis / 12)
 
 
-def music(total):
-    bpm = 124  # >=120 BPM (TikTok creative guidance: faster tracks tend to lift watch-through)
-    beat = 60 / bpm
-    chords = [["C3", "E4", "G4", "C5"], ["G2", "D4", "G4", "B4"], ["A2", "E4", "A4", "C5"], ["F2", "C4", "F4", "A4"]]
+# Per-episode music: every video gets its own key, chord progression, tempo, arpeggio and string tone, picked
+# deterministically from the episode name. YouTube's spam policy calls out channels that reuse "the exact same
+# background music" across many videos, so no two episodes share a bed.
+PROGRESSIONS = [   # chords as (root semitone, quality) in a major key; "m" = minor triad
+    [(0, ""), (7, ""), (9, "m"), (5, "")],      # I  V  vi IV
+    [(9, "m"), (5, ""), (0, ""), (7, "")],      # vi IV I  V
+    [(0, ""), (9, "m"), (5, ""), (7, "")],      # I  vi IV V
+    [(2, "m"), (7, ""), (0, ""), (9, "m")],     # ii V  I  vi
+    [(0, ""), (5, ""), (9, "m"), (7, "")],      # I  IV vi V
+    [(9, "m"), (7, ""), (5, ""), (7, "")],      # vi V  IV V
+]
+PATTERNS = [[0, 2, 1, 3, 2, 1, 3, 2], [0, 1, 2, 3, 2, 1, 2, 3], [0, 3, 2, 1, 3, 2, 1, 2], [0, 2, 3, 2, 1, 2, 3, 1]]
+
+
+def _style(seed):
+    import zlib
+    r = np.random.default_rng(zlib.crc32(seed.encode()) if seed else 0)
+    if not seed:   # the original channel bed
+        return dict(key=0, prog=PROGRESSIONS[0], pattern=PATTERNS[0], bpm=124, decay=0.996)
+    return dict(key=int(r.integers(-5, 7)), prog=PROGRESSIONS[int(r.integers(len(PROGRESSIONS)))],
+                pattern=PATTERNS[int(r.integers(len(PATTERNS)))], bpm=int(r.choice([116, 120, 124, 128, 132])),
+                decay=float(r.choice([0.990, 0.993, 0.996])))
+
+
+def _voicing(root, quality, key):
+    third = 3 if quality == "m" else 4
+    base = 48 + key + root            # MIDI: C3 = 48
+    return [base - 12 if root > 4 else base, base + 12 + third, base + 19, base + 24]
+
+
+def music(total, seed=None):
+    st = _style(seed)
+    beat = 60 / st["bpm"]   # tempos stay >=116 BPM (fast beds tend to lift watch-through)
     out = np.zeros(int(total * SR) + SR)
     cache = {}
     t = 0.0
     bar = 0
     while t < total:
-        ch = chords[bar % 4]
-        pattern = [0, 2, 1, 3, 2, 1, 3, 2]  # arpeggio over 8 eighth notes
-        for k, idx in enumerate(pattern):
-            nt = ch[idx] if k else ch[0]
-            if nt not in cache:
-                cache[nt] = pluck(note(nt), 1.2)
+        ch = _voicing(*st["prog"][bar % 4], st["key"])
+        for k, idx in enumerate(st["pattern"]):   # arpeggio over 8 eighth notes
+            m = ch[idx] if k else ch[0]
+            if m not in cache:
+                cache[m] = pluck(440.0 * 2 ** ((m - 69) / 12), 1.2, st["decay"])
             s = int((t + k * beat / 2) * SR)
-            seg = cache[nt] * (0.9 if k == 0 else 0.5)
+            seg = cache[m] * (0.9 if k == 0 else 0.5)
             out[s:s + len(seg)] += seg[: max(0, len(out) - s)]
         t += 4 * beat
         bar += 1
@@ -127,11 +155,11 @@ GAINS = {"pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7
          "fall": 0.8, "laugh": 0.0}
 
 
-def build_soundtrack(events, total, path, clips=None):
+def build_soundtrack(events, total, path, clips=None, seed=None):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV."""
     import pyloudnorm
     n = int(total * SR)
-    bed = music(total)[:n]
+    bed = music(total, seed)[:n]
     fx = np.zeros(n)
     seen = set()
     for at, name, dur in events:

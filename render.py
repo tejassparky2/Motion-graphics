@@ -108,7 +108,8 @@ def render_video(out, audio=True, voice=True):
     if audio:
         from motion.audio import build_soundtrack
         wav = os.path.join(ROOT, "build", "soundtrack.wav")
-        lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None)
+        lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
+                                seed=VIDEO["name"])
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
