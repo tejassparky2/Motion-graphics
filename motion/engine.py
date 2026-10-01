@@ -323,7 +323,8 @@ class at:
         self.cr.translate(self.x, self.y)
         if self.rot:
             self.cr.rotate(self.rot)
-        self.cr.scale(-self.s if self.flip else self.s, self.s)
+        s = self.s if abs(self.s) > 1e-4 else 1e-4   # a pop at scale 0 would make the matrix singular
+        self.cr.scale(-s if self.flip else s, s)
         return self.cr
 
     def __exit__(self, *a):

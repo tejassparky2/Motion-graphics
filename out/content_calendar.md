@@ -36,8 +36,13 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 13 | Mon Oct 5 | 9:30 PM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
 | 14 | Tue Oct 6 | 1:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
 | 15 | Tue Oct 6 | 4:30 AM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
+| 16 | Tue Oct 6 | 9:30 PM | last_row_2 | The Last Row Kid Is BACK 😂 (Trick Riddles Part 2) |
+| 17 | Wed Oct 7 | 1:30 AM | exam_answers | The Last Row Kid's Exam Answers 😂 (Technically Correct) |
+| 18 | Wed Oct 7 | 4:30 AM | principal_riddles | Last Row Kid vs The PRINCIPAL 😂 (Wait for the Twist) |
 
 Each day mixes three categories, and the 4:30 AM slot (7 PM US Eastern) always gets a twist story or a clever-history video.
+
+Rows 16–18 are the "Last Row Kid" riddle series. They're placed together because nothing else is ready yet; once the next batch exists, spread them one per day and fill the other slots with animals and history. Post Part 2 first, since it calls back to the original Backbencher video.
 
 ## Next up (to produce)
 

@@ -88,6 +88,11 @@ CAST = {
                   hair="messy", hair_col=hexc("#1f1a18"), blush=True, seed=131),
     "kid_c": dict(skin=SKIN_MID, shirt=hexc("#4fb3e8"), pants=DENIM, bw=80, bh=90, head=36, kind="slim",
                   hair="slick", hair_col=hexc("#5a2e1c"), blush=True, seed=137),
+    # The Last Row Kid vs The Principal (who turns out to be his dad: same skin, same smile)
+    "principal": dict(skin=SKIN_MID, shirt=hexc("#3b4f7a"), pants=hexc("#2b2d3a"), bw=100, bh=112, head=41,
+                      kind="suit", hair="slick", hair_col=hexc("#1f1a18"), glasses=True, moustache=True, seed=211),
+    "mom": dict(skin=hexc("#f0c29c"), shirt=hexc("#2e9e8f"), pants=hexc("#f0c29c"), bw=80, bh=112, head=38,
+                kind="dress", hair="long", hair_col=hexc("#3a2a22"), lashes=True, blush=True, seed=223),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),

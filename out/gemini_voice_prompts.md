@@ -340,3 +340,82 @@ An hour later, Emma and Tyler compare their games. Move for move, they're identi
 They've been playing each other the whole time.
 And Jake? He's already walking to the teachers' lounge. Mr. Miller and the principal are next.
 ```
+
+## 16. `last_row_2`  (Oct 6, 9:30 PM IST)
+
+*The Last Row Kid Is BACK 😂 (Trick Riddles Part 2)*. 154 words, about 50 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cheeky classroom comedy; the kid smug, the teacher dry; punch 'roosters don't lay eggs' and 'fifty pages'. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+The kid in the last row is back. And this time, the teacher is ready.
+The teacher says: no riddles today.
+Sir, just one. What can you hold in your left hand, but never in your right?
+The teacher thinks. A pen? A phone?
+No sir. Your right elbow. Go on, try it.
+And the teacher actually tries. In front of everyone.
+Sir, how many months have twenty-eight days?
+Easy. One. February.
+No sir. All twelve. They all have twenty-eight days. Some just keep going.
+(PART 2)
+Last one. A rooster lays an egg on a roof. Which side does it roll down?
+The steeper side, obviously!
+Sir, roosters don't lay eggs.
+The class loses it. And the teacher's face goes red.
+Okay. My turn. What goes up, but never comes down?
+Your blood pressure, sir?
+No. Your age. And your homework: fifty pages.
+Next day, the kid hands in fifty pages. Of brand new riddles.
+```
+
+## 17. `exam_answers`  (Oct 7, 1:30 AM IST)
+
+*The Last Row Kid's Exam Answers 😂 (Technically Correct)*. 120 words, about 38 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: proud deadpan, reading each answer like it's obviously right; a tiny pause before 'A very big zero'. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+Exam day. The last-row kid finishes in two minutes, and smiles.
+Question one: where was the Declaration of Independence signed?
+His answer: at the bottom.
+Question two: you have three apples in one hand, and four in the other. What do you have?
+Very big hands.
+Question three: how can a man go eight days without sleep?
+Easy. He sleeps at night.
+(PART 2)
+Question four: how do you drop an egg on a concrete floor without cracking it?
+Any way you like. Concrete floors are really hard to crack.
+Next day, he gets his paper back. Sir, what did I get?
+A very big zero. At the bottom.
+And then he pins it on the wall. Best paper of the year.
+```
+
+## 18. `principal_riddles`  (Oct 7, 4:30 AM IST)
+
+*Last Row Kid vs The PRINCIPAL 😂 (Wait for the Twist)*. 124 words, about 41 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cocky kid against a calm principal; slow down on 'tell your mom', deadpan on 'Dinner was awkward'. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+The last-row kid finally got sent to the principal's office.
+The principal leans back: so, you like riddles? Try me.
+Sir, an electric train is going north. Which way does the smoke blow?
+South, obviously.
+Electric train, sir. No smoke.
+A farmer has seventeen sheep. All but nine run away. How many are left?
+Eight.
+Nine, sir. All but nine.
+Which is heavier? A pound of bricks, or a pound of feathers?
+(PART 2)
+The bricks.
+Same, sir. A pound is a pound.
+The principal smiles. My turn.
+The more you take, the more you leave behind. What am I?
+Detentions?
+Footsteps. So take yours. To detention.
+Oh, and tell your mom I'll be late for dinner.
+Yep. The principal is his dad. Dinner was awkward.
+```
