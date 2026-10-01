@@ -130,7 +130,74 @@ def _pronounce(text):
 
 
 def _key(text, pace=1.0):
+    if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
+        return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
+
+
+# ---- narration recorded elsewhere (e.g. the channel owner's own voice clone), uploaded as one file per video
+_EXTERNAL = {}     # spoken line text -> wav path cut from the uploaded narration
+EXTERNAL_TAG = ""
+
+
+def use_external(media, lines):
+    """Use an uploaded narration (audio or video file) instead of TTS.
+
+    The file is transcribed with word timestamps, aligned to the script, and cut into one clip per line, so the
+    rest of the pipeline (trimming, pause squeezing, word timings, captions) works exactly as with TTS.
+    Raises if a line can't be found in the recording (e.g. the reader skipped it)."""
+    global EXTERNAL_TAG, _whisper
+    import imageio_ffmpeg
+    tag = hashlib.sha1(open(media, "rb").read()).hexdigest()[:12]
+    d = os.path.join(ROOT, "build", "ext", tag)
+    os.makedirs(d, exist_ok=True)
+    full = os.path.join(d, "full.wav")
+    if not os.path.exists(full):
+        subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", media, "-vn", "-ac", "1",
+                        "-ar", str(SR), "-c:a", "pcm_s16le", full], check=True)
+    a = _read_wav(full)
+    words_cache = os.path.join(d, "words.json")
+    if os.path.exists(words_cache):
+        heard = json.load(open(words_cache))
+    else:
+        if _whisper is None:
+            from faster_whisper import WhisperModel
+            _whisper = WhisperModel(os.environ.get("ALIGN_MODEL", "small.en"), device="cpu", compute_type="int8")
+        a16 = np.interp(np.arange(int(len(a) * 16000 / SR)) * SR / 16000, np.arange(len(a)), a)
+        segs, _ = _whisper.transcribe(a16.astype(np.float32), language="en", word_timestamps=True)
+        heard = [(w.word, w.start, w.end) for sg in segs for w in sg.words]
+        json.dump(heard, open(words_cache, "w"))
+    script, owner = [], []
+    for i, line in enumerate(lines):
+        for w in line.split():
+            script.append(_norm(w))
+            owner.append(i)
+    got = [_norm(w) for w, _, _ in heard]
+    first, last = [None] * len(lines), [None] * len(lines)
+    for blk in difflib.SequenceMatcher(None, script, got, autojunk=False).get_matching_blocks():
+        for k in range(blk.size):
+            i = owner[blk.a + k]
+            t0, t1 = heard[blk.b + k][1], heard[blk.b + k][2]
+            first[i] = t0 if first[i] is None else min(first[i], t0)
+            last[i] = t1 if last[i] is None else max(last[i], t1)
+    dur = len(a) / SR
+    for i in range(len(lines)):   # a line heard differently (e.g. "1925" for "nineteen twenty-five") sits between its neighbours
+        if first[i] is None:
+            first[i] = last[i - 1] if i and last[i - 1] is not None else 0.0
+            nxt = next((first[j] for j in range(i + 1, len(lines)) if first[j] is not None), dur)
+            last[i] = max(first[i] + 0.3, nxt - 0.05)
+            print(f"narration: no words matched for line {i} ({lines[i]!r}); using the gap", file=sys.stderr)
+    prev_end = 0.0
+    for i, line in enumerate(lines):
+        start = max(prev_end, first[i] - 0.08)
+        nxt = first[i + 1] if i + 1 < len(lines) else dur
+        end = min(nxt - 0.02, last[i] + 0.25)
+        prev_end = end
+        _EXTERNAL[line] = os.path.join(d, f"line{i:02d}.wav")
+        import soundfile
+        soundfile.write(_EXTERNAL[line], a[int(start * SR): int(end * SR)], SR, subtype="PCM_16")
+    EXTERNAL_TAG = tag
+    return tag
 
 
 _kokoro = {}
@@ -150,6 +217,8 @@ def synth(text, pace=1.0):
     """Speech for one line as float samples at 44.1 kHz, silence-trimmed (cached).
 
     `pace` scales the speed for this line only (e.g. 0.9 to land a punchline a touch slower)."""
+    if text in _EXTERNAL:
+        return _squeeze(_trim(_read_wav(_EXTERNAL[text])))
     out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
     if not os.path.exists(out):
         os.makedirs(os.path.dirname(out), exist_ok=True)

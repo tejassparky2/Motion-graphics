@@ -42,7 +42,44 @@ def load(name):
     mod = importlib.import_module(f"videos.{name}")
     VIDEO.update(name=name, mod=mod)
     narrator.configure(**getattr(mod, "NARRATOR", {}))
+    media = external_narration(name)
+    if media:
+        from motion.timeline import Beat, parse
+        lines = []
+        for spec in mod.SCRIPT:
+            b = Beat(**spec)
+            b.units = parse(b.text)
+            lines.append(b.spoken_text)
+        narrator.use_external(media, lines)
+        VIDEO["narration"] = media
+        print(f"narration: {media}", file=sys.stderr)
     return mod
+
+
+NARRATION_EXT = ("wav", "m4a", "mp3", "aac", "mp4", "mov", "webm")
+
+
+def external_narration(name):
+    """Narration recorded elsewhere (the owner's own voice), uploaded as assets/narration/<name>.<ext>,
+    or in parts as <name>_1.<ext>, <name>_2.<ext>, ... which are joined in order. None if there isn't any."""
+    d = os.path.join(ROOT, "assets", "narration")
+    def find(stem):
+        return next((os.path.join(d, f"{stem}.{e}") for e in NARRATION_EXT if os.path.exists(os.path.join(d, f"{stem}.{e}"))), None)
+    whole = find(name)
+    if whole:
+        return whole
+    parts = []
+    while find(f"{name}_{len(parts) + 1}"):
+        parts.append(find(f"{name}_{len(parts) + 1}"))
+    if not parts:
+        return None
+    joined = os.path.join(ROOT, "build", f"{name}_narration_joined.wav")
+    os.makedirs(os.path.dirname(joined), exist_ok=True)
+    ins = [x for p in parts for x in ("-i", p)]
+    chain = "".join(f"[{i}:a]" for i in range(len(parts))) + f"concat=n={len(parts)}:v=0:a=1[a]"
+    subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", *ins, "-filter_complex", chain, "-map", "[a]",
+                           "-ac", "1", "-ar", "44100", joined])
+    return joined
 
 
 def timeline():
@@ -69,8 +106,9 @@ def write_metadata(path):
         if m.get("pinned_comment"):
             f.write(f"**Pinned comment**\n```\n{m['pinned_comment']}\n```\n\n")
         words = sum(len(u.spoken) for b in tl.beats for u in b.units)
-        f.write(f"**Video facts:** {tl.total:.1f} s, {words} words of narration, voice `{narrator.VOICE}` at speed "
-                f"{narrator.SPEED}. Made for kids: **No**.\n")
+        voiced = (f"narrated by the channel owner (`{os.path.basename(VIDEO['narration'])}`)" if VIDEO.get("narration")
+                  else f"voice `{narrator.VOICE}` at speed {narrator.SPEED}")
+        f.write(f"**Video facts:** {tl.total:.1f} s, {words} words of narration, {voiced}. Made for kids: **No**.\n")
     print(f"wrote {path}", file=sys.stderr)
 
 
