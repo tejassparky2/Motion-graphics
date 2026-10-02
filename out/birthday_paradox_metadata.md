@@ -40,4 +40,4 @@ birthday paradox, birthday problem, probability, math paradox, paradox, math tri
 Comment your birthday (month + day) and reply if you find your birthday twin 🎂👇
 ```
 
-**Video facts:** 39.7 s, 129 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
+**Video facts:** 40.2 s, 129 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
