@@ -127,7 +127,7 @@ def draw(surface, frame):
 def render_video(out, audio=True, voice=True):
     os.makedirs(os.path.dirname(out), exist_ok=True)
     n = int(round(total_duration() * FPS))
-    silent = out if not audio else os.path.join(ROOT, "build", "video_silent.mp4")
+    silent = out if not audio else os.path.join(ROOT, "build", f"{VIDEO['name']}_silent.mp4")
     os.makedirs(os.path.dirname(silent), exist_ok=True)
     cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
@@ -145,7 +145,7 @@ def render_video(out, audio=True, voice=True):
     print(file=sys.stderr)
     if audio:
         from motion.audio import build_soundtrack
-        wav = os.path.join(ROOT, "build", "soundtrack.wav")
+        wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
                                 seed=VIDEO["name"])
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
@@ -154,7 +154,7 @@ def render_video(out, audio=True, voice=True):
     print(f"wrote {out}", file=sys.stderr)
     # smaller copy that's easy to send to a phone
     preview = out[:-4] + "_preview.mp4"
-    tmp = os.path.join(ROOT, "build", "preview_tmp.mp4")
+    tmp = os.path.join(ROOT, "build", f"{VIDEO['name']}_preview_tmp.mp4")
     subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", out, "-c:v", "libx264", "-crf", "27",
                            "-preset", "slow", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "128k", *CLEAN, tmp])
     # a stream-copy pass drops the encoder tag that re-encoding writes back

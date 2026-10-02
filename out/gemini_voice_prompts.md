@@ -157,24 +157,32 @@ Where he later tricked Al Capone into handing him cash.
 Would you have bought it?
 ```
 
-## 7. `bombardier_beetle`  (Oct 3, 9:30 PM IST)
+## 7. `last_row_2`  (Oct 3, 9:30 PM IST)
 
-*This Beetle Has a Boiling Cannon in Its Butt 🪲🔥*. 145 words, about 45 s.
+*The Last Bencher Is BACK 😂 (Trick Riddles Part 2)*. 151 words, about 49 s.
 
 ```
-Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: excited nature-fact energy, amazed on the boiling spray and the escape. Ignore the line that says (PART 2): don't read it.
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cheeky classroom comedy; the kid smug, the teacher dry; punch 'roosters don't lay eggs' and 'fifty pages'. Ignore the line that says (PART 2): don't read it.
 
 SCRIPT:
-This beetle has a weapon no predator expects. A boiling hot cannon, in its butt.
-Meet the bombardier beetle. When an ant attacks, it doesn't run. It spins around, and fires.
-Inside its body, it keeps its chemicals in one chamber. When it's attacked, they rush into a second chamber full of enzymes, and explode.
-The spray hits nearly one hundred degrees Celsius. Boiling hot.
-And it fires in pulses, about five hundred a second. Like a tiny machine gun.
+The last bencher is back. And this time, the teacher is ready.
+The teacher says: no riddles today.
+Sir, just one. What can you hold in your left hand, but never in your right?
+The teacher thinks. A pen? A phone?
+No sir. Your right elbow. Go on, try it.
+And the teacher actually tries. In front of everyone.
+Sir, how many months have twenty-eight days?
+Easy. One. February.
+No sir. All twelve. They all have twenty-eight days. Some just keep going.
 (PART 2)
-But here's the crazy part. Scientists in Japan fed these beetles to toads.
-The toads swallowed them whole, and the beetles fired, from inside the toad.
-Forty-three percent of the toads threw them back up, some after almost two hours. And every beetle that came out, was alive.
-So next time you have a bad day, remember: this beetle got eaten, and walked it off.
+Last one. A rooster lays an egg on a roof. Which side does it roll down?
+The steeper side, obviously!
+Sir, roosters don't lay eggs.
+The class loses it. And the teacher's face goes red.
+Okay. My turn. What goes up, but never comes down?
+Your blood pressure, sir?
+No. Your age. And your homework: fifty pages.
+Next day, the kid hands in fifty pages. Of brand new riddles.
 ```
 
 ## 8. `bootstrap_paradox`  (Oct 4, 1:30 AM IST)
@@ -218,7 +226,91 @@ Kevin has left the chat.
 Also, the mustache jokes were funny.
 ```
 
-## 10. `emu_war`  (Oct 4, 9:30 PM IST)
+## 10. `birthday_paradox`  (Oct 4, 9:30 PM IST)
+
+*Only 23 People… and 2 Share a Birthday? 🎂🤯 (Birthday Paradox)*. 129 words, about 40 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: amazed math-magician energy; punch every number, and challenge the viewer at the end. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+Put just twenty-three people in a room, and there's a better than fifty-fifty chance two of them share a birthday.
+That sounds wrong. There are three hundred sixty-five days in a year. Surely you'd need way more people?
+Here's the trick. You're not looking for someone with your birthday. Any two people can match.
+And twenty-three people make two hundred fifty-three different pairs. That's two hundred fifty-three chances for a match.
+(PART 2)
+Every pair adds a tiny chance, and they pile up fast.
+At fifty people, it's ninety-seven percent.
+At seventy, it's ninety-nine point nine percent.
+So next time you're in a class of thirty, bet on it. You'll win about seven times out of ten.
+Want proof? Drop your birthday in the comments. I bet you'll find a match.
+```
+
+## 11. `bombardier_beetle`  (Oct 5, 1:30 AM IST)
+
+*This Beetle Has a Boiling Cannon in Its Butt 🪲🔥*. 145 words, about 45 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: excited nature-fact energy, amazed on the boiling spray and the escape. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+This beetle has a weapon no predator expects. A boiling hot cannon, in its butt.
+Meet the bombardier beetle. When an ant attacks, it doesn't run. It spins around, and fires.
+Inside its body, it keeps its chemicals in one chamber. When it's attacked, they rush into a second chamber full of enzymes, and explode.
+The spray hits nearly one hundred degrees Celsius. Boiling hot.
+And it fires in pulses, about five hundred a second. Like a tiny machine gun.
+(PART 2)
+But here's the crazy part. Scientists in Japan fed these beetles to toads.
+The toads swallowed them whole, and the beetles fired, from inside the toad.
+Forty-three percent of the toads threw them back up, some after almost two hours. And every beetle that came out, was alive.
+So next time you have a bad day, remember: this beetle got eaten, and walked it off.
+```
+
+## 12. `exam_answers`  (Oct 5, 4:30 AM IST)
+
+*The Last Bencher's Exam Answers 😂 (Technically Correct)*. 120 words, about 38 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: proud deadpan, reading each answer like it's obviously right; a tiny pause before 'A very big zero'. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+Exam day. The last bencher finishes in two minutes, and smiles.
+Question one: where was the Declaration of Independence signed?
+His answer: at the bottom.
+Question two: you have three apples in one hand, and four in the other. What do you have?
+Very big hands.
+Question three: how can a man go eight days without sleep?
+Easy. He sleeps at night.
+(PART 2)
+Question four: how do you drop an egg on a concrete floor without cracking it?
+Any way you like. Concrete floors are really hard to crack.
+Next day, he gets his paper back. Sir, what did I get?
+A very big zero. At the bottom.
+And then he pins it on the wall. Best paper of the year.
+```
+
+## 13. `ship_of_theseus`  (Oct 5, 9:30 PM IST)
+
+*If You Replace Every Part… Is It Still the Same Ship? 🚢🤯*. 139 words, about 44 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: curious and thoughtful, building to a quiet, personal last question. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+If you replace every part of a ship, one plank at a time, is it still the same ship?
+People have argued about this for almost two thousand years. It's called the Ship of Theseus.
+The hero's old ship is kept in the harbor. Every time a plank rots, they swap in a new one.
+Years go by. Then the last old plank is gone. Not one original piece is left.
+(PART 2)
+So, is it still his ship?
+Now the twist. Someone kept every old plank, and built a second ship out of them.
+Two ships. One has the history. The other has every original piece.
+Which one is the real Ship of Theseus?
+Before you answer: your body does the same thing. Your skin, your blood, even your bones keep rebuilding themselves.
+So... are you still the same you?
+```
+
+## 14. `emu_war`  (Oct 6, 1:30 AM IST)
 
 *Australia Declared War on Emus… and Lost 🐦*. 118 words, about 37 s.
 
@@ -239,7 +331,35 @@ Farmers asked for the army three more times. The answer was always no.
 So yes. The emus won.
 ```
 
-## 11. `perfect_attendance`  (Oct 5, 1:30 AM IST)
+## 15. `principal_riddles`  (Oct 6, 4:30 AM IST)
+
+*Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist)*. 126 words, about 41 s.
+
+```
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cocky kid against a calm principal; slow down on 'tell your mom', deadpan on 'Dinner was awkward'. Ignore the line that says (PART 2): don't read it.
+
+SCRIPT:
+The last bencher in class finally got sent to the principal's office.
+The principal leans back: so, you like riddles? Try me.
+Sir, an electric train is going north. Which way does the smoke blow?
+South, obviously.
+Electric train, sir. No smoke.
+A farmer has seventeen sheep. All but nine run away. How many are left?
+Eight.
+Nine, sir. All but nine.
+Which is heavier? A pound of bricks, or a pound of feathers?
+(PART 2)
+The bricks.
+Same, sir. A pound is a pound.
+The principal smiles. My turn.
+The more you take, the more you leave behind. What am I?
+Detentions?
+Footsteps. So take yours. To detention.
+Oh, and tell your mom I'll be late for dinner.
+Yep. The principal is his dad. Dinner was awkward.
+```
+
+## 16. `perfect_attendance`  (Oct 6, 9:30 PM IST)
 
 *He Never Missed a Day of School… His Secret Was Genius 😂*. 110 words, about 35 s.
 
@@ -260,7 +380,7 @@ And through the side door walks, another Mr. Miller.
 Why do you think you only learned half the syllabus?
 ```
 
-## 12. `double_agent`  (Oct 5, 4:30 AM IST)
+## 17. `double_agent`  (Oct 7, 1:30 AM IST)
 
 *He Lied to the Nazis So Well, They Gave Him a Medal 🎖️*. 164 words, about 51 s.
 
@@ -280,47 +400,31 @@ Here's the twist. Germany gave him the Iron Cross. And Britain gave him a royal 
 Then he faked his own death, vanished to Venezuela, and was found thirty-five years later.
 ```
 
-## 13. `unlucky_man`  (Oct 5, 9:30 PM IST)
+## 18. `last_bencher_3`  (Oct 7, 4:30 AM IST)
 
-*The Unluckiest (or Luckiest) Man Alive 😳🍀*. 146 words, about 46 s.
+*The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3)*. 125 words, about 40 s.
 
 ```
-Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: incredulous storyteller ('you won't believe this'), then slow and dry on 'never officially confirmed', and ask the last question straight to the viewer. Ignore the line that says (PART 2): don't read it.
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cocky kid, calm unbeatable substitute; slow and warm on 'I sat in that exact seat'. Ignore the line that says (PART 2): don't read it.
 
 SCRIPT:
-Meet Frane Selak. He might be the unluckiest man who ever lived. Or the luckiest.
-Nineteen sixty-two. His train flies off a bridge, into an icy river. He swims to shore.
-Nineteen sixty-three. On his first ever flight, a door blows open, and he gets sucked out. He lands, in a haystack.
-Nineteen sixty-six. His bus skids into a river. He swims out. Again.
-So he decides: no more public transport. He buys a car. It catches fire. Twice.
+The teacher is sick today. A substitute walks in. And the last bencher smiles.
+I'm Mister Carter. Any questions?
+Sir, before Mount Everest was discovered, what was the tallest mountain in the world?
+Mount Everest. It was still the tallest. Nobody had found it yet.
+The last bencher blinks. Okay. Lucky guess.
+How many times can you subtract ten from a hundred?
+Once. After that, you're subtracting from ninety.
 (PART 2)
-In ninety-five, a bus hits him. Just a few bruises.
-In ninety-six, his car goes off a mountain road. He's thrown out, and grabs a tree, as his car drops a hundred and fifty meters.
-Then, he buys a lottery ticket, and wins nearly a million dollars.
-Here's the strange part. None of his accidents were ever officially confirmed. So: unluckiest man alive, or the best storyteller?
+The class goes quiet. Nobody has ever beaten him.
+Emma's mom has four kids. April, May, June... What's the fourth one called?
+Emma. Sit down.
+Sir... how do you know all of these?
+Because twenty years ago, I sat in that exact seat.
+Carved into that desk: his initials. The last bencher just met the original.
 ```
 
-## 14. `cheapest_parking`  (Oct 6, 1:30 AM IST)
-
-*The Cheapest Parking Spot in New York 😂🚗*. 118 words, about 37 s.
-
-```
-Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: clever-money storyteller, impressed, slow and smug on the twenty-three dollars. Ignore the line that says (PART 2): don't read it.
-
-SCRIPT:
-A man in a fancy suit walks into a New York bank, and asks to borrow five thousand dollars.
-The banker says: sure, but we need something as collateral.
-So the man hands over the keys to his three hundred thousand dollar sports car.
-The bankers can't stop laughing. A supercar, for five grand? They park it in the bank's secure garage.
-(PART 2)
-Two weeks later, he comes back, and pays the five thousand, plus twenty-three dollars in interest.
-Then the banker looks him up, and he's a multi-millionaire.
-Sir, why would you need to borrow five thousand dollars?
-The man smiles: where else in New York can I park for two weeks, for twenty-three dollars?
-Genius, or cheapskate?
-```
-
-## 15. `chess_trick`  (Oct 6, 4:30 AM IST)
+## 19. `chess_trick`  (Oct 7, 9:30 PM IST)
 
 *He Can't Play Chess… But He Can't Lose 🤯♟️*. 166 words, about 52 s.
 
@@ -341,81 +445,42 @@ They've been playing each other the whole time.
 And Jake? He's already walking to the teachers' lounge. Mr. Miller and the principal are next.
 ```
 
-## 16. `last_row_2`  (Oct 6, 9:30 PM IST)
+## 20. `unlucky_man`  (Oct 8, 1:30 AM IST)
 
-*The Last Row Kid Is BACK 😂 (Trick Riddles Part 2)*. 154 words, about 50 s.
+*The Unluckiest (or Luckiest) Man Alive 😳🍀*. 146 words, about 46 s.
 
 ```
-Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cheeky classroom comedy; the kid smug, the teacher dry; punch 'roosters don't lay eggs' and 'fifty pages'. Ignore the line that says (PART 2): don't read it.
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: incredulous storyteller ('you won't believe this'), then slow and dry on 'never officially confirmed', and ask the last question straight to the viewer. Ignore the line that says (PART 2): don't read it.
 
 SCRIPT:
-The kid in the last row is back. And this time, the teacher is ready.
-The teacher says: no riddles today.
-Sir, just one. What can you hold in your left hand, but never in your right?
-The teacher thinks. A pen? A phone?
-No sir. Your right elbow. Go on, try it.
-And the teacher actually tries. In front of everyone.
-Sir, how many months have twenty-eight days?
-Easy. One. February.
-No sir. All twelve. They all have twenty-eight days. Some just keep going.
+Meet Frane Selak. He might be the unluckiest man who ever lived. Or the luckiest.
+Nineteen sixty-two. His train flies off a bridge, into an icy river. He swims to shore.
+Nineteen sixty-three. On his first ever flight, a door blows open, and he gets sucked out. He lands, in a haystack.
+Nineteen sixty-six. His bus skids into a river. He swims out. Again.
+So he decides: no more public transport. He buys a car. It catches fire. Twice.
 (PART 2)
-Last one. A rooster lays an egg on a roof. Which side does it roll down?
-The steeper side, obviously!
-Sir, roosters don't lay eggs.
-The class loses it. And the teacher's face goes red.
-Okay. My turn. What goes up, but never comes down?
-Your blood pressure, sir?
-No. Your age. And your homework: fifty pages.
-Next day, the kid hands in fifty pages. Of brand new riddles.
+In ninety-five, a bus hits him. Just a few bruises.
+In ninety-six, his car goes off a mountain road. He's thrown out, and grabs a tree, as his car drops a hundred and fifty meters.
+Then, he buys a lottery ticket, and wins nearly a million dollars.
+Here's the strange part. None of his accidents were ever officially confirmed. So: unluckiest man alive, or the best storyteller?
 ```
 
-## 17. `exam_answers`  (Oct 7, 1:30 AM IST)
+## 21. `cheapest_parking`  (Oct 8, 4:30 AM IST)
 
-*The Last Row Kid's Exam Answers 😂 (Technically Correct)*. 120 words, about 38 s.
+*The Cheapest Parking Spot in New York 😂🚗*. 118 words, about 37 s.
 
 ```
-Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: proud deadpan, reading each answer like it's obviously right; a tiny pause before 'A very big zero'. Ignore the line that says (PART 2): don't read it.
+Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: clever-money storyteller, impressed, slow and smug on the twenty-three dollars. Ignore the line that says (PART 2): don't read it.
 
 SCRIPT:
-Exam day. The last-row kid finishes in two minutes, and smiles.
-Question one: where was the Declaration of Independence signed?
-His answer: at the bottom.
-Question two: you have three apples in one hand, and four in the other. What do you have?
-Very big hands.
-Question three: how can a man go eight days without sleep?
-Easy. He sleeps at night.
+A man in a fancy suit walks into a New York bank, and asks to borrow five thousand dollars.
+The banker says: sure, but we need something as collateral.
+So the man hands over the keys to his three hundred thousand dollar sports car.
+The bankers can't stop laughing. A supercar, for five grand? They park it in the bank's secure garage.
 (PART 2)
-Question four: how do you drop an egg on a concrete floor without cracking it?
-Any way you like. Concrete floors are really hard to crack.
-Next day, he gets his paper back. Sir, what did I get?
-A very big zero. At the bottom.
-And then he pins it on the wall. Best paper of the year.
-```
-
-## 18. `principal_riddles`  (Oct 7, 4:30 AM IST)
-
-*Last Row Kid vs The PRINCIPAL 😂 (Wait for the Twist)*. 124 words, about 41 s.
-
-```
-Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cocky kid against a calm principal; slow down on 'tell your mom', deadpan on 'Dinner was awkward'. Ignore the line that says (PART 2): don't read it.
-
-SCRIPT:
-The last-row kid finally got sent to the principal's office.
-The principal leans back: so, you like riddles? Try me.
-Sir, an electric train is going north. Which way does the smoke blow?
-South, obviously.
-Electric train, sir. No smoke.
-A farmer has seventeen sheep. All but nine run away. How many are left?
-Eight.
-Nine, sir. All but nine.
-Which is heavier? A pound of bricks, or a pound of feathers?
-(PART 2)
-The bricks.
-Same, sir. A pound is a pound.
-The principal smiles. My turn.
-The more you take, the more you leave behind. What am I?
-Detentions?
-Footsteps. So take yours. To detention.
-Oh, and tell your mom I'll be late for dinner.
-Yep. The principal is his dad. Dinner was awkward.
+Two weeks later, he comes back, and pays the five thousand, plus twenty-three dollars in interest.
+Then the banker looks him up, and he's a multi-millionaire.
+Sir, why would you need to borrow five thousand dollars?
+The man smiles: where else in New York can I park for two weeks, for twenty-three dollars?
+Genius, or cheapskate?
 ```

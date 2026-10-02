@@ -93,6 +93,9 @@ CAST = {
                       kind="suit", hair="slick", hair_col=hexc("#1f1a18"), glasses=True, moustache=True, seed=211),
     "mom": dict(skin=hexc("#f0c29c"), shirt=hexc("#2e9e8f"), pants=hexc("#f0c29c"), bw=80, bh=112, head=38,
                 kind="dress", hair="long", hair_col=hexc("#3a2a22"), lashes=True, blush=True, seed=223),
+    # The Last Bencher Part 3: the substitute teacher (a last bencher, 20 years ago)
+    "sub": dict(skin=hexc("#e8b48a"), shirt=hexc("#c9e3f5"), pants=hexc("#3b3f4a"), bw=96, bh=110, head=40,
+                kind="shirt_tie", hair="messy", hair_col=hexc("#3a2a22"), beard=hexc("#3a2a22"), seed=229),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),

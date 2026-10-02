@@ -2,7 +2,7 @@
 
 **Title** (55 characters)
 ```
-The Last Row Kid's Exam Answers 😂 (Technically Correct)
+The Last Bencher's Exam Answers 😂 (Technically Correct)
 ```
 
 **Alternative titles to test**
@@ -11,7 +11,7 @@ The Last Row Kid's Exam Answers 😂 (Technically Correct)
 
 **Description**
 ```
-The last-row kid finished the exam in 2 minutes… and every answer is technically correct. 😂
+The last bencher finished the exam in 2 minutes… and every answer is technically correct. 😂
 
 Q1: Where was the Declaration of Independence signed?
 Q2: 3 apples in one hand, 4 in the other. What do you have?
@@ -24,12 +24,12 @@ Then the teacher grades it… the same way. 👀
 
 🔔 Interestingly Strange: weird animals, bizarre history, mind-bending paradoxes and strange stories, hand-drawn in under a minute.
 
-#Riddles #Backbencher #Funny
+#Riddles #LastBencher #Funny
 ```
 
 **Tags** (paste into YouTube Studio > Tags)
 ```
-funny exam answers, trick questions, backbenchers, teacher vs student, technically correct, school jokes, riddles, brain teaser, classroom comedy, interestingly strange
+funny exam answers, trick questions, last bencher, backbenchers, teacher vs student, technically correct, school jokes, riddles, brain teaser, classroom comedy, interestingly strange
 ```
 
 **Pinned comment**

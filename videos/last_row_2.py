@@ -1,4 +1,4 @@
-"""Episode 18: "The Last Row Kid Is Back" — a sequel to The Backbencher, with new trick riddles.
+"""Episode 18: "The Last Bencher Is Back" — a sequel to The Backbencher, with new trick riddles.
 
 Riddles: what you can hold in your left hand but never in your right (your right elbow), how many months have 28 days
 (all twelve), which way a rooster's egg rolls off a roof (roosters don't lay eggs). The teacher hits back with "what
@@ -17,7 +17,7 @@ NARRATOR = dict(speed=1.0)
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="r1", scene="class", text="The kid in the last row is back. And this time, the teacher is ready."),
+    dict(id="r1", scene="class", text="The last bencher is back. And this time, the teacher is ready."),
     dict(id="r2", scene="class", text="The teacher says: no riddles today.", speaker="teacher", speaker_from="no"),
     dict(id="r3", scene="elbow",
          text="Sir, just one. What can you hold in your left hand, but never in your right?", speaker="chotu"),
@@ -42,9 +42,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="The Last Row Kid Is BACK 😂 (Trick Riddles Part 2)",
-    alt_titles=["The Teacher Said NO Riddles… 😂", "3 Trick Riddles That Broke the Teacher Again 🤣"],
-    description="""The last-row kid is back… and the teacher said NO riddles today. 😂
+    title="The Last Bencher Is BACK 😂 (Trick Riddles Part 2)",
+    alt_titles=["The Last Bencher Strikes Again 😂", "The Teacher Said NO Riddles… 😂", "3 Trick Riddles That Broke the Teacher Again 🤣"],
+    description="""The last bencher is back… and the teacher said NO riddles today. 😂
 
 Riddle 1: What can you hold in your left hand, but never in your right?
 Riddle 2: How many months have 28 days?
@@ -55,8 +55,8 @@ Then the teacher strikes back. 👀
 💬 How many did you get? Try the elbow one right now, we know you will 😂
 
 🔔 Interestingly Strange: weird animals, bizarre history, mind-bending paradoxes and strange stories, hand-drawn in under a minute.""",
-    hashtags=["#Riddles", "#Backbencher", "#Funny"],
-    tags=["riddles", "trick questions", "backbenchers", "teacher vs student", "funny riddles", "school jokes",
+    hashtags=["#Riddles", "#LastBencher", "#Funny"],
+    tags=["riddles", "trick questions", "last bencher", "backbenchers", "teacher vs student", "funny riddles", "school jokes",
           "brain teaser", "riddle challenge", "classroom comedy", "trick riddles part 2", "interestingly strange"],
     pinned_comment="Be honest: did you just try to grab your right elbow? 😂 Drop a riddle for Part 3 👇",
 )
@@ -75,7 +75,7 @@ def laughing(t, tl):
 # ------------------------------------------------------------------ classroom
 def scene_class(cr, t, tl):
     A = tl.at
-    keys = [(0, (1.6, 760, 750)), (A("r1", "last"), (2.0, 815, 740)), (A("r1", "back"), KID),
+    keys = [(0, (1.6, 760, 750)), (A("r1", "bencher"), (2.0, 815, 740)), (A("r1", "back"), KID),
             (A("r1", "time"), WIDE), (A("r1", "teacher"), (1.7, 170, 760)), (A("r1", "ready"), (2.2, 130, 730)),
             (A("r2") - 0.1, TEACH), (A("r2", "riddles"), (2.2, 140, 735)), (A("r2", "today"), (1.6, 300, 760)),
             (A("r4") - 0.1, TEACH), (A("r4", "thinks"), (2.2, 130, 740)), (A("r4", "pen"), (1.9, 160, 750)),
@@ -138,7 +138,7 @@ def scene_class(cr, t, tl):
             cr.set_source_rgba(*INK)
             cr.set_line_width(4)
             cr.stroke()
-    # ---- kids (the last-row kid stands for his riddles)
+    # ---- kids (the last bencher stands for his riddles)
     for i, (who, x) in enumerate(KIDS):
         k = dict(facing=-1, arms=("hip", "hip"), eyes="dot", mouth="smile")
         y = 900
@@ -166,7 +166,7 @@ def scene_class(cr, t, tl):
         person(cr, who, x, y, t, **k)
         desk(cr, x, 4200 + i * 10)
     # ---- screen text
-    hl(cr, t, [("THE LAST ROW", RED), (" IS BACK", INK)], 215, 60, 0.0, end=A("r1", "teacher"), bold=True,
+    hl(cr, t, [("THE LAST BENCHER", RED), (" IS BACK", INK)], 215, 52, 0.0, end=A("r1", "teacher"), bold=True,
        sound=False)
     hl(cr, t, [("and the teacher is ", INK), ("READY", BLUE)], 215, 60, A("r1", "ready"), end=A("r2", "riddles") - 0.25,
        bold=True)

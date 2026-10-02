@@ -1,4 +1,4 @@
-"""Episode 20: "The Last Row Kid's Exam" — four technically-correct exam answers, and the teacher answers him back
+"""Episode 20: "The Last Bencher's Exam" — four technically-correct exam answers, and the teacher answers him back
 the same way.
 
 Answers: the Declaration of Independence was signed "at the bottom"; three apples in one hand and four in the other
@@ -19,7 +19,7 @@ NARRATOR = dict(speed=1.0)
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="e1", scene="exam", text="Exam day. The last-row kid finishes in [two minutes,|2 minutes,] and smiles."),
+    dict(id="e1", scene="exam", text="Exam day. The last bencher finishes in [two minutes,|2 minutes,] and smiles."),
     dict(id="e2", scene="q1", text="Question one: where was the Declaration of Independence signed?"),
     dict(id="e3", scene="a1", text="His answer: at the bottom."),
     dict(id="e4", scene="q2",
@@ -36,9 +36,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="The Last Row Kid's Exam Answers 😂 (Technically Correct)",
+    title="The Last Bencher's Exam Answers 😂 (Technically Correct)",
     alt_titles=["He Answered Every Question… Technically 😂", "4 Exam Answers That Are Technically Right 🤣"],
-    description="""The last-row kid finished the exam in 2 minutes… and every answer is technically correct. 😂
+    description="""The last bencher finished the exam in 2 minutes… and every answer is technically correct. 😂
 
 Q1: Where was the Declaration of Independence signed?
 Q2: 3 apples in one hand, 4 in the other. What do you have?
@@ -50,8 +50,8 @@ Then the teacher grades it… the same way. 👀
 💬 Which answer deserves full marks?
 
 🔔 Interestingly Strange: weird animals, bizarre history, mind-bending paradoxes and strange stories, hand-drawn in under a minute.""",
-    hashtags=["#Riddles", "#Backbencher", "#Funny"],
-    tags=["funny exam answers", "trick questions", "backbenchers", "teacher vs student", "technically correct",
+    hashtags=["#Riddles", "#LastBencher", "#Funny"],
+    tags=["funny exam answers", "trick questions", "last bencher", "backbenchers", "teacher vs student", "technically correct",
           "school jokes", "riddles", "brain teaser", "classroom comedy", "interestingly strange"],
     pinned_comment="Be honest: which answer would YOU give full marks? 😂 1, 2, 3 or 4?",
 )
@@ -77,7 +77,7 @@ QUESTIONS = {
 def scene_exam(cr, t, tl):
     A = tl.at
     keys = [(0, (1.3, 400, 760)), (A("e1", "exam"), (1.0, 470, 760)), (A("e1", "day"), ROW),
-            (A("e1", "last-row"), (1.9, 820, 740)), (A("e1", "finishes"), KID), (A("e1", "2"), (1.6, 470, 520)),
+            (A("e1", "bencher"), (1.9, 820, 740)), (A("e1", "finishes"), KID), (A("e1", "2"), (1.6, 470, 520)),
             (A("e1", "smiles"), (2.4, 830, 720))]
     set_camera(camera(t, keys))
     enter_world(cr)
@@ -108,7 +108,7 @@ def scene_exam(cr, t, tl):
                     amp=0.3, lw=2)
         if who == "chotu" and t >= done:
             write(cr, [("DONE", RED)], px, 780, 18, align="center", bold=True)
-    hl(cr, t, [("EXAM DAY", RED)], 215, 84, 0.0, end=A("e1", "last-row"), bold=True, sound=False)
+    hl(cr, t, [("EXAM DAY", RED)], 215, 84, 0.0, end=A("e1", "bencher"), bold=True, sound=False)
     hl(cr, t, [("done in ", INK), ("2 MINUTES", RED)], 215, 66, A("e1", "2"), bold=True)
     cue("pop", t, done)
 

@@ -2,16 +2,17 @@
 
 **Title** (49 characters)
 ```
-The Last Row Kid Is BACK 😂 (Trick Riddles Part 2)
+The Last Bencher Is BACK 😂 (Trick Riddles Part 2)
 ```
 
 **Alternative titles to test**
+- `The Last Bencher Strikes Again 😂`
 - `The Teacher Said NO Riddles… 😂`
 - `3 Trick Riddles That Broke the Teacher Again 🤣`
 
 **Description**
 ```
-The last-row kid is back… and the teacher said NO riddles today. 😂
+The last bencher is back… and the teacher said NO riddles today. 😂
 
 Riddle 1: What can you hold in your left hand, but never in your right?
 Riddle 2: How many months have 28 days?
@@ -23,12 +24,12 @@ Then the teacher strikes back. 👀
 
 🔔 Interestingly Strange: weird animals, bizarre history, mind-bending paradoxes and strange stories, hand-drawn in under a minute.
 
-#Riddles #Backbencher #Funny
+#Riddles #LastBencher #Funny
 ```
 
 **Tags** (paste into YouTube Studio > Tags)
 ```
-riddles, trick questions, backbenchers, teacher vs student, funny riddles, school jokes, brain teaser, riddle challenge, classroom comedy, trick riddles part 2, interestingly strange
+riddles, trick questions, last bencher, backbenchers, teacher vs student, funny riddles, school jokes, brain teaser, riddle challenge, classroom comedy, trick riddles part 2, interestingly strange
 ```
 
 **Pinned comment**
@@ -36,4 +37,4 @@ riddles, trick questions, backbenchers, teacher vs student, funny riddles, schoo
 Be honest: did you just try to grab your right elbow? 😂 Drop a riddle for Part 3 👇
 ```
 
-**Video facts:** 45.0 s, 154 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
+**Video facts:** 44.5 s, 151 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.

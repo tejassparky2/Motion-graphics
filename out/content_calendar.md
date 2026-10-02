@@ -27,22 +27,23 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 4 | Fri Oct 2 | 9:30 PM | shortest_war | The Shortest War in History Lasted 38 Minutes ⏱️ |
 | 5 | Sat Oct 3 | 1:30 AM | excuses | 3 Students, 3 Fake Excuses… Then the Teacher Got Caught 😂 |
 | 6 | Sat Oct 3 | 4:30 AM | eiffel_con | The Man Who Sold the Eiffel Tower… TWICE 🗼😳 |
-| 7 | Sat Oct 3 | 9:30 PM | bombardier_beetle | This Beetle Has a Boiling Cannon in Its Butt 🪲🔥 |
+| 7 | Sat Oct 3 | 9:30 PM | last_row_2 | The Last Bencher Is BACK 😂 (Trick Riddles Part 2) |
 | 8 | Sun Oct 4 | 1:30 AM | bootstrap_paradox | This Song Has No Songwriter 🎸 (The Bootstrap Paradox) |
 | 9 | Sun Oct 4 | 4:30 AM | kevin_chat | The Mystery Kid in the Class Group Chat Was… 😳 |
-| 10 | Sun Oct 4 | 9:30 PM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
-| 11 | Mon Oct 5 | 1:30 AM | perfect_attendance | He Never Missed a Day of School… His Secret Was Genius 😂 |
-| 12 | Mon Oct 5 | 4:30 AM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
-| 13 | Mon Oct 5 | 9:30 PM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
-| 14 | Tue Oct 6 | 1:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
-| 15 | Tue Oct 6 | 4:30 AM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
-| 16 | Tue Oct 6 | 9:30 PM | last_row_2 | The Last Row Kid Is BACK 😂 (Trick Riddles Part 2) |
-| 17 | Wed Oct 7 | 1:30 AM | exam_answers | The Last Row Kid's Exam Answers 😂 (Technically Correct) |
-| 18 | Wed Oct 7 | 4:30 AM | principal_riddles | Last Row Kid vs The PRINCIPAL 😂 (Wait for the Twist) |
+| 10 | Sun Oct 4 | 9:30 PM | birthday_paradox | Only 23 People… and 2 Share a Birthday? 🎂🤯 (Birthday Paradox) |
+| 11 | Mon Oct 5 | 1:30 AM | bombardier_beetle | This Beetle Has a Boiling Cannon in Its Butt 🪲🔥 |
+| 12 | Mon Oct 5 | 4:30 AM | exam_answers | The Last Bencher's Exam Answers 😂 (Technically Correct) |
+| 13 | Mon Oct 5 | 9:30 PM | ship_of_theseus | If You Replace Every Part… Is It Still the Same Ship? 🚢🤯 |
+| 14 | Tue Oct 6 | 1:30 AM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
+| 15 | Tue Oct 6 | 4:30 AM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |
+| 16 | Tue Oct 6 | 9:30 PM | perfect_attendance | He Never Missed a Day of School… His Secret Was Genius 😂 |
+| 17 | Wed Oct 7 | 1:30 AM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
+| 18 | Wed Oct 7 | 4:30 AM | last_bencher_3 | The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3) |
+| 19 | Wed Oct 7 | 9:30 PM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
+| 20 | Thu Oct 8 | 1:30 AM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
+| 21 | Thu Oct 8 | 4:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
 
-Each day mixes three categories, and the 4:30 AM slot (7 PM US Eastern) always gets a twist story or a clever-history video.
-
-Rows 16–18 are the "Last Row Kid" riddle series. They're placed together because nothing else is ready yet; once the next batch exists, spread them one per day and fill the other slots with animals and history. Post Part 2 first, since it calls back to the original Backbencher video.
+Rows 1–6 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
 ## Next up (to produce)
 

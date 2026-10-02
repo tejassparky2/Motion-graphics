@@ -1,4 +1,4 @@
-"""Episode 19: "The Last Row Kid vs The Principal" — trick riddles in the principal's office, with a twist.
+"""Episode 19: "The Last Bencher vs The Principal" — trick riddles in the principal's office, with a twist.
 
 Riddles: which way the smoke blows from an electric train (there's no smoke), seventeen sheep where all but nine run
 away (nine are left), a pound of bricks or a pound of feathers (same). The principal wins with "the more you take, the
@@ -17,7 +17,7 @@ NARRATOR = dict(speed=1.0)
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="p1", scene="office", text="The last-row kid finally got sent to the principal's office."),
+    dict(id="p1", scene="office", text="The last bencher in class finally got sent to the principal's office."),
     dict(id="p2", scene="office", text="The principal leans back: so, you like riddles? Try me.",
          speaker="principal", speaker_from="so,"),
     dict(id="p3", scene="train", text="Sir, an electric train is going north. Which way does the smoke blow?",
@@ -42,9 +42,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Last Row Kid vs The PRINCIPAL 😂 (Wait for the Twist)",
+    title="Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist)",
     alt_titles=["He Tried His Riddles on the Principal… 😂", "3 Trick Riddles vs the Principal 🤣"],
-    description="""The last-row kid finally got sent to the principal's office… so he brought riddles. 😂
+    description="""The last bencher finally got sent to the principal's office… so he brought riddles. 😂
 
 Riddle 1: An electric train is going north. Which way does the smoke blow?
 Riddle 2: A farmer has 17 sheep. All but 9 run away. How many are left?
@@ -55,8 +55,8 @@ Then the principal plays his card. 👀 Did you spot the clue in the very first 
 💬 How many did you get right?
 
 🔔 Interestingly Strange: weird animals, bizarre history, mind-bending paradoxes and strange stories, hand-drawn in under a minute.""",
-    hashtags=["#Riddles", "#Backbencher", "#Funny"],
-    tags=["riddles", "trick questions", "backbenchers", "principal", "funny riddles", "school jokes", "brain teaser",
+    hashtags=["#Riddles", "#LastBencher", "#Funny"],
+    tags=["riddles", "trick questions", "last bencher", "backbenchers", "principal", "funny riddles", "school jokes", "brain teaser",
           "riddle challenge", "plot twist", "classroom comedy", "interestingly strange"],
     pinned_comment="The clue was there from the very first second 👀 Did you spot it? Rewatch and look at the desk 😂",
 )
@@ -153,7 +153,7 @@ def desk_front(cr, t, show_photo=True):
 
 def scene_office(cr, t, tl):
     A = tl.at
-    keys = [(0, (1.6, 240, 720)), (A("p1", "kid"), (1.7, 620, 760)), (A("p1", "sent"), (1.2, 520, 740)),
+    keys = [(0, (1.6, 240, 720)), (A("p1", "bencher"), (1.7, 620, 760)), (A("p1", "sent"), (1.2, 520, 740)),
             (A("p1", "principal's"), (1.9, 300, 700)), (A("p1", "office"), WIDE),
             (A("p2") - 0.1, PRIN), (A("p2", "back"), (1.6, 320, 720)), (A("p2", "riddles"), (2.3, 300, 690)),
             (A("p2", "try"), TWO),
@@ -235,7 +235,7 @@ def scene_office(cr, t, tl):
         k["mouth"] = "o" if int(t * 12) % 2 else "smirk"
     person(cr, "chotu", x, 900, t, walk=t * 1.8 if walking else None, **k)
     # ---- screen text
-    hl(cr, t, [("LAST ROW", RED), (" vs ", INK), ("PRINCIPAL", BLUE)], 215, 64, 0.0, end=A("p1", "sent") - 0.05,
+    hl(cr, t, [("LAST BENCHER", RED), (" vs ", INK), ("PRINCIPAL", BLUE)], 215, 54, 0.0, end=A("p1", "sent") - 0.05,
        bold=True, sound=False)
     hl(cr, t, [("sent to the ", INK), ("PRINCIPAL", RED)], 215, 62, A("p1", "sent"), end=A("p2") - 0.05, bold=True)
     hl(cr, t, [("\"Try me.\"", BLUE)], 215, 80, A("p2", "try"), end=A("p3") - 0.05, bold=True)
