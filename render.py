@@ -54,7 +54,9 @@ def load(name):
         VIDEO["narration"] = media
         print(f"narration: {media}", file=sys.stderr)
     else:
-        narrator.clone_prefetch(Timeline.sentences(mod.SCRIPT))   # own-voice clone: generate all sentences at once
+        takes = Timeline.sentences(mod.SCRIPT)
+        narrator.clone_prefetch([t for t, _ in takes])   # own-voice clone: generate all sentences at once
+        narrator.clone_check(takes)      # ...and re-make any take Whisper medium mishears
     return mod
 
 

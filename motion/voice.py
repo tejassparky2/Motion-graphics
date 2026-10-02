@@ -13,6 +13,7 @@ Engines:
   numbers and captions land on the spoken word.
 """
 import difflib
+import glob
 import hashlib
 import json
 import os
@@ -139,9 +140,14 @@ def _pronounce(text):
     return text
 
 
+CLONE_VERSION = "v3"   # bump when the clone generation, pace or tone changes
+
+
 def _key(text, pace=1.0):
     if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
+    if ENGINE == "clone":
+        return hashlib.sha1(f"clone|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
 
 
@@ -231,15 +237,9 @@ def synth(text, pace=1.0):
         return _squeeze(_trim(_read_wav(_EXTERNAL[text])))
     out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
     if ENGINE == "clone":
-        if not os.path.exists(out):
-            raw = _clone_raw(text)
-            if not os.path.exists(raw):
-                clone_prefetch([text])
-            os.makedirs(os.path.dirname(out), exist_ok=True)
-            import imageio_ffmpeg
-            subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", raw, "-filter:a",
-                            f"atempo={SPEED * pace:.4f}", "-ar", str(SR), "-ac", "1", out], check=True)
-        return _squeeze(_clone_trim(_read_wav(out)))
+        if not os.path.exists(_clone_raw(text)):
+            clone_prefetch([text])
+        return _squeeze(_clone_trim(_read_wav(_clone_process(text, pace)[0])))
     if not os.path.exists(out):
         os.makedirs(os.path.dirname(out), exist_ok=True)
         if ENGINE == "kokoro":
@@ -250,6 +250,71 @@ def synth(text, pace=1.0):
                             "--length-scale", str(1 / (SPEED * pace))],
                            input=text.encode(), check=True, stderr=subprocess.DEVNULL)
     return _squeeze(_trim(_read_wav(out)))
+
+
+# Pace target: The Teacher Bluffed (owner: "speed similar as the teacher Bluffed video") reads at a median
+# 5.2 syllables per second of speech, with lines within ~0.5 of each other.
+CLONE_RATE = float(os.environ.get("CLONE_RATE", "5.2"))
+# Tone, matched to the narrators in the owner's reference videos (voice separated from music, long-term spectrum):
+# the clone was 5-8 dB duller above 2.5 kHz and boomy at 125-160 Hz. So: cut the boom, keep firm bass body at
+# ~220 Hz, lift presence and air, then light compression for a punchy, even level.
+CLONE_TONE = ("highpass=f=70,"
+              "equalizer=f=140:t=q:w=1.2:g=-4,"
+              "equalizer=f=230:t=q:w=1.0:g=2,"
+              "equalizer=f=3200:t=q:w=1.0:g=4,"
+              "equalizer=f=6000:t=q:w=1.0:g=4,"
+              "highshelf=f=8500:g=4,"
+              "acompressor=threshold=-20dB:ratio=3:attack=5:release=60:makeup=2,"
+              "alimiter=limit=0.95")
+
+
+def syllables(text):
+    n = 0
+    for w in re.findall(r"[a-z']+", text.lower()):
+        g = len(re.findall(r"[aeiouy]+", w))
+        if w.endswith("e") and not w.endswith(("le", "ee")) and g > 1:
+            g -= 1
+        n += max(1, g)
+    return n
+
+
+def speech_secs(a, sr):
+    """Seconds of actual speech: silences longer than 120 ms don't count."""
+    w = int(0.01 * sr)
+    n = len(a) // w
+    if n == 0:
+        return len(a) / sr
+    env = np.abs(a[:n * w]).reshape(n, w).max(1)
+    on = env > 0.03 * env.max()
+    tot, i = 0, 0
+    while i < n:
+        j = i
+        while j < n and on[j] == on[i]:
+            j += 1
+        if on[i] or (j - i) < 12:
+            tot += j - i
+        i = j
+    return tot / 100
+
+
+TEMPO_MIN, TEMPO_MAX = 0.92, 1.12     # bigger stretches smear short words ("blood" -> "black"), even with rubberband
+
+
+def _clone_process(text, pace):
+    """The finished take: nudged toward the target pace (rubberband, crisp mode) and toned. -> (path, final rate)."""
+    import imageio_ffmpeg
+    import soundfile
+    out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
+    r, rsr = soundfile.read(_clone_raw(text))
+    rate = syllables(text) / max(0.2, speech_secs(r, rsr))
+    tempo = min(TEMPO_MAX, max(TEMPO_MIN, CLONE_RATE * pace / rate))
+    if not os.path.exists(out):
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        stretch = (f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
+                   f"formant=preserved:pitchq=quality,") if abs(tempo - 1) > 0.005 else ""
+        subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text),
+                        "-filter:a", stretch + CLONE_TONE, "-ar", str(SR), "-ac", "1", out], check=True)
+    return out, rate * tempo
 
 
 def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
@@ -263,14 +328,26 @@ def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
 
 
 def _clone_raw(text):
-    return os.path.join(ROOT, "build", "clone_tts", hashlib.sha1(f"owner|{text}".encode()).hexdigest()[:16] + ".wav")
+    return os.path.join(ROOT, "build", "clone_tts",
+                        hashlib.sha1(f"owner|{CLONE_VERSION}|{text}".encode()).hexdigest()[:16] + ".wav")
+
+
+# Spellings the clone pronounces more clearly (only what it's told to say; captions keep the real word).
+CLONE_SAY = {"bencher": "benchur", "benchers": "benchurs"}
+
+
+def _clone_say(text):
+    for word, say in CLONE_SAY.items():
+        text = re.sub(rf"\b{word}\b", say, text, flags=re.I)
+    return text
 
 
 def clone_prefetch(texts):
     """Generate every missing sentence in one go (the clone model takes ~20 s to load)."""
     if ENGINE != "clone":
         return
-    jobs = [[t, _clone_raw(t)] for t in dict.fromkeys(texts) if t not in _EXTERNAL and not os.path.exists(_clone_raw(t))]
+    jobs = [[_clone_say(t), _clone_raw(t)] for t in dict.fromkeys(texts)
+            if t not in _EXTERNAL and not os.path.exists(_clone_raw(t))]
     if not jobs:
         return
     path = os.path.join(ROOT, "build", "clone_tts", "jobs.json")
@@ -278,6 +355,81 @@ def clone_prefetch(texts):
     json.dump(jobs, open(path, "w"))
     print(f"clone voice: generating {len(jobs)} sentences", file=sys.stderr, flush=True)
     subprocess.run([CLONE_PYTHON, os.path.join(ROOT, "tools", "clone_tts.py"), path], check=True)
+
+
+_NUMWORDS = set("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "
+                "seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred thousand "
+                "million percent point and a".split())
+_checker = None
+
+
+def _heard_ok(text, heard):
+    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28")."""
+    t = re.sub(r"[^a-z0-9' ]", " ", text.lower().replace("-", " ")).split()
+    h = re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()
+    for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
+        if op == "equal":
+            continue
+        if all(w in _NUMWORDS for w in t[i1:i2]) and all(re.fullmatch(r"[0-9%.,]+|and|a", w) for w in h[j1:j2]):
+            continue
+        return False
+    return True
+
+
+def clone_check(takes, tries=6, slack=0.15):
+    """Hear every finished take with Whisper medium. Re-make takes that are misheard or whose pace is more than
+    `slack` off the target, and keep the best of `tries`. `takes`: [(text, pace)]."""
+    if ENGINE != "clone":
+        return
+    global _checker
+    import shutil
+    import soundfile
+    takes = list(dict.fromkeys(takes))
+    todo = [(t, p) for t, p in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t) + ".ok")]
+    if not todo:
+        return
+    if _checker is None:
+        from faster_whisper import WhisperModel
+        _checker = WhisperModel("medium.en", device="cpu", compute_type="int8")
+    best = {}
+    for attempt in range(tries):
+        bad = []
+        for t, p in todo:
+            out, rate = _clone_process(t, p)
+            a, sr = soundfile.read(out)
+            a = np.concatenate([np.zeros(sr // 2), a, np.zeros(sr // 2)])
+            a16 = np.interp(np.arange(int(len(a) * 16000 / sr)) * sr / 16000, np.arange(len(a)), a).astype(np.float32)
+            segs = list(_checker.transcribe(a16, language="en", beam_size=5, word_timestamps=True)[0])
+            heard = " ".join(x.text.strip() for x in segs)
+            probs = [w.probability for x in segs for w in x.words]
+            off = abs(rate / (CLONE_RATE * p) - 1)
+            score = (_heard_ok(t, heard), off <= slack, -off, float(np.mean(probs)) if probs else 0.0)
+            keep = f"{_clone_raw(t)}.try{attempt}.wav"
+            shutil.copy(_clone_raw(t), keep)
+            if t not in best or score > best[t][0]:
+                best[t] = (score, keep, heard, p)
+            if not (score[0] and score[1]):
+                bad.append((t, p))
+        print(f"clone check {attempt + 1}/{tries}: {len(todo) - len(bad)}/{len(todo)} takes clear and on pace",
+              file=sys.stderr, flush=True)
+        if not bad or attempt == tries - 1:
+            break
+        for t, p in bad:
+            os.remove(_clone_raw(t))
+            for pc in (p, 1.0, 0.9):
+                f = os.path.join(ROOT, "build", "tts", f"{_key(t, pc)}.wav")
+                if os.path.exists(f):
+                    os.remove(f)
+        clone_prefetch([t for t, _ in bad])
+        todo = bad
+    for t, (score, keep, heard, p) in best.items():
+        shutil.copy(keep, _clone_raw(t))
+        for pc in (p, 1.0, 0.9):   # rebuild the finished take from the chosen raw one
+            for f in glob.glob(os.path.join(ROOT, "build", "tts", f"{_key(t, pc)}*")):
+                os.remove(f)
+        open(_clone_raw(t) + ".ok", "w").write(heard)
+        if not score[0]:
+            print(f"clone check: still unclear after {tries} tries: {t!r} heard as {heard!r}", file=sys.stderr)
 
 
 _whisper = None

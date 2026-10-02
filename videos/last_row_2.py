@@ -18,7 +18,7 @@ NARRATOR = dict(speed=1.0, max_pause=0.42)
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="r1", scene="class", text="The last bencher is back. And this time, the teacher is ready."),
+    dict(id="r1", scene="class", text="The last bencher in class is back. And this time, the teacher is ready."),
     dict(id="r2", scene="class", text="The teacher says: no riddles today.", speaker="teacher", speaker_from="no"),
     dict(id="r3", scene="elbow",
          text="Sir, just one. What can you hold in your left hand, but never in your right?", speaker="chotu"),
@@ -28,7 +28,7 @@ SCRIPT = [
     dict(id="r7", scene="months", text="Sir, how many months have [twenty-eight|28] days?", speaker="chotu"),
     dict(id="r8", scene="class", text="Easy. Just one. February.", speaker="teacher"),
     dict(id="r9", scene="months2",
-         text="No sir. All [twelve.|12.] They all have [twenty-eight|28] days. Some just keep going.", speaker="chotu"),
+         text="No sir. All [twelve|12] of them. They all have [twenty-eight|28] days. Some just keep going.", speaker="chotu"),
     dict(id="r10", scene="rooster",
          text="Last one. A rooster lays an egg on a roof. Which side does it roll down?", speaker="chotu"),
     dict(id="r11", scene="class", text="The steeper side, obviously!", speaker="teacher"),

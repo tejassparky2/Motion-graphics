@@ -15,7 +15,10 @@ import soundfile as sf
 from chatterbox.tts import ChatterboxTTS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt.wav")
+# The owner's clip sped up x1.2: the clone copies the prompt's pace, and this lands it near Teacher Bluffed's
+# 5.2 syllables/s instead of ~3.2 (tested: 4.9 median, clearer and more even than the plain prompt).
+PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt_fast.wav")
+EXAGGERATION, CFG = 0.6, 0.6     # cfg 0.6 follows the text more closely: better pronunciation
 
 
 def trim(w, sr):
@@ -30,9 +33,9 @@ def trim(w, sr):
 def main():
     jobs = json.load(open(sys.argv[1]))
     model = ChatterboxTTS.from_pretrained(device="cpu")
-    model.prepare_conditionals(PROMPT, exaggeration=0.55)
+    model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
     for k, (text, out) in enumerate(jobs, 1):
-        w = model.generate(text, exaggeration=0.55, cfg_weight=0.45)[0].numpy()
+        w = model.generate(text, exaggeration=EXAGGERATION, cfg_weight=CFG)[0].numpy()
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sf.write(out + ".tmp.wav", trim(w, model.sr), model.sr)
         os.replace(out + ".tmp.wav", out)

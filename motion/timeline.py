@@ -178,7 +178,7 @@ class Timeline:
             b = Beat(**spec)
             b.units = parse(b.text)
             words = b.spoken_text.split()
-            out += [" ".join(words[a0:a1]) for a0, a1 in Timeline._takes(b)[0]]
+            out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]]
         return out
 
     # ---- queries used by scenes
