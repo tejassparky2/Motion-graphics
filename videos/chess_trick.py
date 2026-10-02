@@ -23,7 +23,7 @@ TAIL = 0.8
 
 SCRIPT = [
     dict(id="t1", scene="hall",
-         text="Jake can barely play chess. But he just bet the two best players in school, that he won't lose to both "
+         text="Meet Jake. He can barely play chess. But he just bet the two best players in school, that he won't lose to both "
               "of them. At the same time."),
     dict(id="t2", scene="hall",
          text="[Twenty bucks.|$20.] Everyone laughs. But the trick is so simple, you could do it tomorrow."),

@@ -27,7 +27,7 @@ SCRIPT = [
          text="Question two: you have [three|3] apples in one hand, and [four|4] in the other. What do you have?"),
     dict(id="e5", scene="a2", text="Very big hands."),
     dict(id="e6", scene="q3", text="Question three: how can a man go [eight days|8 days] without sleep?"),
-    dict(id="e7", scene="a3", text="Easy. He sleeps at night."),
+    dict(id="e7", scene="a3", text="That's easy. He sleeps at night."),
     dict(id="e8", scene="q4", text="Question four: how do you drop an egg on a concrete floor without cracking it?"),
     dict(id="e9", scene="a4", text="Any way you like. Concrete floors are really hard to break."),
     dict(id="e10", scene="back", text="Next day, he gets his paper back. Sir, what did I get?", speaker="chotu",

@@ -17,7 +17,7 @@ TAIL = 0.8
 
 SCRIPT = [
     dict(id="g1", scene="chat",
-         text="Every class has a group chat the teacher doesn't know about. This class had one too."),
+         text="Every class has a secret group chat. The teacher doesn't know about it. This class had one, too."),
     dict(id="g2", scene="chat", text="[Thirty|30] kids. Memes all day. Roasting Mr. Miller's mustache every night."),
     dict(id="g3", scene="chat",
          text="And one mystery member: Kevin. Nobody knew who Kevin was. But Kevin had the best memes."),

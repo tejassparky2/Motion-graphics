@@ -31,7 +31,7 @@ class Beat:
     text: str
     speaker: str = None   # character whose mouth moves (from the word `speaker_from` on)
     speaker_from: str = None
-    turn_pause: float = 0.38  # when a line starts as narration and a character takes over at `speaker_from`
+    turn_pause: float = 0.32  # when a line starts as narration and a character takes over at `speaker_from`
     gap: float = 0.18     # silence before this beat
     pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
     units: list = field(default_factory=list)
@@ -55,6 +55,21 @@ def parse(text):
         else:
             units.append(Unit([m.group(4)], m.group(4)))
     return units
+
+
+# Full-stop pauses, measured from the reference narrators (see out/voice_rhythm.md)
+SENTENCE_TAKES = True
+STOP_PAUSE = 0.24
+QUESTION_PAUSE = 0.30
+BEAT_GAP = 0.24          # minimum silence between two script lines (each line ends a sentence)
+_ABBREV = {"mr.", "mrs.", "ms.", "dr.", "st.", "p.s.", "vs.", "etc."}
+
+
+def _sentence_end(w):
+    lw = w.lower().strip('"\'”’)')
+    if lw in _ABBREV or len(lw) <= 2 and lw.endswith("."):   # "Mr.", "A." and similar aren't sentence ends
+        return False
+    return lw.endswith((".", "?", "!", "...", ":"))
 
 
 def clear_dialogue(script, ids=None, pace=0.9, turn_gap=0.42):
@@ -84,6 +99,7 @@ class Timeline:
             b = Beat(**spec)
             b.units = parse(b.text)
             b.audio, wt = self._speak(b)
+            b.gap = max(b.gap, BEAT_GAP)
             if i:
                 t += b.gap
             b.start = t
@@ -110,28 +126,42 @@ class Timeline:
 
     @staticmethod
     def _speak(b):
-        """Audio and per-word times for a beat. A line that switches from narrator to character mid-way is read as
-        two takes with a clear pause between them, so the narration and the character's words don't run together."""
+        """Audio and per-word times for a beat, read the way a person would: every sentence is its own take, joined
+        with a full-stop pause, so sentences never blur into each other. Where a line switches from narrator to
+        character (`speaker_from`), the pause is a little longer."""
         import numpy as np
-        split = 0
-        if b.speaker_from and b.spoken_text not in voice._EXTERNAL:
-            k = _norm(b.speaker_from)
-            n = 0
-            for u in b.units:
-                if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
-                    split = n
-                    break
-                n += len(u.spoken)
-        if not split:
+        words = b.spoken_text.split()
+        if b.spoken_text in voice._EXTERNAL or not SENTENCE_TAKES:
             audio = voice.synth(b.spoken_text, b.pace)
             return audio, voice.word_times(b.spoken_text, audio, b.pace)
-        words = b.spoken_text.split()
-        pre, post = " ".join(words[:split]), " ".join(words[split:])
-        a1, a2 = voice.synth(pre, b.pace), voice.synth(post, b.pace)
-        w1, w2 = voice.word_times(pre, a1, b.pace), voice.word_times(post, a2, b.pace)
-        off = len(a1) / voice.SR + b.turn_pause
-        audio = np.concatenate([a1, np.zeros(int(b.turn_pause * voice.SR)), a2])
-        return audio, list(w1) + [(s0 + off, e0 + off) for s0, e0 in w2]
+        turn = -1
+        if b.speaker_from:
+            k, n = _norm(b.speaker_from), 0
+            for u in b.units:
+                if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
+                    turn = n
+                    break
+                n += len(u.spoken)
+        cuts, pauses = [0], []
+        for n, w in enumerate(words[:-1], 1):
+            if n == turn:
+                cuts.append(n)
+                pauses.append(max(b.turn_pause, STOP_PAUSE))
+            elif _sentence_end(w):
+                cuts.append(n)
+                pauses.append(QUESTION_PAUSE if w.endswith("?") else STOP_PAUSE)
+        cuts.append(len(words))
+        audio, times, off = [], [], 0.0
+        for c, (a0, a1) in enumerate(zip(cuts, cuts[1:])):
+            text = " ".join(words[a0:a1])
+            clip = voice.synth(text, b.pace)
+            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace)]
+            audio.append(clip)
+            off += len(clip) / voice.SR
+            if c < len(pauses):
+                audio.append(np.zeros(int(pauses[c] * voice.SR)))
+                off += pauses[c]
+        return np.concatenate(audio), times
 
     # ---- queries used by scenes
     def at(self, beat_id, key=None, end=False, nth=1):

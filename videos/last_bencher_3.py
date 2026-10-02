@@ -36,7 +36,7 @@ SCRIPT = [
     dict(id="s9", scene="kids",
          text="Emma's mom has four kids. April, May, June... What's the fourth one called?", speaker="chotu"),
     dict(id="s10", scene="kids2", text="Emma. Sit down.", speaker="sub"),
-    dict(id="s11", scene="class", text="Sir... how do you know all of these?", speaker="chotu"),
+    dict(id="s11", scene="class", text="Sir, how do you know all of these?", speaker="chotu"),
     dict(id="s12", scene="class", text="Because [twenty years|20 years] ago, I sat in that exact seat.",
          speaker="sub", gap=0.25),
     dict(id="s13", scene="desk", text="Carved into that desk: his initials. The last bencher just met the original.",
