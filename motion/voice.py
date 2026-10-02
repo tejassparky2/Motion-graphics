@@ -350,7 +350,7 @@ def clone_prefetch(texts):
             if t not in _EXTERNAL and not os.path.exists(_clone_raw(t))]
     if not jobs:
         return
-    path = os.path.join(ROOT, "build", "clone_tts", "jobs.json")
+    path = os.path.join(ROOT, "build", "clone_tts", f"jobs_{os.getpid()}.json")   # one per render, so parallel renders never collide
     os.makedirs(os.path.dirname(path), exist_ok=True)
     json.dump(jobs, open(path, "w"))
     print(f"clone voice: generating {len(jobs)} sentences", file=sys.stderr, flush=True)
