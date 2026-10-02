@@ -376,7 +376,7 @@ def _heard_ok(text, heard):
     return True
 
 
-def clone_check(takes, tries=6, slack=0.15):
+def clone_check(takes, tries=3, slack=0.15):
     """Hear every finished take with Whisper medium. Re-make takes that are misheard or whose pace is more than
     `slack` off the target, and keep the best of `tries`. `takes`: [(text, pace)]."""
     if ENGINE != "clone":
