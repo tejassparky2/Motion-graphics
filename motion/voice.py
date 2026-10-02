@@ -254,7 +254,7 @@ def synth(text, pace=1.0):
 
 # Pace target: The Teacher Bluffed (owner: "speed similar as the teacher Bluffed video") reads at a median
 # 5.2 syllables per second of speech, with lines within ~0.5 of each other.
-CLONE_RATE = float(os.environ.get("CLONE_RATE", "5.2"))
+CLONE_RATE = float(os.environ.get("CLONE_RATE", "5.5"))   # owner: "fast up voice slightly more" (was 5.2)
 # Tone, matched to the narrators in the owner's reference videos (voice separated from music, long-term spectrum):
 # the clone was 5-8 dB duller above 2.5 kHz and boomy at 125-160 Hz. So: cut the boom, keep firm bass body at
 # ~220 Hz, lift presence and air, then light compression for a punchy, even level.
@@ -297,7 +297,7 @@ def speech_secs(a, sr):
     return tot / 100
 
 
-TEMPO_MIN, TEMPO_MAX = 0.92, 1.12     # bigger stretches smear short words ("blood" -> "black"), even with rubberband
+TEMPO_MIN, TEMPO_MAX = 0.94, 1.15     # bigger stretches smear short words ("blood" -> "black"), even with rubberband
 
 
 def _clone_process(text, pace):
