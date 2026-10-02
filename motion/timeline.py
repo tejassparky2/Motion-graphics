@@ -125,15 +125,12 @@ class Timeline:
         self.scenes[-1][2] = self.total
 
     @staticmethod
-    def _speak(b):
-        """Audio and per-word times for a beat, read the way a person would: every sentence is its own take, joined
-        with a full-stop pause, so sentences never blur into each other. Where a line switches from narrator to
-        character (`speaker_from`), the pause is a little longer."""
-        import numpy as np
+    def _takes(b):
+        """The beat's spoken words cut into takes: one per sentence, plus a cut where a character takes over.
+        Returns [(first word, last word + 1)] and the pause after each take but the last."""
         words = b.spoken_text.split()
         if b.spoken_text in voice._EXTERNAL or not SENTENCE_TAKES:
-            audio = voice.synth(b.spoken_text, b.pace)
-            return audio, voice.word_times(b.spoken_text, audio, b.pace)
+            return [(0, len(words))], []
         turn = -1
         if b.speaker_from:
             k, n = _norm(b.speaker_from), 0
@@ -151,8 +148,18 @@ class Timeline:
                 cuts.append(n)
                 pauses.append(QUESTION_PAUSE if w.endswith("?") else STOP_PAUSE)
         cuts.append(len(words))
+        return list(zip(cuts, cuts[1:])), pauses
+
+    @staticmethod
+    def _speak(b):
+        """Audio and per-word times for a beat, read the way a person would: every sentence is its own take, joined
+        with a full-stop pause, so sentences never blur into each other. Where a line switches from narrator to
+        character (`speaker_from`), the pause is a little longer."""
+        import numpy as np
+        words = b.spoken_text.split()
+        spans, pauses = Timeline._takes(b)
         audio, times, off = [], [], 0.0
-        for c, (a0, a1) in enumerate(zip(cuts, cuts[1:])):
+        for c, (a0, a1) in enumerate(spans):
             text = " ".join(words[a0:a1])
             clip = voice.synth(text, b.pace)
             times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace)]
@@ -162,6 +169,17 @@ class Timeline:
                 audio.append(np.zeros(int(pauses[c] * voice.SR)))
                 off += pauses[c]
         return np.concatenate(audio), times
+
+    @staticmethod
+    def sentences(script):
+        """Every take the script needs, so a slow voice engine can generate them all in one batch."""
+        out = []
+        for spec in script:
+            b = Beat(**spec)
+            b.units = parse(b.text)
+            words = b.spoken_text.split()
+            out += [" ".join(words[a0:a1]) for a0, a1 in Timeline._takes(b)[0]]
+        return out
 
     # ---- queries used by scenes
     def at(self, beat_id, key=None, end=False, nth=1):

@@ -26,8 +26,17 @@ import numpy as np
 
 from .engine import ROOT
 
-ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
-if ENGINE == "kokoro":
+# Default narrator: the channel owner's own cloned voice (Chatterbox, prompt in assets/voice/owner_prompt.wav).
+CLONE_PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt.wav")
+CLONE_PYTHON = os.environ.get("CLONE_PYTHON", "/home/user/.venv-clone/bin/python")
+ENGINE = os.environ.get("NARRATOR_ENGINE", "clone" if os.path.exists(CLONE_PROMPT) else "kokoro")
+if ENGINE == "clone":
+    # Owner approved the sample and asked for "slightly faster". The clone reads short sentences slowly, so takes
+    # play at x1.15 (riddle lines, pace 0.9, at x1.035). Last Bencher Part 2 lands at ~180 wpm with pauses, vs 176
+    # for the approved sample. Tempo change keeps the pitch.
+    VOICE = "owner-clone"
+    SPEED = float(os.environ.get("NARRATOR_SPEED", "1.15"))
+elif ENGINE == "kokoro":
     # Channel default narrator: am_fenrir, the stock voice measured closest to the reference narrator the user chose
     # (speaker similarity 0.72, the best of 12; median pitch 142 vs 154 Hz; pitch SD 5.0 vs 6.4 semitones).
     # Speed 0.95 lands at ~200 wpm overall in a finished video (the reference narrator: 167 overall, 190 while
@@ -50,7 +59,7 @@ def configure(voice=None, speed=None, max_pause=None):
     global VOICE, SPEED, MAX_PAUSE
     if voice and "NARRATOR_VOICE" not in os.environ:
         VOICE = voice
-    if speed and "NARRATOR_SPEED" not in os.environ:
+    if speed and "NARRATOR_SPEED" not in os.environ and ENGINE != "clone":   # per-video speeds were tuned for Kokoro
         SPEED = speed
     if max_pause is not None:
         MAX_PAUSE = max_pause
@@ -221,6 +230,16 @@ def synth(text, pace=1.0):
     if text in _EXTERNAL:
         return _squeeze(_trim(_read_wav(_EXTERNAL[text])))
     out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
+    if ENGINE == "clone":
+        if not os.path.exists(out):
+            raw = _clone_raw(text)
+            if not os.path.exists(raw):
+                clone_prefetch([text])
+            os.makedirs(os.path.dirname(out), exist_ok=True)
+            import imageio_ffmpeg
+            subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", raw, "-filter:a",
+                            f"atempo={SPEED * pace:.4f}", "-ar", str(SR), "-ac", "1", out], check=True)
+        return _squeeze(_clone_trim(_read_wav(out)))
     if not os.path.exists(out):
         os.makedirs(os.path.dirname(out), exist_ok=True)
         if ENGINE == "kokoro":
@@ -231,6 +250,34 @@ def synth(text, pace=1.0):
                             "--length-scale", str(1 / (SPEED * pace))],
                            input=text.encode(), check=True, stderr=subprocess.DEVNULL)
     return _squeeze(_trim(_read_wav(out)))
+
+
+def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
+    """Tight trim for clone takes: drop the breath/silence the model leaves around a sentence, but keep soft
+    first consonants (a looser threshold than _trim, so "Put" doesn't turn into "could")."""
+    env = np.convolve(np.abs(a), np.ones(441) / 441, mode="same")
+    loud = np.nonzero(env > thresh)[0]
+    if not len(loud):
+        return a
+    return a[max(0, loud[0] - int(pre * SR)): loud[-1] + int(post * SR)]
+
+
+def _clone_raw(text):
+    return os.path.join(ROOT, "build", "clone_tts", hashlib.sha1(f"owner|{text}".encode()).hexdigest()[:16] + ".wav")
+
+
+def clone_prefetch(texts):
+    """Generate every missing sentence in one go (the clone model takes ~20 s to load)."""
+    if ENGINE != "clone":
+        return
+    jobs = [[t, _clone_raw(t)] for t in dict.fromkeys(texts) if t not in _EXTERNAL and not os.path.exists(_clone_raw(t))]
+    if not jobs:
+        return
+    path = os.path.join(ROOT, "build", "clone_tts", "jobs.json")
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    json.dump(jobs, open(path, "w"))
+    print(f"clone voice: generating {len(jobs)} sentences", file=sys.stderr, flush=True)
+    subprocess.run([CLONE_PYTHON, os.path.join(ROOT, "tools", "clone_tts.py"), path], check=True)
 
 
 _whisper = None

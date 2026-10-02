@@ -53,6 +53,8 @@ def load(name):
         narrator.use_external(media, lines)
         VIDEO["narration"] = media
         print(f"narration: {media}", file=sys.stderr)
+    else:
+        narrator.clone_prefetch(Timeline.sentences(mod.SCRIPT))   # own-voice clone: generate all sentences at once
     return mod
 
 
@@ -107,6 +109,7 @@ def write_metadata(path):
             f.write(f"**Pinned comment**\n```\n{m['pinned_comment']}\n```\n\n")
         words = sum(len(u.spoken) for b in tl.beats for u in b.units)
         voiced = (f"narrated by the channel owner (`{os.path.basename(VIDEO['narration'])}`)" if VIDEO.get("narration")
+                  else "the channel owner's own cloned voice" if narrator.ENGINE == "clone"
                   else f"voice `{narrator.VOICE}` at speed {narrator.SPEED}")
         f.write(f"**Video facts:** {tl.total:.1f} s, {words} words of narration, {voiced}. Made for kids: **No**.\n")
     print(f"wrote {path}", file=sys.stderr)
