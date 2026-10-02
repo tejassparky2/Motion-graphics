@@ -34,4 +34,4 @@ plot twist, school story, group chat, teacher prank, funny story, twist ending, 
 Every group chat has a Kevin. Who's yours? 😂👇
 ```
 
-**Video facts:** 39.2 s, 118 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 40.1 s, 122 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
