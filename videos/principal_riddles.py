@@ -8,12 +8,13 @@ dad. The clue is planted from the first shot: a photo of the two of them on the 
 import math
 
 from motion.captions import captions
+from motion.timeline import clear_dialogue
 from motion.characters import person
 from motion.engine import (INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, pop, rrect_pts, seg, shape,
                            sharp_shape, write)
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 
-NARRATOR = dict(speed=1.0)
+NARRATOR = dict(speed=1.0, max_pause=0.42)
 TAIL = 0.9
 
 SCRIPT = [
@@ -40,6 +41,7 @@ SCRIPT = [
          gap=0.25),
     dict(id="p17", scene="end", text="Yep. The principal is his dad. Dinner was awkward.", gap=0.2),
 ]
+clear_dialogue(SCRIPT)   # riddles and answers: slower, with clear turns
 
 METADATA = dict(
     title="Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist)",

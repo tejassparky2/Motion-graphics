@@ -9,13 +9,14 @@ the bottom." Then the teacher pins it up as the best paper of the year.
 import math
 
 from motion.captions import captions
+from motion.timeline import clear_dialogue
 from motion.characters import person
 from motion.engine import (INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, pop, seg, shape,
                            sharp_shape, write)
 from motion.kit import camera, enter_world, fly, hl, set_camera, stamp, whip
 from videos.backbencher import CX, KID, KIDS, ROW, TEACH, TX, WIDE, classroom, desk
 
-NARRATOR = dict(speed=1.0)
+NARRATOR = dict(speed=1.0, max_pause=0.42)
 TAIL = 0.9
 
 SCRIPT = [
@@ -28,12 +29,13 @@ SCRIPT = [
     dict(id="e6", scene="q3", text="Question three: how can a man go [eight days|8 days] without sleep?"),
     dict(id="e7", scene="a3", text="Easy. He sleeps at night."),
     dict(id="e8", scene="q4", text="Question four: how do you drop an egg on a concrete floor without cracking it?"),
-    dict(id="e9", scene="a4", text="Any way you like. Concrete floors are really hard to crack."),
+    dict(id="e9", scene="a4", text="Any way you like. Concrete floors are really hard to break."),
     dict(id="e10", scene="back", text="Next day, he gets his paper back. Sir, what did I get?", speaker="chotu",
          speaker_from="sir,"),
     dict(id="e11", scene="zero", text="A very big zero. At the bottom.", speaker="teacher"),
     dict(id="e12", scene="end", text="And then he pins it on the wall. Best paper of the year.", gap=0.2),
 ]
+clear_dialogue(SCRIPT, ids={"e2", "e3", "e4", "e5", "e6", "e7", "e8", "e9", "e10", "e11"})   # riddles and answers: slower, with clear turns
 
 METADATA = dict(
     title="The Last Bencher's Exam Answers 😂 (Technically Correct)",
@@ -69,7 +71,7 @@ QUESTIONS = {
     1: (["Where was the Declaration", "of Independence signed?"], "At the bottom."),
     2: (["You have 3 apples in one hand", "and 4 in the other.", "What do you have?"], "Very big hands."),
     3: (["How can a man go 8 days", "without sleep?"], "He sleeps at night."),
-    4: (["How do you drop an egg", "on a concrete floor", "without cracking it?"], "Concrete is hard to crack!"),
+    4: (["How do you drop an egg", "on a concrete floor", "without cracking it?"], "Concrete is hard to break!"),
 }
 
 
@@ -274,10 +276,10 @@ def scene_paper(cr, t, tl, q, answered):
             cue("pop", t, A(ab, "night"))
     elif q == 4:
         egg_drop(cr, t, 360, dy + 100, A(ab, "hard") if answered else 0, answered and t >= A(ab, "concrete"))
-        if answered and t >= A(ab, "crack"):
-            with at(cr, 360, dy - 60, max(0.85, pop(t, A(ab, "crack"), 0.25)), rot=-0.05):
+        if answered and t >= A(ab, "break"):
+            with at(cr, 360, dy - 60, max(0.85, pop(t, A(ab, "break"), 0.25)), rot=-0.05):
                 write(cr, [("floor: fine", hexc("#2e9e52"))], 0, 0, 52, align="center", bold=True)
-            cue("hit", t, A(ab, "crack"))
+            cue("hit", t, A(ab, "break"))
     # the handwritten answer
     if answered:
         write(cr, [(ans, PENCIL)], 110, ay, 52, seg(t, A(ab) + 0.05, A(ab) + 0.5))

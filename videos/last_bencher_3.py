@@ -8,13 +8,14 @@ and his initials have been carved into the kid's desk since the first shot.
 import math
 
 from motion.captions import captions
+from motion.timeline import clear_dialogue
 from motion.characters import person
 from motion.engine import INK, RED, WHITE, at, blob, cue, ease_out, hexc, lerp, line, pop, rrect_pts, seg, shape, write
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 from videos.backbencher import (BOARD, CHALK, CHALK_B, CHALK_P, CHALK_Y, CX, KID, KIDS, ROW, TEACH, TX, WIDE, big_q,
                                 board, classroom, desk, stick)
 
-NARRATOR = dict(speed=1.0)
+NARRATOR = dict(speed=1.0, max_pause=0.42)
 TAIL = 1.0
 
 SCRIPT = [
@@ -30,7 +31,7 @@ SCRIPT = [
          speaker_from="okay"),
     dict(id="s6", scene="subtract", text="How many times can you subtract [ten|10] from [a hundred?|100?]",
          speaker="chotu"),
-    dict(id="s7", scene="subtract2", text="Once. After that, you're subtracting from [ninety.|90.]", speaker="sub"),
+    dict(id="s7", scene="subtract2", text="Just once. Because after that, you're subtracting from [ninety.|90.]", speaker="sub"),
     dict(id="s8", scene="class", text="The class goes quiet. Nobody has ever beaten him."),
     dict(id="s9", scene="kids",
          text="Emma's mom has four kids. April, May, June... What's the fourth one called?", speaker="chotu"),
@@ -41,6 +42,7 @@ SCRIPT = [
     dict(id="s13", scene="desk", text="Carved into that desk: his initials. The last bencher just met the original.",
          gap=0.2),
 ]
+clear_dialogue(SCRIPT)   # riddles and answers: slower, with clear turns
 
 METADATA = dict(
     title="The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3)",

@@ -31,6 +31,7 @@ class Beat:
     text: str
     speaker: str = None   # character whose mouth moves (from the word `speaker_from` on)
     speaker_from: str = None
+    turn_pause: float = 0.38  # when a line starts as narration and a character takes over at `speaker_from`
     gap: float = 0.18     # silence before this beat
     pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
     units: list = field(default_factory=list)
@@ -56,6 +57,21 @@ def parse(text):
     return units
 
 
+def clear_dialogue(script, ids=None, pace=0.9, turn_gap=0.42):
+    """Riddles and their answers, read a little slower, with a clear pause whenever the voice changes hands.
+
+    `ids` picks the beats to slow down (default: every line a character speaks)."""
+    prev = None
+    for spec in script:
+        who = spec.get("speaker")
+        if (ids is None and who) or (ids is not None and spec["id"] in ids):
+            spec.setdefault("pace", pace)
+        if prev is not None and (who != prev or (ids is not None and spec["id"] in ids)):
+            spec["gap"] = max(spec.get("gap", 0.18), turn_gap)
+        prev = who
+    return script
+
+
 def _norm(s):
     return re.sub(r"[^a-z0-9₹.,]", "", s.lower())
 
@@ -67,8 +83,7 @@ class Timeline:
         for i, spec in enumerate(script):
             b = Beat(**spec)
             b.units = parse(b.text)
-            b.audio = voice.synth(b.spoken_text, b.pace)
-            wt = voice.word_times(b.spoken_text, b.audio, b.pace)
+            b.audio, wt = self._speak(b)
             if i:
                 t += b.gap
             b.start = t
@@ -92,6 +107,31 @@ class Timeline:
                     self.scenes[-1][2] = start
                 self.scenes.append([b.scene, start, None])
         self.scenes[-1][2] = self.total
+
+    @staticmethod
+    def _speak(b):
+        """Audio and per-word times for a beat. A line that switches from narrator to character mid-way is read as
+        two takes with a clear pause between them, so the narration and the character's words don't run together."""
+        import numpy as np
+        split = 0
+        if b.speaker_from and b.spoken_text not in voice._EXTERNAL:
+            k = _norm(b.speaker_from)
+            n = 0
+            for u in b.units:
+                if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
+                    split = n
+                    break
+                n += len(u.spoken)
+        if not split:
+            audio = voice.synth(b.spoken_text, b.pace)
+            return audio, voice.word_times(b.spoken_text, audio, b.pace)
+        words = b.spoken_text.split()
+        pre, post = " ".join(words[:split]), " ".join(words[split:])
+        a1, a2 = voice.synth(pre, b.pace), voice.synth(post, b.pace)
+        w1, w2 = voice.word_times(pre, a1, b.pace), voice.word_times(post, a2, b.pace)
+        off = len(a1) / voice.SR + b.turn_pause
+        audio = np.concatenate([a1, np.zeros(int(b.turn_pause * voice.SR)), a2])
+        return audio, list(w1) + [(s0 + off, e0 + off) for s0, e0 in w2]
 
     # ---- queries used by scenes
     def at(self, beat_id, key=None, end=False, nth=1):

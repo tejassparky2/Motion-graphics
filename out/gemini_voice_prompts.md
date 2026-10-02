@@ -159,7 +159,7 @@ Would you have bought it?
 
 ## 7. `last_row_2`  (Oct 3, 9:30 PM IST)
 
-*The Last Bencher Is BACK 😂 (Trick Riddles Part 2)*. 151 words, about 49 s.
+*The Last Bencher Is BACK 😂 (Trick Riddles Part 2)*. 156 words, about 50 s.
 
 ```
 Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cheeky classroom comedy; the kid smug, the teacher dry; punch 'roosters don't lay eggs' and 'fifty pages'. Ignore the line that says (PART 2): don't read it.
@@ -168,11 +168,11 @@ SCRIPT:
 The last bencher is back. And this time, the teacher is ready.
 The teacher says: no riddles today.
 Sir, just one. What can you hold in your left hand, but never in your right?
-The teacher thinks. A pen? A phone?
+The teacher thinks. Is it a pen? Or a phone?
 No sir. Your right elbow. Go on, try it.
 And the teacher actually tries. In front of everyone.
 Sir, how many months have twenty-eight days?
-Easy. One. February.
+Easy. Just one. February.
 No sir. All twelve. They all have twenty-eight days. Some just keep going.
 (PART 2)
 Last one. A rooster lays an egg on a roof. Which side does it roll down?
@@ -181,7 +181,7 @@ Sir, roosters don't lay eggs.
 The class loses it. And the teacher's face goes red.
 Okay. My turn. What goes up, but never comes down?
 Your blood pressure, sir?
-No. Your age. And your homework: fifty pages.
+Wrong. It's your age. And your homework: fifty pages.
 Next day, the kid hands in fifty pages. Of brand new riddles.
 ```
 
@@ -283,7 +283,7 @@ Question three: how can a man go eight days without sleep?
 Easy. He sleeps at night.
 (PART 2)
 Question four: how do you drop an egg on a concrete floor without cracking it?
-Any way you like. Concrete floors are really hard to crack.
+Any way you like. Concrete floors are really hard to break.
 Next day, he gets his paper back. Sir, what did I get?
 A very big zero. At the bottom.
 And then he pins it on the wall. Best paper of the year.
@@ -402,7 +402,7 @@ Then he faked his own death, vanished to Venezuela, and was found thirty-five ye
 
 ## 18. `last_bencher_3`  (Oct 7, 4:30 AM IST)
 
-*The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3)*. 125 words, about 40 s.
+*The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3)*. 127 words, about 41 s.
 
 ```
 Speak directly to camera in my own voice. Read the script below EXACTLY, word for word: don't add, skip or change any words, and don't add an intro, outro, greeting or sign-off. Narrate it like a hooked YouTube Shorts storyteller: fast and energetic, about 200 words a minute, with no pause longer than half a second and no music or sound effects. Tone: cocky kid, calm unbeatable substitute; slow and warm on 'I sat in that exact seat'. Ignore the line that says (PART 2): don't read it.
@@ -414,7 +414,7 @@ Sir, before Mount Everest was discovered, what was the tallest mountain in the w
 Mount Everest. It was still the tallest. Nobody had found it yet.
 The last bencher blinks. Okay. Lucky guess.
 How many times can you subtract ten from a hundred?
-Once. After that, you're subtracting from ninety.
+Just once. Because after that, you're subtracting from ninety.
 (PART 2)
 The class goes quiet. Nobody has ever beaten him.
 Emma's mom has four kids. April, May, June... What's the fourth one called?

@@ -7,13 +7,14 @@ goes up but never comes down" (your age) and fifty pages of homework, and the ki
 import math
 
 from motion.captions import captions
+from motion.timeline import clear_dialogue
 from motion.characters import person
 from motion.engine import INK, RED, WHITE, at, blob, cue, ease_out, hexc, lerp, line, pop, seg, shape, sharp_shape, write
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 from videos.backbencher import (CHALK, CHALK_B, CHALK_P, CHALK_Y, CX, KID, KIDS, ROW, TEACH, TX, WIDE, big_q, board,
                                 classroom, desk, red_face)
 
-NARRATOR = dict(speed=1.0)
+NARRATOR = dict(speed=1.0, max_pause=0.42)
 TAIL = 0.9
 
 SCRIPT = [
@@ -21,11 +22,11 @@ SCRIPT = [
     dict(id="r2", scene="class", text="The teacher says: no riddles today.", speaker="teacher", speaker_from="no"),
     dict(id="r3", scene="elbow",
          text="Sir, just one. What can you hold in your left hand, but never in your right?", speaker="chotu"),
-    dict(id="r4", scene="class", text="The teacher thinks. A pen? A phone?", speaker="teacher", speaker_from="pen"),
+    dict(id="r4", scene="class", text="The teacher thinks. Is it a pen? Or a phone?", speaker="teacher", speaker_from="is"),
     dict(id="r5", scene="elbow2", text="No sir. Your right elbow. Go on, try it.", speaker="chotu"),
     dict(id="r6", scene="class", text="And the teacher actually tries. In front of everyone."),
     dict(id="r7", scene="months", text="Sir, how many months have [twenty-eight|28] days?", speaker="chotu"),
-    dict(id="r8", scene="class", text="Easy. One. February.", speaker="teacher"),
+    dict(id="r8", scene="class", text="Easy. Just one. February.", speaker="teacher"),
     dict(id="r9", scene="months2",
          text="No sir. All [twelve.|12.] They all have [twenty-eight|28] days. Some just keep going.", speaker="chotu"),
     dict(id="r10", scene="rooster",
@@ -35,11 +36,12 @@ SCRIPT = [
     dict(id="r13", scene="class", text="The class loses it. And the teacher's face goes red."),
     dict(id="r14", scene="up", text="Okay. My turn. What goes up, but never comes down?", speaker="teacher"),
     dict(id="r15", scene="class", text="Your blood pressure, sir?", speaker="chotu"),
-    dict(id="r16", scene="class", text="No. Your age. And your homework: [fifty pages.|50 pages.]", speaker="teacher",
+    dict(id="r16", scene="class", text="Wrong. It's your age. And your homework: [fifty pages.|50 pages.]", speaker="teacher",
          gap=0.2),
     dict(id="r17", scene="end", text="Next day, the kid hands in [fifty pages.|50 pages.] Of brand new riddles.",
          gap=0.2),
 ]
+clear_dialogue(SCRIPT)   # riddles and answers: slower, with clear turns
 
 METADATA = dict(
     title="The Last Bencher Is BACK 😂 (Trick Riddles Part 2)",
@@ -172,7 +174,7 @@ def scene_class(cr, t, tl):
        bold=True)
     hl(cr, t, [("\"NO RIDDLES", BLUE), (" today.\"", INK)], 215, 62, A("r2", "riddles"), end=A("r3") - 0.05,
        bold=True)
-    hl(cr, t, [("\"A pen? A phone?\"", INK)], 215, 60, A("r4", "pen"), end=A("r5") - 0.05, bold=True)
+    hl(cr, t, [("\"A pen? Or a phone?\"", INK)], 215, 60, A("r4", "pen"), end=A("r5") - 0.05, bold=True)
     hl(cr, t, [("he actually ", INK), ("TRIES", RED)], 215, 72, A("r6", "tries"), end=A("r7") - 0.05, bold=True)
     hl(cr, t, [("\"ONE. ", BLUE), ("February.\"", INK)], 215, 70, A("r8", "one"), end=A("r9") - 0.05, bold=True)
     hl(cr, t, [("\"The ", INK), ("STEEPER", BLUE), (" side!\"", INK)], 215, 64, A("r11", "steeper"),
