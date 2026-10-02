@@ -34,4 +34,4 @@ plot twist, twins, identical twins, school story, perfect attendance, funny stor
 Plot twist: Mr. Miller's twin teaches math… or does he? 😂👇
 ```
 
-**Video facts:** 35.8 s, 110 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 37.1 s, 110 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
