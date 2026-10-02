@@ -32,9 +32,8 @@ SCRIPT = [
     dict(id="k6", scene="bank2", text="Then the banker looks him up, and he's a multi-millionaire."),
     dict(id="k7", scene="bank2", text="Sir, why would you need to borrow five thousand dollars?", speaker="teacher"),
     dict(id="k8", scene="bank2",
-         text="The man smiles. Where else in New York can I park for two weeks? For only "
-              "[twenty-three dollars.|$23.]",
-         speaker="host", speaker_from="where", gap=0.22),
+         text="The man smiles. Two weeks of parking in New York. For only [twenty-three dollars.|$23.]",
+         speaker="host", speaker_from="two", gap=0.22),
     dict(id="k9", scene="end", text="Genius, or cheapskate?", pace=0.95, gap=0.25),
 ]
 
@@ -150,7 +149,7 @@ def scene_bank(cr, t, tl, part):
     else:
         keys = [(A("k6") - 0.2, (1.2, 420, 740)), (A("k6", "looks"), (1.9, 640, 650)), (A("k6", "multi"), (1.3, 640, 640)),
                 (A("k7", "why"), (1.9, BX, 700)), (A("k7", "borrow"), (1.3, 420, 740)), (A("k8", "smiles"), (2.0, RX, 690)),
-                (A("k8", "where"), (1.5, 300, 720)), (A("k8", "park"), (1.2, 400, 740)), (A("k8", "$23."), (1.9, RX, 700))]
+                (A("k8", "two"), (1.5, 300, 720)), (A("k8", "park"), (1.2, 400, 740)), (A("k8", "$23."), (1.9, RX, 700))]
     set_camera(camera(t, keys, dur=0.16))
     enter_world(cr)
     bank_inside(cr, t)
