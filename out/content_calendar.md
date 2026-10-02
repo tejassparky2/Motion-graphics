@@ -42,8 +42,15 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 19 | Wed Oct 7 | 9:30 PM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
 | 20 | Thu Oct 8 | 1:30 AM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
 | 21 | Thu Oct 8 | 4:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
+| 22 | Thu Oct 8 | 9:30 PM | pinocchio_paradox | Pinocchio Said ONE Sentence… and Broke Logic 🤥🤯 |
+| 23 | Fri Oct 9 | 1:30 AM | surprise_test | He PROVED the Surprise Test Was Impossible… Then It Happened 😳 |
+| 24 | Fri Oct 9 | 4:30 AM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
+| 25 | Fri Oct 9 | 9:30 PM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
+| 26 | Sat Oct 10 | 1:30 AM | braess_paradox | A New Road Made Traffic WORSE… For Everyone 🚗🤯 |
 
 Rows 1–6 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
+
+Rows 22–26 are the short paradoxes (about 35–40 s), built like The Infinite Hotel after it passed 32K views: an impossible-sounding hook in the first line, and a closing question that asks viewers to answer in the comments. If they do well, they can move ahead of rows 19–21.
 
 ## Next up (to produce)
 
