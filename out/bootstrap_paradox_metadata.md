@@ -34,4 +34,4 @@ bootstrap paradox, time travel paradox, causal loop, paradox, time travel, mind 
 Plot hole or genius? Who REALLY wrote the song? 🤔👇
 ```
 
-**Video facts:** 36.9 s, 129 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 37.7 s, 129 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

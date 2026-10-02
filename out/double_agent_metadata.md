@@ -34,4 +34,4 @@ juan pujol garcia, garbo spy, double agent, ww2 history, d-day, spy story, histo
 Imagine getting a medal from BOTH sides of a war 😳 Greatest liar ever? 👇
 ```
 
-**Video facts:** 52.3 s, 164 words of narration, voice `am_fenrir` at speed 1.04. Made for kids: **No**.
+**Video facts:** 50.1 s, 164 words of narration, voice `am_fenrir` at speed 1.04. Made for kids: **No**.

@@ -34,4 +34,4 @@ plot twist, school story, group chat, teacher prank, funny story, twist ending, 
 Every group chat has a Kevin. Who's yours? 😂👇
 ```
 
-**Video facts:** 38.9 s, 116 words of narration, voice `am_fenrir` at speed 1.03. Made for kids: **No**.
+**Video facts:** 38.9 s, 118 words of narration, voice `am_fenrir` at speed 1.03. Made for kids: **No**.

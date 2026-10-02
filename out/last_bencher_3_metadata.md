@@ -36,4 +36,4 @@ last bencher, backbenchers, riddles, trick questions, substitute teacher, teache
 Did you spot the initials on the desk before the reveal? 👀 Rewatch the first 3 seconds 😳
 ```
 
-**Video facts:** 45.2 s, 127 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
+**Video facts:** 45.7 s, 127 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.

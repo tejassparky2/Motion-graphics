@@ -37,4 +37,4 @@ riddles, trick questions, last bencher, backbenchers, teacher vs student, funny 
 Be honest: did you just try to grab your right elbow? 😂 Drop a riddle for Part 3 👇
 ```
 
-**Video facts:** 51.7 s, 156 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
+**Video facts:** 54.3 s, 156 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
