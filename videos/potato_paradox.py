@@ -16,21 +16,24 @@ NARRATOR = dict()
 TAIL = 0.8
 
 SCRIPT = [
-    dict(id="q1", scene="kitchen", text="You have [a hundred pounds|100 lb] of potatoes. They're [ninety-nine percent|99%] "
-                                        "water."),
-    dict(id="q2", scene="kitchen", text="You leave them in the sun, until they're [ninety-eight percent|98%] water. "
-                                        "Just one percent less."),
+    dict(id="q1", scene="kitchen", text="You have [a hundred pounds|100 lb] of potatoes. "
+                                        "[Ninety-nine percent|99%] of that weight is water."),
+    dict(id="q2", scene="kitchen", text="You leave them out to dry, until they're [ninety-eight percent|98%] water. "
+                                        "Just one percent less water."),
     dict(id="q3", scene="kitchen", text="How much do they weigh now? Easy. [Ninety-eight pounds.|98 lb.]",
          speaker="farmer", speaker_from="easy."),
-    dict(id="q4", scene="kitchen", text="Nope. [Fifty.|50 lb.]", pace=0.9, gap=0.3),
-    dict(id="q5", scene="grid", text="Here's why. The part that isn't water is [one percent.|1%.] That's [one pound.|1 lb.]"),
-    dict(id="q6", scene="grid", text="Drying only takes out water. So that pound stays. But now, it has to be "
-                                     "[two percent|2%] of the pile."),
-    dict(id="q7", scene="grid", text="If one pound is [two percent,|2%,] the whole pile is [fifty pounds.|50 lb.] "
-                                     "Half the weight, gone."),
-    dict(id="q8", scene="name", text="It's called the potato paradox. The math is easy. Your brain just refuses to "
-                                     "believe it."),
-    dict(id="q9", scene="end", text="So... did you guess [ninety-eight?|98?]", pace=0.95),
+    dict(id="q4", scene="kitchen", text="Nope. Only [fifty pounds.|50 lb.]", pace=0.9, gap=0.3),
+    dict(id="q5", scene="grid", text="Here's why. Split the [hundred pounds|100 lb] into [a hundred|100] blocks. "
+                                     "Each block is one pound."),
+    dict(id="q6", scene="grid", text="[Ninety-nine|99] blocks are water. Just one block is potato."),
+    dict(id="q7", scene="grid", text="Drying removes only water. So the potato block stays."),
+    dict(id="q8", scene="grid", text="But now the pile is [ninety-eight percent|98%] water. So that one potato block "
+                                     "must be [two percent|2%] of the pile."),
+    dict(id="q9", scene="grid", text="One out of fifty is two percent. So only fifty blocks are left. "
+                                     "[Fifty pounds.|50 lb.]"),
+    dict(id="q10", scene="name", text="It's called the potato paradox. One percent less water sounds tiny. But it cut "
+                                      "the weight in half."),
+    dict(id="q11", scene="end", text="So... did you guess [ninety-eight?|98?]", pace=0.95),
 ]
 
 METADATA = dict(
@@ -97,19 +100,19 @@ def kitchen(cr):
 
 def scene_kitchen(cr, t, tl):
     A = tl.at
-    dry = ease_out(seg(t, A("q2", "sun,"), A("q2", "water.", end=True)))
+    dry = ease_out(seg(t, A("q2", "dry,"), A("q2", "water.", end=True)))
     weight = 100.0
     if t >= A("q4", "50"):
         weight = lerp(100, 50, ease_out(seg(t, A("q4", "50"), A("q4", "50") + 0.6)))
     keys = [(0, (1.5, 360, 720)), (A("q1", "100"), (1.8, 360, 900)), (A("q1", "potatoes."), (1.2, 360, 780)),
-            (A("q1", "99%"), (1.6, 360, 520)), (A("q2"), (1.0, 360, 720)), (A("q2", "sun,"), (1.4, 560, 500)),
+            (A("q1", "99%"), (1.6, 360, 520)), (A("q2"), (1.0, 360, 720)), (A("q2", "dry,"), (1.4, 560, 500)),
             (A("q2", "98%"), (1.6, 360, 520)), (A("q2", "just"), (1.2, 360, 700)),
             (A("q3"), (1.0, 360, 760)), (A("q3", "easy."), (2.0, 150, 740)), (A("q3", "98"), (1.6, 300, 760)),
-            (A("q4"), (1.3, 360, 900)), (A("q4", "50"), (2.0, 360, 950))]
+            (A("q4"), (1.3, 360, 900)), (A("q4", "50"), (1.6, 360, 1010))]
     set_camera(camera(t, keys))
     enter_world(cr)
     kitchen(cr)
-    if A("q2", "sun,") <= t:   # the sun drying them
+    if A("q2", "dry,") <= t:   # the sun drying them
         blob(cr, 600, 420, 60, 60, hexc("#ffd23f"), seed=3300, amp=0.4, lw=3.5)
         for k in range(8):
             a = k * math.pi / 4 + t * 0.6
@@ -122,7 +125,7 @@ def scene_kitchen(cr, t, tl):
     scale(cr, t, 360, 940, weight, 1.1)
     pile(cr, t, 360, 915, 1.25, dry)
     # the percentage tag
-    if t >= A("q1", "99%"):
+    if A("q1", "99%") <= t < A("q4"):
         pct = "99% water" if t < A("q2", "98%") else "98% water"
         with at(cr, 360, 520, max(0.85, pop(t, A("q1", "99%"), 0.25)), rot=-0.03):
             shape(cr, rrect_pts(-190, -50, 380, 100, 20, 14), WATER, seed=3320, amp=0.4, lw=4)
@@ -140,86 +143,106 @@ def scene_kitchen(cr, t, tl):
     cue("hit", t, A("q4", "50"))
 
 
-def grid(cr, t, x0, y0, n, solid, cell=52, appear=None):
-    """n squares, 10 per row; `solid` of them are the potato part (brown), the rest water (blue)."""
+CELL, GX, GY = 46, 360 - 230, 290     # 10 x 10 blocks, 460 px square
+
+
+def grid(cr, t, n, water_col, potato_t=None, appear=None):
+    """n blocks, 10 per row. The last block is potato once `potato_t` has passed; the rest are water."""
     for k in range(n):
         r, c = divmod(k, 10)
-        sc = 1.0 if appear is None else max(0.0, min(1.0, (t - appear - k * 0.008) / 0.15))
+        sc = 1.0 if appear is None else max(0.0, min(1.0, (t - appear - k * 0.006) / 0.15))
         if sc <= 0:
             continue
-        x, y = x0 + c * cell, y0 + r * cell
-        col = POTATO if k >= n - solid else WATER
-        with at(cr, x + cell / 2, y + cell / 2, sc):
-            shape(cr, rrect_pts(-cell / 2 + 3, -cell / 2 + 3, cell - 6, cell - 6, 6, 8), col, seed=3400 + k, amp=0.3,
+        x, y = GX + c * CELL, GY + r * CELL
+        col = POTATO if (potato_t is not None and t >= potato_t and k == n - 1) else water_col
+        with at(cr, x + CELL / 2, y + CELL / 2, sc):
+            shape(cr, rrect_pts(-CELL / 2 + 3, -CELL / 2 + 3, CELL - 6, CELL - 6, 5, 8), col, seed=3400 + k, amp=0.3,
                   lw=2.5)
 
 
 def scene_grid(cr, t, tl):
     A = tl.at
-    x0 = 360 - 260
-    keys = [(A("q5") - 0.2, (1.0, 360, 700)), (A("q5", "isn't"), (1.4, 360, 820)), (A("q5", "1%."), (2.0, 600, 880)),
-            (A("q5", "1lb"), (1.4, 520, 820)), (A("q6"), (1.0, 360, 700)), (A("q6", "stays."), (1.8, 600, 840)),
-            (A("q6", "2%"), (1.2, 360, 700)), (A("q7"), (1.0, 360, 700)), (A("q7", "50"), (1.3, 360, 640)),
-            (A("q7", "half"), (1.0, 360, 700))]
+    keys = [(A("q5") - 0.2, (1.0, 360, 780)), (A("q6", "potato."), (1.08, 400, 760)), (A("q7"), (1.0, 360, 780)),
+            (A("q7", "stays."), (1.08, 400, 760)), (A("q8"), (1.0, 360, 780)), (A("q9", "fifty"), (1.0, 360, 760))]
     set_camera(camera(t, keys))
     enter_world(cr)
     kitchen(cr)
-    shrink = ease_out(seg(t, A("q6", "pile."), A("q7", "50") + 0.2))
+    shrink = ease_out(seg(t, A("q9", "left."), A("q9", "left.") + 1.0))
     n = int(round(lerp(100, 50, shrink)))
-    grid(cr, t, x0, 380, n, 1, appear=A("q5") - 0.1)
-    if t >= A("q5", "isn't"):
-        last = n - 1
-        r, c = divmod(last, 10)
-        cx, cy = x0 + c * 52 + 26, 380 + r * 52 + 26
-        blob(cr, cx, cy, 36, 36, None, seed=3500, amp=0.6, lw=5, stroke=RED)
-        write(cr, [("1 lb", RED)], cx - 60 if c > 6 else cx + 60, cy + 12, 36, align="center", bold=True)
-    label = "100 squares = 100 lb" if t < A("q6", "pile.") else f"{n} squares = {n} lb"
-    write(cr, [(label, WHITE)], 360, 1000, 44, align="center", bold=True)
-    if t >= A("q6", "2%"):
-        write(cr, [("1 out of 50 = ", WHITE), ("2%", hexc("#9fe0ff"))], 360, 1060, 42, align="center", bold=True)
-    hl(cr, t, [("only ", INK), ("1 lb", RED), (" isn't water", INK)], 215, 62, A("q5", "isn't"),
-       end=A("q6") - 0.05, bold=True)
-    hl(cr, t, [("that pound ", INK), ("STAYS", RED)], 215, 70, A("q6", "stays."), end=A("q7") - 0.05, bold=True)
-    hl(cr, t, [("HALF", RED), (" the weight, gone", INK)], 215, 64, A("q7", "half"), bold=True)
+    water_col = WATER if t >= A("q6") else hexc("#d9c7a3")      # plain blocks until we say what they are
+    grid(cr, t, n, water_col, potato_t=A("q6", "potato."), appear=A("q5", "blocks.") - 0.1)
+    if t >= A("q6", "potato."):          # circle the potato block
+        r, c = divmod(n - 1, 10)
+        cx, cy = GX + c * CELL + CELL / 2, GY + r * CELL + CELL / 2
+        blob(cr, cx, cy, 30, 30, None, seed=3500, amp=0.6, lw=5, stroke=RED)
+    # the running explanation under the grid (clear of the captions)
+    lines = []
+    if t >= A("q5", "each"):
+        lines = [[("1 block = 1 lb", WHITE)]]
+    if t >= A("q6"):
+        lines = [[("99 water", hexc("#9fe0ff")), (" + ", WHITE), ("1 potato", hexc("#f2c28a")), (" = 100 lb", WHITE)]]
+    if t >= A("q7", "stays."):
+        lines = [[("1 potato", hexc("#f2c28a")), (" STAYS", hexc("#ff8a80"))]]
+    if t >= A("q8", "2%"):
+        lines = [[("1 potato", hexc("#f2c28a")), (" must be ", WHITE), ("2%", hexc("#ff8a80"))]]
+    if t >= A("q9"):
+        lines = [[("1 out of 50", WHITE), (" = 2%", hexc("#ff8a80"))]]
+    if t >= A("q9", "left."):
+        lines = [[(f"{n - 1} water", hexc("#9fe0ff")), (" + ", WHITE), ("1 potato", hexc("#f2c28a")),
+                  (f" = {n} lb", WHITE)]]
+    for k, runs in enumerate(lines):
+        shape(cr, rrect_pts(30, 766 + k * 64, 660, 64, 24, 12), hexc("#2b2d3a", 0.85), seed=3510, amp=0.2, lw=0,
+              stroke=None)
+        write(cr, runs, 360, 812 + k * 64, 46, align="center", bold=True)
+    hl(cr, t, [("100 blocks = ", INK), ("100 lb", RED)], 215, 62, A("q5"), end=A("q6") - 0.05, bold=True)
+    hl(cr, t, [("only ", INK), ("ONE", RED), (" is potato", INK)], 215, 66, A("q6", "just"), end=A("q7") - 0.05,
+       bold=True)
+    hl(cr, t, [("drying takes ", INK), ("only water", BLUE)], 215, 62, A("q7"), end=A("q8") - 0.05, bold=True)
+    hl(cr, t, [("98%", BLUE), (" water, so potato = ", INK), ("2%", RED)], 215, 48, A("q8"), end=A("q9", "left.") - 0.05,
+       bold=True)
+    hl(cr, t, [("only ", INK), ("50 LB", RED), (" left!", INK)], 215, 76, A("q9", "left."), bold=True, underline=True)
     for k in range(0, 50, 5):
-        cue("pop", t, A("q6", "pile.") + k * 0.02)
+        cue("pop", t, A("q9", "left.") + k * 0.02)
+    stamp(cr, t, A("q9", "50lb."), "HALF!", dur=0.7, y=640)
 
 
 def scene_name(cr, t, tl):
     A = tl.at
-    keys = [(A("q8") - 0.2, (1.1, 360, 680)), (A("q8", "potato"), (1.4, 360, 560)), (A("q8", "math"), (1.0, 360, 700)),
-            (A("q8", "brain"), (1.25, 360, 680))]
+    keys = [(A("q10") - 0.2, (1.1, 360, 680)), (A("q10", "potato"), (1.4, 360, 560)), (A("q10", "percent"), (1.0, 360, 700)),
+            (A("q10", "cut"), (1.1, 360, 680))]
     set_camera(camera(t, keys))
     enter_world(cr)
     kitchen(cr)
-    with at(cr, 360, 540, max(0.85, pop(t, A("q8", "potato"), 0.3)) if t < A("q8", "brain") else 1e-3, rot=-0.03):
+    with at(cr, 360, 540, max(0.85, pop(t, A("q10", "potato"), 0.3)) if t < A("q10", "percent") else 1e-3,
+            rot=-0.03):
         shape(cr, rrect_pts(-250, -90, 500, 180, 18, 14), hexc("#fdf6e3"), seed=3600, amp=0.5, lw=5)
         write(cr, [("THE POTATO", INK)], 0, -14, 58, align="center", bold=True)
         write(cr, [("PARADOX", RED)], 0, 56, 66, align="center", bold=True)
     pile(cr, t, 360, 960, 1.0, 1.0)
-    if t >= A("q8", "brain"):   # a confused brain
-        with at(cr, 360, 560, max(0.85, pop(t, A("q8", "brain"), 0.25)) * 1.4):
-            blob(cr, 0, 0, 90, 64, hexc("#f5a3b5"), seed=3610, amp=1.0, lw=4)
-            for k in range(3):
-                line(cr, [(-60 + k * 40, -40), (-40 + k * 40, 0), (-60 + k * 40, 40)], 4, hexc("#c9607a"),
-                     seed=3611 + k, amp=0.6)
-            write(cr, [("NOPE.", RED)], 0, -84, 44, align="center", bold=True)
-    hl(cr, t, [("the math is ", INK), ("EASY", GREEN)], 215, 66, A("q8", "math"), end=A("q8", "brain") - 0.05,
+    if t >= A("q10", "percent"):     # 1% vs half, side by side
+        for k, (big, small, col, x, st) in enumerate((("-1%", "water", BLUE, 200, A("q10", "percent")),
+                                                     ("-50%", "weight", RED, 520, A("q10", "cut")))):
+            if t >= st:
+                with at(cr, x - 10 * k, 560, max(0.85, pop(t, st, 0.25)) * (1.0 if k == 0 else 1.2)):
+                    shape(cr, rrect_pts(-130, -90, 260, 180, 20, 12), hexc("#fdf6e3"), seed=3620 + k, amp=0.4, lw=5)
+                    write(cr, [(big, col)], 0, 10, 72, align="center", bold=True)
+                    write(cr, [(small, INK)], 0, 66, 38, align="center", bold=True)
+    hl(cr, t, [("1% less water: ", INK), ("tiny", GREEN)], 215, 62, A("q10", "percent"), end=A("q10", "cut") - 0.05,
        bold=True)
-    hl(cr, t, [("your brain ", INK), ("REFUSES", RED)], 215, 66, A("q8", "brain"), bold=True)
+    hl(cr, t, [("...but ", INK), ("HALF", RED), (" the weight", INK)], 215, 66, A("q10", "cut"), bold=True)
 
 
 def scene_end(cr, t, tl):
     A = tl.at
-    keys = [(A("q9") - 0.2, (1.2, 360, 760)), (A("q9", "guess"), (1.7, 360, 880)), (A("q9", "98?"), (1.2, 360, 760))]
+    keys = [(A("q11") - 0.2, (1.2, 360, 760)), (A("q11", "guess"), (1.7, 360, 880)), (A("q11", "98?"), (1.2, 360, 760))]
     set_camera(camera(t, keys))
     enter_world(cr)
     kitchen(cr)
     scale(cr, t, 360, 940, 50, 1.1)
     pile(cr, t, 360, 915, 1.25, 1.0)
     person(cr, "farmer", 120, 1240, t, facing=1, arms=("chin", "hip"), eyes="wide", mouth="o", scale=1.1)
-    hl(cr, t, [("did you guess ", INK), ("98", RED), ("?", INK)], 215, 70, A("q9"), bold=True, underline=True)
-    stamp(cr, t, A("q9", "98?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
+    hl(cr, t, [("did you guess ", INK), ("98", RED), ("?", INK)], 215, 70, A("q11"), bold=True, underline=True)
+    stamp(cr, t, A("q11", "98?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
 
 
 def draw(cr, t, tl):

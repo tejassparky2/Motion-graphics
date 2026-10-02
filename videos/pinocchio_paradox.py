@@ -18,18 +18,19 @@ NARRATOR = dict()
 TAIL = 0.8
 
 SCRIPT = [
-    dict(id="p1", scene="shop", text="Pinocchio's nose grows every time he tells a lie. Never when he tells the truth. So one day, he "
-                                     "says this:"),
-    dict(id="p2", scene="shop", text="My nose is about to grow.", speaker="pino", pace=0.9),
-    dict(id="p3", scene="logic", text="If that's true, his nose grows. But it only grows when he lies. So it was a lie."),
-    dict(id="p4", scene="logic", text="But if it's a lie, his nose has to grow. Which makes it true. Which means it "
-                                      "can't grow."),
-    dict(id="p5", scene="spin", text="Every answer flips into the other one. The nose has to grow, and can't grow, "
-                                     "at the same time."),
-    dict(id="p6", scene="sign", text="It's called the Pinocchio paradox. A philosopher came up with it in "
-                                     "[two thousand one,|2001,] as a twist on a puzzle people have argued about for over "
-                                     "[two thousand years:|2,000 years:] this sentence is false."),
-    dict(id="p7", scene="end", text="So... does his nose grow?", pace=0.95),
+    dict(id="p1", scene="shop", text="Pinocchio has one rule. When he lies, his nose grows. When he tells the truth, "
+                                     "it stays the same."),
+    dict(id="p2", scene="shop", text="One day, he says this.", gap=0.3),
+    dict(id="p3", scene="shop", text="My nose is about to grow.", speaker="pino", pace=0.88),
+    dict(id="p4", scene="logic", text="Let's test it. What if he's telling the truth? Then his nose must grow. But "
+                                      "noses only grow for lies. So it can't be the truth.", pace=0.95),
+    dict(id="p5", scene="logic", text="What if he's lying? Then the opposite is true. His nose won't grow. But a lie "
+                                      "always makes it grow. So it can't be a lie, either.", pace=0.95),
+    dict(id="p6", scene="spin", text="True breaks the rule. A lie breaks the rule. No answer works."),
+    dict(id="p7", scene="sign", text="It's called the Pinocchio paradox. A philosopher came up with it in "
+                                     "[two thousand one.|2001.] It's a new version of a puzzle that's over "
+                                     "[two thousand years|2,000 years] old: this sentence is false."),
+    dict(id="p8", scene="end", text="So... does his nose grow?", pace=0.95),
 ]
 
 METADATA = dict(
@@ -137,132 +138,154 @@ def meter(cr, t, x, y, state, s=1.0):
 
 def scene_shop(cr, t, tl):
     A = tl.at
-    keys = [(0, (1.6, 360, 640)), (A("p1", "nose"), (2.2, 420, 600)), (A("p1", "lie"), (1.3, 380, 680)),
-            (A("p1", "one"), (1.0, 360, 700)), (A("p1", "says"), (1.7, 360, 620)),
-            (A("p2"), (1.4, 400, 600)), (A("p2", "grow"), (2.1, 360, 600))]
+    keys = [(0, (1.6, 360, 700)), (A("p1", "nose"), (2.0, 420, 690)), (A("p1", "truth,"), (1.3, 380, 720)),
+            (A("p2"), (1.0, 360, 760)), (A("p2", "says"), (1.6, 360, 700)),
+            (A("p3"), (1.3, 400, 700)), (A("p3", "grow"), (1.9, 360, 690))]
     set_camera(camera(t, keys))
     enter_world(cr)
     workshop(cr)
-    # the nose grows on the word "lie", then snaps back
-    lie_t = A("p1", "lie")
-    nose = 1.0 + 1.8 * ease_out(seg(t, lie_t, lie_t + 0.35)) * (1 - seg(t, A("p1", "one"), A("p1", "one") + 0.3))
-    mood = "shock" if lie_t <= t < A("p1", "one") else ("worried" if t >= A("p2") else "calm")
-    pino(cr, t, 330, 700, 1.6, nose, mood, talking=tl.speaking("pino", t), look=1 if t >= A("p2") else 0)
-    if t >= A("p2"):
-        with at(cr, 520, 400, max(0.85, pop(t, A("p2"), 0.25))):
+    # the nose grows on "lies", then snaps back on "truth"
+    lie_t = A("p1", "lies,")
+    nose = 1.0 + 1.8 * ease_out(seg(t, lie_t, lie_t + 0.35)) * (1 - seg(t, A("p1", "truth,"), A("p1", "truth,") + 0.3))
+    mood = "shock" if lie_t <= t < A("p1", "truth,") else ("worried" if t >= A("p3") else "calm")
+    if A("p1", "truth,") <= t < A("p2"):
+        mood = "happy"
+    pino(cr, t, 330, 640, 1.6, nose, mood, talking=tl.speaking("pino", t), look=1 if t >= A("p3") else 0)
+    if t >= A("p3"):
+        with at(cr, 520, 360, max(0.85, pop(t, A("p3"), 0.25))):
             shape(cr, rrect_pts(-170, -70, 340, 140, 30, 14), WHITE, seed=710, amp=0.4, lw=4)
             shape(cr, [(-80, 66), (-120, 120), (-40, 66)], WHITE, seed=711, amp=0.3, lw=4)
             write(cr, [("\"My nose is", INK)], 0, -10, 40, align="center", bold=True)
             write(cr, [("about to ", INK), ("GROW", RED), (".\"", INK)], 0, 40, 40, align="center", bold=True)
-    hl(cr, t, [("every ", INK), ("LIE", RED), (" = nose grows", INK)], 215, 60, 0.0, end=A("p1", "one") - 0.05,
+    hl(cr, t, [("a ", INK), ("LIE", RED), (" = nose grows", INK)], 215, 64, 0.0, end=A("p1", "truth,") - 0.05,
        bold=True, sound=False)
-    hl(cr, t, [("so he says ", INK), ("THIS", RED), (":", INK)], 215, 70, A("p1", "one"), end=A("p2") - 0.05, bold=True)
+    hl(cr, t, [("the ", INK), ("TRUTH", TRUE_C), (" = nose stays", INK)], 215, 60, A("p1", "truth,"),
+       end=A("p2") - 0.05, bold=True)
+    hl(cr, t, [("so he says ", INK), ("THIS", RED), (":", INK)], 215, 70, A("p2"), end=A("p3") - 0.05, bold=True)
     cue("pop", t, lie_t)
-    cue("hit", t, A("p2", "grow"))
+    cue("hit", t, A("p3", "grow"))
+
+
+def card(cr, t, x, y, s, title, col, rows, cross_t):
+    """A test card: a title, reasoning lines that appear one by one, and a big X when the test fails."""
+    with at(cr, x, y, s):
+        shape(cr, rrect_pts(-200, -130, 400, 260, 20, 14), hexc("#fdf6e3"), seed=720, amp=0.4, lw=5)
+        write(cr, [(title, col)], 0, -72, 48, align="center", bold=True)
+        for k, (text, rcol, st) in enumerate(rows):
+            if t >= st:
+                write(cr, [(text, rcol)], 0, -6 + k * 56, 38, align="center", bold=True,
+                      progress=ease_out(seg(t, st, st + 0.3)))
+        if t >= cross_t:
+            u = ease_out(seg(t, cross_t, cross_t + 0.2))
+            line(cr, [(-170, -110), (lerp(-170, 170, u), lerp(-110, 110, u))], 16, hexc("#e0483d", 0.9), seed=730,
+                 amp=0.3)
+            if u > 0.5:
+                line(cr, [(170, -110), (lerp(170, -170, u), lerp(-110, 110, u))], 16, hexc("#e0483d", 0.9),
+                     seed=731, amp=0.3)
 
 
 def scene_logic(cr, t, tl):
     A = tl.at
-    keys = [(A("p3") - 0.2, (1.15, 360, 680)), (A("p3", "true,"), (1.6, 360, 420)), (A("p3", "grows."), (1.4, 330, 760)),
-            (A("p3", "only"), (1.1, 360, 700)), (A("p3", "lie.", nth=1), (1.6, 360, 420)),
-            (A("p4"), (1.1, 360, 700)), (A("p4", "grow."), (1.5, 330, 760)), (A("p4", "true."), (1.6, 360, 420)),
-            (A("p4", "can't"), (1.2, 340, 740))]
+    keys = [(A("p4") - 0.2, (1.0, 360, 780)), (A("p4", "must"), (1.05, 360, 760)), (A("p4", "can't"), (1.0, 360, 780)),
+            (A("p5", "won't"), (1.05, 360, 760)), (A("p5", "either."), (1.0, 360, 780))]
     set_camera(camera(t, keys))
     enter_world(cr)
     workshop(cr)
-    # the switch flips TRUE -> LIE -> TRUE -> LIE as the logic goes round
-    flips = [(A("p3"), 0), (A("p3", "lie.", nth=1), 1), (A("p4", "true."), 0), (A("p4", "can't"), 1)]
-    state = 0.0
-    for k, (ft, v) in enumerate(flips):
-        if t >= ft:
-            prev = flips[k - 1][1] if k else 0
-            state = lerp(prev, v, ease_out(seg(t, ft, ft + 0.25)))
-            cue("pop", t, ft)
-    meter(cr, t, 360, 420, state)
-    # nose follows: grows on "grows"/"has to grow", shrinks on "can't grow"
-    grow = 0.0
-    for key, val in ((("p3", "grows."), 1.0), (("p4", "lie,"), 0.0), (("p4", "grow."), 1.0), (("p4", "can't"), 0.0)):
-        if t >= A(*key):
-            grow = val
-    nose_target = 1.0 + 1.6 * grow
-    nose = nose_target if t > A("p3") + 0.3 else 1.0
-    pino(cr, t, 330, 820, 1.35, nose, "worried" if t < A("p4") else "shock", look=-0.5)
-    hl(cr, t, [("if it's ", INK), ("TRUE", TRUE_C), ("...", INK)], 215, 74, A("p3", "true,"), end=A("p3", "only") - 0.05,
-       bold=True)
-    hl(cr, t, [("...it was a ", INK), ("LIE", LIE_C)], 215, 74, A("p3", "lie.", nth=1), end=A("p4") - 0.05, bold=True)
-    hl(cr, t, [("if it's a ", INK), ("LIE", LIE_C), ("...", INK)], 215, 74, A("p4"), end=A("p4", "true.") - 0.05,
-       bold=True)
-    hl(cr, t, [("...it's ", INK), ("TRUE", TRUE_C), ("!", INK)], 215, 74, A("p4", "true."), bold=True)
+    truth = [("nose must grow", INK, A("p4", "must")), ("but that's a LIE", LIE_C, A("p4", "only"))]
+    if t < A("p5"):
+        card(cr, t, 360, 450, max(0.85, pop(t, A("p4", "what"), 0.3)) * 1.25, "TRUTH?", TRUE_C, truth, A("p4", "can't"))
+    else:
+        u = ease_out(seg(t, A("p5"), A("p5") + 0.35))   # test 1 shrinks to a reminder on the left
+        card(cr, t, lerp(360, 120, u), lerp(450, 700, u), lerp(1.25, 0.42, u), "TRUTH?", TRUE_C, truth,
+             A("p4", "can't"))
+        if u >= 1:
+            card(cr, t, 360, 450, max(0.85, pop(t, A("p5") + 0.3, 0.3)) * 1.25, "LIE?", LIE_C,
+                 [("nose won't grow", INK, A("p5", "won't")), ("but lies GROW it", LIE_C, A("p5", "always"))],
+                 A("p5", "either."))
+    # the nose acts out each step
+    nose = 1.0
+    if A("p4", "must") <= t < A("p4", "can't"):
+        nose = 1.0 + 1.4 * ease_out(seg(t, A("p4", "must"), A("p4", "must") + 0.3))
+    elif A("p5", "always") <= t < A("p5", "either."):
+        nose = 1.0 + 1.4 * ease_out(seg(t, A("p5", "always"), A("p5", "always") + 0.3))
+    pino(cr, t, 360, 760, 1.0, nose, "worried" if t < A("p5") else "shock", look=-0.5)
+    cue("hit", t, A("p4", "can't"))
+    cue("hit", t, A("p5", "either."))
+    hl(cr, t, [("test 1: is it ", INK), ("TRUE", TRUE_C), ("?", INK)], 215, 62, A("p4", "what"),
+       end=A("p5") - 0.05, bold=True)
+    hl(cr, t, [("test 2: is it a ", INK), ("LIE", LIE_C), ("?", INK)], 215, 62, A("p5"), bold=True)
 
 
 def scene_spin(cr, t, tl):
     A = tl.at
-    keys = [(A("p5") - 0.2, (1.0, 360, 680)), (A("p5", "flips"), (1.5, 360, 520)), (A("p5", "nose"), (1.1, 360, 700)), (A("p5", "same"), (1.5, 340, 760))]
+    keys = [(A("p6") - 0.2, (1.0, 360, 690)), (A("p6", "true"), (1.1, 360, 690)), (A("p6", "lie"), (1.0, 360, 690)),
+            (A("p6", "answer"), (1.1, 360, 690))]
     set_camera(camera(t, keys))
     enter_world(cr)
     workshop(cr)
-    f = (t - A("p5")) * 5.0          # faster and faster
-    state = (math.sin(f * (1 + 0.5 * (t - A("p5")))) + 1) / 2
-    meter(cr, t, 360, 420, 1.0 if state > 0.5 else 0.0)
+    f = (t - A("p6")) * 5.0          # faster and faster
+    state = (math.sin(f * (1 + 0.5 * (t - A("p6")))) + 1) / 2
+    meter(cr, t, 360, 330, 1.0 if state > 0.5 else 0.0)
     nose = 1.0 + 1.6 * (1 if state > 0.5 else 0)
-    pino(cr, t, 330, 820, 1.35, nose, "shock", dizzy=t >= A("p5", "same"))
+    pino(cr, t, 330, 680, 1.35, nose, "shock", dizzy=t >= A("p6", "answer"))
     for k in range(2):   # the loop arrows
         a0 = t * 4 + k * math.pi
         cr.save()
-        cr.translate(360, 420)
-        cr.arc(0, 0, 200, a0, a0 + 2.2)
+        cr.translate(360, 330)
+        cr.arc(0, 0, 180, a0, a0 + 2.2)
         cr.restore()
         cr.set_source_rgba(*(TRUE_C if k else LIE_C))
         cr.set_line_width(8)
         cr.stroke()
     if int(f) != int(f - 5.0 / 30):
         cue("pop", t, t)
-    hl(cr, t, [("it ", INK), ("FLIPS", RED), ("...", INK)], 215, 76, A("p5", "flips"), end=A("p5", "nose") - 0.05,
+    hl(cr, t, [("TRUE", TRUE_C), (": breaks the rule", INK)], 215, 60, A("p6"), end=A("p6", "lie") - 0.05, bold=True)
+    hl(cr, t, [("LIE", LIE_C), (": breaks the rule", INK)], 215, 60, A("p6", "lie"), end=A("p6", "answer") - 0.05,
        bold=True)
-    hl(cr, t, [("grow ", RED), ("AND", INK), (" don't grow", TRUE_C)], 215, 64, A("p5", "nose"), bold=True)
+    hl(cr, t, [("NO", RED), (" answer works", INK)], 215, 70, A("p6", "answer"), bold=True, underline=True)
 
 
 def scene_sign(cr, t, tl):
     A = tl.at
-    keys = [(A("p6") - 0.2, (1.1, 360, 700)), (A("p6", "pinocchio"), (1.5, 360, 520)), (A("p6", "2001,"), (1.3, 360, 600)),
-            (A("p6", "argued"), (1.0, 360, 720)), (A("p6", "sentence"), (1.3, 360, 760))]
+    keys = [(A("p7") - 0.2, (1.1, 360, 700)), (A("p7", "pinocchio"), (1.5, 360, 520)), (A("p7", "2001."), (1.3, 360, 600)),
+            (A("p7", "puzzle"), (1.0, 360, 720)), (A("p7", "sentence"), (1.3, 360, 760))]
     set_camera(camera(t, keys))
     enter_world(cr)
     workshop(cr)
-    with at(cr, 360, 520, max(0.85, pop(t, A("p6", "pinocchio"), 0.3)), rot=-0.03):
+    with at(cr, 360, 520, max(0.85, pop(t, A("p7", "pinocchio"), 0.3)), rot=-0.03):
         shape(cr, rrect_pts(-260, -90, 520, 180, 18, 14), hexc("#fdf6e3"), seed=800, amp=0.5, lw=5)
         write(cr, [("THE PINOCCHIO", INK)], 0, -14, 52, align="center", bold=True)
         write(cr, [("PARADOX", RED)], 0, 52, 62, align="center", bold=True)
-    if t >= A("p6", "2001,"):
-        with at(cr, 590, 380, max(0.85, pop(t, A("p6", "2001,"), 0.25)), rot=0.1):
+    if t >= A("p7", "2001."):
+        with at(cr, 590, 380, max(0.85, pop(t, A("p7", "2001."), 0.25)), rot=0.1):
             blob(cr, 0, 0, 72, 46, hexc("#f2b632"), seed=801, amp=0.5, lw=4)
             write(cr, [("2001", INK)], 0, 14, 40, align="center", bold=True)
-    if t >= A("p6", "sentence"):   # the original liar sentence
-        with at(cr, 360, 860, max(0.85, pop(t, A("p6", "sentence"), 0.25)), rot=0.02):
+    if t >= A("p7", "sentence"):   # the original liar sentence
+        with at(cr, 360, 700, max(0.85, pop(t, A("p7", "sentence"), 0.25)), rot=0.02):
             shape(cr, rrect_pts(-280, -60, 560, 120, 14, 14), hexc("#2b2d3a"), seed=802, amp=0.4, lw=4)
             write(cr, [("\"This sentence is ", WHITE), ("FALSE", hexc("#ff6b6b")), (".\"", WHITE)], 0, 14, 42,
                   align="center", bold=True)
-        cue("hit", t, A("p6", "sentence"))
+        cue("hit", t, A("p7", "sentence"))
     pino(cr, t, 120, 1180, 0.9, 1.0, "calm")
-    hl(cr, t, [("argued about for ", INK), ("2,000+ YEARS", RED)], 215, 54, A("p6", "argued"),
-       end=A("p6", "sentence") - 0.05, bold=True)
+    hl(cr, t, [("a puzzle over ", INK), ("2,000 YEARS", RED), (" old", INK)], 215, 52, A("p7", "puzzle"),
+       end=A("p7", "sentence") - 0.05, bold=True)
 
 
 def scene_end(cr, t, tl):
     A = tl.at
-    keys = [(A("p7") - 0.2, (1.3, 360, 640)), (A("p7", "nose"), (2.0, 380, 600)), (A("p7", "grow?"), (1.5, 360, 660))]
+    keys = [(A("p8") - 0.2, (1.3, 360, 640)), (A("p8", "nose"), (2.0, 380, 600)), (A("p8", "grow?"), (1.5, 360, 660))]
     set_camera(camera(t, keys))
     enter_world(cr)
     workshop(cr)
     wob = 1.0 + 0.8 * (math.sin(t * 6) + 1) / 2        # the nose can't decide
-    pino(cr, t, 330, 760, 1.5, wob, "worried", look=0.8)
+    pino(cr, t, 330, 640, 1.5, wob, "worried", look=0.8)
     for k, (lab, col, x) in enumerate((("YES", TRUE_C, 200), ("NO", LIE_C, 520))):
-        if t >= A("p7", "grow?"):
-            with at(cr, x, 1110, max(0.85, pop(t, A("p7", "grow?") + k * 0.12, 0.25))):
+        if t >= A("p8", "grow?"):
+            with at(cr, x, 1110, max(0.85, pop(t, A("p8", "grow?") + k * 0.12, 0.25))):
                 shape(cr, rrect_pts(-110, -46, 220, 92, 46, 14), col, seed=900 + k, amp=0.3, lw=4)
                 write(cr, [(lab, WHITE)], 0, 16, 48, align="center", bold=True)
-    hl(cr, t, [("does his nose ", INK), ("GROW", RED), ("?", INK)], 215, 70, A("p7"), bold=True, underline=True)
-    stamp(cr, t, A("p7", "grow?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
+    hl(cr, t, [("does his nose ", INK), ("GROW", RED), ("?", INK)], 215, 70, A("p8"), bold=True, underline=True)
+    stamp(cr, t, A("p8", "grow?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
 
 
 def draw(cr, t, tl):

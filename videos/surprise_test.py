@@ -19,17 +19,17 @@ NARRATOR = dict(max_pause=0.42)
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="s1", scene="class", text="The teacher says: there's a surprise test next week. You won't know the day, "
-                                      "until it happens.", speaker="teacher", speaker_from="there's"),
+    dict(id="s1", scene="class", text="The teacher says: there will be a surprise test next week. You won't know which "
+                                      "day, until it happens.", speaker="teacher", speaker_from="there"),
     dict(id="s2", scene="class", text="The last bencher in class grins. Sir, that test is impossible.", speaker="chotu",
          speaker_from="sir,"),
-    dict(id="s3", scene="days", text="If there's no test by Thursday, it has to be Friday. Then it's no surprise. So "
-                                     "Friday's out.", speaker="chotu"),
-    dict(id="s4", scene="days", text="Now Thursday is the last day. Same logic. Thursday's out. Then Wednesday. "
-                                     "Tuesday. Monday.", speaker="chotu"),
-    dict(id="s5", scene="days", text="No day works. So there's no test!", speaker="chotu"),
-    dict(id="s6", scene="class2", text="He doesn't study at all. And on Wednesday, the teacher hands out the test."),
-    dict(id="s7", scene="class2", text="He's totally surprised. Just like the teacher said."),
+    dict(id="s3", scene="days", text="Think about Friday. If there's no test by Thursday, we'll know it's Friday. That's "
+                                     "no surprise. So it can't be Friday.", speaker="chotu"),
+    dict(id="s4", scene="days", text="Now Thursday is the last possible day. Same logic. It can't be Thursday, either. "
+                                     "Then Wednesday. Then Tuesday. Then Monday.", speaker="chotu"),
+    dict(id="s5", scene="days", text="Every day is ruled out. So there can't be a test!", speaker="chotu"),
+    dict(id="s6", scene="class2", text="So he doesn't study at all. Then on Wednesday, the teacher hands out the test."),
+    dict(id="s7", scene="class2", text="He never saw it coming. It's a total surprise. Exactly like the teacher said."),
     dict(id="s8", scene="name", text="It's called the surprise test paradox. Every step of his logic sounds right. "
                                      "But the test still came."),
     dict(id="s9", scene="end", text="So... where did his logic go wrong?", pace=0.95),
@@ -84,7 +84,7 @@ def scene_class(cr, t, tl, part):
     else:
         keys = [(A("s6") - 0.1, KID), (A("s6", "study"), (2.2, 830, 720)), (A("s6", "wednesday,"), (1.0, 470, 760)),
                 (A("s6", "hands"), (1.5, 600, 760)), (A("s6", "test.", nth=1), (2.0, 820, 760)),
-                (A("s7"), (2.4, 830, 715)), (A("s7", "just"), (1.4, 300, 740)), (A("s7", "said."), (2.0, 140, 720))]
+                (A("s7"), (2.4, 830, 715)), (A("s7", "exactly"), (1.4, 300, 740)), (A("s7", "said."), (2.0, 140, 720))]
     set_camera(camera(t, keys))
     enter_world(cr)
     classroom(cr, t, day=None if part == 1 else 3)
@@ -133,7 +133,7 @@ def scene_class(cr, t, tl, part):
         cue("thud", t, land)
     # screen text
     if part == 1:
-        hl(cr, t, [("SURPRISE TEST", RED), (" next week", INK)], 215, 60, 0.0, end=A("s2") - 0.05, bold=True,
+        hl(cr, t, [("SURPRISE TEST", RED), (" next week", INK)], 215, 54, 0.0, end=A("s2") - 0.05, bold=True,
            sound=False)
         hl(cr, t, [("\"That test is ", INK), ("IMPOSSIBLE", RED), (".\"", INK)], 215, 56, A("s2", "impossible."),
            bold=True)
@@ -141,37 +141,36 @@ def scene_class(cr, t, tl, part):
         hl(cr, t, [("he doesn't ", INK), ("STUDY", RED)], 215, 72, A("s6", "study"), end=A("s6", "wednesday,") - 0.05,
            bold=True)
         hl(cr, t, [("WEDNESDAY", RED), ("...", INK)], 215, 76, A("s6", "wednesday,"), end=A("s7") - 0.05, bold=True)
-        stamp(cr, t, A("s7", "surprised."), "SURPRISE!", dur=0.7, y=330)
-        hl(cr, t, [("just like the ", INK), ("TEACHER", BLUE), (" said", INK)], 215, 60, A("s7", "just"), bold=True)
-        cue("hit", t, A("s7", "surprised."))
+        stamp(cr, t, A("s7", "surprise."), "SURPRISE!", dur=0.7, y=330)
+        hl(cr, t, [("just like the ", INK), ("TEACHER", BLUE), (" said", INK)], 215, 52, A("s7", "exactly"), bold=True)
+        cue("hit", t, A("s7", "surprise."))
 
 
 def scene_days(cr, t, tl):
     A = tl.at
-    keys = [(A("s3") - 0.2, (1.0, 360, 640)), (A("s3", "thursday,"), (1.7, DX[3], 640)), (A("s3", "friday."), (1.7, DX[4], 640)),
-            (A("s3", "surprise."), (1.0, 360, 660)), (A("s3", "out."), (1.8, DX[4], 640)),
-            (A("s4"), (1.7, DX[3], 640)), (A("s4", "logic."), (1.0, 360, 660)), (A("s4", "thursday's"), (1.8, DX[3], 640)),
-            (A("s4", "wednesday."), (1.7, DX[2], 640)), (A("s4", "tuesday."), (1.7, DX[1], 640)),
-            (A("s4", "monday."), (1.7, DX[0], 640)), (A("s5"), (1.0, 360, 660)), (A("s5", "test!"), (1.3, 360, 820))]
+    W1, W2 = (1.1, 360, 700), (1.16, 360, 690)     # the whole week stays in view
+    keys = [(A("s3") - 0.2, W1), (A("s3", "friday."), W2), (A("s3", "surprise."), W1), (A("s3", "can't"), W2),
+            (A("s4"), W1), (A("s4", "either."), W2), (A("s4", "wednesday."), W1), (A("s4", "tuesday."), W2),
+            (A("s4", "monday."), W1), (A("s5"), W1), (A("s5", "test!"), W2)]
     board(cr, t, keys)
     crossed = {}
-    if t >= A("s3", "out."):
-        crossed[4] = A("s3", "out.")
-    for k, key in ((3, "thursday's"), (2, "wednesday."), (1, "tuesday."), (0, "monday.")):
+    if t >= A("s3", "can't"):
+        crossed[4] = A("s3", "can't")
+    for k, key in ((3, "either."), (2, "wednesday."), (1, "tuesday."), (0, "monday.")):
         if t >= A("s4", key):
             crossed[k] = A("s4", key)
     day_boxes(cr, t, crossed)
-    if A("s3", "thursday,") <= t < A("s3", "out."):   # "if no test by Thursday..." arrow to Friday
-        line(cr, [(DX[3], 760), (DX[4], 760)], 6, CHALK_B, seed=1200, amp=0.4)
-        line(cr, [(DX[4] - 20, 744), (DX[4], 760), (DX[4] - 20, 776)], 6, CHALK_B, seed=1201, amp=0.2)
-        write(cr, [("he'd KNOW", CHALK_B)], 548, 820, 34, align="center", bold=True)
+    if A("s3", "thursday,") <= t < A("s3", "can't"):   # "if no test by Thursday..." arrow to Friday
+        line(cr, [(DX[3], 530), (DX[4], 530)], 7, CHALK_B, seed=1200, amp=0.4)
+        line(cr, [(DX[4] - 22, 512), (DX[4], 530), (DX[4] - 22, 548)], 7, CHALK_B, seed=1201, amp=0.2)
+        write(cr, [("we'd KNOW", CHALK_B)], 520, 490, 44, align="center", bold=True)
     if t >= A("s5", "test!"):
-        with at(cr, 360, 900, max(0.85, pop(t, A("s5", "test!"), 0.25)), rot=-0.05):
-            write(cr, [("NO TEST!", CHALK_Y)], 0, 0, 110, align="center", bold=True)
+        with at(cr, 360, 470, max(0.85, pop(t, A("s5", "test!"), 0.25)), rot=-0.05):
+            write(cr, [("NO TEST!", CHALK_Y)], 0, 0, 96, align="center", bold=True)
         cue("hit", t, A("s5", "test!"))
-    hl(cr, t, [("Friday? He'd ", INK), ("KNOW", RED)], 215, 66, A("s3", "thursday,"), end=A("s4") - 0.05, bold=True)
+    hl(cr, t, [("Friday? ", INK), ("NO SURPRISE", RED)], 215, 62, A("s3", "thursday,"), end=A("s4") - 0.05, bold=True)
     hl(cr, t, [("same logic, ", INK), ("every day", RED)], 215, 66, A("s4", "logic."), end=A("s5") - 0.05, bold=True)
-    hl(cr, t, [("no day works", INK)], 215, 74, A("s5"), bold=True)
+    hl(cr, t, [("every day ", INK), ("RULED OUT", RED)], 215, 66, A("s5"), bold=True)
 
 
 def scene_name(cr, t, tl):
@@ -213,7 +212,7 @@ def scene_end(cr, t, tl):
         else:
             person(cr, who, x, 900, t, facing=-1)
         desk(cr, x, 4200 + i * 10)
-    hl(cr, t, [("where did his logic go ", INK), ("WRONG", RED), ("?", INK)], 215, 54, A("s9"), bold=True,
+    hl(cr, t, [("where did his logic go ", INK), ("WRONG", RED), ("?", INK)], 215, 46, A("s9"), bold=True,
        underline=True)
     stamp(cr, t, A("s9", "wrong?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
 

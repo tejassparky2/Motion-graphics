@@ -17,20 +17,23 @@ TAIL = 0.8
 
 SCRIPT = [
     dict(id="b1", scene="city", text="A city builds a brand new road. And traffic gets worse. For everyone."),
-    dict(id="b2", scene="map", text="Four thousand drivers go from home to work. There are two routes."),
-    dict(id="b3", scene="map", text="Each route has one narrow road. The more cars on it, the slower it gets. "
-                                    "And one highway, that always takes "
-                                    "[forty-five minutes.|45 minutes.]"),
-    dict(id="b4", scene="map", text="The drivers split in half. Everyone gets there in "
+    dict(id="b2", scene="map", text="Here's how. [Four thousand|4,000] drivers go from home to work. There are two "
+                                    "routes: top and bottom."),
+    dict(id="b3", scene="map", text="Each route has a narrow road, and a highway. The narrow road takes one minute for "
+                                    "every hundred cars. The highway always takes [forty-five minutes.|45 minutes.]"),
+    dict(id="b4", scene="map", text="So the drivers split in half. [Two thousand|2,000] cars per route. That's "
+                                    "[twenty|20] minutes, plus [forty-five.|45.] Everyone arrives in "
                                     "[sixty-five minutes.|65 minutes.]"),
-    dict(id="b5", scene="shortcut", text="Now the city adds a free shortcut, between the two narrow roads."),
-    dict(id="b6", scene="shortcut", text="Every driver takes it. Both narrow roads jam. Now the trip takes "
+    dict(id="b5", scene="shortcut", text="Now the city adds a free shortcut, joining the two narrow roads."),
+    dict(id="b6", scene="shortcut", text="Every driver switches to it, because it skips both highways."),
+    dict(id="b7", scene="shortcut", text="But now all [four thousand|4,000] cars use both narrow roads. Each one takes "
+                                         "[forty minutes.|40 minutes.] The whole trip takes "
                                          "[eighty minutes.|80 minutes.]"),
-    dict(id="b7", scene="shortcut", text="And nobody can switch back. The old routes now take "
-                                         "[eighty-five.|85.]"),
-    dict(id="b8", scene="name", text="It's called [Bress's|Braess's] paradox. Mathematician Dietrich "
+    dict(id="b8", scene="shortcut", text="And nobody can switch back. The old routes would now take [forty|40] plus "
+                                         "[forty-five.|45.] That's [eighty-five.|85.]"),
+    dict(id="b9", scene="name", text="It's called [Bress's|Braess's] paradox. Mathematician Dietrich "
                                      "[Bress|Braess] described it in [nineteen sixty-eight.|1968.]"),
-    dict(id="b9", scene="end", text="So... would you take the shortcut?", pace=0.95),
+    dict(id="b10", scene="end", text="So... would you take the shortcut?", pace=0.95),
 ]
 
 METADATA = dict(
@@ -196,109 +199,116 @@ def scene_city(cr, t, tl):
 def scene_map(cr, t, tl):
     A = tl.at
     keys = [(A("b2") - 0.2, (1.25, 120, 600)), (A("b2", "work."), (1.0, 360, 600)), (A("b2", "two"), (1.05, 360, 600)),
-            (A("b3", "narrow"), (1.4, 220, 500)), (A("b3", "highway,"), (1.3, 500, 500)),
+            (A("b3", "narrow"), (1.15, 320, 560)), (A("b3", "always"), (1.15, 400, 560)),
             (A("b4"), (1.0, 360, 600)), (A("b4", "65"), (1.05, 360, 620))]
     bg(cr, t, keys)
     glow = {}
     if A("b2", "two") <= t < A("b3"):
         glow = {"n1": hexc("#ffd23f", 0.55), "h1": hexc("#ffd23f", 0.55), "h2": hexc("#7fd1ff", 0.55),
                 "n2": hexc("#7fd1ff", 0.55)}
-    elif A("b3", "narrow") <= t < A("b3", "highway,"):
+    elif A("b3", "narrow") <= t < A("b3", "always"):
         glow = {"n1": hexc("#e0483d", 0.45), "n2": hexc("#e0483d", 0.45)}
-    elif A("b3", "highway,") <= t < A("b4"):
+    elif A("b3", "always") <= t < A("b4"):
         glow = {"h1": hexc("#2e9e52", 0.45), "h2": hexc("#2e9e52", 0.45)}
     world(cr, t, "split" if t >= A("b2", "four") else "none", glow=glow)
-    if t >= A("b2", "four"):
+    if A("b2", "four") <= t < A("b3"):
         with at(cr, 360, 1010, max(0.85, pop(t, A("b2", "four"), 0.25))):
             badge(cr, 0, 0, "4,000 DRIVERS", YEL)
     if A("b2", "two") <= t < A("b3"):
-        tag(cr, 300, 300, "ROUTE 1", hexc("#b9862a"), size=40)
-        tag(cr, 300, 900, "ROUTE 2", hexc("#2f7fb5"), size=40)
-    if A("b3", "narrow") <= t:
+        tag(cr, 300, 300, "TOP", hexc("#b9862a"), size=44)
+        tag(cr, 300, 900, "BOTTOM", hexc("#2f7fb5"), size=44)
+    if A("b3", "narrow") <= t < A("b4", "20"):
         tag(cr, *LABEL_AT["n1"], "NARROW", RED, rot=-0.6)
         tag(cr, *LABEL_AT["n2"], "NARROW", RED, rot=-0.6)
-    if A("b3", "highway,") <= t:
+    if A("b3", "always") <= t:
         tag(cr, *LABEL_AT["h1"], "45 min", GREEN, rot=0.6, size=36)
         tag(cr, *LABEL_AT["h2"], "45 min", GREEN, rot=0.6, size=36)
-    if A("b3", "more") <= t < A("b3", "highway,"):
-        with at(cr, 360, 600, max(0.85, pop(t, A("b3", "more"), 0.25))):
-            badge(cr, 0, 0, "more cars = slower", hexc("#ff6b5e"))
+    if A("b3", "minute") <= t < A("b3", "always"):
+        with at(cr, 360, 600, max(0.85, pop(t, A("b3", "minute"), 0.25))):
+            badge(cr, 0, 0, "1 min per 100 cars", hexc("#ff6b5e"))
     if t >= A("b4", "split"):
         tag(cr, 230, 330, "2,000", hexc("#b9862a"), size=40)
         tag(cr, 230, 880, "2,000", hexc("#2f7fb5"), size=40)
+    if t >= A("b4", "20"):
+        tag(cr, *LABEL_AT["n1"], "20 min", RED, rot=-0.6, size=36)
+        tag(cr, *LABEL_AT["n2"], "20 min", RED, rot=-0.6, size=36)
     if t >= A("b4", "65"):
         with at(cr, 360, 1010, max(0.85, pop(t, A("b4", "65"), 0.25))):
             badge(cr, 0, 0, "20 + 45 = 65 min", hexc("#7ee08a"))
     hl(cr, t, [("4,000", RED), (" drivers", INK)], 200, 64, A("b2", "four"), end=A("b2", "two") - 0.05, bold=True)
     hl(cr, t, [("TWO", RED), (" routes", INK)], 200, 64, A("b2", "two"), end=A("b3", "narrow") - 0.05, bold=True)
-    hl(cr, t, [("narrow road: ", INK), ("JAMS", RED)], 200, 60, A("b3", "narrow"), end=A("b3", "highway,") - 0.05,
+    hl(cr, t, [("narrow: ", INK), ("1 min per 100 cars", RED)], 200, 48, A("b3", "narrow"), end=A("b3", "always") - 0.05,
        bold=True)
-    hl(cr, t, [("highway: always ", INK), ("45", GREEN)], 200, 60, A("b3", "highway,"), end=A("b4") - 0.05, bold=True)
+    hl(cr, t, [("highway: always ", INK), ("45", GREEN)], 200, 60, A("b3", "always"), end=A("b4") - 0.05, bold=True)
+    hl(cr, t, [("2,000", RED), (" cars per route", INK)], 200, 58, A("b4", "split"), end=A("b4", "65") - 0.05, bold=True)
     hl(cr, t, [("everyone: ", INK), ("65 min", GREEN)], 200, 64, A("b4", "65"), bold=True, underline=True)
 
 
 def scene_shortcut(cr, t, tl):
     A = tl.at
-    keys = [(A("b5") - 0.2, (1.0, 360, 600)), (A("b5", "shortcut,"), (1.4, 360, 600)),
-            (A("b6"), (1.0, 360, 600)), (A("b6", "jam."), (1.3, 260, 520)), (A("b6", "80"), (1.0, 360, 620)),
-            (A("b7"), (1.0, 360, 620)), (A("b7", "85."), (1.05, 360, 620))]
+    keys = [(A("b5") - 0.2, (1.0, 360, 600)), (A("b5", "shortcut,"), (1.4, 360, 600)), (A("b6"), (1.05, 360, 600)),
+            (A("b7"), (1.0, 360, 600)), (A("b7", "both"), (1.1, 360, 580)), (A("b7", "80"), (1.0, 360, 620)),
+            (A("b8"), (1.0, 360, 620)), (A("b8", "85."), (1.05, 360, 620))]
     bg(cr, t, keys)
     built = ease_out(seg(t, A("b5", "adds"), A("b5", "shortcut,", end=True) + 0.2))
-    jam = t >= A("b6")
+    jam = t >= A("b7")
     glow = {"sc": hexc("#ffd23f", 0.6)} if not jam else {"n1": hexc("#e0483d", 0.45), "n2": hexc("#e0483d", 0.45),
                                                          "sc": hexc("#e0483d", 0.3)}
-    if t >= A("b7", "old"):
+    if A("b6") <= t < A("b7"):     # the tempting new path: narrow, shortcut, narrow
+        glow = {k: hexc("#ffd23f", 0.75) for k in ("n1", "sc", "n2")}
+    if t >= A("b8", "old"):
         glow.update({"h1": hexc("#9aa0a8", 0.5), "h2": hexc("#9aa0a8", 0.5)})
     world(cr, t, "jam" if jam else "split", shortcut=built, glow=glow)
     if A("b5", "free") <= t:
         tag(cr, *LABEL_AT["sc"], "0 min", hexc("#b9862a"), size=40)
-    if jam:
+    if t >= A("b7", "40"):
         tag(cr, *LABEL_AT["n1"], "40 min", RED, rot=-0.6, size=36)
         tag(cr, *LABEL_AT["n2"], "40 min", RED, rot=-0.6, size=36)
-    if A("b6", "80") <= t < A("b7", "old"):
-        with at(cr, 360, 1010, max(0.85, pop(t, A("b6", "80"), 0.25))):
+    if A("b7", "80") <= t < A("b8", "old"):
+        with at(cr, 360, 1010, max(0.85, pop(t, A("b7", "80"), 0.25))):
             badge(cr, 0, 0, "40 + 0 + 40 = 80 min", hexc("#ff6b5e"))
-    if t >= A("b7", "old"):
-        with at(cr, 360, 1010, max(0.85, pop(t, A("b7", "old"), 0.25))):
+    if t >= A("b8", "old"):
+        with at(cr, 360, 1010, max(0.85, pop(t, A("b8", "old"), 0.25))):
             badge(cr, 0, 0, "old route: 40 + 45 = 85", hexc("#ff6b5e"))
         for k in ("h1", "h2"):
             x, y = LABEL_AT[k]
             line(cr, [(x - 30, y - 30), (x + 30, y + 30)], 9, RED, seed=9500, amp=0.3)
             line(cr, [(x + 30, y - 30), (x - 30, y + 30)], 9, RED, seed=9501, amp=0.3)
     hl(cr, t, [("a ", INK), ("FREE", GREEN), (" shortcut", INK)], 200, 64, A("b5", "free"), end=A("b6") - 0.05, bold=True)
-    hl(cr, t, [("everyone takes it", INK)], 200, 60, A("b6"), end=A("b6", "80") - 0.05, bold=True)
-    hl(cr, t, [("was ", INK), ("65", GREEN), (", now ", INK), ("80", RED)], 200, 64, A("b6", "80"),
-       end=A("b7") - 0.05, bold=True)
-    hl(cr, t, [("NOBODY", RED), (" can switch back", INK)], 200, 56, A("b7"), bold=True)
-    cue("hit", t, A("b6", "80"))
+    hl(cr, t, [("skips both ", INK), ("HIGHWAYS", GREEN)], 200, 60, A("b6"), end=A("b7") - 0.05, bold=True)
+    hl(cr, t, [("4,000", RED), (" on narrow roads", INK)], 200, 54, A("b7"), end=A("b7", "80") - 0.05, bold=True)
+    hl(cr, t, [("was ", INK), ("65", GREEN), (", now ", INK), ("80", RED)], 200, 64, A("b7", "80"),
+       end=A("b8") - 0.05, bold=True)
+    hl(cr, t, [("NOBODY", RED), (" can switch back", INK)], 200, 56, A("b8"), bold=True)
+    cue("hit", t, A("b7", "80"))
 
 
 def scene_name(cr, t, tl):
     A = tl.at
-    keys = [(A("b8") - 0.2, (1.0, 360, 620)), (A("b8", "paradox."), (1.15, 360, 560)), (A("b8", "dietrich"), (1.0, 360, 620))]
+    keys = [(A("b9") - 0.2, (1.0, 360, 620)), (A("b9", "paradox."), (1.15, 360, 560)), (A("b9", "dietrich"), (1.0, 360, 620))]
     bg(cr, t, keys)
     world(cr, t, "jam", shortcut=1.0)
-    with at(cr, 360, 420, max(0.85, pop(t, A("b8"), 0.3)), rot=-0.03):
+    with at(cr, 360, 420, max(0.85, pop(t, A("b9"), 0.3)), rot=-0.03):
         shape(cr, rrect_pts(-260, -90, 520, 180, 18, 14), CREAM, seed=9600, amp=0.5, lw=5)
         write(cr, [("BRAESS'S", INK)], 0, -14, 58, align="center", bold=True)
         write(cr, [("PARADOX", RED)], 0, 56, 66, align="center", bold=True)
-    if t >= A("b8", "dietrich"):
-        with at(cr, 360, 1010, max(0.85, pop(t, A("b8", "dietrich"), 0.25))):
+    if t >= A("b9", "dietrich"):
+        with at(cr, 360, 1010, max(0.85, pop(t, A("b9", "dietrich"), 0.25))):
             badge(cr, 0, 0, "Dietrich Braess, 1968", YEL)
 
 
 def scene_end(cr, t, tl):
     A = tl.at
-    keys = [(A("b9") - 0.2, (1.05, 360, 600)), (A("b9", "shortcut?"), (1.3, 360, 600))]
+    keys = [(A("b10") - 0.2, (1.05, 360, 600)), (A("b10", "shortcut?"), (1.3, 360, 600))]
     bg(cr, t, keys)
     world(cr, t, "jam", shortcut=1.0, glow={"sc": hexc("#ffd23f", 0.5 + 0.3 * math.sin(t * 6))})
     for k, (lab, col, x) in enumerate((("YES", GREEN, 200), ("NO", hexc("#e0483d"), 520))):
-        if t >= A("b9", "shortcut?"):
-            with at(cr, x, 1030, max(0.85, pop(t, A("b9", "shortcut?") + k * 0.12, 0.25))):
+        if t >= A("b10", "shortcut?"):
+            with at(cr, x, 1030, max(0.85, pop(t, A("b10", "shortcut?") + k * 0.12, 0.25))):
                 shape(cr, rrect_pts(-110, -46, 220, 92, 46, 14), col, seed=9700 + k, amp=0.3, lw=4)
                 write(cr, [(lab, WHITE)], 0, 16, 48, align="center", bold=True)
-    hl(cr, t, [("would you take the ", INK), ("SHORTCUT", RED), ("?", INK)], 200, 44, A("b9"), bold=True, underline=True)
-    stamp(cr, t, A("b9", "shortcut?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
+    hl(cr, t, [("would you take the ", INK), ("SHORTCUT", RED), ("?", INK)], 200, 44, A("b10"), bold=True, underline=True)
+    stamp(cr, t, A("b10", "shortcut?", end=True), "COMMENT BELOW!", dur=0.8, y=330)
 
 
 def draw(cr, t, tl):
