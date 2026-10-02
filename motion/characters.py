@@ -96,6 +96,13 @@ CAST = {
     # The Last Bencher Part 3: the substitute teacher (a last bencher, 20 years ago)
     "sub": dict(skin=hexc("#e8b48a"), shirt=hexc("#c9e3f5"), pants=hexc("#3b3f4a"), bw=96, bh=110, head=40,
                 kind="shirt_tie", hair="messy", hair_col=hexc("#3a2a22"), beard=hexc("#3a2a22"), seed=229),
+    # Body-facts series (kidneys): the doctor, the donor (Mike) and his brother (Danny)
+    "doctor": dict(skin=hexc("#e8b48a"), shirt=hexc("#2e9e8f"), pants=hexc("#2e9e8f"), bw=98, bh=114, head=40,
+                   kind="labcoat", hair="gray", hair_col=hexc("#d8d4cc"), glasses=True, seed=233),
+    "mike": dict(skin=SKIN_MID, shirt=hexc("#9fc5e8"), pants=hexc("#9fc5e8"), bw=94, bh=104, head=40, kind="box",
+                 hair="messy", hair_col=hexc("#2b1c14"), seed=239),
+    "danny": dict(skin=SKIN_MID, shirt=hexc("#9fc5e8"), pants=hexc("#9fc5e8"), bw=94, bh=104, head=40, kind="box",
+                  hair="slick", hair_col=hexc("#2b1c14"), beard=hexc("#2b1c14"), seed=241),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),
@@ -312,6 +319,17 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                      amp=0.5)
                 line(cr, [(-bw / 2 + k * bw / 4, top + 4), (-bw / 2 + k * bw / 4, top + bh - 4)], 3, hexc("#8e2f2c"),
                      seed + 10 + k, amp=0.5)
+        elif kind == "labcoat":   # doctor: white coat open over a teal scrub top, stethoscope round the neck
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 24), WHITE, seed, amp=0.6)
+            shape(cr, [(-18, top + 2), (18, top + 2), (12, top + bh - 4), (-12, top + bh - 4)], c["shirt"], seed + 1,
+                  amp=0.4, lw=2.5)
+            line(cr, [(-18, top + 2), (-6, top + 46), (-12, top + bh - 4)], 3, hexc("#c9ccd2"), seed + 2, amp=0.3)
+            line(cr, [(18, top + 2), (6, top + 46), (12, top + bh - 4)], 3, hexc("#c9ccd2"), seed + 3, amp=0.3)
+            shape(cr, rrect_pts(bw / 2 - 30, top + 34, 18, 20, 3, 8), hexc("#eef0f3"), seed + 4, amp=0.3, lw=2)
+            line(cr, [(bw / 2 - 26, top + 34), (bw / 2 - 26, top + 28)], 3, hexc("#3f6fb5"), seed + 5, amp=0.1)  # pen
+            line(cr, [(-14, top + 4), (-20, top + 40), (-8, top + 62)], 4, hexc("#3a3d45"), seed + 6, amp=0.3)
+            line(cr, [(14, top + 4), (20, top + 40), (8, top + 62)], 4, hexc("#3a3d45"), seed + 7, amp=0.3)
+            blob(cr, 0, top + 66, 9, 9, hexc("#b9bec7"), seed + 8, amp=0.2, lw=2.5)
         elif kind == "suit":
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 26), c["shirt"], seed, amp=1.0)
             shape(cr, [(-16, top + 4), (16, top + 4), (0, top + 50)], WHITE, seed + 1, amp=0.5, lw=3)

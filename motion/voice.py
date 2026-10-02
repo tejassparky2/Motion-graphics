@@ -55,9 +55,16 @@ TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
 MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference narrator's breaths are ~0.32 s)
 
 
-def configure(voice=None, speed=None, max_pause=None):
+# Character voices for multi-voice videos: speaker -> dict(voice=<kokoro voice>, speed=1.0, pitch=<semitones>).
+# Anyone not listed (and the narrator) uses the main narrator voice: the owner's clone by default.
+CAST_VOICES = {}
+
+
+def configure(voice=None, speed=None, max_pause=None, cast=None):
     """Per-video narrator settings (environment variables still win, so you can audition voices)."""
     global VOICE, SPEED, MAX_PAUSE
+    CAST_VOICES.clear()
+    CAST_VOICES.update(cast or {})
     if voice and "NARRATOR_VOICE" not in os.environ:
         VOICE = voice
     if speed and "NARRATOR_SPEED" not in os.environ and ENGINE != "clone":   # per-video speeds were tuned for Kokoro
@@ -143,7 +150,28 @@ def _pronounce(text):
 CLONE_VERSION = "v3"   # bump when the clone generation, pace or tone changes
 
 
-def _key(text, pace=1.0):
+def _cast_synth(text, pace, who):
+    """A character line in a stock Kokoro voice, optionally pitched up/down for a cartoon voice."""
+    v = CAST_VOICES[who]
+    out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace, who)}.wav")
+    if not os.path.exists(out):
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        _kokoro_wav(_pronounce(text), v.get("speed", 1.0) * pace, out, voice=v["voice"])
+        if v.get("pitch"):
+            import imageio_ffmpeg
+            tmp = out + ".pitch.wav"
+            subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", out, "-filter:a",
+                            f"rubberband=pitch={2 ** (v['pitch'] / 12):.4f}:formant=shifted:transients=crisp",
+                            tmp], check=True)
+            os.replace(tmp, out)
+    return _squeeze(_trim(_read_wav(out)))
+
+
+def _key(text, pace=1.0, who=None):
+    if who in CAST_VOICES:
+        v = CAST_VOICES[who]
+        return hashlib.sha1(f"cast|{v['voice']}|{v.get('speed', 1.0)}|{v.get('pitch', 0)}|{pace:.3f}|"
+                            f"{_pronounce(text)}".encode()).hexdigest()[:16]
     if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     if ENGINE == "clone":
@@ -219,22 +247,26 @@ def use_external(media, lines):
 _kokoro = {}
 
 
-def _kokoro_wav(text, speed, out):
+def _kokoro_wav(text, speed, out, voice=None):
     import soundfile
     from scipy.signal import resample_poly
-    if VOICE[0] not in _kokoro:
+    voice = voice or VOICE
+    if voice[0] not in _kokoro:
         from kokoro import KPipeline
-        _kokoro[VOICE[0]] = KPipeline(lang_code=VOICE[0], repo_id="hexgrad/Kokoro-82M")
-    audio = np.concatenate([r.audio.numpy() for r in _kokoro[VOICE[0]](text, voice=VOICE, speed=speed)])
+        _kokoro[voice[0]] = KPipeline(lang_code=voice[0], repo_id="hexgrad/Kokoro-82M")
+    audio = np.concatenate([r.audio.numpy() for r in _kokoro[voice[0]](text, voice=voice, speed=speed)])
     soundfile.write(out, resample_poly(audio, 147, 80), SR, subtype="PCM_16")  # 24 kHz -> 44.1 kHz
 
 
-def synth(text, pace=1.0):
+def synth(text, pace=1.0, who=None):
     """Speech for one line as float samples at 44.1 kHz, silence-trimmed (cached).
 
-    `pace` scales the speed for this line only (e.g. 0.9 to land a punchline a touch slower)."""
+    `pace` scales the speed for this line only (e.g. 0.9 to land a punchline a touch slower).
+    `who` picks a character voice from CAST_VOICES; anyone else is the narrator voice."""
     if text in _EXTERNAL:
         return _squeeze(_trim(_read_wav(_EXTERNAL[text])))
+    if who in CAST_VOICES:
+        return _cast_synth(text, pace, who)
     out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
     if ENGINE == "clone":
         if not os.path.exists(_clone_raw(text)):
@@ -439,13 +471,13 @@ def _norm(w):
     return re.sub(r"[^a-z0-9]", "", w.lower())
 
 
-def word_times(text, audio, pace=1.0):
+def word_times(text, audio, pace=1.0, who=None):
     """[(start, end)] for each whitespace-separated word of `text`, relative to the start of `audio`.
 
     Whisper's timestamps are matched to the script by sequence alignment; words Whisper heard differently
     (e.g. "seventy" -> "70") get times interpolated from their neighbours by character length.
     """
-    cache = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.p{MAX_PAUSE}.words.json")
+    cache = os.path.join(ROOT, "build", "tts", f"{_key(text, pace, who)}.p{MAX_PAUSE}.words.json")
     if os.path.exists(cache):
         return [tuple(x) for x in json.load(open(cache))]
     global _whisper

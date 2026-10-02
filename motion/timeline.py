@@ -161,14 +161,30 @@ class Timeline:
         audio, times, off = [], [], 0.0
         for c, (a0, a1) in enumerate(spans):
             text = " ".join(words[a0:a1])
-            clip = voice.synth(text, b.pace)
-            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace)]
+            who = Timeline._who(b, a0)
+            clip = voice.synth(text, b.pace, who)
+            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who)]
             audio.append(clip)
             off += len(clip) / voice.SR
             if c < len(pauses):
                 audio.append(np.zeros(int(pauses[c] * voice.SR)))
                 off += pauses[c]
         return np.concatenate(audio), times
+
+    @staticmethod
+    def _who(b, first_word):
+        """Who speaks the take starting at `first_word`: the beat's speaker from `speaker_from` on (or the whole
+        line if there's no `speaker_from`), otherwise the narrator (None)."""
+        if not b.speaker:
+            return None
+        if not b.speaker_from:
+            return b.speaker
+        k, n = _norm(b.speaker_from), 0
+        for u in b.units:
+            if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
+                return b.speaker if first_word >= n else None
+            n += len(u.spoken)
+        return None
 
     @staticmethod
     def sentences(script):
@@ -178,7 +194,8 @@ class Timeline:
             b = Beat(**spec)
             b.units = parse(b.text)
             words = b.spoken_text.split()
-            out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]]
+            out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]
+                    if Timeline._who(b, a0) not in voice.CAST_VOICES]   # character voices aren't the clone
         return out
 
     # ---- queries used by scenes
