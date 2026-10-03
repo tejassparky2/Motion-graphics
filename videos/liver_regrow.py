@@ -40,7 +40,7 @@ SCRIPT = [
     dict(id="h2", scene="ward", text="No. Your liver grows back.", speaker="doctor"),
     dict(id="h3", scene="ward", text="In a few months, it's almost full size again. Just a different shape.",
          speaker="doctor"),
-    dict(id="h4", scene="ward", text="And the piece your brother got grows too.", speaker="doctor"),
+    dict(id="h4", scene="ward", text="And your brother's half grows bigger too.", speaker="doctor"),
     dict(id="h5", scene="ward", text="So now we both have a whole liver?", speaker="danny"),
     dict(id="h6", scene="ward", text="Pretty much, yes.", speaker="doctor"),
     dict(id="h7", scene="ward", text="Thanks, bro. So, do lungs grow back too?", speaker="danny"),
@@ -53,7 +53,7 @@ METADATA = dict(
     alt_titles=["Your Liver Can Grow Back. Here's How 😳", "One Liver Became Two 🤯"],
     description="""He gave his brother half his liver. A few months later, they both had a whole one. 😳
 
-The liver can grow back. After a living donation, the part that's left gets bigger, and in a few months it's almost full size again. Not the same shape, but the same job. And the piece the brother got grows too.
+The liver can grow back. After a living donation, the part that's left gets bigger, and in a few months it's almost full size again. Not the same shape, but the same job. And the brother's half grows bigger too.
 
 (Funny cartoon, real facts. Not medical advice: talk to a doctor about your own health.)
 
@@ -205,7 +205,7 @@ def scene_ward(cr, t, tl):
     write(cr, [("GOT HALF", RED)], DANNY_X, 990, 28, align="center", bold=True)
     for key, end, runs in (("h2", "h3", [("the liver ", INK), ("GROWS BACK", GREEN)]),
                            ("h3", "h4", [("full size, ", GREEN), ("new shape", BLUE)]),
-                           ("h4", "h5", [("his piece ", INK), ("grows too", GREEN)])):
+                           ("h4", "h5", [("his half ", INK), ("grows too", GREEN)])):
         if A(key) <= t < A(end):
             cr.save()
             cr.identity_matrix()
