@@ -20,6 +20,18 @@ videos are made, committed and pushed here only.
   uploaded yet (ask before scheduling).
 - Characters: Lefty and Righty (kidneys), the heart, the scalpel, the doctor, Mike (donor) and Danny (his brother).
 
+## Videos 2-4: brain, nose, liver
+Research, sources and the psychology behind the scripts: `research_notes/body_facts_2-4.md`.
+- `videos/brain_awake.py`: "They Cut Into His Brain… While He Was AWAKE". The brain can't feel pain; the doctor
+  explains awake surgery and where headaches really come from.
+- `videos/nose_cycle.py`: "You're Breathing Through ONE Nostril Right Now". The two sides of the nose work in
+  shifts (the nasal cycle). The viewer tests it and comments LEFT or RIGHT.
+- `videos/liver_regrow.py`: "He Gave Away Half His Liver… Then It Grew Back". Sequel to the kidney video (Danny's
+  "half a liver" joke); ends on the callback "Medically? Still yes."
+- Shared organ cast (brain, nose tissue, liver lobes, head bandage, fact card, calendar): `motion/organs.py`.
+  The heart, scalpel, faces and hospital set are imported from `videos/kidney_donor.py`, so every episode looks
+  like the same world.
+
 ## Voices (owner-approved)
 - **Doctor: the owner's own cloned voice** (Chatterbox, prompt `assets/voice/owner_prompt_fast.wav`, settings in
   `motion/voice.py`: CLONE_RATE, CLONE_TONE, `clone_check`). Only ever clone the owner's own voice.
@@ -29,6 +41,8 @@ videos are made, committed and pushed here only.
   - Heart: `af_bella`, +6 · Scalpel: `am_puck`, +7 · all at speed 1.0
   - Pitch shift is rubberband with `formant=shifted` (cartoon tone) and `pitchq=quality` (crisper words).
 - Humans (Mike, Danny): `am_michael`, `am_adam`, no pitch change.
+- Added for videos 2-4 (all four test lines exact on Whisper medium): brain `bm_fable` +5, nose sides `am_echo` +5
+  and `bf_lily` +5, liver lobes `am_eric` +5 and `af_river` +5. Avoid "Shh" (misheard as letters).
 - Made-up words (e.g. "eeny, meeny") get garbled in a high voice: use real words ("And the lucky kidney is... this
   one!").
 
@@ -44,11 +58,11 @@ videos are made, committed and pushed here only.
 ## Setting up a fresh container
 The voice clone runs in its own Python environment.
 ```bash
+SETUPTOOLS_USE_DISTUTILS=stdlib pip install docopt   # docopt's old setup.py fails on this image without it
 pip install -r requirements.txt
-python -m venv ~/.venv-clone
-~/.venv-clone/bin/pip install torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cpu
-~/.venv-clone/bin/pip install chatterbox-tts==0.1.7 faster-whisper soundfile
-export CLONE_PYTHON=~/.venv-clone/bin/python   # motion/voice.py defaults to /home/user/.venv-clone/bin/python
+python -m venv /home/user/.venv-clone
+/home/user/.venv-clone/bin/pip install torch==2.6.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cpu
+SETUPTOOLS_USE_DISTUTILS=stdlib /home/user/.venv-clone/bin/pip install chatterbox-tts==0.1.7 faster-whisper soundfile
 ```
 Kokoro, Chatterbox and Whisper models download on first use (about 5 GB). Rendering on this CPU-only cloud machine
 takes about 15-30 minutes per video; the owner may later move rendering to a laptop with an NVIDIA GPU (the code
@@ -63,5 +77,5 @@ python tools/redo_takes.py "Exact sentence." # throw away a cached voice take so
 ```
 
 ## Next
-Ask the owner which body fact to do next (the neck-patch reference suggests a skin or blood-sugar topic), then follow
-the same two-part format.
+Backup topics already researched (see the notes): the stomach renewing its lining, being taller in the morning, the
+funny bone being a nerve. The neck-patch reference suggests a skin or blood-sugar topic too.
