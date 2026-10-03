@@ -19,11 +19,12 @@ from motion.engine import INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, l
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 
 NARRATOR = dict(cast={
-    # organs and tools get cute cartoon voices: bright voices pitched way up (formants shift too, so they sound tiny)
-    "lefty": dict(voice="af_heart", speed=1.1, pitch=8),
-    "righty": dict(voice="bf_emma", speed=1.1, pitch=8),
-    "scalpel": dict(voice="am_puck", speed=1.1, pitch=10),
-    "heart": dict(voice="af_bella", speed=1.1, pitch=9),
+    # organs and tools: cute but clear. Bright voices pitched up 5-7 semitones (not 8-10: that went chipmunk and
+    # smeared the words), spoken a little slower so every word lands
+    "lefty": dict(voice="af_heart", speed=1.0, pitch=5),
+    "righty": dict(voice="bf_emma", speed=1.0, pitch=5),
+    "scalpel": dict(voice="am_puck", speed=1.0, pitch=7),
+    "heart": dict(voice="af_bella", speed=1.0, pitch=6),
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
@@ -33,7 +34,7 @@ SCRIPT = [
     dict(id="k1", scene="body", text="Hey. Why is there a surgeon in here? Nobody's sick!", speaker="lefty"),
     dict(id="k2", scene="body", text="The owner's brother needs a kidney. And he said yes!", speaker="righty"),
     dict(id="k3", scene="body", text="Wait. Which one of us is going?", speaker="lefty"),
-    dict(id="k4", scene="body", text="And the lucky kidney is... This one!", speaker="scalpel", pace=0.84),
+    dict(id="k4", scene="body", text="And the lucky kidney is... This one!", speaker="scalpel", pace=0.92),
     dict(id="k5", scene="body", text="No, no, no! Righty, remember me!", speaker="lefty"),
     dict(id="k6", scene="body", text="Lefty? Lefty! I can't do this alone! I'm only half the team!", speaker="righty"),
     dict(id="k7", scene="body", text="Relax. You're about to get a promotion.", speaker="heart"),

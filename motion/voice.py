@@ -161,7 +161,7 @@ def _cast_synth(text, pace, who):
             import imageio_ffmpeg
             tmp = out + ".pitch.wav"
             subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", out, "-filter:a",
-                            f"rubberband=pitch={2 ** (v['pitch'] / 12):.4f}:formant=shifted:transients=crisp",
+                            f"rubberband=pitch={2 ** (v['pitch'] / 12):.4f}:formant=shifted:transients=crisp:pitchq=quality",
                             tmp], check=True)
             os.replace(tmp, out)
     return _squeeze(_trim(_read_wav(out)))
