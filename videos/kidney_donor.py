@@ -33,7 +33,7 @@ SCRIPT = [
     dict(id="k2", scene="body", text="The owner's brother needs a kidney. And he said yes!", speaker="righty"),
     dict(id="k3", scene="body", text="Wait. Which one of us is going?", speaker="lefty"),
     dict(id="k4", scene="body", text="Eeny, meeny, miny... you!", speaker="scalpel"),
-    dict(id="k5", scene="body", text="Nooo! Righty, remember me!", speaker="lefty"),
+    dict(id="k5", scene="body", text="No, no, no! Righty, remember me!", speaker="lefty"),
     dict(id="k6", scene="body", text="Lefty? Lefty! I can't do this alone! I'm only half the team!", speaker="righty"),
     dict(id="k7", scene="body", text="Relax. You're about to get a promotion.", speaker="heart"),
     dict(id="k8", scene="body", text="Wait. Why am I getting bigger?", speaker="righty"),
@@ -223,7 +223,7 @@ def body_bg(cr):
 # ------------------------------------------------------------------ scene 1: inside the body
 def scene_body(cr, t, tl):
     A = tl.at
-    take = A("k5", "nooo")
+    take = A("k5", "no,")
     gone = ease_out(seg(t, take, take + 0.9))          # Lefty lifted out
     grow = ease_out(seg(t, A("k8", "bigger") - 0.4, A("k8", "bigger") + 0.6))
     rs = 1.0 + 0.32 * grow + (0.04 * math.sin(t * 9) if A("k8") <= t else 0)
@@ -345,14 +345,16 @@ def bed_front(cr, x):
 
 def scene_hospital(cr, t, tl):
     A = tl.at
-    DOCF, MIK, DAN = (1.8, DOC_X, 760), (1.8, MIKE_X + 30, 790), (1.8, DANNY_X - 30, 790)
-    keys = [(A("k9") - 0.1, (1.05, 360, 760)), (A("k9", "kidney"), MIK), (A("k9", "live"), (1.3, 280, 720)),
-            (A("k10"), DOCF), (A("k10", "enough"), (1.2, 380, 640)),
-            (A("k11"), (1.0, 370, 700)), (A("k11", "bigger"), (1.6, 380, 560)), (A("k11", "work"), DOCF),
-            (A("k12"), (1.0, 370, 700)), (A("k12", "checkups"), (1.5, 380, 560)), (A("k12", "blood"), DOCF),
-            (A("k13"), DAN), (A("k13", "liver"), (1.4, 520, 600)),
-            (A("k14"), (2.0, MIKE_X + 30, 790)), (A("k14", "brother"), (1.2, 370, 720)),
-            (A("k15"), (2.2, DOC_X, 740)), (A("k15", "yes"), (1.0, 370, 700))]
+    # faces must land above the caption line (screen y ~860); doctor's face is at world y ~813, the patients' ~767
+    DOCF, MIK, DAN = (1.8, DOC_X, 860), (1.8, MIKE_X + 30, 800), (1.8, DANNY_X - 30, 800)
+    WIDE, CARD = (1.0, 370, 760), (1.2, 380, 770)
+    keys = [(A("k9") - 0.1, (1.05, 360, 770)), (A("k9", "kidney"), MIK), (A("k9", "live"), (1.3, 280, 760)),
+            (A("k10"), DOCF), (A("k10", "enough"), CARD),
+            (A("k11"), WIDE), (A("k11", "bigger"), (1.5, 380, 640)), (A("k11", "work"), DOCF),
+            (A("k12"), WIDE), (A("k12", "checkups"), (1.5, 380, 640)), (A("k12", "blood"), DOCF),
+            (A("k13"), DAN), (A("k13", "liver"), (1.4, 520, 640)),
+            (A("k14"), (2.0, MIKE_X + 30, 800)), (A("k14", "brother"), (1.2, 370, 770)),
+            (A("k15"), (2.2, DOC_X, 860)), (A("k15", "yes"), WIDE)]
     set_camera(camera(t, keys))
     enter_world(cr)
     room(cr, t)
@@ -398,7 +400,7 @@ def scene_hospital(cr, t, tl):
     for key, end, txt, col in (("k10", "k11", "1 kidney = enough", GREEN), ("k11", "k12", "it grows bigger", BLUE),
                                ("k12", "k13", "checkups + blood pressure", INK)):
         if A(key) <= t < A(end):
-            with at(cr, 380, 470, max(0.85, pop(t, A(key), 0.25))):
+            with at(cr, 380, 600, max(0.85, pop(t, A(key), 0.25))):
                 shape(cr, rrect_pts(-210, -40, 420, 80, 18, 12), WHITE, seed=240, amp=0.3, lw=3.5)
                 write(cr, [(txt, col)], 0, 14, 38 if len(txt) < 20 else 30, align="center", bold=True)
             cue("pop", t, A(key))
