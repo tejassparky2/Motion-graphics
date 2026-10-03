@@ -34,4 +34,4 @@ kidney donation, one kidney, can you live with one kidney, kidney donor, body fa
 Be honest: would you give your brother a kidney? 😂 What about half a liver? 👇
 ```
 
-**Video facts:** 45.0 s, 129 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 44.1 s, 132 words of narration, the channel owner's own cloned voice. Made for kids: **No**.

@@ -19,10 +19,11 @@ from motion.engine import INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, l
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 
 NARRATOR = dict(cast={
-    "lefty": dict(voice="am_puck", speed=1.05, pitch=3),
-    "righty": dict(voice="am_liam", speed=1.05, pitch=3),
-    "scalpel": dict(voice="bm_george", speed=1.05, pitch=1),
-    "heart": dict(voice="af_bella", speed=1.05, pitch=2),
+    # organs and tools get cute cartoon voices: bright voices pitched way up (formants shift too, so they sound tiny)
+    "lefty": dict(voice="af_heart", speed=1.1, pitch=8),
+    "righty": dict(voice="bf_emma", speed=1.1, pitch=8),
+    "scalpel": dict(voice="am_puck", speed=1.1, pitch=10),
+    "heart": dict(voice="af_bella", speed=1.1, pitch=9),
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
@@ -32,7 +33,7 @@ SCRIPT = [
     dict(id="k1", scene="body", text="Hey. Why is there a surgeon in here? Nobody's sick!", speaker="lefty"),
     dict(id="k2", scene="body", text="The owner's brother needs a kidney. And he said yes!", speaker="righty"),
     dict(id="k3", scene="body", text="Wait. Which one of us is going?", speaker="lefty"),
-    dict(id="k4", scene="body", text="Eeny, meeny, miny... you!", speaker="scalpel"),
+    dict(id="k4", scene="body", text="And the lucky kidney is... This one!", speaker="scalpel", pace=0.84),
     dict(id="k5", scene="body", text="No, no, no! Righty, remember me!", speaker="lefty"),
     dict(id="k6", scene="body", text="Lefty? Lefty! I can't do this alone! I'm only half the team!", speaker="righty"),
     dict(id="k7", scene="body", text="Relax. You're about to get a promotion.", speaker="heart"),
@@ -230,7 +231,7 @@ def scene_body(cr, t, tl):
     keys = [(0, (1.25, 360, 660)), (A("k1", "surgeon"), (1.4, 520, 520)), (A("k1", "nobody's"), (1.9, LX, KY - 20)),
             (A("k2"), (1.9, RX, KY - 20)), (A("k2", "brother"), (1.2, 360, 640)), (A("k2", "yes"), (1.8, RX, KY - 20)),
             (A("k3"), (1.0, 360, 660)), (A("k3", "which"), (1.7, LX, KY - 30)),
-            (A("k4"), (1.25, 360, 560)), (A("k4", "you"), (2.0, LX, KY - 60)),
+            (A("k4"), (1.25, 360, 560)), (A("k4", "this"), (2.0, LX, KY - 60)),
             (take, (1.0, 260, 560)), (A("k5", "remember"), (1.3, 250, 420)),
             (A("k6"), (1.7, RX, KY - 20)), (A("k6", "alone"), (1.0, 360, 660)), (A("k6", "half"), (1.9, RX, KY - 40)),
             (A("k7"), (1.8, 360, 420)), (A("k7", "promotion"), (1.3, 430, 560)),
@@ -271,7 +272,7 @@ def scene_body(cr, t, tl):
         lx = lerp(LX, 260, gone)
         ly = lerp(KY, -500, gone)
         kidney(cr, t, lx, ly, 1.0, 1, lmood, tl.speaking("lefty", t), look=1 if t < A("k4") else 0,
-               shake=1.5 if A("k4", "you") <= t else 0)
+               shake=1.5 if A("k4", "this") <= t else 0)
     else:
         blob(cr, LX, KY, 70, 100, hexc("#000000", 0.08), seed=150, amp=0.6, lw=0, stroke=None)   # empty spot
         if t >= A("k6"):
@@ -280,10 +281,10 @@ def scene_body(cr, t, tl):
     arrive = ease_out(seg(t, A("k1", "surgeon") - 0.2, A("k1", "surgeon") + 0.5))
     if t >= A("k1", "surgeon") - 0.2:
         sx, sy, rot = lerp(760, 560, arrive), lerp(120, 380, arrive), -0.5
-        if A("k4") <= t < A("k4", "you"):      # eeny, meeny, miny: pointing back and forth
+        if A("k4") <= t < A("k4", "this"):      # "and the lucky kidney is...": pointing back and forth
             k = math.sin((t - A("k4")) * 9)
             sx, sy, rot = 360 + 150 * k, 430, 2.6 + 0.4 * k
-        elif A("k4", "you") <= t < take:
+        elif A("k4", "this") <= t < take:
             sx, sy, rot = LX + 40, KY - 230, 2.9
         elif t >= take:
             sx, sy, rot = lerp(LX + 40, 280, gone), lerp(KY - 230, -700, gone), 2.9
@@ -292,14 +293,14 @@ def scene_body(cr, t, tl):
     hl(cr, t, [("WHICH KIDNEY ", INK), ("GOES?", RED)], 215, 66, 0.0, end=A("k1", "nobody's") - 0.05, bold=True,
        sound=False)
     hl(cr, t, [("brother needs a ", INK), ("KIDNEY", RED)], 215, 60, A("k2", "brother"), end=A("k3") - 0.05, bold=True)
-    hl(cr, t, [("\"Eeny, meeny, miny...\"", INK)], 215, 56, A("k4"), end=A("k4", "you") - 0.05, bold=True)
-    stamp(cr, t, A("k4", "you"), "YOU!", dur=0.6, y=330)
+    hl(cr, t, [("\"And the ", INK), ("LUCKY", RED), (" kidney is...\"", INK)], 215, 50, A("k4"), end=A("k4", "this") - 0.05, bold=True)
+    stamp(cr, t, A("k4", "this"), "THIS ONE!", dur=0.6, y=330)
     hl(cr, t, [("\"I'm only ", INK), ("HALF", RED), (" the team!\"", INK)], 215, 56, A("k6", "half"),
        end=A("k7") - 0.05, bold=True)
     hl(cr, t, [("a ", INK), ("PROMOTION", GREEN), ("?", INK)], 215, 70, A("k7", "promotion"), end=A("k8") - 0.05,
        bold=True)
     hl(cr, t, [("\"Why am I getting ", INK), ("BIGGER", RED), ("?\"", INK)], 215, 54, A("k8", "bigger"), bold=True)
-    for w in (A("k4", "you"), take, A("k8", "bigger")):
+    for w in (A("k4", "this"), take, A("k8", "bigger")):
         cue("hit", t, w)
     cue("whoosh", t, take)
 
