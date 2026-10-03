@@ -1,5 +1,9 @@
 # Interestingly Strange: standing rules
 
+**This branch is the doctor channel ("Body Facts"), separate from Interestingly Strange.** Read
+`DOCTOR_CHANNEL.md` first: format, the finished kidney video, approved voices, setup and commands. Commit and push
+doctor work to `ccr-56282fe5-evehq4-doctor` only. The rules below apply to both channels.
+
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
   pipeline voices each sentence as its own take with a real full-stop pause between them
