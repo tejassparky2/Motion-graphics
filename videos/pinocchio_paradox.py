@@ -26,7 +26,7 @@ SCRIPT = [
                                       "noses only grow for lies. So it can't be the truth.", pace=0.95),
     dict(id="p5", scene="logic", text="What if he's lying? Then the opposite is true. His nose won't grow. But a lie "
                                       "always makes it grow. So it can't be a lie, either.", pace=0.95),
-    dict(id="p6", scene="spin", text="True breaks the rule. A lie breaks the rule. No answer works."),
+    dict(id="p6", scene="spin", text="The truth breaks the rule. A lie breaks the rule, too. No answer works."),
     dict(id="p7", scene="sign", text="It's called the Pinocchio paradox. A philosopher came up with it in "
                                      "[two thousand one.|2001.] It's a new version of a puzzle that's over "
                                      "[two thousand years|2,000 years] old: this sentence is false."),
@@ -218,7 +218,7 @@ def scene_logic(cr, t, tl):
 
 def scene_spin(cr, t, tl):
     A = tl.at
-    keys = [(A("p6") - 0.2, (1.0, 360, 690)), (A("p6", "true"), (1.1, 360, 690)), (A("p6", "lie"), (1.0, 360, 690)),
+    keys = [(A("p6") - 0.2, (1.0, 360, 690)), (A("p6", "truth"), (1.1, 360, 690)), (A("p6", "lie"), (1.0, 360, 690)),
             (A("p6", "answer"), (1.1, 360, 690))]
     set_camera(camera(t, keys))
     enter_world(cr)

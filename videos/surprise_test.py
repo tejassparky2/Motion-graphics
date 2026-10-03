@@ -21,7 +21,7 @@ TAIL = 0.9
 SCRIPT = [
     dict(id="s1", scene="class", text="The teacher says: there will be a surprise test next week. You won't know which "
                                       "day, until it happens.", speaker="teacher", speaker_from="there"),
-    dict(id="s2", scene="class", text="The last bencher in class grins. Sir, that test is impossible.", speaker="chotu",
+    dict(id="s2", scene="class", text="The kid on the last bench grins. Sir, that test is impossible.", speaker="chotu",
          speaker_from="sir,"),
     dict(id="s3", scene="days", text="Think about Friday. If there's no test by Thursday, we'll know it's Friday. That's "
                                      "no surprise. So it can't be Friday.", speaker="chotu"),

@@ -333,7 +333,7 @@ def _clone_raw(text):
 
 
 # Spellings the clone pronounces more clearly (only what it's told to say; captions keep the real word).
-CLONE_SAY = {"bencher": "benchur", "benchers": "benchurs", "Frane": "Frahneh", "Selak": "Sehlahk"}
+CLONE_SAY = {"bencher": "benchur", "benchers": "benchurs", "Frane": "Frahneh", "Selak": "Sehlahk", "Gabriel's": "Gaybreeul's"}
 
 
 def _clone_say(text):

@@ -18,15 +18,15 @@ TAIL = 0.8
 SCRIPT = [
     dict(id="g1", scene="horn", text="This horn can be filled with a few cans of paint. But you could never paint its "
                                      "outside."),
-    dict(id="g2", scene="horn", text="It's called Gabriel's Horn. It's a math shape that goes on forever, getting "
-                                     "thinner and thinner."),
+    dict(id="g2", scene="horn", text="It's called Gabriel's Horn. It's a shape that goes on forever, getting thinner and "
+                                     "thinner."),
     dict(id="g3", scene="fill", text="First, the inside. As the horn gets thinner, the space inside each slice shrinks "
                                      "really fast. So it all adds up to a fixed amount. About "
                                      "[three point one four.|3.14.] A few cans fill it."),
     dict(id="g4", scene="surface", text="Now the outside. It shrinks much more slowly. Every new slice still adds a bit "
                                         "more surface. So the total never stops growing. It's infinite."),
     dict(id="g5", scene="painter", text="So I can fill it, but I can't paint it?", speaker="sam", pace=0.92),
-    dict(id="g6", scene="painter", text="That's the paradox.", gap=0.25),
+    dict(id="g6", scene="painter", text="Exactly. That's the whole paradox.", gap=0.25),
     dict(id="g7", scene="name", text="Italian mathematician Evangelista Torricelli discovered it in the "
                                      "[sixteen forties.|1640s.] People have argued about it ever since."),
     dict(id="g8", scene="end", text="Because if paint fills the inside, isn't it touching every bit of the surface? "
