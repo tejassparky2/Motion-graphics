@@ -34,4 +34,4 @@ ship of theseus, theseus paradox, paradox, philosophy, thought experiment, ident
 Comment A or B 👇 A = the ship with the history, B = the ship with every original plank 🚢
 ```
 
-**Video facts:** 39.2 s, 139 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
+**Video facts:** 41.5 s, 139 words of narration, the channel owner's own cloned voice. Made for kids: **No**.

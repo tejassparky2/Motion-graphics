@@ -30,7 +30,7 @@ SCRIPT = [
          text="He never went. He stayed in Lisbon, and made everything up, from a tourist guidebook, library "
               "magazines, and movie newsreels."),
     dict(id="d5", scene="network",
-         text="Then he invented spies. By the end, the Germans were paying for [twenty-seven|27] agents. None of "
+         text="Then he invented fake spies. By the end, the Germans were paying for [twenty-seven|27] agents. None of "
               "them existed."),
     dict(id="d6", scene="network", text="They paid him about [three hundred forty thousand dollars.|$340,000.]"),
     dict(id="d7", scene="dday",
@@ -38,7 +38,7 @@ SCRIPT = [
               "They held back their troops."),
     dict(id="d8", scene="medals",
          text="Here's the twist. Germany gave him the Iron Cross. And Britain gave him a royal medal too. From both "
-              "sides, in the same war."),
+              "sides, in the same world war."),
     dict(id="d9", scene="end",
          text="Then he faked his own death, vanished to Venezuela, and was found [thirty-five years later.|35 years "
               "later.]", gap=0.2),

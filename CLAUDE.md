@@ -11,6 +11,15 @@
   where words merge or get misheard ("No. Your age" heard as "Know your age") gets reworded and re-rendered.
 - Pause lengths come from the reference videos the owner supplied (`out/voice_rhythm.md`).
 
+## Paradoxes must be explained so any viewer understands
+- Clarity beats length: add a few seconds (45–50 s is fine) rather than skip a step.
+- State the rule plainly first, then walk the logic one step per sentence, with no jumps ("we'd know it's Friday,
+  so it's no surprise, so it can't be Friday").
+- Every number the narrator uses must come from something already said (e.g. "one minute for every hundred cars"
+  before "20 minutes").
+- Show each step on screen as it's spoken: a card, a chart or a counter, kept above the caption line and fully in frame.
+- Hook with the impossible-sounding claim, and end on a question that invites comments.
+
 ## Channel basics
 - 2D hand-drawn Shorts: weird animals and insects, weird history, paradoxes, clever or funny twist stories.
 - Fast pacing, no dead air, a visual change about every second, facts checked (disputed claims left out).

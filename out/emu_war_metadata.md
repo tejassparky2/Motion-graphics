@@ -32,4 +32,4 @@ emu war, great emu war, weird history, australia history, history facts, funny h
 The emus are still undefeated 🐦🏆 What weird war should we cover next? 👇
 ```
 
-**Video facts:** 39.1 s, 118 words of narration, voice `am_fenrir` at speed 1.05. Made for kids: **No**.
+**Video facts:** 38.5 s, 118 words of narration, the channel owner's own cloned voice. Made for kids: **No**.

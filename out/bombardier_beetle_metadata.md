@@ -36,4 +36,4 @@ bombardier beetle, weird insects, animal facts, insect facts, beetle, toad, natu
 Imagine being the toad in this story 😂🐸 Would you eat this beetle? 👇
 ```
 
-**Video facts:** 43.2 s, 145 words of narration, voice `am_fenrir` at speed 1.05. Made for kids: **No**.
+**Video facts:** 46.6 s, 145 words of narration, the channel owner's own cloned voice. Made for kids: **No**.

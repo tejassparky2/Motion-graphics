@@ -36,4 +36,4 @@ riddles, trick questions, last bencher, backbenchers, principal, funny riddles, 
 The clue was there from the very first second 👀 Did you spot it? Rewatch and look at the desk 😂
 ```
 
-**Video facts:** 45.5 s, 126 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
+**Video facts:** 47.1 s, 126 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
