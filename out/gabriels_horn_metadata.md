@@ -34,4 +34,4 @@ gabriel's horn, torricelli's trumpet, painter's paradox, infinity, math paradox,
 Can you paint it or not? 🎺 Most people get this wrong… explain your answer 👇
 ```
 
-**Video facts:** 46.2 s, 145 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 46.3 s, 146 words of narration, the channel owner's own cloned voice. Made for kids: **No**.

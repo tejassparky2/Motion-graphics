@@ -34,4 +34,4 @@ surprise test paradox, unexpected hanging paradox, paradox, last bencher, logic 
 Where EXACTLY does his logic break? 🤔 Best explanation gets pinned 👇
 ```
 
-**Video facts:** 45.9 s, 136 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 45.6 s, 137 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
