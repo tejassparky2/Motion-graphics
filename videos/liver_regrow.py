@@ -19,23 +19,24 @@ from motion.organs import big_lobe_pts, calendar, card, lobe, small_lobe_pts
 from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, body_bg, heart, room, scalpel
 
 NARRATOR = dict(cast={
-    "big": dict(voice="am_eric", speed=1.0, pitch=5),        # the big lobe (4/4 on Whisper medium)
-    "small": dict(voice="af_river", speed=1.0, pitch=5),     # the small lobe
-    "scalpel": dict(voice="am_puck", speed=1.0, pitch=7),    # same scalpel and heart as the kidney episode
-    "heart": dict(voice="af_bella", speed=1.0, pitch=6),
+    # voices styled on the owner's reference Short (see brain_awake.py)
+    "big": dict(voice="bm_daniel", speed=1.0, pitch=2),      # the big lobe
+    "small": dict(voice="bm_george", speed=1.0, pitch=2),    # the small lobe
+    "scalpel": dict(voice="bf_alice", speed=1.0, pitch=4),   # same scalpel voice as the brain episode
+    "heart": dict(voice="af_jessica", speed=1.0, pitch=4),
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 
 SCRIPT = [
-    dict(id="l1", scene="body", text="Hi again! I'm here for half a liver.", speaker="scalpel"),
-    dict(id="l2", scene="body", text="Half? Which half?", speaker="small"),
-    dict(id="l3", scene="body", text="The big one.", speaker="scalpel"),
-    dict(id="l4", scene="body", text="Me? Little guy, you can't run this place alone!", speaker="big"),
-    dict(id="l5", scene="body", text="Wait! Come back! I'm way too small!", speaker="small"),
+    dict(id="l1", scene="body", text="Hello again! I came for half a liver.", speaker="scalpel"),
+    dict(id="l2", scene="body", text="Wait, which half?", speaker="small"),
+    dict(id="l3", scene="body", text="The big guy!", speaker="scalpel"),
+    dict(id="l4", scene="body", text="What, me? Little guy, you can't run this place alone!", speaker="big"),
+    dict(id="l5", scene="body", text="Hey, come back! I'm way too small!", speaker="small"),
     dict(id="l6", scene="body", text="Relax. Just give it a few weeks.", speaker="heart"),
-    dict(id="l7", scene="body", text="A few weeks for what? Whoa. Whoa! I'm getting huge!", speaker="small"),
+    dict(id="l7", scene="body", text="Wait, what? Oh no. Oh no! I'm getting huge!", speaker="small"),
     dict(id="h1", scene="ward", text="Doc, I gave my brother half my liver. Is it gone forever?", speaker="mike"),
     dict(id="h2", scene="ward", text="No. Your liver grows back.", speaker="doctor"),
     dict(id="h3", scene="ward", text="In a few months, it's almost full size again. Just a different shape.",
@@ -75,16 +76,16 @@ def scene_body(cr, t, tl):
     A = tl.at
     take = A("l5")
     gone = ease_out(seg(t, take - 0.1, take + 0.8))
-    grow = ease_out(seg(t, A("l7", "whoa"), A("l7", "huge", end=True) + 0.4))
+    grow = ease_out(seg(t, A("l7", "no"), A("l7", "huge", end=True) + 0.4))
     sx0, sy0 = SMALL
     sx, sy = lerp(sx0, 360, grow), lerp(sy0, 650, grow)
-    ss = 1.0 + 0.12 * grow + (0.03 * math.sin(t * 9) if A("l7", "whoa") <= t < A("l7", "huge", end=True) else 0)
+    ss = 1.0 + 0.12 * grow + (0.03 * math.sin(t * 9) if A("l7", "no") <= t < A("l7", "huge", end=True) else 0)
     keys = [(0, (1.15, 360, 680)), (A("l1", "half"), (1.25, 420, 520)), (A("l1", "liver"), (1.0, 360, 660)),
             (A("l2"), (1.7, 470, 720)), (A("l3"), (1.3, 380, 560)), (A("l3", "big"), (1.6, 200, 720)),
             (A("l4"), (1.7, 210, 720)), (A("l4", "alone"), (1.0, 360, 660)),
             (take, (1.3, 400, 640)), (A("l5", "small"), (1.8, 470, 720)),
             (A("l6"), (1.7, 360, 420)), (A("l6", "weeks"), (1.1, 380, 560)),
-            (A("l7"), (1.6, 460, 720)), (A("l7", "whoa"), (1.05, 360, 640))]
+            (A("l7"), (1.6, 460, 720)), (A("l7", "no"), (1.05, 360, 640))]
     set_camera(camera(t, keys))
     enter_world(cr)
     body_bg(cr)
@@ -111,9 +112,9 @@ def scene_body(cr, t, tl):
         sm = "happy"
     if take <= t < A("l6"):
         sm = "cry"
-    if A("l6") <= t < A("l7", "whoa"):
+    if A("l6") <= t < A("l7", "no"):
         sm = "worried"
-    if A("l7", "whoa") <= t:
+    if A("l7", "no") <= t:
         sm = "shock" if t < A("l7", "huge") else "happy"
     lobe(cr, t, small_lobe_pts(sx, sy, ss, grow), sx + lerp(30, 0, grow) * ss, sy - 22 * ss,
          0.85 + 0.25 * grow, sm, tl.speaking("small", t), look=-0.8 if t < take + 0.8 else 0,
@@ -128,15 +129,15 @@ def scene_body(cr, t, tl):
     if t < take + 1.0:
         scalpel(cr, t, px, py, 1.15, rot, talking=tl.speaking("scalpel", t), mood="happy")
     # ---- weeks ticking by while it regrows
-    if A("l7", "whoa") <= t:
-        wk = 1 + int(7 * seg(t, A("l7", "whoa"), A("l7", "huge", end=True)))
+    if A("l7", "no") <= t:
+        wk = 1 + int(7 * seg(t, A("l7", "no"), A("l7", "huge", end=True)))
         cr.save()
         cr.identity_matrix()
-        calendar(cr, t, 600, 380, f"WEEK {wk}", A("l7", "whoa"))
+        calendar(cr, t, 600, 380, f"WEEK {wk}", A("l7", "no"))
         cr.restore()
     # ---- screen text
     hl(cr, t, [("HALF", RED), (" a liver?!", INK)], 215, 70, 0.0, end=A("l2") - 0.05, bold=True, sound=False)
-    hl(cr, t, [("\"The ", INK), ("BIG", RED), (" one.\"", INK)], 215, 66, A("l3", "big"), end=A("l4", "alone"), bold=True)
+    hl(cr, t, [("\"The ", INK), ("BIG", RED), (" guy!\"", INK)], 215, 66, A("l3", "big"), end=A("l4", "alone"), bold=True)
     hl(cr, t, [("off to his ", INK), ("BROTHER", BLUE)], 215, 62, take, end=A("l6") - 0.05, bold=True)
     hl(cr, t, [("\"I'm getting ", INK), ("HUGE", RED), ("!\"", INK)], 215, 64, A("l7", "huge"), bold=True)
     stamp(cr, t, A("l1", "liver"), "HI AGAIN!", dur=0.6, y=330)

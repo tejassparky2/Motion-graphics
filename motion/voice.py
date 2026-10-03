@@ -55,7 +55,8 @@ TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
 MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference narrator's breaths are ~0.32 s)
 
 
-# Character voices for multi-voice videos: speaker -> dict(voice=<kokoro voice>, speed=1.0, pitch=<semitones>).
+# Character voices for multi-voice videos: speaker -> dict(voice=<kokoro voice>, speed=1.0, pitch=<semitones>,
+# formant="shifted" (cartoon, the default) or "preserved" (a higher but natural-sounding voice)).
 # Anyone not listed (and the narrator) uses the main narrator voice: the owner's clone by default.
 CAST_VOICES = {}
 
@@ -161,7 +162,8 @@ def _cast_synth(text, pace, who):
             import imageio_ffmpeg
             tmp = out + ".pitch.wav"
             subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", out, "-filter:a",
-                            f"rubberband=pitch={2 ** (v['pitch'] / 12):.4f}:formant=shifted:transients=crisp:pitchq=quality",
+                            f"rubberband=pitch={2 ** (v['pitch'] / 12):.4f}:formant={v.get('formant', 'shifted')}:"
+                            f"transients=crisp:pitchq=quality",
                             tmp], check=True)
             os.replace(tmp, out)
     return _squeeze(_trim(_read_wav(out)))
@@ -170,7 +172,8 @@ def _cast_synth(text, pace, who):
 def _key(text, pace=1.0, who=None):
     if who in CAST_VOICES:
         v = CAST_VOICES[who]
-        return hashlib.sha1(f"cast|{v['voice']}|{v.get('speed', 1.0)}|{v.get('pitch', 0)}|{pace:.3f}|"
+        fmt = "" if v.get("formant", "shifted") == "shifted" else f"{v['formant']}|"   # keeps older takes cached
+        return hashlib.sha1(f"cast|{v['voice']}|{v.get('speed', 1.0)}|{v.get('pitch', 0)}|{fmt}{pace:.3f}|"
                             f"{_pronounce(text)}".encode()).hexdigest()[:16]
     if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]

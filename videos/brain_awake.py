@@ -18,14 +18,17 @@ from motion.organs import brain, card, head_bandage, skull
 from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, room, scalpel
 
 NARRATOR = dict(cast={
-    "brain": dict(voice="bm_fable", speed=1.0, pitch=5),     # cute but clear: 4/4 lines exact on Whisper medium
-    "scalpel": dict(voice="am_puck", speed=1.0, pitch=7),    # same scalpel as the kidney episode
+    # Voices styled on the owner's reference Short (cracked-kneecap cartoon): the organ things happen to is a young
+    # male voice raised a little; helpers (tools) are brighter, raised a bit more. Stock voices, not copies; picked
+    # by speaker similarity to the reference (research_notes/body_facts_2-4.md).
+    "brain": dict(voice="bm_george", speed=1.0, pitch=2),
+    "scalpel": dict(voice="bf_alice", speed=1.0, pitch=4),
     "mike": dict(voice="am_michael", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 
 SCRIPT = [
-    dict(id="b1", scene="head", text="Hey! Who opened the roof?", speaker="brain"),
+    dict(id="b1", scene="head", text="Hey, who opened the roof?", speaker="brain"),
     dict(id="b2", scene="head", text="Relax. It's just me. Brain surgery today!", speaker="scalpel"),
     dict(id="b3", scene="head", text="Brain surgery? Then put him to sleep! He's still awake!", speaker="brain"),
     dict(id="b4", scene="head", text="He has to be wide awake. Now, hold still.", speaker="scalpel"),

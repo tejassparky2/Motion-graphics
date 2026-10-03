@@ -95,3 +95,13 @@ New characters were auditioned on four test lines with Whisper medium (all lines
 brain `bm_fable` +5, working nostril `am_echo` +5, resting nostril `bf_lily` +5, big lobe `am_eric` +5, small lobe
 `af_river` +5. Rejected: `af_kore`, `am_liam`, `af_jessica`, `bf_isabella` (misheard "Shh", "Whoa"). "Shh" was cut
 from the script for the same reason ("Quiet." instead).
+
+## Voices restyled on the owner's reference (second pass)
+The owner sent a reference Short (a cracked kneecap, wires and a doctor) and asked for organ voices "like this,
+don't copy". Measured with resemblyzer speaker embeddings and pYIN pitch on the reference's character lines:
+- Two character voices. The kneecap (the one things happen to) sounds like a young male voice, very expressive
+  (pitch SD 7-8.5 semitones), ~4.6-5 syllables/s. The tools (helpers) are brighter and higher, ~3.9 syllables/s.
+- 28 Kokoro voices x pitch 0..+9 x formant shifted/preserved were synthesized and compared. Closest to the kneecap:
+  `bm_george` +2 (0.71), `bm_daniel` +2 (0.69). Closest to the tools: `bf_alice` +4 (0.80), `af_jessica` +4 (0.79),
+  `af_river` +4 (0.78). The old +5..+7 cast was more cartoonish than the reference.
+- These are different stock voices with a similar style, not a copy of the reference's voices.

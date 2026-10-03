@@ -41,8 +41,13 @@ Research, sources and the psychology behind the scripts: `research_notes/body_fa
   - Heart: `af_bella`, +6 · Scalpel: `am_puck`, +7 · all at speed 1.0
   - Pitch shift is rubberband with `formant=shifted` (cartoon tone) and `pitchq=quality` (crisper words).
 - Humans (Mike, Danny): `am_michael`, `am_adam`, no pitch change.
-- Added for videos 2-4 (all four test lines exact on Whisper medium): brain `bm_fable` +5, nose sides `am_echo` +5
-  and `bf_lily` +5, liver lobes `am_eric` +5 and `af_river` +5. Avoid "Shh" (misheard as letters).
+- **Videos 2-4 use a new style the owner asked for** (reference Short: a cracked kneecap and the tools fixing it).
+  The organ things happen to gets a young male voice raised a little (+2); helpers get a brighter voice raised a
+  bit more (+4). Stock voices picked by speaker similarity to the reference, not copies of it: brain and small
+  liver lobe `bm_george` +2, working nostril and big liver lobe `bm_daniel` +2, scalpel `bf_alice` +4, heart
+  `af_jessica` +4, resting nostril `af_river` +4 (`formant` stays "shifted"). Every line is exact on Whisper
+  medium. One-word takes ("Hey!", "Me?", "Whoa.", "Half?", "Ugh.") get misheard in these voices: fold them into a
+  longer sentence ("Hey, who opened the roof?", "What, me?"). Avoid "Shh".
 - Made-up words (e.g. "eeny, meeny") get garbled in a high voice: use real words ("And the lucky kidney is... this
   one!").
 

@@ -18,9 +18,10 @@ from motion.organs import airflow, brain, card, turbinate
 from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, room
 
 NARRATOR = dict(cast={
-    "left": dict(voice="am_echo", speed=1.0, pitch=5),       # the side that's working (4/4 on Whisper medium)
-    "right": dict(voice="bf_lily", speed=1.0, pitch=5),      # the side on its break
-    "brain": dict(voice="bm_fable", speed=1.0, pitch=5),     # same brain as the awake-surgery episode
+    # voices styled on the owner's reference Short (see brain_awake.py)
+    "left": dict(voice="bm_daniel", speed=1.0, pitch=2),     # the side that's working
+    "right": dict(voice="af_river", speed=1.0, pitch=4),     # the side on its break
+    "brain": dict(voice="bm_george", speed=1.0, pitch=2),    # same brain as the awake-surgery episode
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
@@ -33,7 +34,7 @@ SCRIPT = [
     dict(id="n4", scene="nose", text="Quiet. I'm on my break.", speaker="right"),
     dict(id="n5", scene="nose", text="A break? We're a team! Get up and help!", speaker="left"),
     dict(id="n6", scene="nose", text="Shift change! Right side, you're up.", speaker="brain"),
-    dict(id="n7", scene="nose", text="Ugh. Fine.", speaker="right"),
+    dict(id="n7", scene="nose", text="Okay. My turn.", speaker="right"),
     dict(id="n8", scene="nose", text="Finally. Wake me up in a few hours.", speaker="left"),
     dict(id="d1", scene="ward", text="Doc, one side of my nose keeps getting blocked. Is it broken?",
          speaker="danny"),
@@ -126,7 +127,7 @@ def scene_nose(cr, t, tl):
         lm = "happy"
     if A("n8") <= t:
         lm = "happy"       # eyes shut: off to sleep
-    rm = "happy" if t < A("n6") else ("worried" if t < A("n7", "fine") else "angry")
+    rm = "happy" if t < A("n6") else ("worried" if t < A("n7", "turn") else "angry")
     look_l = 0.0 if t < A("n3") else 1.0
     turbinate(cr, t, WALL_L, TY, -1, lsw, lm, tl.speaking("left", t), look=look_l,
               hat="hard" if lsw < 0.5 else "sleep")
