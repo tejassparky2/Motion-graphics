@@ -31,18 +31,18 @@ SCRIPT = [
     dict(id="n2", scene="nose", text="Feel that? I'm doing most of the work!", speaker="left"),
     dict(id="n3", scene="nose", text="Because this one is asleep!", speaker="left"),
     dict(id="n4", scene="nose", text="Quiet. I'm on my break.", speaker="right"),
-    dict(id="n5", scene="nose", text="A break? We share one nose! Get up and help!", speaker="left"),
+    dict(id="n5", scene="nose", text="A break? We're a team! Get up and help!", speaker="left"),
     dict(id="n6", scene="nose", text="Shift change! Right side, you're up.", speaker="brain"),
     dict(id="n7", scene="nose", text="Ugh. Fine.", speaker="right"),
     dict(id="n8", scene="nose", text="Finally. Wake me up in a few hours.", speaker="left"),
     dict(id="d1", scene="ward", text="Doc, one side of my nose keeps getting blocked. Is it broken?",
          speaker="danny"),
     dict(id="d2", scene="ward", text="No. That's the nasal cycle. Most people have it.", speaker="doctor"),
-    dict(id="d3", scene="ward", text="Tissue inside one side swells up, so most of the air goes through the other "
-                                     "side.", speaker="doctor"),
-    dict(id="d4", scene="ward", text="Every few hours, your nervous system swaps the sides. You just don't notice.",
+    dict(id="d3", scene="ward", text="The tissue inside one side swells up. So most of the air flows through the "
+                                     "other side.", speaker="doctor"),
+    dict(id="d4", scene="ward", text="Every few hours, your nervous system swaps them. You just don't notice.",
          speaker="doctor"),
-    dict(id="d5", scene="ward", text="So my nose takes naps on the job?", speaker="mike"),
+    dict(id="d5", scene="ward", text="So my nose takes naps at work?", speaker="mike"),
     dict(id="d6", scene="ward", text="Bro. Just like you.", speaker="danny", gap=0.3),
     dict(id="d7", scene="ward", text="Try it now. Block one side and breathe, then the other. Which side is working "
                                      "for you?", speaker="doctor", gap=0.35),
@@ -150,7 +150,7 @@ def scene_nose(cr, t, tl):
        end=A("n3", "asleep") - 0.05, bold=True)
     hl(cr, t, [("the other side is ", INK), ("ASLEEP", BLUE)], 215, 54, A("n3", "asleep"), end=A("n5") - 0.05,
        bold=True)
-    hl(cr, t, [("\"We share ", INK), ("ONE", RED), (" nose!\"", INK)], 215, 60, A("n5", "share"), end=A("n6") - 0.05,
+    hl(cr, t, [("\"We're a ", INK), ("TEAM", RED), ("!\"", INK)], 215, 66, A("n5", "team"), end=A("n6") - 0.05,
        bold=True)
     stamp(cr, t, A("n6", "change"), "SHIFT CHANGE!", dur=0.9, y=330)
     hl(cr, t, [("\"Wake me up in a few ", INK), ("HOURS", BLUE), (".\"", INK)], 215, 50, A("n8", "hours"), bold=True)
@@ -221,7 +221,7 @@ def scene_ward(cr, t, tl):
     hl(cr, t, [("most of the air: ", INK), ("ONE side", RED)], 215, 54, A("d3", "air"), end=A("d4") - 0.05, bold=True)
     hl(cr, t, [("your ", INK), ("NERVES", BLUE), (" swap them", INK)], 215, 60, A("d4", "swaps"), end=A("d5") - 0.05,
        bold=True)
-    hl(cr, t, [("naps ", INK), ("on the job", RED), ("?", INK)], 215, 62, A("d5", "naps"), end=A("d7") - 0.05,
+    hl(cr, t, [("naps ", INK), ("at work", RED), ("?", INK)], 215, 62, A("d5", "naps"), end=A("d7") - 0.05,
        bold=True)
     if A("d7", "which") <= t:   # the question to the viewer
         cr.save()
