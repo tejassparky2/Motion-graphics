@@ -38,8 +38,8 @@ SCRIPT = [
     dict(id="d1", scene="ward", text="Doc, one side of my nose keeps getting blocked. Is it broken?",
          speaker="danny"),
     dict(id="d2", scene="ward", text="No. That's the nasal cycle. Most people have it.", speaker="doctor"),
-    dict(id="d3", scene="ward", text="The tissue inside one side swells up. So most of the air flows through the "
-                                     "other side.", speaker="doctor"),
+    dict(id="d3", scene="ward", text="The tissue inside one side swells up. So the other side does most of the "
+                                     "breathing.", speaker="doctor"),
     dict(id="d4", scene="ward", text="Every few hours, your nervous system swaps them. You just don't notice.",
          speaker="doctor"),
     dict(id="d5", scene="ward", text="So my nose takes naps at work?", speaker="mike"),
@@ -218,7 +218,7 @@ def scene_ward(cr, t, tl):
     hl(cr, t, [("Is my nose ", INK), ("BROKEN", RED), ("?", INK)], 215, 60, A("d1", "broken"), end=A("d2") - 0.05,
        bold=True)
     hl(cr, t, [("the ", INK), ("NASAL CYCLE", BLUE)], 215, 62, A("d2", "cycle"), end=A("d3") - 0.05, bold=True)
-    hl(cr, t, [("most of the air: ", INK), ("ONE side", RED)], 215, 54, A("d3", "air"), end=A("d4") - 0.05, bold=True)
+    hl(cr, t, [("the ", INK), ("OTHER", BLUE), (" side breathes", INK)], 215, 54, A("d3", "breathing"), end=A("d4") - 0.05, bold=True)
     hl(cr, t, [("your ", INK), ("NERVES", BLUE), (" swap them", INK)], 215, 60, A("d4", "swaps"), end=A("d5") - 0.05,
        bold=True)
     hl(cr, t, [("naps ", INK), ("at work", RED), ("?", INK)], 215, 62, A("d5", "naps"), end=A("d7") - 0.05,

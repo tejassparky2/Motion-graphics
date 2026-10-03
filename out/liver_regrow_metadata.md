@@ -13,7 +13,7 @@ He Gave Away Half His Liver… Then It Grew Back 😳
 ```
 He gave his brother half his liver. A few months later, they both had a whole one. 😳
 
-The liver can grow back. After a living donation, the part that's left gets bigger, and in a few months it's almost full size again. Not the same shape, but the same job. And the piece the brother got grows too.
+The liver can grow back. After a living donation, the part that's left gets bigger, and in a few months it's almost full size again. Not the same shape, but the same job. And the brother's half grows bigger too.
 
 (Funny cartoon, real facts. Not medical advice: talk to a doctor about your own health.)
 
@@ -34,4 +34,4 @@ liver regeneration, liver grows back, living liver donor, can your liver grow ba
 Danny already got a kidney AND half a liver. 😂 What should he ask for next? 👇
 ```
 
-**Video facts:** 39.8 s, 114 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 39.9 s, 113 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
