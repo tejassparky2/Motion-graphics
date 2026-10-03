@@ -26,3 +26,4 @@
 - Each video ships with an upload sheet: title, alternative titles, description, hashtags, tags, pinned comment.
 - No metadata or encoder tags in outputs; never strip other parties' provenance watermarks (e.g. SynthID).
 - Riddle series is called **The Last Bencher** (not "Last Row Kid").
+- The doctor channel ("Body Facts") is a separate channel with its own chat and branch (`ccr-56282fe5-evehq4-doctor`). Don't make doctor videos on this branch.
