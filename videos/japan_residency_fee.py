@@ -1,6 +1,7 @@
 """News: Japan's permanent residency fee went up twenty times (1 October 2026).
 
-Format: a host talks with the country itself (a talking flag), one fact per line. Script and drawings are our own.
+Format: our host talks with the Globe (our recurring character, painted in the country's flag colours), one fact per
+line. Script and drawings are our own.
 
 Facts, as of 4 October 2026:
 - From 1 Oct 2026 the permanent residence permission fee is 200,000 yen (was 10,000 yen) for applications filed on or
@@ -29,17 +30,17 @@ from motion.captions import captions
 from motion.characters import person
 from motion.engine import INK, RED, WHITE, at, blob, ease_out, hexc, line, pop, rrect_pts, seg, shape, write
 from motion.kit import camera, hl, stamp, whip
-from motion.news import (GREEN, JP_RED, PAPER, SKY, big_x, country, crowd, date_stamp, dinner, panel, passport, phone,
-                         price_tag, source_tag, tick)
+from motion.news import (GREEN, JP_RED, PAPER, SKY, big_x, crowd, date_stamp, dinner, globe, panel, passport,
+                         phone, price_tag, source_tag, tick)
 from motion.story import buttons
 
 NARRATOR = dict(speed=1.0)
 TAIL = 0.9
 
-H, J = "reporter", "japan"
+H, J = "reporter", "globe"
 SCRIPT = [
-    dict(id="n1", scene="talk", text="Japan. I heard you made a big change.", speaker=H),
-    dict(id="n2", scene="talk", text="I did. Since October first, permanent residency costs twenty times more.",
+    dict(id="n1", scene="talk", text="Want to live in Japan for good? It just got a lot more expensive.", speaker=H),
+    dict(id="n2", scene="talk", text="It did. Since October first, permanent residency in Japan costs twenty times more.",
          speaker=J),
     dict(id="n3", scene="talk", text="Twenty times? What did it cost before?", speaker=H),
     dict(id="n4", scene="talk", text="[Ten thousand yen.|10,000 yen.] That's about [sixty-three dollars.|$63.]",
@@ -53,12 +54,12 @@ SCRIPT = [
     dict(id="n8", scene="talk", text="Pretty much.", speaker=J),
     dict(id="n9", scene="talk", text="But why so much more?", speaker=H),
     dict(id="n10", scene="talk",
-         text="More than four million foreign residents live here now. That's a record.", speaker=J),
+         text="More than four million foreign residents live in Japan now. That's a record.", speaker=J),
     dict(id="n11", scene="talk",
          text="The government says the new fee covers the real cost of handling applications. "
               "And it's closer to what other countries charge.", speaker=J),
     dict(id="n12", scene="talk", text="So if I pay, do I get a Japanese passport?", speaker=H),
-    dict(id="n13", scene="talk", text="No. You can live here with no time limit. But you are not a citizen.",
+    dict(id="n13", scene="talk", text="No. You can live there with no time limit. But you are not a citizen.",
          speaker=J),
     dict(id="n14", scene="talk", text="And you now need a higher income to qualify.", speaker=J),
     dict(id="n15", scene="talk", text="So it costs more. And it's harder to get.", speaker=H),
@@ -93,10 +94,10 @@ Sources:
     pinned_comment="Would you pay ¥200,000 (about $1,270) for permanent residency in Japan? Yes or no? 👇",
 )
 
-HOST_X, POLE_X, GROUND = 170, 430, 960
-TWO = (1.1, 362, 730)
+HOST_X, GLOBE_X, GROUND = 170, 530, 960
+TWO = (1.0, 360, 720)
 HOST_CLOSE = (1.75, 190, 770)
-FLAG_CLOSE = (1.75, 545, 650)
+GLOBE_CLOSE = (1.35, 530, 668)
 
 
 def _bg(cr, t, keys):
@@ -119,7 +120,7 @@ def _cam_keys(tl):
     for b in tl.beats:
         if b.scene != "talk":
             continue
-        keys.append((b.start - 0.05, HOST_CLOSE if b.speaker == H else FLAG_CLOSE))
+        keys.append((b.start - 0.05, HOST_CLOSE if b.speaker == H else GLOBE_CLOSE))
     A = tl.at
     keys += [(A("n7", "dinner"), (1.4, 300, 740)), (A("n10", "four"), (1.3, 470, 700)),
              (A("n15"), TWO)]
@@ -129,7 +130,7 @@ def _cam_keys(tl):
 def _japan(cr, t, tl, eyes="dot", idle="smile"):
     talking = tl.speaking(J, t)
     mouth = ("o" if int(t * 12) % 2 else idle) if talking else idle
-    country(cr, "jp", POLE_X, GROUND, t, eyes=eyes, mouth=mouth, look=-1,
+    globe(cr, "jp", GLOBE_X, GROUND, t, eyes=eyes, mouth=mouth, look=-1,
             bounce=abs(math.sin(t * 9)) * 3 if talking else 0)
 
 
@@ -253,7 +254,7 @@ def scene_talk(cr, t, tl):
 
 def scene_end(cr, t, tl):
     A = tl.at
-    _bg(cr, t, [(A("n16") - 0.4, (1.1, 362, 725))])
+    _bg(cr, t, [(A("n16") - 0.4, (1.0, 360, 715))])
     _host(cr, t, tl, arms=("point", "hip"), eyes="happy")
     _japan(cr, t, tl, "wide", "smile")
     cr.identity_matrix()

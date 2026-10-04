@@ -1,8 +1,7 @@
-"""Pieces for the news & tech channel: talking country flags, a date stamp, a source tag, price tags, pop-in panels
-and simple drawn props (crowd, passport, phone, dinner plate). Everything is drawn by us; flags are plain geometric
-national flags, no logos, photos or footage.
+"""Pieces for the news & tech channel: the talking globe (painted in each story's flag colours), a date stamp,
+a source tag, price tags, pop-in panels and simple drawn props (crowd, passport, phone, dinner plate). Everything is drawn by us: no logos, photos or footage.
 
-Panels and tags are drawn in screen space (call after the world is drawn); `country` is drawn in world space."""
+Panels and tags are drawn in screen space (call after the world is drawn); `globe` is drawn in world space."""
 import math
 
 from .characters import _eyes, _mouth
@@ -17,43 +16,75 @@ GOLD = hexc("#f2b632")
 TEAL = hexc("#2e9e8f")
 
 
-# ---------------------------------------------------------------- flags
-def _wave_pts(x0, y0, w, h, t, amp=7.0, n=14):
-    """Outline of a flag waving from its pole edge (x0): the free end moves most."""
-    def dy(u):
-        return amp * u * math.sin(t * 5.0 - u * 5.5)
-    top = [(x0 + w * k / n, y0 + dy(k / n)) for k in range(n + 1)]
-    bot = [(x0 + w * k / n, y0 + h + dy(k / n)) for k in range(n, -1, -1)]
-    return top + bot, dy
+# ---------------------------------------------------------------- the talking globe
+# The channel's recurring character: a desk globe with a face. For each story it is painted in that country's flag
+# colours (sea, land, stand ring), so viewers see whose story it is without us drawing anyone's flag as a character.
+PALETTES = {
+    "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
+    "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
+}
+_LAND = [(-0.45, -0.28, 0.48, 0.34, 1), (0.02, 0.4, 0.3, 0.4, 2), (0.55, -0.22, 0.4, 0.46, 3),
+         (-0.9, 0.48, 0.22, 0.2, 4), (0.95, 0.5, 0.2, 0.14, 5)]
 
 
-def _flag_jp(cr, x0, y0, w, h, t, seed):
-    pts, dy = _wave_pts(x0, y0, w, h, t)
-    shape(cr, pts, WHITE, seed=seed, amp=0.5, lw=4.5)
-    cx, cy = x0 + w / 2, y0 + h / 2 + dy(0.5)
-    blob(cr, cx, cy, h * 0.3, h * 0.3, JP_RED, seed=seed + 1, amp=0.5, lw=0, stroke=None)
-    return cx, cy
+def _continent(cx, cy, rx, ry, k, n=18):
+    """A lumpy landmass outline (fixed shape per k)."""
+    pts = []
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        f = 1 + 0.22 * math.sin(3 * a + k * 1.7) + 0.14 * math.sin(5 * a + k * 2.9) + 0.08 * math.sin(7 * a + k)
+        pts.append((cx + rx * f * math.cos(a), cy + ry * f * math.sin(a)))
+    return pts
 
 
-FLAGS = {"jp": _flag_jp}
-
-
-def country(cr, code, pole_x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, bounce=0.0, seed=7000):
-    """A national flag on a pole that talks: face on the flag's centre. `look` = -1 faces left, 1 right."""
-    w, h = 250, 160
-    with at(cr, pole_x, ground_y - bounce, s):
-        line(cr, [(0, 0), (0, -370)], 9, INK, seed, amp=0.2)
-        line(cr, [(0, 0), (0, -370)], 4, hexc("#a9a2ae"), seed, amp=0.2)
-        blob(cr, 0, -376, 9, 9, GOLD, seed + 1, amp=0.3, lw=3)
-        blob(cr, 0, -4, 34, 10, hexc("#8e8a80"), seed + 2, amp=0.4, lw=3.5)
-        cx, cy = FLAGS[code](cr, 0, -360, w, h, t, seed + 3)
-        with at(cr, cx + look * 8, cy, 1.55):   # a big, readable face on the flag's centre
-            if eyes in ("dot", "wide", "sly"):
-                for sx in (-1, 1):
+def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, bounce=0.0, spin=0.12, seed=7000):
+    """A talking desk globe standing on the floor at (x, ground_y), coloured for `code` (see PALETTES)."""
+    p = PALETTES[code]
+    r = 128
+    cy = -r - 120
+    with at(cr, x, ground_y - bounce, s):
+        # stand: base, post and the half-ring meridian
+        blob(cr, 0, -10, 70, 16, hexc("#8e5a2e"), seed, amp=0.4, lw=4)
+        line(cr, [(0, -14), (0, cy + r + 14)], 12, INK, seed + 1, amp=0.2)
+        line(cr, [(0, -14), (0, cy + r + 14)], 6, hexc("#b07a45"), seed + 1, amp=0.2)
+        # sphere, tilted a little like a real desk globe
+        with at(cr, 0, cy, 1.0, rot=-0.18):
+            blob(cr, 0, 0, r, r, p["sea"], seed + 2, amp=0.6, lw=5)
+            cr.save()
+            cr.arc(0, 0, r - 3, 0, 2 * math.pi)
+            cr.clip()
+            off = (t * spin) % 2.4 - 1.2
+            for lx, ly, rx, ry, k in _LAND:
+                for wrap in (0.0, -2.4, 2.4):
+                    u = lx + off + wrap
+                    if -1.6 < u < 1.6:
+                        sq = max(0.3, math.cos(min(1.5, abs(u)) * math.pi / 3.2))   # land squashes near the edge
+                        shape(cr, _continent(u * r, ly * r, rx * r * sq, ry * r, k), p["land"], seed=seed + 10 + k,
+                              amp=0.8, lw=3, stroke=hexc("#2a2230", 0.55))
+            for k in (-2, -1, 0, 1, 2):
+                line(cr, [(-r, k * r * 0.36), (r, k * r * 0.36)], 2.5, p["lines"], seed + 30 + k, amp=0.3)
+            cr.restore()
+            blob(cr, 0, 0, r, r, None, seed + 2, amp=0.6, lw=5)
+        # meridian ring in the flag's second colour
+        cr.save()
+        cr.new_path()
+        cr.arc(0, cy, r + 18, math.pi * 0.62, math.pi * 1.38)
+        cr.set_line_width(15)
+        cr.set_source_rgba(*INK)
+        cr.stroke()
+        cr.arc(0, cy, r + 18, math.pi * 0.62, math.pi * 1.38)
+        cr.set_line_width(8)
+        cr.set_source_rgba(*p["ring"])
+        cr.stroke()
+        cr.restore()
+        with at(cr, look * 10, cy + 6, 1.7):   # the face
+            for sx in (-1, 1):
+                if eyes in ("dot", "wide", "sly"):
                     blob(cr, sx * 15, -8, 11, 12, WHITE, seed + 20 + sx, amp=0.4, lw=2.5)
             _eyes(cr, eyes, 0, -8, t, seed + 9)
+            blob(cr, 0, 18, 17, 11, hexc("#fffdf7", 0.85), seed + 41, amp=0.4, lw=0, stroke=None)
             _mouth(cr, mouth, 0, 16, seed + 10, t)
-    return pole_x + cx * s, ground_y + cy * s
+    return x, ground_y + cy * s
 
 
 # ---------------------------------------------------------------- screen-space overlays
