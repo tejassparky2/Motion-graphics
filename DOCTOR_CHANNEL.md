@@ -32,6 +32,15 @@ Research, sources and the psychology behind the scripts: `research_notes/body_fa
   The heart, scalpel, faces and hospital set are imported from `videos/kidney_donor.py`, so every episode looks
   like the same world.
 
+## Videos 5-6: little-known operations (owner: "not commonly known operations")
+Format from the owner's reel (orthotopic neobladder): organs talk during the operation, a "they used WHAT?" twist,
+then the doctor names the procedure and explains it. Notes and sources: `research_notes/body_facts_5-6.md`.
+- `videos/tooth_eye.py`: tooth-in-eye surgery (osteo-odonto-keratoprosthesis).
+- `videos/toe_thumb.py`: toe-to-thumb transfer.
+- Scripted and voice-tested for later: high heels and the feet; not drinking water and constipation.
+- More little-known operations to consider: rotationplasty (the foot turned backwards to work as a knee),
+  hemispherectomy, faecal transplant, uterus transplant.
+
 ## House style (from the owner's references, videos 2-4)
 The owner sent two more reference Shorts (an esophagus with bleeding veins treated by an endoscope; a baby that
 stopped growing, taken out by a gloved hand to a NICU incubator) and asked to work "like that". What we took:
