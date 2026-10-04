@@ -59,7 +59,7 @@ SCRIPT = [
          text="The government says the new fee covers the real cost of handling applications. "
               "And it's closer to what other countries charge.", speaker=J),
     dict(id="n12", scene="talk", text="So if I pay, do I get a Japanese passport?", speaker=H),
-    dict(id="n13", scene="talk", text="No. You can live there with no time limit. But you are not a citizen.",
+    dict(id="n13", scene="talk", text="No. You can stay there with no time limit. But you are not a citizen.",
          speaker=J),
     dict(id="n14", scene="talk", text="And you now need a higher income to qualify.", speaker=J),
     dict(id="n15", scene="talk", text="So it costs more. And it's harder to get.", speaker=H),
@@ -224,7 +224,7 @@ def scene_talk(cr, t, tl):
         passport(c, 0, 0, 1.0)
         if t >= A("n13", "no"):
             big_x(c, 0, 0, 72, seg(t, A("n13", "no"), A("n13", "no") + 0.3))
-    panel(cr, t, A("n12", "passport"), A("n13", "live"), 360, 420, 260, 240, pp, seed=8500)
+    panel(cr, t, A("n12", "passport"), A("n13", "stay"), 360, 420, 260, 240, pp, seed=8500)
 
     def status(c):
         tick(c, -190, -40, 18, seed=8610)
@@ -232,7 +232,7 @@ def scene_talk(cr, t, tl):
         if t >= A("n13", "citizen"):
             big_x(c, -190, 40, 18, 1.0, seed=8620)
             write(c, [("not a citizen", JP_RED)], -160, 52, 32, bold=True)
-    panel(cr, t, A("n13", "live"), A("n14"), 360, 420, 520, 200, status, seed=8600)
+    panel(cr, t, A("n13", "stay"), A("n14"), 360, 420, 520, 200, status, seed=8600)
 
     def income(c):
         u = ease_out(seg(t, A("n14", "higher"), A("n14", "higher") + 0.6))
