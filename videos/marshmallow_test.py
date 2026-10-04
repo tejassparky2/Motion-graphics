@@ -30,8 +30,8 @@ SCRIPT = [
     dict(id="k3", scene="deal", text="Each child got a marshmallow, and a deal. Eat it now. Or wait alone, and get "
                                      "two."),
     dict(id="k4", scene="later", text="Years later, the kids who waited longer had higher test scores as teenagers."),
-    dict(id="k5", scene="later", text="So the lesson seemed clear. Willpower is the secret to success."),
-    dict(id="k6", scene="redo", text="But the first kids all came from one university nursery school. In "
+    dict(id="k5", scene="later", text="So the message was clear. Willpower is the secret to success."),
+    dict(id="k6", scene="redo", text="But the first kids all came from just one preschool, on one campus. In "
                                      "[twenty eighteen,|2018,] researchers tried again, with hundreds of kids from "
                                      "different families."),
     dict(id="k7", scene="redo", text="Waiting still mattered a little. But once they counted family money and home "
@@ -49,7 +49,7 @@ METADATA = dict(
 
 In the late 1960s, psychologist Walter Mischel tried it on preschool kids at Stanford. Years later, the kids who waited longer had higher test scores as teenagers, and "willpower is the secret to success" became famous.
 
-But the first kids all came from one university nursery school. In 2018, researchers tried again with hundreds of kids from different families: waiting still mattered a little, but once they counted family money and home life, the effect shrank by about two thirds. And in another study, kids waited about four times longer when the adult had kept an earlier promise. 😳
+But the first kids all came from just one preschool, on one campus. In 2018, researchers tried again with hundreds of kids from different families: waiting still mattered a little, but once they counted family money and home life, the effect shrank by about two thirds. And in another study, kids waited about four times longer when the adult had kept an earlier promise. 😳
 
 Studies: Mischel (Stanford, 1960s-70s); Watts, Duncan & Quan (2018), Psychological Science; Kidd, Palmeri & Aslin (2013), Cognition.
 
@@ -171,7 +171,7 @@ def scene_redo(cr, t, tl):
             (A("k7", "shrank"), (1.35, 360, 700))]
     bg(cr, t, keys, SKY, GROUND)
     if t < A("k6", "2018,"):
-        card(cr, t, A("k6", "nursery"), 360, 600, 0.75, "ONE NURSERY", "SCHOOL", seed=70)
+        card(cr, t, A("k6", "preschool,"), 360, 600, 0.75, "JUST ONE", "PRESCHOOL", seed=70)
         for k in range(4):
             person(cr, "kid_b", 210 + k * 100, 960, t, facing=1, eyes="dot", mouth="smile", scale=0.9)
     elif t < A("k7"):

@@ -25,11 +25,11 @@ SCRIPT = [
     dict(id="b1", scene="hook", text="Want an enemy to like you? Don't do them a favor. Ask them for one."),
     dict(id="b2", scene="assembly", text="In the [seventeen thirties,|1730s,] a rich new lawmaker in Pennsylvania "
                                          "spoke out against Benjamin Franklin."),
-    dict(id="b3", scene="book", text="Franklin didn't flatter him. He tried something stranger. He asked to borrow a "
+    dict(id="b3", scene="book", text="Franklin didn't flatter him. He did something stranger. He asked to borrow a "
                                      "rare book from the man's library."),
-    dict(id="b4", scene="book", text="The rival sent it right away. Franklin returned it about a week later, with a "
+    dict(id="b4", scene="book", text="The man sent it right away. Franklin returned it about a week later, with a "
                                      "note of thanks."),
-    dict(id="b5", scene="friends", text="The next time they met, the rival spoke to him kindly. And they stayed "
+    dict(id="b5", scene="friends", text="The next time they met, the man spoke to him kindly. And they stayed "
                                         "friends for life."),
     dict(id="b6", scene="quote", text="Franklin wrote: He that has once done you a kindness, will be more ready to do "
                                       "you another, than he whom you yourself have obliged."),
