@@ -36,4 +36,4 @@ nasal cycle, one nostril, why is one nostril blocked, breathing through one nost
 Okay, test it right now: which side is working for you, LEFT or RIGHT? 👃👇
 ```
 
-**Video facts:** 45.6 s, 129 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 44.6 s, 131 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
