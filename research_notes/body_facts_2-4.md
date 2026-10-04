@@ -105,3 +105,24 @@ don't copy". Measured with resemblyzer speaker embeddings and pYIN pitch on the 
   `bm_george` +2 (0.71), `bm_daniel` +2 (0.69). Closest to the tools: `bf_alice` +4 (0.80), `af_jessica` +4 (0.79),
   `af_river` +4 (0.78). The old +5..+7 cast was more cartoonish than the reference.
 - These are different stock voices with a similar style, not a copy of the reference's voices.
+
+## Third pass: the owner's two new reference Shorts (house style)
+Measured from the files the owner sent (frames at 1 fps, Whisper medium transcripts, pYIN pitch, resemblyzer):
+- **Reference A** (57 s, esophageal varices): the esophagus with googly eyes and swollen purple veins bursts and
+  bleeds bright red; the stomach (deeper voice) drinks the blood thinking it's wine; an endoscope character bands
+  the veins. Then the doctor (masked) names the condition and the procedure ("esophageal varices", "endoscopic band
+  ligation") in one calm 24 s explanation. Organ part ~32 s, doctor part ~24 s.
+- **Reference B** (57 s, fetal growth restriction): the fetus is too small, a scale shows it, a gloved hand with
+  eyes takes the baby out to a NICU incubator, then the doctor explains to the father.
+- **Look:** clean flat vector, thin even outlines, realistic medical colours, googly eyes straight on the organ,
+  white anatomy tags ("Esophagus", "VAIN"), bright red blood, tools as characters. One word of caption at a time,
+  uppercase, white with a dark outline, ~75% down the frame. Doctor's room: plain wall, masked doctor, patient in a
+  blue shirt in bed, a static medium shot. A diagonal channel watermark.
+- **Voices:** doctor ~120 Hz at 4.7-5.0 syllables/s (calm, slower than our clone's 5.5). Organs: a scared high
+  voice (290-480 Hz), a grumpy natural one (~150 Hz; `am_eric` matches it at 0.89, so the references very likely
+  use the same stock voices we do), tools/helpers mid-high.
+- **What we changed:** clean style, one-word captions, anatomy tags, masked-doctor room, doctor at 4.9 syl/s, the
+  doctor naming the medical term ("awake craniotomy", "living donor liver transplant", "nasal cycle"), organ voices
+  re-cast (scared `af_heart`/`af_jessica` +6, grumpy `am_eric`, tool `af_nova` +2, helper `af_river` +4). Every
+  character line re-checked with Whisper medium; four were reworded ("his"→"this", "A break?"→"Unbreak",
+  "Shift change!"→"15", "which half"→"what have").
