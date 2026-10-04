@@ -103,6 +103,11 @@ CAST = {
                  hair="messy", hair_col=hexc("#2b1c14"), seed=239),
     "danny": dict(skin=SKIN_MID, shirt=hexc("#9fc5e8"), pants=hexc("#9fc5e8"), bw=94, bh=104, head=40, kind="box",
                   hair="slick", hair_col=hexc("#2b1c14"), beard=hexc("#2b1c14"), seed=241),
+    # Body Facts clean style (the owner's references): patients in a blue shirt
+    "mike_b": dict(skin=SKIN_MID, shirt=hexc("#2f7fd6"), pants=hexc("#2b2d3a"), bw=94, bh=104, head=40,
+                   kind="collar", hair="messy", hair_col=hexc("#2b1c14"), seed=239),
+    "danny_b": dict(skin=SKIN_MID, shirt=hexc("#2f7fd6"), pants=hexc("#2b2d3a"), bw=94, bh=104, head=40,
+                    kind="collar", hair="slick", hair_col=hexc("#2b1c14"), beard=hexc("#2b1c14"), seed=241),
     "richbeggar": dict(skin=SKIN_TAN, shirt=hexc("#2b2d3a"), pants=hexc("#2b2d3a"), bw=96, bh=104, head=40,
                        kind="suit", hair="slick", hair_col=hexc("#6d6258"), beard=hexc("#8a7f74"), shades=True,
                        seed=77),
@@ -213,7 +218,7 @@ def _mouth(cr, kind, mx, my, seed, t):
 
 
 def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="dot", mouth="smile",
-           item=None, bob=True, shake=0.0, tears=False, sweat=False, scale=1.0, jump=0.0, lean=0.0):
+           item=None, bob=True, shake=0.0, tears=False, sweat=False, scale=1.0, jump=0.0, lean=0.0, mask=None):
     """Draw a character. `walk` is a phase in cycles (None = standing). `arms` = (front, back)."""
     c = CAST[who]
     seed = c.get("seed") or {"seth": 11, "ramu": 23, "chotu": 37}[who]
@@ -288,6 +293,13 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
                   c["shirt"], seed, amp=1.0)
             line(cr, [(-14, top + 4), (0, top + 18), (14, top + 4)], 3.5, GOLD, seed + 1, amp=0.4)
             line(cr, [(0, top + 18), (0, top + 60)], 3, GOLD, seed + 2, amp=0.4)
+        elif kind == "collar":   # plain shirt with a white collar (Body Facts patients)
+            shape(cr, rrect_pts(-bw / 2, top, bw, bh, 24), c["shirt"], seed, amp=1.0)
+            for sx in (-1, 1):
+                shape(cr, [(0, top + 2), (sx * 22, top - 2), (sx * 16, top + 22)], WHITE, seed + 1 + sx, amp=0.2, lw=2.5)
+            line(cr, [(0, top + 8), (0, top + bh - 6)], 2.5, hexc("#1f5fa8"), seed + 4, amp=0.2)
+            for k in range(3):
+                dot(cr, 5, top + 28 + k * 22, 3, WHITE)
         elif kind == "shirt_tie":
             shape(cr, rrect_pts(-bw / 2, top, bw, bh, 24), c["shirt"], seed, amp=1.0)
             shape(cr, [(-16, top + 2), (0, top + 16), (16, top + 2)], hexc("#e3dccb"), seed + 1, amp=0.3, lw=3)
@@ -427,6 +439,15 @@ def person(cr, who, x, y, t, facing=1, walk=None, arms=("down", "down"), eyes="d
             dot(cr, fx - 26, hy + 12, 6, BLUSH)
             dot(cr, fx + 26, hy + 12, 6, BLUSH)
         _mouth(cr, mouth, fx, hy + 24, seed + 10, t)
+        if mask is not None:   # surgical mask; `mask` > 0 puffs it while talking
+            line(cr, [(fx - 30, hy + 10), (-hr + 2, hy + 2)], 2.5, hexc("#1f6f50"), seed + 30, amp=0.2)
+            line(cr, [(fx + 30, hy + 10), (hr - 2, hy + 2)], 2.5, hexc("#1f6f50"), seed + 31, amp=0.2)
+            p = 1 + 0.06 * mask
+            shape(cr, [(fx - 32, hy + 13), (fx + 32, hy + 13), (fx + 30 * p, hy + 36), (fx + 14, hy + 45 * p),
+                       (fx - 14, hy + 45 * p), (fx - 30 * p, hy + 36)], hexc("#2fa36f"), seed + 32, amp=0.3, lw=3)
+            for k in range(3):
+                line(cr, [(fx - 26, hy + 20 + k * 8), (fx + 26, hy + 20 + k * 8)], 2, hexc("#1f7f55"), seed + 33 + k,
+                     amp=0.2)
         if tears:
             for sx in (-1, 1):
                 k = (t * 1.6 + (sx + 1) * 0.3) % 1

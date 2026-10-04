@@ -12,28 +12,33 @@ Facts (kept general and uncontroversial; sources in research_notes/body_facts_2-
 import math
 
 from motion.captions import captions
-from motion.characters import person
-from motion.engine import INK, RED, blob, cue, ease_out, hexc, lerp, line, seg, shape, write
-from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
-from motion.organs import big_lobe_pts, calendar, card, lobe, small_lobe_pts
+from motion.engine import blob, cue, ease_out, hexc, lerp, line, seg, shape, write
+from motion.clinic import A_CLOSE, B_CLOSE, BED_A, BED_B, DOC_CLOSE, NEXT_BED, TWO_SHOT, bed, doctor, label, \
+    patient, room, sheet, watermark
+from motion.kit import camera, enter_world, set_camera, whip
+from motion.organs import big_lobe_pts, calendar, lobe, small_lobe_pts
 from motion.surgery import BLOOD, BLOOD_D, DRAPE, SKIN, SKIN_D, clamp, cut_line, drapes, ellipse, forceps, \
     scalpel_tip, slit, stitches, wound
-from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, heart, room, scalpel
+from videos.kidney_donor import heart, scalpel
 
-NARRATOR = dict(cast={
-    # voices styled on the owner's reference Short (see brain_awake.py)
-    "big": dict(voice="bm_daniel", speed=1.0, pitch=2),      # the big lobe
-    "small": dict(voice="bm_george", speed=1.0, pitch=2),    # the small lobe
-    "scalpel": dict(voice="af_jessica", speed=1.0, pitch=4),   # same scalpel voice as the brain episode
+# Voices and look styled on the owner's two reference Shorts (an esophagus bleeding / a baby that stopped growing):
+# a scared, high organ voice, a grumpy natural one, a bright "tool" voice; picked by speaker similarity to the
+# references (research_notes/body_facts_2-4.md). The doctor (the owner's clone) reads at the references' calm pace.
+STYLE = "clean"
+NARRATOR = dict(clone_rate=4.9, cast={
+    "big": dict(voice="am_eric", speed=1.0, pitch=0),        # the big lobe: grumpy
+    "small": dict(voice="af_jessica", speed=1.0, pitch=6),   # the small lobe: scared
+    "scalpel": dict(voice="af_nova", speed=1.0, pitch=2),    # same scalpel voice as the brain episode
     "heart": dict(voice="af_river", speed=1.0, pitch=4),
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
+EMPHASIS = {"liver", "transplant", "donor", "grows", "months", "shape", "huge"}   # bigger captions
 
 SCRIPT = [
     dict(id="l1", scene="body", text="Hello again! I came for half a liver.", speaker="scalpel"),
-    dict(id="l2", scene="body", text="Wait, which half?", speaker="small"),
+    dict(id="l2", scene="body", text="Wait, which half of us?", speaker="small"),
     dict(id="l3", scene="body", text="The big guy!", speaker="scalpel"),
     dict(id="l4", scene="body", text="What, me? Little guy, you can't run this place alone!", speaker="big"),
     dict(id="l5", scene="body", text="Hey, come back! I'm way too small!", speaker="small"),
@@ -44,6 +49,7 @@ SCRIPT = [
     dict(id="h3", scene="ward", text="In a few months, it's almost full size again. Just a different shape.",
          speaker="doctor"),
     dict(id="h4", scene="ward", text="And your brother's half grows bigger too.", speaker="doctor"),
+    dict(id="h4b", scene="ward", text="This surgery is called a living donor liver transplant.", speaker="doctor"),
     dict(id="h5", scene="ward", text="So now we both have a whole liver?", speaker="danny"),
     dict(id="h6", scene="ward", text="Pretty much, yes.", speaker="doctor"),
     dict(id="h7", scene="ward", text="Thanks, bro. So, do lungs grow back too?", speaker="danny"),
@@ -230,102 +236,59 @@ def scene_body(cr, t, tl):
         calendar(cr, t, 600, 380, f"WEEK {wk}", A("l7", "no"))
         cr.restore()
     # ---- screen text
-    hl(cr, t, [("HALF", RED), (" a liver?!", INK)], 215, 70, 0.0, end=A("l2") - 0.05, bold=True, sound=False)
-    hl(cr, t, [("\"The ", INK), ("BIG", RED), (" guy!\"", INK)], 215, 66, A("l3", "big"), end=A("l4", "alone"), bold=True)
-    hl(cr, t, [("off to his ", INK), ("BROTHER", BLUE)], 215, 62, take, end=A("l6") - 0.05, bold=True)
-    hl(cr, t, [("\"I'm getting ", INK), ("HUGE", RED), ("!\"", INK)], 215, 64, A("l7", "huge"), bold=True)
-    stamp(cr, t, A("l1", "liver"), "HI AGAIN!", dur=0.6, y=330)
+    # ---- anatomy tags, like the references
+    if t < A("l1", "liver") - 0.15:
+        label(cr, "Liver (under here)", 250, 470, 330, 600)
+    elif close <= 0:
+        if gone <= 0:
+            label(cr, "Liver: right lobe", 170, 400, 240, 560)
+        label(cr, "Liver: left lobe", 560, 400, 470, 580)
+        label(cr, "Heart", 360, 380, 360, 450)
+    if xray > 0 and grow > 0.5:
+        label(cr, "Left lobe: growing", 540, 470, 430, 600)
     for w in (A("l1", "liver") - 0.15, A("l3", "big"), take, A("l7", "huge")):
         cue("hit", t, w)
     cue("whoosh", t, take)
     cue("scribble", t, 0.05, 0.8)
 
 
-# ------------------------------------------------------------------ the ward
-DOC_X, MIKE_X, DANNY_X = 360, 140, 580
-
-
-def mini_liver(cr, x, y, s):
-    blob(cr, x, y, 54 * s, 34 * s, hexc("#8e2f2a"), seed=610, amp=0.6, lw=3)
-    blob(cr, x - 14 * s, y - 10 * s, 14 * s, 7 * s, hexc("#ffffff", 0.3), seed=611, amp=0.3, lw=0, stroke=None)
-
-
+# ------------------------------------------------------------------ the doctor's room
 def scene_ward(cr, t, tl):
     A = tl.at
-    DOCF, MIK, DAN = (1.8, DOC_X, 860), (1.8, MIKE_X + 30, 800), (1.8, DANNY_X - 30, 800)
-    WIDE = (1.0, 370, 760)
-    keys = [(A("h1") - 0.1, (1.05, 360, 770)), (A("h1", "liver"), MIK), (A("h1", "forever"), (1.3, 280, 760)),
-            (A("h2"), DOCF), (A("h2", "grows"), WIDE),
-            (A("h3"), DOCF), (A("h3", "different"), WIDE),
-            (A("h4"), (1.3, 470, 760)), (A("h5"), DAN), (A("h6"), DOCF), (A("h6", "yes"), WIDE),
-            (A("h7"), DAN), (A("h7", "lungs"), (1.4, 520, 700)),
-            (A("h8"), (2.0, MIKE_X + 30, 800)), (A("h8", "brother"), (1.2, 370, 770)),
-            (A("h9"), (2.2, DOC_X, 860)), (A("h9", "yes"), WIDE)]
-    set_camera(camera(t, keys))
+    keys = [(A("h1") - 0.1, A_CLOSE), (A("h1", "forever"), TWO_SHOT),
+            (A("h2"), DOC_CLOSE), (A("h3"), TWO_SHOT), (A("h3", "different"), DOC_CLOSE),
+            (A("h4"), NEXT_BED), (A("h4b"), DOC_CLOSE), (A("h5"), B_CLOSE), (A("h6"), DOC_CLOSE),
+            (A("h7"), B_CLOSE), (A("h7", "lungs"), NEXT_BED),
+            (A("h8"), A_CLOSE), (A("h9"), DOC_CLOSE), (A("h9", "yes"), TWO_SHOT)]
+    set_camera(camera(t, keys, dur=0.25))
     enter_world(cr)
-    room(cr, t)
-    bed_back(cr, MIKE_X, 1)
-    bed_back(cr, DANNY_X, -1)
-    d = dict(facing=-1, arms=("hold", "hip"), eyes="dot", mouth="smile")
-    if A("h2") <= t < A("h7"):
-        d.update(arms=("point", "hip"), eyes="happy" if t >= A("h3") else "dot", facing=-1 if t < A("h4") else 1)
-    if A("h7") <= t < A("h9"):
-        d.update(eyes="wide", mouth="o", facing=1)
-    if A("h9") <= t:
-        d.update(eyes="sly", mouth="flat", facing=-1, arms=("hip", "hip"))
-    if tl.speaking("doctor", t):
-        d["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "doctor", DOC_X, 1010, t, scale=1.12, **d)
-    m = dict(facing=1, arms=("hold", "down"), eyes="sad", mouth="sad")
+    room(cr)
+    (xa, ya, sa), (xb, yb, sb) = BED_A, BED_B
+    bed(cr, xa)
+    bed(cr, xb)
+    m = dict(eyes="sad", mouth="sad", arms=("hold", "down"))
     if A("h2") <= t < A("h7"):
         m.update(eyes="happy", mouth="grin")
     if A("h7", "lungs") <= t:
-        m.update(eyes="wide", mouth="o", sweat=True, shake=1.0 if t < A("h8") else 0)
+        m.update(eyes="wide", mouth="o", sweat=True)
     if A("h8") <= t:
-        m.update(eyes="sly", mouth="flat", arms=("point", "down"), shake=0)
-    if tl.speaking("mike", t):
-        m["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "mike", MIKE_X, 935, t, **m)
-    n = dict(facing=-1, arms=("hold", "down"), eyes="happy", mouth="grin")
+        m.update(eyes="sly", mouth="flat", arms=("point", "down"), sweat=False)
+    patient(cr, "mike_b", xa, ya, sa, t, talking=tl.speaking("mike", t), **m)
+    n = dict(eyes="happy", mouth="grin", arms=("hold", "down"))
     if A("h7") <= t:
         n.update(arms=("thumb", "down"))
     if A("h9") <= t:
         n.update(eyes="wide", mouth="o", sweat=True, arms=("hold", "down"))
-    if tl.speaking("danny", t):
-        n["mouth"] = "o" if int(t * 12) % 2 else "grin"
-    person(cr, "danny", DANNY_X, 935, t, **n)
-    bed_front(cr, MIKE_X)
-    bed_front(cr, DANNY_X)
-    write(cr, [("GAVE HALF", BLUE)], MIKE_X, 990, 28, align="center", bold=True)
-    write(cr, [("GOT HALF", RED)], DANNY_X, 990, 28, align="center", bold=True)
-    for key, end, runs in (("h2", "h3", [("the liver ", INK), ("GROWS BACK", GREEN)]),
-                           ("h3", "h4", [("full size, ", GREEN), ("new shape", BLUE)]),
-                           ("h4", "h5", [("his half ", INK), ("grows too", GREEN)])):
-        if A(key) <= t < A(end):
-            cr.save()
-            cr.identity_matrix()
-            card(cr, t, A(key), 360, 320, runs, size=44, w=520)
-            cr.restore()
-            cue("pop", t, A(key))
-    if A("h5", "whole") <= t < A("h7"):        # one liver became two
-        cr.save()
-        cr.identity_matrix()
-        for x in (250, 470):
-            mini_liver(cr, x, 330, max(0.85, min(1.3, 5 * (t - A("h5", "whole")))))
-        cr.restore()
-        cue("pop", t, A("h5", "whole"))
-    hl(cr, t, [("Gone ", INK), ("FOREVER", RED), ("?", INK)], 215, 64, A("h1", "forever"), end=A("h2") - 0.05,
-       bold=True)
-    hl(cr, t, [("NO", GREEN), (". It grows back.", INK)], 215, 62, A("h2"), end=A("h3") - 0.05, bold=True)
-    hl(cr, t, [("in a ", INK), ("few months", BLUE)], 215, 64, A("h3", "months"), end=A("h4") - 0.05, bold=True)
-    hl(cr, t, [("2 brothers, ", INK), ("2 livers", GREEN)], 215, 64, A("h5", "whole"), end=A("h7") - 0.05, bold=True)
-    hl(cr, t, [("\"Do ", INK), ("LUNGS", RED), (" grow back?\"", INK)], 215, 58, A("h7", "lungs"), end=A("h8") - 0.05,
-       bold=True)
-    hl(cr, t, [("\"Can I live without a ", INK), ("BROTHER", RED), ("?\"", INK)], 215, 50, A("h8", "brother"),
-       end=A("h9") - 0.05, bold=True)
-    stamp(cr, t, A("h9", "yes"), "STILL YES.", dur=0.9, y=330)
-    for w in (A("h7", "lungs"), A("h9", "yes")):
-        cue("hit", t, w)
+    patient(cr, "danny_b", xb, yb, sb, t, talking=tl.speaking("danny", t), **n)
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("h2") <= t < A("h7"):
+        d.update(arms=("hold", "down"), eyes="happy" if t >= A("h3") else "dot")
+    if A("h7") <= t < A("h9"):
+        d.update(eyes="wide")
+    if A("h9") <= t:
+        d.update(eyes="sly")
+    doctor(cr, t, talking=tl.speaking("doctor", t), **d)
+    sheet(cr)
 
 
 def draw(cr, t, tl):
@@ -338,3 +301,4 @@ def draw(cr, t, tl):
         scene_body(cr, t, tl)
     cr.restore()
     captions(cr, t, tl)
+    watermark(cr)

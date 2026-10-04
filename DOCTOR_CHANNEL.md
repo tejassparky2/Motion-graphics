@@ -32,6 +32,22 @@ Research, sources and the psychology behind the scripts: `research_notes/body_fa
   The heart, scalpel, faces and hospital set are imported from `videos/kidney_donor.py`, so every episode looks
   like the same world.
 
+## House style (from the owner's references, videos 2-4)
+The owner sent two more reference Shorts (an esophagus with bleeding veins treated by an endoscope; a baby that
+stopped growing, taken out by a gloved hand to a NICU incubator) and asked to work "like that". What we took:
+- **Clean look:** `STYLE = "clean"` in a video module turns off the hand-drawn wobble, thins outlines, and switches
+  text to Anton (OFL, `assets/fonts/Anton-Regular.ttf`).
+- **Captions:** one word at a time, uppercase, white with a dark outline, at y=950. The video's `EMPHASIS` set
+  makes medical terms bigger.
+- **Anatomy tags** instead of handwritten headlines: `motion.clinic.label("Nasal septum", x, y, px, py)`.
+- **Doctor's room** (`motion/clinic.py`): plain olive wall, a masked doctor (`person(..., mask=...)`), and patients
+  in blue shirts (`mike_b`, `danny_b`) sitting up in bed, in a medium shot with the sheet across the front.
+- **Script:** the doctor names the medical term ("This is called an awake craniotomy.").
+- **Voices:** the doctor (the owner's clone) at 4.9 syllables/s (`clone_rate` in NARRATOR), the references' calm
+  pace. Organs: scared = `af_heart`/`af_jessica` +6, grumpy = `am_eric` (0.89 match to the reference's stomach),
+  tool = `af_nova` +2, calm helper = `af_river` +4.
+- A faint "Body Facts" watermark, like the references' channel mark.
+
 ## Surgery scenes (owner's rule)
 The owner wants operations shown fully, like the reference Short (a knee cut open on blue drapes): the body part on
 the table, the numbing shot, the cut, the open wound with red tissue and blood, the organ inside with a face, and

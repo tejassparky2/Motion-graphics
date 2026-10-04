@@ -42,6 +42,10 @@ def load(name):
     mod = importlib.import_module(f"videos.{name}")
     VIDEO.update(name=name, mod=mod)
     narrator.configure(**getattr(mod, "NARRATOR", {}))
+    engine.set_style(getattr(mod, "STYLE", "hand"))
+    from motion import captions
+    captions.EMPHASIS.clear()
+    captions.EMPHASIS.update(getattr(mod, "EMPHASIS", ()))
     media = external_narration(name)
     if media:
         from motion.timeline import Beat, parse

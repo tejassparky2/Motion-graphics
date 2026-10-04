@@ -33,6 +33,16 @@ register_fonts()
 import cairo  # noqa: E402
 
 FONT = "Kalam"
+# Drawing style. "hand" (default): boiling hand-drawn lines and the Kalam hand. "clean": the medical-explainer
+# look of the Body Facts references (smooth vector lines, thinner outlines, a bold condensed sans).
+STYLE = {"clean": False, "lw": 1.0}
+
+
+def set_style(name):
+    global FONT
+    clean = name == "clean"
+    STYLE.update(clean=clean, lw=0.72 if clean else 1.0)
+    FONT = "Anton" if clean else "Kalam"
 
 # ---------------------------------------------------------------- palette
 def hexc(h, a=1.0):
@@ -120,6 +130,8 @@ def _rng(seed):
 
 
 def wobble(pts, seed, amp=1.4):
+    if STYLE["clean"]:
+        return list(pts)
     r = _rng(seed)
     return [(x + r.uniform(-amp, amp), y + r.uniform(-amp, amp)) for x, y in pts]
 
@@ -184,6 +196,7 @@ def poly_pts(corners, step=16):
 
 
 def shape(cr, pts, fill=None, seed=0, amp=1.3, lw=4.0, stroke=INK, closed=True):
+    lw = lw * STYLE["lw"] if lw else lw
     pts = wobble(pts, seed, amp) if amp else pts
     _catmull(cr, pts, closed)
     if fill is not None and closed:
@@ -204,6 +217,7 @@ def shape(cr, pts, fill=None, seed=0, amp=1.3, lw=4.0, stroke=INK, closed=True):
 
 def sharp_shape(cr, corners, fill=None, seed=0, amp=1.2, lw=4.0, stroke=INK):
     """Polygon with straight-ish (jittered) edges and sharp corners."""
+    lw = lw * STYLE["lw"] if lw else lw
     pts = wobble(corners, seed, amp)
     cr.move_to(*pts[0])
     for p in pts[1:]:
@@ -236,6 +250,7 @@ def dot(cr, x, y, r, color=INK):
 
 # ---------------------------------------------------------------- text
 def _font(cr, size, bold=False):
+    bold = bold and not STYLE["clean"]   # Anton is heavy already; synthetic bold would smear it
     cr.select_font_face(FONT, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD if bold else cairo.FONT_WEIGHT_NORMAL)
     cr.set_font_size(size)
 
@@ -263,8 +278,9 @@ def write(cr, runs, x, y, size, progress=1.0, align="left", bold=False, underlin
         x -= total
     cr.save()
     # slight per-boil jitter makes static text feel hand drawn
-    r = _rng(hash((x, y, size)))
-    cr.translate(r.uniform(-0.6, 0.6), r.uniform(-0.6, 0.6))
+    if not STYLE["clean"]:
+        r = _rng(hash((x, y, size)))
+        cr.translate(r.uniform(-0.6, 0.6), r.uniform(-0.6, 0.6))
     cr.rectangle(x - 10, y - size * 1.4, (total + 20) * clamp01(progress), size * 2.0)
     cr.clip()
     if halo is not None:   # soft outline so text stays readable over busy backgrounds

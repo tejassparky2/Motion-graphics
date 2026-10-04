@@ -55,7 +55,9 @@ def stamp(cr, t, start, text, dur=0.8, y=470, color="#ffd23f"):
     cr.save()
     cr.identity_matrix()
     cr.push_group()
-    cr.select_font_face("Kalam", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    from . import engine
+    cr.select_font_face(engine.FONT, cairo.FONT_SLANT_NORMAL,
+                        cairo.FONT_WEIGHT_NORMAL if engine.STYLE["clean"] else cairo.FONT_WEIGHT_BOLD)
     cr.set_font_size(80)
     half = cr.text_extents(text).x_advance / 2 + 36
     with at(cr, W / 2, y, s, rot=-0.1):

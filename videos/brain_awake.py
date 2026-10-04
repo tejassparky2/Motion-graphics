@@ -11,23 +11,26 @@ Facts (kept general and uncontroversial; sources in research_notes/body_facts_2-
 import math
 
 from motion.captions import captions
-from motion.characters import person
-from motion.engine import INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, seg, shape, write
-from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
-from motion.organs import brain, card, head_bandage
+from motion.engine import RED, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, seg, shape, write
+from motion.kit import camera, enter_world, set_camera, whip
+from motion.clinic import A_CLOSE, BED_A, DOC_CLOSE, TWO_SHOT, bed, doctor, label, patient, room, sheet, \
+    watermark
+from motion.organs import brain, head_bandage
 from motion.surgery import DRAPE, DRAPE_D, SKIN, SKIN_D, clamp, cut_line, drapes, ellipse, scalpel_tip, slit, syringe, \
     wound
-from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, eyes, mouth, room, scalpel
+from videos.kidney_donor import eyes, mouth, scalpel
 
-NARRATOR = dict(cast={
-    # Voices styled on the owner's reference Short (cracked-kneecap cartoon): the organ things happen to is a young
-    # male voice raised a little; helpers (tools) are brighter, raised a bit more. Stock voices, not copies; picked
-    # by speaker similarity to the reference (research_notes/body_facts_2-4.md).
-    "brain": dict(voice="bm_george", speed=1.0, pitch=2),
-    "scalpel": dict(voice="af_jessica", speed=1.0, pitch=4),
+# Voices and look styled on the owner's two reference Shorts (an esophagus bleeding / a baby that stopped growing):
+# a scared, high organ voice, a grumpy natural one, a bright "tool" voice; picked by speaker similarity to the
+# references (research_notes/body_facts_2-4.md). The doctor (the owner's clone) reads at the references' calm pace.
+STYLE = "clean"
+NARRATOR = dict(clone_rate=4.9, cast={
+    "brain": dict(voice="af_heart", speed=1.0, pitch=6),     # scared organ
+    "scalpel": dict(voice="af_nova", speed=1.0, pitch=2),    # tool
     "mike": dict(voice="am_michael", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
+EMPHASIS = {"craniotomy", "brain", "awake", "pain", "sensors", "headaches"}   # bigger captions
 
 SCRIPT = [
     dict(id="b1", scene="head", text="Hey, who opened the roof?", speaker="brain"),
@@ -37,13 +40,14 @@ SCRIPT = [
     dict(id="b5", scene="head", text="No, no, wait! This is going to hurt so much!", speaker="brain"),
     dict(id="b6", scene="head", text="Hold on, I don't feel anything.", speaker="brain", gap=0.4),
     dict(id="b7", scene="head", text="Of course not. You don't have any pain sensors.", speaker="scalpel"),
-    dict(id="b8", scene="head", text="I feel all of his pain. And I can't feel my own?", speaker="brain"),
+    dict(id="b8", scene="head", text="I feel every pain he has. And I can't feel my own?", speaker="brain"),
     dict(id="h1", scene="ward", text="Doc, you cut into my brain, and I was wide awake. Why didn't it hurt?",
          speaker="mike"),
     dict(id="h2", scene="ward", text="The brain itself has no pain sensors.", speaker="doctor"),
     dict(id="h3", scene="ward", text="We numbed your scalp. After that, the brain felt nothing.", speaker="doctor"),
     dict(id="h4", scene="ward", text="And you stayed awake, so you could talk while we worked. That told us which "
                                      "parts to leave alone.", speaker="doctor"),
+    dict(id="h4b", scene="ward", text="This is called an awake craniotomy.", speaker="doctor"),
     dict(id="h5", scene="ward", text="Then why do I get headaches?", speaker="mike"),
     dict(id="h6", scene="ward", text="That pain comes from the layers and blood vessels around the brain. Not the "
                                      "brain itself.", speaker="doctor"),
@@ -213,62 +217,38 @@ def scene_head(cr, t, tl):
                 mood="happy" if t < A("b5") or t >= A("b7") else "calm")
     # ---- pain messages from the rest of the body pour into the brain
     if A("b8") <= t:
-        for k, (lab, x0, y0, w) in enumerate([("STUBBED TOE!", 120, 1100, "feel"), ("PAPER CUT!", 700, 980, "his"),
+        for k, (lab, x0, y0, w) in enumerate([("STUBBED TOE!", 120, 1100, "feel"), ("PAPER CUT!", 700, 980, "every"),
                                               ("HOT TEA!", 90, 300, "pain")]):
             ouch(cr, t, A("b8", w), lab, x0, y0, k)
     # ---- screen text
-    hl(cr, t, [("AWAKE ", RED), ("brain surgery?!", INK)], 215, 62, 0.0, end=A("b2", "surgery") - 0.05, bold=True,
-       sound=False)
-    hl(cr, t, [("\"He's still ", INK), ("AWAKE", RED), ("!\"", INK)], 215, 62, A("b3", "awake"), end=A("b4") - 0.05,
-       bold=True)
-    hl(cr, t, [("\"This is going to ", INK), ("HURT", RED), ("!\"", INK)], 215, 56, A("b5", "hurt"),
-       end=A("b6") - 0.05, bold=True)
-    hl(cr, t, [("...I feel ", INK), ("NOTHING", GREEN), ("?", INK)], 215, 64, A("b6", "anything"),
-       end=A("b7") - 0.05, bold=True)
+    # ---- anatomy tags, like the references
+    if t < A("b1", "roof") - 0.25:
+        label(cr, "Scalp (numbed)", 250, 360, 300, 450)
+    elif t < A("b5"):
+        label(cr, "Skull", 205, 395, 228, 470)
+        label(cr, "Brain", 500, 395, 430, 480)
     if A("b7", "sensors") <= t < A("b8"):
-        cr.save()
-        cr.identity_matrix()
-        card(cr, t, A("b7", "sensors"), 360, 330, [("PAIN SENSORS: ", INK), ("0", RED)], size=46)
-        cr.restore()
+        label(cr, "Pain sensors: 0", 500, 380, 420, 470, size=30)
         cue("pop", t, A("b7", "sensors"))
-    hl(cr, t, [("feels ALL your pain... ", INK), ("but not its own", RED)], 215, 44, A("b8", "own"), bold=True)
-    stamp(cr, t, poke + 0.25, "BOOP", dur=0.5, y=330)
     for w in (A("b3", "awake"), poke, A("b6", "anything"), A("b1", "roof") - 0.25):
         cue("hit", t, w)
     cue("whoosh", t, A("b1", "roof") - 0.1)
     cue("scribble", t, 0.35, 0.6)
 
 
-# ------------------------------------------------------------------ the ward, after the surgery
-MIKE_X, DOC_X = 200, 480
-
-
+# ------------------------------------------------------------------ the doctor's room, after the surgery
 def scene_ward(cr, t, tl):
     A = tl.at
-    MIK, DOCF = (1.8, MIKE_X + 20, 800), (1.8, DOC_X, 860)
-    WIDE, CARD = (1.05, 350, 770), (1.2, 360, 700)
-    keys = [(A("h1") - 0.1, (1.1, 340, 770)), (A("h1", "brain"), MIK), (A("h1", "hurt"), (1.3, 300, 760)),
-            (A("h2"), DOCF), (A("h2", "pain"), CARD),
-            (A("h3"), WIDE), (A("h3", "nothing"), DOCF),
-            (A("h4"), (1.3, 330, 700)), (A("h4", "talk"), MIK), (A("h4", "parts"), CARD),
-            (A("h5"), MIK), (A("h6"), DOCF), (A("h6", "layers"), CARD), (A("h6", "itself"), WIDE),
-            (A("h7"), (2.0, MIKE_X + 20, 800)), (A("h7", "brain"), (1.2, 350, 770)),
-            (A("h8"), (2.2, DOC_X, 860)), (A("h8", "barely"), WIDE)]
-    set_camera(camera(t, keys))
+    keys = [(A("h1") - 0.1, A_CLOSE), (A("h1", "hurt"), TWO_SHOT),
+            (A("h2"), DOC_CLOSE), (A("h3"), TWO_SHOT), (A("h4"), DOC_CLOSE), (A("h4", "parts"), TWO_SHOT),
+            (A("h4b"), DOC_CLOSE), (A("h5"), A_CLOSE), (A("h6"), DOC_CLOSE), (A("h6", "itself"), TWO_SHOT),
+            (A("h7"), A_CLOSE), (A("h8"), DOC_CLOSE), (A("h8", "barely"), TWO_SHOT)]
+    set_camera(camera(t, keys, dur=0.25))
     enter_world(cr)
-    room(cr, t)
-    bed_back(cr, MIKE_X, 1)
-    d = dict(facing=-1, arms=("hold", "hip"), eyes="dot", mouth="smile")
-    if A("h2") <= t < A("h7"):
-        d.update(arms=("point", "hip"), eyes="happy" if A("h4") <= t < A("h5") else "dot")
-    if A("h7") <= t < A("h8"):
-        d.update(eyes="wide", mouth="o")
-    if A("h8") <= t:
-        d.update(eyes="sly", mouth="flat", arms=("hip", "hip"))
-    if tl.speaking("doctor", t):
-        d["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "doctor", DOC_X, 1010, t, scale=1.12, **d)
-    m = dict(facing=1, arms=("hold", "down"), eyes="wide", mouth="o")
+    room(cr)
+    x, y, s = BED_A
+    bed(cr, x)
+    m = dict(eyes="wide", mouth="o", arms=("hold", "down"))
     if A("h2") <= t < A("h5"):
         m.update(eyes="happy", mouth="grin")
     if A("h5") <= t < A("h6"):
@@ -278,38 +258,19 @@ def scene_ward(cr, t, tl):
     if A("h7") <= t:
         m.update(eyes="sly", mouth="smirk", arms=("point", "down"))
     if A("h8", "barely") <= t:
-        m.update(eyes="wide", mouth="o", sweat=True)
-    if tl.speaking("mike", t):
-        m["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "mike", MIKE_X, 935, t, **m)
-    head_bandage(cr, MIKE_X, 935, t)
-    bed_front(cr, MIKE_X)
-    write(cr, [("BRAIN SURGERY", BLUE)], MIKE_X, 990, 26, align="center", bold=True)
-    # fact cards, above the caption line
-    for key, end, runs in (("h2", "h3", [("brain: ", INK), ("0", RED), (" pain sensors", INK)]),
-                           ("h3", "h4", [("numb scalp = ", INK), ("no pain", GREEN)]),
-                           ("h4", "h5", [("awake = he can ", INK), ("TALK", BLUE)]),
-                           ("h6", "h7", [("headache = ", INK), ("layers + vessels", RED)])):
-        if A(key) <= t < A(end):
-            cr.save()
-            cr.identity_matrix()
-            card(cr, t, A(key), 360, 320, runs, size=40, w=500)
-            cr.restore()
-            cue("pop", t, A(key))
-    hl(cr, t, [("Why didn't it ", INK), ("HURT", RED), ("?", INK)], 215, 60, A("h1", "hurt"), end=A("h2") - 0.05,
-       bold=True)
-    hl(cr, t, [("NO", RED), (" pain sensors in the brain", INK)], 215, 46, A("h2", "pain"), end=A("h3") - 0.05,
-       bold=True)
-    hl(cr, t, [("talk = ", INK), ("map the brain", BLUE)], 215, 56, A("h4", "talk"), end=A("h5") - 0.05, bold=True)
-    hl(cr, t, [("So why ", INK), ("HEADACHES", RED), ("?", INK)], 215, 60, A("h5", "headaches"), end=A("h6") - 0.05,
-       bold=True)
-    hl(cr, t, [("the layers ", INK), ("AROUND", RED), (" the brain", INK)], 215, 46, A("h6", "around"),
-       end=A("h7") - 0.05, bold=True)
-    hl(cr, t, [("\"Did you find a ", INK), ("BRAIN", RED), ("?\"", INK)], 215, 56, A("h7", "brain"),
-       end=A("h8") - 0.05, bold=True)
-    stamp(cr, t, A("h8", "barely"), "BARELY.", dur=0.9, y=330)
-    for w in (A("h7", "brain"), A("h8", "barely")):
-        cue("hit", t, w)
+        m.update(eyes="wide", mouth="o", sweat=True, arms=("hold", "down"))
+    patient(cr, "mike_b", x, y, s, t, talking=tl.speaking("mike", t), **m)
+    with at(cr, x, y, s):
+        head_bandage(cr, 0, 0, t)
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("h2") <= t < A("h7"):
+        d.update(arms=("hold", "down"), eyes="happy" if A("h4") <= t < A("h5") else "dot")
+    if A("h7") <= t < A("h8"):
+        d.update(eyes="wide")
+    if A("h8") <= t:
+        d.update(eyes="sly", arms=("down", "down"))
+    doctor(cr, t, talking=tl.speaking("doctor", t), **d)
+    sheet(cr)
 
 
 def draw(cr, t, tl):
@@ -322,3 +283,4 @@ def draw(cr, t, tl):
         scene_head(cr, t, tl)
     cr.restore()
     captions(cr, t, tl)
+    watermark(cr)

@@ -61,9 +61,12 @@ MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference nar
 CAST_VOICES = {}
 
 
-def configure(voice=None, speed=None, max_pause=None, cast=None):
-    """Per-video narrator settings (environment variables still win, so you can audition voices)."""
-    global VOICE, SPEED, MAX_PAUSE
+def configure(voice=None, speed=None, max_pause=None, cast=None, clone_rate=None):
+    """Per-video narrator settings (environment variables still win, so you can audition voices).
+    `clone_rate`: target syllables/s for the cloned voice in this video (default CLONE_RATE)."""
+    global VOICE, SPEED, MAX_PAUSE, CLONE_RATE
+    if "CLONE_RATE" not in os.environ:   # reset per video, so one video's pace never leaks into the next
+        CLONE_RATE = clone_rate or CLONE_RATE_DEFAULT
     CAST_VOICES.clear()
     CAST_VOICES.update(cast or {})
     if voice and "NARRATOR_VOICE" not in os.environ:
@@ -290,6 +293,7 @@ def synth(text, pace=1.0, who=None):
 # Pace target: The Teacher Bluffed (owner: "speed similar as the teacher Bluffed video") reads at a median
 # 5.2 syllables per second of speech, with lines within ~0.5 of each other.
 CLONE_RATE = float(os.environ.get("CLONE_RATE", "5.5"))   # owner: "fast up voice slightly more" (was 5.2)
+CLONE_RATE_DEFAULT = CLONE_RATE
 # Tone, matched to the narrators in the owner's reference videos (voice separated from music, long-term spectrum):
 # the clone was 5-8 dB duller above 2.5 kHz and boomy at 125-160 Hz. So: cut the boom, keep firm bass body at
 # ~220 Hz, lift presence and air, then light compression for a punchy, even level.

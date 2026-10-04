@@ -11,29 +11,33 @@ Facts (kept general and uncontroversial; sources in research_notes/body_facts_2-
 import math
 
 from motion.captions import captions
-from motion.characters import person
-from motion.engine import INK, RED, WHITE, at, blob, cue, ease_out, hexc, lerp, line, seg, shape, write
-from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
-from motion.organs import airflow, brain, card, turbinate
-from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, room
+from motion.engine import blob, cue, ease_out, hexc, lerp, line, seg, shape, write
+from motion.clinic import A_CLOSE, B_CLOSE, BED_A, BED_B, DOC_CLOSE, NEXT_BED, TWO_SHOT, bed, doctor, label, \
+    patient, room, sheet, watermark
+from motion.kit import camera, enter_world, set_camera, whip
+from motion.organs import airflow, brain, turbinate
 
-NARRATOR = dict(cast={
-    # voices styled on the owner's reference Short (see brain_awake.py)
-    "left": dict(voice="bm_daniel", speed=1.0, pitch=2),     # the side that's working
+# Voices and look styled on the owner's two reference Shorts (an esophagus bleeding / a baby that stopped growing):
+# a scared, high organ voice, a grumpy natural one, a bright "tool" voice; picked by speaker similarity to the
+# references (research_notes/body_facts_2-4.md). The doctor (the owner's clone) reads at the references' calm pace.
+STYLE = "clean"
+NARRATOR = dict(clone_rate=4.9, cast={
+    "left": dict(voice="am_eric", speed=1.0, pitch=0),       # the side that's working: grumpy
     "right": dict(voice="af_river", speed=1.0, pitch=4),     # the side on its break
-    "brain": dict(voice="bm_george", speed=1.0, pitch=2),    # same brain as the awake-surgery episode
+    "brain": dict(voice="af_heart", speed=1.0, pitch=6),     # same brain as the awake-surgery episode
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
+EMPHASIS = {"nasal", "cycle", "swells", "breathing", "nervous", "hours", "left", "right"}   # bigger captions
 
 SCRIPT = [
     dict(id="n1", scene="nose", text="Hey, you. Yes, you. Breathe through your nose.", speaker="left"),
     dict(id="n2", scene="nose", text="Feel that? I'm doing most of the work!", speaker="left"),
     dict(id="n3", scene="nose", text="Because this one is asleep!", speaker="left"),
     dict(id="n4", scene="nose", text="Quiet. I'm on my break.", speaker="right"),
-    dict(id="n5", scene="nose", text="A break? We're a team! Get up and help!", speaker="left"),
-    dict(id="n6", scene="nose", text="Shift change! Right side, you're up.", speaker="brain"),
+    dict(id="n5", scene="nose", text="What? A break? We're a team! Get up and help!", speaker="left"),
+    dict(id="n6", scene="nose", text="Time to switch! Right side, you're up.", speaker="brain"),
     dict(id="n7", scene="nose", text="Okay. My turn.", speaker="right"),
     dict(id="n8", scene="nose", text="Finally. Wake me up in a few hours.", speaker="left"),
     dict(id="d1", scene="ward", text="Doc, one side of my nose keeps getting blocked. Is it broken?",
@@ -87,7 +91,12 @@ def nose_bg(cr, t):
     shape(cr, [(300, 120), (420, 120), (520, 520), (690, 960), (640, 1110), (80, 1110), (30, 960), (200, 520)],
           hexc("#f2b48e"), seed=500, amp=0.8, lw=4.5)
     for x0, x1 in ((WALL_L, SEPT_L), (SEPT_R, WALL_R)):
-        shape(cr, [(x0, TOP), (x1, TOP), (x1, BOT), (x0, BOT)], hexc("#8f3e48"), seed=501 + x0, amp=0.6, lw=4)
+        shape(cr, [(x0, TOP), (x1, TOP), (x1, BOT), (x0, BOT)], hexc("#a8474f"), seed=501 + x0, amp=0.6, lw=4)
+        shape(cr, [(x0 + 14, TOP + 10), (x1 - 14, TOP + 10), (x1 - 14, BOT - 6), (x0 + 14, BOT - 6)], hexc("#c45d63"),
+              seed=505 + x0, amp=0, lw=0, stroke=None)                                  # moist lining
+        for k, vx in enumerate((x0 + 8, x1 - 8)):                                       # blood vessels in the wall
+            pts = [(vx + 6 * math.sin(j * 1.3 + k), TOP + 20 + j * 48) for j in range(13)]
+            line(cr, pts, 4, hexc("#6b4fa8"), seed=507 + x0 + k, amp=0)
     shape(cr, [(SEPT_L, TOP - 20), (SEPT_R, TOP - 20), (SEPT_R + 4, BOT + 30), (SEPT_L - 4, BOT + 30)],
           hexc("#f2b48e"), seed=503, amp=0.4, lw=4)                                  # the middle wall
     for cx in ((WALL_L + SEPT_L) / 2, (SEPT_R + WALL_R) / 2):                         # nostrils
@@ -103,7 +112,7 @@ def scene_nose(cr, t, tl):
             (A("n2"), LF), (A("n2", "work"), (1.0, 360, 720)),
             (A("n3", "asleep"), RF), (A("n4"), (1.8, 475, 760)),
             (A("n5"), LF), (A("n5", "help"), (1.0, 360, 700)),
-            (A("n6"), (1.4, 360, 360)), (A("n6", "change"), (1.25, 360, 480)), (A("n6", "up"), (1.0, 360, 700)),
+            (A("n6"), (1.4, 360, 360)), (A("n6", "switch"), (1.25, 360, 480)), (A("n6", "up"), (1.0, 360, 700)),
             (A("n7"), RF), (A("n8"), LF), (A("n8", "hours"), (1.0, 360, 720))]
     set_camera(camera(t, keys))
     enter_world(cr)
@@ -145,95 +154,60 @@ def scene_nose(cr, t, tl):
             blob(cr, WALL_L + 40 + 50 * k, TY - 120 + 60 * u, 6, 10, hexc("#8fd3ff", 1 - u), seed=520 + k, amp=0.2,
                  lw=0, stroke=None)
     # ---- screen text
-    hl(cr, t, [("Only ", INK), ("ONE", RED), (" nostril works?", INK)], 215, 60, 0.0, end=A("n2") - 0.05,
-       bold=True, sound=False)
-    hl(cr, t, [("\"I'm doing ", INK), ("MOST", RED), (" of the work!\"", INK)], 215, 52, A("n2", "most"),
-       end=A("n3", "asleep") - 0.05, bold=True)
-    hl(cr, t, [("the other side is ", INK), ("ASLEEP", BLUE)], 215, 54, A("n3", "asleep"), end=A("n5") - 0.05,
-       bold=True)
-    hl(cr, t, [("\"We're a ", INK), ("TEAM", RED), ("!\"", INK)], 215, 66, A("n5", "team"), end=A("n6") - 0.05,
-       bold=True)
-    stamp(cr, t, A("n6", "change"), "SHIFT CHANGE!", dur=0.9, y=330)
-    hl(cr, t, [("\"Wake me up in a few ", INK), ("HOURS", BLUE), (".\"", INK)], 215, 50, A("n8", "hours"), bold=True)
-    for w in (A("n3", "asleep"), A("n6", "change")):
+    # ---- anatomy tags, like the references
+    label(cr, "Nasal septum", 360, 330, 360, 420)
+    if t < A("n8"):
+        label(cr, "Swollen tissue", lerp(590, 130, swap), 470, lerp(520, 200, swap), 560)
+    if A("n2", "most") <= t < A("n6"):
+        label(cr, "Open side", 130, 1050, 300, 960)
+    if t >= A("n6", "switch"):
+        label(cr, "Swap!", 360, 175, 360, 215, size=34)
+    for w in (A("n3", "asleep"), A("n6", "switch")):
         cue("hit", t, w)
     cue("whoosh", t, A("n6", "up"))
 
 
-# ------------------------------------------------------------------ the ward
-DOC_X, MIKE_X, DANNY_X = 360, 140, 580
-
-
+# ------------------------------------------------------------------ the doctor's room
 def scene_ward(cr, t, tl):
     A = tl.at
-    DOCF, MIK, DAN = (1.8, DOC_X, 860), (1.8, MIKE_X + 30, 800), (1.8, DANNY_X - 30, 800)
-    WIDE = (1.0, 370, 760)
-    keys = [(A("d1") - 0.1, (1.05, 360, 770)), (A("d1", "nose"), DAN), (A("d1", "broken"), (1.3, 470, 760)),
-            (A("d2"), DOCF), (A("d2", "cycle"), WIDE), (A("d2", "most"), DOCF),
-            (A("d3"), WIDE), (A("d3", "swells"), DOCF), (A("d3", "other"), WIDE),
-            (A("d4"), DOCF), (A("d4", "swaps"), WIDE), (A("d4", "notice"), DOCF),
-            (A("d5"), MIK), (A("d6"), DAN), (A("d6", "like"), (1.4, 220, 740)),
-            (A("d7"), (1.6, DOC_X, 830)), (A("d7", "block"), (1.2, DOC_X, 780)), (A("d7", "which"), (1.9, DOC_X, 860))]
-    set_camera(camera(t, keys))
+    keys = [(A("d1") - 0.1, A_CLOSE), (A("d1", "broken"), TWO_SHOT),
+            (A("d2"), DOC_CLOSE), (A("d2", "most"), TWO_SHOT), (A("d3"), DOC_CLOSE), (A("d3", "breathing"), TWO_SHOT),
+            (A("d4"), DOC_CLOSE), (A("d4", "notice"), TWO_SHOT),
+            (A("d5"), B_CLOSE), (A("d6"), NEXT_BED),
+            (A("d7"), DOC_CLOSE), (A("d7", "which"), TWO_SHOT)]
+    set_camera(camera(t, keys, dur=0.25))
     enter_world(cr)
-    room(cr, t)
-    bed_back(cr, MIKE_X, 1)
-    bed_back(cr, DANNY_X, -1)
-    d = dict(facing=1, arms=("hold", "hip"), eyes="dot", mouth="smile")
-    if A("d2") <= t < A("d5"):
-        d.update(arms=("point", "hip"), eyes="happy" if t >= A("d4") else "dot")
-    if A("d5") <= t < A("d7"):
-        d.update(eyes="sly", mouth="smirk", facing=-1)
-    if A("d7") <= t:     # to camera: hand up at the nose, like he's testing it
-        d.update(arms=("face", "hip"), eyes="happy", facing=1)
-    if tl.speaking("doctor", t):
-        d["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "doctor", DOC_X, 1010, t, scale=1.12, **d)
-    m = dict(facing=1, arms=("hold", "down"), eyes="dot", mouth="smile")
+    room(cr)
+    (xa, ya, sa), (xb, yb, sb) = BED_A, BED_B
+    bed(cr, xa)
+    bed(cr, xb)
+    n = dict(eyes="sad", mouth="sad", arms=("face", "down"))
+    if A("d2") <= t:
+        n.update(eyes="dot", mouth="smile", arms=("hold", "down"))
+    if A("d6") <= t < A("d7"):
+        n.update(eyes="sly", mouth="smirk", arms=("point", "down"), facing=1)
+    patient(cr, "danny_b", xa, ya, sa, t, talking=tl.speaking("danny", t), **n)
+    m = dict(eyes="dot", mouth="smile", arms=("hold", "down"))
     if A("d5") <= t < A("d6"):
         m.update(eyes="wide", mouth="grin")
     if A("d6") <= t < A("d7"):
         m.update(eyes="wide", mouth="o", sweat=True)
-    if tl.speaking("mike", t):
-        m["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "mike", MIKE_X, 935, t, **m)
-    n = dict(facing=-1, arms=("face", "down"), eyes="sad", mouth="sad")
-    if A("d2") <= t:
-        n.update(arms=("hold", "down"), eyes="dot", mouth="smile")
-    if A("d6") <= t < A("d7"):
-        n.update(arms=("point", "down"), eyes="sly", mouth="smirk")
-    if tl.speaking("danny", t):
-        n["mouth"] = "o" if int(t * 12) % 2 else "smile"
-    person(cr, "danny", DANNY_X, 935, t, **n)
-    bed_front(cr, MIKE_X)
-    bed_front(cr, DANNY_X)
-    for key, end, runs in (("d2", "d3", [("nasal cycle = ", INK), ("normal", GREEN)]),
-                           ("d3", "d4", [("one side ", INK), ("SWELLS", RED), (" up", INK)]),
-                           ("d4", "d5", [("swap every ", INK), ("few hours", BLUE)])):
-        if A(key) <= t < A(end):
-            cr.save()
-            cr.identity_matrix()
-            card(cr, t, A(key), 360, 320, runs, size=44, w=520)
-            cr.restore()
-            cue("pop", t, A(key))
-    hl(cr, t, [("Is my nose ", INK), ("BROKEN", RED), ("?", INK)], 215, 60, A("d1", "broken"), end=A("d2") - 0.05,
-       bold=True)
-    hl(cr, t, [("the ", INK), ("NASAL CYCLE", BLUE)], 215, 62, A("d2", "cycle"), end=A("d3") - 0.05, bold=True)
-    hl(cr, t, [("the ", INK), ("OTHER", BLUE), (" side breathes", INK)], 215, 54, A("d3", "breathing"), end=A("d4") - 0.05, bold=True)
-    hl(cr, t, [("your ", INK), ("NERVES", BLUE), (" swap them", INK)], 215, 60, A("d4", "swaps"), end=A("d5") - 0.05,
-       bold=True)
-    hl(cr, t, [("naps ", INK), ("at work", RED), ("?", INK)], 215, 62, A("d5", "naps"), end=A("d7") - 0.05,
-       bold=True)
-    if A("d7", "which") <= t:   # the question to the viewer
+    patient(cr, "mike_b", xb, yb, sb, t, talking=tl.speaking("mike", t), **m)
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("d2") <= t < A("d5"):
+        d.update(arms=("hold", "down"), eyes="happy" if t >= A("d4") else "dot")
+    if A("d5") <= t < A("d7"):
+        d.update(eyes="sly")
+    if A("d7") <= t:     # to camera: hand up at the nose, like he's testing it
+        d.update(arms=("face", "down"), eyes="happy")
+    doctor(cr, t, talking=tl.speaking("doctor", t), **d)
+    sheet(cr)
+    if A("d7", "which") <= t:   # the question to the viewer, as a tag
         cr.save()
         cr.identity_matrix()
-        card(cr, t, A("d7", "which"), 360, 330, [("LEFT", RED), ("  or  ", INK), ("RIGHT", BLUE), ("?", INK)],
-             size=52, w=420)
+        label(cr, "LEFT or RIGHT?", 360, 300, size=46)
         cr.restore()
         cue("pop", t, A("d7", "which"))
-    hl(cr, t, [("TRY IT ", RED), ("now", INK)], 215, 66, A("d7"), bold=True)
-    for w in (A("d6", "like"),):
-        cue("hit", t, w)
 
 
 def draw(cr, t, tl):
@@ -246,3 +220,4 @@ def draw(cr, t, tl):
         scene_nose(cr, t, tl)
     cr.restore()
     captions(cr, t, tl)
+    watermark(cr)
