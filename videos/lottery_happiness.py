@@ -32,8 +32,8 @@ SCRIPT = [
                                          "breakfast. A funny joke. Or a compliment."),
     dict(id="l6", scene="treadmill", text="Scientists call it the hedonic treadmill. Whatever happens to us, we get "
                                           "used to it. And we drift back to where we started."),
-    dict(id="l7", scene="twist", text="But in [twenty twenty,|2020,] a much bigger study followed lottery winners in "
-                                      "Sweden, for up to [twenty|20] years."),
+    dict(id="l7", scene="twist", text="But in [twenty twenty,|2020,] a much bigger study followed people in Sweden, who "
+                                      "had won the lottery, for up to [twenty|20] years."),
     dict(id="l8", scene="twist", text="Big winners were more satisfied with their lives, for over ten years. But their "
                                       "everyday mood barely changed."),
     dict(id="l9", scene="end", text="So what do you think? Would money make you happier? Or just more comfortable?",
