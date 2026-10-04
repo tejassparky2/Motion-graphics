@@ -23,6 +23,9 @@
 ## Channel basics
 - 2D hand-drawn Shorts: weird animals and insects, weird history, paradoxes, clever or funny twist stories.
 - Fast pacing, no dead air, a visual change about every second, facts checked (disputed claims left out).
+- Any topic is open, including controversial ones (religion, money, power): the owner wants to explore freely.
+  Keep it honest: quote people's real, sourced words (say "often credited to" when the source is unknown) and
+  never phrase anything as a call to violence.
 - Each video ships with an upload sheet: title, alternative titles, description, hashtags, tags, pinned comment.
 - No metadata or encoder tags in outputs; never strip other parties' provenance watermarks (e.g. SynthID).
 - Riddle series is called **The Last Bencher** (not "Last Row Kid").

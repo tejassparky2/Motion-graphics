@@ -50,6 +50,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 27 | Sat Oct 10 | 4:30 AM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
 | 28 | Sat Oct 10 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
 | 29 | Sun Oct 11 | 1:30 AM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
+| 30 | Sun Oct 11 | 4:30 AM | napoleon_question | Why Don't the Poor Rise Up? Napoleon's Answer Is Shocking 😳 |
 
 Rows 1–13 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
