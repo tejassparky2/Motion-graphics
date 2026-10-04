@@ -34,4 +34,4 @@ toe to thumb transfer, toe to thumb surgery, toe to hand transplant, microsurger
 Would you trade your big toe for a new thumb? 🦶👍 And yes, he washes his hands. 😂👇
 ```
 
-**Video facts:** 41.8 s, 138 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 42.4 s, 141 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
