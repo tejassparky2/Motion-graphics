@@ -17,16 +17,17 @@ from motion.clinic import A_CLOSE, B_CLOSE, BED_A, BED_B, DOC_CLOSE, NEXT_BED, T
 from motion.kit import camera, enter_world, set_camera, whip
 from motion.organs import airflow, brain, turbinate
 
-# Voices and look styled on the owner's two reference Shorts (an esophagus bleeding / a baby that stopped growing):
-# a scared, high organ voice, a grumpy natural one, a bright "tool" voice; picked by speaker similarity to the
-# references (research_notes/body_facts_2-4.md). The doctor (the owner's clone) reads at the references' calm pace.
+# Voices copied from the owner's references where they are stock voices (found by having all 28 Kokoro voices read
+# the references' own lines; research_notes/body_facts_2-4.md): grumpy organ = am_eric (the stomach, 0.82), tools =
+# af_river +6 (the endoscope), patients = am_fenrir -1 / am_puck -1 (the patient, the dad). The scared high voice
+# in the references isn't a stock voice; bf_lily +10 is the closest clear one (0.76).
 STYLE = "clean"
 NARRATOR = dict(clone_rate=4.9, cast={
-    "left": dict(voice="am_eric", speed=1.0, pitch=0),       # the side that's working: grumpy
-    "right": dict(voice="af_river", speed=1.0, pitch=4),     # the side on its break
-    "brain": dict(voice="af_heart", speed=1.0, pitch=6),     # same brain as the awake-surgery episode
-    "mike": dict(voice="am_michael", speed=1.08),
-    "danny": dict(voice="am_adam", speed=1.08),
+    "left": dict(voice="am_eric", speed=0.9, pitch=0),       # the side that's working: grumpy
+    "right": dict(voice="af_river", speed=1.0, pitch=6),     # the side on its break
+    "brain": dict(voice="bf_lily", speed=1.0, pitch=10),     # same brain as the awake-surgery episode
+    "mike": dict(voice="am_fenrir", speed=1.0, pitch=-1),
+    "danny": dict(voice="am_puck", speed=1.0, pitch=-1),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 EMPHASIS = {"nasal", "cycle", "swells", "breathing", "nervous", "hours", "left", "right"}   # bigger captions
@@ -36,11 +37,11 @@ SCRIPT = [
     dict(id="n2", scene="nose", text="Feel that? I'm doing most of the work!", speaker="left"),
     dict(id="n3", scene="nose", text="Because this one is asleep!", speaker="left"),
     dict(id="n4", scene="nose", text="Quiet. I'm on my break.", speaker="right"),
-    dict(id="n5", scene="nose", text="What? A break? We're a team! Get up and help!", speaker="left"),
-    dict(id="n6", scene="nose", text="Time to switch! Right side, you're up.", speaker="brain"),
+    dict(id="n5", scene="nose", text="What? You're on a break? We're a team! Get up and help!", speaker="left"),
+    dict(id="n6", scene="nose", text="Switch sides, now! Right side, you're up.", speaker="brain"),
     dict(id="n7", scene="nose", text="Okay. My turn.", speaker="right"),
     dict(id="n8", scene="nose", text="Finally. Wake me up in a few hours.", speaker="left"),
-    dict(id="d1", scene="ward", text="Doc, one side of my nose keeps getting blocked. Is it broken?",
+    dict(id="d1", scene="ward", text="Doctor, one side of my nose keeps getting blocked. Is it broken?",
          speaker="danny"),
     dict(id="d2", scene="ward", text="No. That's the nasal cycle. Most people have it.", speaker="doctor"),
     dict(id="d3", scene="ward", text="The tissue inside one side swells up. So the other side does most of the "

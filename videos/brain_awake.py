@@ -20,20 +20,21 @@ from motion.surgery import DRAPE, DRAPE_D, SKIN, SKIN_D, clamp, cut_line, drapes
     wound
 from videos.kidney_donor import eyes, mouth, scalpel
 
-# Voices and look styled on the owner's two reference Shorts (an esophagus bleeding / a baby that stopped growing):
-# a scared, high organ voice, a grumpy natural one, a bright "tool" voice; picked by speaker similarity to the
-# references (research_notes/body_facts_2-4.md). The doctor (the owner's clone) reads at the references' calm pace.
+# Voices copied from the owner's references where they are stock voices (found by having all 28 Kokoro voices read
+# the references' own lines; research_notes/body_facts_2-4.md): grumpy organ = am_eric (the stomach, 0.82), tools =
+# af_river +6 (the endoscope), patients = am_fenrir -1 / am_puck -1 (the patient, the dad). The scared high voice
+# in the references isn't a stock voice; bf_lily +10 is the closest clear one (0.76).
 STYLE = "clean"
 NARRATOR = dict(clone_rate=4.9, cast={
-    "brain": dict(voice="af_heart", speed=1.0, pitch=6),     # scared organ
-    "scalpel": dict(voice="af_nova", speed=1.0, pitch=2),    # tool
-    "mike": dict(voice="am_michael", speed=1.08),
+    "brain": dict(voice="bf_lily", speed=1.0, pitch=10),     # scared organ
+    "scalpel": dict(voice="af_river", speed=1.0, pitch=6),   # tool
+    "mike": dict(voice="am_fenrir", speed=1.0, pitch=-1),    # patient
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 EMPHASIS = {"craniotomy", "brain", "awake", "pain", "sensors", "headaches"}   # bigger captions
 
 SCRIPT = [
-    dict(id="b1", scene="head", text="Hey, who opened the roof?", speaker="brain"),
+    dict(id="b1", scene="head", text="Wait, why is my roof open?", speaker="brain"),
     dict(id="b2", scene="head", text="Relax. It's just me. Brain surgery today!", speaker="scalpel"),
     dict(id="b3", scene="head", text="Brain surgery? Then put him to sleep! He's still awake!", speaker="brain"),
     dict(id="b4", scene="head", text="He has to be wide awake. Now, hold still.", speaker="scalpel"),
@@ -51,7 +52,7 @@ SCRIPT = [
     dict(id="h5", scene="ward", text="Then why do I get headaches?", speaker="mike"),
     dict(id="h6", scene="ward", text="That pain comes from the layers and blood vessels around the brain. Not the "
                                      "brain itself.", speaker="doctor"),
-    dict(id="h7", scene="ward", text="Doc. Did you find a brain in there?", speaker="mike", gap=0.3),
+    dict(id="h7", scene="ward", text="Doctor, did you find a brain in there?", speaker="mike", gap=0.3),
     dict(id="h8", scene="ward", text="Barely.", speaker="doctor", gap=0.35),
 ]
 

@@ -126,3 +126,14 @@ Measured from the files the owner sent (frames at 1 fps, Whisper medium transcri
   re-cast (scared `af_heart`/`af_jessica` +6, grumpy `am_eric`, tool `af_nova` +2, helper `af_river` +4). Every
   character line re-checked with Whisper medium; four were reworded ("his"→"this", "A break?"→"Unbreak",
   "Shift change!"→"15", "which half"→"what have").
+
+## Fourth pass: voices copied from the references
+The owner asked to copy the references' organ voices and keep his own voice for the doctor. Each reference character's
+lines were re-read by all 28 Kokoro voices at a range of pitches (rubberband and resample) and scored against the
+reference with speaker embeddings (same words, so only the voice differs):
+- stomach = `am_eric` natural pitch, ~10% slower (0.82; next best 0.67); endoscope = `af_river` +6 (0.74, same
+  timing); glove = `af_river` +7 (0.68); dad = `am_puck` -1 (0.76); patient = `am_fenrir`/`am_echo` -1 (0.69).
+- esophagus, fetus, placenta: no stock voice above 0.64, so they come from another voice tool. Not cloned (that
+  would copy another creator's voice); the closest clear stock voice is `bf_lily` +10 (0.76 to the scared voices,
+  8/9 lines clear; more pitch made the words unclear).
+All 33 character lines are exact on Whisper medium after rewording seven short ones.

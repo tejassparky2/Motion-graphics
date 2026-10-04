@@ -43,9 +43,12 @@ stopped growing, taken out by a gloved hand to a NICU incubator) and asked to wo
 - **Doctor's room** (`motion/clinic.py`): plain olive wall, a masked doctor (`person(..., mask=...)`), and patients
   in blue shirts (`mike_b`, `danny_b`) sitting up in bed, in a medium shot with the sheet across the front.
 - **Script:** the doctor names the medical term ("This is called an awake craniotomy.").
-- **Voices:** the doctor (the owner's clone) at 4.9 syllables/s (`clone_rate` in NARRATOR), the references' calm
-  pace. Organs: scared = `af_heart`/`af_jessica` +6, grumpy = `am_eric` (0.89 match to the reference's stomach),
-  tool = `af_nova` +2, calm helper = `af_river` +4.
+- **Voices (owner: "copy the voices from the reference, the doctor is our voice"):** found by having all 28 Kokoro
+  voices read the references' own lines. Same stock voices as the references: grumpy organ `am_eric` speed 0.9
+  (the stomach), tools `af_river` +6 (the endoscope), patients `am_fenrir` -1 (Mike) and `am_puck` -1 (Danny).
+  The references' scared high voice isn't a stock voice; `bf_lily` +10 is the closest clear one. Calm helper
+  (heart) `af_heart` +2. Doctor: the owner's clone at 4.9 syllables/s (`clone_rate`). Never clone a reference
+  creator's voice from their audio. Short one-word takes ("Doc.", "Oh no.") get misheard: write "Doctor, ..."
 - A faint "Body Facts" watermark, like the references' channel mark.
 
 ## Surgery scenes (owner's rule)

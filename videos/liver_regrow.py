@@ -21,17 +21,18 @@ from motion.surgery import BLOOD, BLOOD_D, DRAPE, SKIN, SKIN_D, clamp, cut_line,
     scalpel_tip, slit, stitches, wound
 from videos.kidney_donor import heart, scalpel
 
-# Voices and look styled on the owner's two reference Shorts (an esophagus bleeding / a baby that stopped growing):
-# a scared, high organ voice, a grumpy natural one, a bright "tool" voice; picked by speaker similarity to the
-# references (research_notes/body_facts_2-4.md). The doctor (the owner's clone) reads at the references' calm pace.
+# Voices copied from the owner's references where they are stock voices (found by having all 28 Kokoro voices read
+# the references' own lines; research_notes/body_facts_2-4.md): grumpy organ = am_eric (the stomach, 0.82), tools =
+# af_river +6 (the endoscope), patients = am_fenrir -1 / am_puck -1 (the patient, the dad). The scared high voice
+# in the references isn't a stock voice; bf_lily +10 is the closest clear one (0.76).
 STYLE = "clean"
 NARRATOR = dict(clone_rate=4.9, cast={
-    "big": dict(voice="am_eric", speed=1.0, pitch=0),        # the big lobe: grumpy
-    "small": dict(voice="af_jessica", speed=1.0, pitch=6),   # the small lobe: scared
-    "scalpel": dict(voice="af_nova", speed=1.0, pitch=2),    # same scalpel voice as the brain episode
-    "heart": dict(voice="af_river", speed=1.0, pitch=4),
-    "mike": dict(voice="am_michael", speed=1.08),
-    "danny": dict(voice="am_adam", speed=1.08),
+    "big": dict(voice="am_eric", speed=0.9, pitch=0),        # the big lobe: grumpy
+    "small": dict(voice="bf_lily", speed=1.0, pitch=10),     # the small lobe: scared
+    "scalpel": dict(voice="af_river", speed=1.0, pitch=6),   # same scalpel voice as the brain episode
+    "heart": dict(voice="af_heart", speed=1.0, pitch=2),     # calm helper
+    "mike": dict(voice="am_fenrir", speed=1.0, pitch=-1),
+    "danny": dict(voice="am_puck", speed=1.0, pitch=-1),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 EMPHASIS = {"liver", "transplant", "donor", "grows", "months", "shape", "huge"}   # bigger captions
@@ -43,7 +44,7 @@ SCRIPT = [
     dict(id="l4", scene="body", text="What, me? Little guy, you can't run this place alone!", speaker="big"),
     dict(id="l5", scene="body", text="Hey, come back! I'm way too small!", speaker="small"),
     dict(id="l6", scene="body", text="Relax. Just give it a few weeks.", speaker="heart"),
-    dict(id="l7", scene="body", text="Wait, what? Oh no. Oh no! I'm getting huge!", speaker="small"),
+    dict(id="l7", scene="body", text="Wait, what? Something's happening! I'm getting huge!", speaker="small"),
     dict(id="h1", scene="ward", text="Doc, I gave my brother half my liver. Is it gone forever?", speaker="mike"),
     dict(id="h2", scene="ward", text="No. Your liver grows back.", speaker="doctor"),
     dict(id="h3", scene="ward", text="In a few months, it's almost full size again. Just a different shape.",
@@ -53,7 +54,7 @@ SCRIPT = [
     dict(id="h5", scene="ward", text="So now we both have a whole liver?", speaker="danny"),
     dict(id="h6", scene="ward", text="Pretty much, yes.", speaker="doctor"),
     dict(id="h7", scene="ward", text="Thanks, bro. So, do lungs grow back too?", speaker="danny"),
-    dict(id="h8", scene="ward", text="Doc. Can I live without a brother?", speaker="mike", gap=0.3),
+    dict(id="h8", scene="ward", text="Doctor, can I live without a brother?", speaker="mike", gap=0.3),
     dict(id="h9", scene="ward", text="Medically? Still yes.", speaker="doctor", gap=0.35),
 ]
 
@@ -114,16 +115,16 @@ def scene_body(cr, t, tl):
     close = ease_out(seg(t, A("l6", "weeks"), A("l6", "weeks") + 0.5))
     sew = seg(t, A("l6", "weeks") + 0.3, A("l6", end=True) + 0.4)
     xray = ease_out(seg(t, A("l7") - 0.1, A("l7") + 0.3))
-    grow = ease_out(seg(t, A("l7", "no"), A("l7", "huge", end=True) + 0.4))
+    grow = ease_out(seg(t, A("l7", "happening"), A("l7", "huge", end=True) + 0.4))
     sx, sy = lerp(SMALL[0], 360, grow), lerp(SMALL[1], 630, grow)
-    ss = LS * (1.0 + 0.3 * grow) + (0.02 * math.sin(t * 9) if A("l7", "no") <= t < A("l7", "huge", end=True) else 0)
+    ss = LS * (1.0 + 0.3 * grow) + (0.02 * math.sin(t * 9) if A("l7", "happening") <= t < A("l7", "huge", end=True) else 0)
     SMF, BGF, WIDE = (1.7, 477, 700), (1.7, 240, 690), (1.0, 360, 700)
     keys = [(0, (1.2, 360, 650)), (A("l1", "liver"), WIDE),
             (A("l2"), SMF), (A("l3"), (1.3, 380, 580)), (A("l3", "big"), BGF),
             (A("l4"), BGF), (A("l4", "alone"), WIDE),
             (take, (1.0, 360, 560)), (A("l5", "small"), SMF),
             (A("l6"), (1.5, 360, 560)), (A("l6", "weeks"), WIDE),
-            (A("l7"), SMF), (A("l7", "no"), (1.15, 360, 660))]
+            (A("l7"), SMF), (A("l7", "happening"), (1.15, 360, 660))]
     set_camera(camera(t, keys))
     enter_world(cr)
     drapes(cr)
@@ -136,9 +137,9 @@ def scene_body(cr, t, tl):
         sm = "happy"
     if take <= t < A("l6"):
         sm = "cry"
-    if A("l6") <= t < A("l7", "no"):
+    if A("l6") <= t < A("l7", "happening"):
         sm = "worried"
-    if A("l7", "no") <= t:
+    if A("l7", "happening") <= t:
         sm = "shock" if t < A("l7", "huge") else "happy"
     bm = "calm" if t < A("l1", "liver") else "worried"
     if A("l3", "big") <= t:
@@ -229,11 +230,11 @@ def scene_body(cr, t, tl):
     if t < take + 0.4 or t >= A("l6") + 99:
         scalpel(cr, t, sx_, sy_, sc, rot, talking=tl.speaking("scalpel", t), mood="happy")
     # ---- weeks ticking by while it regrows
-    if A("l7", "no") <= t:
-        wk = 1 + int(7 * seg(t, A("l7", "no"), A("l7", "huge", end=True)))
+    if A("l7", "happening") <= t:
+        wk = 1 + int(7 * seg(t, A("l7", "happening"), A("l7", "huge", end=True)))
         cr.save()
         cr.identity_matrix()
-        calendar(cr, t, 600, 380, f"WEEK {wk}", A("l7", "no"))
+        calendar(cr, t, 600, 380, f"WEEK {wk}", A("l7", "happening"))
         cr.restore()
     # ---- screen text
     # ---- anatomy tags, like the references
