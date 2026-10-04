@@ -19,7 +19,7 @@ It's real. In a toe-to-thumb transfer, surgeons move the big toe or the second t
 
 💬 Would you trade a toe for a thumb? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.
 
 #ToeToThumb #BodyFacts #Surgery
 ```

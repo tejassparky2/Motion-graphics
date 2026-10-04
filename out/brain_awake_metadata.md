@@ -19,7 +19,7 @@ Why? The brain itself has no pain sensors. In awake brain surgery the scalp is n
 
 💬 Would you stay awake for your own brain surgery? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.
 
 #Brain #BodyFacts #Doctor
 ```

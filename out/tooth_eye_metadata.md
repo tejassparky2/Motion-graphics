@@ -19,7 +19,7 @@ It's real. Tooth-in-eye surgery (osteo-odonto-keratoprosthesis) is for people bl
 
 💬 Would you give up a tooth to see again? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.
 
 #ToothInEye #BodyFacts #Surgery
 ```

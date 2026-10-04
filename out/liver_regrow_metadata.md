@@ -19,7 +19,7 @@ The liver can grow back. After a living donation, the part that's left gets bigg
 
 💬 Would you give half your liver to your brother? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on. (Part 1: the kidney.)
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on. (Part 1: the kidney.)
 
 #Liver #BodyFacts #Doctor
 ```
