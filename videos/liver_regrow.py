@@ -39,7 +39,7 @@ SCRIPT = [
     dict(id="l1", scene="body", text="Hello again, liver! I'm here to take half of you.", speaker="scalpel"),
     dict(id="l2", scene="body", text="Half of me? Which half?", speaker="small"),
     dict(id="l3", scene="body", text="The big one, on the right side.", speaker="scalpel"),
-    dict(id="l4", scene="body", text="Me? But the little one can't do all this work alone!", speaker="big"),
+    dict(id="l4", scene="body", text="Why me? The little one can't do all this work alone!", speaker="big"),
     dict(id="l5", scene="body", text="Wait, come back! I'm way too small to do this!", speaker="small"),
     dict(id="l6", scene="body", text="Relax, little liver. Just give it a few weeks.", speaker="heart"),
     dict(id="l7", scene="body", text="What's happening to me? I'm getting huge!", speaker="small"),
