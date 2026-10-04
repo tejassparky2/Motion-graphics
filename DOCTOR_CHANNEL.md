@@ -45,6 +45,12 @@ Notes and sources: `research_notes/body_facts_7-8.md`.
 - `videos/rotationplasty.py`: the foot turned backwards so the ankle works as a knee (after a bone tumour).
 - `videos/fecal_transplant.py`: fecal microbiota transplant (a donor's gut bacteria cure recurring C. diff).
 
+## Videos 9-10: two more weird operations (first with the corner logo)
+Notes and sources: `research_notes/body_facts_9-10.md`.
+- `videos/half_brain.py`: hemispherectomy (half the brain removed to stop seizures; the other half takes over).
+- `videos/forehead_nose.py`: paramedian forehead flap (forehead skin swung down to rebuild the nose, attached
+  for about three weeks).
+
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
 own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
