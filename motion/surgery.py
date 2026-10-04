@@ -15,12 +15,12 @@ METAL, METAL_D = hexc("#c9ced6"), hexc("#7d8591")
 
 def drapes(cr):
     cr.set_source_rgba(*DRAPE)
-    cr.rectangle(-900, -900, 2600, 3200)
-    cr.fill()
-    for k in range(12):   # cloth folds
+    cr.paint()                       # whole frame: scenes can sit anywhere in the world
+    for k in range(12):   # cloth folds, repeated across the world
         y = -200 + k * 150
-        line(cr, [(-300, y), (-60, y + 30), (140, y - 10)], 4, DRAPE_D, seed=700 + k, amp=1.0)
-        line(cr, [(600, y + 60), (800, y + 90), (1020, y + 50)], 4, DRAPE_D, seed=720 + k, amp=1.0)
+        for x0 in (0, 1600):
+            line(cr, [(x0 - 300, y), (x0 - 60, y + 30), (x0 + 140, y - 10)], 4, DRAPE_D, seed=700 + k, amp=1.0)
+            line(cr, [(x0 + 600, y + 60), (x0 + 800, y + 90), (x0 + 1020, y + 50)], 4, DRAPE_D, seed=720 + k, amp=1.0)
 
 
 def ellipse(cx, cy, rx, ry, n=64):
