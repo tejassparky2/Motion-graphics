@@ -1,4 +1,4 @@
-# Organ ER: channel kit
+# Doc and the Organs: channel kit
 
 Images are in `out/doc_brand/`, made by `python make_doc_brand.py`. To change the name, run
 `python make_doc_brand.py --name "Your Name"`.
@@ -7,18 +7,18 @@ Images are in `out/doc_brand/`, made by `python make_doc_brand.py`. To change th
 |---|---|
 | `avatar.png` (800×800) | Customization › Branding › Picture |
 | `banner.png` (2560×1440) | Customization › Branding › Banner image (the name and tagline sit inside the area every device shows) |
-| `watermark.png` (150×150) | Customization › Branding › Video watermark (end of video) |
+| `watermark.png` (150×150) | Customization › Branding › Video watermark (optional: every new video already carries the logo in its top-left corner) |
 | `lockup.png` | Thumbnails, end screens, Instagram/TikTok profile header |
 
 ## Channel name and handle
-- **Name:** Organ ER
-- **Handle ideas (check which are free):** `@OrganER`, `@OrganERdoc`, `@TheOrganER`, `@OrganERshorts`
+- **Name:** Doc and the Organs
+- **Handle ideas (check which are free):** `@DocAndTheOrgans`, `@DocAndOrgans`, `@DocAndTheOrgansShorts`, `@TheDocAndTheOrgans`
 
 ## Channel description (About)
 ```
 Your organs argue. The doctor explains. 🫀🧠
 
-Organ ER is a hand-drawn cartoon about the human body: the strangest surgeries, the weirdest things your organs do, and the real medicine behind them. First the organs panic. Then the doctor tells you what's actually going on.
+Doc and the Organs is a hand-drawn cartoon about the human body: the strangest surgeries, the weirdest things your organs do, and the real medicine behind them. First the organs panic. Then the doctor tells you what's actually going on.
 
 New Shorts every week:
 🦷 Surgeries you've never heard of (a tooth inside an eye, a toe turned into a thumb)
@@ -37,7 +37,7 @@ Your organs argue. The doctor explains. 🫀 Weird surgeries + real body facts, 
 
 ## Channel keywords (Settings › Channel › Keywords)
 ```
-organ ER, body facts, weird surgery, rare surgery, medical animation, doctor explains, human body, organs cartoon, health facts, surgery explained, anatomy cartoon, medical shorts, how surgery works, weird body facts
+doc and the organs, body facts, weird surgery, rare surgery, medical animation, doctor explains, human body, organs cartoon, health facts, surgery explained, anatomy cartoon, medical shorts, how surgery works, weird body facts
 ```
 
 ## Channel settings
@@ -49,7 +49,7 @@ organ ER, body facts, weird surgery, rare surgery, medical animation, doctor exp
 
 ## Pinned "welcome" post (Community tab)
 ```
-Welcome to Organ ER 🫀 Every Short: your organs panic, then the doctor explains the real medicine. Which weird surgery should we do next? 👇
+Welcome to Doc and the Organs 🫀 Every Short: your organs panic, then the doctor explains the real medicine. Which weird surgery should we do next? 👇
 ```
 
 ## Upload order (strongest hooks first)
@@ -57,7 +57,9 @@ Welcome to Organ ER 🫀 Every Short: your organs panic, then the doctor explain
 2. They Turned His TOE Into a THUMB 😳
 3. They Cut Into His Brain… While He Was AWAKE 😳
 4. He Gave Away Half His Liver… Then It Grew Back 😳
-5. You're Breathing Through ONE Nostril Right Now 👃
-6. He Donated a Kidney… Then His Other Kidney Did THIS 😳 (the older style; remake it first if you want everything to match)
+5. They Turned His Foot BACKWARDS… On Purpose 😳
+6. They Put Someone Else's POOP Inside Him… And It Cured Him 😳
+7. You're Breathing Through ONE Nostril Right Now 👃
+8. He Donated a Kidney… Then His Other Kidney Did THIS 😳 (the older style; remake it first if you want everything to match)
 
 Post every 2–3 days at first, rather than all at once, so each Short gets its own test audience.

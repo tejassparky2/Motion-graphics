@@ -65,7 +65,7 @@ Try it: block one side and breathe, then the other.
 
 💬 Which side is working for you right now? Left or right? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.""",
     hashtags=["#Nose", "#BodyFacts", "#Doctor"],
     tags=["nasal cycle", "one nostril", "why is one nostril blocked", "breathing through one nostril", "nose facts",
           "body facts", "doctor explains", "human body", "weird body facts", "funny animation", "health facts"],

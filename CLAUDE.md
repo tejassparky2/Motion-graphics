@@ -1,6 +1,6 @@
 # Interestingly Strange: standing rules
 
-**This branch is the doctor channel ("Body Facts"), separate from Interestingly Strange.** Read
+**This branch is the doctor channel ("Doc and the Organs"; videos carry its corner logo), separate from Interestingly Strange.** Read
 `DOCTOR_CHANNEL.md` first: format, the finished kidney video, approved voices, setup and commands. Commit and push
 doctor work to `ccr-56282fe5-evehq4-doctor` only. The rules below apply to both channels.
 

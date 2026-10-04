@@ -65,7 +65,7 @@ Why? The brain itself has no pain sensors. In awake brain surgery the scalp is n
 
 💬 Would you stay awake for your own brain surgery? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.""",
     hashtags=["#Brain", "#BodyFacts", "#Doctor"],
     tags=["awake brain surgery", "brain can't feel pain", "awake craniotomy", "why doesn't brain surgery hurt",
           "brain facts", "where do headaches come from", "body facts", "doctor explains", "human body",

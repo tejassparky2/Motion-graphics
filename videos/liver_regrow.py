@@ -67,7 +67,7 @@ The liver can grow back. After a living donation, the part that's left gets bigg
 
 💬 Would you give half your liver to your brother? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on. (Part 1: the kidney.)""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on. (Part 1: the kidney.)""",
     hashtags=["#Liver", "#BodyFacts", "#Doctor"],
     tags=["liver regeneration", "liver grows back", "living liver donor", "can your liver grow back",
           "liver donation", "liver facts", "body facts", "doctor explains", "human body", "funny animation",

@@ -60,7 +60,7 @@ It's real. In a rotationplasty, surgeons remove the part of the leg with the bon
 
 💬 Did you know this surgery existed? 👇
 
-🔔 Organ ER: your organs argue, then the doctor explains what's really going on.""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.""",
     hashtags=["#Rotationplasty", "#WeirdSurgery", "#Doctor"],
     tags=["rotationplasty", "foot turned backwards", "ankle as knee", "weird surgery", "rare surgery",
           "osteosarcoma", "bone cancer surgery", "prosthetic leg", "doctor explains", "medical animation"],

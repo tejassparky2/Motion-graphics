@@ -69,15 +69,18 @@ def label(cr, text, x, y, px=None, py=None, size=26):
 
 
 def watermark(cr):
-    """Faint channel name across the frame, in screen space (deters re-uploads, like the references)."""
+    """The channel's corner logo, plus its name faint across the frame (deters re-uploads, like the references).
+    Screen space; every doctor-channel video calls this last in its frame function."""
+    from motion.brand import CHANNEL, corner_logo
     cr.save()
     cr.identity_matrix()
     for x, y in ((190, 470), (520, 760)):
         with at(cr, x, y, 1.0, rot=0.38):
             cr.select_font_face("Anton", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
             cr.set_font_size(30)
-            wd = cr.text_extents("Body Facts").x_advance
+            wd = cr.text_extents(CHANNEL).x_advance
             cr.move_to(-wd / 2, 0)
             cr.set_source_rgba(1, 1, 1, 0.22)
-            cr.show_text("Body Facts")
+            cr.show_text(CHANNEL)
     cr.restore()
+    corner_logo(cr)

@@ -65,7 +65,7 @@ It's real. Tooth-in-eye surgery (osteo-odonto-keratoprosthesis) is for people bl
 
 💬 Would you give up a tooth to see again? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.""",
     hashtags=["#ToothInEye", "#BodyFacts", "#Surgery"],
     tags=["tooth in eye surgery", "osteo-odonto-keratoprosthesis", "OOKP", "tooth in eye", "weird surgery",
           "rare surgery", "blindness surgery", "cornea", "body facts", "doctor explains", "medical animation"],

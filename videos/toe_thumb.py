@@ -58,7 +58,7 @@ It's real. In a toe-to-thumb transfer, surgeons move the big toe or the second t
 
 💬 Would you trade a toe for a thumb? 👇
 
-🔔 Body Facts: your organs argue, then the doctor explains what's really going on.""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.""",
     hashtags=["#ToeToThumb", "#BodyFacts", "#Surgery"],
     tags=["toe to thumb transfer", "toe to thumb surgery", "toe to hand transplant", "microsurgery", "weird surgery",
           "rare surgery", "thumb reconstruction", "body facts", "doctor explains", "medical animation"],

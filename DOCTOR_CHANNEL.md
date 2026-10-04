@@ -45,10 +45,14 @@ Notes and sources: `research_notes/body_facts_7-8.md`.
 - `videos/rotationplasty.py`: the foot turned backwards so the ankle works as a knee (after a bone tumour).
 - `videos/fecal_transplant.py`: fecal microbiota transplant (a donor's gut bacteria cure recurring C. diff).
 
-## Channel name and brand
-Suggested name **Organ ER** (tagline "Your organs argue. The doctor explains."). Brand kit: `python make_doc_brand.py`
-(`--name "..."` to change it) writes `out/doc_brand/` (avatar, banner, lockup, watermark, preview) and
-`out/doc_brand/channel_about.md` (About text, keywords, settings, upload order).
+## Channel name and brand (owner's choice)
+The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). Name, mascot (the heart in
+a surgical mask and head mirror) and logo live in `motion/brand.py`.
+- **Every video carries the channel logo** in the top-left corner (round mascot badge + "DOC AND THE ORGANS"), plus
+  the name faint across the frame: call `watermark(cr)` from `motion/clinic.py` as the last thing in `frame()`.
+- Brand kit: `python make_doc_brand.py` writes `out/doc_brand/` (avatar, banner, lockup, watermark, preview) and
+  `out/doc_brand/channel_about.md` holds the About text, handles, keywords, settings and upload order.
+- Upload sheets end with "🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on."
 
 ## House style (from the owner's references, videos 2-4)
 The owner sent two more reference Shorts (an esophagus with bleeding veins treated by an endoscope; a baby that

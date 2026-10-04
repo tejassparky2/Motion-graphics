@@ -61,7 +61,7 @@ It's real. A fecal microbiota transplant (FMT) is used when a gut infection call
 
 💬 Would you accept a poop transplant? 👇
 
-🔔 Organ ER: your organs argue, then the doctor explains what's really going on.""",
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.""",
     hashtags=["#PoopTransplant", "#WeirdSurgery", "#Doctor"],
     tags=["fecal microbiota transplant", "poop transplant", "FMT", "C diff", "gut bacteria", "weird medicine",
           "rare treatment", "microbiome", "doctor explains", "medical animation"],
