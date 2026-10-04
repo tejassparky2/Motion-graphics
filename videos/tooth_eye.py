@@ -41,7 +41,7 @@ SCRIPT = [
     dict(id="t7", scene="cheek", text="In his cheek? This is the strangest job ever!", speaker="tooth"),
     dict(id="t8", scene="eye2", text="Wait. I can see light again!", speaker="eye"),
     dict(id="h1", scene="ward", text="Doctor, is there really a tooth in my eye?", speaker="danny"),
-    dict(id="h2", scene="ward", text="Yes. It's called tooth-in-eye surgery.", speaker="doctor"),
+    dict(id="h2", scene="ward", text="Yes. There's a real tooth inside your eye.", speaker="doctor"),
     dict(id="h3", scene="ward", text="Its medical name is osteo-odonto-keratoprosthesis.", speaker="doctor"),
     dict(id="h4", scene="ward", text="We took one of your teeth with a little bone, and fixed a tiny plastic lens "
                                      "through it.", speaker="doctor"),
