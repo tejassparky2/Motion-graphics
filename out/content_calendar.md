@@ -36,27 +36,29 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 13 | Mon Oct 5 | 9:30 PM | ship_of_theseus | If You Replace Every Part… Is It Still the Same Ship? 🚢🤯 |
 | 14 | Tue Oct 6 | 1:30 AM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
 | 15 | Tue Oct 6 | 4:30 AM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |
-| 16 | Tue Oct 6 | 9:30 PM | perfect_attendance | He Never Missed a Day of School… His Secret Was Genius 😂 |
+| 16 | Tue Oct 6 | 9:30 PM | perfect_attendance | **SKIPPED by owner** (not clear or strong enough) ~~He Never Missed a Day of School… His Secret Was Genius 😂~~ |
 | 17 | Wed Oct 7 | 1:30 AM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
-| 18 | Wed Oct 7 | 4:30 AM | last_bencher_3 | The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3) |
+| 18 | Wed Oct 7 | 4:30 AM | last_bencher_3 | **SKIPPED by owner** (not clear or strong enough) ~~The Last Bencher Finally Met His Match 😳 (Trick Riddles Part 3)~~ |
 | 19 | Wed Oct 7 | 9:30 PM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
 | 20 | Thu Oct 8 | 1:30 AM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
 | 21 | Thu Oct 8 | 4:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
 | 22 | Thu Oct 8 | 9:30 PM | pinocchio_paradox | Pinocchio Said ONE Sentence… and Broke Logic 🤥🤯 |
-| 23 | Fri Oct 9 | 1:30 AM | surprise_test | He PROVED the Surprise Test Was Impossible… Then It Happened 😳 |
+| 23 | Fri Oct 9 | 1:30 AM | surprise_test | **SKIPPED by owner** (not clear or strong enough) ~~He PROVED the Surprise Test Was Impossible… Then It Happened 😳~~ |
 | 24 | Fri Oct 9 | 4:30 AM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
 | 25 | Fri Oct 9 | 9:30 PM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
-| 26 | Sat Oct 10 | 1:30 AM | braess_paradox | A New Road Made Traffic WORSE… For Everyone 🚗🤯 |
+| 26 | Sat Oct 10 | 1:30 AM | braess_paradox | **SKIPPED by owner** (not clear or strong enough) ~~A New Road Made Traffic WORSE… For Everyone 🚗🤯~~ |
 | 27 | Sat Oct 10 | 4:30 AM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
 | 28 | Sat Oct 10 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
 | 29 | Sun Oct 11 | 1:30 AM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
-| 30 | Sun Oct 11 | 4:30 AM | napoleon_question | Why Don't the Poor Rise Up? Napoleon's Answer Is Shocking 😳 |
+| 30 | Sun Oct 11 | 4:30 AM | napoleon_question | **SKIPPED by owner** (not clear or strong enough) ~~Why Don't the Poor Rise Up? Napoleon's Answer Is Shocking 😳~~ |
 | 31 | Sun Oct 11 | 9:30 PM | machiavelli_feared | Is It Better to Be Loved or Feared? Machiavelli's Answer 😈 |
 | 32 | Mon Oct 12 | 1:30 AM | diogenes_alexander | Alexander the Great Offered Him Anything… His Answer Was Genius ☀️ |
 | 33 | Mon Oct 12 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? What Scientists Found Later 🍬 |
 | 34 | Mon Oct 12 | 9:30 PM | ben_franklin_effect | Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝 |
 
 Rows 1–13 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
+
+Rows 16, 18, 23, 26 and 30 were skipped by the owner ("no good content and understanding"); their slots are free.
 
 Rows 22–26 are the short paradoxes (about 35–40 s), built like The Infinite Hotel after it passed 32K views: an impossible-sounding hook in the first line, and a closing question that asks viewers to answer in the comments. If they do well, they can move ahead of rows 19–21.
 
