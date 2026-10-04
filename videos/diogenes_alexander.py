@@ -32,7 +32,7 @@ SCRIPT = [
          speaker_from="yes.", pace=0.9),
     dict(id="d8", scene="meet", text="Alexander's men laughed at him. But Alexander said: if I were not Alexander, I "
                                      "would be Diogenes.", speaker="alexander", speaker_from="if", gap=0.3),
-    dict(id="d9", scene="plutarch", text="That's how the ancient writer Plutarch tells it."),
+    dict(id="d9", scene="plutarch", text="That story comes from the Greek writer, Plutarch."),
     dict(id="d10", scene="end", text="So what do you think? Who was really richer? The man who had everything, or the "
                                      "man who wanted nothing?", pace=0.95),
 ]
