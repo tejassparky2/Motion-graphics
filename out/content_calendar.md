@@ -47,10 +47,15 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 24 | Fri Oct 9 | 4:30 AM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
 | 25 | Fri Oct 9 | 9:30 PM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
 | 26 | Sat Oct 10 | 1:30 AM | braess_paradox | A New Road Made Traffic WORSE… For Everyone 🚗🤯 |
+| 27 | Sat Oct 10 | 4:30 AM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
+| 28 | Sat Oct 10 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
+| 29 | Sun Oct 11 | 1:30 AM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
 
 Rows 1–13 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
 Rows 22–26 are the short paradoxes (about 35–40 s), built like The Infinite Hotel after it passed 32K views: an impossible-sounding hook in the first line, and a closing question that asks viewers to answer in the comments. If they do well, they can move ahead of rows 19–21.
+
+Rows 27–29 start the "researchers found…" series, built like the owner's Napoleon reference (a question hook, a simple model, the answer step by step, "So what do you think?") but only with sourced studies; research in `out/research_researchers_said.md`.
 
 ## Next up (to produce)
 
