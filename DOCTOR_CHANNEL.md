@@ -38,8 +38,17 @@ then the doctor names the procedure and explains it. Notes and sources: `researc
 - `videos/tooth_eye.py`: tooth-in-eye surgery (osteo-odonto-keratoprosthesis).
 - `videos/toe_thumb.py`: toe-to-thumb transfer.
 - Scripted and voice-tested for later: high heels and the feet; not drinking water and constipation.
-- More little-known operations to consider: rotationplasty (the foot turned backwards to work as a knee),
-  hemispherectomy, faecal transplant, uterus transplant.
+- More little-known operations to consider: hemispherectomy, uterus transplant.
+
+## Videos 7-8: more weird operations
+Notes and sources: `research_notes/body_facts_7-8.md`.
+- `videos/rotationplasty.py`: the foot turned backwards so the ankle works as a knee (after a bone tumour).
+- `videos/fecal_transplant.py`: fecal microbiota transplant (a donor's gut bacteria cure recurring C. diff).
+
+## Channel name and brand
+Suggested name **Organ ER** (tagline "Your organs argue. The doctor explains."). Brand kit: `python make_doc_brand.py`
+(`--name "..."` to change it) writes `out/doc_brand/` (avatar, banner, lockup, watermark, preview) and
+`out/doc_brand/channel_about.md` (About text, keywords, settings, upload order).
 
 ## House style (from the owner's references, videos 2-4)
 The owner sent two more reference Shorts (an esophagus with bleeding veins treated by an endoscope; a baby that
