@@ -108,6 +108,8 @@ forceps, stitches). Keep it in the channel's cartoon style.
   faces above about y=860 on screen and fact cards fully in frame, under the headline.
 
 ## Setting up a fresh container
+Cloud sessions do this automatically: `.claude/hooks/session-start.sh` (registered in `.claude/settings.json`)
+runs the steps below at startup. Lint with `python -m pyflakes <file>`; smoke-test with `python render.py --video X --still 5`.
 The voice clone runs in its own Python environment.
 ```bash
 SETUPTOOLS_USE_DISTUTILS=stdlib pip install docopt   # docopt's old setup.py fails on this image without it
