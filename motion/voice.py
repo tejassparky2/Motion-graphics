@@ -415,7 +415,8 @@ def clone_check(takes, tries=3, slack=0.15):
         if not bad or attempt == tries - 1:
             break
         for t, p in bad:
-            os.remove(_clone_raw(t))
+            if os.path.exists(_clone_raw(t)):   # the same sentence can come twice, at two paces
+                os.remove(_clone_raw(t))
             for pc in (p, 1.0, 0.9):
                 f = os.path.join(ROOT, "build", "tts", f"{_key(t, pc)}.wav")
                 if os.path.exists(f):
