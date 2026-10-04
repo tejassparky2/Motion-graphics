@@ -58,3 +58,8 @@ stay our own.
 ## Held back
 - Brazil election (4 Oct): wait for official TSE results, then a neutral "what happened" explainer.
 - Wars and outbreaks (Sudan, Tigray, Yemen, DR Congo Ebola): possible later, with extra care; not as first uploads.
+
+## Owner's reference clip (4 Oct 2026)
+63 s, 720x1280. A host talks with a talking Japan flag about the permanent-residency fee rising from ¥10,000 to
+¥200,000; fast 2-4-word captions; host reactions carry the jokes; ends on a punchline. We use the script *shape* only
+(see "Script format" in NEWS_CHANNEL.md); all wording, drawings and voice are our own.

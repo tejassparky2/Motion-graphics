@@ -56,6 +56,9 @@ CAST = {
                    kind="cardigan", hair="gray", hair_col=hexc("#d8d4cc"), glasses=True, seed=103),
     "owner": dict(skin=SKIN_MID, shirt=hexc("#5b7c99"), pants=hexc("#3b3f4a"), bw=100, bh=108, head=40,
                   kind="apron", hair="bald", hair_col=hexc("#d8d4cc"), glasses=True, moustache=True, seed=109),
+    # the news channel's host (Globe in a Minute working name): our own character
+    "reporter": dict(skin=hexc("#d9a77c"), shirt=hexc("#2e9e8f"), pants=hexc("#2b2d3a"), bw=96, bh=106, head=40,
+                     kind="hoodie", hair="messy", hair_col=hexc("#2a1d18"), glasses=True, seed=131),
     # game-show host (The Monty Hall Problem)
     "host": dict(skin=hexc("#e8b48a"), shirt=hexc("#c9a227"), pants=hexc("#2b2d3a"), bw=96, bh=108, head=40,
                  kind="suit", hair="slick", hair_col=hexc("#3a2a22"), seed=113),

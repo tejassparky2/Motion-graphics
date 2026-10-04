@@ -26,3 +26,17 @@ don't copy his name, look, voice, catchphrases or clips.
 3. Research and fact-check the first batch (two reliable sources per claim, dates on everything), then render,
    check, and deliver with upload sheets.
 4. Keep a `out/news_calendar.md` for this channel.
+
+## Script format (from the owner's reference clip, 4 Oct 2026; our own animation)
+The owner shared a 63 s reference: a host chats with the **country itself** (a talking flag). Use that *script shape*,
+never its wording, look or footage:
+- Line 1: the host greets the country / asks what changed. Line 2: the country states the news with the date.
+- Then quick back-and-forth, one fact per line: the host asks the obvious viewer question ("How much was it before?"),
+  the country answers with a sourced number. Convert money to dollars with the date's rate.
+- Host reactions carry the emotion (surprise, a relatable comparison like "a nice dinner" vs "a new phone").
+- Give the reason in the official source's words ("The government says ..."), plus one clarifying fact people get wrong.
+- End on a question the viewer answers in the comments. About 45–60 s.
+- Drawing: our `reporter` host (motion/characters.py) and `motion/news.country(...)` (talking flag on a pole), close shot
+  on whoever speaks, pop-in panels for every number, `date_stamp` and `source_tag` on screen.
+- Both parts are voiced in the owner's cloned voice; a 0.36 s pause whenever the speaker changes.
+- First video in this format: `videos/japan_residency_fee.py`.
