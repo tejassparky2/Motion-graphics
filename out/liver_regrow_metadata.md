@@ -34,4 +34,4 @@ liver regeneration, liver grows back, living liver donor, can your liver grow ba
 Danny already got a kidney AND half a liver. 😂 What should he ask for next? 👇
 ```
 
-**Video facts:** 39.9 s, 113 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 41.6 s, 113 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
