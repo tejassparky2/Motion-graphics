@@ -47,7 +47,7 @@ Notes and sources: `research_notes/body_facts_7-8.md`.
 
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). Name, mascot (the heart in
-a surgical mask and head mirror) and logo live in `motion/brand.py`.
+a surgical mask and head mirror) and logo live in `motion/doc_brand.py`.
 - **Every video carries the channel logo** in the top-left corner (round mascot badge + "DOC AND THE ORGANS"), plus
   the name faint across the frame: call `watermark(cr)` from `motion/clinic.py` as the last thing in `frame()`.
 - Brand kit: `python make_doc_brand.py` writes `out/doc_brand/` (avatar, banner, lockup, watermark, preview) and

@@ -15,7 +15,7 @@ import argparse
 import math
 import os
 
-from motion import brand, engine
+from motion import doc_brand as brand, engine
 from motion.engine import INK, WHITE, at, blob, cairo, hexc, line, rrect_pts, shape
 
 NAME = brand.CHANNEL
