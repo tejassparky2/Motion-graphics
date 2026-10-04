@@ -1,4 +1,7 @@
-# Interestingly Strange: standing rules
+# Global News & Tech channel: standing rules
+
+This branch is the owner's **global news & tech** Shorts channel (working name, the owner picks the final one).
+Read `NEWS_CHANNEL.md` first. The narration rules below come from the owner's first channel and apply here too.
 
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
@@ -16,17 +19,20 @@
 - State the rule plainly first, then walk the logic one step per sentence, with no jumps ("we'd know it's Friday,
   so it's no surprise, so it can't be Friday").
 - Every number the narrator uses must come from something already said (e.g. "one minute for every hundred cars"
-  before "20 minutes").
-- Show each step on screen as it's spoken: a card, a chart or a counter, kept above the caption line and fully in frame.
-- Hook with the impossible-sounding claim, and end on a question that invites comments.
-
-## Channel basics
-- 2D hand-drawn Shorts: weird animals and insects, weird history, paradoxes, clever or funny twist stories.
-- Fast pacing, no dead air, a visual change about every second, facts checked (disputed claims left out).
-- Any topic is open, including controversial ones (religion, money, power): the owner wants to explore freely.
-  Keep it honest: quote people's real, sourced words (say "often credited to" when the source is unknown) and
-  never phrase anything as a call to violence.
-- Each video ships with an upload sheet: title, alternative titles, description, hashtags, tags, pinned comment.
+  be## Channel basics (news & tech)
+- Short explainers (about 40–60 s) on world news, countries, and tech news, for a global audience. Inspired by the
+  format of Omar Agamy (@omaragamyy): one surprising fact or fresh development per video, explained fast and simply.
+  Inspired by, never copied: no use of his name, face, voice, branding, catchphrases or clips.
+- **Accuracy first.** Every claim needs at least two reliable sources (official statements, wire services such as
+  Reuters/AP, the original study or filing). Put the sources in the description. Say the date ("as of October 2026")
+  for anything that can change. Leave out rumours and anything you can't confirm.
+- Neutral and fair: report what happened and what each side says; label opinion as opinion. Any topic is open, but never
+  phrase anything as a call to violence and never mock a group of people.
+- Draw everything (maps, flags, logos as simple generic shapes, people as our own characters). No news footage,
+  photos or clips from other outlets, and no real company logos copied exactly.
+- Real people are shown as our own cartoon characters and quoted only with their real, sourced words.
+- Each video ships with an upload sheet: title, alternative titles, description (with sources), hashtags, tags,
+  pinned comment.
 - No metadata or encoder tags in outputs; never strip other parties' provenance watermarks (e.g. SynthID).
-- Riddle series is called **The Last Bencher** (not "Last Row Kid").
-- The doctor channel ("Body Facts") is a separate channel with its own chat and branch (`ccr-56282fe5-evehq4-doctor`). Don't make doctor videos on this branch.
+- Only the owner's own voice is cloned. Don't make Interestingly Strange or doctor (Body Facts) videos on this branch:
+  they have their own chats and branches (`ccr-56282fe5-evehq4`, `ccr-56282fe5-evehq4-doctor`).

@@ -1,0 +1,28 @@
+# Global News & Tech channel: handoff
+
+The owner asked (4 Oct 2026) for a separate chat for a new **global news and tech** Shorts channel, inspired by
+Omar Agamy (@omaragamyy). This branch (`ccr-56282fe5-evehq4-news`) starts from the Interestingly Strange code, so the
+whole pipeline is already here.
+
+## About the inspiration
+Omar Agamy is an Egyptian-Canadian creator (about 3 million YouTube subscribers, 3,000+ Shorts) whose videos are
+short, fast explainers about countries of the world, current affairs and some tech news: one fact or new
+development per video, a punchy hook, simple explanation. Study the format (hook, length, pacing, how he explains);
+don't copy his name, look, voice, catchphrases or clips.
+
+## What's already built (see `AGENTS.md` for the full guide)
+- `render.py` + `motion/`: the 2D hand-drawn renderer (720x1280, 30 fps), captions, characters, camera.
+- `motion/story.py`: cards, scrolls, tags, answer buttons, helmets, talking mouths.
+- Narration in the owner's cloned voice (Chatterbox, `tools/clone_tts.py`), every line checked with Whisper medium:
+  `tools/render_check.sh NAME`. Reword any misheard line (see the CLAUDE.md narration rules).
+- One video = one file in `videos/`, with `SCRIPT`, scenes and `METADATA` (the upload sheet).
+- The Interestingly Strange videos in `videos/` are examples to copy from (e.g. `machiavelli_feared.py`,
+  `pyrrhic_victory.py`).
+
+## First steps for this chat
+1. Agree with the owner on the channel name, the mix (world news vs tech), and how many videos a day.
+2. Build news-specific pieces in `motion/`: a simple world map with countries to highlight, flag shapes, a "date
+   stamp" and a "source" tag, phone/laptop/chip drawings for tech stories.
+3. Research and fact-check the first batch (two reliable sources per claim, dates on everything), then render,
+   check, and deliver with upload sheets.
+4. Keep a `out/news_calendar.md` for this channel.
