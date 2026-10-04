@@ -22,7 +22,7 @@ NARRATOR = dict(cast={
     # male voice raised a little; helpers (tools) are brighter, raised a bit more. Stock voices, not copies; picked
     # by speaker similarity to the reference (research_notes/body_facts_2-4.md).
     "brain": dict(voice="bm_george", speed=1.0, pitch=2),
-    "scalpel": dict(voice="bf_alice", speed=1.0, pitch=4),
+    "scalpel": dict(voice="af_jessica", speed=1.0, pitch=4),
     "mike": dict(voice="am_michael", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0

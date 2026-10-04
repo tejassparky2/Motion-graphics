@@ -44,10 +44,11 @@ Research, sources and the psychology behind the scripts: `research_notes/body_fa
 - **Videos 2-4 use a new style the owner asked for** (reference Short: a cracked kneecap and the tools fixing it).
   The organ things happen to gets a young male voice raised a little (+2); helpers get a brighter voice raised a
   bit more (+4). Stock voices picked by speaker similarity to the reference, not copies of it: brain and small
-  liver lobe `bm_george` +2, working nostril and big liver lobe `bm_daniel` +2, scalpel `bf_alice` +4, heart
-  `af_jessica` +4, resting nostril `af_river` +4 (`formant` stays "shifted"). Every line is exact on Whisper
+  liver lobe `bm_george` +2, working nostril and big liver lobe `bm_daniel` +2, scalpel `af_jessica` +4, heart
+  `af_river` +4, resting nostril `af_river` +4 (`formant` stays "shifted"). Every line is exact on Whisper
   medium. One-word takes ("Hey!", "Me?", "Whoa.", "Half?", "Ugh.") get misheard in these voices: fold them into a
-  longer sentence ("Hey, who opened the roof?", "What, me?"). Avoid "Shh".
+  longer sentence ("Hey, who opened the roof?", "What, me?"). Avoid "Shh". Don't use `bf_alice`: it ends every
+  sentence with a breathy hiss that Whisper hears as an extra "s" ("Hello agains").
 - Made-up words (e.g. "eeny, meeny") get garbled in a high voice: use real words ("And the lucky kidney is... this
   one!").
 

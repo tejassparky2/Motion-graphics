@@ -22,8 +22,8 @@ NARRATOR = dict(cast={
     # voices styled on the owner's reference Short (see brain_awake.py)
     "big": dict(voice="bm_daniel", speed=1.0, pitch=2),      # the big lobe
     "small": dict(voice="bm_george", speed=1.0, pitch=2),    # the small lobe
-    "scalpel": dict(voice="bf_alice", speed=1.0, pitch=4),   # same scalpel voice as the brain episode
-    "heart": dict(voice="af_jessica", speed=1.0, pitch=4),
+    "scalpel": dict(voice="af_jessica", speed=1.0, pitch=4),   # same scalpel voice as the brain episode
+    "heart": dict(voice="af_river", speed=1.0, pitch=4),
     "mike": dict(voice="am_michael", speed=1.08),
     "danny": dict(voice="am_adam", speed=1.08),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
