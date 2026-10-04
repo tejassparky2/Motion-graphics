@@ -21,31 +21,29 @@ from motion.surgery import BLOOD, BLOOD_D, DRAPE, SKIN, SKIN_D, clamp, cut_line,
     scalpel_tip, slit, stitches, wound
 from videos.kidney_donor import heart, scalpel
 
-# Voices copied from the owner's references where they are stock voices (found by having all 28 Kokoro voices read
-# the references' own lines; research_notes/body_facts_2-4.md): grumpy organ = am_eric (the stomach, 0.82), tools =
-# af_river +6 (the endoscope), patients = am_fenrir -1 / am_puck -1 (the patient, the dad). The scared high voice
-# in the references isn't a stock voice; bf_lily +10 is the closest clear one (0.76).
+# Voices: natural stock voices at their own pitch (owner: the pitched-up voices weren't clear), a touch slower.
+# The doctor is the owner's own cloned voice.
 STYLE = "clean"
 NARRATOR = dict(clone_rate=4.9, cast={
-    "big": dict(voice="am_eric", speed=0.9, pitch=0),        # the big lobe: grumpy
-    "small": dict(voice="bf_lily", speed=1.0, pitch=10),     # the small lobe: scared
-    "scalpel": dict(voice="af_river", speed=1.0, pitch=6),   # same scalpel voice as the brain episode
-    "heart": dict(voice="af_heart", speed=1.0, pitch=2),     # calm helper
-    "mike": dict(voice="am_fenrir", speed=1.0, pitch=-1),
-    "danny": dict(voice="am_puck", speed=1.0, pitch=-1),
+    "big": dict(voice="am_michael", speed=0.95),      # the big lobe
+    "small": dict(voice="af_heart", speed=0.95),      # the small lobe
+    "scalpel": dict(voice="af_bella", speed=0.95),    # same scalpel voice as the brain episode
+    "heart": dict(voice="af_sarah", speed=0.95),
+    "mike": dict(voice="am_fenrir", speed=0.95),
+    "danny": dict(voice="am_puck", speed=0.95),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 EMPHASIS = {"liver", "transplant", "donor", "grows", "months", "shape", "huge"}   # bigger captions
 
 SCRIPT = [
-    dict(id="l1", scene="body", text="Hello again! I came for half a liver.", speaker="scalpel"),
-    dict(id="l2", scene="body", text="Wait, which half of us?", speaker="small"),
-    dict(id="l3", scene="body", text="The big guy!", speaker="scalpel"),
-    dict(id="l4", scene="body", text="What, me? Little guy, you can't run this place alone!", speaker="big"),
-    dict(id="l5", scene="body", text="Hey, come back! I'm way too small!", speaker="small"),
-    dict(id="l6", scene="body", text="Relax. Just give it a few weeks.", speaker="heart"),
-    dict(id="l7", scene="body", text="Wait, what? Something's happening! I'm getting huge!", speaker="small"),
-    dict(id="h1", scene="ward", text="Doc, I gave my brother half my liver. Is it gone forever?", speaker="mike"),
+    dict(id="l1", scene="body", text="Hello again, liver! I'm here to take half of you.", speaker="scalpel"),
+    dict(id="l2", scene="body", text="Half of me? Which half?", speaker="small"),
+    dict(id="l3", scene="body", text="The big one, on the right side.", speaker="scalpel"),
+    dict(id="l4", scene="body", text="Me? But the little one can't do all this work alone!", speaker="big"),
+    dict(id="l5", scene="body", text="Wait, come back! I'm way too small to do this!", speaker="small"),
+    dict(id="l6", scene="body", text="Relax, little liver. Just give it a few weeks.", speaker="heart"),
+    dict(id="l7", scene="body", text="What's happening to me? I'm getting huge!", speaker="small"),
+    dict(id="h1", scene="ward", text="Doctor, I gave my brother half of my liver. Is it gone forever?", speaker="mike"),
     dict(id="h2", scene="ward", text="No. Your liver grows back.", speaker="doctor"),
     dict(id="h3", scene="ward", text="In a few months, it's almost full size again. Just a different shape.",
          speaker="doctor"),
@@ -53,7 +51,7 @@ SCRIPT = [
     dict(id="h4b", scene="ward", text="This surgery is called a living donor liver transplant.", speaker="doctor"),
     dict(id="h5", scene="ward", text="So now we both have a whole liver?", speaker="danny"),
     dict(id="h6", scene="ward", text="Pretty much, yes.", speaker="doctor"),
-    dict(id="h7", scene="ward", text="Thanks, bro. So, do lungs grow back too?", speaker="danny"),
+    dict(id="h7", scene="ward", text="Thanks, bro. Hey, do lungs grow back too?", speaker="danny"),
     dict(id="h8", scene="ward", text="Doctor, can I live without a brother?", speaker="mike", gap=0.3),
     dict(id="h9", scene="ward", text="Medically? Still yes.", speaker="doctor", gap=0.35),
 ]

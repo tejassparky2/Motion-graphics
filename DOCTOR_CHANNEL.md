@@ -43,12 +43,11 @@ stopped growing, taken out by a gloved hand to a NICU incubator) and asked to wo
 - **Doctor's room** (`motion/clinic.py`): plain olive wall, a masked doctor (`person(..., mask=...)`), and patients
   in blue shirts (`mike_b`, `danny_b`) sitting up in bed, in a medium shot with the sheet across the front.
 - **Script:** the doctor names the medical term ("This is called an awake craniotomy.").
-- **Voices (owner: "copy the voices from the reference, the doctor is our voice"):** found by having all 28 Kokoro
-  voices read the references' own lines. Same stock voices as the references: grumpy organ `am_eric` speed 0.9
-  (the stomach), tools `af_river` +6 (the endoscope), patients `am_fenrir` -1 (Mike) and `am_puck` -1 (Danny).
-  The references' scared high voice isn't a stock voice; `bf_lily` +10 is the closest clear one. Calm helper
-  (heart) `af_heart` +2. Doctor: the owner's clone at 4.9 syllables/s (`clone_rate`). Never clone a reference
-  creator's voice from their audio. Short one-word takes ("Doc.", "Oh no.") get misheard: write "Doctor, ..."
+- **Voices (latest, owner: the pitched-up organ voices "not clear and understandable"):** natural stock voices at
+  their own pitch, speed 0.95. Brain/small lobe `af_heart`, scalpel `af_bella`, grumpy organ `am_michael`, sleepy
+  nostril `bf_emma`, heart `af_sarah`, Mike `am_fenrir`, Danny `am_puck`. Doctor: the owner's clone at 4.9 syl/s.
+  No pitch shifting on dialogue voices. Lines are plain, natural sentences where characters call each other by name
+  ("Relax, brain. It's just me, the scalpel."), like the references.
 - A faint "Body Facts" watermark, like the references' channel mark.
 
 ## Surgery scenes (owner's rule)

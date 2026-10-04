@@ -20,29 +20,27 @@ from motion.surgery import DRAPE, DRAPE_D, SKIN, SKIN_D, clamp, cut_line, drapes
     wound
 from videos.kidney_donor import eyes, mouth, scalpel
 
-# Voices copied from the owner's references where they are stock voices (found by having all 28 Kokoro voices read
-# the references' own lines; research_notes/body_facts_2-4.md): grumpy organ = am_eric (the stomach, 0.82), tools =
-# af_river +6 (the endoscope), patients = am_fenrir -1 / am_puck -1 (the patient, the dad). The scared high voice
-# in the references isn't a stock voice; bf_lily +10 is the closest clear one (0.76).
+# Voices: natural stock voices at their own pitch (owner: the pitched-up voices weren't clear), a touch slower.
+# The doctor is the owner's own cloned voice.
 STYLE = "clean"
 NARRATOR = dict(clone_rate=4.9, cast={
-    "brain": dict(voice="bf_lily", speed=1.0, pitch=10),     # scared organ
-    "scalpel": dict(voice="af_river", speed=1.0, pitch=6),   # tool
-    "mike": dict(voice="am_fenrir", speed=1.0, pitch=-1),    # patient
+    "brain": dict(voice="af_heart", speed=0.95),
+    "scalpel": dict(voice="af_bella", speed=0.95),
+    "mike": dict(voice="am_fenrir", speed=0.95),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 EMPHASIS = {"craniotomy", "brain", "awake", "pain", "sensors", "headaches"}   # bigger captions
 
 SCRIPT = [
-    dict(id="b1", scene="head", text="Wait, why is my roof open?", speaker="brain"),
-    dict(id="b2", scene="head", text="Relax. It's just me. Brain surgery today!", speaker="scalpel"),
-    dict(id="b3", scene="head", text="Brain surgery? Then put him to sleep! He's still awake!", speaker="brain"),
-    dict(id="b4", scene="head", text="He has to be wide awake. Now, hold still.", speaker="scalpel"),
-    dict(id="b5", scene="head", text="No, no, wait! This is going to hurt so much!", speaker="brain"),
-    dict(id="b6", scene="head", text="Hold on, I don't feel anything.", speaker="brain", gap=0.4),
-    dict(id="b7", scene="head", text="Of course not. You don't have any pain sensors.", speaker="scalpel"),
-    dict(id="b8", scene="head", text="I feel every pain he has. And I can't feel my own?", speaker="brain"),
-    dict(id="h1", scene="ward", text="Doc, you cut into my brain, and I was wide awake. Why didn't it hurt?",
+    dict(id="b1", scene="head", text="Hey! Who just opened the roof of my head?", speaker="brain"),
+    dict(id="b2", scene="head", text="Relax, brain. It's just me, the scalpel. We're doing surgery today.", speaker="scalpel"),
+    dict(id="b3", scene="head", text="Surgery? Then why is he still awake?", speaker="brain"),
+    dict(id="b4", scene="head", text="He needs to stay awake, so he can talk to the doctors. Now hold still.", speaker="scalpel"),
+    dict(id="b5", scene="head", text="No, no, please stop! This is going to hurt so much!", speaker="brain"),
+    dict(id="b6", scene="head", text="Wait a second. I don't feel anything at all.", speaker="brain", gap=0.4),
+    dict(id="b7", scene="head", text="Of course you don't. The brain has no pain sensors.", speaker="scalpel"),
+    dict(id="b8", scene="head", text="So I feel every pain he has, but I can't feel my own?", speaker="brain"),
+    dict(id="h1", scene="ward", text="Doctor, you operated on my brain while I was awake. Why didn't it hurt?",
          speaker="mike"),
     dict(id="h2", scene="ward", text="The brain itself has no pain sensors.", speaker="doctor"),
     dict(id="h3", scene="ward", text="We numbed your scalp. After that, the brain felt nothing.", speaker="doctor"),

@@ -17,30 +17,28 @@ from motion.clinic import A_CLOSE, B_CLOSE, BED_A, BED_B, DOC_CLOSE, NEXT_BED, T
 from motion.kit import camera, enter_world, set_camera, whip
 from motion.organs import airflow, brain, turbinate
 
-# Voices copied from the owner's references where they are stock voices (found by having all 28 Kokoro voices read
-# the references' own lines; research_notes/body_facts_2-4.md): grumpy organ = am_eric (the stomach, 0.82), tools =
-# af_river +6 (the endoscope), patients = am_fenrir -1 / am_puck -1 (the patient, the dad). The scared high voice
-# in the references isn't a stock voice; bf_lily +10 is the closest clear one (0.76).
+# Voices: natural stock voices at their own pitch (owner: the pitched-up voices weren't clear), a touch slower.
+# The doctor is the owner's own cloned voice.
 STYLE = "clean"
 NARRATOR = dict(clone_rate=4.9, cast={
-    "left": dict(voice="am_eric", speed=0.9, pitch=0),       # the side that's working: grumpy
-    "right": dict(voice="af_river", speed=1.0, pitch=6),     # the side on its break
-    "brain": dict(voice="bf_lily", speed=1.0, pitch=10),     # same brain as the awake-surgery episode
-    "mike": dict(voice="am_fenrir", speed=1.0, pitch=-1),
-    "danny": dict(voice="am_puck", speed=1.0, pitch=-1),
+    "left": dict(voice="am_michael", speed=0.95),     # the side that's working
+    "right": dict(voice="bf_emma", speed=0.95),       # the side on its break
+    "brain": dict(voice="af_heart", speed=0.95),      # same brain as the awake-surgery episode
+    "mike": dict(voice="am_fenrir", speed=0.95),
+    "danny": dict(voice="am_puck", speed=0.95),
 })                                   # the doctor speaks in the narrator voice (the owner's clone)
 TAIL = 1.0
 EMPHASIS = {"nasal", "cycle", "swells", "breathing", "nervous", "hours", "left", "right"}   # bigger captions
 
 SCRIPT = [
-    dict(id="n1", scene="nose", text="Hey, you. Yes, you. Breathe through your nose.", speaker="left"),
-    dict(id="n2", scene="nose", text="Feel that? I'm doing most of the work!", speaker="left"),
-    dict(id="n3", scene="nose", text="Because this one is asleep!", speaker="left"),
-    dict(id="n4", scene="nose", text="Quiet. I'm on my break.", speaker="right"),
-    dict(id="n5", scene="nose", text="What? You're on a break? We're a team! Get up and help!", speaker="left"),
-    dict(id="n6", scene="nose", text="Switch sides, now! Right side, you're up.", speaker="brain"),
-    dict(id="n7", scene="nose", text="Okay. My turn.", speaker="right"),
-    dict(id="n8", scene="nose", text="Finally. Wake me up in a few hours.", speaker="left"),
+    dict(id="n1", scene="nose", text="Hey, you! Yes, you. Breathe in through your nose.", speaker="left"),
+    dict(id="n2", scene="nose", text="Can you feel it? I'm doing most of the work!", speaker="left"),
+    dict(id="n3", scene="nose", text="Because my partner over there is asleep!", speaker="left"),
+    dict(id="n4", scene="nose", text="Let me sleep. I'm on my break.", speaker="right"),
+    dict(id="n5", scene="nose", text="A break? We have to work together! Get up and help me!", speaker="left"),
+    dict(id="n6", scene="nose", text="Okay, you two, switch sides. Right side, you're up.", speaker="brain"),
+    dict(id="n7", scene="nose", text="Fine. It's my turn.", speaker="right"),
+    dict(id="n8", scene="nose", text="Finally! Wake me up in a few hours.", speaker="left"),
     dict(id="d1", scene="ward", text="Doctor, one side of my nose keeps getting blocked. Is it broken?",
          speaker="danny"),
     dict(id="d2", scene="ward", text="No. That's the nasal cycle. Most people have it.", speaker="doctor"),
@@ -48,8 +46,8 @@ SCRIPT = [
                                      "breathing.", speaker="doctor"),
     dict(id="d4", scene="ward", text="Every few hours, your nervous system swaps them. You just don't notice.",
          speaker="doctor"),
-    dict(id="d5", scene="ward", text="So my nose takes naps at work?", speaker="mike"),
-    dict(id="d6", scene="ward", text="Bro. Just like you.", speaker="danny", gap=0.3),
+    dict(id="d5", scene="ward", text="So one side of my nose is always taking a nap?", speaker="mike"),
+    dict(id="d6", scene="ward", text="Just like you at work, bro.", speaker="danny", gap=0.3),
     dict(id="d7", scene="ward", text="Try it now. Block one side and breathe, then the other. Which side is working "
                                      "for you?", speaker="doctor", gap=0.35),
 ]
