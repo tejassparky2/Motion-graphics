@@ -51,6 +51,10 @@ Notes and sources: `research_notes/body_facts_9-10.md`.
 - `videos/forehead_nose.py`: paramedian forehead flap (forehead skin swung down to rebuild the nose, attached
   for about three weeks).
 
+## Video 11: eggs vs multivitamin (fact-check, owner's request)
+`videos/egg_vitamins.py`, notes `research_notes/body_facts_11.md`. A viral claim checked by the organs on a
+nutrient scoreboard (what five eggs give each organ), then the doctor's answer. Don't name or mock the creator.
+
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
 own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
