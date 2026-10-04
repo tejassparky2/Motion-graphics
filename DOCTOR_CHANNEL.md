@@ -46,9 +46,11 @@ Notes and sources: `research_notes/body_facts_7-8.md`.
 - `videos/fecal_transplant.py`: fecal microbiota transplant (a donor's gut bacteria cure recurring C. diff).
 
 ## Channel name and brand (owner's choice)
-The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). Name, mascot (the heart in
-a surgical mask and head mirror) and logo live in `motion/doc_brand.py`.
-- **Every new video (from video 9 on) carries the channel logo** in the top-left corner (round mascot badge + "DOC AND THE ORGANS"), plus
+The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
+own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
+it as supplied; don't redraw it. Name, logo helpers and the old heart mascot live in `motion/doc_brand.py`.
+- **Every new video (from video 9 on) carries the channel logo** in the top-left corner (the owner's round logo + a
+  navy "DOC AND THE ORGANS" tag), plus
   the name faint across the frame: call `watermark(cr)` from `motion/clinic.py` as the last thing in `frame()`.
   Videos 2-8 were made before the logo and stay as released (`watermark(cr, logo=False, name="Body Facts")`):
   the owner wants the logo on future videos only, so never re-render old videos just to add it.

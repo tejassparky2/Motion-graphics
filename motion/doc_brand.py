@@ -1,13 +1,18 @@
-"""The doctor channel's brand: name, mascot (the heart in a surgical mask and head mirror) and the small logo every
-video carries in its top-left corner. make_doc_brand.py draws the profile picture and banner from the same pieces."""
+"""The doctor channel's brand: name, the owner's logo (assets/brand/doc_logo.png: the doctor with his arms crossed
+among the organs, in a glowing blue circle) and the small logo every new video carries in its top-left corner.
+make_doc_brand.py builds the profile picture and banner from the same pieces. The old heart mascot is kept for
+anything drawn in the cartoon style."""
 import math
+import os
 
-from motion import engine
 from motion.engine import INK, WHITE, at, blob, cairo, hexc, line, rrect_pts, shape
 
-CHANNEL = "Doc and the Organs"
+CHANNEL = CHANNEL_DEFAULT = "Doc and the Organs"
 TAGLINE = "Your organs argue. The doctor explains."
 SKY = hexc("#86cfdc")
+NAVY, NAVY_D, GLOW, GOLD = hexc("#0c2a6b"), hexc("#06153a"), hexc("#3d8bff"), hexc("#ffc928")
+LOGO = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "brand", "doc_logo.png")
+LOGO_C, LOGO_R = (627, 640), 612     # the logo's circle inside the 1254x1254 image (outside it is plain white)
 MASK = hexc("#2fa36f")
 RED = hexc("#d8363a")
 
@@ -63,40 +68,63 @@ def name_runs(name=None):
     return [(" ".join(words), INK)]
 
 
+_LOGO = []
+
+
+def logo_image():
+    if not _LOGO:
+        _LOGO.append(cairo.ImageSurface.create_from_png(LOGO))
+    return _LOGO[0]
+
+
+def logo_disc(cr, x, y, d):
+    """The owner's logo as a disc of diameter d, top-left corner at (x, y)."""
+    img = logo_image()
+    sc = d / (2 * LOGO_R)
+    cr.save()
+    cr.arc(x + d / 2, y + d / 2, d / 2, 0, 2 * math.pi)
+    cr.clip()
+    cr.translate(x + d / 2, y + d / 2)
+    cr.scale(sc, sc)
+    cr.set_source_surface(img, -LOGO_C[0], -LOGO_C[1])
+    cr.get_source().set_filter(cairo.FILTER_BEST)
+    cr.paint()
+    cr.restore()
+
+
+def name_tag_runs():
+    """DOC in white, AND THE in white, ORGANS in gold: the logo's own colours."""
+    return [("DOC ", WHITE), ("AND THE ", WHITE), ("ORGANS", GOLD)]
+
+
 _BADGE = {}
 
 
 def _badge_surface():
-    """The corner logo (round avatar + name tag), drawn once per style and reused every frame."""
-    key = engine.FONT
-    if key not in _BADGE:
-        w, h, d = 400, 100, 92
+    """The corner logo (the owner's round logo + a navy name tag), drawn once and reused every frame."""
+    if "badge" not in _BADGE:
+        w, h, d = 420, 112, 104
         s = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
         cr = cairo.Context(s)
         cr.select_font_face("Anton", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
         cr.set_font_size(27)
-        runs = name_runs()
+        runs = name_tag_runs()
         tw = sum(cr.text_extents(t).x_advance for t, _ in runs)
-        x0 = d - 14
-        shape(cr, rrect_pts(x0, 28, tw + 40, 44, 22, 20), WHITE, seed=60, amp=0, lw=3)
+        x0 = d - 16
+        shape(cr, rrect_pts(x0, h / 2 - 22, tw + 40, 44, 22, 20), NAVY, stroke=GLOW, seed=60, amp=0, lw=3)
         cx = x0 + 26
         for t, col in runs:
-            cr.move_to(cx, 61)
+            cr.move_to(cx, h / 2 + 11)
             cr.set_source_rgba(*col)
             cr.show_text(t)
             cx += cr.text_extents(t).x_advance
-        cr.save()
+        logo_disc(cr, 4, (h - d) / 2, d)
         cr.arc(4 + d / 2, h / 2, d / 2, 0, 2 * math.pi)
-        cr.clip()
-        cr.translate(4, h / 2 - d / 2)
-        avatar(cr, d)
-        cr.restore()
-        cr.arc(4 + d / 2, h / 2, d / 2, 0, 2 * math.pi)
-        cr.set_source_rgba(*WHITE)
-        cr.set_line_width(4)
+        cr.set_source_rgba(*GLOW)
+        cr.set_line_width(3)
         cr.stroke()
-        _BADGE[key] = s
-    return _BADGE[key]
+        _BADGE["badge"] = s
+    return _BADGE["badge"]
 
 
 def corner_logo(cr, x=18, y=92, alpha=0.95):

@@ -1,11 +1,11 @@
 # Doc and the Organs: channel kit
 
-Images are in `out/doc_brand/`, made by `python make_doc_brand.py`. To change the name, run
+Images are in `out/doc_brand/`, made by `python make_doc_brand.py` from your logo (`assets/brand/doc_logo.png`). To change the name, run
 `python make_doc_brand.py --name "Your Name"`.
 
 | File | Where it goes in YouTube Studio |
 |---|---|
-| `avatar.png` (800×800) | Customization › Branding › Picture |
+| `avatar.png` (800×800, your logo) | Customization › Branding › Picture (or upload your original logo file) |
 | `banner.png` (2560×1440) | Customization › Branding › Banner image (the name and tagline sit inside the area every device shows) |
 | `watermark.png` (150×150) | Customization › Branding › Video watermark (optional: every new video already carries the logo in its top-left corner) |
 | `lockup.png` | Thumbnails, end screens, Instagram/TikTok profile header |
