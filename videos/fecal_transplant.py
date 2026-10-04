@@ -226,4 +226,4 @@ def draw(cr, t, tl):
         scene_gut(cr, t, tl)
     cr.restore()
     captions(cr, t, tl)
-    watermark(cr)
+    watermark(cr, logo=False, name="Body Facts")   # made before the logo: stays as released
