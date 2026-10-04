@@ -1,7 +1,7 @@
 """Shared pieces for the "researchers found / clever words from history" videos: a close camera, title cards,
 quote scrolls and the two answer buttons at the end. Coordinates are world units; the camera puts its focus point
 at the centre of the 720x1280 frame, so screen y = 640 + zoom * (world y - focus y)."""
-from .engine import INK, WHITE, at, blob, ease_out, hexc, pop, rrect_pts, seg, shape, write
+from .engine import INK, WHITE, at, blob, ease_out, hexc, line, pop, rrect_pts, seg, shape, write
 from .kit import camera
 
 CLOSE = (1.5, 360, 800)        # people standing at world y 960 fill the frame and stay clear of the captions
@@ -68,3 +68,32 @@ def tag(cr, t, start, x, y, text, col, s=0.8, seed=60):
         w = 26 * len(text) + 60
         shape(cr, rrect_pts(-w / 2, -40, w, 80, 24, 12), hexc("#2b2d3a"), seed=seed, amp=0.3, lw=0, stroke=None)
         write(cr, [(text, col)], 0, 14, 44, align="center", bold=True)
+
+
+def head_c(who, x, y, s=1.0):
+    """Centre of a character's head, for hats and helmets drawn on top of `person`."""
+    from .characters import CAST
+    c = CAST[who]
+    return x, y - (14 + c["bh"] + c["head"]) * s
+
+
+def talk(tl, who, t, idle="smile"):
+    """Mouth for `person`: flaps while `who` is speaking."""
+    return ("o" if int(t * 12) % 2 else idle) if tl.speaking(who, t) else idle
+
+
+def helmet(cr, who, x, y, s=1.0, crest=RED, facing=1, metal=hexc("#c9a04a")):
+    """An ancient Greek bronze helmet with a horsehair crest, over a character's head (eyes and face stay visible)."""
+    import math
+    from .characters import CAST
+    hr = CAST[who]["head"]
+    hx, hy = head_c(who, x, y, s)
+    brow = -hr * 0.42                # the helmet's rim sits just above the eyes
+    with at(cr, hx, hy, s, flip=facing < 0):
+        shape(cr, [(-hr * 1.1 + k * hr * 0.22, -hr - 24 - 10 * math.sin(k / 10 * math.pi)) for k in range(11)] +
+              [(hr * 1.1, -hr + 4), (-hr * 1.1, -hr + 4)], crest, seed=700, amp=0.6, lw=3.5)
+        dome = [((hr + 8) * math.cos(a), brow + (hr * 0.62 + 8) * math.sin(a)) for a in
+                [math.pi + k * math.pi / 14 for k in range(15)]]
+        shape(cr, dome + [(-hr * 0.7, brow), (-hr * 0.85, hr * 0.55), (-hr - 6, hr * 0.4)], metal, seed=701, amp=0.4,
+              lw=4)
+        line(cr, [(-hr - 6, brow), (hr + 8, brow)], 4, hexc("#8a6a2a"), seed=702, amp=0.2)
