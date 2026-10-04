@@ -34,4 +34,4 @@ awake brain surgery, brain can't feel pain, awake craniotomy, why doesn't brain 
 Be honest: could you stay awake while they operate on your brain? 😳 And what would you talk about? 👇
 ```
 
-**Video facts:** 49.9 s, 156 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 54.5 s, 157 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
