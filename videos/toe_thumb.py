@@ -37,7 +37,7 @@ SCRIPT = [
     dict(id="o6", scene="hand2", text="Welcome! Can you hold this cup for me?", speaker="hand"),
     dict(id="o7", scene="hand2", text="Wow. I'm a thumb now!", speaker="toe"),
     dict(id="c1", scene="ward", text="Doctor, is that really my toe on my hand?", speaker="mike"),
-    dict(id="c2", scene="ward", text="Yes. This is called a toe-to-thumb transfer.", speaker="doctor"),
+    dict(id="c2", scene="ward", text="Yes. We turned your big toe into a new thumb.", speaker="doctor"),
     dict(id="c3", scene="ward", text="We moved your big toe to your hand. Under a microscope, we connected its bone, "
                                      "tendons, blood vessels, and nerves.", speaker="doctor"),
     dict(id="c4", scene="ward", text="Your thumb does a huge part of your hand's work. Now you can grip and pinch "
@@ -223,6 +223,12 @@ def scene_ward(cr, t, tl):
         d.update(eyes="sly")
     doctor(cr, t, talking=tl.speaking("doctor", t), **d)
     sheet(cr)
+    if A("c2") <= t < A("c4"):   # the operation's name, on screen
+        cr.save()
+        cr.identity_matrix()
+        label(cr, "Toe-to-thumb transfer", 360, 320, size=44)
+        cr.restore()
+        cue("pop", t, A("c2"))
 
 
 def draw(cr, t, tl):

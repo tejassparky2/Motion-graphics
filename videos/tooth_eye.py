@@ -14,7 +14,7 @@ import math
 
 from motion.captions import captions
 from motion.clinic import A_CLOSE, BED_A, DOC_CLOSE, TWO_SHOT, bed, doctor, label, patient, room, sheet, watermark
-from motion.engine import WHITE, at, blob, dot, ease_out, hexc, lerp, line, rrect_pts, seg, shape
+from motion.engine import WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, rrect_pts, seg, shape
 from motion.kit import camera, enter_world, set_camera, whip
 from motion.organs import calendar
 from motion.surgery import BLOOD, BLOOD_D, SKIN, drapes, forceps, stitches
@@ -313,6 +313,14 @@ def scene_ward(cr, t, tl):
         d.update(eyes="sly")
     doctor(cr, t, talking=tl.speaking("doctor", t), **d)
     sheet(cr)
+    if A("h2") <= t < A("h5"):   # the operation's names, on screen
+        cr.save()
+        cr.identity_matrix()
+        label(cr, "Tooth-in-eye surgery", 360, 300, size=44)
+        if t >= A("h3"):
+            label(cr, "Osteo-odonto-keratoprosthesis", 360, 380, size=34)
+        cr.restore()
+        cue("pop", t, A("h2"))
 
 
 def draw(cr, t, tl):
