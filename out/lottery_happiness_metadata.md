@@ -36,4 +36,4 @@ lottery winners happiness, hedonic treadmill, does money buy happiness, psycholo
 Be honest: would a lottery win make YOU happier, or just more comfortable? 💰👇
 ```
 
-**Video facts:** 51.1 s, 153 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 52.1 s, 157 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
