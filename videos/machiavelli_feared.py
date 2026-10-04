@@ -29,7 +29,7 @@ SCRIPT = [
                                        "feared."),
     dict(id="m5", scene="ropes", text="Why? Because people break love whenever it helps them. But the fear of "
                                       "punishment never lets go."),
-    dict(id="m6", scene="catch", text="But there's a catch. Feared is fine. Hated is not. And the fastest way to be "
+    dict(id="m6", scene="catch", text="But there's a catch. Being feared is fine. Being hated is not. And the fastest way to be "
                                       "hated? Take people's money."),
     dict(id="m7", scene="quote", text="In his words, people forget the death of their father faster than the loss of "
                                       "their inheritance."),
