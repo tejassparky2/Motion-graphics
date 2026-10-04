@@ -51,6 +51,10 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 28 | Sat Oct 10 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
 | 29 | Sun Oct 11 | 1:30 AM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
 | 30 | Sun Oct 11 | 4:30 AM | napoleon_question | Why Don't the Poor Rise Up? Napoleon's Answer Is Shocking 😳 |
+| 31 | Sun Oct 11 | 9:30 PM | machiavelli_feared | Is It Better to Be Loved or Feared? Machiavelli's Answer 😈 |
+| 32 | Mon Oct 12 | 1:30 AM | diogenes_alexander | Alexander the Great Offered Him Anything… His Answer Was Genius ☀️ |
+| 33 | Mon Oct 12 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? What Scientists Found Later 🍬 |
+| 34 | Mon Oct 12 | 9:30 PM | ben_franklin_effect | Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝 |
 
 Rows 1–13 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
