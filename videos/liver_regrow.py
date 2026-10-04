@@ -13,10 +13,12 @@ import math
 
 from motion.captions import captions
 from motion.characters import person
-from motion.engine import INK, RED, WHITE, at, blob, cue, ease_out, hexc, lerp, seg, write
+from motion.engine import INK, RED, blob, cue, ease_out, hexc, lerp, line, seg, shape, write
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 from motion.organs import big_lobe_pts, calendar, card, lobe, small_lobe_pts
-from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, body_bg, heart, room, scalpel
+from motion.surgery import BLOOD, BLOOD_D, DRAPE, SKIN, SKIN_D, clamp, cut_line, drapes, ellipse, forceps, \
+    scalpel_tip, slit, stitches, wound
+from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, heart, room, scalpel
 
 NARRATOR = dict(cast={
     # voices styled on the owner's reference Short (see brain_awake.py)
@@ -68,43 +70,59 @@ The liver can grow back. After a living donation, the part that's left gets bigg
     pinned_comment="Danny already got a kidney AND half a liver. 😂 What should he ask for next? 👇",
 )
 
-BIG = (250, 640)       # big lobe (the patient's right: screen left)
-SMALL = (440, 650)     # small lobe
+WX, WY, WRX, WRY = 360, 640, 260, 210   # the incision in the belly
+SLIT = slit(WX, WY, WRX, 30)
+BIG = (285, 625)       # big lobe (the patient's right: screen left)
+SMALL = (455, 635)     # small lobe
+LS = 0.72              # lobe scale inside the belly
+
+
+def belly(cr):
+    """The patient's belly on the table (asleep under the drapes), like the knee in the reference."""
+    shape(cr, [(40, 120), (680, 120), (700, 600), (690, 1300), (30, 1300), (20, 600)], SKIN, seed=600, amp=1.0,
+          lw=4.5)
+    for k in range(4):       # rib edges showing through, up top
+        y = 230 + 44 * k
+        line(cr, [(110, y + 40), (250, y), (360, y + 30 - 6 * k)], 3.5, SKIN_D, seed=601 + k, amp=0.6)
+        line(cr, [(610, y + 40), (470, y), (360, y + 30 - 6 * k)], 3.5, SKIN_D, seed=605 + k, amp=0.6)
+    blob(cr, 360, 1060, 16, 22, SKIN_D, seed=609, amp=0.4, lw=3.5)       # belly button
+    for x0 in (-260, 980):   # drapes over his sides
+        shape(cr, [(x0 - 300, 0), (x0 + 300 if x0 < 0 else x0 - 300, 0), (x0 + 330 if x0 < 0 else x0 - 330, 1400),
+                   (x0 - 300, 1400)], DRAPE, seed=610 + x0, amp=1.0, lw=4)
+
+
+def guts(cr):
+    """Background inside the belly: the bowel loops underneath."""
+    for k in range(6):
+        blob(cr, 150 + 85 * k, 790 + 18 * (k % 2), 62, 40, hexc("#e58d8a"), seed=620 + k, amp=0.6, lw=3)
+        line(cr, [(118 + 85 * k, 790), (182 + 85 * k, 800)], 2.5, hexc("#b8605e"), seed=630 + k, amp=0.4)
 
 
 def scene_body(cr, t, tl):
     A = tl.at
+    cut = seg(t, 0.05, A("l1", "liver") - 0.15)
+    open_u = ease_out(seg(t, A("l1", "liver") - 0.15, A("l1", "liver") + 0.45))
+    split = seg(t, A("l3", "big"), A("l3", end=True) + 0.5)               # cut between the lobes
     take = A("l5")
-    gone = ease_out(seg(t, take - 0.1, take + 0.8))
+    gone = seg(t, take, take + 1.8) ** 1.6
+    close = ease_out(seg(t, A("l6", "weeks"), A("l6", "weeks") + 0.5))
+    sew = seg(t, A("l6", "weeks") + 0.3, A("l6", end=True) + 0.4)
+    xray = ease_out(seg(t, A("l7") - 0.1, A("l7") + 0.3))
     grow = ease_out(seg(t, A("l7", "no"), A("l7", "huge", end=True) + 0.4))
-    sx0, sy0 = SMALL
-    sx, sy = lerp(sx0, 360, grow), lerp(sy0, 650, grow)
-    ss = 1.0 + 0.12 * grow + (0.03 * math.sin(t * 9) if A("l7", "no") <= t < A("l7", "huge", end=True) else 0)
-    keys = [(0, (1.15, 360, 680)), (A("l1", "half"), (1.25, 420, 520)), (A("l1", "liver"), (1.0, 360, 660)),
-            (A("l2"), (1.7, 470, 720)), (A("l3"), (1.3, 380, 560)), (A("l3", "big"), (1.6, 200, 720)),
-            (A("l4"), (1.7, 210, 720)), (A("l4", "alone"), (1.0, 360, 660)),
-            (take, (1.3, 400, 640)), (A("l5", "small"), (1.8, 470, 720)),
-            (A("l6"), (1.7, 360, 420)), (A("l6", "weeks"), (1.1, 380, 560)),
-            (A("l7"), (1.6, 460, 720)), (A("l7", "no"), (1.05, 360, 640))]
+    sx, sy = lerp(SMALL[0], 360, grow), lerp(SMALL[1], 630, grow)
+    ss = LS * (1.0 + 0.3 * grow) + (0.02 * math.sin(t * 9) if A("l7", "no") <= t < A("l7", "huge", end=True) else 0)
+    SMF, BGF, WIDE = (1.7, 477, 700), (1.7, 240, 690), (1.0, 360, 700)
+    keys = [(0, (1.2, 360, 650)), (A("l1", "liver"), WIDE),
+            (A("l2"), SMF), (A("l3"), (1.3, 380, 580)), (A("l3", "big"), BGF),
+            (A("l4"), BGF), (A("l4", "alone"), WIDE),
+            (take, (1.0, 360, 560)), (A("l5", "small"), SMF),
+            (A("l6"), (1.5, 360, 560)), (A("l6", "weeks"), WIDE),
+            (A("l7"), SMF), (A("l7", "no"), (1.15, 360, 660))]
     set_camera(camera(t, keys))
     enter_world(cr)
-    body_bg(cr)
-    # ---- the heart, up top
-    hm = "happy" if t >= A("l6") else ("worried" if A("l4") <= t < A("l6") else "calm")
-    heart(cr, t, 360, 300, 1.0, hm, talking=tl.speaking("heart", t))
-    # ---- the big lobe, until it leaves for the brother
-    if gone < 1:
-        bx, by = lerp(BIG[0], 300, gone), lerp(BIG[1], -600, gone)
-        bm = "calm" if t < A("l1", "liver") else "worried"
-        if A("l3", "big") <= t:
-            bm = "shock"
-        if A("l4", "alone") <= t:
-            bm = "cry"
-        lobe(cr, t, big_lobe_pts(bx, by, 1.0), bx - 60, by - 30, 1.0, bm, tl.speaking("big", t), look=0.6,
-             shake=1.5 if A("l3", "big") <= t else 0)
-    else:
-        blob(cr, BIG[0] - 30, BIG[1], 150, 80, hexc("#000000", 0.07), seed=600, amp=0.6, lw=0, stroke=None)
-    # ---- the small lobe
+    drapes(cr)
+    belly(cr)
+    # ---- moods
     sm = "calm"
     if A("l1", "liver") <= t < A("l3"):
         sm = "worried"
@@ -116,18 +134,94 @@ def scene_body(cr, t, tl):
         sm = "worried"
     if A("l7", "no") <= t:
         sm = "shock" if t < A("l7", "huge") else "happy"
-    lobe(cr, t, small_lobe_pts(sx, sy, ss, grow), sx + lerp(30, 0, grow) * ss, sy - 22 * ss,
-         0.85 + 0.25 * grow, sm, tl.speaking("small", t), look=-0.8 if t < take + 0.8 else 0,
-         shake=2.0 if sm == "cry" else 0)
-    # ---- the scalpel
-    arrive = ease_out(seg(t, 0.0, 0.5))
-    px, py, rot = lerp(760, 560, arrive), lerp(120, 360, arrive), -0.5
-    if A("l3", "big") <= t < take:
-        px, py, rot = BIG[0] + 30, BIG[1] - 250, 2.9
-    elif t >= take:
-        px, py, rot = lerp(BIG[0] + 30, 330, gone), lerp(BIG[1] - 250, -800, gone), 2.9
-    if t < take + 1.0:
-        scalpel(cr, t, px, py, 1.15, rot, talking=tl.speaking("scalpel", t), mood="happy")
+    bm = "calm" if t < A("l1", "liver") else "worried"
+    if A("l3", "big") <= t:
+        bm = "shock"
+    if A("l4", "alone") <= t:
+        bm = "cry"
+    hm = "happy" if t >= A("l6") else ("worried" if A("l4") <= t < A("l6") else "calm")
+
+    def small(c):
+        lobe(c, t, small_lobe_pts(sx, sy, ss, grow), sx + lerp(22, 0, grow) * ss / LS, sy - 16 * ss / LS,
+             0.65 + 0.3 * grow, sm, tl.speaking("small", t), look=-0.8 if t < take + 0.8 else 0,
+             shake=2.0 if sm == "cry" else 0)
+
+    def big(c, x, y):
+        lobe(c, t, big_lobe_pts(x, y, LS), x - 45, y - 22, 0.72, bm, tl.speaking("big", t), look=0.6,
+             shake=1.5 if A("l3", "big") <= t else 0)
+
+    def inside(c):
+        guts(c)
+        heart(c, t, 360, 505, 0.6, hm, talking=tl.speaking("heart", t))      # peeking down from the chest
+        if gone <= 0:
+            big(c, *BIG)
+        else:
+            blob(c, BIG[0], BIG[1], 120, 70, hexc("#4a1a20"), seed=640, amp=0.6, lw=0, stroke=None)
+        small(c)
+        if split > 0:                                                         # the cut between the lobes
+            n = int(20 * split)
+            pts = [(372 + 6 * math.sin(k), 565 + 8 * k) for k in range(max(2, n))]
+            line(c, pts, 7, BLOOD_D, seed=641, amp=0.4)
+            line(c, pts, 4, BLOOD, seed=642, amp=0.4)
+
+    # ---- the opening, then the stitched cut, then the x-ray view
+    if open_u <= 0:
+        tip = cut_line(cr, SLIT, cut)
+    elif close < 1:
+        tip = None
+        wound(cr, t, WX, WY, WRX, WRY, open_u * (1 - close), inside, seed=1)
+    else:
+        tip = None
+    if close >= 1:
+        if xray > 0:
+            cr.save()
+            cr.new_path()
+            pts = ellipse(WX, WY, WRX, WRY)
+            cr.move_to(*pts[0])
+            for p in pts[1:]:
+                cr.line_to(*p)
+            cr.close_path()
+            cr.clip()
+            cr.push_group()
+            cr.set_source_rgba(*hexc("#5a2430"))
+            cr.paint()
+            inside(cr)
+            cr.set_source_rgba(*hexc("#bfe3ff", 0.18))
+            cr.paint()
+            cr.pop_group_to_source()
+            cr.paint_with_alpha(0.85 * xray)
+            cr.restore()
+            shape(cr, ellipse(WX, WY, WRX, WRY), None, seed=650, amp=0.4, lw=4, stroke=hexc("#2b3a66", xray))
+            write(cr, [("X-RAY VIEW", hexc("#2b3a66", xray))], WX, WY - WRY - 18, 34, align="center", bold=True)
+        stitches(cr, SLIT, sew if xray <= 0 else 1.0)
+    # ---- clamps hold it open
+    if open_u >= 1 and close < 0.3:
+        hold = ease_out(seg(t, A("l1", "liver") + 0.45, A("l1", "liver") + 0.85)) * (1 - close / 0.3)
+        cm = "happy" if t < A("l4") else "worried"
+        clamp(cr, t, lerp(WX - WRX - 300, WX - WRX + 10, hold), WY, -1, 0.9, cm, look=0.5)
+        clamp(cr, t, lerp(WX + WRX + 300, WX + WRX - 10, hold), WY, 1, 0.9, cm, look=0.5)
+    # ---- the big lobe is lifted out with forceps, dripping
+    if 0 < gone < 1:
+        bx, by = BIG[0] + 40 * gone, BIG[1] - 1100 * gone
+        forceps(cr, bx - 10, by - 70, 1.0, grip=1.0)
+        big(cr, bx, by)
+        for k in range(3):
+            u = (t * 1.8 + k / 3) % 1
+            blob(cr, bx - 60 + 50 * k, by + 70 + 220 * u, 6, 9, BLOOD, seed=660 + k, amp=0.2, lw=2, stroke=BLOOD_D)
+    # ---- the scalpel: cuts in, greets, then cuts between the lobes
+    sc = 1.15
+    if t < A("l1", "liver") - 0.15:
+        px, py = tip if tip is not None else SLIT[0]
+        rot = math.pi - 0.25
+        sx_, sy_ = scalpel_tip(px, py, rot, sc)
+    elif A("l3", "big") <= t < take + 0.4:
+        rot = math.pi - 0.1
+        u = min(1.0, split)
+        sx_, sy_ = scalpel_tip(372, 565 + 160 * u, rot, sc)
+    else:
+        rot, sx_, sy_ = 2.7, 560, 300
+    if t < take + 0.4 or t >= A("l6") + 99:
+        scalpel(cr, t, sx_, sy_, sc, rot, talking=tl.speaking("scalpel", t), mood="happy")
     # ---- weeks ticking by while it regrows
     if A("l7", "no") <= t:
         wk = 1 + int(7 * seg(t, A("l7", "no"), A("l7", "huge", end=True)))
@@ -141,10 +235,10 @@ def scene_body(cr, t, tl):
     hl(cr, t, [("off to his ", INK), ("BROTHER", BLUE)], 215, 62, take, end=A("l6") - 0.05, bold=True)
     hl(cr, t, [("\"I'm getting ", INK), ("HUGE", RED), ("!\"", INK)], 215, 64, A("l7", "huge"), bold=True)
     stamp(cr, t, A("l1", "liver"), "HI AGAIN!", dur=0.6, y=330)
-    for w in (A("l3", "big"), take, A("l7", "huge")):
+    for w in (A("l1", "liver") - 0.15, A("l3", "big"), take, A("l7", "huge")):
         cue("hit", t, w)
     cue("whoosh", t, take)
-    cue("whoosh", t, 0.05)
+    cue("scribble", t, 0.05, 0.8)
 
 
 # ------------------------------------------------------------------ the ward

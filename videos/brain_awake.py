@@ -12,10 +12,12 @@ import math
 
 from motion.captions import captions
 from motion.characters import person
-from motion.engine import INK, RED, WHITE, at, blob, cue, ease_out, hexc, lerp, seg, write
+from motion.engine import INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, seg, shape, write
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
-from motion.organs import brain, card, head_bandage, skull
-from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, room, scalpel
+from motion.organs import brain, card, head_bandage
+from motion.surgery import DRAPE, DRAPE_D, SKIN, SKIN_D, clamp, cut_line, drapes, ellipse, scalpel_tip, slit, syringe, \
+    wound
+from videos.kidney_donor import BLUE, GREEN, bed_back, bed_front, eyes, mouth, room, scalpel
 
 NARRATOR = dict(cast={
     # Voices styled on the owner's reference Short (cracked-kneecap cartoon): the organ things happen to is a young
@@ -69,26 +71,38 @@ Why? The brain itself has no pain sensors. In awake brain surgery the scalp is n
                    "about? 👇",
 )
 
-BX, BY = 360, 700           # the brain, centred in the skull
+HX, HY = 360, 700                       # the patient's head on the table
+WX, WY, WRX, WRY = 360, 520, 160, 105   # the window cut in the top of his head
+BX, BY = WX, WY + 6                     # the brain, seen through it
+SLIT = slit(WX, WY, WRX, -26)
 
 
-def head_bg(cr, t, lid):
-    import cairo
-    g = cairo.RadialGradient(360, 700, 80, 360, 700, 900)
-    g.add_color_stop_rgba(0, *hexc("#5a3a52"))
-    g.add_color_stop_rgba(1, *hexc("#2a1c2e"))
-    cr.rectangle(-900, -900, 2600, 3200)
-    cr.set_source(g)
-    cr.fill()
-    if lid > 0:   # operating-light beam through the open top
-        cr.move_to(250, -400)
-        cr.line_to(470, -400)
-        cr.line_to(560, 700)
-        cr.line_to(160, 700)
-        cr.close_path()
-        cr.set_source_rgba(1, 0.96, 0.75, 0.22 * lid)
-        cr.fill()
-    blob(cr, 360, 700, 268, 220, hexc("#7a4a5e"), seed=400, amp=0.6, lw=0, stroke=None)   # inside of the skull
+def patient_head(cr, t, mood, hum=False):
+    """Mike on the table, awake: the top of his head shaved for surgery, his face at the bottom."""
+    hair = hexc("#2b1c14")
+    for sx in (-1, 1):
+        blob(cr, HX + sx * 262, HY + 110, 34, 56, SKIN_D, seed=420 + sx, amp=0.6, lw=3.5)        # ears
+    shape(cr, ellipse(HX, HY, 268, 312), SKIN, seed=422, amp=0.8, lw=4.5)
+    for sx in (-1, 1):                                                                       # hair at the sides
+        shape(cr, [(HX + sx * 264, HY + 50), (HX + sx * 252, HY - 90), (HX + sx * 196, HY - 70),
+                   (HX + sx * 222, HY + 70)], hair, seed=424 + sx, amp=0.6, lw=3)
+    blob(cr, WX, WY + 8, 212, 150, hexc("#efd9bd"), seed=426, amp=0.6, lw=0, stroke=None)      # shaved patch
+    for k in range(46):
+        a, r = k * 2.39996, 0.25 + 0.75 * ((k * 0.618) % 1)
+        dot(cr, WX + 196 * r * math.cos(a), WY + 8 + 136 * r * math.sin(a), 1.6, hexc("#8a7a6a", 0.6))
+    blob(cr, HX - 150, HY + 205, 34, 18, hexc("#f2a0a0", 0.45), seed=427, amp=0.3, lw=0, stroke=None)   # cheeks
+    blob(cr, HX + 150, HY + 205, 34, 18, hexc("#f2a0a0", 0.45), seed=428, amp=0.3, lw=0, stroke=None)
+    eyes(cr, HX, HY + 120, 2.1, mood, 0.0, blink=(int(t * 10) % 37 == 0))
+    line(cr, [(HX - 6, HY + 170), (HX + 12, HY + 205), (HX - 8, HY + 212)], 4, SKIN_D, seed=429, amp=0.3)   # nose
+    mouth(cr, HX, HY + 250, 1.6, mood, False, t)
+    # drape over his chin and shoulders
+    shape(cr, [(-200, HY + 262), (180, HY + 282), (360, HY + 300), (540, HY + 282), (920, HY + 262), (920, 1700),
+               (-200, 1700)], DRAPE, seed=430, amp=1.0, lw=4)
+    for k in range(5):
+        line(cr, [(60 + k * 150, HY + 300), (90 + k * 150, HY + 420)], 4, DRAPE_D, seed=431 + k, amp=0.8)
+    if hum:   # he's fine: humming while the brain panics
+        u = (t * 0.8) % 1
+        write(cr, [("la la la", hexc("#2b3a66", 1 - u))], HX + 210, HY + 210 - 60 * u, 40, bold=True)
 
 
 def ouch(cr, t, start, label, x0, y0, k):
@@ -113,20 +127,31 @@ def ouch(cr, t, start, label, x0, y0, k):
 
 def scene_head(cr, t, tl):
     A = tl.at
-    lid = ease_out(seg(t, 0.0, 0.7))
+    inject = seg(t, 0.0, 0.45)                                   # numbing shot in the scalp
+    cut = seg(t, 0.35, A("b1", "roof") - 0.25)                   # the scalpel draws the cut
+    open_u = ease_out(seg(t, A("b1", "roof") - 0.25, A("b1", "roof") + 0.35))
+    flap = ease_out(seg(t, A("b1", "roof") - 0.1, A("b1", "roof") + 0.6))   # the piece of skull lifted out
     poke = A("b5", "hurt")
     touch = math.sin(math.pi * seg(t, poke, poke + 0.7)) if t >= poke else 0.0
-    keys = [(0, (1.15, 360, 700)), (A("b1", "roof"), (1.6, BX, BY + 90)),
-            (A("b2"), (1.3, 460, 420)), (A("b2", "surgery"), (1.0, 360, 600)),
-            (A("b3"), (1.6, BX, BY + 90)), (A("b3", "awake"), (1.25, BX, 620)),
-            (A("b4"), (1.4, 470, 440)), (A("b4", "still"), (1.15, 380, 560)),
-            (A("b5"), (1.6, BX, BY + 90)), (poke, (1.3, BX, 600)),
-            (A("b6"), (1.8, BX, BY + 80)),
-            (A("b7"), (1.2, 400, 560)), (A("b7", "sensors"), (1.1, 360, 620)),
-            (A("b8"), (1.0, 360, 700)), (A("b8", "own"), (1.6, BX, BY + 90))]
+    BRAIN, WIDE, MIKE = (1.8, BX, 600), (1.0, 360, 700), (1.6, HX, 860)
+    keys = [(0, (1.3, 360, 620)), (A("b1", "roof"), BRAIN),
+            (A("b2"), (1.3, 430, 520)), (A("b2", "surgery"), WIDE),
+            (A("b3"), BRAIN), (A("b3", "awake"), MIKE),
+            (A("b4"), (1.3, 430, 520)), (A("b4", "still"), (1.15, 380, 600)),
+            (A("b5"), BRAIN), (poke, WIDE),
+            (A("b6"), BRAIN),
+            (A("b7"), (1.25, 400, 560)), (A("b7", "sensors"), (1.1, 360, 640)),
+            (A("b8"), WIDE), (A("b8", "own"), BRAIN)]
     set_camera(camera(t, keys))
     enter_world(cr)
-    head_bg(cr, t, lid)
+    drapes(cr)
+    # ---- Mike, awake the whole time
+    mm = "shock" if t < A("b1", "roof") + 0.4 else "calm"
+    if A("b3", "awake") <= t < A("b4"):
+        mm = "happy"
+    if poke <= t < A("b7"):
+        mm = "happy"
+    patient_head(cr, t, mm, hum=poke <= t < A("b7"))
     # ---- the brain's mood follows the scene
     mood, shake = "shock", 0.0
     if A("b2") <= t < A("b3"):
@@ -141,21 +166,50 @@ def scene_head(cr, t, tl):
         mood = "shock"
     if A("b8") <= t:
         mood = "sad" if t < A("b8", "own") else "worried"
-    brain(cr, t, BX, BY, 1.25, mood, tl.speaking("brain", t), look=-0.6 if A("b2") <= t < A("b5") else 0,
-          shake=shake, squish=touch)
-    skull(cr, 360, 700, lid)
-    # ---- the scalpel comes down through the open top
-    arrive = ease_out(seg(t, A("b2") - 0.3, A("b2") + 0.4))
-    if t >= A("b2") - 0.3:
-        sx, sy, rot = lerp(560, 520, arrive), lerp(-300, 380, arrive), 2.7
+
+    def inside(c):
+        brain(c, t, BX, BY, 0.85, mood, tl.speaking("brain", t), look=-0.6 if A("b2") <= t < A("b5") else 0,
+              shake=shake, squish=touch)
+    tip = None
+    if open_u <= 0:
+        tip = cut_line(cr, SLIT, cut)
+    else:
+        wound(cr, t, WX, WY, WRX, WRY, open_u, inside, bone=True)
+    if 0 < flap < 1:   # the bone flap lifts out and away
+        with at(cr, lerp(WX, WX + 330, flap), lerp(WY, WY - 520, flap), 1.0, rot=1.2 * flap):
+            shape(cr, ellipse(0, 0, WRX - 20, (WRY - 20) * min(1.0, 0.3 + open_u)), hexc("#f2e6cf"), seed=440,
+                  amp=0.4, lw=3.5)
+            blob(cr, 0, 0, WRX - 40, (WRY - 40) * 0.6, hexc("#e8d6b5"), seed=441, amp=0.4, lw=0, stroke=None)
+    # ---- clamps hold the cut open once it's open
+    if open_u >= 1:
+        hold = ease_out(seg(t, A("b1", "roof") + 0.35, A("b1", "roof") + 0.75))
+        cm = "happy" if t < A("b5") or t >= A("b7") else "worried"
+        clamp(cr, t, lerp(WX - WRX - 260, WX - WRX + 8, hold), WY - 6, -1, 0.75, cm, look=0.5)
+        clamp(cr, t, lerp(WX + WRX + 260, WX + WRX - 8, hold), WY - 6, 1, 0.75, cm, look=0.5)
+    # ---- the numbing shot
+    if t < 0.8:
+        lift = ease_out(seg(t, 0.5, 0.8))
+        syringe(cr, t, WX + 110, WY - 20 - 500 * lift, 0.9, 0.5, inject)
+    # ---- the scalpel: cuts, then hovers, then boops the brain
+    sc = 1.15
+    if t < A("b1", "roof") - 0.25:
+        px, py = tip if tip is not None else SLIT[0]
+        rot = math.pi - 0.25
+        sx, sy = scalpel_tip(px, py, rot, sc)
+    else:
+        rot = 2.7
+        sx, sy = 540, 330
         if A("b4", "still") <= t < poke:
             u = ease_out(seg(t, A("b4", "still"), poke))
-            sx, sy, rot = lerp(520, 420, u), lerp(380, 400, u), 2.95
-        elif t >= poke:          # boop: the tip touches the top of the brain, then backs off
-            sx, sy, rot = 420, 400 + 50 * touch, 2.95
+            rot = lerp(2.7, math.pi - 0.15, u)
+            sx, sy = scalpel_tip(lerp(470, BX + 30, u), lerp(250, BY - 70, u), rot, sc)
+        elif t >= poke:
+            rot = math.pi - 0.15
+            sx, sy = scalpel_tip(BX + 30, BY - 70 + 40 * touch, rot, sc)
             if t >= A("b7"):
-                sx, sy, rot = 540, 400, 2.7
-        scalpel(cr, t, sx, sy, 1.2, rot, talking=tl.speaking("scalpel", t),
+                rot, sx, sy = 2.7, 540, 330
+    if t >= 0.4:
+        scalpel(cr, t, sx, sy, sc, rot, talking=tl.speaking("scalpel", t),
                 mood="happy" if t < A("b5") or t >= A("b7") else "calm")
     # ---- pain messages from the rest of the body pour into the brain
     if A("b8") <= t:
@@ -179,9 +233,10 @@ def scene_head(cr, t, tl):
         cue("pop", t, A("b7", "sensors"))
     hl(cr, t, [("feels ALL your pain... ", INK), ("but not its own", RED)], 215, 44, A("b8", "own"), bold=True)
     stamp(cr, t, poke + 0.25, "BOOP", dur=0.5, y=330)
-    for w in (A("b3", "awake"), poke, A("b6", "anything")):
+    for w in (A("b3", "awake"), poke, A("b6", "anything"), A("b1", "roof") - 0.25):
         cue("hit", t, w)
-    cue("whoosh", t, A("b2") - 0.3)
+    cue("whoosh", t, A("b1", "roof") - 0.1)
+    cue("scribble", t, 0.35, 0.6)
 
 
 # ------------------------------------------------------------------ the ward, after the surgery
