@@ -33,7 +33,7 @@ SCRIPT = [
     dict(id="b3", scene="head", text="Brain surgery? Then put him to sleep! He's still awake!", speaker="brain"),
     dict(id="b4", scene="head", text="He has to be wide awake. Now, hold still.", speaker="scalpel"),
     dict(id="b5", scene="head", text="No, no, wait! This is going to hurt so much!", speaker="brain"),
-    dict(id="b6", scene="head", text="Huh. I don't feel anything.", speaker="brain", gap=0.4),
+    dict(id="b6", scene="head", text="Hold on, I don't feel anything.", speaker="brain", gap=0.4),
     dict(id="b7", scene="head", text="Of course not. You don't have any pain sensors.", speaker="scalpel"),
     dict(id="b8", scene="head", text="I feel all of his pain. And I can't feel my own?", speaker="brain"),
     dict(id="h1", scene="ward", text="Doc, you cut into my brain, and I was wide awake. Why didn't it hurt?",
