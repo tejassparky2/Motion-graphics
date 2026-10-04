@@ -32,6 +32,12 @@ Research, sources and the psychology behind the scripts: `research_notes/body_fa
   The heart, scalpel, faces and hospital set are imported from `videos/kidney_donor.py`, so every episode looks
   like the same world.
 
+## Surgery scenes (owner's rule)
+The owner wants operations shown fully, like the reference Short (a knee cut open on blue drapes): the body part on
+the table, the numbing shot, the cut, the open wound with red tissue and blood, the organ inside with a face, and
+clamp characters holding it open. No hiding. Kit: `motion/surgery.py` (drapes, syringe, cut_line, wound, clamp,
+forceps, stitches). Keep it in the channel's cartoon style.
+
 ## Voices (owner-approved)
 - **Doctor: the owner's own cloned voice** (Chatterbox, prompt `assets/voice/owner_prompt_fast.wav`, settings in
   `motion/voice.py`: CLONE_RATE, CLONE_TONE, `clone_check`). Only ever clone the owner's own voice.
