@@ -41,4 +41,4 @@ plague, russia, irkutsk, black death, suspected plague, plague in america, cdc, 
 Did you know there are plague cases in the US every year? Yes or no? 👇
 ```
 
-**Video facts:** 48.7 s, 143 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 62.7 s, 173 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
