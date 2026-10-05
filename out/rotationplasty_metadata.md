@@ -19,7 +19,7 @@ It's real. In a rotationplasty, surgeons remove the part of the leg with the bon
 
 💬 Did you know this surgery existed? 👇
 
-🔔 Organ ER: your organs argue, then the doctor explains what's really going on.
+🔔 Doc and the Organs: your organs argue, then the doctor explains what's really going on.
 
 #Rotationplasty #WeirdSurgery #Doctor
 ```
@@ -34,4 +34,4 @@ rotationplasty, foot turned backwards, ankle as knee, weird surgery, rare surger
 His ANKLE is his knee now. 😳 Did you know this surgery existed? 👇
 ```
 
-**Video facts:** 43.4 s, 137 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 44.0 s, 137 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.

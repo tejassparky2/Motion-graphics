@@ -34,4 +34,4 @@ tooth in eye surgery, osteo-odonto-keratoprosthesis, OOKP, tooth in eye, weird s
 A tooth inside an eye… and it WORKS. 😳 Would you do it to see again? 👇
 ```
 
-**Video facts:** 51.4 s, 168 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 50.7 s, 168 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.

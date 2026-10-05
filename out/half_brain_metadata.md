@@ -34,4 +34,4 @@ hemispherectomy, half a brain, brain surgery, epilepsy surgery, seizures, neurop
 Danny says he has less than half a brain. 😂 Did you know the brain could do this? 👇
 ```
 
-**Video facts:** 47.2 s, 154 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 48.0 s, 154 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.

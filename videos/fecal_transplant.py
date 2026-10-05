@@ -18,9 +18,9 @@ from motion.engine import at, blob, cue, dot, ease_out, hexc, lerp, line, rrect_
 from motion.kit import camera, enter_world, set_camera, whip
 from videos.kidney_donor import eyes, mouth
 
-# Voices: natural stock voices at their own pitch; the doctor is the owner's own cloned voice.
+# Voices: natural stock voices at their own pitch. The doctor is Kokoro am_adam (owner: no cloned voice).
 STYLE = "clean"
-NARRATOR = dict(clone_rate=4.9, cast={
+NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
     "colon": dict(voice="af_heart", speed=0.95),
     "germ": dict(voice="am_onyx", speed=0.95),
     "good": dict(voice="af_nova", speed=0.95),

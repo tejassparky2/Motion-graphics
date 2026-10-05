@@ -34,4 +34,4 @@ forehead flap, paramedian forehead flap, nose reconstruction, skin cancer surger
 Three weeks with your forehead stuck to your nose. 😳 Could you do it? 👇
 ```
 
-**Video facts:** 50.0 s, 163 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 50.5 s, 163 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.

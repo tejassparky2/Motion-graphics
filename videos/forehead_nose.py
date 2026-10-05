@@ -20,9 +20,9 @@ from motion.surgery import DRAPE, DRAPE_D, SKIN, SKIN_D, cut_line, drapes, scalp
     wound
 from videos.kidney_donor import eyes, mouth, scalpel
 
-# Voices: natural stock voices at their own pitch; the doctor is the owner's own cloned voice.
+# Voices: natural stock voices at their own pitch. The doctor is Kokoro am_adam (owner: no cloned voice).
 STYLE = "clean"
-NARRATOR = dict(clone_rate=4.9, cast={
+NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
     "nose": dict(voice="am_michael", speed=0.95),
     "forehead": dict(voice="af_heart", speed=0.95),
     "scalpel": dict(voice="af_bella", speed=0.95),
