@@ -218,8 +218,8 @@ def nonveg_mark(cr, x, y, s):
 
 def scene_hen(cr, t, tl):
     A = tl.at
-    OVC, EGC, WIDE = (1.5, OV[0] + 40, OV[1] + 40), (1.5, EGG_POS[0] - 40, EGG_POS[1] - 40), (1.0, 360, 620)
-    keys = [(0, (1.25, 430, 700)), (A("o2"), OVC), (A("o2", "release"), WIDE), (A("o3"), EGC), (A("o4"), WIDE),
+    OVC, EGC, WIDE = (1.4, OV[0] + 90, OV[1] + 60), (1.3, EGG_POS[0] - 80, EGG_POS[1] - 80), (1.05, 360, 640)
+    keys = [(0, WIDE), (A("o1", "multivitamin"), EGC), (A("o2"), OVC), (A("o2", "release"), WIDE), (A("o3"), EGC), (A("o4"), WIDE),
             (A("o5"), EGC), (A("o6"), WIDE), (A("o7"), (1.1, 360, 560)), (A("o8"), EGC), (A("o9"), WIDE)]
     set_camera(camera(t, keys))
     enter_world(cr)
@@ -251,10 +251,10 @@ def scene_hen(cr, t, tl):
     egg(cr, t, EGG_POS[0], EGG_POS[1], 1.1, em, tl.speaking("egg", t))
     # what an egg is (o4)
     if A("o4", "yolk") <= t < A("o5"):
-        cutaway(cr, 170, 760, 1.0)
-        label(cr, "Yolk = the egg cell", 170, 610, 170, 740, size=26)
-        label(cr, "White", 60, 880, 120, 820, size=24)
-        label(cr, "Shell", 280, 900, 225, 840, size=24)
+        cutaway(cr, 190, 780, 1.35)
+        label(cr, "Yolk = the egg cell", 200, 600, 190, 760, size=28)
+        label(cr, "White", 70, 930, 140, 860, size=26)
+        label(cr, "Shell", 320, 950, 260, 880, size=26)
         cue("pop", t, A("o4", "yolk"))
     if A("o3", "period") <= t < A("o4", "yolk"):
         label(cr, "Hens don't have periods. They ovulate.", 360, 300, size=28)
@@ -267,8 +267,8 @@ def scene_hen(cr, t, tl):
             label(cr, "Farm hen: about 300 a year", 360, 360, size=28)
             cue("pop", t, A("o7", "three"))
     if A("o9", "non-veg") - 0.2 <= t:
-        nonveg_mark(cr, 560, 470, 1.0)
-        label(cr, "India: eggs get the non-veg mark", 400, 340, size=28)
+        nonveg_mark(cr, 560, 500, 1.6)
+        label(cr, "India: eggs get the non-veg mark", 380, 340, size=30)
         cue("pop", t, A("o9", "non-veg") - 0.2)
     label(cr, "Hen's ovary", OV[0], OV[1] - 170, OV[0], OV[1] - 120, size=26) if t < A("o3") else None
     for w in (A("o1", "vegetarian"), A("o1", "multivitamin"), A("o3", "period")):

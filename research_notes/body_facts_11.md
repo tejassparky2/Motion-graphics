@@ -35,3 +35,22 @@ NIH Office of Dietary Supplements, multivitamin/mineral fact sheet (https://ods.
 get nutrients mainly from food; supplements help some groups (pregnancy: folic acid; vegans: B12; people with a
 diagnosed deficiency, low intake or poor appetite). Script: "most healthy people with a varied diet don't need a
 multivitamin at all"; the exceptions are in the description.
+
+## Update: the reel's real claims (veg / non-veg)
+The owner sent the actual reel (93 s, Hindi); its main claim is "eggs are vegetarian". The script was reworked
+and approved by the owner before rendering.
+- Hens ovulate about every 24-26 hours; the yolk is the ovum, wrapped in white and shell in the oviduct; a hen
+  lays with or without a rooster, and a rooster only fertilises the egg (Hendrix Genetics, "An egg a day,
+  oviposition explained": https://layinghens.hendrix-genetics.com/en/articles/egg-day-oviposition-explained/).
+  Hens don't menstruate: the reel's "menstrual cycle" is wrong.
+- Layer farms keep no roosters, so their eggs are unfertilised and can't hatch (ScienceABC, "Are all chicken eggs
+  fertilized?": https://www.scienceabc.com/eyeopeners/are-all-chicken-eggs-fertilized).
+- Laying numbers: modern layers ~285-300 eggs a year (2022 average estimate 285). Wild red junglefowl lay one or two
+  clutches of 4-6 eggs; the often-quoted "10-15 a year" comes from advocacy sites, so the script says "a handful".
+- India: FSSAI labelling rules define non-vegetarian food as containing any part of an animal "including ... eggs",
+  marked with the brown symbol (FSSAI labelling guidance note 2022:
+  https://fssai.gov.in/upload/uploadfiles/files/Guidance_Note_Labelling_23_02_2022.pdf).
+- Vitamin K2 in eggs: MK-4 is 91-98% of egg vitamin K; MK-7 not detected (IntechOpen, "Vitamin K2 Rich Food
+  Products": https://www.intechopen.com/chapters/51024). The reel's "K2-7" is wrong (description only).
+- Potassium: ~69 mg per egg (~1.5% DV), not a highlight. Calories 72, protein ~6 g, carbs ~0, cholesterol 186 mg:
+  correct. "80% of pharma companies will shut down": left out.
