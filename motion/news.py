@@ -19,8 +19,8 @@ TEAL = hexc("#2e9e8f")
 # ---------------------------------------------------------------- the talking globe
 # The channel's recurring character: a desk globe with a face. For each story it is painted in that country's flag
 # colours (sea, land, stand ring), so viewers see whose story it is without us drawing anyone's flag as a character.
-# For a company story it wears that company's brand colours plus a badge with our own simple drawing of the
-# company's mark (owner's request, 5 Oct 2026), never a copied logo file.
+# For a company story the globe takes the shape and colour of the company's mark (our own drawing, never a
+# copied logo file) with the name on the base (owner's request, 5 Oct 2026).
 PALETTES = {
     "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
     # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
@@ -28,6 +28,11 @@ PALETTES = {
     "apple": dict(sea=hexc("#2b2d33"), land=hexc("#3b3e46"), ring=hexc("#c9ccd2"), lines=hexc("#44474f"),
                   body="apple", name="APPLE"),
     "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
+    "ru": dict(sea=hexc("#fbf8ef"), land=hexc("#1f4fb0"), ring=hexc("#d52b1e"), lines=hexc("#c9d6ee")),
+    "us": dict(sea=hexc("#3c3b6e"), land=hexc("#b22234"), ring=hexc("#fbf8ef"), lines=hexc("#6e6da0")),
+    # Tesla: the globe shaped like Tesla's T (our drawing), in Tesla red, name on the base.
+    "tesla": dict(sea=hexc("#e31937"), land=hexc("#b8102a"), ring=hexc("#c9ccd2"), lines=hexc("#f05a6e"),
+                  body="tesla", name="TESLA"),
 }
 _LAND = [(-0.45, -0.28, 0.48, 0.34, 1), (0.02, 0.4, 0.3, 0.4, 2), (0.55, -0.22, 0.4, 0.46, 3),
          (-0.9, 0.48, 0.22, 0.2, 4), (0.95, 0.5, 0.2, 0.14, 5)]
@@ -62,6 +67,24 @@ def _apple_mark(cr, x, y, s, seed, col=None):
 EMBLEMS = {"apple": _apple_mark}
 
 
+def _body_apple():
+    k = 4.7
+    return ([(bx * k, (by - 4) * k) for bx, by in APPLE_BODY], [[(lx * k, (ly - 4) * k) for lx, ly in APPLE_LEAF]])
+
+
+def _body_tesla():
+    """Our own drawing of a T with an arched top bar and a thin arc above it (says "Tesla", not the official logo)."""
+    top = [(150 * math.cos(a), -96 - 26 * math.sin(a)) for a in [k * math.pi / 12 for k in range(13)]]
+    outline = top + [(-150, -72), (-138, -52), (-60, -44), (-56, 70), (-40, 132), (0, 148), (40, 132), (56, 70),
+                     (60, -44), (138, -52), (150, -72)]
+    outer = [(158 * math.cos(a), -134 - 30 * math.sin(a)) for a in [k * math.pi / 12 for k in range(13)]]
+    inner = [(140 * math.cos(a), -128 - 22 * math.sin(a)) for a in [k * math.pi / 12 for k in range(12, -1, -1)]]
+    return outline, [outer + inner]
+
+
+BODIES = {"apple": _body_apple, "tesla": _body_tesla}
+
+
 def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, bounce=0.0, spin=0.12, seed=7000):
     """A talking desk globe standing on the floor at (x, ground_y), coloured for `code` (see PALETTES)."""
     p = PALETTES[code]
@@ -76,15 +99,11 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
             shape(cr, rrect_pts(-92, -54, 184, 46, 12, 14), p["ring"], seed=seed + 60, amp=0.4, lw=4)
             write(cr, [(p["name"], INK)], 0, -20, 34, align="center", bold=True)
         # sphere, tilted a little like a real desk globe
-        if p.get("body") == "apple":   # the globe shaped like the company's mark
-            k = 4.7
-            outline = [(bx * k, (by - 4) * k) for bx, by in APPLE_BODY]
-            leaf = [(lx * k, (ly - 4) * k) for lx, ly in APPLE_LEAF]
-        else:
-            outline = None
+        outline, extras = BODIES[p["body"]]() if p.get("body") else (None, [])   # shaped like the company's mark
         with at(cr, 0, cy, 1.0, rot=0.0 if outline else -0.18):
             if outline:
-                shape(cr, leaf, p["sea"], seed=seed + 3, amp=0.4, lw=5)
+                for k, part in enumerate(extras):
+                    shape(cr, part, p["sea"], seed=seed + 3 + k, amp=0.4, lw=5)
                 shape(cr, outline, p["sea"], seed=seed + 2, amp=0.5, lw=5)
             else:
                 blob(cr, 0, 0, r, r, p["sea"], seed + 2, amp=0.6, lw=5)
@@ -114,8 +133,12 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
                 shape(cr, outline, None, seed=seed + 2, amp=0.5, lw=5)
             else:
                 blob(cr, 0, 0, r, r, None, seed + 2, amp=0.6, lw=5)
-        # meridian ring in the flag's second colour
+        # meridian ring in the flag's second colour (not on the T, where it would cut across the bar)
         cr.save()
+        if p.get("body") == "tesla":
+            cr.new_path()
+            cr.rectangle(-9999, -9999, 1, 1)
+            cr.clip()
         cr.new_path()
         cr.arc(0, cy, r + 18, math.pi * 0.62, math.pi * 1.38)
         cr.set_line_width(15)
@@ -130,7 +153,8 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
             with at(cr, -look * 56, cy - 76, 1.0):
                 blob(cr, 0, 0, 46, 46, WHITE, seed + 50, amp=0.4, lw=4)
                 EMBLEMS[p["emblem"]](cr, 0, 4, 1.15, seed + 51)
-        with at(cr, look * (46 if p.get("emblem_col") else 10), cy + 6, 1.7):   # the face
+        fx, fy = (0, 14) if p.get("body") == "tesla" else (look * (46 if p.get("emblem_col") else 10), 6)
+        with at(cr, fx, cy + fy, 1.55 if p.get("body") == "tesla" else 1.7):   # the face
             for sx in (-1, 1):
                 if eyes in ("dot", "wide", "sly"):
                     blob(cr, sx * 15, -8, 11, 12, WHITE, seed + 20 + sx, amp=0.4, lw=2.5)
@@ -160,9 +184,9 @@ def panel(cr, t, start, end, x, y, w, h, draw_fn, seed=7100, fill=PAPER):
     cr.restore()
 
 
-def date_stamp(cr, t, start, text, x=150, y=150):
+def date_stamp(cr, t, start, text, x=150, y=150, end=None):
     """A red rubber stamp with the date the facts are true for."""
-    if t < start:
+    if t < start or (end is not None and t >= end):
         return
     _screen(cr)
     with at(cr, x, y, max(0.7, pop(t, start, 0.25)), rot=-0.08):
