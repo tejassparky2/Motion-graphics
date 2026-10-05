@@ -27,10 +27,11 @@ import numpy as np
 
 from .engine import ROOT
 
-# Default narrator: the channel owner's own cloned voice (Chatterbox, prompt in assets/voice/owner_prompt.wav).
+# Default narrator: Kokoro (owner, 5 Oct 2026: "kokoro voice is confirmed, don't use my voice"). The owner's
+# cloned voice (Chatterbox, NARRATOR_ENGINE=clone) is not used unless the owner asks for it again.
 CLONE_PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt.wav")
 CLONE_PYTHON = os.environ.get("CLONE_PYTHON", "/home/user/.venv-clone/bin/python")
-ENGINE = os.environ.get("NARRATOR_ENGINE", "clone" if os.path.exists(CLONE_PROMPT) else "kokoro")
+ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
 if ENGINE == "clone":
     # Owner approved the sample and asked for "slightly faster". The clone reads short sentences slowly, so takes
     # play at x1.15 (riddle lines, pace 0.9, at x1.035). Last Bencher Part 2 lands at ~180 wpm with pauses, vs 176
@@ -57,7 +58,7 @@ MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference nar
 
 # Character voices for multi-voice videos: speaker -> dict(voice=<kokoro voice>, speed=1.0, pitch=<semitones>,
 # formant="shifted" (cartoon, the default) or "preserved" (a higher but natural-sounding voice)).
-# Anyone not listed (and the narrator) uses the main narrator voice: the owner's clone by default.
+# Anyone not listed (and the narrator) uses the main narrator voice (Kokoro am_fenrir unless the video sets one).
 CAST_VOICES = {}
 
 

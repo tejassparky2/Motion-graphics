@@ -4,6 +4,12 @@
 `DOCTOR_CHANNEL.md` first: format, the finished kidney video, approved voices, setup and commands. Commit and push
 doctor work to `ccr-56282fe5-evehq4-doctor` only. The rules below apply to both channels.
 
+## Voice (owner, 5 Oct 2026): Kokoro only, never the owner's cloned voice
+- "Kokoro voice is confirmed, don't use my voice." All narration and the doctor use Kokoro stock voices
+  (`motion/voice.py` default ENGINE "kokoro"). The cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks.
+- Doctor channel: the doctor is `am_adam` (set `voice="am_adam"` in the video's NARRATOR), so he doesn't sound
+  like Mike (`am_fenrir`). Organ and character voices stay as approved.
+
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
   pipeline voices each sentence as its own take with a real full-stop pause between them

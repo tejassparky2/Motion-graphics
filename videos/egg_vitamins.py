@@ -30,9 +30,9 @@ from motion.organs import brain
 from videos.kidney_donor import eyes, grad_fill, mouth
 from videos.tooth_eye import tooth
 
-# Voices: natural stock voices at their own pitch; the doctor is the owner's own cloned voice.
+# Voices: natural stock voices at their own pitch. The doctor is Kokoro am_adam (owner: no cloned voice).
 STYLE = "clean"
-NARRATOR = dict(clone_rate=4.9, cast={
+NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
     "egg": dict(voice="am_michael", speed=0.95),
     "ovary": dict(voice="af_bella", speed=0.95),
     "brain": dict(voice="af_heart", speed=0.95),
@@ -75,7 +75,7 @@ SCRIPT = [
     dict(id="p4", scene="ward", text="But they have no vitamin C, no fiber, and very little calcium.",
          speaker="doctor"),
     dict(id="p5", scene="ward", text="Heart experts say about one egg a day fits a healthy diet.", speaker="doctor"),
-    dict(id="p5b", scene="ward", text="Eating more? Ask your doctor, especially if your cholesterol is high.",
+    dict(id="p5b", scene="ward", text="Want to eat more? Ask your doctor, especially if your cholesterol is high.",
          speaker="doctor"),
     dict(id="p7", scene="ward", text="So, are eggs veg or non-veg for you?", speaker="doctor"),
     dict(id="p8", scene="ward", text="Non-veg, bro. I eat twelve a day.", speaker="danny", gap=0.3),

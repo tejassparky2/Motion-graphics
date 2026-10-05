@@ -93,7 +93,8 @@ clamp characters holding it open. No hiding. Kit: `motion/surgery.py` (drapes, s
 forceps, stitches). Keep it in the channel's cartoon style.
 
 ## Voices (owner-approved)
-- **Doctor: the owner's own cloned voice** (Chatterbox, prompt `assets/voice/owner_prompt_fast.wav`, settings in
+- **Doctor (from 5 Oct 2026): Kokoro `am_adam`, the owner's decision ("don't use my voice"); see CLAUDE.md.**
+  Videos 2-11 were first made with the doctor in the owner's own cloned voice (Chatterbox, prompt `assets/voice/owner_prompt_fast.wav`, settings in
   `motion/voice.py`: CLONE_RATE, CLONE_TONE, `clone_check`). Only ever clone the owner's own voice.
 - **Organs and tools: cute but clear.** The owner first asked for cute voices, then for "clear but cute" after +8 to
   +10 semitones sounded too squeaky. Current settings (in the video's `NARRATOR` cast):

@@ -44,4 +44,4 @@ are eggs veg, eggs veg or non veg, eggs vs multivitamin, unfertilized eggs, egg 
 Settle it in the comments: are eggs veg or non-veg? 🥚 (Danny says non-veg… and eats twelve a day. 😂) 👇
 ```
 
-**Video facts:** 80.7 s, 232 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 80.6 s, 234 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
