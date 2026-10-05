@@ -41,7 +41,7 @@ SCRIPT = [
          text="An hour later, Emma and Tyler compare their games. Move for move, they're identical.", gap=0.25),
     dict(id="t9", scene="twist", text="They've been playing each other the whole time.", pace=0.95),
     dict(id="t10", scene="end",
-         text="And Jake? He's already walking to the teachers' lounge. Mr. Miller and the principal are next.",
+         text="And what about Jake? He's already walking to the teachers' lounge. Mr. Miller and the principal are next.",
          gap=0.25),
 ]
 

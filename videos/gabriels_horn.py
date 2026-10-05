@@ -27,7 +27,7 @@ SCRIPT = [
                                         "more surface. So the total never stops growing. It's infinite."),
     dict(id="g5", scene="painter", text="So I can fill it, but I can't paint it?", speaker="sam", pace=0.92),
     dict(id="g6", scene="painter", text="Exactly. That's the whole paradox.", gap=0.25),
-    dict(id="g7", scene="name", text="Italian mathematician Evangelista Torricelli discovered it in the "
+    dict(id="g7", scene="name", text="An Italian scientist, Evangelista Torricelli, discovered it in the "
                                      "[sixteen forties.|1640s.] People have argued about it ever since."),
     dict(id="g8", scene="end", text="Because if paint fills the inside, isn't it touching every bit of the surface? "
                                     "So... can you paint it, or not?", pace=0.95),

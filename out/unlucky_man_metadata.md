@@ -32,4 +32,4 @@ frane selak, unluckiest man, luckiest man alive, survived everything, lottery wi
 Be honest: unluckiest, luckiest… or best storyteller? 🤔👇
 ```
 
-**Video facts:** 50.3 s, 146 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 46.1 s, 146 words of narration, voice `am_fenrir` at speed 1.08. Made for kids: **No**.

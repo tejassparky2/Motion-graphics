@@ -36,4 +36,4 @@ potato paradox, math paradox, paradox, percentages, brain teaser, math trick, mi
 Be honest: what was your first guess? 98? 99? 🥔👇
 ```
 
-**Video facts:** 46.1 s, 134 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 44.7 s, 134 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

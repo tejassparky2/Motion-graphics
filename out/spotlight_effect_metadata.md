@@ -36,4 +36,4 @@ spotlight effect, psychology experiment, social anxiety, embarrassing, cornell s
 Be honest: what's the most embarrassing thing you thought EVERYONE saw? 😂👇
 ```
 
-**Video facts:** 44.8 s, 142 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 45.6 s, 142 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

@@ -34,4 +34,4 @@ plot twist, funny story, clever trick, rich man trick, new york parking, bank lo
 Genius or cheapskate? 😂 Be honest 👇
 ```
 
-**Video facts:** 36.9 s, 115 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 37.2 s, 115 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

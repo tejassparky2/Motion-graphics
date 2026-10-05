@@ -34,4 +34,4 @@ pinocchio paradox, liar paradox, paradox, logic puzzle, this sentence is false, 
 YES or NO: does his nose grow? 🤥 Explain your answer… if you can 😂👇
 ```
 
-**Video facts:** 40.1 s, 134 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 39.4 s, 134 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
