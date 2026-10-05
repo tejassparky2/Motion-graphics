@@ -26,28 +26,34 @@ from motion.news import crowd, source_tag, tick
 from motion.newsbrand import badge
 from motion.newsprops import binoculars, old_scroll, pill_bottle
 from motion.story import buttons
-from motion.storykit import (GOLD, GREEN, NAVY, actor, building, focus, hospital, podium, quarantine_tape, sign,
-                             sky_ground, snowfall)
+from motion.storykit import (GOLD, GREEN, NAVY, actor, building, focus, hospital, news_pacing, podium,
+                             quarantine_tape, sign, sky_ground, snowfall)
+
+news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="p1", scene="lab", text="A lab worker in Siberia has died. And doctors suspect the plague."),
-    dict(id="p2", scene="lab", text="Yes. The same germ behind the Black Death."),
-    dict(id="p3", scene="lab", text="It happened in Irkutsk, Russia. At an institute that studies plague."),
-    dict(id="p4", scene="hospital", text="A twenty-eight-year-old lab technician went to hospital on September "
-                                         "twenty-ninth. She died days later."),
-    dict(id="p5", scene="hospital", text="Officials say the situation is stable."),
-    dict(id="p6", scene="hospital", text="But [one hundred ninety-seven|197] people who may have had contact were "
-                                         "isolated. And several hospitals went into a three-week quarantine."),
-    dict(id="p7", scene="podium", text="Is it confirmed? Not yet. Russia's health agency calls it pneumonia of "
-                                       "unknown cause."),
-    dict(id="p8", scene="podium", text="The US State Department says it is monitoring closely."),
-    dict(id="p9", scene="usa", text="And here's what most Americans don't know. Plague still shows up in the US. "
-                                    "About seven cases a year, mostly in the West."),
-    dict(id="p10", scene="usa", text="The good news? It can be treated with antibiotics if it's caught early."),
-    dict(id="p11", scene="end", text="Did you know plague still exists in America? Tell me in the comments."),
+    dict(id="p1", scene="lab", text="A laboratory worker in Siberia has died, and doctors suspect the plague."),
+    dict(id="p2", scene="lab", text="The plague is caused by the same germ that caused the Black Death in the fourteenth "
+                                    "century."),
+    dict(id="p3", scene="lab", text="The worker was a twenty-eight-year-old technician at an institute in Irkutsk, "
+                                    "Russia, that studies the plague."),
+    dict(id="p4", scene="hospital", text="She went to hospital on September twenty-ninth and died a few days later."),
+    dict(id="p5", scene="hospital", text="Russian officials say the situation is stable."),
+    dict(id="p6", scene="hospital", text="Still, [one hundred ninety-seven|197] people who may have had contact with "
+                                         "her were isolated."),
+    dict(id="p7", scene="hospital", text="Several hospitals also went into a three-week quarantine."),
+    dict(id="p8", scene="podium", text="The plague has not been confirmed."),
+    dict(id="p9", scene="podium", text="Russia's health agency says she died of pneumonia with an unknown cause."),
+    dict(id="p10", scene="podium", text="The US State Department says it is monitoring the situation closely."),
+    dict(id="p11", scene="usa", text="Here is something many Americans do not know."),
+    dict(id="p12", scene="usa", text="The plague still exists in the United States, with about seven human cases a "
+                                     "year, mostly in the West."),
+    dict(id="p13", scene="usa", text="The good news is that it can be treated with antibiotics when it is caught "
+                                     "early."),
+    dict(id="p14", scene="end", text="Did you know the plague still exists in America? Tell me in the comments."),
 ]
 
 METADATA = dict(
@@ -88,7 +94,7 @@ def lab_set(cr, t):
 def scene_lab(cr, t, tl):
     A = tl.at
     keys = [(0, (0.9, 640, 820)), (A("p1", "plague"), (1.4, 640, 700)), (A("p2"), (1.3, 640, 640)),
-            (A("p3"), (0.85, 640, 820)), (A("p3", "institute"), (1.2, 640, 680))]
+            (A("p3"), (0.85, 640, 820)), (A("p3", "Irkutsk"), (1.0, 500, 760)), (A("p3", "studies"), (1.2, 640, 680))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     lab_set(cr, t)
@@ -101,17 +107,19 @@ def scene_lab(cr, t, tl):
             old_scroll(cr, 0, 0, "the Black Death", "Europe, 1300s", 1.1)
     if t >= A("p3", "Irkutsk"):
         sign(cr, 300, 470, "Irkutsk, Russia", NAVY, start=A("p3", "Irkutsk"), t=t, seed=21010)
+    hl(cr, t, [("lab worker ", INK), ("DIED", RED)], 215, 74, A("p1"), end=A("p1", "plague") - 0.05, bold=True)
     hl(cr, t, [("SUSPECTED ", RED), ("plague", INK)], 215, 74, A("p1", "plague"), end=A("p2") - 0.05, bold=True)
     hl(cr, t, [("the ", INK), ("BLACK DEATH", RED), (" germ", INK)], 215, 62, A("p2"), end=A("p3") - 0.05, bold=True)
     if A("p2", "Black") <= t < A("p3"):
         source_tag(cr, t, A("p2", "Black"), "World Health Organization", y=270)
-    hl(cr, t, [("Siberia, ", INK), ("RUSSIA", NAVY)], 215, 80, A("p3"), bold=True)
+    hl(cr, t, [("age 28, ", INK), ("lab technician", NAVY)], 215, 62, A("p3"), end=A("p3", "Irkutsk") - 0.05, bold=True)
+    hl(cr, t, [("Irkutsk, ", INK), ("RUSSIA", NAVY)], 215, 80, A("p3", "Irkutsk"), bold=True)
 
 
 def scene_hospital(cr, t, tl):
     A = tl.at
     keys = [(A("p4") - 0.2, (0.9, 600, 830)), (A("p4", "September"), (1.3, 600, 700)), (A("p5"), focus(1060, 1.7)),
-            (A("p6"), (1.0, 640, 830)), (A("p6", "isolated"), (1.2, 640, 760)), (A("p6", "quarantine"), (1.0, 620, 760))]
+            (A("p6"), (1.0, 640, 830)), (A("p6", "isolated"), (1.2, 640, 760)), (A("p7"), (1.1, 610, 700))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr, snow=True)
@@ -127,49 +135,48 @@ def scene_hospital(cr, t, tl):
             shape(cr, rrect_pts(-260, -110, 520, 220, 14, 14), WHITE, seed=21110, amp=0.4, lw=5)
             crowd(cr, 0, -30, t, 60, cols=15, gap=26, progress=u)
             write(cr, [(f"{int(197 * u)} isolated", RED)], 0, 86, 44, align="center", bold=True)
-    if t >= A("p6", "quarantine"):
+    if t >= A("p7", "quarantine"):
         quarantine_tape(cr, 260, 960, 820)
-    hl(cr, t, [("age ", INK), ("28", RED), (", lab technician", INK)], 215, 60, A("p4"), end=A("p5") - 0.05,
-       bold=True)
+    hl(cr, t, [("hospital: ", INK), ("29 SEP", RED)], 215, 74, A("p4"), end=A("p5") - 0.05, bold=True)
     hl(cr, t, [("officials: ", INK), ("\"stable\"", NAVY)], 215, 74, A("p5"), end=A("p6") - 0.05, bold=True)
-    hl(cr, t, [("197", RED), (" isolated", INK)], 215, 84, A("p6"), end=A("p6", "quarantine") - 0.05, bold=True)
-    hl(cr, t, [("3-week ", INK), ("QUARANTINE", RED)], 215, 66, A("p6", "quarantine"), bold=True)
+    hl(cr, t, [("197", RED), (" isolated", INK)], 215, 84, A("p6"), end=A("p7") - 0.05, bold=True)
+    hl(cr, t, [("3-week ", INK), ("QUARANTINE", RED)], 215, 66, A("p7", "quarantine"), bold=True)
     if t >= A("p5"):
         source_tag(cr, t, A("p5"), "Meduza; Al Jazeera, 5 Oct 2026", y=270)
 
 
 def scene_podium(cr, t, tl):
     A = tl.at
-    keys = [(A("p7") - 0.2, focus(420, 1.6)), (A("p7", "agency"), (1.3, 480, 720)), (A("p8"), (1.0, 900, 820)),
-            (A("p8", "monitoring"), (1.4, 980, 700))]
+    keys = [(A("p8") - 0.2, focus(420, 1.6)), (A("p9"), (1.3, 480, 720)), (A("p10"), (1.0, 900, 820)),
+            (A("p10", "monitoring"), (1.4, 980, 700))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr, ground=hexc("#c9c4b8"))
     actor(cr, "health_official", 420, t, facing=1, arms=("point", "hip"), eyes="open", mouth="talk")
     podium(cr, 420, "HEALTH AGENCY", hexc("#1f4fb0"))
-    if A("p7", "Not") <= t < A("p7", "agency"):
-        stamp(cr, t, A("p7", "Not"), "NOT CONFIRMED", dur=A("p7", "agency") - A("p7", "Not"), y=460)
-    if A("p7", "agency") <= t < A("p8"):
-        with at(cr, 480, 500, pop(t, A("p7", "agency"), 0.2) or 0.01):
+    if A("p8", "not") <= t < A("p9"):
+        stamp(cr, t, A("p8", "not"), "NOT CONFIRMED", dur=A("p9") - A("p8", "not"), y=460)
+    if A("p9") <= t < A("p10"):
+        with at(cr, 480, 500, pop(t, A("p9", "pneumonia"), 0.2) or 0.01):
             shape(cr, rrect_pts(-250, -70, 500, 140, 12, 14), WHITE, seed=21200, amp=0.4, lw=5)
-            write(cr, [("\"pneumonia of", INK)], 0, -10, 40, align="center", bold=True)
-            write(cr, [("unknown cause\"", INK)], 0, 36, 40, align="center", bold=True)
-    if t >= A("p8"):
+            write(cr, [("pneumonia with an", INK)], 0, -10, 40, align="center", bold=True)
+            write(cr, [("unknown cause", INK)], 0, 36, 40, align="center", bold=True)
+    if t >= A("p10"):
         building(cr, 980, 420, 420, hexc("#f1ede4"), "US STATE DEPT", seed=21210)
         with at(cr, 980, 560, 1.2):
             binoculars(cr, 0, 0, 1.0)
-    hl(cr, t, [("confirmed? ", INK), ("NOT YET", RED)], 215, 74, A("p7"), end=A("p8") - 0.05, bold=True)
-    hl(cr, t, [("US ", NAVY), ("monitoring", INK)], 215, 84, A("p8"), bold=True)
+    hl(cr, t, [("confirmed? ", INK), ("NOT YET", RED)], 215, 74, A("p8"), end=A("p10") - 0.05, bold=True)
+    hl(cr, t, [("US ", NAVY), ("monitoring", INK)], 215, 84, A("p10"), bold=True)
 
 
 def scene_usa(cr, t, tl):
     A = tl.at
-    keys = [(A("p9") - 0.2, (1.0, 640, 820)), (A("p9", "US."), (1.0, 640, 760)), (A("p9", "seven"), (1.3, 640, 680)),
-            (A("p9", "West"), (1.1, 640, 740)), (A("p10"), focus(420, 1.6)), (A("p10", "antibiotics"), (1.4, 560, 720))]
+    keys = [(A("p11") - 0.2, (1.0, 640, 820)), (A("p12"), (1.0, 640, 760)), (A("p12", "seven"), (1.3, 640, 680)),
+            (A("p12", "West"), (1.1, 640, 740)), (A("p13"), focus(420, 1.6)), (A("p13", "antibiotics"), (1.4, 560, 720))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr, ground=hexc("#e2c48f"))
-    if t < A("p10"):
+    if t < A("p13"):
         # a simple US map shape with the western region highlighted
         with at(cr, 640, 600, 1.0):
             usa = [(-300, -150), (40, -150), (60, -120), (120, -110), (150, -140), (200, -120), (270, -160),
@@ -177,7 +184,7 @@ def scene_usa(cr, t, tl):
                    (100, 90), (40, 110), (0, 150), (-30, 120), (-80, 80), (-150, 80), (-220, 60), (-260, 30),
                    (-300, -20), (-310, -90)]
             shape(cr, usa, hexc("#f7f1e3"), seed=21300, amp=0.8, lw=5)
-            if t >= A("p9", "West"):
+            if t >= A("p12", "West"):
                 cr.save()
                 cr.move_to(*usa[0])
                 for q in usa[1:]:
@@ -191,31 +198,31 @@ def scene_usa(cr, t, tl):
                 shape(cr, usa, None, seed=21300, amp=0.8, lw=5)
                 write(cr, [("WEST", RED)], -215, 0, 40, align="center", bold=True)
             write(cr, [("USA", NAVY)], 60, 0, 60, align="center", bold=True)
-        if t >= A("p9", "seven"):
-            sign(cr, 640, 400, "about 7 cases a year", RED, start=A("p9", "seven"), t=t, seed=21310)
+        if t >= A("p12", "seven"):
+            sign(cr, 640, 400, "about 7 cases a year", RED, start=A("p12", "seven"), t=t, seed=21310)
     else:
         actor(cr, "doctor", 420, t, facing=1, arms=("hold", "thumb"), eyes="happy", mouth="smile")
-        if t >= A("p10", "antibiotics"):
-            with at(cr, 640, 640, pop(t, A("p10", "antibiotics"), 0.2) or 0.01):
+        if t >= A("p13", "antibiotics"):
+            with at(cr, 640, 640, pop(t, A("p13", "antibiotics"), 0.2) or 0.01):
                 pill_bottle(cr, 0, 0, 1.4)
             tick(cr, 760, 560, 26, col=GREEN)
-    hl(cr, t, [("plague in the ", INK), ("USA", NAVY), ("?", INK)], 215, 70, A("p9"), end=A("p9", "seven") - 0.05,
+    hl(cr, t, [("plague in the ", INK), ("USA", NAVY), ("?", INK)], 215, 70, A("p11"), end=A("p12", "seven") - 0.05,
        bold=True)
-    hl(cr, t, [("~7 cases ", RED), ("a year", INK)], 215, 80, A("p9", "seven"), end=A("p10") - 0.05, bold=True)
-    if A("p9", "seven") <= t < A("p10"):
-        source_tag(cr, t, A("p9", "seven"), "CDC", y=270)
-    hl(cr, t, [("treatable ", GREEN), ("if caught early", INK)], 215, 62, A("p10"), bold=True)
+    hl(cr, t, [("~7 cases ", RED), ("a year", INK)], 215, 80, A("p12", "seven"), end=A("p13") - 0.05, bold=True)
+    if A("p12", "seven") <= t < A("p13"):
+        source_tag(cr, t, A("p12", "seven"), "CDC", y=270)
+    hl(cr, t, [("treatable ", GREEN), ("if caught early", INK)], 215, 62, A("p13"), bold=True)
 
 
 def scene_end(cr, t, tl):
     A = tl.at
-    set_camera(camera(t, [(A("p11") - 0.2, focus(420, 1.5, screen=640))], dur=0.14))
+    set_camera(camera(t, [(A("p14") - 0.2, focus(420, 1.5, screen=640))], dur=0.14))
     enter_world(cr)
     sky_ground(cr, ground=hexc("#e2c48f"))
     actor(cr, "doctor", 420, t, facing=1, arms=("point", "hip"), eyes="open", mouth="talk")
-    hl(cr, t, [("plague ", RED), ("in America?", INK)], 215, 70, A("p11"), bold=True, underline=True)
+    hl(cr, t, [("plague ", RED), ("in America?", INK)], 215, 70, A("p14"), bold=True, underline=True)
     cr.identity_matrix()
-    buttons(cr, t, A("p11", "comments"), (("YES", GREEN), ("NO", RED)), y=470, s=0.85)
+    buttons(cr, t, A("p14", "comments"), (("YES", GREEN), ("NO", RED)), y=470, s=0.85)
 
 
 def draw(cr, t, tl):
