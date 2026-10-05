@@ -25,6 +25,8 @@ Sources:
 • MacRumors (2 Oct 2026): https://www.macrumors.com/2026/10/02/apple-announces-macos-full-disk-access-changes/
 • Engadget: https://www.engadget.com/2276186/apple-sounds-the-alarm-on-ai-agents-and-full-disk-access/
 
+Check it yourself: System Settings > Privacy & Security > Full Disk Access shows which apps have it.
+
 Not affiliated with or endorsed by Apple.
 
 #Apple #Mac #AI #TechNews
@@ -40,4 +42,4 @@ apple, mac, macos, full disk access, ai agents, apple news, mac privacy, tech ne
 Would you give an AI app access to everything on your computer? Yes or no? 👇
 ```
 
-**Video facts:** 44.3 s, 137 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 49.7 s, 156 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
