@@ -32,4 +32,4 @@ chess trick, chess hack, clever trick, school story, plot twist, mind trick, che
 Would this trick work on you? 😏♟️ Who should Jake play next? 👇
 ```
 
-**Video facts:** 50.0 s, 168 words of narration, voice `am_fenrir` at speed 1.02. Made for kids: **No**.
+**Video facts:** 50.3 s, 170 words of narration, voice `am_fenrir` at speed 1.02. Made for kids: **No**.

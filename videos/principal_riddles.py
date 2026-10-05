@@ -28,7 +28,7 @@ SCRIPT = [
     dict(id="p6", scene="sheep",
          text="A farmer has [seventeen|17] sheep. All but [nine|9] run away. How many are left?", speaker="chotu"),
     dict(id="p7", scene="office", text="It's eight, of course.", speaker="principal"),
-    dict(id="p8", scene="sheep2", text="[Nine,|9,] sir. All but [nine.|9.]", speaker="chotu"),
+    dict(id="p8", scene="sheep2", text="[Nine,|9,] sir. All but [nine|9] ran away.", speaker="chotu"),
     dict(id="p9", scene="scale", text="Which is heavier? A pound of bricks, or a pound of feathers?", speaker="chotu"),
     dict(id="p10", scene="office", text="The bricks.", speaker="principal"),
     dict(id="p11", scene="scale2", text="Same, sir. A pound is a pound.", speaker="chotu"),
