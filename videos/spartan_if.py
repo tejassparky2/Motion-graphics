@@ -23,7 +23,7 @@ SCRIPT = [
     dict(id="i3", scene="letter", text="He wrote to Sparta: If I invade your land, I will drive you out.",
          speaker="philip", speaker_from="if"),
     dict(id="i4", scene="reply", text="The Spartans wrote back just one word: If.", pace=0.9),
-    dict(id="i5", scene="why", text="Why is that so clever? Look at his threat again."),
+    dict(id="i5", scene="why", text="Why is that so clever? Look at his letter again."),
     dict(id="i6", scene="why", text="Everything hangs on the first word. If. First, he has to get in. And then, he "
                                     "has to win."),
     dict(id="i7", scene="why", text="In one word, the Spartans were telling him: That's a big if."),
