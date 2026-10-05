@@ -24,8 +24,9 @@ TEAL = hexc("#2e9e8f")
 PALETTES = {
     "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
     # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
-    "apple": dict(sea=hexc("#e3e5ea"), land=hexc("#55585f"), ring=hexc("#1d1d1f"), lines=hexc("#c4c7ce"),
-                  emblem="apple"),
+    # Apple: the whole globe in the mark's graphite, the apple big and white on one side, the name on the base.
+    "apple": dict(sea=hexc("#2b2d33"), land=hexc("#3b3e46"), ring=hexc("#c9ccd2"), lines=hexc("#44474f"),
+                  emblem="apple", emblem_col=hexc("#f5f5f7"), name="APPLE"),
     "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
 }
 _LAND = [(-0.45, -0.28, 0.48, 0.34, 1), (0.02, 0.4, 0.3, 0.4, 2), (0.55, -0.22, 0.4, 0.46, 3),
@@ -42,7 +43,7 @@ def _continent(cx, cy, rx, ry, k, n=18):
     return pts
 
 
-def _apple_mark(cr, x, y, s, seed):
+def _apple_mark(cr, x, y, s, seed, col=None):
     """Our own hand-drawn apple with a bite and a leaf (a simple shape that says "Apple", not the official logo)."""
     body = [(0, -17), (8, -21), (17, -22), (24, -18), (27, -12),
             (24, -8), (21, -4), (20, 0), (21, 4), (24, 8),            # the bite
@@ -50,8 +51,9 @@ def _apple_mark(cr, x, y, s, seed):
             (-24, 20), (-28, 10), (-29, 0), (-28, -10), (-24, -18), (-17, -22), (-8, -21)]
     leaf = [(1, -24), (3, -33), (12, -39), (10, -30)]
     with at(cr, x, y, s):
-        shape(cr, body, hexc("#1d1d1f"), seed=seed, amp=0.25, lw=0, stroke=None)
-        shape(cr, leaf, hexc("#1d1d1f"), seed=seed + 1, amp=0.15, lw=0, stroke=None)
+        col = col or hexc("#1d1d1f")
+        shape(cr, body, col, seed=seed, amp=0.25, lw=0, stroke=None)
+        shape(cr, leaf, col, seed=seed + 1, amp=0.15, lw=0, stroke=None)
 
 
 EMBLEMS = {"apple": _apple_mark}
@@ -67,6 +69,9 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
         blob(cr, 0, -10, 70, 16, hexc("#8e5a2e"), seed, amp=0.4, lw=4)
         line(cr, [(0, -14), (0, cy + r + 14)], 12, INK, seed + 1, amp=0.2)
         line(cr, [(0, -14), (0, cy + r + 14)], 6, hexc("#b07a45"), seed + 1, amp=0.2)
+        if p.get("name"):   # a name plate on the base
+            shape(cr, rrect_pts(-92, -54, 184, 46, 12, 14), p["ring"], seed=seed + 60, amp=0.4, lw=4)
+            write(cr, [(p["name"], INK)], 0, -20, 34, align="center", bold=True)
         # sphere, tilted a little like a real desk globe
         with at(cr, 0, cy, 1.0, rot=-0.18):
             blob(cr, 0, 0, r, r, p["sea"], seed + 2, amp=0.6, lw=5)
@@ -83,6 +88,8 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
                               amp=0.8, lw=3, stroke=hexc("#2a2230", 0.55))
             for k in (-2, -1, 0, 1, 2):
                 line(cr, [(-r, k * r * 0.36), (r, k * r * 0.36)], 2.5, p["lines"], seed + 30 + k, amp=0.3)
+            if p.get("emblem_col"):   # the company's mark, big, on one side of the globe (our own drawing)
+                EMBLEMS[p["emblem"]](cr, -look * 58, 4, 1.6, seed + 51, p["emblem_col"])
             cr.restore()
             blob(cr, 0, 0, r, r, None, seed + 2, amp=0.6, lw=5)
         # meridian ring in the flag's second colour
@@ -97,11 +104,11 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
         cr.set_source_rgba(*p["ring"])
         cr.stroke()
         cr.restore()
-        if p.get("emblem"):   # the company's mark as a badge on the globe, hand-drawn by us
+        if p.get("emblem") and not p.get("emblem_col"):   # or as a small badge, hand-drawn by us
             with at(cr, -look * 56, cy - 76, 1.0):
                 blob(cr, 0, 0, 46, 46, WHITE, seed + 50, amp=0.4, lw=4)
                 EMBLEMS[p["emblem"]](cr, 0, 4, 1.15, seed + 51)
-        with at(cr, look * 10, cy + 6, 1.7):   # the face
+        with at(cr, look * (46 if p.get("emblem_col") else 10), cy + 6, 1.7):   # the face
             for sx in (-1, 1):
                 if eyes in ("dot", "wide", "sly"):
                     blob(cr, sx * 15, -8, 11, 12, WHITE, seed + 20 + sx, amp=0.4, lw=2.5)

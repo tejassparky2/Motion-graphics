@@ -59,8 +59,9 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
    monetization.
 
 ## Company stories and topic choice (owner, 5 Oct 2026)
-- Company stories: the Globe wears the company's brand colours (`PALETTES` in `motion/news.py`, e.g. `"apple"`: silver
-  and graphite) plus a white badge with the company's mark so viewers recognise it (owner's request). We draw the mark
+- Company stories (owner's request): the whole Globe is painted in the colour of the company's mark, the mark is big
+  on one side of the globe and the company name is on a plate on the base (`PALETTES` in `motion/news.py`: `emblem`,
+  `emblem_col`, `name`; e.g. `"apple"`: graphite globe, white apple, "APPLE"). We draw the mark
   ourselves as a simple shape (`EMBLEMS`), never paste the official logo file, and never suggest the company made or
   endorses the video.
 - Any topic is open, including wars and tariff/trade wars, as long as the accuracy and neutrality rules hold.
