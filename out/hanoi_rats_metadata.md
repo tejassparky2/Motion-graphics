@@ -36,4 +36,4 @@ great hanoi rat hunt, hanoi rat massacre, perverse incentive, cobra effect, weir
 Be honest… you would've started a rat farm too 😂🐀 Wouldn't you?
 ```
 
-**Video facts:** 47.8 s, 162 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 47.3 s, 162 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
