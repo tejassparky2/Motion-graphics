@@ -20,12 +20,13 @@ from motion.news import source_tag
 from motion.newsbrand import badge
 from motion.newsprops import calendar
 from motion.story import buttons
-from motion.storykit import GREEN, NAVY, actor, desk, file_icon, focus, laptop, news_pacing, office, robot, sign
+from motion.storykit import (GREEN, NAVY, actor, desk, file_icon, focus, laptop, news_pacing, office, reveal_gaps,
+                             robot, sign)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.9
+TAIL = 0.5
 MUSIC = dict(mood="tech", drops=['a6'])   # news bed (motion/newsmusic.py); drop = silence before Apple's warning
 
 SCRIPT = [
@@ -45,6 +46,7 @@ SCRIPT = [
     dict(id="a9", scene="change", text="Apple has not said when this change will arrive."),
     dict(id="a10", scene="end", text="Would you let an AI read everything on your computer? Tell me in the comments."),
 ]
+reveal_gaps(SCRIPT, MUSIC)
 
 METADATA = dict(
     title="Apple Is Locking Down Your Mac Because of AI 🔒",

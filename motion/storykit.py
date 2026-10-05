@@ -20,12 +20,23 @@ PURPLE = hexc("#8a63d2")
 
 
 def news_pacing():
-    """Clear sentence breaks for the news channel (owner, 5 Oct 2026): a longer pause at every full stop and
-    question mark, and between lines. Call once at the top of each news video module."""
-    from . import timeline
-    timeline.STOP_PAUSE = 0.45
-    timeline.QUESTION_PAUSE = 0.55
-    timeline.BEAT_GAP = 0.5
+    """Pacing for the news channel. Call once at the top of each news video module.
+    Research (research_notes/news_pacing.md): pauses of 300-400 ms between phrases already give the full
+    intelligibility gain (Tanaka et al. 2011), human Shorts narrators pause ~0.1-0.2 s, and every extra second of
+    silence is a swipe risk. So a clear but short stop at each full stop (each sentence is still its own take, so the
+    voice drops at the end), a slightly longer one after a question, and a slow camera push-in on every held shot."""
+    from . import kit, timeline
+    timeline.STOP_PAUSE = 0.32
+    timeline.QUESTION_PAUSE = 0.40
+    timeline.BEAT_GAP = 0.34
+    kit.DRIFT[0] = 0.006
+
+
+def reveal_gaps(script, music, gap=0.55):
+    """Keep a real beat of silence before each reveal line (the music drops out there)."""
+    for spec in script:
+        if spec["id"] in music.get("drops", ()):
+            spec["gap"] = max(spec.get("gap", 0.18), gap)
 
 
 def actor(cr, who, x, t, y=905, **kw):

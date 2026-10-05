@@ -26,13 +26,13 @@ from motion.news import crowd, source_tag, tick
 from motion.newsbrand import badge
 from motion.newsprops import binoculars, old_scroll, pill_bottle
 from motion.story import buttons
-from motion.storykit import (GOLD, GREEN, NAVY, actor, building, focus, hospital, news_pacing, podium,
-                             quarantine_tape, sign, sky_ground, snowfall)
+from motion.storykit import (GOLD, GREEN, NAVY, actor, building, focus, hospital, news_pacing, podium, quarantine_tape,
+                             reveal_gaps, sign, sky_ground, snowfall)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.9
+TAIL = 0.5
 # news bed (motion/newsmusic.py); the drop is a beat of silence before "plague still exists in the US"
 MUSIC = dict(mood="urgent", drops=['p12'])
 
@@ -57,6 +57,7 @@ SCRIPT = [
                                      "early."),
     dict(id="p14", scene="end", text="Did you know the plague still exists in America? Tell me in the comments."),
 ]
+reveal_gaps(SCRIPT, MUSIC)
 
 METADATA = dict(
     title="A Lab Worker Died. Doctors Suspect the Plague 😷",

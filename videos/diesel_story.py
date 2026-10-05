@@ -21,12 +21,12 @@ from motion.news import source_tag
 from motion.newsprops import barrel, calendar, truck, wallet
 from motion.story import buttons
 from motion.newsbrand import badge
-from motion.storykit import focus, news_pacing
+from motion.storykit import focus, news_pacing, reveal_gaps
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.9
+TAIL = 0.5
 # news bed (motion/newsmusic.py); the drop is a beat of silence before "But there is a catch."
 MUSIC = dict(mood="money", drops=['d14'])
 
@@ -56,6 +56,7 @@ SCRIPT = [
     dict(id="d16", scene="station", text="So prices may drop soon, but they may not stay low for long."),
     dict(id="d17", scene="end", text="Have you noticed higher prices at the store? Tell me in the comments."),
 ]
+reveal_gaps(SCRIPT, MUSIC)
 
 METADATA = dict(
     title="Diesel Hit a Record. Here's the Plan to Bring It Down ⛽",
@@ -215,8 +216,8 @@ def big_tank(cr, x, level):
 def scene_town(cr, t, tl):
     A = tl.at
     keys = [(0, (1.0, 1060, 880)), (A("d1", "highest"), (1.6, 1270, 682)), (A("d2"), (1.5, 1270, 697)),
-            (A("d3"), focus(1080, 1.8)), (A("d4"), (1.2, 560, 917)), (A("d4", "stores"), (1.4, 330, 872)),
-            (A("d5"), focus(330, 1.7)), (A("d5", "everything"), (1.4, 330, 860))]
+            (A("d3"), focus(1100, 1.5, screen=780)), (A("d4"), (1.0, 480, 820)), (A("d4", "stores"), (1.1, 330, 760)),
+            (A("d5"), (1.3, 330, 700)), (A("d5", "everything"), (1.1, 330, 760))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     town_set(cr, t)
@@ -332,7 +333,7 @@ def scene_summit(cr, t, tl):
 def scene_station(cr, t, tl):
     A = tl.at
     keys = [(A("d13") - 0.2, (1.2, 900, 890)), (A("d13", "twenty-five"), (1.6, 1300, 682)),
-            (A("d14"), focus(1060, 1.8)), (A("d15"), (1.0, 1560, 885)), (A("d15", "refilled"), (1.2, 1560, 848)),
+            (A("d14"), focus(1100, 1.5, screen=780)), (A("d15"), (1.0, 1560, 885)), (A("d15", "refilled"), (1.2, 1560, 848)),
             (A("d16"), (1.6, 1300, 682)), (A("d16", "stay"), (1.5, 1320, 690))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)

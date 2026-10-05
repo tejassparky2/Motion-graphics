@@ -103,3 +103,13 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
   - 4:30 AM IST = 7 PM US Eastern on the previous day (6 PM from 1 Nov). This slot is for **US stories**.
   - 9:30 PM IST = 12 PM US Eastern, 5 PM UK (11 AM / 4 PM from 1 Nov and 25 Oct). This slot is for **world and tech
     stories**.
+
+## Pacing (5 Oct 2026, research in `research_notes/news_pacing.md`)
+- **Talking speed:** keep Kokoro at 0.95 (about 190-200 wpm while speaking). It is in the best-engagement band, and
+  faster would hurt non-native viewers.
+- **Pauses (`news_pacing()`):** 0.32 s at a full stop, 0.40 s after a question, 0.34 s between lines. Clear stops, no
+  dead air.
+  - The reveal line keeps 0.55 s of silence (`reveal_gaps`).
+- **Pictures:** a change about every 2 s (a medium pace suits news and its credibility). The camera slowly pushes in
+  on every held shot, so nothing is ever frozen.
+- **Tail after the last word:** 0.5 s.

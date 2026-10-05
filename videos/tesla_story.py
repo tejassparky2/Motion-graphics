@@ -21,12 +21,13 @@ from motion.news import source_tag, tick
 from motion.newsbrand import badge
 from motion.newsprops import clipboard, clock, counter, robotaxi, wrong_pin
 from motion.story import buttons
-from motion.storykit import GOLD, GREEN, NAVY, actor, billboard, building, focus, news_pacing, sign, sky_ground
+from motion.storykit import (GOLD, GREEN, NAVY, actor, billboard, building, focus, news_pacing, reveal_gaps, sign,
+                             sky_ground)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.9
+TAIL = 0.5
 # news bed (motion/newsmusic.py); the drop is a beat of silence before the safety review line
 MUSIC = dict(mood="tech", drops=['c8'])
 
@@ -48,6 +49,7 @@ SCRIPT = [
     dict(id="c12", scene="lot", text="Elon Musk says the company is being extremely careful with safety."),
     dict(id="c13", scene="end", text="Would you ride in a car with no steering wheel? Tell me in the comments."),
 ]
+reveal_gaps(SCRIPT, MUSIC)
 
 METADATA = dict(
     title="Tesla's Driverless Taxi Had a Bumpy First Month 🚕",

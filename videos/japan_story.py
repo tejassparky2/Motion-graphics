@@ -24,12 +24,12 @@ from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 from motion.news import big_x, crowd, passport, price_tag, source_tag
 from motion.newsbrand import badge
 from motion.story import buttons
-from motion.storykit import (GREEN, NAVY, actor, building, focus, news_pacing, podium, sign, sky_ground)
+from motion.storykit import (GREEN, NAVY, actor, building, focus, news_pacing, podium, reveal_gaps, sign, sky_ground)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.9
+TAIL = 0.5
 # news bed (motion/newsmusic.py); the drop is a beat of silence before the new fee: 200,000 yen
 MUSIC = dict(mood="money", drops=['j4'])
 
@@ -50,6 +50,7 @@ SCRIPT = [
     dict(id="j10", scene="why", text="Applicants now also need a higher income to qualify."),
     dict(id="j11", scene="end", text="Would you pay twelve hundred dollars to live in Japan? Tell me in the comments."),
 ]
+reveal_gaps(SCRIPT, MUSIC)
 
 METADATA = dict(
     title="Japan Just Made Permanent Residency 20x More Expensive 🇯🇵",

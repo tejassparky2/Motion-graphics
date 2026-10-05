@@ -8,16 +8,21 @@ ANCHOR = (360, 780)   # where the camera focus point lands on screen
 _cam = [(1.2, 360, 760)]
 
 
+DRIFT = [0.0]   # slow push-in per second of a held shot (news videos set it), so no shot is ever frozen
+
+
 def camera(t, keys, dur=0.3):
     """Ease into each camera key [(time, (zoom, fx, fy))] from the previous one."""
     keys = sorted(keys, key=lambda k: k[0])
     active = [k for k in keys if k[0] <= t]
     if not active:
-        return keys[0][1]
+        kt, z, fx, fy = keys[0][0], *keys[0][1]
+        return (z * (1 + DRIFT[0] * min(max(t, 0), 6)), fx, fy)
     kt, v = active[-1]
     before = active[-2][1] if len(active) > 1 else v
     u = ease_out(seg(t, kt, kt + dur))
-    return tuple(lerp(a, b, u) for a, b in zip(before, v))
+    z, fx, fy = (lerp(a, b, u) for a, b in zip(before, v))
+    return (z * (1 + DRIFT[0] * min(t - kt, 6)), fx, fy)
 
 
 def set_camera(cam):

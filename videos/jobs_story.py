@@ -23,12 +23,12 @@ from motion.newsbrand import badge
 from motion.newsprops import bars, gauge, job_icon, wallet
 from motion.story import buttons
 from motion.storykit import (GOLD, GREEN, NAVY, actor, billboard, building, focus, hospital, news_pacing, office,
-                             sign, sky_ground)
+                             reveal_gaps, sign, sky_ground)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.9
+TAIL = 0.5
 # news bed (motion/newsmusic.py); the drop is a beat of silence before the real number: only 29,000 jobs
 MUSIC = dict(mood="money", drops=['j2'])
 
@@ -53,6 +53,7 @@ SCRIPT = [
     dict(id="j12", scene="door", text="That is tough news for anyone who is looking for work."),
     dict(id="j13", scene="end", text="Is it harder to find a job where you live? Tell me in the comments."),
 ]
+reveal_gaps(SCRIPT, MUSIC)
 
 METADATA = dict(
     title="America Added Just 29,000 Jobs. Here's What That Means 💼",
