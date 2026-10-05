@@ -47,7 +47,7 @@ def captions(cr, t, tl):
 
 
 def _draw(cr, t, chunk, start):
-    words = [u.shown.rstrip(",.;:") or u.shown for u in chunk]
+    words = [u.shown for u in chunk]   # keep full stops and commas: the owner wants every sentence end visible
     cr.save()
     cr.identity_matrix()
     cr.select_font_face(FONT, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)

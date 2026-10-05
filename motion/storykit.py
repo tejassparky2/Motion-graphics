@@ -19,6 +19,15 @@ ORANGE = hexc("#e0a03a")
 PURPLE = hexc("#8a63d2")
 
 
+def news_pacing():
+    """Clear sentence breaks for the news channel (owner, 5 Oct 2026): a longer pause at every full stop and
+    question mark, and between lines. Call once at the top of each news video module."""
+    from . import timeline
+    timeline.STOP_PAUSE = 0.45
+    timeline.QUESTION_PAUSE = 0.55
+    timeline.BEAT_GAP = 0.5
+
+
 def actor(cr, who, x, t, y=905, **kw):
     """A character from our own cast (motion/newsfolk.py)."""
     if kw.get("eyes") == "dot":

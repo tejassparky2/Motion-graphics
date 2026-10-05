@@ -40,4 +40,4 @@ apple, mac, macos, full disk access, ai agents, apple news, mac privacy, tech ne
 Would you give an AI app access to everything on your computer? Yes or no? 👇
 ```
 
-**Video facts:** 38.0 s, 118 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 46.1 s, 137 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
