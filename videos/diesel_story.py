@@ -374,6 +374,7 @@ def scene_end(cr, t, tl):
             line(cr, [(-44, -110 + k * 32), (30, -110 + k * 32)], 3, hexc("#a9adb5"), 16101 + k, amp=0.3)
         write(cr, [("TOTAL $$$", RED)], 0, 128, 22, align="center", bold=True)
     hl(cr, t, [("higher ", INK), ("PRICES", RED), ("?", INK)], 215, 84, A("f14"), bold=True, underline=True)
+    cr.identity_matrix()
     buttons(cr, t, A("f14", "comments"), (("YES", GREEN), ("NO", RED)), y=470, s=0.85)
 
 

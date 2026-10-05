@@ -28,6 +28,25 @@ FOLK = {
                      glasses=True, tie=hexc("#ffd23f"), seed=209),
     "expert_b": dict(skin=SKINS[0], body=hexc("#b388eb"), legs=hexc("#2b2d3a"), hair="bob", hair_col=hexc("#d9b26a"),
                      glasses=True, lashes=True, seed=211),
+    # more story people
+    "jobseeker": dict(skin=SKINS[2], body=hexc("#ffb347"), legs=hexc("#3f6fb5"), hair="short", hair_col=hexc("#2b2018"),
+                      seed=241),
+    "firefighter": dict(skin=SKINS[1], body=hexc("#3b3f4a"), legs=hexc("#3b3f4a"), hair="helmet",
+                        hair_col=hexc("#d9302c"), beard=hexc("#6b4a2e"), stripes=True, seed=243),
+    "inspector": dict(skin=SKINS[4], body=hexc("#4a6fa5"), legs=hexc("#2b2d3a"), hair="short", hair_col=hexc("#111111"),
+                      glasses=True, tie=hexc("#e8e2d4"), seed=245),
+    "rider": dict(skin=SKINS[0], body=hexc("#ff6fa5"), legs=hexc("#2b2d3a"), hair="bob", hair_col=hexc("#2b2018"),
+                  lashes=True, seed=247),
+    "mac_user": dict(skin=SKINS[3], body=hexc("#9ad1f5"), legs=hexc("#2b2d3a"), hair="curls", hair_col=hexc("#2b2018"),
+                     seed=249),
+    "doctor": dict(skin=SKINS[2], body=hexc("#f7f7f2"), legs=hexc("#5b8def"), hair="bun", hair_col=hexc("#1e1a2a"),
+                   glasses=True, lashes=True, stethoscope=True, seed=251),
+    "health_official": dict(skin=SKINS[1], body=hexc("#5a5f73"), legs=hexc("#23263a"), hair="gray",
+                            hair_col=hexc("#d8d4cc"), tie=hexc("#2e6b5e"), seed=253),
+    "builder": dict(skin=SKINS[3], body=hexc("#ff8a3d"), legs=hexc("#3f6fb5"), hair="hardhat",
+                    hair_col=hexc("#f2c12e"), stripes=True, seed=255),
+    "worker": dict(skin=SKINS[5], body=hexc("#4f86c6"), legs=hexc("#2b2d3a"), hair="cap", hair_col=hexc("#2b2d3a"),
+                   seed=257),
     # generic officials (never portraits of real people)
     "official_1": dict(skin=SKINS[1], body=hexc("#3b4f7a"), legs=hexc("#23263a"), hair="side", hair_col=hexc("#4a3424"),
                        tie=hexc("#e0483d"), seed=221),
@@ -140,6 +159,15 @@ def _hair(cr, kind, col, hr, seed):
     elif kind == "short":
         shape(cr, [(-hr, -10), (-hr + 4, -hr + 4), (0, -hr - 4), (hr - 4, -hr + 4), (hr, -10), (hr - 6, -hr + 16),
                    (-hr + 6, -hr + 16)], col, seed=seed, amp=0.4, lw=3)
+    elif kind == "helmet":   # fire helmet with a wide brim
+        shape(cr, [(-hr - 4, -6), (-hr + 4, -hr - 2), (0, -hr - 16), (hr - 4, -hr - 2), (hr + 4, -6)], col, seed=seed,
+              amp=0.4, lw=3.5)
+        shape(cr, rrect_pts(-hr - 18, -14, 2 * hr + 36, 14, 7, 12), col, seed=seed + 1, amp=0.3, lw=3.5)
+        blob(cr, 0, -hr + 6, 11, 10, hexc("#f2b632"), seed + 2, amp=0.2, lw=2.5)
+    elif kind == "hardhat":
+        shape(cr, [(-hr - 2, -8), (-hr + 4, -hr), (0, -hr - 12), (hr - 4, -hr), (hr + 2, -8)], col, seed=seed, amp=0.4,
+              lw=3.5)
+        shape(cr, rrect_pts(-hr - 8, -14, 2 * hr + 16, 10, 5, 12), col, seed=seed + 1, amp=0.3, lw=3.5)
     elif kind in ("bald", "gray"):
         for sx in (-1, 1):
             blob(cr, sx * (hr - 4), -4, 10, 16, col, seed + sx, amp=0.4, lw=2.5)
@@ -173,6 +201,18 @@ def folk(cr, who, x, y, t, facing=1, arms=("down", "down"), eyes="open", mouth="
                      hexc("#ffffff", 0.35), seed + 7 + k, amp=0.3)
                 line(cr, [(-26 + k * 26, top + 10), (-26 + k * 26, top + bh - 10)], 3, hexc("#ffffff", 0.35),
                      seed + 10 + k, amp=0.3)
+        if c.get("stripes"):   # reflective bands on a firefighter's coat
+            for yy in (top + 50, top + 80):
+                line(cr, [(-bw / 2 + 6, yy), (bw / 2 - 6, yy)], 7, hexc("#f2e05a"), seed + 12, amp=0.2)
+        if c.get("stethoscope"):
+            cr.save()
+            cr.new_path()
+            cr.arc(0, top + 6, 26, 0.3, math.pi - 0.3)
+            cr.set_line_width(4)
+            cr.set_source_rgba(*INK)
+            cr.stroke()
+            cr.restore()
+            blob(cr, 18, top + 40, 7, 7, hexc("#a9adb5"), seed + 13, amp=0.2, lw=2.5)
         if c.get("tie"):
             shape(cr, [(-7, top + 6), (7, top + 6), (10, top + 54), (0, top + 64), (-10, top + 54)], c["tie"],
                   seed=seed + 14, amp=0.2, lw=3)
