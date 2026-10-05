@@ -27,10 +27,12 @@ import numpy as np
 
 from .engine import ROOT
 
-# Default narrator: the channel owner's own cloned voice (Chatterbox, prompt in assets/voice/owner_prompt.wav).
+# Default narrator: Kokoro am_fenrir at 0.95 (owner's decision, 5 Oct 2026: the cloned voice kept fewer viewers and
+# was misheard more often). The owner's cloned voice (Chatterbox) stays available only on request:
+# NARRATOR_ENGINE=clone.
 CLONE_PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt.wav")
 CLONE_PYTHON = os.environ.get("CLONE_PYTHON", "/home/user/.venv-clone/bin/python")
-ENGINE = os.environ.get("NARRATOR_ENGINE", "clone" if os.path.exists(CLONE_PROMPT) else "kokoro")
+ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
 if ENGINE == "clone":
     # Owner approved the sample and asked for "slightly faster". The clone reads short sentences slowly, so takes
     # play at x1.15 (riddle lines, pace 0.9, at x1.035). Last Bencher Part 2 lands at ~180 wpm with pauses, vs 176

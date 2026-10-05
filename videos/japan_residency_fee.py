@@ -34,7 +34,7 @@ from motion.news import (GREEN, JP_RED, PAPER, SKY, big_x, crowd, date_stamp, di
                          phone, price_tag, source_tag, tick)
 from motion.story import buttons
 
-NARRATOR = dict(speed=1.0)
+NARRATOR = dict(speed=0.95)
 TAIL = 0.9
 
 H, J = "reporter", "globe"

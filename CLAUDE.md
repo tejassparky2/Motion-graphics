@@ -36,3 +36,16 @@ Read `NEWS_CHANNEL.md` first. The narration rules below come from the owner's fi
 - No metadata or encoder tags in outputs; never strip other parties' provenance watermarks (e.g. SynthID).
 - Only the owner's own voice is cloned. Don't make Interestingly Strange or doctor (Body Facts) videos on this branch:
   they have their own chats and branches (`ccr-56282fe5-evehq4`, `ccr-56282fe5-evehq4-doctor`).
+
+## Owner's channel-wide decisions (5 Oct 2026)
+1. **Voice: Kokoro, not the cloned voice.** The default narrator is Kokoro `am_fenrir` at speed 0.95 (`motion/voice.py`).
+   Use the owner's cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks. On Interestingly Strange, more viewers
+   swiped away on cloned-voice videos (about 35% stayed) and Whisper misheard it far more often. For a voice unique to
+   this channel, Kokoro can blend voices (e.g. `NARRATOR_VOICE="am_fenrir,am_fenrir,am_michael"`): offer the owner
+   2-3 short samples, checked with Whisper medium, before picking one.
+2. **Posting: 2 videos a day, not 3.** Many similar videos a day is riskier under YouTube's "inauthentic /
+   mass-produced content" rule.
+3. **Script first.** For every new video, send the owner the script first (each line, what's on screen, title,
+   sources) and render only after they approve or edit it. Keep their wording; if one of their lines would be
+   misheard, say so and suggest a fix. Their ideas, opinions and edits make each video original, which protects
+   monetization.

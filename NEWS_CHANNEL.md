@@ -13,14 +13,14 @@ don't copy his name, look, voice, catchphrases or clips.
 ## What's already built (see `AGENTS.md` for the full guide)
 - `render.py` + `motion/`: the 2D hand-drawn renderer (720x1280, 30 fps), captions, characters, camera.
 - `motion/story.py`: cards, scrolls, tags, answer buttons, helmets, talking mouths.
-- Narration in the owner's cloned voice (Chatterbox, `tools/clone_tts.py`), every line checked with Whisper medium:
+- Narration in Kokoro `am_fenrir` (owner's cloned voice only on request), every line checked with Whisper medium:
   `tools/render_check.sh NAME`. Reword any misheard line (see the CLAUDE.md narration rules).
 - One video = one file in `videos/`, with `SCRIPT`, scenes and `METADATA` (the upload sheet).
 - The Interestingly Strange videos in `videos/` are examples to copy from (e.g. `machiavelli_feared.py`,
   `pyrrhic_victory.py`).
 
 ## First steps for this chat
-1. Agree with the owner on the channel name, the mix (world news vs tech), and how many videos a day.
+1. Agree with the owner on the channel name and the mix (world news vs tech). Posting: 2 videos a day.
 2. Build news-specific pieces in `motion/`: a simple world map with countries to highlight, flag shapes, a "date
    stamp" and a "source" tag, phone/laptop/chip drawings for tech stories.
 3. Research and fact-check the first batch (two reliable sources per claim, dates on everything), then render,
@@ -41,5 +41,18 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
 - Drawing: our `reporter` host (motion/characters.py) and `motion/news.globe(...)`: our talking desk globe, painted in the
   story country's flag colours (add a palette in `PALETTES`). Never a talking flag. Close shot
   on whoever speaks, pop-in panels for every number, `date_stamp` and `source_tag` on screen.
-- Both parts are voiced in the owner's cloned voice; a 0.36 s pause whenever the speaker changes.
+- Both parts are voiced by the channel narrator (Kokoro); a 0.36 s pause whenever the speaker changes.
 - First video in this format: `videos/japan_residency_fee.py`.
+
+## Owner's channel-wide decisions (5 Oct 2026)
+1. **Voice: Kokoro, not the cloned voice.** The default narrator is Kokoro `am_fenrir` at speed 0.95 (`motion/voice.py`).
+   Use the owner's cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks. On Interestingly Strange, more viewers
+   swiped away on cloned-voice videos (about 35% stayed) and Whisper misheard it far more often. For a voice unique to
+   this channel, Kokoro can blend voices (e.g. `NARRATOR_VOICE="am_fenrir,am_fenrir,am_michael"`): offer the owner
+   2-3 short samples, checked with Whisper medium, before picking one.
+2. **Posting: 2 videos a day, not 3.** Many similar videos a day is riskier under YouTube's "inauthentic /
+   mass-produced content" rule.
+3. **Script first.** For every new video, send the owner the script first (each line, what's on screen, title,
+   sources) and render only after they approve or edit it. Keep their wording; if one of their lines would be
+   misheard, say so and suggest a fix. Their ideas, opinions and edits make each video original, which protects
+   monetization.
