@@ -17,23 +17,22 @@ TEAL = hexc("#2e9e8f")
 
 
 # ---------------------------------------------------------------- the talking globe
-# The channel's recurring character: a desk globe with a face. For each story it is painted in that country's flag
-# colours (sea, land, stand ring), so viewers see whose story it is without us drawing anyone's flag as a character.
+# The channel's recurring character: a desk globe with a face. For a country story the whole globe is painted as that
+# country's flag (owner's request, 5 Oct 2026), with faint continent outlines so it still reads as a globe.
 # For a company story the globe takes the shape and colour of the company's mark (our own drawing, never a
 # copied logo file) with the name on the base (owner's request, 5 Oct 2026).
 PALETTES = {
-    "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0"),
-               name="JAPAN", name_col=hexc("#fbf8ef")),
+    "jp": dict(flag="jp", ring=hexc("#bc002d"), lines=hexc("#e9b8c0"), name="JAPAN", name_col=hexc("#fbf8ef")),
     # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
     # Apple: the globe itself is shaped like the apple mark (our drawing), in graphite, name on the base.
     "apple": dict(sea=hexc("#2b2d33"), land=hexc("#3b3e46"), ring=hexc("#c9ccd2"), lines=hexc("#44474f"),
                   body="apple", name="APPLE"),
     "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee"),
                   name="WORLD"),
-    "ru": dict(sea=hexc("#fbf8ef"), land=hexc("#1f4fb0"), ring=hexc("#d52b1e"), lines=hexc("#c9d6ee"),
-               name="RUSSIA", name_col=hexc("#fbf8ef")),
-    "us": dict(sea=hexc("#3c3b6e"), land=hexc("#b22234"), ring=hexc("#fbf8ef"), lines=hexc("#6e6da0"),
-               name="USA"),
+    "ru": dict(flag="ru", ring=hexc("#d52b1e"), lines=hexc("#ffffff"), name="RUSSIA", name_col=hexc("#fbf8ef")),
+    "in": dict(flag="in", ring=hexc("#138808"), lines=hexc("#ffffff"), name="INDIA", name_col=hexc("#fbf8ef"),
+               face=(0, 78, 1.25)),
+    "us": dict(flag="us", ring=hexc("#fbf8ef"), lines=hexc("#ffffff"), name="USA"),
     # Tesla: the globe shaped like Tesla's T (our drawing), in Tesla red, name on the base.
     "tesla": dict(sea=hexc("#e31937"), land=hexc("#b8102a"), ring=hexc("#c9ccd2"), lines=hexc("#f05a6e"),
                   body="tesla", name="TESLA"),
@@ -89,6 +88,78 @@ def _body_tesla():
 BODIES = {"apple": _body_apple, "tesla": _body_tesla}
 
 
+# ---------------------------------------------------------------- flags painted over the whole globe
+def _bands(cr, r, cols, vertical=False):
+    n = len(cols)
+    for k, col in enumerate(cols):
+        cr.set_source_rgba(*col)
+        if vertical:
+            cr.rectangle(-r + 2 * r * k / n, -r, 2 * r / n + 1, 2 * r)
+        else:
+            cr.rectangle(-r, -r + 2 * r * k / n, 2 * r, 2 * r / n + 1)
+        cr.fill()
+
+
+def _star(cr, x, y, rad, col):
+    pts = []
+    for k in range(10):
+        a = -math.pi / 2 + k * math.pi / 5
+        rr = rad if k % 2 == 0 else rad * 0.42
+        pts.append((x + rr * math.cos(a), y + rr * math.sin(a)))
+    cr.move_to(*pts[0])
+    for q in pts[1:]:
+        cr.line_to(*q)
+    cr.close_path()
+    cr.set_source_rgba(*col)
+    cr.fill()
+
+
+def _flag_jp(cr, r, seed):
+    _bands(cr, r, [hexc("#fbf8ef")])
+    blob(cr, 0, 0, r * 0.52, r * 0.52, hexc("#bc002d"), seed, amp=0.4, lw=0, stroke=None)
+
+
+def _flag_ru(cr, r, seed):
+    _bands(cr, r, [hexc("#fbf8ef"), hexc("#0039a6"), hexc("#d52b1e")])
+
+
+def _flag_in(cr, r, seed):
+    _bands(cr, r, [hexc("#ff9933"), hexc("#fbf8ef"), hexc("#138808")])
+    navy = hexc("#000080")
+    cr.save()
+    cr.new_path()
+    cr.arc(0, 0, r * 0.3, 0, 2 * math.pi)
+    cr.set_line_width(5)
+    cr.set_source_rgba(*navy)
+    cr.stroke()
+    for k in range(24):   # the 24 spokes of the wheel
+        a = k * 2 * math.pi / 24
+        cr.move_to(0, 0)
+        cr.line_to(r * 0.3 * math.cos(a), r * 0.3 * math.sin(a))
+    cr.set_line_width(2)
+    cr.stroke()
+    cr.arc(0, 0, r * 0.06, 0, 2 * math.pi)
+    cr.fill()
+    cr.restore()
+
+
+def _flag_us(cr, r, seed):
+    red, white = hexc("#b22234"), hexc("#fbf8ef")
+    _bands(cr, r, [red if k % 2 == 0 else white for k in range(13)])
+    cw, ch = r * 1.05, 2 * r * 7 / 13
+    cr.set_source_rgba(*hexc("#3c3b6e"))
+    cr.rectangle(-r, -r, cw, ch)
+    cr.fill()
+    for row in range(5):
+        for col in range(6 if row % 2 == 0 else 5):
+            x = -r + cw * (col + (0.5 if row % 2 == 0 else 1.0)) / 6
+            y = -r + ch * (row + 0.7) / 5.4
+            _star(cr, x, y, 6.5, white)
+
+
+FLAGS = {"jp": _flag_jp, "ru": _flag_ru, "in": _flag_in, "us": _flag_us}
+
+
 def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, bounce=0.0, spin=0.12, seed=7000):
     """A talking desk globe standing on the floor at (x, ground_y), coloured for `code` (see PALETTES)."""
     p = PALETTES[code]
@@ -110,7 +181,7 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
                     shape(cr, part, p["sea"], seed=seed + 3 + k, amp=0.4, lw=5)
                 shape(cr, outline, p["sea"], seed=seed + 2, amp=0.5, lw=5)
             else:
-                blob(cr, 0, 0, r, r, p["sea"], seed + 2, amp=0.6, lw=5)
+                blob(cr, 0, 0, r, r, p.get("sea", WHITE), seed + 2, amp=0.6, lw=5)
             cr.save()
             if outline:
                 cr.move_to(*outline[0])
@@ -121,15 +192,29 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
                 cr.arc(0, 0, r - 3, 0, 2 * math.pi)
             cr.clip()
             off = (t * spin) % 2.4 - 1.2
+            if p.get("flag"):   # the whole globe painted as the country's flag; continents as faint outlines
+                FLAGS[p["flag"]](cr, r, seed + 70)
             for lx, ly, rx, ry, k in _LAND:
                 for wrap in (0.0, -2.4, 2.4):
                     u = lx + off + wrap
                     if -1.6 < u < 1.6:
                         sq = max(0.3, math.cos(min(1.5, abs(u)) * math.pi / 3.2))   # land squashes near the edge
-                        shape(cr, _continent(u * r, ly * r, rx * r * sq, ry * r, k), p["land"], seed=seed + 10 + k,
-                              amp=0.8, lw=3, stroke=hexc("#2a2230", 0.55))
+                        if p.get("flag"):
+                            shape(cr, _continent(u * r, ly * r, rx * r * sq, ry * r, k), None, seed=seed + 10 + k,
+                                  amp=0.8, lw=2.5, stroke=hexc("#2a2230", 0.22))
+                        else:
+                            shape(cr, _continent(u * r, ly * r, rx * r * sq, ry * r, k), p["land"],
+                                  seed=seed + 10 + k, amp=0.8, lw=3, stroke=hexc("#2a2230", 0.55))
             for k in (-2, -1, 0, 1, 2):
-                line(cr, [(-r, k * r * 0.36), (r, k * r * 0.36)], 2.5, p["lines"], seed + 30 + k, amp=0.3)
+                line(cr, [(-r, k * r * 0.36), (r, k * r * 0.36)], 2.5,
+                     hexc("#ffffff", 0.28) if p.get("flag") else p["lines"], seed + 30 + k, amp=0.3)
+            if p.get("flag"):   # a soft shadow on one side so it reads as a ball
+                cr.new_path()
+                cr.arc(0, 0, r, -math.pi / 2, math.pi / 2)
+                cr.arc_negative(-r * 0.35, 0, r * 1.06, math.pi / 2 - 0.3, -math.pi / 2 + 0.3)
+                cr.close_path()
+                cr.set_source_rgba(0, 0, 0, 0.12)
+                cr.fill()
             if p.get("emblem_col"):   # the company's mark, big, on one side of the globe (our own drawing)
                 EMBLEMS[p["emblem"]](cr, -look * 58, 4, 1.6, seed + 51, p["emblem_col"])
             cr.restore()
@@ -157,8 +242,13 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
             with at(cr, -look * 56, cy - 76, 1.0):
                 blob(cr, 0, 0, 46, 46, WHITE, seed + 50, amp=0.4, lw=4)
                 EMBLEMS[p["emblem"]](cr, 0, 4, 1.15, seed + 51)
-        fx, fy = (0, 14) if p.get("body") == "tesla" else (look * (46 if p.get("emblem_col") else 10), 6)
-        with at(cr, fx, cy + fy, 1.55 if p.get("body") == "tesla" else 1.7):   # the face
+        if p.get("face"):
+            fx, fy, fs = p["face"]
+        elif p.get("body") == "tesla":
+            fx, fy, fs = 0, 14, 1.55
+        else:
+            fx, fy, fs = look * (46 if p.get("emblem_col") else 10), 6, 1.7
+        with at(cr, fx, cy + fy, fs):   # the face
             for sx in (-1, 1):
                 if eyes in ("dot", "wide", "sly"):
                     blob(cr, sx * 15, -8, 11, 12, WHITE, seed + 20 + sx, amp=0.4, lw=2.5)

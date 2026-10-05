@@ -33,7 +33,7 @@ SCRIPT = dialogue([
     ("j2", "talk", "G", "That's from the official jobs report, out October second."),
     ("j3", "talk", "H", "Is that bad?"),
     ("j4", "talk", "G", "It's weak. Unemployment ticked up to [four point two percent.|4.2%.]"),
-    ("j5", "talk", "G", "And earlier months were cut too. [Sixty thousand|60,000] fewer jobs than first reported."),
+    ("j5", "talk", "G", "And the two months before were revised down. By [sixty thousand|60,000] jobs."),
     ("j6", "talk", "H", "What about pay?"),
     ("j7", "talk", "G", "Wages grew [three percent|3%] in a year. The slowest since [twenty twenty-one.|2021.]"),
     ("j8", "talk", "H", "So where are the jobs?"),

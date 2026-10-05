@@ -65,6 +65,9 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
   We draw the mark ourselves as a simple shape, never paste the official logo file, and never suggest the company
   made or endorses the video.
 - Every globe has a name plate on its base: countries too ("JAPAN", "RUSSIA", "USA", "WORLD"), owner's request.
+- Country globes are painted as the country's complete flag (owner's request, 5 Oct 2026): e.g. India saffron, white
+  and green with the navy 24-spoke wheel in the middle; USA stripes and stars; Japan the red disc; Russia three bands.
+  Add a new country as a painter in `FLAGS` in `motion/news.py` plus a `PALETTES` entry (`flag`, `ring`, `name`).
 - Any topic is open, including wars and tariff/trade wars, as long as the accuracy and neutrality rules hold.
 - What US viewers stay for (research, 5 Oct 2026): the money-in-your-pocket angle. In the Iran war, 7 in 10 Americans
   worry most about gas prices (Pew, Apr 2026); 64% say gas prices hurt their household (Reuters/Ipsos); tariffs are
