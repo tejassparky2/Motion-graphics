@@ -56,6 +56,11 @@ CAST = {
                    kind="cardigan", hair="gray", hair_col=hexc("#d8d4cc"), glasses=True, seed=103),
     "owner": dict(skin=SKIN_MID, shirt=hexc("#5b7c99"), pants=hexc("#3b3f4a"), bw=100, bh=108, head=40,
                   kind="apron", hair="bald", hair_col=hexc("#d8d4cc"), glasses=True, moustache=True, seed=109),
+    # news story cast: a truck driver (red cap) and a shopper
+    "trucker": dict(skin=SKIN_TAN, shirt=hexc("#c0504d"), pants=DENIM, bw=104, bh=106, head=40, kind="plaid",
+                    hair=None, seed=141),
+    "shopper": dict(skin=hexc("#f0c29c"), shirt=hexc("#2e9e8f"), pants=hexc("#3b3f4a"), bw=84, bh=110, head=38,
+                    kind="dress", hair="long", hair_col=hexc("#3a2418"), lashes=True, blush=True, seed=143),
     # the news channel's host (Globe in a Minute working name): our own character
     "reporter": dict(skin=hexc("#d9a77c"), shirt=hexc("#2e9e8f"), pants=hexc("#2b2d3a"), bw=96, bh=106, head=40,
                      kind="hoodie", hair="messy", hair_col=hexc("#2a1d18"), glasses=True, seed=131),
