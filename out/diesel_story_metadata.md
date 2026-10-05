@@ -41,4 +41,4 @@ diesel prices, gas prices, g7, oil reserves, strait of hormuz, fuel prices, infl
 Have you noticed higher prices at the store this fall? Yes or no? 👇
 ```
 
-**Video facts:** 76.0 s, 222 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 73.1 s, 222 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
