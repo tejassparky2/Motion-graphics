@@ -53,7 +53,9 @@ Shared building blocks:
 ## 3. Workflow for every video
 
 1. **Research.** Use real, sourced facts and quotes. Say "often credited to" when the source is unknown. Leave out disputed claims.
-2. **Script.** Hook with the surprising claim in line 1. One idea per sentence, full stops everywhere, and a visual change about every second.
+2. **Script, then wait.** Send the owner the script (lines, what's on screen, title, sources) and render only after they
+   approve or edit it. Keep their wording.
+   **Writing it:** Hook with the surprising claim in line 1. One idea per sentence, full stops everywhere, and a visual change about every second.
    End on a question that invites comments. Aim for 40–50 s.
 3. **Fast preview** (Kokoro voice, a few seconds):
    `NARRATOR_ENGINE=kokoro python render.py --video NAME --sheet 1 --out build/NAME_sheet.png` gives a contact sheet of

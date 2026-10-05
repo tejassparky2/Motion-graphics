@@ -1,18 +1,17 @@
 # Interestingly Strange: 2-week content calendar
 
-**Slots (3 a day):**
+**Slots (2 a day from Oct 6; was 3 a day until Oct 5):**
 
 | Slot | Until Oct 31 (IST) | From Nov 1 (IST) | US Eastern | US Pacific | Gets |
 |---|---|---|---|---|---|
 | A | **9:30 PM** | 10:30 PM | 12:00 PM (lunch) | 9:00 AM | a solid video |
-| B | **1:30 AM** | 2:30 AM | 4:00 PM (after school/work) | 1:00 PM | a solid video |
 | C | **4:30 AM** | 5:30 AM | 7:00 PM (prime time) | 4:00 PM | **the strongest video of the day** |
 
 US clocks go back on Sun 1 Nov 2026, so every slot moves 1 hour later in IST from then on. Schedule everything in
 YouTube Studio (Upload → Visibility → Schedule), set in IST.
 
-**Mix:** twist stories and riddles, weird animals and insects, weird history, and paradoxes/theories, rotated so the three
-videos of a day are always three different categories.
+**Mix:** twist stories and riddles, weird animals and insects, weird history, and paradoxes/theories, rotated so the two
+videos of a day are always two different categories.
 
 **Fact rule:** every fact topic is checked against sources before it's animated. The "Check" column lists what to confirm.
 Anything disputed gets left out, the way the Emu War kill counts were.
@@ -34,29 +33,29 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 11 | Mon Oct 5 | 1:30 AM | bombardier_beetle | This Beetle Has a Boiling Cannon in Its Butt 🪲🔥 |
 | 12 | Mon Oct 5 | 4:30 AM | exam_answers | The Last Bencher's Exam Answers 😂 (Technically Correct) |
 | 13 | Mon Oct 5 | 9:30 PM | ship_of_theseus | If You Replace Every Part… Is It Still the Same Ship? 🚢🤯 |
-| 14 | Tue Oct 6 | 1:30 AM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
-| 15 | Tue Oct 6 | 4:30 AM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |
-| 16 | Tue Oct 6 | 9:30 PM | spartan_if | A King Threatened Sparta… They Replied With ONE Word 😳 |
-| 17 | Wed Oct 7 | 1:30 AM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
-| 18 | Wed Oct 7 | 4:30 AM | archimedes_lever | He Said He Could Move the EARTH… and Then Proved It With a Ship 🌍 |
-| 19 | Wed Oct 7 | 9:30 PM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
-| 20 | Thu Oct 8 | 1:30 AM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
-| 21 | Thu Oct 8 | 4:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
-| 22 | Thu Oct 8 | 9:30 PM | pinocchio_paradox | Pinocchio Said ONE Sentence… and Broke Logic 🤥🤯 |
-| 23 | Fri Oct 9 | 1:30 AM | pyrrhic_victory | He WON the Battle… Then Said "One More Win and We're Finished" ⚔️ |
-| 24 | Fri Oct 9 | 4:30 AM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
-| 25 | Fri Oct 9 | 9:30 PM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
-| 26 | Sat Oct 10 | 1:30 AM | epictetus_rain | A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️ |
-| 27 | Sat Oct 10 | 4:30 AM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
-| 28 | Sat Oct 10 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
-| 29 | Sun Oct 11 | 1:30 AM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
-| 30 | Sun Oct 11 | 4:30 AM | socrates_know | The Wisest Man Said "I Know Nothing"… and That's WHY He Was Wise 🧠 |
-| 31 | Sun Oct 11 | 9:30 PM | machiavelli_feared | Is It Better to Be Loved or Feared? Machiavelli's Answer 😈 |
-| 32 | Mon Oct 12 | 1:30 AM | diogenes_alexander | Alexander the Great Offered Him Anything… His Answer Was Genius ☀️ |
-| 33 | Mon Oct 12 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? What Scientists Found Later 🍬 |
-| 34 | Mon Oct 12 | 9:30 PM | ben_franklin_effect | Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝 |
+| 14 | Tue Oct 6 | 4:30 AM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
+| 15 | Tue Oct 6 | 9:30 PM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |
+| 16 | Wed Oct 7 | 4:30 AM | spartan_if | A King Threatened Sparta… They Replied With ONE Word 😳 |
+| 17 | Wed Oct 7 | 9:30 PM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
+| 18 | Thu Oct 8 | 4:30 AM | archimedes_lever | He Said He Could Move the EARTH… and Then Proved It With a Ship 🌍 |
+| 19 | Thu Oct 8 | 9:30 PM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
+| 20 | Fri Oct 9 | 4:30 AM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
+| 21 | Fri Oct 9 | 9:30 PM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
+| 22 | Sat Oct 10 | 4:30 AM | pinocchio_paradox | Pinocchio Said ONE Sentence… and Broke Logic 🤥🤯 |
+| 23 | Sat Oct 10 | 9:30 PM | pyrrhic_victory | He WON the Battle… Then Said "One More Win and We're Finished" ⚔️ |
+| 24 | Sun Oct 11 | 4:30 AM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
+| 25 | Sun Oct 11 | 9:30 PM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
+| 26 | Mon Oct 12 | 4:30 AM | epictetus_rain | A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️ |
+| 27 | Mon Oct 12 | 9:30 PM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
+| 28 | Tue Oct 13 | 4:30 AM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
+| 29 | Tue Oct 13 | 9:30 PM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
+| 30 | Wed Oct 14 | 4:30 AM | socrates_know | The Wisest Man Said "I Know Nothing"… and That's WHY He Was Wise 🧠 |
+| 31 | Wed Oct 14 | 9:30 PM | machiavelli_feared | Is It Better to Be Loved or Feared? Machiavelli's Answer 😈 |
+| 32 | Thu Oct 15 | 4:30 AM | diogenes_alexander | Alexander the Great Offered Him Anything… His Answer Was Genius ☀️ |
+| 33 | Thu Oct 15 | 9:30 PM | marshmallow_test | The Marshmallow Test Was WRONG? What Scientists Found Later 🍬 |
+| 34 | Fri Oct 16 | 4:30 AM | ben_franklin_effect | Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝 |
 
-Rows 1–13 are already scheduled. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
+Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
 Rows 16, 18, 23, 26 and 30 were skipped by the owner ("no good content and understanding"); their slots now hold five new clever-words videos (Sparta's "If", Archimedes, the Pyrrhic victory, Epictetus, Socrates), each with a sourced quote and an everyday example.
 

@@ -1,5 +1,14 @@
 # Interestingly Strange: standing rules
 
+## Workflow: script first, owner approves, then render (protects monetization)
+- For every new video, first send the owner the script: each narration line, a one-line note of what's on screen,
+  the title and the sources. **Don't render until the owner approves it** or sends changes.
+- The owner adds or changes lines as they like; keep their words. If one of their lines would be misheard by the
+  voice, say so and suggest a fix rather than changing it silently.
+- The owner's own ideas, opinions and edits are what make each video original (YouTube's "inauthentic content" rule
+  targets mass-produced, templated videos), so ask for them and vary formats, scenes and characters.
+- Post **2 videos a day** (9:30 PM and 4:30 AM IST until Oct 31), not 3.
+
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
   pipeline voices each sentence as its own take with a real full-stop pause between them
