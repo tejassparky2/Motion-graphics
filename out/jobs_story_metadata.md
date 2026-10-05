@@ -39,4 +39,4 @@ jobs report, unemployment, us economy, september jobs report, job market, wages,
 Is it harder to find a job where you live right now? Yes or no? 👇
 ```
 
-**Video facts:** 55.6 s, 153 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 53.3 s, 153 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
