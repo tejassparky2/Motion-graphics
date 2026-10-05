@@ -34,7 +34,7 @@ SCRIPT = [
          text="On October second, Apple warned app makers about a setting called Full Disk Access.", speaker=G),
     dict(id="a3", scene="talk", text="What does that setting do?", speaker=H),
     dict(id="a4", scene="talk",
-         text="It lets an app see almost everything on your Mac. Your files. Your mail. Your messages. "
+         text="It lets an app see almost everything on your Mac. Your files. Your email. Your messages. "
               "Even your browsing history.", speaker=G),
     dict(id="a5", scene="talk", text="And AI agents want that?", speaker=H),
     dict(id="a6", scene="talk",
