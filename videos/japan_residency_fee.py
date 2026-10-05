@@ -59,7 +59,7 @@ SCRIPT = [
          text="The government says the new fee covers the real cost of handling applications. "
               "And it's closer to what other countries charge.", speaker=J),
     dict(id="n12", scene="talk", text="So if I pay, do I get a Japanese passport?", speaker=H),
-    dict(id="n13", scene="talk", text="No. You can stay there with no time limit. But you are not a citizen.",
+    dict(id="n13", scene="talk", text="No. You can stay there for good. But you are not a citizen.",
          speaker=J),
     dict(id="n14", scene="talk", text="And you now need a higher income to qualify.", speaker=J),
     dict(id="n15", scene="talk", text="So it costs more. And it's harder to get.", speaker=H),
@@ -72,6 +72,7 @@ for _i, _s in enumerate(SCRIPT):   # a clear pause whenever the other one starts
         _s["gap"] = 0.36
     if _s["speaker"] == J:
         _s["voice"] = GLOBE_VOICE
+        _s.setdefault("pace", 1.12)   # George reads slower than the host; match their pace
 
 METADATA = dict(
     title="Japan Just Made Permanent Residency 20x More Expensive 🇯🇵",
@@ -231,7 +232,7 @@ def scene_talk(cr, t, tl):
 
     def status(c):
         tick(c, -190, -40, 18, seed=8610)
-        write(c, [("live here, no time limit", INK)], -160, -28, 32, bold=True)
+        write(c, [("can stay for good", INK)], -160, -28, 32, bold=True)
         if t >= A("n13", "citizen"):
             big_x(c, -190, 40, 18, 1.0, seed=8620)
             write(c, [("not a citizen", JP_RED)], -160, 52, 32, bold=True)
