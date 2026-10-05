@@ -24,31 +24,33 @@ from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
 from motion.news import big_x, crowd, passport, price_tag, source_tag
 from motion.newsbrand import badge
 from motion.story import buttons
-from motion.storykit import (GREEN, NAVY, actor, building, focus, news_pacing, podium, reveal_gaps, sign, sky_ground)
+from motion.storykit import (GREEN, NAVY, actor, building, comment_prompt, focus, news_pacing, podium, reveal_gaps,
+                             sign, sky_ground)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.5
+TAIL = 0.3
 # news bed (motion/newsmusic.py); the drop is a beat of silence before the new fee: 200,000 yen
-MUSIC = dict(mood="money", drops=['j4'])
+MUSIC = dict(mood="money", drops=['j3'])
 
-SCRIPT = [
-    dict(id="j1", scene="office", text="If you dream of moving to Japan for good, it just got a lot more expensive."),
-    dict(id="j2", scene="office", text="On October first, Japan raised the fee for permanent residency twenty times "
-                                       "over."),
-    dict(id="j3", scene="office", text="The fee used to be [ten thousand|10,000] yen, which is about sixty-three "
-                                       "dollars."),
-    dict(id="j4", scene="office", text="Now it is [two hundred thousand|200,000] yen, which is about twelve hundred "
-                                       "and seventy dollars."),
+SCRIPT = [   # v3, approved by the owner 5 Oct 2026 (research_notes/news_scripts_v3.md)
+    dict(id="j1", scene="office", text="Japan just made staying in the country for good twenty times more expensive."),
+    dict(id="j2", scene="office", text="On October first, the fee for permanent residency jumped from "
+                                       "[ten thousand|10,000] yen to [two hundred thousand|200,000] yen."),
+    dict(id="j3", scene="office", text="That is a jump from about sixty-three dollars to about twelve hundred and "
+                                       "seventy dollars."),
+    dict(id="j3b", scene="meaning", text="So if you ever dreamed of moving to Japan, here is what you need to know."),
     dict(id="j5", scene="meaning", text="Permanent residency lets a foreigner stay in Japan with no time limit."),
     dict(id="j6", scene="meaning", text="But it does not make them a citizen, and it does not come with a Japanese "
                                         "passport."),
     dict(id="j7", scene="count", text="Japan now has more than four million foreign residents, which is a record."),
+    dict(id="j7b", scene="why", text="So why did Japan raise the fee so much?"),
     dict(id="j8", scene="why", text="The government says the new fee covers the real cost of handling applications."),
     dict(id="j9", scene="why", text="It also says the fee is now closer to what other countries charge."),
+    dict(id="j9b", scene="why", text="And there is one more change."),
     dict(id="j10", scene="why", text="Applicants now also need a higher income to qualify."),
-    dict(id="j11", scene="end", text="Would you pay twelve hundred dollars to live in Japan? Tell me in the comments."),
+    dict(id="j11", scene="end", text="Would you pay twelve hundred dollars to live in Japan for good?"),
 ]
 reveal_gaps(SCRIPT, MUSIC)
 
@@ -100,40 +102,42 @@ def traveller(cr, x, t, **kw):
 
 def scene_office(cr, t, tl):
     A = tl.at
-    keys = [(0, focus(300, 1.7)), (A("j1", "expensive"), (0.9, 640, 820)), (A("j2"), (1.2, 640, 700)),
-            (A("j2", "twenty"), (1.4, 640, 660)), (A("j3"), (1.3, 560, 680)), (A("j4"), (1.1, 640, 690))]
+    keys = [(0, focus(300, 1.7)), (A("j1", "twenty"), (1.2, 640, 700)), (A("j2"), (1.2, 640, 700)),
+            (A("j2", "10,000"), (1.3, 560, 680)), (A("j2", "200,000"), (1.1, 640, 690)), (A("j3"), (1.0, 640, 720))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr)
     building(cr, 640, 460, 470, hexc("#f1ede4"), "IMMIGRATION OFFICE", seed=22020)
     flag_pole(cr, 960)
-    traveller(cr, 300, t, facing=1, arms=("wave", "hold") if t < A("j1", "expensive") else ("hold", "hip"),
-              eyes="happy" if t < A("j1", "expensive") else "wide", mouth="smile" if t < A("j1", "expensive") else "o")
-    if A("j2", "October") <= t < A("j3"):
+    traveller(cr, 300, t, facing=1, arms=("wave", "hold") if t < A("j1", "twenty") else ("hold", "hip"),
+              eyes="happy" if t < A("j1", "twenty") else "wide", mouth="smile" if t < A("j1", "twenty") else "o")
+    if A("j2", "October") <= t < A("j2", "10,000"):
         sign(cr, 640, 360, "since 1 OCT 2026", RED, start=A("j2", "October"), t=t, seed=22030)
-    if A("j2", "twenty") <= t < A("j3"):
-        with at(cr, 640, 560, pop(t, A("j2", "twenty"), 0.25) or 0.01):
+    if A("j1", "twenty") <= t < A("j2", "October"):
+        with at(cr, 640, 560, pop(t, A("j1", "twenty"), 0.25) or 0.01):
             blob(cr, 0, 0, 110, 110, hexc("#ffd23f"), 22040, amp=0.6, lw=5)
             write(cr, [("20x", RED)], 0, 26, 90, align="center", bold=True)
-    if t >= A("j3"):
-        old = min(1.0, seg(t, A("j4"), A("j4") + 0.5)) if t >= A("j4") else 0.0
-        with at(cr, 520, 560, pop(t, A("j3", "10,000"), 0.2) or 0.01):
+    if t >= A("j2", "10,000"):
+        old = min(1.0, seg(t, A("j2", "200,000"), A("j2", "200,000") + 0.5)) if t >= A("j2", "200,000") else 0.0
+        with at(cr, 520, 560, pop(t, A("j2", "10,000"), 0.2) or 0.01):
             price_tag(cr, 0, 0, "¥10,000", "about $63", s=0.9, crossed=old)
-    if t >= A("j4", "200,000"):
-        with at(cr, 760, 700, pop(t, A("j4", "200,000"), 0.2) or 0.01):
+    if t >= A("j2", "200,000"):
+        with at(cr, 760, 700, pop(t, A("j2", "200,000"), 0.2) or 0.01):
             price_tag(cr, 0, 0, "¥200,000", "about $1,270", col=RED, s=0.9, rot=0.04, seed=22050)
-    hl(cr, t, [("living in ", INK), ("JAPAN", JP_RED)], 215, 80, 0.05, end=A("j1", "expensive") - 0.05, bold=True)
-    hl(cr, t, [("a lot more ", INK), ("EXPENSIVE", RED)], 215, 66, A("j1", "expensive"), end=A("j2") - 0.05, bold=True)
-    hl(cr, t, [("residency fee ", INK), ("x20", RED)], 215, 74, A("j2"), end=A("j3") - 0.05, bold=True)
-    hl(cr, t, [("before: ", INK), ("$63", GREEN)], 215, 80, A("j3"), end=A("j4") - 0.05, bold=True)
-    hl(cr, t, [("now: ", INK), ("$1,270", RED)], 215, 80, A("j4"), bold=True)
+    hl(cr, t, [("staying in ", INK), ("JAPAN", JP_RED)], 215, 76, 0.05, end=A("j1", "twenty") - 0.05, bold=True)
+    hl(cr, t, [("x20", RED), (" more expensive", INK)], 215, 66, A("j1", "twenty"), end=A("j2") - 0.05, bold=True)
+    hl(cr, t, [("residency fee: ", INK), ("1 OCT", RED)], 215, 70, A("j2"), end=A("j2", "10,000") - 0.05, bold=True)
+    hl(cr, t, [("¥10,000", GREEN), (" to ", INK), ("¥200,000", RED)], 215, 66, A("j2", "10,000"), end=A("j3") - 0.05,
+       bold=True)
+    hl(cr, t, [("$63", GREEN), (" to ", INK), ("$1,270", RED)], 215, 80, A("j3"), bold=True)
     if t >= A("j2"):
         source_tag(cr, t, A("j2"), "Immigration Services Agency of Japan", y=270)
 
 
 def scene_meaning(cr, t, tl):
     A = tl.at
-    keys = [(A("j5") - 0.2, (1.1, 540, 780)), (A("j5", "limit"), (1.3, 500, 720)), (A("j6"), (1.3, 500, 720))]
+    keys = [(A("j3b") - 0.2, focus(360, 1.6)), (A("j5"), (1.1, 540, 780)), (A("j5", "limit"), (1.3, 500, 720)),
+            (A("j6"), (1.3, 500, 720))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr)
@@ -149,6 +153,7 @@ def scene_meaning(cr, t, tl):
         with at(cr, 560, 700, pop(t, A("j6", "passport"), 0.2) or 0.01):
             passport(cr, 0, 0, 1.0)
             big_x(cr, 0, 0, 70, seg(t, A("j6", "passport") + 0.2, A("j6", "passport") + 0.6))
+    hl(cr, t, [("dream of ", INK), ("JAPAN?", JP_RED)], 215, 76, A("j3b"), end=A("j5") - 0.05, bold=True)
     hl(cr, t, [("permanent ", INK), ("RESIDENCY", NAVY)], 215, 66, A("j5"), end=A("j6") - 0.05, bold=True)
     hl(cr, t, [("NOT ", RED), ("citizenship", INK)], 215, 74, A("j6"), bold=True)
 
@@ -171,8 +176,8 @@ def scene_count(cr, t, tl):
 
 def scene_why(cr, t, tl):
     A = tl.at
-    keys = [(A("j8") - 0.2, focus(420, 1.6)), (A("j8", "cost"), (1.2, 620, 720)), (A("j9"), (1.2, 620, 720)),
-            (A("j10"), (1.1, 800, 760)), (A("j10", "income"), (1.3, 900, 700))]
+    keys = [(A("j7b") - 0.2, focus(420, 1.6)), (A("j8", "cost"), (1.2, 620, 720)), (A("j9"), (1.2, 620, 720)),
+            (A("j9b"), focus(420, 1.6)), (A("j10"), (1.1, 800, 760)), (A("j10", "income"), (1.3, 900, 700))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr, ground=hexc("#c9c4b8"))
@@ -184,7 +189,7 @@ def scene_why(cr, t, tl):
                 shape(cr, rrect_pts(-90 + k * 6, -110 + k * 14, 180, 120, 6, 10), WHITE, seed=22310 + k, amp=0.4,
                       lw=4)
             write(cr, [("FORMS", INK)], 12, 60, 34, align="center", bold=True)
-    if A("j9", "countries") <= t < A("j10"):
+    if A("j9", "countries") <= t < A("j9b"):
         with at(cr, 760, 560, pop(t, A("j9", "countries"), 0.2) or 0.01):
             for k, (lab, h) in enumerate([("JAPAN", 150), ("OTHERS", 170)]):
                 shape(cr, rrect_pts(-110 + k * 140, 80 - h, 90, h, 6, 10), JP_RED if k == 0 else hexc("#8a63d2"),
@@ -198,13 +203,15 @@ def scene_why(cr, t, tl):
             write(cr, [("income needed", INK)], 0, 160, 32, align="center", bold=True)
             line(cr, [(90, 60), (90, -60 - 60 * u)], 8, RED, 22342, amp=0.2)
             line(cr, [(70, -40 - 60 * u), (90, -64 - 60 * u), (110, -40 - 60 * u)], 8, RED, 22343, amp=0.2)
+    hl(cr, t, [("why ", INK), ("x20", RED), ("?", INK)], 215, 84, A("j7b"), end=A("j8") - 0.05, bold=True)
     hl(cr, t, [("the ", INK), ("REAL COST", RED)], 215, 74, A("j8"), end=A("j9") - 0.05, bold=True)
-    hl(cr, t, [("like ", INK), ("other countries", NAVY)], 215, 70, A("j9"), end=A("j10") - 0.05, bold=True)
+    hl(cr, t, [("like ", INK), ("other countries", NAVY)], 215, 70, A("j9"), end=A("j9b") - 0.05, bold=True)
+    hl(cr, t, [("one more ", INK), ("CHANGE", RED)], 215, 74, A("j9b"), end=A("j10") - 0.05, bold=True)
     hl(cr, t, [("higher ", RED), ("income", INK), (" needed", INK)], 215, 66, A("j10"), bold=True)
     if A("j10") <= t:
         source_tag(cr, t, A("j10"), "Nikkei Asia", y=270)
-    elif t >= A("j8"):
-        source_tag(cr, t, A("j8"), "SBS; The Standard HK, 1 Oct 2026", y=270)
+    elif t >= A("j7b"):
+        source_tag(cr, t, A("j7b"), "SBS; The Standard HK, 1 Oct 2026", y=270)
 
 
 def scene_end(cr, t, tl):
@@ -216,7 +223,8 @@ def scene_end(cr, t, tl):
     traveller(cr, 300, t, facing=1, arms=("point", "hip"), eyes="open", mouth="talk")
     hl(cr, t, [("would you pay ", INK), ("$1,270", RED), ("?", INK)], 215, 66, A("j11"), bold=True, underline=True)
     cr.identity_matrix()
-    buttons(cr, t, A("j11", "comments"), (("YES", GREEN), ("NO", RED)), y=470, s=0.85)
+    buttons(cr, t, A("j11") + 0.3, (("YES", GREEN), ("NO", RED)), y=330, s=0.85)
+    comment_prompt(cr, t, A("j11") + 0.6)
 
 
 def draw(cr, t, tl):

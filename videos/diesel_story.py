@@ -21,40 +21,39 @@ from motion.news import source_tag
 from motion.newsprops import barrel, calendar, truck, wallet
 from motion.story import buttons
 from motion.newsbrand import badge
-from motion.storykit import focus, news_pacing, reveal_gaps
+from motion.storykit import comment_prompt, focus, news_pacing, reveal_gaps
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.5
+TAIL = 0.3
 # news bed (motion/newsmusic.py); the drop is a beat of silence before "But there is a catch."
 MUSIC = dict(mood="money", drops=['d14'])
 
-SCRIPT = [
-    dict(id="d1", scene="town", text="Diesel fuel just hit its highest price ever in the United States."),
+SCRIPT = [   # v3, approved by the owner 5 Oct 2026 (research_notes/news_scripts_v3.md)
+    dict(id="d1", scene="town", text="Diesel just hit its highest price ever in the United States."),
     dict(id="d2", scene="town", text="On September twenty-second, the average gallon cost "
                                      "[six dollars and fifty-two cents.|$6.52.]"),
-    dict(id="d3", scene="town", text="That matters even if you never buy diesel."),
+    dict(id="d3", scene="town", text="Even if you never buy diesel, you are probably paying for it."),
     dict(id="d4", scene="town", text="The trucks that bring food and goods to your stores run on diesel."),
     dict(id="d5", scene="town", text="So when diesel costs more, almost everything in the store can cost more too."),
     dict(id="d6", scene="sea", text="Why did the price jump so much?"),
     dict(id="d7", scene="sea", text="The war with Iran has stopped most oil tankers from passing through the Strait "
                                     "of Hormuz."),
-    dict(id="d8", scene="sea", text="That narrow sea route normally carries about one fifth of the world's oil."),
+    dict(id="d8", scene="sea", text="That narrow sea route normally carries about one in every five barrels of oil "
+                                    "the world uses."),
     dict(id="d9", scene="sea", text="With less oil getting through, diesel became scarce all around the world."),
     dict(id="d10", scene="summit", text="On October second, the G7, a group of seven of the world's biggest "
                                         "economies, agreed on a plan."),
     dict(id="d11", scene="summit", text="Together, they will release up to [one hundred million|100 million] barrels "
                                         "of oil and diesel from their emergency reserves."),
-    dict(id="d12", scene="summit", text="The release will take four months, and most of the diesel will come in the "
-                                        "first twenty days."),
     dict(id="d13", scene="station", text="Energy experts say diesel could fall by about twenty-five cents a gallon "
                                          "within a few weeks."),
     dict(id="d14", scene="station", text="But there is a catch."),
     dict(id="d15", scene="station", text="Emergency reserves are a short-term fix, and they will have to be refilled "
                                          "later."),
     dict(id="d16", scene="station", text="So prices may drop soon, but they may not stay low for long."),
-    dict(id="d17", scene="end", text="Have you noticed higher prices at the store? Tell me in the comments."),
+    dict(id="d17", scene="end", text="Have you noticed higher prices at the store?"),
 ]
 reveal_gaps(SCRIPT, MUSIC)
 
@@ -244,7 +243,7 @@ def scene_town(cr, t, tl):
                 write(cr, [("$$+", RED)], 0, 10, 24, align="center", bold=True)
     hl(cr, t, [("diesel: ", INK), ("ALL-TIME HIGH", RED)], 215, 62, A("d1", "highest"), end=A("d2") - 0.05, bold=True)
     hl(cr, t, [("$6.52", RED), (" a gallon", INK)], 215, 80, A("d2"), end=A("d3") - 0.05, bold=True)
-    hl(cr, t, [("why it matters to ", INK), ("YOU", RED)], 215, 60, A("d3"), end=A("d4") - 0.05, bold=True)
+    hl(cr, t, [("you're ", INK), ("PAYING", RED), (" for it", INK)], 215, 66, A("d3"), end=A("d4") - 0.05, bold=True)
     hl(cr, t, [("trucks run on ", INK), ("DIESEL", RED)], 215, 64, A("d4"), end=A("d5") - 0.05, bold=True)
     hl(cr, t, [("prices go ", INK), ("UP", RED)], 215, 84, A("d5"), bold=True)
     if A("d2") <= t < A("d3"):
@@ -273,9 +272,9 @@ def scene_sea(cr, t, tl):
     if t >= A("d8"):
         with at(cr, 900, 470, (pop(t, A("d8"), 0.2) or 0.01) * 1.35):
             shape(cr, rrect_pts(-210, -70, 420, 140, 12, 14), WHITE, seed=15750, amp=0.4, lw=5)
-            write(cr, [("1/5", RED)], -110, 30, 90, align="center", bold=True)
-            write(cr, [("of the world's", INK)], 70, -6, 30, align="center", bold=True)
-            write(cr, [("oil", INK)], 70, 34, 30, align="center", bold=True)
+            write(cr, [("1 in 5", RED)], -100, 26, 64, align="center", bold=True)
+            write(cr, [("barrels of the", INK)], 90, -6, 28, align="center", bold=True)
+            write(cr, [("world's oil", INK)], 90, 32, 28, align="center", bold=True)
     if t >= A("d9"):
         for k, x in enumerate((-260, 1500, 360)):
             with at(cr, x, 620 if k != 2 else 470, pop(t, A("d9") + 0.2 * k, 0.25) or 0.01):
@@ -284,7 +283,7 @@ def scene_sea(cr, t, tl):
     hl(cr, t, [("WHY", RED), (" so high?", INK)], 215, 80, A("d6"), end=A("d7") - 0.05, bold=True)
     hl(cr, t, [("WAR", RED), (" with Iran", INK)], 215, 80, A("d7"), end=A("d7", "Strait") - 0.05, bold=True)
     hl(cr, t, [("Strait of ", INK), ("HORMUZ", RED)], 215, 74, A("d7", "Strait"), end=A("d8") - 0.05, bold=True)
-    hl(cr, t, [("1/5", RED), (" of the world's oil", INK)], 215, 62, A("d8"), end=A("d9") - 0.05, bold=True)
+    hl(cr, t, [("1 in 5", RED), (" barrels of oil", INK)], 215, 66, A("d8"), end=A("d9") - 0.05, bold=True)
     if A("d8") <= t < A("d9"):
         source_tag(cr, t, A("d8"), "U.S. Energy Information Administration", y=280)
     hl(cr, t, [("diesel ", INK), ("SCARCE", RED), (" worldwide", INK)], 215, 58, A("d9"), bold=True)
@@ -293,8 +292,7 @@ def scene_sea(cr, t, tl):
 def scene_summit(cr, t, tl):
     A = tl.at
     keys = [(A("d10") - 0.2, (1.0, 330, 830)), (A("d10", "G7"), (1.7, 310, 589)), (A("d10", "plan"), (1.4, 330, 875)),
-            (A("d11"), (0.9, 1220, 840)), (A("d11", "reserves"), (1.3, 1220, 888)), (A("d12"), (1.6, 700, 707)),
-            (A("d12", "diesel"), (1.2, 1250, 933)), (A("d12", "twenty"), (1.6, 700, 707))]
+            (A("d11"), (0.9, 1220, 840)), (A("d11", "reserves"), (1.3, 1220, 888))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     summit_set(cr, t)
@@ -312,22 +310,9 @@ def scene_summit(cr, t, tl):
         dx = side * 300 * door
         shape(cr, rrect_pts(1220 - 300 + (0 if side < 0 else 300) + dx, 480, 300, 420, 4, 14), hexc("#8f939b"),
               seed=15850 + side, amp=0.4, lw=4)
-    if A("d12") <= t < A("d12", "diesel"):
-        with at(cr, 700, 520, pop(t, A("d12"), 0.2) or 0.01):
-            calendar(cr, 0, 0, "MONTHS", "4", 1.0)
-    if t >= A("d12", "diesel"):
-        u = (t - A("d12", "diesel")) * 0.6
-        for k in range(3):
-            barrel(cr, 1000 + ((u * 300 + k * 160) % 520), 850, 1.1, col=ORANGE, label="DIESEL", seed=15960 + k)
-    if t >= A("d12", "twenty"):
-        with at(cr, 700, 520, pop(t, A("d12", "twenty"), 0.2) or 0.01):
-            calendar(cr, 0, 0, "DIESEL", "20", 1.0)
-            write(cr, [("days", INK)], 0, 116, 34, align="center", bold=True)
     hl(cr, t, [("2 OCT 2026", RED)], 215, 80, A("d10"), end=A("d10", "G7") - 0.05, bold=True)
     hl(cr, t, [("the ", INK), ("G7", NAVY), ("'s plan", INK)], 215, 84, A("d10", "G7"), end=A("d11") - 0.05, bold=True)
-    hl(cr, t, [("100 MILLION", RED), (" barrels", INK)], 215, 66, A("d11"), end=A("d12") - 0.05, bold=True)
-    hl(cr, t, [("over ", INK), ("4 months", RED)], 215, 80, A("d12"), end=A("d12", "diesel") - 0.05, bold=True)
-    hl(cr, t, [("DIESEL", RED), (" first: 20 days", INK)], 215, 66, A("d12", "diesel"), bold=True)
+    hl(cr, t, [("100 MILLION", RED), (" barrels", INK)], 215, 66, A("d11"), bold=True)
 
 
 def scene_station(cr, t, tl):
@@ -379,7 +364,8 @@ def scene_end(cr, t, tl):
         write(cr, [("TOTAL $$$", RED)], 0, 128, 22, align="center", bold=True)
     hl(cr, t, [("higher ", INK), ("PRICES", RED), ("?", INK)], 215, 84, A("d17"), bold=True, underline=True)
     cr.identity_matrix()
-    buttons(cr, t, A("d17", "comments"), (("YES", GREEN), ("NO", RED)), y=470, s=0.85)
+    buttons(cr, t, A("d17") + 0.3, (("YES", GREEN), ("NO", RED)), y=330, s=0.85)
+    comment_prompt(cr, t, A("d17") + 0.6)
 
 
 def draw(cr, t, tl):

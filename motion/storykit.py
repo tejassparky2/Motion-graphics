@@ -183,3 +183,40 @@ def sign(cr, x, y, text, col=RED, bg=WHITE, s=1.0, rot=-0.04, seed=17750, start=
         half = cr.text_extents(text).x_advance / 2 + 26
         shape(cr, rrect_pts(-half, -38, 2 * half, 76, 10, 12), bg, seed=seed, amp=0.4, lw=4.5)
         write(cr, [(text, col)], 0, 14, 40, align="center", bold=True)
+
+
+def comment_prompt(cr, t, start, y=430):
+    """'Tell me in the comments' as on-screen text under the YES/NO buttons (the voice ends on the question)."""
+    if t < start:
+        return
+    cr.identity_matrix()
+    with at(cr, 360, y, max(0.6, pop(t, start, 0.25)) * 0.9):
+        shape(cr, rrect_pts(-250, -38, 500, 76, 38, 14), NAVY, seed=17800, amp=0.3, lw=4)
+        write(cr, [("Tell me in the comments", WHITE)], -16, 13, 34, align="center", bold=True)
+        line(cr, [(212, -14), (212, 16)], 5, GOLD, 17801, amp=0.1)
+        line(cr, [(200, 4), (212, 18), (224, 4)], 5, GOLD, 17802, amp=0.1)
+
+
+def squirrel(cr, x, y, t, s=1.0, facing=1, seed=17850):
+    """A generic wild rodent (squirrel / prairie dog) standing on its back legs."""
+    brown = hexc("#a8743f")
+    with at(cr, x, y, s):
+        cr.scale(facing, 1)
+        blob(cr, -46, -70, 30, 62, hexc("#8a5a2b"), seed, amp=0.8, lw=4)          # bushy tail
+        blob(cr, 0, -60, 34, 52, brown, seed + 1, amp=0.4, lw=4)                    # body
+        blob(cr, 6, -50, 16, 26, hexc("#e9cfa3"), seed + 2, amp=0.3, lw=0, stroke=None)   # belly
+        blob(cr, 10, -124, 26, 24, brown, seed + 3, amp=0.4, lw=4)                  # head
+        blob(cr, -4, -146, 7, 9, brown, seed + 4, amp=0.2, lw=3)                    # ear
+        dot(cr, 20, -128, 4.5, INK)                                                 # eye
+        dot(cr, 36, -118, 3.5, INK)                                                 # nose
+        for sx in (-10, 14):
+            line(cr, [(sx, -12), (sx, 0)], 6, INK, seed + 5 + sx, amp=0.1)
+
+
+def flea(cr, x, y, t, s=1.0, seed=17870):
+    """A tiny flea that hops in place."""
+    hop = abs(math.sin(t * 6)) * 10
+    with at(cr, x, y - hop, s):
+        blob(cr, 0, 0, 9, 7, hexc("#4a2a1a"), seed, amp=0.2, lw=2)
+        for k in (-1, 1):
+            line(cr, [(k * 4, 4), (k * 9, 10)], 2, INK, seed + k, amp=0.1)

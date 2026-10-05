@@ -21,20 +21,21 @@ from motion.news import source_tag, tick
 from motion.newsbrand import badge
 from motion.newsprops import clipboard, clock, counter, robotaxi, wrong_pin
 from motion.story import buttons
-from motion.storykit import (GOLD, GREEN, NAVY, actor, billboard, building, focus, news_pacing, reveal_gaps, sign,
+from motion.storykit import (GOLD, GREEN, NAVY, actor, billboard, building, comment_prompt, focus, news_pacing, reveal_gaps, sign,
                              sky_ground)
 
 news_pacing()
 
 NARRATOR = dict(speed=0.95)
-TAIL = 0.5
+TAIL = 0.3
 # news bed (motion/newsmusic.py); the drop is a beat of silence before the safety review line
 MUSIC = dict(mood="tech", drops=['c8'])
 
-SCRIPT = [
-    dict(id="c1", scene="austin", text="In Austin, Texas, you can now pay for a taxi ride with no driver."),
-    dict(id="c2", scene="austin", text="The car is Tesla's Cybercab, and it has no steering wheel and no pedals."),
-    dict(id="c3", scene="austin", text="Tesla started charging for rides in September, so the first month is now over."),
+SCRIPT = [   # v3, approved by the owner 5 Oct 2026 (research_notes/news_scripts_v3.md)
+    dict(id="c1", scene="austin", text="Tesla's taxi with no steering wheel just finished its first paid month."),
+    dict(id="c2", scene="austin", text="It is called the Cybercab, and it carries passengers around Austin, Texas, with "
+                                       "no driver."),
+    dict(id="c2b", scene="austin", text="It has no pedals either, so nobody inside can take control."),
     dict(id="c4", scene="ride", text="It was a bumpy start."),
     dict(id="c5", scene="ride", text="Passengers complained about long waits and about cars picking them up in the "
                                      "wrong spots."),
@@ -44,10 +45,11 @@ SCRIPT = [
     dict(id="c9", scene="safety", text="Austin firefighters have also asked for clear rules on how to handle a car "
                                        "with no driver controls."),
     dict(id="c10", scene="lot", text="Even so, Tesla is not slowing down."),
-    dict(id="c11", scene="lot", text="The number of Cybercabs registered in Texas has grown from [forty-five|45] to "
-                                     "[one hundred sixty-nine.|169.]"),
+    dict(id="c11", scene="lot", text="The number of Cybercabs registered in Texas has grown from "
+                                     "[forty-five at launch|45 at launch] to [one hundred sixty-nine.|169.]"),
+    dict(id="c11b", scene="lot", text="That is almost four times as many."),
     dict(id="c12", scene="lot", text="Elon Musk says the company is being extremely careful with safety."),
-    dict(id="c13", scene="end", text="Would you ride in a car with no steering wheel? Tell me in the comments."),
+    dict(id="c13", scene="end", text="Would you ride in a car with no steering wheel?"),
 ]
 reveal_gaps(SCRIPT, MUSIC)
 
@@ -92,29 +94,31 @@ def cab(cr, x, t, doors=0.0, s=1.6, label=True):
 
 def scene_austin(cr, t, tl):
     A = tl.at
-    keys = [(0, (1.4, 480, 830)), (A("c1", "taxi"), (1.6, 640, 800)), (A("c1", "driver"), (1.6, 620, 800)),
-            (A("c2"), (1.2, 620, 820)), (A("c2", "wheel"), (2.2, 700, 760)), (A("c3"), focus(300, 1.6)),
-            (A("c3", "month"), (1.3, 480, 820))]
+    keys = [(0, (1.4, 480, 830)), (A("c1", "taxi"), (1.6, 640, 800)), (A("c1", "wheel"), (1.6, 620, 800)),
+            (A("c1", "month"), focus(300, 1.6)), (A("c2"), (1.2, 620, 820)), (A("c2", "Austin"), (1.3, 480, 820)),
+            (A("c2b"), (2.2, 700, 760))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     austin_set(cr, t)
     arrive = ease_out(seg(t, 0.2, A("c1", "taxi") + 0.3))
-    cab(cr, lerp(1500, 640, arrive), t, doors=seg(t, A("c1", "driver"), A("c1", "driver") + 0.5))
-    if A("c2", "wheel") <= t < A("c3"):   # inside: an empty seat, no wheel
+    cab(cr, lerp(1500, 640, arrive), t, doors=seg(t, A("c1", "wheel"), A("c1", "wheel") + 0.5))
+    if t >= A("c2b"):   # inside: an empty seat, no wheel, no pedals
         with at(cr, 700, 700, 1.0):
             shape(cr, rrect_pts(-130, -90, 260, 170, 16, 14), WHITE, seed=19120, amp=0.4, lw=4)
             shape(cr, rrect_pts(-110, -60, 70, 120, 14, 12), hexc("#3b3f4a"), seed=19121, amp=0.3, lw=3)
             with at(cr, 50, -10, 1.0):
                 line(cr, [(-40, -40), (40, 40)], 9, RED, 19122, amp=0.2)
                 line(cr, [(40, -40), (-40, 40)], 9, RED, 19123, amp=0.2)
-            write(cr, [("no wheel", RED)], 50, 70, 26, align="center", bold=True)
-    actor(cr, "rider", 300, t, facing=1, arms=("wave", "hold") if t < A("c3") else ("thumb", "hold"),
-          eyes="wide" if A("c2", "wheel") <= t < A("c3") else "happy", mouth="o" if t < A("c3") else "grin")
-    if t >= A("c3", "September"):
-        sign(cr, 300, 470, "since SEP 2026", RED, start=A("c3", "September"), t=t)
-    hl(cr, t, [("a taxi with ", INK), ("NO DRIVER", RED)], 215, 66, A("c1", "taxi"), end=A("c2") - 0.05, bold=True)
-    hl(cr, t, [("Tesla ", RED), ("Cybercab", INK)], 215, 80, A("c2"), end=A("c3") - 0.05, bold=True)
-    hl(cr, t, [("month ", INK), ("ONE", RED), (" is over", INK)], 215, 74, A("c3"), bold=True)
+            write(cr, [("no wheel, no pedals", RED)], 20, 70, 24, align="center", bold=True)
+    actor(cr, "rider", 300, t, facing=1, arms=("wave", "hold") if t < A("c1", "month") else ("thumb", "hold"),
+          eyes="wide" if t >= A("c2b") else "happy", mouth="o" if t >= A("c2b") else "grin")
+    if A("c1", "month") <= t < A("c2"):
+        sign(cr, 300, 540, "paid rides since SEP 2026", RED, start=A("c1", "month"), t=t, s=0.85)
+    hl(cr, t, [("NO STEERING WHEEL", RED)], 215, 66, A("c1"), end=A("c1", "month") - 0.05, bold=True)
+    hl(cr, t, [("month ", INK), ("ONE", RED), (" is over", INK)], 215, 74, A("c1", "month"), end=A("c2") - 0.05,
+       bold=True)
+    hl(cr, t, [("Tesla ", RED), ("Cybercab", INK)], 215, 80, A("c2"), end=A("c2b") - 0.05, bold=True)
+    hl(cr, t, [("no wheel, ", INK), ("NO PEDALS", RED)], 215, 66, A("c2b"), bold=True)
 
 
 def scene_ride(cr, t, tl):
@@ -175,7 +179,7 @@ def scene_safety(cr, t, tl):
 def scene_lot(cr, t, tl):
     A = tl.at
     keys = [(A("c10") - 0.2, (1.0, 640, 830)), (A("c11"), (1.05, 640, 800)), (A("c11", "169"), (1.3, 640, 740)),
-            (A("c12"), (1.3, 640, 700))]
+            (A("c11b"), (1.2, 640, 720)), (A("c12"), (1.3, 640, 700))]
     set_camera(camera(t, keys, dur=0.14))
     enter_world(cr)
     sky_ground(cr, ground=hexc("#b9bcc4"))
@@ -196,7 +200,8 @@ def scene_lot(cr, t, tl):
             write(c, [("Elon Musk on X, 3 Oct 2026", hexc("#b8102a"))], 0, 66, 26, align="center")
         billboard(cr, 640, 500, 600, 260, quote, seed=19460)
     hl(cr, t, [("NOT", RED), (" slowing down", INK)], 215, 74, A("c10"), end=A("c11") - 0.05, bold=True)
-    hl(cr, t, [("45", INK), (" to ", INK), ("169", RED)], 215, 90, A("c11"), end=A("c12") - 0.05, bold=True)
+    hl(cr, t, [("45", INK), (" to ", INK), ("169", RED)], 215, 90, A("c11"), end=A("c11b") - 0.05, bold=True)
+    hl(cr, t, [("almost ", INK), ("4x", RED), (" as many", INK)], 215, 80, A("c11b"), end=A("c12") - 0.05, bold=True)
     if A("c11") <= t < A("c12"):
         source_tag(cr, t, A("c11"), "Texas DMV records via CNBC", y=270)
     hl(cr, t, [("Musk: ", INK), ("\"extremely careful\"", RED)], 215, 58, A("c12"), bold=True)
@@ -211,7 +216,8 @@ def scene_end(cr, t, tl):
     actor(cr, "rider", 360, t, facing=1, arms=("point", "hold"), eyes="open", mouth="talk")
     hl(cr, t, [("would ", INK), ("YOU", RED), (" ride?", INK)], 215, 74, A("c13"), bold=True, underline=True)
     cr.identity_matrix()
-    buttons(cr, t, A("c13", "comments"), (("YES", GREEN), ("NO", RED)), y=470, s=0.85)
+    buttons(cr, t, A("c13") + 0.3, (("YES", GREEN), ("NO", RED)), y=330, s=0.85)
+    comment_prompt(cr, t, A("c13") + 0.6)
 
 
 def draw(cr, t, tl):
