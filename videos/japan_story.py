@@ -30,6 +30,8 @@ news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
+# news bed (motion/newsmusic.py); the drop is a beat of silence before the new fee: 200,000 yen
+MUSIC = dict(mood="money", drops=['j4'])
 
 SCRIPT = [
     dict(id="j1", scene="office", text="If you dream of moving to Japan for good, it just got a lot more expensive."),

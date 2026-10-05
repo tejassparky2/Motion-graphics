@@ -27,6 +27,8 @@ news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
+# news bed (motion/newsmusic.py); the drop is a beat of silence before "But there is a catch."
+MUSIC = dict(mood="money", drops=['d14'])
 
 SCRIPT = [
     dict(id="d1", scene="town", text="Diesel fuel just hit its highest price ever in the United States."),

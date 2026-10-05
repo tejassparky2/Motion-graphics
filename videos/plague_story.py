@@ -33,6 +33,8 @@ news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
+# news bed (motion/newsmusic.py); the drop is a beat of silence before "plague still exists in the US"
+MUSIC = dict(mood="urgent", drops=['p12'])
 
 SCRIPT = [
     dict(id="p1", scene="lab", text="A laboratory worker in Siberia has died, and doctors suspect the plague."),

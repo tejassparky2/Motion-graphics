@@ -88,3 +88,18 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
   cartoon people, never portraits of real people. Cast sheet: `out/brand/news_cast.png`.
 - Format under test: the story told with characters acting in drawn places, camera cutting on key words
   (`videos/diesel_story.py`), one narrator.
+
+## Music and posting times (owner, 5 Oct 2026)
+- **News bed:** `motion/newsmusic.py`. Research and sources are in `research_notes/news_music.md`.
+  - Every news video sets `MUSIC = dict(mood="urgent"|"money"|"tech", drops=[beat id of the reveal line])`.
+  - Music is a simple pulse with no vocals. It changes at each scene cut, cuts to silence before the reveal line, and
+    ends on V so the loop resolves.
+  - It is unique per video (key, tempo, chords, grooves).
+  - Mix: about 21-22 dB under the voice while words are spoken, never less than 20 dB (WCAG G56).
+- **Checks after a render:**
+  - `tools/mixcheck.py NAME`: Whisper medium on the full mix, so the music never hides a word.
+  - `python render.py --video NAME --remix`: redoes only the soundtrack.
+- **Posting: 9:30 PM IST and 4:30 AM IST.**
+  - 4:30 AM IST = 7 PM US Eastern on the previous day (6 PM from 1 Nov). This slot is for **US stories**.
+  - 9:30 PM IST = 12 PM US Eastern, 5 PM UK (11 AM / 4 PM from 1 Nov and 25 Oct). This slot is for **world and tech
+    stories**.

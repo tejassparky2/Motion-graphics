@@ -27,6 +27,8 @@ news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
+# news bed (motion/newsmusic.py); the drop is a beat of silence before the safety review line
+MUSIC = dict(mood="tech", drops=['c8'])
 
 SCRIPT = [
     dict(id="c1", scene="austin", text="In Austin, Texas, you can now pay for a taxi ride with no driver."),

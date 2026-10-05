@@ -10,6 +10,7 @@
 """
 import argparse
 import importlib
+import json
 import os
 import subprocess
 import sys
@@ -151,13 +152,20 @@ def render_video(out, audio=True, voice=True):
     if audio:
         from motion.audio import build_soundtrack
         wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
+        with open(os.path.join(ROOT, "build", f"{VIDEO['name']}_events.json"), "w") as f:
+            json.dump(engine.EVENTS, f)   # lets --remix redo the sound without redrawing the frames
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
-                                seed=VIDEO["name"])
+                                seed=VIDEO["name"], news=news_cues())
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
     print(f"wrote {out}", file=sys.stderr)
-    # smaller copy that's easy to send to a phone
+    write_preview(out)
+    write_metadata(out[:-4] + "_metadata.md")
+
+
+def write_preview(out):
+    """Smaller copy that's easy to send to a phone."""
     preview = out[:-4] + "_preview.mp4"
     tmp = os.path.join(ROOT, "build", f"{VIDEO['name']}_preview_tmp.mp4")
     subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", out, "-c:v", "libx264", "-crf", "27",
@@ -166,7 +174,45 @@ def render_video(out, audio=True, voice=True):
     subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN,
                            "-movflags", "+faststart", preview])
     print(f"wrote {preview}", file=sys.stderr)
-    write_metadata(out[:-4] + "_metadata.md")
+
+
+def news_cues():
+    """Scene cuts and reveal lines for the news bed, from the video's MUSIC = dict(mood=..., drops=[beat ids])."""
+    m = getattr(VIDEO["mod"], "MUSIC", None)
+    if not m:
+        return None
+    tl = timeline()
+    return dict(mood=m.get("mood", "urgent"), scenes=[tuple(s) for s in tl.scenes],
+                drop_times=[tl.at(b) for b in m.get("drops", ())])
+
+
+def remix(out, voice=True):
+    """Rebuild only the soundtrack of an already rendered video (after a music change)."""
+    from motion.audio import build_soundtrack
+    silent = os.path.join(ROOT, "build", f"{VIDEO['name']}_silent.mp4")
+    n = int(round(total_duration() * FPS))
+    path = os.path.join(ROOT, "build", f"{VIDEO['name']}_events.json")
+    if os.path.exists(path):
+        with open(path) as f:
+            events = [tuple(e) for e in json.load(f)]
+    else:   # collect the sound-effect cues by drawing every frame onto a tiny surface (fast)
+        small = cairo.ImageSurface(cairo.FORMAT_ARGB32, W // 10, H // 10)
+        for i in range(n):
+            engine.set_frame(i)
+            cr = cairo.Context(small)
+            cr.scale(0.1, 0.1)
+            VIDEO["mod"].draw(cr, i / FPS, timeline())
+        events = list(engine.EVENTS)
+        with open(path, "w") as f:
+            json.dump(events, f)
+    wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
+    lufs = build_soundtrack(events, n / FPS, wav, timeline().clips() if voice else None, seed=VIDEO["name"],
+                            news=news_cues())
+    print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
+    subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
+                           "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
+    print(f"wrote {out}", file=sys.stderr)
+    write_preview(out)
 
 
 def render_still(t, out):
@@ -210,10 +256,13 @@ if __name__ == "__main__":
     ap.add_argument("--sheet", type=float)
     ap.add_argument("--no-audio", action="store_true")
     ap.add_argument("--no-voice", action="store_true")
+    ap.add_argument("--remix", action="store_true", help="redo only the soundtrack of a rendered video")
     a = ap.parse_args()
     load(a.video)
     if a.still is not None:
         render_still(a.still, a.out or os.path.join(ROOT, "build", f"{a.video}_still_{a.still}.png"))
+    elif a.remix:
+        remix(a.out or os.path.join(ROOT, "out", f"{a.video}.mp4"), voice=not a.no_voice)
     elif a.sheet:
         render_sheet(a.sheet, a.out or os.path.join(ROOT, "build", f"{a.video}_sheet.png"))
     else:

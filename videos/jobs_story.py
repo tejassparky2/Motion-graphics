@@ -29,6 +29,8 @@ news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
+# news bed (motion/newsmusic.py); the drop is a beat of silence before the real number: only 29,000 jobs
+MUSIC = dict(mood="money", drops=['j2'])
 
 SCRIPT = [
     dict(id="j1", scene="street", text="Economists expected America to add about [ninety thousand|90,000] jobs in "

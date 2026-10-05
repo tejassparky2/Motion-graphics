@@ -155,11 +155,16 @@ GAINS = {"pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7
          "fall": 0.8, "laugh": 0.0}
 
 
-def build_soundtrack(events, total, path, clips=None, seed=None):
-    """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV."""
+def build_soundtrack(events, total, path, clips=None, seed=None, news=None):
+    """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
+    `news` = dict(mood=..., scenes=[...], drop_times=[...]) switches to the news channel's bed (motion/newsmusic.py)."""
     import pyloudnorm
     n = int(total * SR)
-    bed = music(total, seed)[:n]
+    if news:
+        from .newsmusic import news_music
+        bed = news_music(total, seed, **news)[:n]
+    else:
+        bed = music(total, seed)[:n]
     fx = np.zeros(n)
     seen = set()
     for at, name, dur in events:

@@ -26,6 +26,7 @@ news_pacing()
 
 NARRATOR = dict(speed=0.95)
 TAIL = 0.9
+MUSIC = dict(mood="tech", drops=['a6'])   # news bed (motion/newsmusic.py); drop = silence before Apple's warning
 
 SCRIPT = [
     dict(id="a1", scene="home", text="If you use a Mac, an important setting is about to change."),
