@@ -22,14 +22,18 @@ TEAL = hexc("#2e9e8f")
 # For a company story the globe takes the shape and colour of the company's mark (our own drawing, never a
 # copied logo file) with the name on the base (owner's request, 5 Oct 2026).
 PALETTES = {
-    "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
+    "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0"),
+               name="JAPAN", name_col=hexc("#fbf8ef")),
     # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
     # Apple: the globe itself is shaped like the apple mark (our drawing), in graphite, name on the base.
     "apple": dict(sea=hexc("#2b2d33"), land=hexc("#3b3e46"), ring=hexc("#c9ccd2"), lines=hexc("#44474f"),
                   body="apple", name="APPLE"),
-    "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
-    "ru": dict(sea=hexc("#fbf8ef"), land=hexc("#1f4fb0"), ring=hexc("#d52b1e"), lines=hexc("#c9d6ee")),
-    "us": dict(sea=hexc("#3c3b6e"), land=hexc("#b22234"), ring=hexc("#fbf8ef"), lines=hexc("#6e6da0")),
+    "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee"),
+                  name="WORLD"),
+    "ru": dict(sea=hexc("#fbf8ef"), land=hexc("#1f4fb0"), ring=hexc("#d52b1e"), lines=hexc("#c9d6ee"),
+               name="RUSSIA", name_col=hexc("#fbf8ef")),
+    "us": dict(sea=hexc("#3c3b6e"), land=hexc("#b22234"), ring=hexc("#fbf8ef"), lines=hexc("#6e6da0"),
+               name="USA"),
     # Tesla: the globe shaped like Tesla's T (our drawing), in Tesla red, name on the base.
     "tesla": dict(sea=hexc("#e31937"), land=hexc("#b8102a"), ring=hexc("#c9ccd2"), lines=hexc("#f05a6e"),
                   body="tesla", name="TESLA"),
@@ -97,7 +101,7 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
         line(cr, [(0, -14), (0, cy + 60)], 6, hexc("#b07a45"), seed + 1, amp=0.2)
         if p.get("name"):   # a name plate on the base
             shape(cr, rrect_pts(-92, -54, 184, 46, 12, 14), p["ring"], seed=seed + 60, amp=0.4, lw=4)
-            write(cr, [(p["name"], INK)], 0, -20, 34, align="center", bold=True)
+            write(cr, [(p["name"], p.get("name_col", INK))], 0, -20, 34, align="center", bold=True)
         # sphere, tilted a little like a real desk globe
         outline, extras = BODIES[p["body"]]() if p.get("body") else (None, [])   # shaped like the company's mark
         with at(cr, 0, cy, 1.0, rot=0.0 if outline else -0.18):

@@ -61,9 +61,10 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
 ## Company stories and topic choice (owner, 5 Oct 2026)
 - Company stories (owner's request): the Globe itself takes the shape and colour of the company's mark (no separate
   logo on one side), keeps its globe lines, stand, face and ring, and the company name is on a plate on the base
-  (`PALETTES` in `motion/news.py`: `body`, `name`; e.g. `"apple"`: a graphite apple-shaped globe, "APPLE"). We draw the mark
-  ourselves as a simple shape (`EMBLEMS`), never paste the official logo file, and never suggest the company made or
-  endorses the video.
+  (`PALETTES` in `motion/news.py`: `body`, `name`; e.g. `"apple"`: a graphite apple-shaped globe, "APPLE").
+  We draw the mark ourselves as a simple shape, never paste the official logo file, and never suggest the company
+  made or endorses the video.
+- Every globe has a name plate on its base: countries too ("JAPAN", "RUSSIA", "USA", "WORLD"), owner's request.
 - Any topic is open, including wars and tariff/trade wars, as long as the accuracy and neutrality rules hold.
 - What US viewers stay for (research, 5 Oct 2026): the money-in-your-pocket angle. In the Iran war, 7 in 10 Americans
   worry most about gas prices (Pew, Apr 2026); 64% say gas prices hurt their household (Reuters/Ipsos); tariffs are

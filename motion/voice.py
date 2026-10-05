@@ -147,7 +147,8 @@ def _squeeze(a):
 # Pronunciation fixes for words the English voices don't know (Kokoro/misaki phoneme markup).
 # "lakh" defaults to a short "lock"; Indian English says "laakh" with a long vowel.
 PRONOUNCE = {"lakh": "[lakh](/lˈɑːk/)", "emus": "[emus](/ˈimjuz/)", "emu": "[emu](/ˈimju/)",
-             "bencher": "[bencher](/bˈɛnʧəɹ/)", "benchers": "[benchers](/bˈɛnʧəɹz/)"}
+             "bencher": "[bencher](/bˈɛnʧəɹ/)", "benchers": "[benchers](/bˈɛnʧəɹz/)",
+             "Irkutsk": "[Irkutsk](/ɪɹkˈutsk/)"}   # was heard as "Yakutsk"
 
 
 def _pronounce(text):
