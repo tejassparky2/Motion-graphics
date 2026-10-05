@@ -24,9 +24,9 @@ TEAL = hexc("#2e9e8f")
 PALETTES = {
     "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
     # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
-    # Apple: the whole globe in the mark's graphite, the apple big and white on one side, the name on the base.
+    # Apple: the globe itself is shaped like the apple mark (our drawing), in graphite, name on the base.
     "apple": dict(sea=hexc("#2b2d33"), land=hexc("#3b3e46"), ring=hexc("#c9ccd2"), lines=hexc("#44474f"),
-                  emblem="apple", emblem_col=hexc("#f5f5f7"), name="APPLE"),
+                  body="apple", name="APPLE"),
     "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
 }
 _LAND = [(-0.45, -0.28, 0.48, 0.34, 1), (0.02, 0.4, 0.3, 0.4, 2), (0.55, -0.22, 0.4, 0.46, 3),
@@ -43,13 +43,16 @@ def _continent(cx, cy, rx, ry, k, n=18):
     return pts
 
 
-def _apple_mark(cr, x, y, s, seed, col=None):
-    """Our own hand-drawn apple with a bite and a leaf (a simple shape that says "Apple", not the official logo)."""
-    body = [(0, -17), (8, -21), (17, -22), (24, -18), (27, -12),
+APPLE_BODY = [(0, -17), (8, -21), (17, -22), (24, -18), (27, -12),
             (24, -8), (21, -4), (20, 0), (21, 4), (24, 8),            # the bite
             (27, 13), (24, 20), (18, 27), (11, 30), (5, 29), (0, 27), (-5, 29), (-11, 30), (-18, 27),
             (-24, 20), (-28, 10), (-29, 0), (-28, -10), (-24, -18), (-17, -22), (-8, -21)]
-    leaf = [(1, -24), (3, -33), (12, -39), (10, -30)]
+APPLE_LEAF = [(1, -24), (3, -33), (12, -39), (10, -30)]
+
+
+def _apple_mark(cr, x, y, s, seed, col=None):
+    """Our own hand-drawn apple with a bite and a leaf (a simple shape that says "Apple", not the official logo)."""
+    body, leaf = APPLE_BODY, APPLE_LEAF
     with at(cr, x, y, s):
         col = col or hexc("#1d1d1f")
         shape(cr, body, col, seed=seed, amp=0.25, lw=0, stroke=None)
@@ -67,16 +70,32 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
     with at(cr, x, ground_y - bounce, s):
         # stand: base, post and the half-ring meridian
         blob(cr, 0, -10, 70, 16, hexc("#8e5a2e"), seed, amp=0.4, lw=4)
-        line(cr, [(0, -14), (0, cy + r + 14)], 12, INK, seed + 1, amp=0.2)
-        line(cr, [(0, -14), (0, cy + r + 14)], 6, hexc("#b07a45"), seed + 1, amp=0.2)
+        line(cr, [(0, -14), (0, cy + 60)], 12, INK, seed + 1, amp=0.2)
+        line(cr, [(0, -14), (0, cy + 60)], 6, hexc("#b07a45"), seed + 1, amp=0.2)
         if p.get("name"):   # a name plate on the base
             shape(cr, rrect_pts(-92, -54, 184, 46, 12, 14), p["ring"], seed=seed + 60, amp=0.4, lw=4)
             write(cr, [(p["name"], INK)], 0, -20, 34, align="center", bold=True)
         # sphere, tilted a little like a real desk globe
-        with at(cr, 0, cy, 1.0, rot=-0.18):
-            blob(cr, 0, 0, r, r, p["sea"], seed + 2, amp=0.6, lw=5)
+        if p.get("body") == "apple":   # the globe shaped like the company's mark
+            k = 4.7
+            outline = [(bx * k, (by - 4) * k) for bx, by in APPLE_BODY]
+            leaf = [(lx * k, (ly - 4) * k) for lx, ly in APPLE_LEAF]
+        else:
+            outline = None
+        with at(cr, 0, cy, 1.0, rot=0.0 if outline else -0.18):
+            if outline:
+                shape(cr, leaf, p["sea"], seed=seed + 3, amp=0.4, lw=5)
+                shape(cr, outline, p["sea"], seed=seed + 2, amp=0.5, lw=5)
+            else:
+                blob(cr, 0, 0, r, r, p["sea"], seed + 2, amp=0.6, lw=5)
             cr.save()
-            cr.arc(0, 0, r - 3, 0, 2 * math.pi)
+            if outline:
+                cr.move_to(*outline[0])
+                for q in outline[1:]:
+                    cr.line_to(*q)
+                cr.close_path()
+            else:
+                cr.arc(0, 0, r - 3, 0, 2 * math.pi)
             cr.clip()
             off = (t * spin) % 2.4 - 1.2
             for lx, ly, rx, ry, k in _LAND:
@@ -91,7 +110,10 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
             if p.get("emblem_col"):   # the company's mark, big, on one side of the globe (our own drawing)
                 EMBLEMS[p["emblem"]](cr, -look * 58, 4, 1.6, seed + 51, p["emblem_col"])
             cr.restore()
-            blob(cr, 0, 0, r, r, None, seed + 2, amp=0.6, lw=5)
+            if outline:
+                shape(cr, outline, None, seed=seed + 2, amp=0.5, lw=5)
+            else:
+                blob(cr, 0, 0, r, r, None, seed + 2, amp=0.6, lw=5)
         # meridian ring in the flag's second colour
         cr.save()
         cr.new_path()
