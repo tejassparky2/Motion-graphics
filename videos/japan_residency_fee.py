@@ -66,9 +66,12 @@ SCRIPT = [
     dict(id="n16", scene="end",
          text="Would you pay [twelve hundred dollars|$1,200] to live in Japan? Tell me in the comments.", speaker=H),
 ]
+GLOBE_VOICE = "bm_george"   # the globe's own Kokoro voice; the host keeps the channel narrator (am_fenrir)
 for _i, _s in enumerate(SCRIPT):   # a clear pause whenever the other one starts talking
     if _i and _s["speaker"] != SCRIPT[_i - 1]["speaker"]:
         _s["gap"] = 0.36
+    if _s["speaker"] == J:
+        _s["voice"] = GLOBE_VOICE
 
 METADATA = dict(
     title="Japan Just Made Permanent Residency 20x More Expensive 🇯🇵",

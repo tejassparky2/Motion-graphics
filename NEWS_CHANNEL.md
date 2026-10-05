@@ -41,7 +41,8 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
 - Drawing: our `reporter` host (motion/characters.py) and `motion/news.globe(...)`: our talking desk globe, painted in the
   story country's flag colours (add a palette in `PALETTES`). Never a talking flag. Close shot
   on whoever speaks, pop-in panels for every number, `date_stamp` and `source_tag` on screen.
-- Both parts are voiced by the channel narrator (Kokoro); a 0.36 s pause whenever the speaker changes.
+- Two voices (owner, 5 Oct 2026): the host is the channel narrator (Kokoro `am_fenrir`); the Globe has its own Kokoro
+  voice (`GLOBE_VOICE`, per-line `voice=` in the script; default `bm_george`). A 0.36 s pause whenever the speaker changes.
 - First video in this format: `videos/japan_residency_fee.py`.
 
 ## Owner's channel-wide decisions (5 Oct 2026)

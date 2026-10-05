@@ -34,6 +34,7 @@ class Beat:
     turn_pause: float = 0.32  # when a line starts as narration and a character takes over at `speaker_from`
     gap: float = 0.18     # silence before this beat
     pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
+    voice: str = None     # a different Kokoro voice for this line (a second character); None = the narrator
     units: list = field(default_factory=list)
     start: float = 0.0
     end: float = 0.0
@@ -161,8 +162,9 @@ class Timeline:
         audio, times, off = [], [], 0.0
         for c, (a0, a1) in enumerate(spans):
             text = " ".join(words[a0:a1])
-            clip = voice.synth(text, b.pace)
-            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace)]
+            with voice.speaking_as(b.voice):
+                clip = voice.synth(text, b.pace)
+                times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace)]
             audio.append(clip)
             off += len(clip) / voice.SR
             if c < len(pauses):

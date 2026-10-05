@@ -12,6 +12,7 @@ Engines:
 - Word timestamps come from running faster-whisper over the synthesized audio (also cached), so on-screen
   numbers and captions land on the spoken word.
 """
+import contextlib
 import difflib
 import glob
 import hashlib
@@ -66,6 +67,21 @@ def configure(voice=None, speed=None, max_pause=None):
         SPEED = speed
     if max_pause is not None:
         MAX_PAUSE = max_pause
+
+
+@contextlib.contextmanager
+def speaking_as(voice=None):
+    """Use another Kokoro voice for a block of lines (e.g. a second character), then switch back.
+    Caches are keyed on the voice, so each character's takes are kept apart."""
+    global VOICE
+    if not voice or ENGINE != "kokoro":
+        yield
+        return
+    old, VOICE = VOICE, voice
+    try:
+        yield
+    finally:
+        VOICE = old
 
 
 def _voice_path():
