@@ -27,6 +27,8 @@ Sources:
 • CNN (4 Oct 2026): https://www.cnn.com/2026/10/04/europe/russia-laboratory-plague-accident-intl
 • CDC, plague in the United States: https://www.cdc.gov/plague/maps-statistics/index.html
 • WHO plague fact sheet: https://www.who.int/news-room/fact-sheets/detail/plague
+• CDC, how people get plague (flea bites, wild rodents): https://www.cdc.gov/plague/causes/index.html
+• CDC, signs and symptoms (seek medical care right away): https://www.cdc.gov/plague/signs-symptoms/index.html
 
 #Plague #Health #News
 ```
@@ -41,4 +43,4 @@ plague, russia, irkutsk, black death, suspected plague, plague in america, cdc, 
 Did you know there are plague cases in the US every year? Yes or no? 👇
 ```
 
-**Video facts:** 60.3 s, 173 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 59.1 s, 180 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
