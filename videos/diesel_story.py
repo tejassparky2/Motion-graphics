@@ -13,7 +13,7 @@ The seven officials are generic cartoon people, not portraits of real leaders.
 import math
 
 from motion.captions import captions
-from motion.characters import person
+from motion.newsfolk import folk
 from motion.engine import (INK, RED, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, pop, rrect_pts, seg,
                            shape, sharp_shape, write)
 from motion.kit import camera, enter_world, hl, set_camera, stamp, whip
@@ -74,6 +74,13 @@ NAVY = hexc("#23346b")
 ORANGE = hexc("#e0a03a")
 SKY = hexc("#a9dcf5")
 GROUND = 900
+
+
+def person(cr, who, x, y, t, **kw):
+    """Our own news cast (motion/newsfolk.py), never the Interestingly Strange characters."""
+    if kw.get("eyes") == "dot":
+        kw["eyes"] = "open"
+    folk(cr, who, x, y, t, **kw)
 
 
 def sky_ground(cr, ground=hexc("#c9b48a")):
@@ -221,7 +228,7 @@ def scene_sea(cr, t, tl):
         x = x0 + (0 if blocked else 80 * seg(t, A("f4"), A("f4") + 3))
         tanker(cr, x, 760, 1.0, 15700 + k * 9, t=t)
         if k == 0:   # the captain on the first tanker's deck
-            person(cr, "oldman", x - 60, 752, t, scale=0.9, facing=1, arms=("chin", "hip"),
+            person(cr, "captain", x - 60, 752, t, scale=0.9, facing=1, arms=("chin", "hip"),
                    eyes="wide" if blocked else "dot", mouth="o" if blocked else "flat")
     if blocked:
         u = ease_out(seg(t, A("f4", "choked"), A("f4", "choked") + 0.3))
@@ -240,7 +247,7 @@ def scene_sea(cr, t, tl):
 
 
 # ---------------------------------------------------------------- summit room and the emergency warehouse
-OFFICIALS = ["principal", "teacher", "hilbert", "sub", "oldman", "mia", "sam"]
+OFFICIALS = [f"official_{k}" for k in range(1, 8)]
 
 
 def summit_set(cr, t):
@@ -332,7 +339,7 @@ def scene_station(cr, t, tl):
         wallet(cr, 980, 640, pop(t, A("f9"), 0.2) or 0.01)
         write(cr, [("?", hexc("#8a63d2"))], 1060, 600, 100, align="center", bold=True, halo=WHITE)
     if A("f10") <= t < A("f11"):
-        for k, who in enumerate(("teacher", "oldman")):
+        for k, who in enumerate(("expert_a", "expert_b")):
             walk = seg(t, A("f10") + 0.1 * k, A("f10") + 0.8 + 0.1 * k)
             person(cr, who, lerp(560, 760 + k * 110, ease_out(walk)), 905, t, facing=1,
                    walk=t * 2.5 if walk < 1 else None, arms=("point", "hip"), eyes="dot",

@@ -80,3 +80,11 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
   https://news.gallup.com/poll/14338/most-important-problem.aspx ;
   https://www.niemanlab.org/2025/09/more-americans-than-ever-now-get-news-on-tiktok-pew-finds/ ;
   https://www.americanprogress.org/article/the-trump-administrations-tariffs-and-iran-war-will-cause-americans-to-face-higher-prices-this-summer/
+
+## Our own cast (owner, 5 Oct 2026)
+- Never reuse Interestingly Strange characters (`motion/characters.py`) in this channel's videos. Every character
+  comes from `motion/newsfolk.py` (`folk(...)`, cast list `FOLK`): bean bodies, big round heads, big oval eyes with a
+  shine and eyebrows, a nose, mitten hands. Add new people as `FOLK` entries; officials and leaders are generic
+  cartoon people, never portraits of real people. Cast sheet: `out/brand/news_cast.png`.
+- Format under test: the story told with characters acting in drawn places, camera cutting on key words
+  (`videos/diesel_story.py`), one narrator.
