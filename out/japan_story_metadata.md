@@ -41,4 +41,4 @@ japan, japan permanent residency, japan news, permanent residency fee, living in
 Would you pay ¥200,000 (about $1,270) for permanent residency in Japan? Yes or no? 👇
 ```
 
-**Video facts:** 50.6 s, 149 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 54.7 s, 166 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
