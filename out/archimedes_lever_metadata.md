@@ -38,4 +38,4 @@ archimedes, give me a place to stand, lever, law of the lever, physics explained
 Could he really move the Earth with a long enough lever? YES or NO 👇🌍
 ```
 
-**Video facts:** 50.2 s, 175 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 49.6 s, 175 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

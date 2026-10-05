@@ -40,4 +40,4 @@ diogenes, alexander the great, diogenes and alexander, stand out of my sun, stoi
 Who was richer: Alexander or Diogenes? Defend your answer 👇☀️
 ```
 
-**Video facts:** 61.0 s, 197 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 59.7 s, 197 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
