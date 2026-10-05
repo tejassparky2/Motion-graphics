@@ -40,4 +40,4 @@ tesla, cybercab, robotaxi, self driving, driverless car, austin, elon musk, tech
 Would you ride in a car with no steering wheel? Yes or no? 👇
 ```
 
-**Video facts:** 53.1 s, 157 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 54.1 s, 157 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
