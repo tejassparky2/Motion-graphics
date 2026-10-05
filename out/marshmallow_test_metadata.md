@@ -36,4 +36,4 @@ marshmallow test, marshmallow experiment, delayed gratification, willpower, psyc
 Would YOU have waited for the second marshmallow? Be honest 🍬👇
 ```
 
-**Video facts:** 48.8 s, 154 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 51.8 s, 154 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

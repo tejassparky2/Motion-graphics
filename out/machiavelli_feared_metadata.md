@@ -36,4 +36,4 @@ machiavelli, the prince, better to be feared than loved, loved or feared, philos
 Loved or feared? Pick one and defend it 👇😈
 ```
 
-**Video facts:** 42.5 s, 142 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 42.0 s, 142 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

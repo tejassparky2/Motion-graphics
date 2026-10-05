@@ -38,4 +38,4 @@ ben franklin effect, benjamin franklin, psychology trick, how to make someone li
 Would you try this on someone who doesn't like you? Report back 😂🤝👇
 ```
 
-**Video facts:** 47.8 s, 161 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 48.7 s, 161 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
