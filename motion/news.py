@@ -19,8 +19,11 @@ TEAL = hexc("#2e9e8f")
 # ---------------------------------------------------------------- the talking globe
 # The channel's recurring character: a desk globe with a face. For each story it is painted in that country's flag
 # colours (sea, land, stand ring), so viewers see whose story it is without us drawing anyone's flag as a character.
+# For a company story it wears that company's brand colours instead; we never draw a real logo.
 PALETTES = {
     "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
+    # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
+    "apple": dict(sea=hexc("#e3e5ea"), land=hexc("#55585f"), ring=hexc("#1d1d1f"), lines=hexc("#c4c7ce")),
     "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
 }
 _LAND = [(-0.45, -0.28, 0.48, 0.34, 1), (0.02, 0.4, 0.3, 0.4, 2), (0.55, -0.22, 0.4, 0.46, 3),

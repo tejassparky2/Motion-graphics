@@ -57,3 +57,19 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
    sources) and render only after they approve or edit it. Keep their wording; if one of their lines would be
    misheard, say so and suggest a fix. Their ideas, opinions and edits make each video original, which protects
    monetization.
+
+## Company stories and topic choice (owner, 5 Oct 2026)
+- Company stories: the Globe wears the company's brand colours (`PALETTES` in `motion/news.py`, e.g. `"apple"`: silver
+  and graphite). Never draw or copy a real logo.
+- Any topic is open, including wars and tariff/trade wars, as long as the accuracy and neutrality rules hold.
+- What US viewers stay for (research, 5 Oct 2026): the money-in-your-pocket angle. In the Iran war, 7 in 10 Americans
+  worry most about gas prices (Pew, Apr 2026); 64% say gas prices hurt their household (Reuters/Ipsos); tariffs are
+  raising food prices (CAP). Economy/inflation, government and immigration top Gallup's "most important problem". So:
+  lead with what a story means for the viewer (prices, jobs, their phone, their data), then explain the why.
+  Shorts: most engagement happens in the first 10 seconds, so the hook line is the most important line. 20% of US
+  adults (43% under 30) regularly get news on TikTok; YouTube is used by 84% (Pew 2025).
+  Sources: https://www.pewresearch.org/global/2026/04/07/gas-prices-are-americans-top-concern-in-iran-war/ ;
+  https://thehill.com/policy/international/5820379-rising-fuel-costs-concern/ ;
+  https://news.gallup.com/poll/14338/most-important-problem.aspx ;
+  https://www.niemanlab.org/2025/09/more-americans-than-ever-now-get-news-on-tiktok-pew-finds/ ;
+  https://www.americanprogress.org/article/the-trump-administrations-tariffs-and-iran-war-will-cause-americans-to-face-higher-prices-this-summer/
