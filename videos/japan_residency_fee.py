@@ -39,7 +39,7 @@ TAIL = 0.9
 
 H, J = "reporter", "globe"
 SCRIPT = [
-    dict(id="n1", scene="talk", text="Want to live in Japan for good? It just got a lot more expensive.", speaker=H),
+    dict(id="n1", scene="talk", text="Do you want to live in Japan for good? It just got a lot more expensive.", speaker=H),
     dict(id="n2", scene="talk", text="It did. Since October first, permanent residency in Japan costs twenty times more.",
          speaker=J),
     dict(id="n3", scene="talk", text="Twenty times? What did it cost before?", speaker=H),
