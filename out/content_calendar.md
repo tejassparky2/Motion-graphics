@@ -31,7 +31,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 9 | Sun Oct 4 | 4:30 AM | kevin_chat | The Mystery Kid in the Class Group Chat Was… 😳 |
 | 10 | Sun Oct 4 | 9:30 PM | birthday_paradox | Only 23 People… and 2 Share a Birthday? 🎂🤯 (Birthday Paradox) |
 | 11 | Mon Oct 5 | 1:30 AM | bombardier_beetle | This Beetle Has a Boiling Cannon in Its Butt 🪲🔥 |
-| 12 | Mon Oct 5 | 4:30 AM | exam_answers | The Last Bencher's Exam Answers 😂 (Technically Correct) |
+| 12 | Mon Oct 5 | 9:30 PM | exam_answers | The Last Bencher's Exam Answers 😂 (Technically Correct) |
 | 13 | Mon Oct 5 | 9:30 PM | ship_of_theseus | If You Replace Every Part… Is It Still the Same Ship? 🚢🤯 |
 | 14 | Tue Oct 6 | 4:30 AM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
 | 15 | Tue Oct 6 | 9:30 PM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |

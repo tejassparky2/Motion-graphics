@@ -37,4 +37,4 @@ funny exam answers, trick questions, last bencher, backbenchers, teacher vs stud
 Be honest: which answer would YOU give full marks? 😂 1, 2, 3 or 4?
 ```
 
-**Video facts:** 40.3 s, 121 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 38.2 s, 121 words of narration, voice `am_fenrir` at speed 1.0. Made for kids: **No**.
