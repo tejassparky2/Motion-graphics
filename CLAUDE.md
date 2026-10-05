@@ -10,6 +10,8 @@
 - After every render, check every line with Whisper **medium** (not just the small model in verify.py). Any line
   where words merge or get misheard ("No. Your age" heard as "Know your age") gets reworded and re-rendered.
 - Pause lengths come from the reference videos the owner supplied (`out/voice_rhythm.md`).
+- Narrator: Kokoro `am_fenrir` (the default). The owner switched back from their cloned voice on 5 Oct 2026 because
+  more viewers swiped away on the cloned-voice videos. Use the clone (`NARRATOR_ENGINE=clone`) only if the owner asks.
 
 ## Paradoxes must be explained so any viewer understands
 - Clarity beats length: add a few seconds (45–50 s is fine) rather than skip a step.
