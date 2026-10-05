@@ -19,11 +19,13 @@ TEAL = hexc("#2e9e8f")
 # ---------------------------------------------------------------- the talking globe
 # The channel's recurring character: a desk globe with a face. For each story it is painted in that country's flag
 # colours (sea, land, stand ring), so viewers see whose story it is without us drawing anyone's flag as a character.
-# For a company story it wears that company's brand colours instead; we never draw a real logo.
+# For a company story it wears that company's brand colours plus a badge with our own simple drawing of the
+# company's mark (owner's request, 5 Oct 2026), never a copied logo file.
 PALETTES = {
     "jp": dict(sea=hexc("#fbf8ef"), land=hexc("#bc002d"), ring=hexc("#bc002d"), lines=hexc("#e9b8c0")),
     # companies: the globe in the company's brand colours (never its logo). Apple: silver and graphite.
-    "apple": dict(sea=hexc("#e3e5ea"), land=hexc("#55585f"), ring=hexc("#1d1d1f"), lines=hexc("#c4c7ce")),
+    "apple": dict(sea=hexc("#e3e5ea"), land=hexc("#55585f"), ring=hexc("#1d1d1f"), lines=hexc("#c4c7ce"),
+                  emblem="apple"),
     "world": dict(sea=hexc("#5fa8d8"), land=hexc("#5cb85c"), ring=hexc("#c9a227"), lines=hexc("#9fd0ee")),
 }
 _LAND = [(-0.45, -0.28, 0.48, 0.34, 1), (0.02, 0.4, 0.3, 0.4, 2), (0.55, -0.22, 0.4, 0.46, 3),
@@ -38,6 +40,21 @@ def _continent(cx, cy, rx, ry, k, n=18):
         f = 1 + 0.22 * math.sin(3 * a + k * 1.7) + 0.14 * math.sin(5 * a + k * 2.9) + 0.08 * math.sin(7 * a + k)
         pts.append((cx + rx * f * math.cos(a), cy + ry * f * math.sin(a)))
     return pts
+
+
+def _apple_mark(cr, x, y, s, seed):
+    """Our own hand-drawn apple with a bite and a leaf (a simple shape that says "Apple", not the official logo)."""
+    body = [(0, -17), (8, -21), (17, -22), (24, -18), (27, -12),
+            (24, -8), (21, -4), (20, 0), (21, 4), (24, 8),            # the bite
+            (27, 13), (24, 20), (18, 27), (11, 30), (5, 29), (0, 27), (-5, 29), (-11, 30), (-18, 27),
+            (-24, 20), (-28, 10), (-29, 0), (-28, -10), (-24, -18), (-17, -22), (-8, -21)]
+    leaf = [(1, -24), (3, -33), (12, -39), (10, -30)]
+    with at(cr, x, y, s):
+        shape(cr, body, hexc("#1d1d1f"), seed=seed, amp=0.25, lw=0, stroke=None)
+        shape(cr, leaf, hexc("#1d1d1f"), seed=seed + 1, amp=0.15, lw=0, stroke=None)
+
+
+EMBLEMS = {"apple": _apple_mark}
 
 
 def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, bounce=0.0, spin=0.12, seed=7000):
@@ -80,6 +97,10 @@ def globe(cr, code, x, ground_y, t, s=1.0, eyes="dot", mouth="smile", look=-1, b
         cr.set_source_rgba(*p["ring"])
         cr.stroke()
         cr.restore()
+        if p.get("emblem"):   # the company's mark as a badge on the globe, hand-drawn by us
+            with at(cr, -look * 56, cy - 76, 1.0):
+                blob(cr, 0, 0, 46, 46, WHITE, seed + 50, amp=0.4, lw=4)
+                EMBLEMS[p["emblem"]](cr, 0, 4, 1.15, seed + 51)
         with at(cr, look * 10, cy + 6, 1.7):   # the face
             for sx in (-1, 1):
                 if eyes in ("dot", "wide", "sly"):

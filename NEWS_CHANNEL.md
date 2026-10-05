@@ -60,7 +60,9 @@ globe), and never his opening "Hey <country>, what's new with you?" or any greet
 
 ## Company stories and topic choice (owner, 5 Oct 2026)
 - Company stories: the Globe wears the company's brand colours (`PALETTES` in `motion/news.py`, e.g. `"apple"`: silver
-  and graphite). Never draw or copy a real logo.
+  and graphite) plus a white badge with the company's mark so viewers recognise it (owner's request). We draw the mark
+  ourselves as a simple shape (`EMBLEMS`), never paste the official logo file, and never suggest the company made or
+  endorses the video.
 - Any topic is open, including wars and tariff/trade wars, as long as the accuracy and neutrality rules hold.
 - What US viewers stay for (research, 5 Oct 2026): the money-in-your-pocket angle. In the Iran war, 7 in 10 Americans
   worry most about gas prices (Pew, Apr 2026); 64% say gas prices hurt their household (Reuters/Ipsos); tariffs are
