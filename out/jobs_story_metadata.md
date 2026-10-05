@@ -25,6 +25,7 @@ Sources:
 • Yahoo Finance (2 Oct 2026): https://finance.yahoo.com/economy/article/septembers-jobs-report-shows-the-us-added-just-29000-jobs-and-unemployment-ticked-up-195320409.html
 • CNBC (2 Oct 2026): https://www.cnbc.com/2026/10/02/jobs-report-september-2026.html
 • CNN (2 Oct 2026): https://www.cnn.com/2026/10/02/economy/us-jobs-report-september-final
+• BLS release schedule (next report 6 Nov 2026): https://www.bls.gov/schedule/news_release/empsit.htm
 
 #Jobs #Economy #News
 ```
@@ -39,4 +40,4 @@ jobs report, unemployment, us economy, september jobs report, job market, wages,
 Is it harder to find a job where you live right now? Yes or no? 👇
 ```
 
-**Video facts:** 53.3 s, 153 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 53.3 s, 163 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
