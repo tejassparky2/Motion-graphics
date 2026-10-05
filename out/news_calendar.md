@@ -9,3 +9,8 @@
 | 4 Oct 2026 | Hawaii's Hōlei Sea Arch collapses | world/nature | proposed |
 
 Research and sources: `research_notes/news_first_batch.md`.
+| 5 Oct 2026 | Brazil runoff: Bolsonaro 47%, Lula 44.9% | world | proposed (today) |
+| 5 Oct 2026 | Apple tightens Mac Full Disk Access over AI agents | tech | proposed (today) |
+| 5 Oct 2026 | Suspected plague death at Russian lab (not confirmed) | world/health | proposed |
+| 5 Oct 2026 | Nicaragua quits Central American Parliament | world | proposed |
+| 5 Oct 2026 | OpenAI's always-on "Dots" agents | tech | proposed |

@@ -63,3 +63,24 @@ stay our own.
 63 s, 720x1280. A host talks with a talking Japan flag about the permanent-residency fee rising from ¥10,000 to
 ¥200,000; fast 2-4-word captions; host reactions carry the jokes; ends on a punchline. We use the script *shape* only
 (see "Script format" in NEWS_CHANNEL.md); all wording, drawings and voice are our own.
+
+## Today's candidates (researched 5 Oct 2026)
+1. Brazil goes to a runoff (world). First round 4 Oct: Flávio Bolsonaro 47% of valid votes, Lula 44.9%; runoff
+   25 Oct. Most polls had Lula first. Sources: Al Jazeera https://www.aljazeera.com/news/2026/10/5/brazils-presidential-race-three-key-takeaways-from-the-first-round ;
+   The Guardian / AP (via Wikipedia current events, 4 Oct). Confirm final numbers with Brazil's electoral court (TSE).
+2. Apple vs AI agents (tech). Apple says it will add controls so Full Disk Access on macOS needs "very explicit user
+   action", citing AI agent risks; no date given. Sources: MacRumors https://www.macrumors.com/2026/10/02/apple-announces-macos-full-disk-access-changes/ ;
+   gHacks https://www.ghacks.net/2026/10/05/apple-will-require-explicit-user-action-to-grant-full-disk-access-in-macos-citing-ai-agents/
+3. Suspected plague death at a Russian lab (world/health). 28-year-old lab technician at the Irkutsk Anti-Plague
+   Institute died; 197 contacts isolated; Rospotrebnadzor says "pneumonia of unknown cause", plague NOT confirmed.
+   Sources: CNN https://www.cnn.com/2026/10/04/europe/russia-laboratory-plague-accident-intl ;
+   Al Jazeera https://www.aljazeera.com/news/2026/10/5/russian-lab-worker-dies-of-suspected-plague-in-siberia-us-monitoring-case ;
+   Meduza https://meduza.io/en/feature/2026/10/05/hospitals-in-irkutsk-impose-quarantines-after-an-employee-at-an-anti-plague-institute-dies-russia-s-public-health-agency-says-she-died-of-pneumonia-and-the-epidemiological-situation-remains-stable
+4. Nicaragua quits the Central American Parliament (world). Announced 3 Oct, a day after an OAS resolution calling
+   for political prisoners' release; government says "full exercise of its sovereignty"; it left the OAS (2023) and
+   the UN Human Rights Council (2025). Sources: AP via Spokesman-Review https://www.spokesman.com/stories/2026/oct/04/nicaragua-announces-withdrawal-from-central-americ/ ;
+   GMA News https://www.gmanetwork.com/news/topstories/world/1004735/nicaragua-announces-withdrawal-from-central-american-parliament/story/
+5. OpenAI's always-on "Dots" agents (tech, DevDay 29 Sep). Sources: Business Standard
+   https://www.business-standard.com/technology/tech-news/openai-devday-2026-dots-gpt-6-1-sol-codex-developer-tools-126093000396_1.html ;
+   InfoQ https://www.infoq.com/news/2026/10/openai-devday-2026/
+- Watch: Nobel Prize in Medicine announced today (5 Oct, 11:30 CEST); winners not yet confirmed in our sources.
