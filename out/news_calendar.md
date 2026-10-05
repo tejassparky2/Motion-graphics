@@ -14,3 +14,7 @@ Research and sources: `research_notes/news_first_batch.md`.
 | 5 Oct 2026 | Suspected plague death at Russian lab (not confirmed) | world/health | proposed |
 | 5 Oct 2026 | Nicaragua quits Central American Parliament | world | proposed |
 | 5 Oct 2026 | OpenAI's always-on "Dots" agents | tech | proposed |
+| 5 Oct 2026 | Diesel record and the G7 release | world/prices | script sent for approval |
+| 5 Oct 2026 | Suspected plague death at Russian lab | world/health | script sent for approval |
+| 5 Oct 2026 | Tesla Cybercab's bumpy first month | tech | script sent for approval |
+| 5 Oct 2026 | US added just 29,000 jobs | US/economy | script sent for approval |
