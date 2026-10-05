@@ -142,3 +142,47 @@ Labels: **[Academic]** peer-reviewed. **[Official]** YouTube or the government. 
 | **ASK** | last | One easy question, then "Tell me in the comments." |
 
 Scripts written this way: `research_notes/news_scripts_v3.md`.
+
+## 8. Question at the end, or a loop? (owner's question, 5 Oct 2026)
+
+### What each one does
+- **[Official]** YouTube definitions (https://support.google.com/youtube/answer/12220281):
+  - Shorts **views** count every play and every replay.
+  - **Engaged views** are "how many times viewers stayed to watch past the initial seconds, **not including any
+    loops**". Engaged views are what YouTube pays on.
+  - **Average percentage viewed** is calculated from engaged views and their watch time. It can go above 100% when
+    people replay.
+  - **YouTube has not published that loops themselves raise distribution.**
+- **[Creator, from her own analytics]** Jenny Hoyos, Creator Science podcast
+  (https://podcast.creatorscience.com/jenny-hoyos/):
+  - Cutting **one second** off an ending took a Short from 83% to 88% retention, and it "went flying".
+  - One video lost **25 points in its last second** (70% → 45%).
+  - "Whatever you say you're gonna do, you end it right after you do it."
+  - Her 90%+ retention needs people to rewatch.
+- **[Academic]** Asking a question raised the number of comments on posts (de Vries, Gensler & Leeflang 2012).
+  Easy pick-one questions get answered far more often than open ones (Pew).
+- **[Official]** YouTube weighs satisfaction, through surveys, likes and shares (section 1). Comments are where
+  people come back to talk, which builds the regular-viewer bond (section 6).
+
+### The trade-off
+- **A pure loop** (the last words run straight into the first) gets the most replays. But for news it means a
+  sentence with no full stop, which breaks our clarity rule and your "no joined sentences" rule. It also has no
+  question, so fewer comments.
+- **A question plus a spoken "Tell me in the comments."** gets more comments. But the spoken ask adds about 1.3 s
+  after the payoff, the exact spot where Hoyos measured the big last-second drop.
+
+### Recommendation: both, in a "looping question" ending
+1. **Keep the spoken question as the very last words.** It is the comment trigger, and it is a clean, full sentence.
+2. **Move "Tell me in the comments" from the voice to the screen.** It stays as written text with the YES/NO buttons
+   and the pinned comment. This cuts about 1.3 s of wind-down.
+3. **End 0.3 s after the question mark.** The music already ends on the chord that resolves into bar one, so the
+   replay feels continuous.
+4. **The last shot returns to the opening shot's place and character.** The jump back to frame 1 then feels like
+   one scene, which encourages a rewatch.
+
+### How to check it on the channel
+YouTube's built-in "Test & Compare" tests only titles and thumbnails, not the video itself. So alternate endings
+across similar videos and compare:
+- comments per 1,000 engaged views
+- average percentage viewed
+- the last 3 seconds of the retention graph
