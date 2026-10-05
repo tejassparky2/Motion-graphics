@@ -87,3 +87,19 @@ def watermark(cr, logo=True, name=None):
     cr.restore()
     if logo:
         corner_logo(cr)
+
+
+def ward(cr, t, tl, keys, mike, danny, doc, dur=0.25):
+    """The doctor's room with Mike (bed A) and Danny (bed B): camera, set, people and sheet. `mike`, `danny` and
+    `doc` are the keyword moods for patient()/doctor() at time t; who's talking comes from the timeline."""
+    from motion.kit import camera, enter_world, set_camera
+    set_camera(camera(t, keys, dur=dur))
+    enter_world(cr)
+    room(cr)
+    (xa, ya, sa), (xb, yb, sb) = BED_A, BED_B
+    bed(cr, xa)
+    bed(cr, xb)
+    patient(cr, "mike_b", xa, ya, sa, t, talking=tl.speaking("mike", t), **mike)
+    patient(cr, "danny_b", xb, yb, sb, t, talking=tl.speaking("danny", t), **danny)
+    doctor(cr, t, talking=tl.speaking("doctor", t), **doc)
+    sheet(cr)

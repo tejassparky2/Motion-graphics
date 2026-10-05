@@ -55,6 +55,13 @@ Notes and sources: `research_notes/body_facts_9-10.md`.
 `videos/egg_vitamins.py`, notes `research_notes/body_facts_11.md`. A viral claim checked by the organs on a
 nutrient scoreboard (what five eggs give each organ), then the doctor's answer. Don't name or mock the creator.
 
+## Videos 12-14: hidden body processes (like the nose cycle), owner-approved scripts
+Notes and sources: `research_notes/body_facts_12-14.md`. Doctor voice Kokoro `am_adam`.
+- `videos/blind_spot.py`: the eye's blind spot, with an on-screen test (cross and dot).
+- `videos/morning_height.py`: taller in the morning (spine discs lose and regain water); astronauts +3%.
+- `videos/stomach_clean.py`: stomach growling and the migrating motor complex (the gut's cleaning wave).
+- The ward scene setup is shared: `ward()` in `motion/clinic.py`.
+
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
 own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
