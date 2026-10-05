@@ -1,25 +1,25 @@
 # Doc and the Organs: upload sheet for all 10 unposted videos
 
-Posting order (strongest hooks first, topics alternated): 2 a day, morning and evening.
+Posting schedule (IST, 2 a day at 4:30 AM and 9:30 PM; 5 Oct 9:30 PM is already taken by the scheduled awake-brain video). In YouTube Studio, set Visibility > Schedule with the time zone on India Standard Time.
 
-| # | Day | File | Length | Title |
+| # | Post on (IST) | File | Length | Title |
 |---|---|---|---|---|
-| 1 | Day 1 | `tooth_eye.mp4` | 51 s | They Put His TOOTH Inside His EYE… And He Could See 😳 |
-| 2 | Day 1 | `blind_spot.mp4` | 46 s | You Have a HOLE in Your Vision Right Now 👁️ |
-| 3 | Day 2 | `toe_thumb.mp4` | 42 s | They Turned His TOE Into a THUMB 😳 |
-| 4 | Day 2 | `egg_vitamins.mp4` | 81 s | Are Eggs Veg? Can 5 Eggs Replace Your Multivitamin? 🥚 |
-| 5 | Day 3 | `half_brain.mp4` | 48 s | His Brain Scan Showed HALF Was Missing… 😳 |
-| 6 | Day 3 | `morning_height.mp4` | 44 s | You're TALLER Right Now Than You'll Be Tonight 📏 |
-| 7 | Day 4 | `rotationplasty.mp4` | 44 s | They Turned His Foot BACKWARDS… On Purpose 😳 |
-| 8 | Day 4 | `stomach_clean.mp4` | 48 s | Your Stomach Growls to CLEAN Itself 🧹 |
-| 9 | Day 5 | `forehead_nose.mp4` | 50 s | They Glued His Forehead to His Nose… On Purpose 😳 |
-| 10 | Day 5 | `fecal_transplant.mp4` | 45 s | They Put Someone Else's POOP Inside Him… And It Cured Him 😳 |
+| 1 | Tue 6 Oct, 4:30 AM | `tooth_eye.mp4` | 51 s | They Put His TOOTH Inside His EYE… And He Could See 😳 |
+| 2 | Tue 6 Oct, 9:30 PM | `blind_spot.mp4` | 46 s | You Have a HOLE in Your Vision Right Now 👁️ |
+| 3 | Wed 7 Oct, 4:30 AM | `toe_thumb.mp4` | 42 s | They Turned His TOE Into a THUMB 😳 |
+| 4 | Wed 7 Oct, 9:30 PM | `egg_vitamins.mp4` | 81 s | Are Eggs Veg? Can 5 Eggs Replace Your Multivitamin? 🥚 |
+| 5 | Thu 8 Oct, 4:30 AM | `half_brain.mp4` | 48 s | His Brain Scan Showed HALF Was Missing… 😳 |
+| 6 | Thu 8 Oct, 9:30 PM | `morning_height.mp4` | 44 s | You're TALLER Right Now Than You'll Be Tonight 📏 |
+| 7 | Fri 9 Oct, 4:30 AM | `rotationplasty.mp4` | 44 s | They Turned His Foot BACKWARDS… On Purpose 😳 |
+| 8 | Fri 9 Oct, 9:30 PM | `stomach_clean.mp4` | 48 s | Your Stomach Growls to CLEAN Itself 🧹 |
+| 9 | Sat 10 Oct, 4:30 AM | `forehead_nose.mp4` | 50 s | They Glued His Forehead to His Nose… On Purpose 😳 |
+| 10 | Sat 10 Oct, 9:30 PM | `fecal_transplant.mp4` | 45 s | They Put Someone Else's POOP Inside Him… And It Cured Him 😳 |
 
 Every video: Kokoro voices (no cloned voice), checked line by line with Whisper medium, no metadata or encoder tags. Videos 1, 3, 7 and 10 were made before the corner logo; the others carry it.
 
 ---
 
-## 1. Day 1: `tooth_eye.mp4`
+## 1. Tue 6 Oct, 4:30 AM IST: `tooth_eye.mp4`
 
 **Title** (53 characters)
 ```
@@ -59,7 +59,7 @@ A tooth inside an eye… and it WORKS. 😳 Would you do it to see again? 👇
 
 ---
 
-## 2. Day 1: `blind_spot.mp4`
+## 2. Tue 6 Oct, 9:30 PM IST: `blind_spot.mp4`
 
 **Title** (43 characters)
 ```
@@ -103,7 +103,7 @@ Did the dot disappear? 👀 (Close your LEFT eye, stare at the cross, move your 
 
 ---
 
-## 3. Day 2: `toe_thumb.mp4`
+## 3. Wed 7 Oct, 4:30 AM IST: `toe_thumb.mp4`
 
 **Title** (34 characters)
 ```
@@ -143,7 +143,7 @@ Would you trade your big toe for a new thumb? 🦶👍 And yes, he washes his ha
 
 ---
 
-## 4. Day 2: `egg_vitamins.mp4`
+## 4. Wed 7 Oct, 9:30 PM IST: `egg_vitamins.mp4`
 
 **Title** (53 characters)
 ```
@@ -193,7 +193,7 @@ Settle it in the comments: are eggs veg or non-veg? 🥚 (Danny says non-veg… 
 
 ---
 
-## 5. Day 3: `half_brain.mp4`
+## 5. Thu 8 Oct, 4:30 AM IST: `half_brain.mp4`
 
 **Title** (41 characters)
 ```
@@ -233,7 +233,7 @@ Danny says he has less than half a brain. 😂 Did you know the brain could do t
 
 ---
 
-## 6. Day 3: `morning_height.mp4`
+## 6. Thu 8 Oct, 9:30 PM IST: `morning_height.mp4`
 
 **Title** (48 characters)
 ```
@@ -275,7 +275,7 @@ Measure yourself tomorrow morning and tonight. 📏 Tell me the difference! 👇
 
 ---
 
-## 7. Day 4: `rotationplasty.mp4`
+## 7. Fri 9 Oct, 4:30 AM IST: `rotationplasty.mp4`
 
 **Title** (44 characters)
 ```
@@ -315,7 +315,7 @@ His ANKLE is his knee now. 😳 Did you know this surgery existed? 👇
 
 ---
 
-## 8. Day 4: `stomach_clean.mp4`
+## 8. Fri 9 Oct, 9:30 PM IST: `stomach_clean.mp4`
 
 **Title** (37 characters)
 ```
@@ -357,7 +357,7 @@ Be honest: has your stomach ever growled in a silent room? 😂 👇
 
 ---
 
-## 9. Day 5: `forehead_nose.mp4`
+## 9. Sat 10 Oct, 4:30 AM IST: `forehead_nose.mp4`
 
 **Title** (49 characters)
 ```
@@ -397,7 +397,7 @@ Three weeks with your forehead stuck to your nose. 😳 Could you do it? 👇
 
 ---
 
-## 10. Day 5: `fecal_transplant.mp4`
+## 10. Sat 10 Oct, 9:30 PM IST: `fecal_transplant.mp4`
 
 **Title** (59 characters)
 ```
