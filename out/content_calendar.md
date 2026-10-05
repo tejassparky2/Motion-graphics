@@ -34,14 +34,14 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 12 | Mon Oct 5 | 9:30 PM | exam_answers | **SKIPPED by owner** ~~The Last Bencher's Exam Answers 😂 (Technically Correct)~~ |
 | 13 | Mon Oct 5 | 9:30 PM | ship_of_theseus | If You Replace Every Part… Is It Still the Same Ship? 🚢🤯 |
 | 14 | Mon Oct 5 | 9:30 PM | emu_war | Australia Declared War on Emus… and Lost 🐦 |
-| 15 | Tue Oct 6 | 4:30 AM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |
+| 15 | Tue Oct 6 | 4:30 AM | pinocchio_paradox | Pinocchio Said ONE Sentence… and Broke Logic 🤥🤯 |
 | 16 | Tue Oct 6 | 9:30 PM | spartan_if | A King Threatened Sparta… They Replied With ONE Word 😳 |
 | 17 | Wed Oct 7 | 4:30 AM | double_agent | He Lied to the Nazis So Well, They Gave Him a Medal 🎖️ |
 | 18 | Wed Oct 7 | 9:30 PM | archimedes_lever | He Said He Could Move the EARTH… and Then Proved It With a Ship 🌍 |
 | 19 | Thu Oct 8 | 4:30 AM | chess_trick | He Can't Play Chess… But He Can't Lose 🤯♟️ |
 | 20 | Thu Oct 8 | 9:30 PM | unlucky_man | The Unluckiest (or Luckiest) Man Alive 😳🍀 |
 | 21 | Fri Oct 9 | 4:30 AM | cheapest_parking | The Cheapest Parking Spot in New York 😂🚗 |
-| 22 | Fri Oct 9 | 9:30 PM | pinocchio_paradox | Pinocchio Said ONE Sentence… and Broke Logic 🤥🤯 |
+| 22 | Fri Oct 9 | 9:30 PM | principal_riddles | Last Bencher vs The PRINCIPAL 😂 (Wait for the Twist) |
 | 23 | Sat Oct 10 | 4:30 AM | pyrrhic_victory | He WON the Battle… Then Said "One More Win and We're Finished" ⚔️ |
 | 24 | Sat Oct 10 | 9:30 PM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
 | 25 | Sun Oct 11 | 4:30 AM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
