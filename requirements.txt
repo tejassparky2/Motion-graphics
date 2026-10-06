@@ -1,0 +1,9 @@
+numpy
+pycairo
+imageio-ffmpeg
+kokoro
+soundfile
+scipy
+piper-tts
+faster-whisper
+pyloudnorm
