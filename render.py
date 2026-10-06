@@ -129,25 +129,56 @@ def draw(surface, frame):
     surface.flush()
 
 
+def _encode_frames(first, last, path, report=False):
+    """Draw frames [first, last) and encode them to `path`; returns the sound cues registered while drawing."""
+    engine.EVENTS.clear()
+    cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
+           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
+           "-threads", "1", path]
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    for i in range(first, last):
+        draw(surface, i)
+        proc.stdin.write(bytes(surface.get_data()))
+        if report and (i - first) % FPS == 0:
+            print(f"\rrendering {(i - first) / FPS:5.1f}s / {(last - first) / FPS:.1f}s (one of the parallel parts)",
+                  end="", file=sys.stderr, flush=True)
+    proc.stdin.close()
+    if proc.wait() != 0:
+        raise RuntimeError("ffmpeg failed")
+    return list(engine.EVENTS)
+
+
+def _encode_part(args):
+    return _encode_frames(*args)
+
+
 def render_video(out, audio=True, voice=True):
+    """Frames are drawn in parallel (one process per CPU core; every frame depends only on its time), each process
+    encodes its own part, and the parts are joined without re-encoding."""
+    import multiprocessing as mp
     os.makedirs(os.path.dirname(out), exist_ok=True)
     n = int(round(total_duration() * FPS))
     silent = out if not audio else os.path.join(ROOT, "build", f"{VIDEO['name']}_silent.mp4")
     os.makedirs(os.path.dirname(silent), exist_ok=True)
-    cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
-           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
-           *([] if audio else CLEAN), "-movflags", "+faststart", silent]
-    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-    for i in range(n):
-        draw(surface, i)
-        proc.stdin.write(bytes(surface.get_data()))
-        if i % FPS == 0:
-            print(f"\rrendering {i / FPS:5.1f}s / {n / FPS:.1f}s", end="", file=sys.stderr, flush=True)
-    proc.stdin.close()
-    if proc.wait() != 0:
-        sys.exit("ffmpeg failed")
+    workers = max(1, min(int(os.environ.get("RENDER_WORKERS", os.cpu_count() or 1)), 8))
+    bounds = [round(n * k / workers) for k in range(workers + 1)]
+    parts = [os.path.join(ROOT, "build", f"{VIDEO['name']}_part{k}.mp4") for k in range(workers)]
+    jobs = [(bounds[k], bounds[k + 1], parts[k], k == 0) for k in range(workers)]
+    if workers == 1:
+        events = [_encode_part(jobs[0])]
+    else:
+        with mp.get_context("fork").Pool(workers) as pool:
+            events = pool.map(_encode_part, jobs)
     print(file=sys.stderr)
+    engine.EVENTS[:] = [e for ev in events for e in ev]   # parts are in time order, so this is the sequential order
+    listing = os.path.join(ROOT, "build", f"{VIDEO['name']}_parts.txt")
+    with open(listing, "w") as f:
+        f.writelines(f"file '{p}'\n" for p in parts)
+    subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", listing,
+                           "-c", "copy", *([] if audio else CLEAN), "-movflags", "+faststart", silent])
+    for p in parts + [listing]:
+        os.remove(p)
     if audio:
         from motion.audio import build_soundtrack
         wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
