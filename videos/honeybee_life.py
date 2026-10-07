@@ -576,12 +576,12 @@ def scene_hive(cr, t, tl):
     cam = camera(t, [(A("h3") - 0.3, (1.25, 360, 700)), (A("h3", "60,000"), (1.0, 360, 640))], dur=1.2)
     cr.save()
     enter(cr, cam)
-    crowd(cr, t, [(470, 6, 0.42, 70, 650), (580, 6, 0.48, 40, 680), (700, 5, 0.55, 80, 640)], seed=5)
+    crowd(cr, t, [(430, 6, 0.4, 70, 650), (530, 6, 0.45, 40, 680), (640, 2, 0.5, 70, 650)], seed=5)
     bee(cr, t, 360, 760, 1.05, eyes="happy" if t >= A("h3", "sisters.") else "open", mouth="grin", arms=("wave", "down"))
     cr.restore()
     hearts(cr, t, A("h3", "sisters."), 200, 520, 5, seed=3)
     hearts(cr, t, A("h3", "sisters.") + 0.2, 540, 500, 5, seed=4)
-    tag(cr, t, A("h3") + 0.2, 360, 560, "YOU")
+    tag(cr, t, A("h3") + 0.2, 360, 600, "YOU")
     counter(cr, t, A("h3", "60,000"), 360, 250, 60000, size=104, dur=1.1, sub="BEES IN ONE HIVE")
     sign(cr, t, A("h3", "sisters."), 360, 380, "ALL SISTERS", col=PINK, size=50, rot=-0.04)
     vignette(cr, 0.45)
@@ -717,7 +717,7 @@ def scene_wax(cr, t, tl):
             paint(cr, alpha(hexc("#fff8e0"), 1 - ph * 0.3), hexc("#c9a35c"), 2.5)
     cr.restore()
     sign(cr, t, A("h9"), 360, 230, "JOB #3: BUILDER", col=HONEY, size=56, end=A("h9", "belly.") - 0.05)
-    sign(cr, t, A("h9", "belly."), 360, 230, "WAX FROM HER BELLY", col=CREAM, tcol=hexc("#8a5a1a"), size=48,
+    sign(cr, t, A("h9", "belly."), 360, 230, "WAX FROM HER BELLY", col=hexc("#e0902a"), size=50,
          end=build - 0.05)
     sign(cr, t, build, 360, 230, "HOME, SWEET HOME", col=HONEY, size=52)
     vignette(cr, 0.45)
@@ -802,8 +802,8 @@ def scene_dance(cr, t, tl):
     cam = camera(t, [(A("h13") - 0.3, (1.0, 360, 640)), (angle_t, (1.0, 360, 620))])
     cr.save()
     enter(cr, cam)
-    crowd(cr, t, [(860, 6, 0.42, 60, 660)], seed=9, eyes="wide" if t >= dance else "open", mouth="o")
-    cx, cy = 360, 580
+    crowd(cr, t, [(790, 6, 0.42, 60, 660)], seed=9, eyes="wide" if t >= dance else "open", mouth="o")
+    cx, cy = 360, 650
     ang = math.radians(40)   # the food is 40 degrees right of the sun
     if t >= dance:
         d = (t - dance) * 0.55 % 1.0    # waggle run up the angle, loop back round
@@ -855,7 +855,7 @@ def scene_dance(cr, t, tl):
         sign(cr, t, A("h13"), 360, 230, "FOUND FOOD?", col=GREEN, size=60)
     else:
         sign(cr, t, dance, 360, 230, "DANCE!", col=PINK, size=78, end=angle_t - 0.05)
-        sign(cr, t, angle_t, 360, 200, "ANGLE = DIRECTION", col=HONEY, size=50, sub="the sun is the compass")
+        sign(cr, t, angle_t, 360, 175, "ANGLE = DIRECTION", col=HONEY, size=48, sub="the sun is the compass")
     vignette(cr, 0.45)
 
 
@@ -898,7 +898,7 @@ def scene_drones(cr, t, tl):
         cr.restore()
     sign(cr, t, one_job, 360, 260, "ONE JOB:", col=MAUVE, size=58, end=succeed - 0.05)
     sign(cr, t, A("h17", "mating"), 360, 380, "FIND A QUEEN", col=PINK, size=62, rot=0.04, end=succeed - 0.05)
-    stamp(cr, t, die, 360, 260, "R.I.P.", col=hexc("#5a6478"), size=92)
+    stamp(cr, t, die, 360, 230, "R.I.P.", col=hexc("#3f4656"), size=96)
     vignette(cr, 0.45)
 
 
