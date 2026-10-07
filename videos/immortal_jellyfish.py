@@ -34,7 +34,7 @@ SCRIPT = [
     dict(id="j7", scene="sink", text="Its body shrinks into a little blob."),
     dict(id="j8", scene="sink", text="And the blob turns back into a polyp. The baby stage."),
     dict(id="j9", scene="again", text="Then it grows up all over again."),
-    dict(id="j10", scene="cells", text="Its cells switch jobs. Old jellyfish cells turn into baby polyp cells."),
+    dict(id="j10", scene="cells", text="Its tiny cells switch jobs. Old jellyfish cells turn into baby polyp cells."),
     dict(id="j11", scene="lab", text="In a lab in Japan, one did this [ten|10] times in [two|2] years."),
     dict(id="j12", scene="danger", text="So is it truly immortal? Not quite."),
     dict(id="j13", scene="danger", text="Fish eat it. Disease kills it. It just doesn't have to die of old age."),
