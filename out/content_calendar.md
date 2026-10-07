@@ -55,6 +55,10 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 33 | Thu Oct 15 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? What Scientists Found Later 🍬 |
 | 34 | Thu Oct 15 | 9:30 PM | ben_franklin_effect | Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝 |
 | 35 | Fri Oct 16 | 4:30 AM | honeybee_life | What If You Were a Honeybee? 🐝 (Your Whole Life in 70 Seconds) |
+| 36 | Fri Oct 16 | 9:30 PM | last_bencher_4 | The New Teacher Said Nobody Is Smarter Than Her 😏 #TheLastBencher |
+| 37 | Sat Oct 17 | 4:30 AM | achilles_tortoise | A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox) |
+| 38 | Sat Oct 17 | 9:30 PM | twain_dead_twice | Mark Twain Had To Tell The Papers He Wasn't Dead. Twice. 💀 |
+| 39 | Sun Oct 18 | 4:30 AM | immortal_jellyfish | This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼 |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
