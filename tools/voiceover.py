@@ -1,6 +1,6 @@
 """Voice-over in the owner's own cloned voice for any video (made for the owner's 3D business videos).
 
-  NARRATOR_ENGINE=clone python tools/voiceover.py script.txt OUT_NAME [--pace 1.0] [--video clip.mp4]
+  NARRATOR_ENGINE=clone python tools/voiceover.py script.txt OUT_NAME [--pace 0.85] [--video clip.mp4]
 
 script.txt: plain text. Every sentence ends with . ? or ! and is spoken as its own take, with a real full-stop pause
 after it (the same pauses as the channel videos). A blank line between paragraphs gives a longer pause.
@@ -27,8 +27,13 @@ from motion import voice      # noqa: E402
 from motion.engine import ROOT  # noqa: E402
 from motion.timeline import STOP_PAUSE, QUESTION_PAUSE  # noqa: E402
 
-PARAGRAPH_PAUSE = 0.6
+# Owner (7 Oct 2026): "slow little my cloned voice". Voice-overs default to pace 0.85 (~4.7 syllables/s instead of the
+# Shorts' 5.5) with 30% longer pauses; slowing a take down to x0.85 stays clean with rubberband.
+PACE = 0.85
+PAUSE_SCALE = 1.3
+PARAGRAPH_PAUSE = 0.6 * PAUSE_SCALE
 LEAD, TAIL = 0.15, 0.4
+voice.TEMPO_MIN = 0.8
 CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact"]
 
 
@@ -41,7 +46,7 @@ def sentences(text):
             if not re.search(r"[.?!]$", s):
                 s += "."
             last = k == len(parts) - 1
-            out.append((s, PARAGRAPH_PAUSE if last else QUESTION_PAUSE if s.endswith("?") else STOP_PAUSE))
+            out.append((s, PARAGRAPH_PAUSE if last else (QUESTION_PAUSE if s.endswith("?") else STOP_PAUSE) * PAUSE_SCALE))
     return out
 
 
@@ -54,7 +59,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("script")
     ap.add_argument("name")
-    ap.add_argument("--pace", type=float, default=1.0, help="below 1 is slower (0.9 = 10%% slower)")
+    ap.add_argument("--pace", type=float, default=PACE, help="1.0 = the Shorts pace; lower is slower (default %(default)s)")
     ap.add_argument("--video", help="a video to put the voice-over on")
     a = ap.parse_args()
 
