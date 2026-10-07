@@ -36,13 +36,13 @@ SCRIPT = [
     dict(id="h16", scene="drones", text="They don't clean. They don't make honey. They can't even sting."),
     dict(id="h17", scene="drones", text="They have one job. Mating with a queen."),
     dict(id="h18", scene="drones", text="The ones who succeed? Die right after.", gap=0.4),
-    dict(id="h19", scene="autumn", text="And in autumn, the sisters throw the rest out of the house."),
+    dict(id="h19", scene="autumn", text="Then autumn comes. And the sisters throw the rest out of the house."),
     dict(id="h20", scene="sunset", text="Back to you. You fly until your wings wear out. And one day, you just don't "
                                         "come home."),
     dict(id="h21", scene="spoon", text="Your whole life's work? One twelfth of a teaspoon of honey."),
     dict(id="h22", scene="spoon", text="One teaspoon is the life's work of twelve bees."),
     dict(id="h23", scene="tea", text="And someone stirs it into their tea.", gap=0.4),
-    dict(id="h24", scene="end", text="So. Would you rather be the worker? Or the drone?", pace=0.95),
+    dict(id="h24", scene="end", text="So. Would you rather be the worker? Or the drone on the couch?", pace=0.95),
 ]
 
 METADATA = dict(
@@ -1015,7 +1015,7 @@ def scene_end(cr, t, tl):
     cr.restore()
     sign(cr, t, A("h24"), 360, 230, "WHO WOULD YOU BE?", col=HONEY, size=52)
     buttons(cr, t, A("h24", "worker?"), (("WORKER", GREEN), ("DRONE", MAUVE)), y=1040)
-    stamp(cr, t, A("h24", "drone?", end=True), 360, 380, "COMMENT BELOW!", col=RED, size=54, rot=-0.06)
+    stamp(cr, t, A("h24", "couch?", end=True), 360, 380, "COMMENT BELOW!", col=RED, size=54, rot=-0.06)
     dof_flowers(cr, t)
     vignette(cr)
 
