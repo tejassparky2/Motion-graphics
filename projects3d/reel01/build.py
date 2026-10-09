@@ -28,8 +28,9 @@ CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "
 PRINTER_GAP = 4.0      # seconds of printer footage with no voice
 PRINTER_SPEED = 1.5
 END_HOLD = 1.2
-CAP_Y = 1400           # caption centre: above the Reels caption/buttons zone (bottom ~380 px)
+CAP_Y = 1320           # caption centre: above the Reels caption/buttons zone (bottom ~380 px)
 CALLOUT_Y = 300        # callouts below the top bar
+WHATSAPP = (37, 211, 102)
 
 
 def media(d, key):
@@ -128,7 +129,12 @@ def wrap(d, text, f, maxw):
         else:
             lines.append(cur)
             cur = w
-    return lines + [cur]
+    lines += [cur]
+    if len(lines) == 2:   # balance two lines so no word is left alone
+        ws = text.split()
+        lines = min(([" ".join(ws[:k]), " ".join(ws[k:])] for k in range(1, len(ws))),
+                    key=lambda p: max(d.textlength(x, font=f) for x in p))
+    return lines
 
 
 def caption(frame, text, age):
@@ -154,7 +160,8 @@ def callout(frame, text, y, age, color=(245, 166, 35), size=62):
     pad = 34
     box = (W / 2 - tw / 2 - pad, yy - size * 0.75, W / 2 + tw / 2 + pad, yy + size * 0.75)
     d.rounded_rectangle(box, radius=size * 0.75, fill=color)
-    d.text((W / 2, yy), text, font=f, fill=(25, 18, 14), anchor="mm")
+    dark = sum(color) < 200
+    d.text((W / 2, yy), text, font=f, fill="white" if dark else (25, 18, 14), anchor="mm")
 
 
 # ---------- build ----------
@@ -188,6 +195,7 @@ def main():
     st = lambda txt: cues[texts.index(txt)][0]   # noqa: E731
 
     comp = fix_comparison(media(mdir, "1ce678f6"))
+    end = st("Want one?")
     scenes = [  # (start, source factory, callouts [(text, from)])
         (0.0, lambda n: video_frames(media(mdir, "170721"), n, fit=True), [("From ONE photo...", 0.0)]),
         (st("Just this one."), lambda n: image_frames(Image.open(media(mdir, "2cd4a06f")), n), []),
@@ -202,8 +210,10 @@ def main():
         (st("And here it is."), lambda n: video_frames(media(mdir, "170901"), n, speed=1.0), []),
         (st("Single figures too."), lambda n: video_frames(media(mdir, "170732"), n, fit=True), []),
         (st("Couples."), lambda n: video_frames(media(mdir, "170757"), n, fit=True), []),
-        (st("Send me your photo."), lambda n: image_frames(comp, n, "contain", bg=(250, 247, 243), zoom=(1.0, 1.04)),
-         [("DM YOUR PHOTO TO ORDER", st("Send me your photo."))]),
+        (end, lambda n: image_frames(comp, n, "contain", bg=(250, 247, 243), zoom=(1.0, 1.03), top=400),
+         [("@yours3dindia", end, 290, (30, 22, 18)), ("COMMENT TO GET A DM", st("Comment below to get a DM."), 1215),
+          ("FREE PREVIEW ON WHATSAPP", st("Free previews on WhatsApp."), 1340, WHATSAPP),
+          ("+91 91647 48401", st("Free previews on WhatsApp."), 1450, WHATSAPP)]),
     ]
 
     os.makedirs(os.path.join(ROOT, "out", "3d"), exist_ok=True)
@@ -219,12 +229,11 @@ def main():
         for frame in make(b - a):
             t = f / FPS
             frame = frame.copy()
-            for txt, t0 in calls:
+            for k, (txt, t0, *place) in enumerate(calls):
                 if t >= t0:
-                    callout(frame, txt, CALLOUT_Y + 130 * [c[0] for c in calls].index(txt) if len(calls) > 1
-                            else CALLOUT_Y, t - t0)
+                    callout(frame, txt, place[0] if place else CALLOUT_Y + 130 * k, t - t0, *place[1:])
             for c0, c1, txt in cues:
-                if c0 <= t < c1 + 0.15:
+                if c0 <= t < c1 + 0.15 and t < end:   # the end card spells the call to action out instead
                     caption(frame, txt, t - c0)
             enc.stdin.write(frame.tobytes())
             f += 1
