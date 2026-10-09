@@ -47,6 +47,29 @@ CAST = {
     "reporter": dict(skin="olive", hair="short", hair_col=hexc("#2b1a12"), shirt=hexc("#f4f0e6"),
                      suit=hexc("#7a5a3c"), pants=hexc("#6a4c32"), tie=hexc("#b33a2e"), shoes=hexc("#2b1d16"),
                      fedora=hexc("#5c4632"), build="adult"),
+    "protagoras": dict(skin="olive", hair="short", hair_col=hexc("#3a2418"), beard=hexc("#5a3a24"),
+                       shirt=hexc("#f3efe4"), toga=hexc("#8a4fc9"), shoes=hexc("#8a5a2b"), sandals=True, build="adult"),
+    "student_gr": dict(skin="tan", hair="curly", hair_col=hexc("#4a2c1c"), shirt=hexc("#3fae6a"), tunic=True,
+                       belt=hexc("#8a5a2b"), shoes=hexc("#8a5a2b"), sandals=True, build="adult"),
+    "judge": dict(skin="light", hair="bald", hair_col=hexc("#d9d9e0"), beard=hexc("#e8e8ee"), shirt=hexc("#f3efe4"),
+                  toga=hexc("#c8402e"), shoes=hexc("#8a5a2b"), sandals=True, build="adult",
+                  brows_col=hexc("#b8b8c4")),
+    "mother": dict(skin="brown", hair="bun", hair_col=hexc("#1e130d"), shirt=hexc("#2fa59a"), pants=hexc("#e8a33a"),
+                   skirt=True, shoes=hexc("#5a2a3a"), build="adult"),
+    "barber": dict(skin="olive", hair="short", hair_col=hexc("#1e130d"), stache=hexc("#1e130d"), shirt=WHITE,
+                   pants=hexc("#2b2b33"), apron=hexc("#e8473f"), tie=hexc("#2b2b33"), bowtie=True, build="adult"),
+    "villager": dict(skin="tan", hair="short", hair_col=hexc("#5a3418"), beard=hexc("#5a3418"),
+                     shirt=hexc("#c9a46a"), pants=hexc("#5a6478"), build="adult"),
+    "russell": dict(skin="light", hair="twain", hair_col=hexc("#e8e8ee"), shirt=WHITE, suit=hexc("#4a4f5c"),
+                    pants=hexc("#3a3e48"), tie=hexc("#2b2b33"), build="adult", brows_col=hexc("#c8c8d0")),
+    "seller": dict(skin="light", hair="topknot", hair_col=hexc("#1e130d"), stache=hexc("#1e130d"),
+                   shirt=hexc("#f4d35e"), toga=hexc("#c8302a"), shoes=hexc("#2b1d16"), build="adult"),
+    "crowdkid": dict(skin="light", hair="topknot", hair_col=hexc("#1e130d"), shirt=hexc("#4a8ad0"), tunic=True,
+                     belt=hexc("#2b2b33"), shoes=hexc("#2b1d16"), build="kid"),
+    "aquinas": dict(skin="light", hair="tonsure", hair_col=hexc("#5a3a24"), shirt=WHITE, toga=hexc("#2b2b33"),
+                    shoes=hexc("#2b1d16"), build="adult"),
+    "fermi": dict(skin="olive", hair="short", hair_col=hexc("#2b1a12"), shirt=WHITE, suit=hexc("#6a7080"),
+                  pants=hexc("#5a606e"), tie=hexc("#8a2a2a"), shoes=hexc("#2b1d16"), build="adult"),
     "cousin": dict(skin="light", hair="short", hair_col=hexc("#8a6a4a"), shirt=hexc("#e8f0ff"), build="adult",
                    stache=hexc("#8a6a4a")),
 }
@@ -75,6 +98,11 @@ def _hair_back(cr, style, r, col):
         cr.arc(0, -1.02 * r, 0.42 * r, 0, 2 * math.pi)        # the bun
         paint(cr, rad(-0.1 * r, -1.12 * r, 0.5 * r, [(0, shade(col, 0.3)), (1, shade(col, -0.1))]), OUTLINE, 5)
         stroke_line(cr, [(-0.25 * r, -1.0 * r), (0, -0.88 * r), (0.25 * r, -1.0 * r)], 3, alpha(OUTLINE, 0.5))
+    elif style == "topknot":
+        cr.arc(0, -1.12 * r, 0.28 * r, 0, 2 * math.pi)
+        paint(cr, rad(-0.08 * r, -1.2 * r, 0.35 * r, [(0, shade(col, 0.35)), (1, col)]), OUTLINE, 5)
+        rrect(cr, -0.2 * r, -0.92 * r, 0.4 * r, 0.12 * r, 0.05 * r)
+        paint(cr, hexc("#e8473f"), OUTLINE, 3)
     elif style == "pony":
         smooth(cr, [(0.7 * r, -0.6 * r), (1.35 * r, -0.4 * r), (1.45 * r, 0.3 * r), (1.15 * r, 0.75 * r),
                     (1.0 * r, 0.1 * r), (0.85 * r, -0.3 * r)])
@@ -107,7 +135,7 @@ def _hair_front(cr, style, r, col):
                 (-0.15 * r, -0.44 * r), (-0.5 * r, -0.35 * r), (-0.82 * r, -0.3 * r)]
         smooth(cr, pts)
         paint(cr, g, OUTLINE, 5)
-    elif style in ("bun", "short", "pony"):
+    elif style in ("bun", "short", "pony", "topknot"):
         part = 0.25 if style == "bun" else -0.2
         pts = [(-1.03 * r, 0.1 * r if style == "bun" else -0.15 * r)]
         for k in range(9):
@@ -137,6 +165,14 @@ def _hair_front(cr, style, r, col):
             x = (-0.55 + 0.36 * k) * r
             stroke_line(cr, [(x, -0.62 * r), (x + 0.12 * r, -0.9 * r), (x + 0.3 * r, -1.02 * r)], 3,
                         alpha(OUTLINE, 0.22))
+    elif style == "tonsure":
+        cr.new_path()
+        cr.arc(0, -0.05 * r, 1.07 * r, math.pi * 0.95, math.pi * 2.05)
+        cr.arc_negative(0, -0.1 * r, 0.8 * r, math.pi * 2.0, math.pi * 1.0)
+        cr.close_path()
+        paint(cr, lin(0, -r, 0, 0, [(0, shade(col, 0.25)), (1, shade(col, -0.05))]), OUTLINE, 5)
+        ellipse(cr, -0.25 * r, -0.62 * r, 0.25 * r, 0.12 * r, -0.4)
+        paint(cr, alpha(WHITE, 0.45), None, 0)
     elif style == "bald":
         for side in (-1, 1):   # grey tufts over the ears
             smooth(cr, [(side * 0.78 * r, -0.45 * r), (side * 1.12 * r, -0.3 * r), (side * 1.12 * r, 0.25 * r),
@@ -389,6 +425,19 @@ def person(cr, t, x, y, s=1.0, who="kid", facing=1, eyes="open", mouth="smile", 
                 cr.line_to(side * 46, top + 60)
                 cr.line_to(side * 6, top + 128)
                 paint(cr, None, alpha(OUTLINE, 0.7), 4)
+        if c.get("apron") is not None:
+            ap = c["apron"]
+            cr.save()
+            smooth(cr, [(-sw + 22, top + 70), (sw - 22, top + 70), (pw + 16, bot + 40), (-pw - 16, bot + 40)])
+            cr.clip_preserve()
+            paint(cr, WHITE, None, 0)
+            for k in range(-4, 5):
+                cr.rectangle(k * 28 - 7, top + 60, 14, bot - top + 60)
+            cr.set_source_rgba(*ap)
+            cr.fill()
+            cr.restore()
+            smooth(cr, [(-sw + 22, top + 70), (sw - 22, top + 70), (pw + 16, bot + 40), (-pw - 16, bot + 40)])
+            paint(cr, None, OUTLINE, 4.5)
         if c.get("collar") is not None:
             for side in (-1, 1):
                 cr.move_to(0, top + 4)
@@ -690,4 +739,180 @@ def portrait(cr, t, start, x, y, r, who, eyes="open", mouth="smile", brows=None,
     cr.restore()
     cr.arc(0, 0, r, 0, 2 * math.pi)
     paint(cr, None, OUTLINE, 7)
+    cr.restore()
+
+
+
+CROC = hexc("#5fae4a")
+
+
+def crocodile(cr, t, x, y, s=1.0, facing=1, eyes="half", jaw=0.15, arms=("hips", "down"), brows=None, bob=True,
+              hold=None, shadow=True, seed=0):
+    """A big upright cartoon crocodile standing with its feet at (x, y), snout pointing toward `facing`.
+    `jaw` 0..1 opens the mouth (teeth showing). `hold(cr, hx, hy)` draws a prop in the front hand."""
+    if shadow:
+        ground_shadow(cr, x, y + 4 * s, 120 * s, 0.26)
+    b = math.sin(t * 2.0 + seed) * 3 if bob else 0.0
+    cr.save()
+    cr.translate(x, y + b * s)
+    cr.scale(s * facing, s)
+    sk = CROC
+    belly = hexc("#e8e0a8")
+    # tail
+    smooth(cr, [(-60, -120), (-150, -90), (-230, -40 + 10 * math.sin(t * 2 + seed)), (-250, -20), (-150, -40),
+                (-60, -60)])
+    paint(cr, lin(-250, 0, -60, 0, [(0, shade(sk, -0.2)), (1, sk)]), OUTLINE, 5)
+    for k in range(5):
+        xx = -80 - k * 34
+        cr.move_to(xx - 10, -96 + k * 12)
+        cr.line_to(xx, -116 + k * 14)
+        cr.line_to(xx + 10, -96 + k * 12)
+        paint(cr, shade(sk, -0.25), OUTLINE, 3)
+    # legs
+    for side in (-1, 1):
+        lx = side * 44
+        rrect(cr, lx - 26, -110, 52, 104, 22)
+        paint(cr, lin(0, -110, 0, 0, [(0, sk), (1, shade(sk, -0.25))]), OUTLINE, 5)
+        ellipse(cr, lx + 14, -8, 40, 16)
+        paint(cr, shade(sk, -0.1), OUTLINE, 4.5)
+    # back arm
+    def arm(side, pose, prop=None):
+        hxy = {"down": (20, 120), "hips": (60, 70), "wave": (70, -110), "up": (20, -150), "point": (150, -10),
+               "hold": (90, 40), "out": (130, 20), "chin": (-40, -40), "shrug": (90, -30), "face": (-30, -90),
+               "fist": (60, -130)}.get(pose, (20, 120)) if isinstance(pose, str) else pose
+        sx, sy = side * 66, -330
+        ex, ey = sx + side * hxy[0], sy + hxy[1]
+        mx, my = (sx + ex) / 2 + side * 14, (sy + ey) / 2 + 12
+        stroke_line(cr, [(sx, sy), (mx, my), (ex, ey)], 38, OUTLINE)
+        stroke_line(cr, [(sx, sy), (mx, my), (ex, ey)], 29, sk)
+        for k in range(3):
+            a = -0.6 + 0.6 * k
+            stroke_line(cr, [(ex, ey), (ex + side * math.cos(a) * 22, ey + math.sin(a) * 22)], 11, OUTLINE)
+            stroke_line(cr, [(ex, ey), (ex + side * math.cos(a) * 22, ey + math.sin(a) * 22)], 6, sk)
+        if prop:
+            prop(cr, ex, ey)
+    arm(-1, arms[1])
+    # body
+    smooth(cr, [(-80, -360), (0, -380), (80, -360), (96, -200), (80, -90), (0, -70), (-80, -90), (-96, -200)])
+    paint(cr, rad(-30, -300, 300, [(0, shade(sk, 0.35)), (0.6, sk), (1, shade(sk, -0.2))]), OUTLINE, 5.5)
+    smooth(cr, [(-46, -340), (46, -340), (58, -200), (40, -100), (-40, -100), (-58, -200)])
+    paint(cr, lin(0, -340, 0, -100, [(0, shade(belly, 0.2)), (1, shade(belly, -0.1))]), OUTLINE, 4)
+    for k in range(5):
+        yy = -310 + k * 44
+        stroke_line(cr, [(-50 + abs(k - 2) * 4, yy), (50 - abs(k - 2) * 4, yy)], 3, alpha(OUTLINE, 0.35),
+                    curve=False)
+    # head: skull + long snout; the lower jaw hinges open
+    hy = -420
+    ja = jaw * 0.55
+    cr.save()
+    cr.translate(30, hy + 30)
+    cr.rotate(ja)
+    smooth(cr, [(-60, -10), (200, -10), (214, 6), (200, 22), (-50, 30)])
+    paint(cr, lin(0, -10, 0, 30, [(0, belly), (1, shade(sk, -0.15))]), OUTLINE, 5)
+    for k in range(7):
+        xx = 10 + k * 28
+        cr.move_to(xx - 8, -10)
+        cr.line_to(xx, -26)
+        cr.line_to(xx + 8, -10)
+        paint(cr, WHITE, OUTLINE, 2.5)
+    cr.restore()
+    if jaw > 0.1:
+        cr.move_to(-20, hy + 30)
+        cr.line_to(230, hy + 30)
+        cr.line_to(230 * math.cos(ja), hy + 30 + 230 * math.sin(ja))
+        cr.close_path()
+        paint(cr, hexc("#b8384a"), None, 0)
+    smooth(cr, [(-70, hy + 30), (-60, hy - 60), (10, hy - 80), (70, hy - 50), (230, hy - 10), (246, hy + 14),
+                (230, hy + 34), (-40, hy + 44)])
+    paint(cr, rad(0, hy - 60, 220, [(0, shade(sk, 0.4)), (0.6, sk), (1, shade(sk, -0.2))]), OUTLINE, 5.5)
+    for k in range(7):
+        xx = 50 + k * 26
+        cr.move_to(xx - 7, hy + 32)
+        cr.line_to(xx, hy + 48)
+        cr.line_to(xx + 7, hy + 32)
+        paint(cr, WHITE, OUTLINE, 2.5)
+    for nx in (226, 236):
+        cr.arc(nx, hy - 4, 4, 0, 2 * math.pi)
+        paint(cr, OUTLINE, None, 0)
+    for k, ex in enumerate((-18, 40)):     # eyes on top of the head
+        cr.arc(ex, hy - 70, 34, 0, 2 * math.pi)
+        paint(cr, rad(ex, hy - 80, 40, [(0, shade(sk, 0.4)), (1, sk)]), OUTLINE, 5)
+        _eye(cr, ex, hy - 72, 22, 24, (0.6, 0.1), eyes)
+        if eyes == "half":
+            _lid(cr, ex, hy - 72, 22, 24, 0.5, shade(sk, 0.3))
+        elif eyes == "angry":
+            _lid(cr, ex, hy - 72, 22, 24, 0.4, shade(sk, 0.3), slope=0.4 * (1 if k else -1))
+        if brows:
+            d = {"up": -14, "angry": 8, "sad": -6}.get(brows, 0)
+            stroke_line(cr, [(ex - 22, hy - 104 + (d if k else -d) * 0.5), (ex + 22, hy - 104 - (d if k else -d) * 0.5)],
+                        7, OUTLINE, curve=False)
+    ellipse(cr, 150, hy + 14, 22, 10)
+    paint(cr, alpha(hexc("#ff8a8a"), 0.4), None, 0)
+    arm(1, arms[0], hold)
+    cr.restore()
+
+
+def baby_basket(cr, t, x, y, s=1.0, eyes="open", mouth="smile", seed=0):
+    """A woven basket with a baby in it; (x, y) is the basket's bottom centre."""
+    cr.save()
+    cr.translate(x, y + math.sin(t * 2 + seed) * 2)
+    cr.scale(s, s)
+    head(cr, t, 0, -150, 58, "kid", eyes, mouth, hair=None, blush=True)
+    for side in (-1, 1):
+        cr.arc(side * 66, -112 + math.sin(t * 6 + side) * 8, 16, 0, 2 * math.pi)
+        paint(cr, SKIN["tan"], OUTLINE, 4)
+    cr.move_to(-110, -90)
+    cr.curve_to(-100, 10, 100, 10, 110, -90)
+    cr.close_path()
+    paint(cr, lin(0, -90, 0, 0, [(0, hexc("#e0b070")), (1, hexc("#a8763a"))]), OUTLINE, 5)
+    cr.save()
+    cr.move_to(-110, -90)
+    cr.curve_to(-100, 10, 100, 10, 110, -90)
+    cr.close_path()
+    cr.clip()
+    for k in range(-6, 7):
+        stroke_line(cr, [(k * 20, -90), (k * 20 + 10, 10)], 3, alpha(OUTLINE, 0.3), curve=False)
+    for k in range(4):
+        stroke_line(cr, [(-110, -70 + k * 22), (110, -70 + k * 22)], 3, alpha(OUTLINE, 0.3), curve=False)
+    cr.restore()
+    rrect(cr, -116, -100, 232, 20, 10)
+    paint(cr, hexc("#ffd6e4"), OUTLINE, 4)
+    cr.restore()
+
+
+
+def alien(cr, t, x, y, s=1.0, eyes="open", mouth="smile", wave=False, seed=0, col=hexc("#8fe07a")):
+    """A small cute green alien standing with its feet at (x, y)."""
+    b = math.sin(t * 3 + seed) * 4
+    ground_shadow(cr, x, y + 4 * s, 60 * s, 0.25)
+    cr.save()
+    cr.translate(x, y + b * s)
+    cr.scale(s, s)
+    for side in (-1, 1):
+        stroke_line(cr, [(side * 20, -60), (side * 26, -4)], 18, OUTLINE, curve=False)
+        stroke_line(cr, [(side * 20, -60), (side * 26, -4)], 11, col, curve=False)
+    ellipse(cr, 0, -100, 46, 56)
+    paint(cr, rad(-14, -120, 70, [(0, shade(col, 0.4)), (1, shade(col, -0.15))]), OUTLINE, 5)
+    for side in (-1, 1):
+        hy = -180 if (wave and side > 0) else -70
+        stroke_line(cr, [(side * 40, -120), (side * 70, hy + 10 * math.sin(t * 8) * (1 if wave and side > 0 else 0))],
+                    16, OUTLINE)
+        stroke_line(cr, [(side * 40, -120), (side * 70, hy + 10 * math.sin(t * 8) * (1 if wave and side > 0 else 0))],
+                    9, col)
+    for side in (-1, 1):       # antennae
+        stroke_line(cr, [(side * 22, -250), (side * 40, -300)], 6, OUTLINE)
+        cr.arc(side * 40, -304, 11, 0, 2 * math.pi)
+        paint(cr, hexc("#ffd84d"), OUTLINE, 3.5)
+    ellipse(cr, 0, -210, 78, 66)
+    paint(cr, rad(-20, -235, 100, [(0, shade(col, 0.45)), (1, shade(col, -0.12))]), OUTLINE, 5.5)
+    for side in (-1, 1):
+        ellipse(cr, side * 32, -215, 24, 30, side * 0.35)
+        paint(cr, rad(side * 26, -228, 34, [(0, hexc("#3a3a58")), (1, hexc("#0e0e1a"))]), OUTLINE, 4)
+        ellipse(cr, side * 26, -228, 7, 9)
+        paint(cr, alpha(WHITE, 0.9), None, 0)
+    cr.save()
+    cr.translate(0, -170)
+    cr.scale(0.7, 0.7)
+    _mouth(cr, 0, 0, mouth, t)
+    cr.restore()
     cr.restore()

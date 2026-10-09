@@ -151,6 +151,18 @@ class Timeline:
         return list(zip(cuts, cuts[1:])), pauses
 
     @staticmethod
+    def _turn(b):
+        """Index of the first word the character speaks (0 if the whole line is theirs)."""
+        if not b.speaker_from:
+            return 0
+        k, n = _norm(b.speaker_from), 0
+        for u in b.units:
+            if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
+                return n
+            n += len(u.spoken)
+        return 0
+
+    @staticmethod
     def _speak(b):
         """Audio and per-word times for a beat, read the way a person would: every sentence is its own take, joined
         with a full-stop pause, so sentences never blur into each other. Where a line switches from narrator to
@@ -158,11 +170,13 @@ class Timeline:
         import numpy as np
         words = b.spoken_text.split()
         spans, pauses = Timeline._takes(b)
+        turn = Timeline._turn(b)
         audio, times, off = [], [], 0.0
         for c, (a0, a1) in enumerate(spans):
             text = " ".join(words[a0:a1])
-            clip = voice.synth(text, b.pace)
-            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace)]
+            who = b.speaker if (b.speaker and a0 >= turn) else None   # the character's own voice, if it has one
+            clip = voice.synth(text, b.pace, who)
+            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who)]
             audio.append(clip)
             off += len(clip) / voice.SR
             if c < len(pauses):
