@@ -137,14 +137,14 @@ def wrap(d, text, f, maxw):
     return lines
 
 
-def caption(frame, text, age):
+def caption(frame, text, age, y=CAP_Y):
     """Clean caption: white bold text with a dark outline; pops in over 0.12 s."""
     d = ImageDraw.Draw(frame)
     size = 70 if age > 0.12 else int(70 * (0.85 + 0.15 * age / 0.12))
     f = font(size)
     lines = wrap(d, text, f, 900)
     lh = size * 1.18
-    y0 = CAP_Y - lh * (len(lines) - 1) / 2
+    y0 = y - lh * (len(lines) - 1) / 2
     for i, ln in enumerate(lines):
         d.text((W / 2, y0 + i * lh), ln, font=f, fill="white", anchor="mm", stroke_width=7,
                stroke_fill=(20, 16, 14))
@@ -196,7 +196,7 @@ def main():
 
     comp = fix_comparison(media(mdir, "1ce678f6"))
     end = st("Want one?")
-    scenes = [  # (start, source factory, callouts [(text, from)])
+    scenes = [  # (start, source factory, callouts [(text, from[, y[, colour]])][, caption y])
         (0.0, lambda n: video_frames(media(mdir, "170721"), n, fit=True), [("From ONE photo...", 0.0)]),
         (st("Just this one."), lambda n: image_frames(Image.open(media(mdir, "2cd4a06f")), n), []),
         (st("First, I turn it into a cartoon-style 3D design."),
@@ -208,7 +208,7 @@ def main():
         (cut, lambda n: video_frames(media(mdir, "WA0007"), n, start=1.0, speed=PRINTER_SPEED),
          [("PRINTING (1.5x SPEED)", cut)]),
         (st("And here it is."), lambda n: video_frames(media(mdir, "170901"), n, speed=1.0), []),
-        (st("Single figures too."), lambda n: video_frames(media(mdir, "170732"), n, fit=True), []),
+        (st("Single figures too."), lambda n: video_frames(media(mdir, "170732"), n, fit=True), [], 420),
         (st("Couples."), lambda n: video_frames(media(mdir, "170757"), n, fit=True), []),
         (end, lambda n: image_frames(comp, n, "contain", bg=(250, 247, 243), zoom=(1.0, 1.03), top=400),
          [("@yours3dindia", end, 290, (30, 22, 18)), ("COMMENT TO GET A DM", st("Comment below to get a DM."), 1215),
@@ -225,7 +225,7 @@ def main():
     nframes = int(round(total * FPS))
     bounds = [round(s[0] * FPS) for s in scenes] + [nframes]
     f = 0
-    for (s0, make, calls), a, b in zip(scenes, bounds, bounds[1:]):
+    for (s0, make, calls, *cap_y), a, b in zip(scenes, bounds, bounds[1:]):
         for frame in make(b - a):
             t = f / FPS
             frame = frame.copy()
@@ -234,7 +234,7 @@ def main():
                     callout(frame, txt, place[0] if place else CALLOUT_Y + 130 * k, t - t0, *place[1:])
             for c0, c1, txt in cues:
                 if c0 <= t < c1 + 0.15 and t < end:   # the end card spells the call to action out instead
-                    caption(frame, txt, t - c0)
+                    caption(frame, txt, t - c0, *cap_y)
             enc.stdin.write(frame.tobytes())
             f += 1
     enc.stdin.close()
@@ -265,7 +265,7 @@ def main():
 
     subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-i", silent, "-i", wav, "-map", "0:v:0", "-map", "1:a:0",
                            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
-                           "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-movflags", "+faststart", "-shortest",
+                           "-af", "loudnorm=I=-14:TP=-1.5:LRA=11,alimiter=limit=0.75:level=false", "-movflags", "+faststart", "-shortest",
                            *CLEAN, out])
     os.remove(silent)
     os.remove(wav)
