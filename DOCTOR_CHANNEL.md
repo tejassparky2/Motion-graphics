@@ -62,6 +62,11 @@ Notes and sources: `research_notes/body_facts_12-14.md`. Doctor voice Kokoro `am
 - `videos/stomach_clean.py`: stomach growling and the migrating motor complex (the gut's cleaning wave).
 - The ward scene setup is shared: `ward()` in `motion/clinic.py`.
 
+## Videos 15-18: more hidden body facts, owner-approved scripts
+Notes and sources: `research_notes/body_facts_15-18.md`.
+- `videos/funny_bone.py` (the ulnar nerve), `videos/stomach_acid.py` (why acid doesn't digest the stomach),
+  `videos/goosebumps.py` (the hair muscle), `videos/tickle.py` (why you can't tickle yourself).
+
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
 own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
