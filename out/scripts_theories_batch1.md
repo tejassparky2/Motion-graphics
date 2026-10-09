@@ -20,7 +20,7 @@ a debate. Living people are named and quoted, not drawn as characters.
 9. A future civilization could run billions of simulated worlds, full of people who think they're real.
 10. So for every real world, there could be billions of fake ones.
 11. Imagine a billion dream worlds and one real one. You wake up somewhere. Where are you, probably?
-12. In twenty sixteen, Elon Musk said the chance we're in base reality is one in billions.
+12. In twenty sixteen, Elon Musk said the odds that we are in base reality are one in billions. *(reworded: "the chance we're in" was heard as "the chance wherein")*
 13. But Bostrom himself says he doesn't know which of the three is true.
 14. So be honest. If this were a simulation, what's the first thing you'd do?
 
@@ -36,7 +36,7 @@ Elon Musk at the 2016 Code Conference ("one in billions", the Pong comparison) a
 2. Over seven hundred years ago, Thomas Aquinas made this argument.
 3. Everything that happens has a cause. You exist because of your parents. They exist because of theirs.
 4. Follow the chain back. It can't go back forever, he said. Something had to start it.
-5. A first cause. And that, Aquinas wrote, is what everyone calls God.
+5. A first cause. That, Aquinas wrote, is what everyone calls God. *(reworded: "And that" was heard as "In that")*
 6. Like a line of falling dominoes. Someone had to push the first one.
 7. Then, in nineteen twenty-seven, Bertrand Russell pushed back. (Russell, in his own voice:) If everything must have a cause, then God must have a cause.
 8. And if anything can exist without a cause, he said, it may just as well be the world.

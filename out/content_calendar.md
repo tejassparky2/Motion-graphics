@@ -59,6 +59,13 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 37 | Sat Oct 17 | 4:30 AM | achilles_tortoise | A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox) |
 | 38 | Sat Oct 17 | 9:30 PM | twain_dead_twice | Mark Twain Had To Tell The Papers He Wasn't Dead. Twice. 💀 |
 | 39 | Sun Oct 18 | 4:30 AM | immortal_jellyfish | This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼 |
+| 40 | Sun Oct 18 | 9:30 PM | court_paradox | He Sued His Own Student. And Nobody Could Win. ⚖️ |
+| 41 | Mon Oct 19 | 4:30 AM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 |
+| 42 | Mon Oct 19 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
+| 43 | Tue Oct 20 | 4:30 AM | spear_shield | One Salesman's Lie Became the Chinese Word for "Contradiction" 🛡️ |
+| 44 | Tue Oct 20 | 9:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 (Simulation Theory) |
+| 45 | Wed Oct 21 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
+| 46 | Wed Oct 21 | 9:30 PM | fermi_paradox | Where Is Everybody? 👽 (The Fermi Paradox Explained) |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
