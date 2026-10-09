@@ -33,7 +33,10 @@
 
 ## Channel basics
 - 2D hand-drawn Shorts: weird animals and insects, weird history, paradoxes, clever or funny twist stories.
-- Fast pacing, no dead air, a visual change about every second, facts checked (disputed claims left out).
+- Fast pacing, no dead air, a visual change about every second, disputed claims left out.
+- Research is light (owner, 9 Oct 2026): write from your own knowledge and creativity, and look things up only when a
+  claim is surprising, very specific (exact quotes, dates, numbers) or you're unsure. Original clever stories with a
+  twist (no research needed) are welcome alongside real ones; don't present invented stories as true history.
 - Any topic is open, including controversial ones (religion, money, power): the owner wants to explore freely.
   Keep it honest: quote people's real, sourced words (say "often credited to" when the source is unknown) and
   never phrase anything as a call to violence.
