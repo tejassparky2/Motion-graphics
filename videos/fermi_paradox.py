@@ -35,7 +35,7 @@ SCRIPT = [
                                         "water can be liquid."),
     dict(id="f6", scene="numbers", text="Even if only a tiny fraction had life, the galaxy should be buzzing."),
     dict(id="f7", scene="silence", text="But we've heard nothing. No signals. No visitors. Just silence.", pace=0.93),
-    dict(id="f8", scene="answers", text="So, the answers. Maybe life is incredibly rare, and we're just lucky."),
+    dict(id="f8", scene="answers", text="So, three possible answers. Maybe life is incredibly rare, and we're just lucky."),
     dict(id="f9", scene="answers", text="Maybe something wipes out civilizations before they reach the stars. Some "
                                         "scientists call it the Great Filter."),
     dict(id="f10", scene="answers", text="Or maybe they're out there, staying quiet on purpose."),

@@ -61,7 +61,7 @@ Line 9 is the classical reply (only what begins to exist needs a cause). Both si
 5. And scientists estimate billions of Earth-size planets sit in the zone where water can be liquid.
 6. Even if only a tiny fraction had life, the galaxy should be buzzing.
 7. But we've heard nothing. No signals. No visitors. Just silence.
-8. So, the answers. Maybe life is incredibly rare, and we're just lucky.
+8. So, three possible answers. Maybe life is incredibly rare, and we're just lucky.
 9. Maybe something wipes out civilizations before they reach the stars. Some scientists call it the Great Filter.
 10. Or maybe they're out there, staying quiet on purpose.
 11. It's like standing in a dark forest at night. Total silence. Either you're alone, or everyone else is hiding.
