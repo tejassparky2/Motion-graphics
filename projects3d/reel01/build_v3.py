@@ -25,7 +25,7 @@ from motion import audio as synth       # noqa: E402
 
 NAME = "reel01_v3"
 VOICE = "reel01_v3"
-SHOWN = {("zero", "point", "two"): "0.2", ("yours", "3D", "India", "dot", "com."): "yours3dindia.com."}
+SHOWN = {("zero", "point", "two"): "0.2", ("Yours", "3D", "India", "dot", "com."): "yours3dindia.com"}
 PRINTER_SPEED = 1.5
 
 
@@ -104,7 +104,7 @@ def main():
     t_e = mid("Over fifteen hundred colour changes.", "Layer by layer.")
     t_f, t_g, t_h = st("And here it is."), st("Single figures too."), st("Couples.")
     t_m, end = st("Made just for you."), st("Want one?")
-    t_web = st("Or order at yours 3D India dot com.")
+    t_web = st("Or order online.")
     scan_dur = st("First, I turn it into a cartoon-style 3D design.") - t_c
     stills = [still(media(mdir, "170721"), 1.5), still(media(mdir, "170732"), 1.5), still(media(mdir, "170757"), 2.0)]
     # (start, frames factory, graded?, wipe into this scene?, caption y)
