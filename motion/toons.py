@@ -70,6 +70,12 @@ CAST = {
                     shoes=hexc("#2b1d16"), build="adult"),
     "fermi": dict(skin="olive", hair="short", hair_col=hexc("#2b1a12"), shirt=WHITE, suit=hexc("#6a7080"),
                   pants=hexc("#5a606e"), tie=hexc("#8a2a2a"), shoes=hexc("#2b1d16"), build="adult"),
+    "doctor": dict(skin="brown", hair="short", hair_col=hexc("#1e130d"), shirt=hexc("#2fa59a"), suit=WHITE,
+                   pants=hexc("#2f7f78"), shoes=hexc("#2b2b33"), stethoscope=True, build="adult"),
+    "doctor2": dict(skin="light", hair="bun", hair_col=hexc("#6b3a22"), shirt=hexc("#4a8ad0"), suit=WHITE,
+                    pants=hexc("#3a6aa8"), shoes=hexc("#2b2b33"), stethoscope=True, glasses=True, build="adult"),
+    "patient": dict(skin="tan", hair="short", hair_col=hexc("#3a2418"), shirt=hexc("#9fd0f0"),
+                    pants=hexc("#9fd0f0"), shoes=hexc("#e8e8ee"), build="adult"),
     "cousin": dict(skin="light", hair="short", hair_col=hexc("#8a6a4a"), shirt=hexc("#e8f0ff"), build="adult",
                    stache=hexc("#8a6a4a")),
 }
@@ -464,6 +470,14 @@ def person(cr, t, x, y, s=1.0, who="kid", facing=1, eyes="open", mouth="smile", 
                 cr.close_path()
                 paint(cr, lin(0, top, 0, top + 108, [(0, shade(c["tie"], 0.25)), (1, shade(c["tie"], -0.15))]),
                       OUTLINE, 4)
+        if c.get("stethoscope"):    # tubing around the neck, chest piece on the front
+            stroke_line(cr, [(-34, top + 4), (-40, top + 70), (-12, top + 120), (14, top + 112)], 9, OUTLINE)
+            stroke_line(cr, [(-34, top + 4), (-40, top + 70), (-12, top + 120), (14, top + 112)], 5,
+                        hexc("#3a3e48"))
+            stroke_line(cr, [(34, top + 4), (40, top + 60)], 9, OUTLINE)
+            stroke_line(cr, [(34, top + 4), (40, top + 60)], 5, hexc("#3a3e48"))
+            cr.arc(20, top + 112, 14, 0, 2 * math.pi)
+            paint(cr, rad(16, top + 106, 18, [(0, WHITE), (1, hexc("#9aa4b4"))]), OUTLINE, 4)
         if c.get("build") == "kid" and c.get("tie") is not None and c.get("suit") is None:
             for side in (-1, 1):   # school-shirt collar points
                 cr.move_to(0, top + 4)
