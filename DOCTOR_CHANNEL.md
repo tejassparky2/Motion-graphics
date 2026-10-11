@@ -67,6 +67,13 @@ Notes and sources: `research_notes/body_facts_15-18.md`.
 - `videos/funny_bone.py` (the ulnar nerve), `videos/stomach_acid.py` (why acid doesn't digest the stomach),
   `videos/goosebumps.py` (the hair muscle), `videos/tickle.py` (why you can't tickle yourself).
 
+## Videos 19-22: polished style + step-by-step explanations (owner-approved scripts)
+Notes and sources: `research_notes/body_facts_19-22.md`. Built with `motion/pbody.py` on top of the polished
+modules (`POLISHED_STYLE.md`): glossy organ characters, `step_card` (Step 1/2/3), `tip_card` (do this / see a
+doctor), and `clinic()` with the toons doctor, Mike and Danny. Signs and cards sit between y 230 and 400 (clear of
+the corner logo); tags go in world space next to the organ they name.
+- `videos/brain_freeze.py`, `videos/hiccups.py`, `videos/foot_asleep.py`, `videos/earwax.py`.
+
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
 own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
