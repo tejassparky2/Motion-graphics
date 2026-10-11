@@ -68,6 +68,8 @@ CAST = {
                      belt=hexc("#2b2b33"), shoes=hexc("#2b1d16"), build="kid"),
     "aquinas": dict(skin="light", hair="tonsure", hair_col=hexc("#5a3a24"), shirt=WHITE, toga=hexc("#2b2b33"),
                     shoes=hexc("#2b1d16"), build="adult"),
+    "lewis": dict(skin="light", hair="short", hair_col=hexc("#6a5a4a"), shirt=WHITE, suit=hexc("#7a6a4e"),
+                  pants=hexc("#5a4e3a"), tie=hexc("#5a2a2a"), shoes=hexc("#2b1d16"), glasses=True, build="adult"),
     "fermi": dict(skin="olive", hair="short", hair_col=hexc("#2b1a12"), shirt=WHITE, suit=hexc("#6a7080"),
                   pants=hexc("#5a606e"), tie=hexc("#8a2a2a"), shoes=hexc("#2b1d16"), build="adult"),
     "doctor": dict(skin="brown", hair="short", hair_col=hexc("#1e130d"), shirt=hexc("#2fa59a"), suit=WHITE,
