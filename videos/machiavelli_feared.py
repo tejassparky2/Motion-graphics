@@ -37,8 +37,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Is It Better to Be Loved or Feared? Machiavelli's Answer 😈",
-    alt_titles=["The 500-Year-Old Answer to 'Loved or Feared?' 👑", "Machiavelli Said People Forgive Murder Before Money 😳"],
+    title="Loved or Feared? Machiavelli's 500-Year-Old Answer 😈",
+    alt_titles=["Is It Better to Be Loved or Feared? Machiavelli's Answer 😈",
+                "The 500-Year-Old Answer to 'Loved or Feared?' 👑", "Machiavelli Said People Forgive Murder Before Money 😳"],
     description="""Is it better to be loved, or feared? 500 years ago, Niccolò Machiavelli gave an answer people still argue about. 👑
 
 In The Prince (written in 1513), he says the best is both. But if you have to pick one, it's much safer to be feared: people break love whenever it helps them, but the fear of punishment never lets go.

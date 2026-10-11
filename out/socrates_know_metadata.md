@@ -1,11 +1,12 @@
 # Upload sheet: socrates_know
 
-**Title** (66 characters)
+**Title** (56 characters)
 ```
-The Wisest Man Said "I Know Nothing"… and That's WHY He Was Wise 🧠
+Socrates Said "I Know Nothing"… That's WHY He Was Wise 🧠
 ```
 
 **Alternative titles to test**
+- `The Wisest Man Said "I Know Nothing"… and That's WHY He Was Wise 🧠`
 - `"I Know That I Know Nothing" Explained in 50 Seconds 🧠`
 - `The Oracle Said He Was the Wisest. He Tried to Prove It Wrong 😳`
 

@@ -50,8 +50,9 @@ SCRIPT = [
 clear_dialogue(SCRIPT)   # riddles and answers: slower, with clear turns
 
 METADATA = dict(
-    title="The New Teacher Said Nobody Is Smarter Than Her 😏 #TheLastBencher",
-    alt_titles=["The Last Bencher vs The New Teacher (3 Riddles) 🧠", "She Bet Him She Was Smarter. Big Mistake. 😂"],
+    title="\"Nobody's Smarter Than Me.\" 3 Riddles Later 😏",
+    alt_titles=["The New Teacher Said Nobody Is Smarter Than Her 😏 #TheLastBencher",
+                "The Last Bencher vs The New Teacher (3 Riddles) 🧠", "She Bet Him She Was Smarter. Big Mistake. 😂"],
     description="""Day one: the new teacher says nobody in her class is smarter than her. The Last Bencher raises his hand: three riddles, and if she gets one right, he sits in the front row for a year. 😏
 
 1️⃣ A doctor gives you three pills. Take one every half hour. How long do they last?

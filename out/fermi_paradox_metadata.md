@@ -1,11 +1,12 @@
 # Upload sheet: fermi_paradox
 
-**Title** (51 characters)
+**Title** (53 characters)
 ```
-Where Is Everybody? 👽 (The Fermi Paradox Explained)
+100 Billion Stars. Zero Aliens. Where Is Everybody? 👽
 ```
 
 **Alternative titles to test**
+- `Where Is Everybody? 👽 (The Fermi Paradox Explained)`
 - `Billions of Planets... So Why Is Space SILENT? 👽`
 - `The Question That Haunts Scientists: Where Are the Aliens? 🌌`
 

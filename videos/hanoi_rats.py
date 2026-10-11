@@ -37,8 +37,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="A City Paid People to Kill Rats… and Got MORE Rats 🐀",
-    alt_titles=["The Great Hanoi Rat Hunt of 1902 🐀", "Why Paying for Rat Tails Backfired 😂"],
+    title="In 1902, a City Paid People to Kill Rats… Got MORE Rats 🐀",
+    alt_titles=["A City Paid People to Kill Rats… and Got MORE Rats 🐀",
+                "The Great Hanoi Rat Hunt of 1902 🐀", "Why Paying for Rat Tails Backfired 😂"],
     description="""In 1902, a city paid people to kill rats… and ended up with more rats. 🐀
 
 Hanoi, then ruled by France, had just built new sewers, and they filled up with rats. Afraid of plague, officials offered one cent for every rat, and all you had to bring was the tail. Soon there were rats running around with no tails: hunters were cutting off the tails and letting the rats go to breed. Health inspectors even found rat farms outside the city. 😳

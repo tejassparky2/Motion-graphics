@@ -1,11 +1,12 @@
 # Upload sheet: honeybee_life
 
-**Title** (62 characters)
+**Title** (54 characters)
 ```
-What If You Were a Honeybee? 🐝 (Your Whole Life in 70 Seconds)
+What If You Were a Honeybee? Your Life in 70 Seconds 🐝
 ```
 
 **Alternative titles to test**
+- `What If You Were a Honeybee? 🐝 (Your Whole Life in 70 Seconds)`
 - `You're a Bee. You Have 6 Weeks to Live. 🐝`
 - `The Brutal Life of a Honeybee (Explained Funny) 🍯`
 

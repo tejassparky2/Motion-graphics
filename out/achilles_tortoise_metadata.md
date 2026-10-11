@@ -1,11 +1,12 @@
 # Upload sheet: achilles_tortoise
 
-**Title** (62 characters)
+**Title** (54 characters)
 ```
-A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox)
+Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢
 ```
 
 **Alternative titles to test**
+- `A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox)`
 - `Why Achilles Can NEVER Catch The Tortoise 🐢 (Or Can He?)`
 - `The 2,400-Year-Old Paradox That Fooled Everyone 🏃‍♂️🐢`
 

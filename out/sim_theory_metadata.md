@@ -1,11 +1,12 @@
 # Upload sheet: sim_theory
 
-**Title** (64 characters)
+**Title** (44 characters)
 ```
-You Might Be Living Inside a Computer Game 🎮 (Simulation Theory)
+You Might Be Living Inside a Computer Game 🎮
 ```
 
 **Alternative titles to test**
+- `You Might Be Living Inside a Computer Game 🎮 (Simulation Theory)`
 - `Are We Living in a Simulation? The Argument Explained Simply 🤯`
 - `One of These 3 Things MUST Be True 🎮`
 

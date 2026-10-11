@@ -1,11 +1,12 @@
 # Upload sheet: last_bencher_4
 
-**Title** (65 characters)
+**Title** (45 characters)
 ```
-The New Teacher Said Nobody Is Smarter Than Her 😏 #TheLastBencher
+"Nobody's Smarter Than Me." 3 Riddles Later 😏
 ```
 
 **Alternative titles to test**
+- `The New Teacher Said Nobody Is Smarter Than Her 😏 #TheLastBencher`
 - `The Last Bencher vs The New Teacher (3 Riddles) 🧠`
 - `She Bet Him She Was Smarter. Big Mistake. 😂`
 

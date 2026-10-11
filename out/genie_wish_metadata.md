@@ -1,11 +1,12 @@
 # Upload sheet: genie_wish
 
-**Title** (42 characters)
+**Title** (46 characters)
 ```
-The Kid Broke The Genie With ONE Wish 🧞‍♂️
+3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️
 ```
 
 **Alternative titles to test**
+- `The Kid Broke The Genie With ONE Wish 🧞‍♂️`
 - `"I Wish This Wish Doesn't Come True" 🤯`
 - `The Wish No Genie Can Grant 🧞`
 

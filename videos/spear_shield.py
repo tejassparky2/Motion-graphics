@@ -47,8 +47,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="One Salesman's Lie Became the Chinese Word for \"Contradiction\" 🛡️",
-    alt_titles=["The Unstoppable Spear vs the Unbreakable Shield 🛡️ (2,000-Year-Old Paradox)",
+    title="One Lie Became the Chinese Word for \"Contradiction\" 🛡️",
+    alt_titles=["One Salesman's Lie Became the Chinese Word for \"Contradiction\" 🛡️",
+                "The Unstoppable Spear vs the Unbreakable Shield 🛡️ (2,000-Year-Old Paradox)",
                 "What If This Spear Hits This Shield? 🤯"],
     description="""One salesman's lie became a word that over a billion people still use. 🛡️
 

@@ -1,11 +1,12 @@
 # Upload sheet: spotlight_effect
 
-**Title** (65 characters)
+**Title** (59 characters)
 ```
-Nobody Is Watching You as Much as You Think (Science Proved It) 👀
+You Think 50% Noticed. Only 1 in 4 Did 👀 (Spotlight Effect)
 ```
 
 **Alternative titles to test**
+- `Nobody Is Watching You as Much as You Think (Science Proved It) 👀`
 - `The Embarrassing T-Shirt Experiment 😳`
 - `Why You Feel Like Everyone Is Staring (The Spotlight Effect)`
 

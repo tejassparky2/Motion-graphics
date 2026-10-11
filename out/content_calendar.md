@@ -45,27 +45,27 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 23 | Sat Oct 10 | 4:30 AM | pyrrhic_victory | He WON the Battle… Then Said "One More Win and We're Finished" ⚔️ |
 | 24 | Sat Oct 10 | 9:30 PM | potato_paradox | 100 lb of Potatoes Lose 1% Water… and Weigh 50 lb?! 🥔🤯 |
 | 25 | Sun Oct 11 | 4:30 AM | gabriels_horn | You Can FILL This Horn… But You Can Never PAINT It 🎺🤯 |
-| 26 | Sun Oct 11 | 9:30 PM | epictetus_rain | A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️ |
-| 27 | Mon Oct 12 | 4:30 AM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
-| 28 | Mon Oct 12 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
-| 29 | Tue Oct 13 | 4:30 AM | fermi_paradox | Where Is Everybody? 👽 (The Fermi Paradox Explained) *(moved from #46; lottery_happiness SKIPPED by owner 11 Oct)* |
-| 30 | Tue Oct 13 | 9:30 PM | socrates_know | The Wisest Man Said "I Know Nothing"… and That's WHY He Was Wise 🧠 |
-| 31 | Wed Oct 14 | 4:30 AM | machiavelli_feared | Is It Better to Be Loved or Feared? Machiavelli's Answer 😈 |
-| 32 | Wed Oct 14 | 9:30 PM | diogenes_alexander | Alexander the Great Offered Him Anything… His Answer Was Genius ☀️ |
-| 33 | Thu Oct 15 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? What Scientists Found Later 🍬 |
-| 34 | Thu Oct 15 | 9:30 PM | ben_franklin_effect | Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝 |
-| 35 | Fri Oct 16 | 4:30 AM | honeybee_life | What If You Were a Honeybee? 🐝 (Your Whole Life in 70 Seconds) |
-| 36 | Fri Oct 16 | 9:30 PM | last_bencher_4 | The New Teacher Said Nobody Is Smarter Than Her 😏 #TheLastBencher |
-| 37 | Sat Oct 17 | 4:30 AM | achilles_tortoise | A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox) |
+| 26 | Sun Oct 11 | 9:30 PM | epictetus_rain | 1 Sentence From a Slave… a Roman Emperor Studied It 🌧️ |
+| 27 | Mon Oct 12 | 4:30 AM | spotlight_effect | You Think 50% Noticed. Only 1 in 4 Did 👀 (Spotlight Effect) |
+| 28 | Mon Oct 12 | 9:30 PM | hanoi_rats | In 1902, a City Paid People to Kill Rats… Got MORE Rats 🐀 |
+| 29 | Tue Oct 13 | 4:30 AM | fermi_paradox | 100 Billion Stars. Zero Aliens. Where Is Everybody? 👽 *(moved from #46; lottery_happiness SKIPPED by owner 11 Oct)* |
+| 30 | Tue Oct 13 | 9:30 PM | socrates_know | Socrates Said "I Know Nothing"… That's WHY He Was Wise 🧠 |
+| 31 | Wed Oct 14 | 4:30 AM | machiavelli_feared | Loved or Feared? Machiavelli's 500-Year-Old Answer 😈 |
+| 32 | Wed Oct 14 | 9:30 PM | diogenes_alexander | Alexander Offered Him Anything… His Reply Was Genius ☀️ |
+| 33 | Thu Oct 15 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? The 2018 Retest 🍬 |
+| 34 | Thu Oct 15 | 9:30 PM | ben_franklin_effect | Ben Franklin's Trick to Make an Enemy Like You 🤝 |
+| 35 | Fri Oct 16 | 4:30 AM | honeybee_life | What If You Were a Honeybee? Your Life in 70 Seconds 🐝 |
+| 36 | Fri Oct 16 | 9:30 PM | last_bencher_4 | "Nobody's Smarter Than Me." 3 Riddles Later 😏 |
+| 37 | Sat Oct 17 | 4:30 AM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
 | 38 | Sat Oct 17 | 9:30 PM | twain_dead_twice | Mark Twain Had To Tell The Papers He Wasn't Dead. Twice. 💀 |
-| 39 | Sun Oct 18 | 4:30 AM | immortal_jellyfish | This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼 |
-| 40 | Sun Oct 18 | 9:30 PM | court_paradox | He Sued His Own Student. And Nobody Could Win. ⚖️ |
+| 39 | Sun Oct 18 | 4:30 AM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 |
+| 40 | Sun Oct 18 | 9:30 PM | court_paradox | He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️ |
 | 41 | Mon Oct 19 | 4:30 AM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 |
 | 42 | Mon Oct 19 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
-| 43 | Tue Oct 20 | 4:30 AM | spear_shield | One Salesman's Lie Became the Chinese Word for "Contradiction" 🛡️ |
-| 44 | Tue Oct 20 | 9:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 (Simulation Theory) |
+| 43 | Tue Oct 20 | 4:30 AM | spear_shield | One Lie Became the Chinese Word for "Contradiction" 🛡️ |
+| 44 | Tue Oct 20 | 9:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
 | 45 | Wed Oct 21 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
-| 46 | Wed Oct 21 | 9:30 PM | genie_wish | The Kid Broke The Genie With ONE Wish 🧞‍♂️ |
+| 46 | Wed Oct 21 | 9:30 PM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 

@@ -47,8 +47,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Alexander the Great Offered Him Anything… His Answer Was Genius ☀️",
-    alt_titles=["The Man Who Told Alexander the Great to Move 😳", "Who Was Richer: Alexander or Diogenes? ☀️"],
+    title="Alexander Offered Him Anything… His Reply Was Genius ☀️",
+    alt_titles=["Alexander the Great Offered Him Anything… His Answer Was Genius ☀️",
+                "The Man Who Told Alexander the Great to Move 😳", "Who Was Richer: Alexander or Diogenes? ☀️"],
     description="""The most powerful man in the world offered a poor man anything he wanted. The poor man asked him to move. ☀️
 
 Greece had just made Alexander the Great its leader. In Corinth, important people came to praise him, but the philosopher Diogenes, who lived in a big clay jar, didn't come. So Alexander went to find him, lying in the sun, and asked if he wanted anything at all.

@@ -1,11 +1,12 @@
 # Upload sheet: spear_shield
 
-**Title** (65 characters)
+**Title** (54 characters)
 ```
-One Salesman's Lie Became the Chinese Word for "Contradiction" 🛡️
+One Lie Became the Chinese Word for "Contradiction" 🛡️
 ```
 
 **Alternative titles to test**
+- `One Salesman's Lie Became the Chinese Word for "Contradiction" 🛡️`
 - `The Unstoppable Spear vs the Unbreakable Shield 🛡️ (2,000-Year-Old Paradox)`
 - `What If This Spear Hits This Shield? 🤯`
 

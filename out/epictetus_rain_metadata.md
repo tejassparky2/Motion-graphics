@@ -1,11 +1,12 @@
 # Upload sheet: epictetus_rain
 
-**Title** (60 characters)
+**Title** (54 characters)
 ```
-A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️
+1 Sentence From a Slave… a Roman Emperor Studied It 🌧️
 ```
 
 **Alternative titles to test**
+- `A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️`
 - `It's Not Things That Upset You (Epictetus) 🧠`
 - `Same Rain, Two Feelings: The Idea That Changes Everything 🌧️`
 

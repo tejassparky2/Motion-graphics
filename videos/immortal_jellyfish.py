@@ -42,8 +42,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼",
-    alt_titles=["The Immortal Jellyfish That Reverses Its Own Age 🪼", "This Animal Doesn't Have to Die of Old Age 🤯"],
+    title="This Jellyfish Turns Back Into a Baby. 10 Times. 🪼",
+    alt_titles=["This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼",
+                "The Immortal Jellyfish That Reverses Its Own Age 🪼", "This Animal Doesn't Have to Die of Old Age 🤯"],
     description="""This animal can grow old... then turn back into a baby. 🪼
 
 It's the immortal jellyfish (Turritopsis dohrnii), about 4.5 mm across: smaller than your little fingernail.

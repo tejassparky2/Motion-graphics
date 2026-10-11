@@ -36,8 +36,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️",
-    alt_titles=["It's Not Things That Upset You (Epictetus) 🧠", "Same Rain, Two Feelings: The Idea That Changes Everything 🌧️"],
+    title="1 Sentence From a Slave… a Roman Emperor Studied It 🌧️",
+    alt_titles=["A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️",
+                "It's Not Things That Upset You (Epictetus) 🧠", "Same Rain, Two Feelings: The Idea That Changes Everything 🌧️"],
     description="""A man born a slave had one idea. And an emperor of Rome learned from it. 🧠
 
 Epictetus was born a slave almost 2,000 years ago. Later he was freed and became a teacher. He taught: "It's not things that upset us. It's what we think about them."

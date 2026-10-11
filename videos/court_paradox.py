@@ -45,8 +45,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="He Sued His Own Student. And Nobody Could Win. ⚖️",
-    alt_titles=["The 2,000-Year-Old Lawsuit Nobody Can Solve ⚖️ (Paradox of the Court)",
+    title="He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️",
+    alt_titles=["He Sued His Own Student. And Nobody Could Win. ⚖️",
+                "The 2,000-Year-Old Lawsuit Nobody Can Solve ⚖️ (Paradox of the Court)",
                 "Whoever Loses This Case... Wins 🤯"],
     description="""A teacher sued his own student, and the judges couldn't decide who wins. ⚖️
 

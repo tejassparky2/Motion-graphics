@@ -1,11 +1,12 @@
 # Upload sheet: machiavelli_feared
 
-**Title** (58 characters)
+**Title** (52 characters)
 ```
-Is It Better to Be Loved or Feared? Machiavelli's Answer 😈
+Loved or Feared? Machiavelli's 500-Year-Old Answer 😈
 ```
 
 **Alternative titles to test**
+- `Is It Better to Be Loved or Feared? Machiavelli's Answer 😈`
 - `The 500-Year-Old Answer to 'Loved or Feared?' 👑`
 - `Machiavelli Said People Forgive Murder Before Money 😳`
 

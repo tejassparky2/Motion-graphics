@@ -1,11 +1,12 @@
 # Upload sheet: hanoi_rats
 
-**Title** (52 characters)
+**Title** (57 characters)
 ```
-A City Paid People to Kill Rats… and Got MORE Rats 🐀
+In 1902, a City Paid People to Kill Rats… Got MORE Rats 🐀
 ```
 
 **Alternative titles to test**
+- `A City Paid People to Kill Rats… and Got MORE Rats 🐀`
 - `The Great Hanoi Rat Hunt of 1902 🐀`
 - `Why Paying for Rat Tails Backfired 😂`
 

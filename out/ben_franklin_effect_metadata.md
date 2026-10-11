@@ -1,11 +1,12 @@
 # Upload sheet: ben_franklin_effect
 
-**Title** (72 characters)
+**Title** (48 characters)
 ```
-Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝
+Ben Franklin's Trick to Make an Enemy Like You 🤝
 ```
 
 **Alternative titles to test**
+- `Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝`
 - `The Ben Franklin Effect: Make Enemies Like You 😳`
 - `Why Asking for a Favor Makes People Like You 🤝`
 

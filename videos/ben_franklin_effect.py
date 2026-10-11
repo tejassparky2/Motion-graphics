@@ -42,8 +42,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝",
-    alt_titles=["The Ben Franklin Effect: Make Enemies Like You 😳", "Why Asking for a Favor Makes People Like You 🤝"],
+    title="Ben Franklin's Trick to Make an Enemy Like You 🤝",
+    alt_titles=["Want an Enemy to Like You? Ask THEM for a Favor (Ben Franklin's Trick) 🤝",
+                "The Ben Franklin Effect: Make Enemies Like You 😳", "Why Asking for a Favor Makes People Like You 🤝"],
     description="""Want an enemy to like you? Don't do them a favor. Ask them for one. 🤝
 
 In the 1730s, a rich new lawmaker in Pennsylvania spoke out against Benjamin Franklin. Franklin didn't flatter him: he asked to borrow a rare book from the man's library. The rival sent it right away, Franklin returned it a week later with a note of thanks, and they stayed friends for life.

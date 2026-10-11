@@ -42,8 +42,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="The Wisest Man Said \"I Know Nothing\"… and That's WHY He Was Wise 🧠",
-    alt_titles=["\"I Know That I Know Nothing\" Explained in 50 Seconds 🧠", "The Oracle Said He Was the Wisest. He Tried to Prove It Wrong 😳"],
+    title="Socrates Said \"I Know Nothing\"… That's WHY He Was Wise 🧠",
+    alt_titles=["The Wisest Man Said \"I Know Nothing\"… and That's WHY He Was Wise 🧠",
+                "\"I Know That I Know Nothing\" Explained in 50 Seconds 🧠", "The Oracle Said He Was the Wisest. He Tried to Prove It Wrong 😳"],
     description="""The wisest man in Athens said he knew nothing. And that's exactly why he was the wisest. 🧠
 
 About 2,400 years ago, a friend of Socrates asked the oracle of Delphi: "Is anyone wiser than Socrates?" The answer: no one. Socrates was confused, because he knew he wasn't wise. So he tested it: he questioned a famous politician, then poets, then craftsmen. Each one thought he knew more than he really did, and when Socrates asked simple questions, they couldn't explain.

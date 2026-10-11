@@ -46,8 +46,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Where Is Everybody? 👽 (The Fermi Paradox Explained)",
-    alt_titles=["Billions of Planets... So Why Is Space SILENT? 👽", "The Question That Haunts Scientists: Where Are the Aliens? 🌌"],
+    title="100 Billion Stars. Zero Aliens. Where Is Everybody? 👽",
+    alt_titles=["Where Is Everybody? 👽 (The Fermi Paradox Explained)",
+                "Billions of Planets... So Why Is Space SILENT? 👽", "The Question That Haunts Scientists: Where Are the Aliens? 🌌"],
     description="""Our galaxy could have billions of planets like Earth. So where is everybody? 👽
 
 1950: physicist Enrico Fermi is having lunch with friends, joking about flying saucers, when he suddenly asks: "But where is everybody?"

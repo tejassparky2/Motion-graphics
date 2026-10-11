@@ -49,8 +49,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="You Might Be Living Inside a Computer Game 🎮 (Simulation Theory)",
-    alt_titles=["Are We Living in a Simulation? The Argument Explained Simply 🤯",
+    title="You Might Be Living Inside a Computer Game 🎮",
+    alt_titles=["You Might Be Living Inside a Computer Game 🎮 (Simulation Theory)",
+                "Are We Living in a Simulation? The Argument Explained Simply 🤯",
                 "One of These 3 Things MUST Be True 🎮"],
     description="""A philosopher at Oxford argued that you might be living inside a computer simulation. 🎮
 

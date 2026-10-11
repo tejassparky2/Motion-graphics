@@ -1,11 +1,12 @@
 # Upload sheet: diogenes_alexander
 
-**Title** (66 characters)
+**Title** (55 characters)
 ```
-Alexander the Great Offered Him Anything… His Answer Was Genius ☀️
+Alexander Offered Him Anything… His Reply Was Genius ☀️
 ```
 
 **Alternative titles to test**
+- `Alexander the Great Offered Him Anything… His Answer Was Genius ☀️`
 - `The Man Who Told Alexander the Great to Move 😳`
 - `Who Was Richer: Alexander or Diogenes? ☀️`
 

@@ -1,11 +1,12 @@
 # Upload sheet: immortal_jellyfish
 
-**Title** (60 characters)
+**Title** (50 characters)
 ```
-This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼
+This Jellyfish Turns Back Into a Baby. 10 Times. 🪼
 ```
 
 **Alternative titles to test**
+- `This Jellyfish Can Turn Back Into A Baby. Again And Again. 🪼`
 - `The Immortal Jellyfish That Reverses Its Own Age 🪼`
 - `This Animal Doesn't Have to Die of Old Age 🤯`
 

@@ -1,11 +1,12 @@
 # Upload sheet: court_paradox
 
-**Title** (49 characters)
+**Title** (51 characters)
 ```
-He Sued His Own Student. And Nobody Could Win. ⚖️
+He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️
 ```
 
 **Alternative titles to test**
+- `He Sued His Own Student. And Nobody Could Win. ⚖️`
 - `The 2,000-Year-Old Lawsuit Nobody Can Solve ⚖️ (Paradox of the Court)`
 - `Whoever Loses This Case... Wins 🤯`
 

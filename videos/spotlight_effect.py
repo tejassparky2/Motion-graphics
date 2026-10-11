@@ -36,8 +36,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Nobody Is Watching You as Much as You Think (Science Proved It) 👀",
-    alt_titles=["The Embarrassing T-Shirt Experiment 😳", "Why You Feel Like Everyone Is Staring (The Spotlight Effect)"],
+    title="You Think 50% Noticed. Only 1 in 4 Did 👀 (Spotlight Effect)",
+    alt_titles=["Nobody Is Watching You as Much as You Think (Science Proved It) 👀",
+                "The Embarrassing T-Shirt Experiment 😳", "Why You Feel Like Everyone Is Staring (The Spotlight Effect)"],
     description="""You walk into a room wearing the most embarrassing T-shirt in the world. How many people notice? 😳
 
 In 2000, researchers at Cornell University tested it. Students wore a T-shirt with a giant picture of singer Barry Manilow, walked into a room of other students, and walked out. They guessed about half the room had noticed the shirt. The real answer: only about one in four. 👀

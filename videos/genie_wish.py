@@ -41,8 +41,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="The Kid Broke The Genie With ONE Wish 🧞‍♂️",
-    alt_titles=["\"I Wish This Wish Doesn't Come True\" 🤯", "The Wish No Genie Can Grant 🧞"],
+    title="3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️",
+    alt_titles=["The Kid Broke The Genie With ONE Wish 🧞‍♂️",
+                "\"I Wish This Wish Doesn't Come True\" 🤯", "The Wish No Genie Can Grant 🧞"],
     description="""A genie gives a kid three wishes, with one rule: anything you want, except more wishes. 🧞‍♂️
 
 First wish: a mountain of chocolate. Second wish: to be the smartest kid in the world. And the smartest kid in the world makes wish number three:

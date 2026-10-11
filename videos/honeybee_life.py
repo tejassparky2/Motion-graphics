@@ -46,8 +46,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="What If You Were a Honeybee? 🐝 (Your Whole Life in 70 Seconds)",
-    alt_titles=["You're a Bee. You Have 6 Weeks to Live. 🐝", "The Brutal Life of a Honeybee (Explained Funny) 🍯"],
+    title="What If You Were a Honeybee? Your Life in 70 Seconds 🐝",
+    alt_titles=["What If You Were a Honeybee? 🐝 (Your Whole Life in 70 Seconds)",
+                "You're a Bee. You Have 6 Weeks to Live. 🐝", "The Brutal Life of a Honeybee (Explained Funny) 🍯"],
     description="""What if you were a honeybee? Spoiler: you're a girl, and you have about six weeks to live. 🐝
 
 You live with up to 60,000 bees, almost all of them your sisters. Mom is the queen: she lays up to 2,000 eggs a day.

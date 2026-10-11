@@ -45,8 +45,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox)",
-    alt_titles=["Why Achilles Can NEVER Catch The Tortoise 🐢 (Or Can He?)",
+    title="Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢",
+    alt_titles=["A Tortoise Beats The Fastest Runner Alive?! 🐢 (Zeno's Paradox)",
+                "Why Achilles Can NEVER Catch The Tortoise 🐢 (Or Can He?)",
                 "The 2,400-Year-Old Paradox That Fooled Everyone 🏃‍♂️🐢"],
     description="""A Greek thinker once "proved" that the fastest runner alive can never catch a tortoise. 🐢
 

@@ -42,8 +42,9 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="The Marshmallow Test Was WRONG? What Scientists Found Later 🍬",
-    alt_titles=["The Famous Willpower Test… Was It Really About Money? 🍬",
+    title="The Marshmallow Test Was WRONG? The 2018 Retest 🍬",
+    alt_titles=["The Marshmallow Test Was WRONG? What Scientists Found Later 🍬",
+                "The Famous Willpower Test… Was It Really About Money? 🍬",
                 "Wait for 2 Marshmallows? The Twist Nobody Told You 😳"],
     description="""One treat now, or two if you can wait. This simple test was supposed to predict your whole future. 🍬
 
