@@ -22,6 +22,18 @@
 - Narrator: Kokoro `am_fenrir` (the default). The owner switched back from their cloned voice on 5 Oct 2026 because
   more viewers swiped away on the cloned-voice videos. Use the clone (`NARRATOR_ENGINE=clone`) only if the owner asks.
 
+## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
+- From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
+  one second with something already wrong or tense ("A kid in the last row raises his hand…", "A teacher finds a pack
+  of cigarettes in the classroom trash can", "a hotel with infinite rooms, and every single one is full"). The weakest
+  open on a statement about a topic, "Meet X", a quiz setup or a bare philosophy question (Ship of Theseus 52%, Monty
+  Hall 43%, Mystery Kid 36%).
+- Line 1 = a character in a scene, mid-action, or an image with a contradiction built in. Put a big question in a
+  character's mouth instead of asking the viewer cold. Never open with "Meet…", "This X has…" or a series name.
+- Frame 0 is already moving and shows the hook as big on-screen text: no fade-in, no empty establishing shot.
+- Open a loop in the first 5 seconds that only the ending closes ("but the teacher just smiles").
+- Don't trust `hookscore.py` for this channel (it scores our best openings WEAK); judge hooks against these rules.
+
 ## Paradoxes must be explained so any viewer understands
 - Clarity beats length: add a few seconds (45–50 s is fine) rather than skip a step.
 - State the rule plainly first, then walk the logic one step per sentence, with no jumps ("we'd know it's Friday,
