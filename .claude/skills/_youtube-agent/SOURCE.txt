@@ -1,0 +1,2 @@
+Installed from https://github.com/Jakeschincariol/youtube-agent-skill (commit a2feb21, MIT) on 11 Oct 2026.
+Code reviewed before install: Python standard library only, no network access, reads only the files passed to it, never posts or uploads.
