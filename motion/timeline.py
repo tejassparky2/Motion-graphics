@@ -34,6 +34,7 @@ class Beat:
     turn_pause: float = 0.32  # when a line starts as narration and a character takes over at `speaker_from`
     gap: float = 0.18     # silence before this beat
     pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
+    hold: float = 0.0     # a silent beat (text ""): this many seconds of picture with no voice (memes)
     units: list = field(default_factory=list)
     start: float = 0.0
     end: float = 0.0
@@ -98,7 +99,11 @@ class Timeline:
         for i, spec in enumerate(script):
             b = Beat(**spec)
             b.units = parse(b.text)
-            b.audio, wt = self._speak(b)
+            if not b.units:          # silent beat: picture only
+                import numpy as np
+                b.audio, wt = np.zeros(int(b.hold * voice.SR)), []
+            else:
+                b.audio, wt = self._speak(b)
             b.gap = max(b.gap, BEAT_GAP)
             if i:
                 t += b.gap
@@ -192,7 +197,8 @@ class Timeline:
             b = Beat(**spec)
             b.units = parse(b.text)
             words = b.spoken_text.split()
-            out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]]
+            if words:
+                out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]]
         return out
 
     # ---- queries used by scenes
@@ -234,6 +240,7 @@ class Timeline:
         words = sum(len(u.spoken) for b in self.beats for u in b.units)
         speech = sum(b.end - b.start for b in self.beats)
         gaps = [b.start - a.end for a, b in zip(self.beats, self.beats[1:])]
+        speech -= sum(b.hold for b in self.beats if not b.units)
         print(f"narration: {words} words, {speech:.1f}s of speech in {self.total:.1f}s "
-              f"({100 * speech / self.total:.0f}% coverage), {60 * words / speech:.0f} wpm while speaking, "
-              f"max gap between lines {max(gaps):.2f}s", file=sys.stderr)
+              f"({100 * speech / self.total:.0f}% coverage), {60 * words / max(speech, 0.01):.0f} wpm while speaking, "
+              f"max gap between lines {max(gaps, default=0):.2f}s", file=sys.stderr)

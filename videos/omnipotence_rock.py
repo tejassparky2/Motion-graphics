@@ -1,70 +1,74 @@
-"""Can God make a rock so heavy that even God can't lift it? -- the omnipotence paradox in the polished look.
+"""#47 v2: the Last Bencher asks "Can God make a rock so heavy, that even God can't lift it?" -- the omnipotence
+paradox told as a classroom scene, in the polished look.
 
 Thomas Aquinas, Summa Theologiae I, q.25, a.3 (about 1270): God's power covers everything possible, and "whatever
 implies contradiction does not come within the scope of divine omnipotence, because it cannot have the aspect of
-possibility". C.S. Lewis, The Problem of Pain (1940), ch. 2: "nonsense remains nonsense even when we talk it about
-God". Line o12 is a paraphrase of Aquinas, not a quote. God is shown only as light, never as a figure.
-First video made with the youtube-agent skills (yt-plan, yt-script, yt-package, yt-seo); script in
-out/scripts_batch_47-50.md, made at the owner's request on 11 Oct 2026 ("Now make 1 video with new skills with analysis").
+possibility". Line q12 paraphrases him; it is not a quote. God is shown only as light, never as a figure.
+v1 (narrator asks the question) was rendered on 11 Oct 2026; the owner asked for a stronger hook the same day, and
+approved this v2 (out/scripts_batch_47-50.md doc, "Hook fix"): the question is in the kid's mouth at second 0, the
+class reacts, and "the teacher just smiles" opens a loop the ending closes.
 """
 import math
 
+from motion import voice
 from motion.engine import W, H, cue, ease_out, hexc, lerp, seg
 from motion.kit import whip
 from motion.pkit import (BLUE, GOLD, GREEN, INKC, PURPLE, RED, buttons, card, check, knot, red_x, shake, sparkles,
                          studio, tag)
-from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, captions, enter, lin, paint, particles,
-                           put, rad, rrect, shade, sign, smooth, soft_disc, soft_rrect, sprite, stamp, stroke_line,
-                           vignette)
+from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, captions, ellipse, enter, lin, paint,
+                           particles, put, rad, rrect, shade, sign, smooth, soft_disc, soft_rrect, sprite, stamp,
+                           stroke_line, vignette)
+from motion.timeline import clear_dialogue
 from motion.toons import person, portrait
 from videos.first_cause import CANDLE, book, glow, monastery
+from videos.last_bencher_4 import classroom, room
 
 NARRATOR = dict(speed=0.92)
 TAIL = 0.9
+voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5),
+                       "sir": dict(voice="am_michael", speed=1.0)})
 
 SCRIPT = [
-    dict(id="o1", scene="hook", text="Can God make a rock so heavy, that even God can't lift it?", pace=0.95),
-    dict(id="o2", scene="choice", text="Think about it.", gap=0.3),
-    dict(id="o3", scene="yes", text="If the answer is yes, there's a rock God can't lift."),
-    dict(id="o4", scene="yes", text="So God isn't all-powerful."),
-    dict(id="o5", scene="no", text="If the answer is no, there's a rock God can't make.", gap=0.3),
-    dict(id="o6", scene="no", text="So, again, not all-powerful."),
-    dict(id="o7", scene="trap", text="Either way, all-powerful loses. That's the trap.", gap=0.3),
-    dict(id="o8", scene="square", text="Now, try this. Draw a square circle.", gap=0.3),
-    dict(id="o9", scene="square", text="You can't. But not because you're weak."),
-    dict(id="o10", scene="square", text="A square circle isn't a hard thing to draw. It's not a thing at all."),
-    dict(id="o11", scene="aquinas", text="About [seven hundred and fifty years ago,|750 years ago,] Thomas Aquinas "
-                                         "made the same move.", gap=0.3),
-    dict(id="o12", scene="aquinas", text="His answer: all-powerful means able to do anything possible. And a "
-                                         "contradiction isn't anything."),
-    dict(id="o13", scene="words", text="So the impossible rock is just a square circle, made of words."),
-    dict(id="o14", scene="lewis", text="Centuries later, [C. S. Lewis|C.S. Lewis] put it simply: nonsense remains "
-                                       "nonsense, even when we talk it about God.", gap=0.3),
-    dict(id="o15", scene="end", text="So, is that a clever answer, or a clever escape?", gap=0.3, pace=0.95),
+    dict(id="q1", scene="ask", text="Sir, can God make a rock so heavy, that even God can't lift it?", speaker="kid"),
+    dict(id="q2", scene="freeze", text="The whole class turns around. The teacher freezes."),
+    dict(id="q3", scene="yes", text="Say yes, and there's a rock God can't lift.", speaker="kid"),
+    dict(id="q4", scene="no", text="Say no, and there's a rock God can't make.", speaker="kid"),
+    dict(id="q5", scene="trap", text="Either way, God isn't all-powerful. Checkmate, sir.", speaker="kid"),
+    dict(id="q6", scene="smile", text="But the teacher just smiles, and hands him the chalk."),
+    dict(id="q7", scene="board", text="Then draw me a square circle.", speaker="sir"),
+    dict(id="q8", scene="board", text="That's impossible!", speaker="kid"),
+    dict(id="q9", scene="board", text="Exactly. Not because you're weak. A square circle isn't a thing at all.",
+         speaker="sir"),
+    dict(id="q10", scene="words", text="And a rock too heavy for an all-powerful God? Same thing. A square circle, "
+                                       "made of words.", speaker="sir"),
+    dict(id="q11", scene="aquinas", text="That's the answer Thomas Aquinas gave, about [seven hundred and fifty years "
+                                         "ago.|750 years ago.]"),
+    dict(id="q12", scene="aquinas", text="All-powerful means able to do anything possible. And a contradiction isn't "
+                                         "anything."),
+    dict(id="q13", scene="end", text="So, did the teacher win? Or did he just dodge the question?", pace=0.95),
 ]
+clear_dialogue(SCRIPT, pace=0.95)   # a riddle duel: clear turns between the kid and the teacher
 
 METADATA = dict(
     title="1 Rock. 2 Answers. Both Break God?",
-    alt_titles=["The Rock Even God Can't Lift 🪨", "Can God Make a Rock He Can't Lift? 🪨",
-                "Yes or No? Either Way, God Loses 🪨"],
-    description="""Can God make a rock so heavy He can't lift it? The omnipotence paradox in 45 seconds, and Aquinas's answer. 🪨
+    alt_titles=["The Last Bencher Asked About God… Teacher's Reply 😳", "Can God Make a Rock He Can't Lift? 🪨",
+                "Kid Traps Teacher With 1 Question About God 🪨"],
+    description=""""Sir, can God make a rock so heavy, that even God can't lift it?" The omnipotence paradox, and the teacher's answer. 🪨
 
-If the answer is yes, there's a rock God can't lift. So God isn't all-powerful.
-If the answer is no, there's a rock God can't make. So, again, not all-powerful. Either way, all-powerful loses.
+Say yes, and there's a rock God can't lift. Say no, and there's a rock God can't make. Either way, God isn't all-powerful. Checkmate?
+But the teacher just smiles, and hands him the chalk: "Then draw me a square circle." Impossible. Not because you're weak: a square circle isn't a thing at all. And a rock too heavy for an all-powerful God? Same thing: a square circle, made of words.
 
-Now try to draw a square circle. You can't, but not because you're weak: a square circle isn't a hard thing to draw, it's not a thing at all.
-About 750 years ago, Thomas Aquinas made the same move: all-powerful means able to do anything possible, and a contradiction isn't anything. So the impossible rock is just a square circle, made of words.
-Centuries later, C.S. Lewis put it simply: "nonsense remains nonsense even when we talk it about God."
+That's the answer Thomas Aquinas gave, about 750 years ago: all-powerful means able to do anything possible, and a contradiction isn't anything.
 
-Sources: Thomas Aquinas, Summa Theologiae I, q.25, a.3; C.S. Lewis, The Problem of Pain (1940), ch. 2.
+Source: Thomas Aquinas, Summa Theologiae I, q.25, a.3.
 
-💬 So, is that a clever answer, or a clever escape? Keep it respectful 🙏👇
+💬 So, did the teacher win? Or did he just dodge the question? Keep it respectful 🙏👇
 
-🔔 Interestingly Strange: mind-bending paradoxes, big theories, weird history and strange stories, animated in under a minute.""",
-    hashtags=["#Paradox", "#Philosophy", "#Shorts"],
-    tags=["omnipotence paradox", "can god make a rock he can't lift", "paradox", "philosophy", "aquinas",
-          "logic puzzle", "god paradox", "c.s. lewis", "square circle", "interestingly strange"],
-    pinned_comment="Clever answer, or clever escape? 🪨 Defend your pick (respectfully) 👇",
+🔔 Interestingly Strange: The Last Bencher, mind-bending paradoxes, big theories and weird history, animated.""",
+    hashtags=["#TheLastBencher", "#Paradox", "#Shorts"],
+    tags=["omnipotence paradox", "can god make a rock he can't lift", "the last bencher", "paradox", "philosophy",
+          "aquinas", "logic puzzle", "teacher vs student", "square circle", "interestingly strange"],
+    pinned_comment="Did the teacher win, or did he dodge it? 🪨 Defend your pick (respectfully) 👇",
 )
 
 STONE = hexc("#8a8f9c")
@@ -183,179 +187,242 @@ def morph(t, speed=1.6):
     return 0.5 + 0.5 * math.sin(t * speed * math.pi)
 
 
-# ---------------------------------------------------------------- scenes
-def scene_hook(cr, t, tl):
-    A = tl.at
-    hill(cr, t)
+
+
+def thought_rock(cr, t, start, x, y, s=1.0):
+    """A thought bubble with a huge rock in it, popping in at `start`."""
+    k = appear(t, start, 0.35) if t >= start else 0.0
+    if k <= 0.01:
+        return
     cr.save()
-    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("o1", "heavy,"), (1.12, 360, 700)),
-                         (A("o1", "lift"), (1.2, 360, 620))], dur=0.6))
-    k = 0.6 + 0.4 * appear(t, A("o1", "God"), 0.6)
-    glow(cr, t, 360, 330, 100 * k, k)
-    lifting = t >= A("o1", "lift")
-    beam(cr, t, 360, 380, 360, 600, appear(t, A("o1", "lift"), 0.3) if lifting else 0)
-    rock(cr, 360, 830, 1.0 + 0.1 * ease_out(appear(t, A("o1", "heavy,"), 0.5)), tremble=3 if lifting else 0, t=t)
+    cr.translate(x, y)
+    cr.scale(k * s, k * s)
+    for (dx, dy, r) in ((-150, 150, 14), (-120, 115, 22)):
+        cr.arc(dx, dy, r, 0, 2 * math.pi)
+        paint(cr, WHITE, OUTLINE, 4)
+    smooth(cr, [(-130, 40), (-120, -70), (-40, -120), (60, -115), (140, -60), (140, 50), (60, 100), (-60, 100)])
+    paint(cr, WHITE, OUTLINE, 6)
+    glow(cr, t, 70, -70, 26, 0.9)
+    rock(cr, -10, 70, 0.42)
     cr.restore()
-    stamp(cr, t, A("o1", "heavy,"), 360, 105, "TOO HEAVY?", col=RED, size=62, rot=-0.06, end=A("o1", "lift") - 0.05)
-    if lifting:
-        bold_text(cr, "?", 620, 470 + math.sin(t * 5) * 8, 150 * appear(t, A("o1", "lift"), 0.4), GOLD)
-    vignette(cr, 0.45)
 
 
-def scene_choice(cr, t, tl):
+def mouth_of(tl, who, t, rest="smile"):
+    return "talk" if tl.speaking(who, t) else rest
+
+
+def sir(cr, t, tl, x, y, s, **kw):
+    kw.setdefault("mouth", mouth_of(tl, "sir", t, kw.pop("rest", "smile")))
+    person(cr, t, x, y, s, "sir", **kw)
+
+
+# ---------------------------------------------------------------- scenes
+def scene_ask(cr, t, tl):
     A = tl.at
-    hill(cr, t)
-    glow(cr, t, 360, 300, 90, 0.9)
-    rock(cr, 360, 830, 0.85)
-    buttons(cr, t, A("o2"), [("YES", GREEN), ("NO", RED)], y=480, size=60, w=280)
-    sign(cr, t, A("o2", "Think"), 360, 150, "YES OR NO?", col=GOLD, size=70)
+    room(cr, t)
+    cr.save()
+    enter(cr, camera(t, [(0, (2.0, 555, 470)), (A("q1", "heavy,"), (2.05, 575, 470))], dur=0.8))
+    talk = tl.speaking("kid", t)
+    classroom(cr, t, tl, kid_pose=dict(arms=("up", "down"), eyes="open", mouth="talk" if talk else "grin",
+                                       brows="raise"))
+    cr.restore()
+    thought_rock(cr, t, A("q1", "rock"), 190, 340, 0.85)
+    sign(cr, t, -0.5, 360, 120, "CAN GOD LIFT IT?", col=GOLD, size=64)
     vignette(cr, 0.45)
+
+
+def scene_freeze(cr, t, tl):
+    A = tl.at
+    room(cr, t, board=True)
+    turned = t >= A("q2", "turns")
+    frozen = t >= A("q2", "freezes.")
+    classroom(cr, t, tl, kid_pose=dict(arms=("hips", "down"), eyes="happy", mouth="smug"),
+              look_at=(560, 0) if turned else None, gasp=turned)
+    cr.save()
+    if frozen:
+        dx, dy = shake(t, A("q2", "freezes."), 0.3, 8)
+        cr.translate(dx, dy)
+    sir(cr, t, tl, 150, 1120, 1.05, eyes="wide", rest="o", brows="up", arms=("write", "down"), sweat=frozen)
+    if frozen:      # an ice-blue flash over the teacher
+        k = 1 - seg(t, A("q2", "freezes."), A("q2", "freezes.") + 1.2)
+        soft_disc(cr, 150, 760, 260, (0.6, 0.85, 1.0, 0.45 * k + 0.15))
+    cr.restore()
+    stamp(cr, t, A("q2", "freezes."), 360, 170, "FROZEN", col=BLUE, size=90)
+    vignette(cr, 0.4)
+
+
+def _corner_kid(cr, t, tl, start):
+    portrait(cr, t, start, 610, 320, 82, "kid", eyes="happy" if not tl.speaking("kid", t) else "open",
+             mouth=mouth_of(tl, "kid", t, "smug"), bg=hexc("#9fd8ff"))
 
 
 def scene_yes(cr, t, tl):
     A = tl.at
     hill(cr, t)
-    strain = t >= A("o3", "can't")
-    cr.save()
-    enter(cr, camera(t, [(A("o3"), (1.0, 360, 640)), (A("o3", "can't"), (1.1, 360, 640))], dur=0.5))
-    glow(cr, t, 360, 300, 90, 0.9)
-    beam(cr, t, 360, 340, 360, 600, 1.0 if strain else appear(t, A("o3", "rock"), 0.4))
+    strain = t >= A("q3", "can't")
+    glow(cr, t, 360, 330, 90, 0.9)
+    beam(cr, t, 360, 380, 360, 600, 1.0 if strain else appear(t, A("q3", "rock"), 0.4))
     rock(cr, 360, 830, 1.0, tremble=4 if strain else 0, t=t)
     if strain:
         for k in range(3):     # dust puffs: it won't budge
             ph = (t * 1.4 + k / 3) % 1
             soft_disc(cr, 160 + k * 200, 820 - ph * 60, 30 + ph * 30, (1, 1, 1, 0.35 * (1 - ph)))
-    cr.restore()
-    buttons(cr, t, A("o3"), [("YES", GREEN)], y=150, size=60, w=260)
-    red_x(cr, t, A("o3", "can't"), 570, 560, 48)
-    if t >= A("o4"):
-        dx, dy = shake(t, A("o4", "isn't"), 0.4, 10)
-        card(cr, t, A("o4"), 360 + dx, 380 + dy, 560, 150, "GOD CAN'T LIFT IT", ["so: NOT all-powerful"], col=RED,
-             title_size=40, line_size=40)
+    buttons(cr, t, A("q3"), [("YES", GREEN)], y=150, size=60, w=260)
+    red_x(cr, t, A("q3", "can't"), 570, 560, 48)
+    if t >= A("q3", "lift."):
+        card(cr, t, A("q3", "lift."), 330, 400, 480, 120, "GOD CAN'T LIFT IT", [], col=RED, title_size=40)
+    _corner_kid(cr, t, tl, A("q3"))
     vignette(cr, 0.45)
 
 
 def scene_no(cr, t, tl):
     A = tl.at
     hill(cr, t)
-    glow(cr, t, 360, 300, 90, 0.9)
+    glow(cr, t, 360, 330, 90, 0.9)
     ghost_rock(cr, t, 360, 830, 1.0)
-    if t >= A("o5", "make."):
-        sparkles(cr, t, A("o5", "make."), 360, 700, n=6, seed=3, col=(1, 0.95, 0.7, 1), spread=160)
-    buttons(cr, t, A("o5"), [("NO", RED)], y=150, size=60, w=260)
-    red_x(cr, t, A("o5", "make."), 570, 590, 48)
-    if t >= A("o6"):
-        dx, dy = shake(t, A("o6", "again,"), 0.4, 12)
-        card(cr, t, A("o6"), 360 + dx, 420 + dy, 560, 150, "GOD CAN'T MAKE IT", ["so: NOT all-powerful"], col=RED,
-             title_size=40, line_size=40)
+    if t >= A("q4", "make."):
+        sparkles(cr, t, A("q4", "make."), 360, 700, n=6, seed=3, col=(1, 0.95, 0.7, 1), spread=160)
+    buttons(cr, t, A("q4"), [("NO", RED)], y=150, size=60, w=260)
+    red_x(cr, t, A("q4", "make."), 570, 590, 48)
+    if t >= A("q4", "make."):
+        card(cr, t, A("q4", "make."), 330, 400, 480, 120, "GOD CAN'T MAKE IT", [], col=RED, title_size=40)
+    _corner_kid(cr, t, tl, A("q4") - 0.3)
     vignette(cr, 0.45)
 
 
 def scene_trap(cr, t, tl):
     A = tl.at
-    studio(cr, t, hexc("#2a2450"), hexc("#5a3a6a"), seed=6)
-    hit = A("o7", "loses.")
-    u = ease_out(seg(t, A("o7"), hit))
-    for side, lab in ((-1, "YES"), (1, "NO")):
-        x = lerp(360 + side * 230, 360 + side * 112, u)
-        card(cr, t, A("o7"), x, 540, 220, 170, lab, [], col=GREEN if lab == "YES" else RED, title_size=46)
-        red_x(cr, t, A("o7") + 0.1, x, 575, 44)
-    if t >= hit:
-        cue("hit", t, hit)
-        sparkles(cr, t, hit, 360, 540, n=10, seed=7, col=(1, 0.9, 0.5, 1), spread=200)
-    if t >= A("o7", "trap."):
-        knot(cr, t, A("o7", "trap."), 360, 760, 100, RED, label=None)
-    sign(cr, t, A("o7", "Either"), 360, 170, "EITHER WAY...", col=PURPLE, size=64, end=A("o7", "That's") - 0.05)
-    stamp(cr, t, A("o7", "That's"), 360, 190, "THE TRAP", col=RED, size=84)
+    room(cr, t)
+    mate = A("q5", "Checkmate,")
+    cr.save()
+    enter(cr, camera(t, [(A("q5") - 0.3, (1.0, 360, 640)), (mate, (1.6, 520, 500))], dur=0.5))
+    talk = tl.speaking("kid", t)
+    classroom(cr, t, tl, kid_pose=dict(arms=("cross", "cross") if t >= mate else ("point", "down"),
+                                       eyes="half" if t >= mate else "open", mouth="talk" if talk else "smug",
+                                       brows="raise"),
+              look_at=(560, 0), gasp=True)
+    cr.restore()
+    if t < mate:
+        for side, lab, col in ((-1, "YES", GREEN), (1, "NO", RED)):
+            x = 360 + side * 120
+            card(cr, t, A("q5"), x, 330, 220, 150, lab, [], col=col, title_size=46)
+            red_x(cr, t, A("q5") + 0.1, x, 360, 44)
+        sign(cr, t, A("q5", "all-powerful."), 360, 150, "NOT ALL-POWERFUL", col=RED, size=56)
+    else:
+        stamp(cr, t, mate, 360, 170, "CHECKMATE", col=PURPLE, size=90)
+        sign(cr, t, mate + 0.3, 360, 330, "OOOOH!", col=GOLD, size=64, rot=0.05)
     vignette(cr, 0.4)
 
 
-def scene_square(cr, t, tl):
+def chalk_stick(cr, x, y, rot=0.0, s=1.0):
+    cr.save()
+    cr.translate(x, y)
+    cr.rotate(rot)
+    cr.scale(s, s)
+    rrect(cr, -30, -8, 60, 16, 6)
+    paint(cr, WHITE, OUTLINE, 3)
+    cr.restore()
+
+
+def scene_smile(cr, t, tl):
     A = tl.at
-    studio(cr, t, hexc("#cfe6ff"), hexc("#fff1d6"), seed=3)
-    chalkboard(cr, 360, 400, 600, 420)
-    drawing = A("o8", "Draw")
-    verdict = A("o10")
-    if drawing <= t < verdict:
-        u = morph(t - drawing, 1.4)
-        square_circle(cr, 360, 400, 130 * appear(t, drawing, 0.4), u, col=(1, 1, 1, 0.9))
+    room(cr, t, board=True)
+    smiling = t >= A("q6", "smiles,")
+    cr.save()
+    enter(cr, camera(t, [(A("q6") - 0.3, (1.0, 360, 640)), (A("q6", "smiles,"), (1.35, 300, 600))], dur=0.6))
+    sir(cr, t, tl, 280, 1080, 1.25, eyes="half" if smiling else "wide", rest="smug" if smiling else "o",
+        brows="raise" if smiling else "up", arms=("out", "down") if t >= A("q6", "chalk.") else ("hips", "down"))
+    cr.restore()
+    c0 = A("q6", "hands")
+    if t >= c0:                       # the chalk flies to the kid, off to the right
+        u = seg(t, c0, c0 + 0.7)
+        chalk_stick(cr, lerp(460, 760, u), 640 - 180 * math.sin(u * math.pi), rot=u * 9, s=1.3)
+        cue("whoosh", t, c0, 0.5)
+    if smiling:
+        sparkles(cr, t, A("q6", "smiles,"), 330, 520, n=5, seed=6, col=GOLD, spread=120)
+    sign(cr, t, A("q6", "But"), 360, 140, "BUT...", col=GOLD, size=72)
+    vignette(cr, 0.4)
+
+
+def scene_board(cr, t, tl):
+    A = tl.at
+    room(cr, t, board=True)
+    draw0 = A("q7", "square")
+    verdict = A("q9", "square")
+    if draw0 <= t < verdict:
+        u = morph(t - draw0, 1.4)
+        square_circle(cr, 360, 310, 120 * appear(t, draw0, 0.4), u, col=(1, 1, 1, 0.92))
     if t >= verdict:
-        card(cr, t, verdict, 360, 400, 520, 230, "A SQUARE CIRCLE IS", ["not hard...", "NOT A THING."],
-             col=PURPLE, title_size=40, line_size=48, mark="no", mark_at=A("o10", "thing", nth=2))
-    stuck = t >= A("o9")
-    person(cr, t, 150, 1000, 0.75, "kid", eyes="wide" if stuck else "open", mouth="o" if stuck else "smile",
-           arms=("point", "down") if not stuck else ("face", "down"), hold=None if stuck else chalk,
-           brows="up" if stuck else None, sweat=stuck)
-    w0 = A("o9", "weak.")
+        card(cr, t, verdict, 360, 345, 540, 260, "A SQUARE CIRCLE IS", ["not hard...", "NOT A THING."],
+             col=PURPLE, title_size=42, line_size=52, mark="no", mark_at=A("q9", "thing"))
+    stuck = t >= A("q8")
+    talk = tl.speaking("kid", t)
+    person(cr, t, 200, 1060, 0.9, "kid", eyes="wide" if stuck else "open", mouth="talk" if talk else ("o" if stuck else "smile"),
+           arms=("face", "down") if stuck else ("up", "down"), brows="up" if stuck else None, sweat=stuck, facing=1,
+           hold=None if stuck else (lambda c, hx, hy: chalk_stick(c, hx, hy, -0.6)))
+    sir(cr, t, tl, 560, 1060, 0.95, eyes="happy" if t >= A("q9") else "half", rest="smug",
+        arms=("point", "hips") if t >= A("q9") else ("cross", "cross"), facing=-1)
+    w0 = A("q9", "weak.")
     if w0 <= t < verdict:          # it's not about strength
-        bold_text(cr, "STRENGTH", 500, 728, 50 * appear(t, w0, 0.3), GOLD)
-        red_x(cr, t, w0 + 0.1, 500, 710, 70)
-    sign(cr, t, A("o8", "try"), 360, 110, "TRY THIS", col=BLUE, size=64, end=A("o9") - 0.05)
+        bold_text(cr, "STRENGTH", 360, 515, 44 * appear(t, w0, 0.3), GOLD)
+        red_x(cr, t, w0 + 0.1, 360, 500, 56)
+    sign(cr, t, A("q8"), 360, 110, "IMPOSSIBLE!", col=RED, size=60, end=A("q9") - 0.05)
+    sign(cr, t, A("q9"), 360, 110, "EXACTLY.", col=GREEN, size=64, end=verdict - 0.05)
     vignette(cr, 0.35)
-
-
-def scene_aquinas(cr, t, tl):
-    A = tl.at
-    monastery(cr, t)
-    answer = A("o12")
-    if t < answer:
-        person(cr, t, 360, 960, 1.0, "aquinas", eyes="happy" if t >= A("o11", "move.") else "open",
-               mouth="talk" if tl.speaking("aquinas", t) else "smile", arms=("hold", "down"), hold=book)
-        tag(cr, t, A("o11", "Thomas"), 360, 200, "THOMAS AQUINAS", col=CANDLE)
-        sign(cr, t, A("o11", "750"), 360, 320, "~750 YEARS AGO", col=PURPLE, size=50, rot=0.03)
-    else:
-        person(cr, t, 150, 1010, 0.7, "aquinas", eyes="happy", mouth="smile", arms=("point", "down"))
-        card(cr, t, answer, 400, 330, 560, 230, "ALL-POWERFUL MEANS", ["can do anything", "POSSIBLE"], col=GREEN,
-             title_size=40, line_size=44, mark="ok", mark_at=A("o12", "possible."))
-        card(cr, t, A("o12", "contradiction"), 400, 620, 560, 200, "A CONTRADICTION", ["isn't anything"], col=RED,
-             title_size=40, line_size=44, mark="no", mark_at=A("o12", "anything.", nth=1))
-    vignette(cr, 0.45)
 
 
 def scene_words(cr, t, tl):
     A = tl.at
     hill(cr, t)
-    s0 = A("o13")
-    u = ease_out(seg(t, A("o13", "square"), A("o13", "square") + 0.8))
+    s0 = A("q10")
+    sq = A("q10", "square")
+    u = ease_out(seg(t, sq, sq + 0.8))
+    glow(cr, t, 360, 330, 80, 0.8 * (1 - u))
     rock(cr, 360, 830, 1.0 * (1 - u) + 0.01, a=1 - u)
     if u > 0:
         square_circle(cr, 360, 560, 150 * u, morph(t, 1.2), col=(1, 0.95, 0.7, 1), lw=10)
-    if t >= A("o13", "words."):
-        k = appear(t, A("o13", "words."), 0.4)
+    if t >= A("q10", "words."):
+        k = appear(t, A("q10", "words."), 0.4)
         for i, w in enumerate(("ROCK", "GOD", "CAN'T", "LIFT", "HEAVY")):
             ang = t * 0.8 + i * 2 * math.pi / 5
             bold_text(cr, w, 360 + math.cos(ang) * 240, 560 + math.sin(ang) * 210, 40 * k, WHITE)
-    sign(cr, t, s0, 360, 170, "THE IMPOSSIBLE ROCK", col=GOLD, size=54, end=A("o13", "square") - 0.05)
-    sign(cr, t, A("o13", "square"), 360, 170, "= A SQUARE CIRCLE", col=PURPLE, size=56, end=A("o13", "words.") - 0.05)
-    stamp(cr, t, A("o13", "words."), 360, 190, "MADE OF WORDS", col=RED, size=70)
+    sign(cr, t, s0, 360, 170, "THE IMPOSSIBLE ROCK", col=GOLD, size=54, end=A("q10", "Same") - 0.05)
+    sign(cr, t, A("q10", "Same"), 360, 170, "SAME THING", col=PURPLE, size=60, end=A("q10", "words.") - 0.05)
+    stamp(cr, t, A("q10", "words."), 360, 190, "MADE OF WORDS", col=RED, size=70)
+    portrait(cr, t, s0, 610, 330, 76, "sir", eyes="happy", mouth=mouth_of(tl, "sir", t, "smug"), bg=hexc("#ffd84d"))
     vignette(cr, 0.45)
 
 
-def scene_lewis(cr, t, tl):
+def scene_aquinas(cr, t, tl):
     A = tl.at
-    studio(cr, t, hexc("#e8dcc8"), hexc("#fff4e4"), seed=9)
-    portrait(cr, t, A("o14") + 0.1, 360, 330, 170, "lewis", eyes="half", mouth="smile", bg=hexc("#c9a46a"))
-    tag(cr, t, A("o14", "Lewis"), 360, 120, "C.S. LEWIS, 1940", col=hexc("#c9a46a"))
-    q = A("o14", "nonsense")
-    if t >= q:
-        card(cr, t, q, 360, 650, 600, 300, "“NONSENSE REMAINS", ["NONSENSE,", "even when we talk", "it about God.”"],
-             col=PURPLE, title_size=40, line_size=44, rot=-0.02)
-    sign(cr, t, A("o14", "Centuries"), 360, 580, "CENTURIES LATER", col=GOLD, size=50, end=q - 0.05)
-    vignette(cr, 0.35)
+    monastery(cr, t)
+    answer = A("q12")
+    if t < answer:
+        person(cr, t, 360, 960, 1.0, "aquinas", eyes="happy" if t >= A("q11", "750") else "open", mouth="smile",
+               arms=("hold", "down"), hold=book)
+        tag(cr, t, A("q11", "Thomas"), 360, 200, "THOMAS AQUINAS", col=CANDLE)
+        sign(cr, t, A("q11", "750"), 360, 320, "~750 YEARS AGO", col=PURPLE, size=50, rot=0.03)
+    else:
+        person(cr, t, 150, 1010, 0.7, "aquinas", eyes="happy", mouth="smile", arms=("point", "down"))
+        card(cr, t, answer, 400, 330, 560, 230, "ALL-POWERFUL MEANS", ["can do anything", "POSSIBLE"], col=GREEN,
+             title_size=40, line_size=44, mark="ok", mark_at=A("q12", "possible."))
+        card(cr, t, A("q12", "contradiction"), 400, 620, 560, 200, "A CONTRADICTION", ["isn't anything"], col=RED,
+             title_size=40, line_size=44, mark="no", mark_at=A("q12", "anything."))
+    vignette(cr, 0.45)
 
 
 def scene_end(cr, t, tl):
     A = tl.at
-    hill(cr, t)
-    glow(cr, t, 360, 300, 80, 0.8)
-    rock(cr, 360, 830, 0.8, tremble=1.5, t=t)
-    buttons(cr, t, A("o15", "clever"), [("CLEVER ANSWER", GREEN), ("CLEVER ESCAPE", RED)], y=470, size=40, w=320)
-    sign(cr, t, A("o15"), 360, 150, "YOUR VERDICT?", col=GOLD, size=64)
-    vignette(cr, 0.45)
+    room(cr, t, board=True)
+    classroom(cr, t, tl, kid_pose=dict(arms=("chin", "down"), eyes="half", mouth="flat"), look_at=(360, 0))
+    sir(cr, t, tl, 150, 1120, 1.0, eyes="happy", rest="smug", arms=("hips", "hips"))
+    buttons(cr, t, A("q13", "teacher"), [("TEACHER WON", GREEN), ("HE DODGED IT", RED)], y=330, size=40, w=320)
+    sign(cr, t, A("q13"), 360, 150, "YOUR VERDICT?", col=GOLD, size=64)
+    vignette(cr, 0.4)
 
 
-SCENES = {"hook": scene_hook, "choice": scene_choice, "yes": scene_yes, "no": scene_no, "trap": scene_trap,
-          "square": scene_square, "aquinas": scene_aquinas, "words": scene_words, "lewis": scene_lewis,
+SCENES = {"ask": scene_ask, "freeze": scene_freeze, "yes": scene_yes, "no": scene_no, "trap": scene_trap,
+          "smile": scene_smile, "board": scene_board, "words": scene_words, "aquinas": scene_aquinas,
           "end": scene_end}
 
 

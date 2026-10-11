@@ -6,38 +6,36 @@
 ```
 
 **Alternative titles to test**
-- `The Rock Even God Can't Lift 🪨`
+- `The Last Bencher Asked About God… Teacher's Reply 😳`
 - `Can God Make a Rock He Can't Lift? 🪨`
-- `Yes or No? Either Way, God Loses 🪨`
+- `Kid Traps Teacher With 1 Question About God 🪨`
 
 **Description**
 ```
-Can God make a rock so heavy He can't lift it? The omnipotence paradox in 45 seconds, and Aquinas's answer. 🪨
+"Sir, can God make a rock so heavy, that even God can't lift it?" The omnipotence paradox, and the teacher's answer. 🪨
 
-If the answer is yes, there's a rock God can't lift. So God isn't all-powerful.
-If the answer is no, there's a rock God can't make. So, again, not all-powerful. Either way, all-powerful loses.
+Say yes, and there's a rock God can't lift. Say no, and there's a rock God can't make. Either way, God isn't all-powerful. Checkmate?
+But the teacher just smiles, and hands him the chalk: "Then draw me a square circle." Impossible. Not because you're weak: a square circle isn't a thing at all. And a rock too heavy for an all-powerful God? Same thing: a square circle, made of words.
 
-Now try to draw a square circle. You can't, but not because you're weak: a square circle isn't a hard thing to draw, it's not a thing at all.
-About 750 years ago, Thomas Aquinas made the same move: all-powerful means able to do anything possible, and a contradiction isn't anything. So the impossible rock is just a square circle, made of words.
-Centuries later, C.S. Lewis put it simply: "nonsense remains nonsense even when we talk it about God."
+That's the answer Thomas Aquinas gave, about 750 years ago: all-powerful means able to do anything possible, and a contradiction isn't anything.
 
-Sources: Thomas Aquinas, Summa Theologiae I, q.25, a.3; C.S. Lewis, The Problem of Pain (1940), ch. 2.
+Source: Thomas Aquinas, Summa Theologiae I, q.25, a.3.
 
-💬 So, is that a clever answer, or a clever escape? Keep it respectful 🙏👇
+💬 So, did the teacher win? Or did he just dodge the question? Keep it respectful 🙏👇
 
-🔔 Interestingly Strange: mind-bending paradoxes, big theories, weird history and strange stories, animated in under a minute.
+🔔 Interestingly Strange: The Last Bencher, mind-bending paradoxes, big theories and weird history, animated.
 
-#Paradox #Philosophy #Shorts
+#TheLastBencher #Paradox #Shorts
 ```
 
 **Tags** (paste into YouTube Studio > Tags)
 ```
-omnipotence paradox, can god make a rock he can't lift, paradox, philosophy, aquinas, logic puzzle, god paradox, c.s. lewis, square circle, interestingly strange
+omnipotence paradox, can god make a rock he can't lift, the last bencher, paradox, philosophy, aquinas, logic puzzle, teacher vs student, square circle, interestingly strange
 ```
 
 **Pinned comment**
 ```
-Clever answer, or clever escape? 🪨 Defend your pick (respectfully) 👇
+Did the teacher win, or did he dodge it? 🪨 Defend your pick (respectfully) 👇
 ```
 
-**Video facts:** 49.2 s, 149 words of narration, voice `am_fenrir` at speed 0.92. Made for kids: **No**.
+**Video facts:** 45.1 s, 132 words of narration, voice `am_fenrir` at speed 0.92. Made for kids: **No**.

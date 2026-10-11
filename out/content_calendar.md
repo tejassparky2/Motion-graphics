@@ -66,7 +66,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 44 | Tue Oct 20 | 9:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
 | 45 | Wed Oct 21 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
 | 46 | Wed Oct 21 | 9:30 PM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ |
-| 47 | Thu Oct 22 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? 🪨 *(rendered 11 Oct)* |
+| 47 | Thu Oct 22 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? *(v2: Last Bencher hook, rendered 11 Oct)* |
 | 48 | Thu Oct 22 | 9:30 PM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ *(script sent)* |
 | 49 | Fri Oct 23 | 4:30 AM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 *(script sent)* |
 | 50 | Fri Oct 23 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 *(script sent)* |
@@ -76,16 +76,16 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 54 | Sun Oct 25 | 9:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea)* |
 | 55 | Mon Oct 26 | 4:30 AM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
 | 56 | Mon Oct 26 | 9:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea)* |
-| 57 | Tue Oct 27 | 4:30 AM | free_will | Did You Choose to Watch This? *(idea)* |
+| 57 | Tue Oct 27 | 4:30 AM | meme_95_marks | Me: 95/100. Dad: Where Are the Other 5? 😭 *(meme, rendered 11 Oct)* |
 | 58 | Tue Oct 27 | 9:30 PM | newcomb_box | The Mind-Reading Box *(idea)* |
 | 59 | Wed Oct 28 | 4:30 AM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
 | 60 | Wed Oct 28 | 9:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
 | 61 | Thu Oct 29 | 4:30 AM | pascals_wager | Pascal's Wager *(idea)* |
 | 62 | Thu Oct 29 | 9:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
-| 63 | Fri Oct 30 | 4:30 AM | dancing_plague | The Town That Couldn't Stop Dancing (1518) *(idea)* |
+| 63 | Fri Oct 30 | 4:30 AM | meme_exam_chapter | Teacher: This Won't Come in the Exam. The Exam: 💀 *(meme, rendered 11 Oct)* |
 | 64 | Fri Oct 30 | 9:30 PM | trolley_problem | The Trolley Problem *(idea)* |
 | 65 | Sat Oct 31 | 4:30 AM | last_bencher_halloween | Last Bencher Halloween Special *(idea)* |
-| 66 | Sat Oct 31 | 9:30 PM | vampire_panic | The 1892 Vampire Panic *(idea)* |
+| 66 | Sat Oct 31 | 9:30 PM | meme_3am | Me at 3 AM: Watched It 47 Times 😭 *(meme, rendered 11 Oct)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 

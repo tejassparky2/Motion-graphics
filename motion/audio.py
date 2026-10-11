@@ -178,6 +178,9 @@ def build_soundtrack(events, total, path, clips=None, seed=None):
         voice, speaking = narration_track(clips, total)
         voice, speaking = voice[:n], speaking[:n]
         loud = speaking > 0.5
+        if not loud.any():       # a silent meme: no voice at all, so music + effects only
+            clips = None
+    if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
         bed *= (v_rms * 10 ** (-10 / 20)) / rms(bed)
