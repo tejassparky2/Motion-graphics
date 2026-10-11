@@ -66,7 +66,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 44 | Tue Oct 20 | 9:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
 | 45 | Wed Oct 21 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
 | 46 | Wed Oct 21 | 9:30 PM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ |
-| 47 | Thu Oct 22 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? 🪨 *(script sent)* |
+| 47 | Thu Oct 22 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? 🪨 *(rendered 11 Oct)* |
 | 48 | Thu Oct 22 | 9:30 PM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ *(script sent)* |
 | 49 | Fri Oct 23 | 4:30 AM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 *(script sent)* |
 | 50 | Fri Oct 23 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 *(script sent)* |
