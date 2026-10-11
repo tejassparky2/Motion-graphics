@@ -133,7 +133,8 @@ def main():
         c0 = c0 or c
         # background follows 35% of the figurine's sway, as if both were filmed together
         dx, dy = (c[0] - c0[0]) * 0.35, (c[1] - c0[1]) * 0.35
-        ox, oy = int((bg.shape[1] - W) / 2 - dx), int((bg.shape[0] - H) / 2 - dy)
+        ox = int(np.clip((bg.shape[1] - W) / 2 - dx, 0, bg.shape[1] - W))
+        oy = int(np.clip((bg.shape[0] - H) / 2 - dy, 0, bg.shape[0] - H))
         b = bg[oy:oy + H, ox:ox + W] * (1 - sh[..., None] * 0.9)
         fg = lift(img)
         # light wrap: let a little background colour into the very edge
