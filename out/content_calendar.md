@@ -48,7 +48,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 26 | Sun Oct 11 | 9:30 PM | epictetus_rain | A Slave Said ONE Sentence… and a Roman Emperor Studied It 🌧️ |
 | 27 | Mon Oct 12 | 4:30 AM | spotlight_effect | Nobody Is Watching You as Much as You Think (Science Proved It) 👀 |
 | 28 | Mon Oct 12 | 9:30 PM | hanoi_rats | A City Paid People to Kill Rats… and Got MORE Rats 🐀 |
-| 29 | Tue Oct 13 | 4:30 AM | lottery_happiness | Lottery Winners Weren't Happier… Then a Bigger Study Found THIS 💰 |
+| 29 | Tue Oct 13 | 4:30 AM | fermi_paradox | Where Is Everybody? 👽 (The Fermi Paradox Explained) *(moved from #46; lottery_happiness SKIPPED by owner 11 Oct)* |
 | 30 | Tue Oct 13 | 9:30 PM | socrates_know | The Wisest Man Said "I Know Nothing"… and That's WHY He Was Wise 🧠 |
 | 31 | Wed Oct 14 | 4:30 AM | machiavelli_feared | Is It Better to Be Loved or Feared? Machiavelli's Answer 😈 |
 | 32 | Wed Oct 14 | 9:30 PM | diogenes_alexander | Alexander the Great Offered Him Anything… His Answer Was Genius ☀️ |
@@ -65,7 +65,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 43 | Tue Oct 20 | 4:30 AM | spear_shield | One Salesman's Lie Became the Chinese Word for "Contradiction" 🛡️ |
 | 44 | Tue Oct 20 | 9:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 (Simulation Theory) |
 | 45 | Wed Oct 21 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
-| 46 | Wed Oct 21 | 9:30 PM | fermi_paradox | Where Is Everybody? 👽 (The Fermi Paradox Explained) |
+| 46 | Wed Oct 21 | 9:30 PM | genie_wish | **NEW: script sent for approval** (The Genie's Last Wish, original story) |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
