@@ -6,10 +6,9 @@ Owner's standing preferences for every video made here (keep them unless the own
   clone the owner's voice; leave Chatterbox's watermark in place.
 - **Reel voice style (owner, 12 Oct 2026: "use the speed and pause from the Your Cute Mini reference"):** one line per
   paragraph in the script, each line one flowing take, ~5.3 syllables/s, ~0.9 s pause after each line, polished:
-  `tools/voiceover.py SCRIPT NAME --engine turbo --flow --gap 0.9 --polish --even 5.4` (owner picked Chatterbox
-  Turbo, 12 Oct 2026; sample: `out/voiceover/ab_T2.mp3`; Whisper-checked retakes, evened lines re-checked).
-  `--even` (owner, 12 Oct: "inconsistent speed, sometimes very fast") stretches every phrase inside a line to the same
-  speed (`tools/even_pace.py`), so lists and short lines aren't rushed.
+  `tools/voiceover.py SCRIPT NAME --engine turbo --flow --gap 0.9 --polish` (owner picked Chatterbox Turbo at its
+  natural speed, 12 Oct 2026: "the speed is good in ab_T"; sample `out/voiceover/ab_T3.mp3`). Whisper-checked retakes.
+  No `--even` for Turbo (the owner preferred its own speed); `--even` stays available for the older Chatterbox voice.
 - **Workflow:** look at the uploads, send the plan + script, wait for approval, then make it. Keep the owner's words;
   flag words the clone may mishear (write websites and numbers the way they should be spoken, e.g.
   "yours 3D India dot com", "zero point two"; captions show the written form).
