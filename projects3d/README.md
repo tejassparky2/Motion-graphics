@@ -8,8 +8,9 @@ Owner's standing preferences for every video made here (keep them unless the own
   flag words the clone may mishear (write websites and numbers the way they should be spoken, e.g.
   "yours 3D India dot com", "zero point two"; captions show the written form).
 - **Platform:** Instagram Reels, 1080x1920, captions and graphics clear of the Reels UI (bottom ~380 px).
-- **Brand / call to action:** @yours3dindia · "Comment below to get a DM" (no keyword) · free previews on WhatsApp
-  +91 91647 48401 · website yours3dindia.com.
+- **Brand / call to action:** @yours3dindia · "Comment below to get a DM" (no keyword) · free preview on WhatsApp
+  +91 91647 48401. WhatsApp replaces the website as the place to send people (owner, 12 Oct 2026): don't put
+  yours3dindia.com in new videos unless the owner asks.
 - **Look:** motion graphics between shots (see `reel01/build_v3.py`: tracker, scan, counters, wipes, word-by-word
   captions), light grade + vignette on phone clips.
 - **Background:** keep the real background. No background replacement (owner, 11 Oct 2026); lighting and colour
