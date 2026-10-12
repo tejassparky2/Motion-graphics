@@ -150,7 +150,7 @@ def gallery_frames(photo, n):
             sheet.paste(sq if (i, j) == hero else tiles[i * cols + j], (gap + j * (size + gap), gap + i * (size + gap)))
     hx, hy = gap + hero[1] * (size + gap), gap + hero[0] * (size + gap)
     head = 170
-    end_off = hy + size / 2 - (H + head) / 2          # scroll so the hero tile sits mid-screen
+    end_off = hy + head + size / 2 - 820              # scroll so the hero tile sits above the caption line
     full = v1.cover(photo)
     t_scroll, t_glow, t_grow = 0.55, 0.62, 0.80      # fractions of the scene
     for k in range(n):
