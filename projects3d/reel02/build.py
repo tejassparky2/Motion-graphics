@@ -255,8 +255,8 @@ def main():
             if si == 8:
                 end_card(fr, t, t_end)
             if t < t_end:
-                for (c0, c1, _), ws in zip(cues, words):
-                    if c0 <= t < c1 + 0.15:
+                for k, ((c0, c1, _), ws) in enumerate(zip(cues, words)):
+                    if c0 <= t < c1 + 0.15 and k > 0:     # the hook line is already the POV title
                         v2.karaoke(fr, ws, t, cap_y, t - c0)
             for c in cuts:
                 if -v2.WIPE <= f - c < v2.WIPE:
