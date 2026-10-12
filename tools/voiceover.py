@@ -50,6 +50,18 @@ def sentences(text):
     return out
 
 
+def paragraphs(text, gap):
+    """Presenter style (--flow): each paragraph is one flowing take, with a short gap after it."""
+    return [(" ".join(p.split()), gap) for p in re.split(r"\n\s*\n", text.strip()) if p.strip()]
+
+
+# Presenter polish (--polish): clean low end, a little warmth and presence, gentle de-essing and even level --
+# the close-mic sound of a creator talking to camera.
+POLISH = ("highpass=f=75,equalizer=f=180:t=q:w=1:g=1.5,equalizer=f=3200:t=q:w=1.2:g=3,"
+          "equalizer=f=9000:t=q:w=1:g=1.5,deesser=i=0.35,"
+          "acompressor=threshold=0.1:ratio=3:attack=8:release=120:makeup=1.6")
+
+
 def stamp(t):
     ms = int(round(t * 1000))
     return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
@@ -61,9 +73,13 @@ def main():
     ap.add_argument("name")
     ap.add_argument("--pace", type=float, default=PACE, help="1.0 = the Shorts pace; lower is slower (default %(default)s)")
     ap.add_argument("--video", help="a video to put the voice-over on")
+    ap.add_argument("--flow", action="store_true", help="presenter style: one take per paragraph, short gaps")
+    ap.add_argument("--gap", type=float, default=0.3, help="pause after each paragraph with --flow (s)")
+    ap.add_argument("--polish", action="store_true", help="presenter EQ, de-ess and compression")
     a = ap.parse_args()
 
-    lines = sentences(open(a.script, encoding="utf-8").read())
+    text = open(a.script, encoding="utf-8").read()
+    lines = paragraphs(text, a.gap) if a.flow else sentences(text)
     texts = [s for s, _ in lines]
     voice.clone_prefetch(texts)
     voice.clone_check([(s, a.pace) for s in texts])
@@ -86,6 +102,10 @@ def main():
     base = os.path.join(out_dir, a.name)
     soundfile.write(base + ".wav", audio, sr, subtype="PCM_16")
     ff = imageio_ffmpeg.get_ffmpeg_exe()
+    if a.polish:
+        subprocess.run([ff, "-y", "-loglevel", "error", "-i", base + ".wav", "-af", POLISH + ",alimiter=limit=0.89",
+                        *CLEAN, base + ".polish.wav"], check=True)
+        os.replace(base + ".polish.wav", base + ".wav")
     subprocess.run([ff, "-y", "-loglevel", "error", "-i", base + ".wav", "-c:a", "libmp3lame", "-b:a", "192k",
                     "-write_xing", "0", "-id3v2_version", "0", *CLEAN, base + ".mp3"], check=True)
     with open(base + ".srt", "w", encoding="utf-8") as f:
