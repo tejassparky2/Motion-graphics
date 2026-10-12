@@ -98,14 +98,14 @@ def image_frames(im, n, mode="cover", zoom=(1.0, 1.07), top=None, bg=None):
         yield base.resize((W, H), Image.BILINEAR, box=(x, y, x + cw, y + ch))
 
 
-def video_frames(path, n, start=0.0, speed=1.0, fit=None):
+def video_frames(path, n, start=0.0, speed=1.0, fit=None, post=""):
     """n output frames from a clip, played at `speed` (or slowed/sped to fill exactly n frames when fit=True)."""
     dur = float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
                                          "csv=p=0", path]).decode())
     if fit:
         speed = (dur - start - 0.05) / (n / FPS)
     vf = (f"setpts=(PTS-STARTPTS)/{speed},fps={FPS},scale={W}:{H}:force_original_aspect_ratio=increase,"
-          f"crop={W}:{H},setsar=1")
+          f"crop={W}:{H},setsar=1" + (f",{post}" if post else ""))
     p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", str(start), "-i", path, "-vf", vf, "-frames:v", str(n),
                           "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
     last = None

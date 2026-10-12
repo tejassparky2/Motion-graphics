@@ -55,14 +55,26 @@ def graded(path):
     return _graders[path]
 
 
-def clip(path, n, start=0.0, end=None, speed=None):
+STEADY = "deshake=rx=48:ry=48:edge=mirror,unsharp=5:5:0.7"   # the hand-held printer close-ups
+
+
+def clip(path, n, start=0.0, end=None, speed=None, post=""):
     """n frames from [start, end) of a clip, sped to fit exactly (or at `speed`)."""
     if speed is None:
         dur = (end if end is not None else float(subprocess.check_output(
             ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]))) - start
         speed = dur / (n / FPS)
     g = graded(path)
-    return (g(f) for f in v1.video_frames(path, n, start=start, speed=speed))
+    return (g(f) for f in v1.video_frames(path, n, start=start, speed=speed, post=post))
+
+
+def hide_cost(frames, box=(445, 462, 655, 562)):
+    """The slicer's stats panel shows the job cost: blur that one line."""
+    from PIL import ImageFilter
+    for f in frames:
+        f = f.copy()
+        f.paste(f.crop(box).filter(ImageFilter.GaussianBlur(9)), box[:2])
+        yield f
 
 
 def chain(*parts):
@@ -322,16 +334,17 @@ def main():
     rec2 = media(mdir, "153010_WhatsApp")
     # (start, frames factory, warm grade?, wipe in?, caption y)
     scenes = [
-        (0.0, lambda n: clip(media(mdir, "152343"), n, 0.2, speed=1.0), False, False, CAP_Y),
+        (0.0, lambda n: clip(media(mdir, "152343"), n, 0.8, speed=1.0), False, False, CAP_Y),
         (L[1], lambda n: gallery_frames(photo, n), False, True, CAP_Y),
         (L[2], lambda n: precious_frames(photo, n), False, False, CAP_Y),
         (L[3], lambda n: dissolve(lambda m: precious_frames(photo, m),
-                                  lambda m: clip(media(mdir, "155918"), m, 4.0, speed=0.8), n), False, False, CAP_Y),
+                                  lambda m: clip(media(mdir, "155918"), m, 7.0, speed=0.8), n), False, False, CAP_Y),
         (L[4], lambda n: clip(media(mdir, "152321"), n, 0.0, speed=1.0), False, True, CAP_Y),
         (L[5], lambda n: clip(media(mdir, "153133"), n, 1.5, speed=1.4), False, True, CAP_Y),
-        (L[6], chain((lambda n: clip(media(mdir, "153348"), n, 2.0, speed=1.6), 0.28),
-                     (lambda n: clip(media(mdir, "155428"), n, 0.5, speed=1.0), 0.32),
-                     (lambda n: clip(media(mdir, "155838"), n, 1.0, speed=1.6), 0.40)), False, True, CAP_Y),
+        (L[6], chain((lambda n: hide_cost(clip(media(mdir, "153348"), n, 16.3, speed=1.0)), 0.30),
+                     (lambda n: clip(media(mdir, "155428"), n, 2.6, speed=1.0, post=STEADY), 0.30),
+                     (lambda n: clip(media(mdir, "155838"), n, 15.0, speed=1.0, post=STEADY), 0.40)),
+         False, True, CAP_Y),
         (L[7], lambda n: clip(media(mdir, "155918"), n, 0.0, speed=1.0), False, True, CAP_Y),
         (L[8], lambda n: phone_frames(rec1, n, 27.6, 33.6), False, True, CAP_TOP),
         (L[9], chain((lambda n: phone_frames(rec1, n, 38.2, 40.2), 0.25),
