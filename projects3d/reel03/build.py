@@ -25,7 +25,7 @@ font = r2.font
 
 NAME = "reel03"
 r2.PHONE_TOP, r2.PHONE_H = 330, 960       # leave room for the step bar above and the step label below
-CAP_TOP = 240
+CAP_TOP = 262
 STEPS = ["SAY HI", "TELL US WHAT YOU WANT", "SEND ONE PHOTO", "2 FREE PREVIEWS", "PICK & ASK FOR CHANGES",
          "SIZE & NAMES", "CONFIRM"]
 
@@ -69,13 +69,30 @@ def punch(frame, focus_y, z):
     return frame.resize((W, H), Image.BILINEAR, box=(cx - cw / 2, cy - ch / 2, cx + cw / 2, cy + ch / 2))
 
 
-def zoom_curve(p, at, hold=0.35, z=1.35):
+def zoom_curve(p, at, hold=0.35, z=1.2):
     """0 -> z around fraction `at` of a scene, holding for `hold`, easing in and out."""
     if p < at:
         return 1 + (z - 1) * v2.ease((p - at + 0.12) / 0.12) if p > at - 0.12 else 1.0
     if p < at + hold:
         return z
     return 1 + (z - 1) * (1 - v2.ease((p - at - hold) / 0.12))
+
+
+def sentence_at(ws, t):
+    """The sentence of a caption cue that is being spoken at time t (captions stay at 1-2 lines)."""
+    groups, cur = [], []
+    for w in ws:
+        cur.append(w)
+        if w[0][-1] in ".?!":
+            groups.append(cur)
+            cur = []
+    if cur:
+        groups.append(cur)
+    pick = groups[0]
+    for g in groups:
+        if g[0][1] <= t + 0.05:
+            pick = g
+    return pick
 
 
 def couple_cards(frame, age):
@@ -176,7 +193,8 @@ def main():
             if t < t_end:
                 for (c0, c1, _), ws in zip(cues, words):
                     if c0 <= t < c1 + 0.15:
-                        v2.karaoke(fr, ws, t, CAP_TOP if si else r2.CAP_Y, t - c0)
+                        sw = sentence_at(ws, t)
+                        v2.karaoke(fr, sw, t, CAP_TOP if si else r2.CAP_Y, t - sw[0][1])
             for c in cuts:
                 if -v2.WIPE <= f - c < v2.WIPE:
                     fr = v2.wipe(fr, f - c)

@@ -375,6 +375,7 @@ def _heard_ok(text, heard):
     ("P.O.V." -> "POV")."""
     text, heard = (re.sub(r"\b((?:[A-Za-z]\.){2,})", lambda m: m.group(1).replace(".", ""), x) for x in (text, heard))
     text, heard = (re.sub(r"(?i)\b(colo|favo|flavo|hono|neighbo)ur", r"\1r", x) for x in (text, heard))   # UK = US
+    text, heard = (re.sub(r"(?i)\bcentimet(re|er)s?\b", "cm", x) for x in (text, heard))
     t = re.sub(r"[^a-z0-9' ]", " ", text.lower().replace("-", " ")).split()
     h = re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
