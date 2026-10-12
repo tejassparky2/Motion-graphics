@@ -82,21 +82,21 @@ def score(n, sr, flute_from, lift_at, seed=7):
     while t < lift_at - 0.01:
         dur = min(6.0, lift_at - t)
         for s in minor[i % 4]:
-            put(_pad_note(_hz(s), dur + 2.0, sr, bright=0.6), t, pad, 0.22)
-        put(_pad_note(_hz(minor[i % 4][0] - 12), dur + 2.0, sr, 0.4), t, pad, 0.18)
+            put(_pad_note(_hz(s + 12), dur + 2.0, sr, bright=0.8), t, pad, 0.22)
+        put(_pad_note(_hz(minor[i % 4][0]), dur + 2.0, sr, 0.5), t, pad, 0.12)
         t += dur
         i += 1
     spans = [2.6, 2.6, max(2.0, total - lift_at - 5.2)]
     for ch, dur in zip(lift, spans):
         for s in ch + [ch[0] + 12]:
-            put(_pad_note(_hz(s), dur + 2.5, sr, bright=1.0), t, pad, 0.22)
-        put(_pad_note(_hz(ch[0] - 12), dur + 2.5, sr, 0.5), t, pad, 0.2)
+            put(_pad_note(_hz(s + 12), dur + 2.5, sr, bright=1.0), t, pad, 0.22)
+        put(_pad_note(_hz(ch[0]), dur + 2.5, sr, 0.5), t, pad, 0.12)
         t += dur
 
     # tanpura cycle Pa - Sa' - Sa' - Sa, one pluck a second
     for k in range(int(total) + 1):
         f = [_hz(-5), _hz(0), _hz(0), _hz(-12)][k % 4]
-        put(_tanpura(f, sr, rng), k * 1.0 + rng.uniform(0, 0.03), drone, 0.09)
+        put(_tanpura(f * 2, sr, rng), k * 1.0 + rng.uniform(0, 0.03), drone, 0.12)
 
     # bansuri phrases (D Kafi-ish: D E F G A B C), only from flute_from on; brighter phrase at the lift
     phrase_minor = [(7, 1.4), (5, 0.8), (3, 0.8), (5, 1.6), (0, 2.4), (None, 1.2),
@@ -122,15 +122,15 @@ def score(n, sr, flute_from, lift_at, seed=7):
         prev, t = semi, t + dur
 
     # keep the bed out of the speech band (pad/drone), small warm room on everything
-    pad = sosfilt(butter(2, 1800, "lowpass", fs=sr, output="sos"), pad)
-    drone = sosfilt(butter(2, 2600, "lowpass", fs=sr, output="sos"), drone)
+    pad = sosfilt(butter(2, 3500, "lowpass", fs=sr, output="sos"), pad)
+    drone = sosfilt(butter(2, 4500, "lowpass", fs=sr, output="sos"), drone)
     dry = pad + drone + flute
     ir_t = np.arange(int(2.2 * sr)) / sr
     ir = rng.standard_normal(len(ir_t)) * np.exp(-ir_t / 0.6)
     ir[0] = 8.0
     wet = fftconvolve(dry, ir)[: len(dry)] / 14
     mix = (dry * 0.75 + wet * 0.45)[:n]
-    mix = sosfilt(butter(2, 70, "highpass", fs=sr, output="sos"), mix)
+    mix = sosfilt(butter(2, 140, "highpass", fs=sr, output="sos"), mix)
     fade_in = np.clip(np.arange(n) / (2.0 * sr), 0, 1)
     fade_out = np.clip((n - np.arange(n)) / (2.5 * sr), 0, 1)
     mix = mix * fade_in * fade_out
@@ -160,8 +160,8 @@ def duck_mix(voice, music, sr, plan, under_speech_db=-20.0, attack=0.15, release
         section[t >= start] = lvl
         under[t >= start] = u[0] if u else under_speech_db
     # running speech level (smoothed) sets the ceiling for the music while someone talks
-    speech_lvl = np.convolve(np.where(speaking, vdb, -90), np.ones(20) / 20, "same")
-    target = np.where(speaking, np.minimum(section, np.maximum(speech_lvl, -30) + under), section)
+    speech_lvl = np.median(vdb[speaking]) if speaking.any() else -20.0
+    target = np.where(speaking, np.minimum(section, speech_lvl + under), section)
     g = np.empty(frames)
     cur = target[0]
     a_c, r_c = np.exp(-0.05 / attack), np.exp(-0.05 / release)

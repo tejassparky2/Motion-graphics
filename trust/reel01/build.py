@@ -135,18 +135,23 @@ def add_music(reel, total, qr_at):
     voice = np.frombuffer(raw, np.float32).reshape(-1, 2).astype(np.float64)
     speech_end = CUTS[0][2] - CUTS[0][1] - XF                   # Pushpa's appeal, then the residents
     music = score(len(voice), SR, flute_from=speech_end + 0.5, lift_at=qr_at)
-    # music level (RMS dBFS): ~20 dB under Pushpa's appeal so every word stays clear; with the residents
-    # (room sound, short words) it comes up, and it is fullest under the QR
-    plan = [(0, -33.0, -17.0), (speech_end, -26.0, -9.0), (qr_at, -23.0, -6.0)]
+    # music level (RMS dBFS): clearly heard on a phone but ~10 dB under Pushpa's appeal (the first mix at
+    # ~22 dB under was inaudible to the owner); up with the residents, fullest under the QR
+    plan = [(0, -21.0, -10.0), (speech_end, -18.0, -6.0), (qr_at, -15.0, -3.0)]
     mix, g = duck_mix(voice, music, SR, plan)
     for a, b in ((0, speech_end), (speech_end, qr_at), (qr_at, total)):
         print(f"music {a:5.1f}-{b:5.1f}s: {np.mean(g[int(a * 20):int(b * 20)]):.1f} dBFS RMS")
-    peak = np.abs(mix).max()
-    if peak > 0.84:
-        mix *= 0.84 / peak
     wav = reel + ".mix.wav"
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", "-", wav],
-                   input=mix.astype(np.float32).tobytes(), check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(SR), "-ac", "2", "-i", "-",
+                    "-c:a", "pcm_f32le", wav + ".raw.wav"], input=mix.astype(np.float32).tobytes(), check=True)
+    # back to -14 LUFS with a peak limiter (scaling the whole mix by its loudest peak left it too quiet)
+    err = subprocess.run(["ffmpeg", "-hide_banner", "-i", wav + ".raw.wav", "-af", "ebur128", "-f", "null", "-"],
+                         capture_output=True, text=True).stderr
+    lufs = float(err.rsplit("I:", 1)[1].split("LUFS")[0])
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", wav + ".raw.wav", "-af",
+                    f"volume={-14.0 - lufs:.2f}dB,alimiter=limit=0.84:attack=5:release=80:level=disabled", wav],
+                   check=True)
+    os.remove(wav + ".raw.wav")
     tmp = reel + ".m.mp4"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", reel, "-i", wav, "-map", "0:v", "-map", "1:a", "-c:v", "copy",
                     "-c:a", "aac", "-b:a", "160k", "-shortest", "-movflags", "+faststart", *CLEAN,
