@@ -314,6 +314,62 @@ def soft_pad(n, sr, bpm=72):
     return out / max(1e-6, np.abs(out).max())
 
 
+def warm_bed(n, sr, beat_from, bpm=80, seed=5):
+    """Original soft, warm background music: electric-piano chords (Cmaj7-Am7-Fmaj7-G6), soft bass, room
+    reverb; a gentle kick and shaker join at `beat_from` seconds. Synthesized here, no samples."""
+    from scipy.signal import butter, fftconvolve, sosfilt
+    r = np.random.default_rng(seed)
+    chords = [[60, 64, 67, 71], [57, 60, 64, 67], [53, 57, 60, 64], [55, 59, 62, 64]]
+    beat = 60 / bpm
+    out = np.zeros(n + sr * 3)
+    drums = np.zeros_like(out)
+    shaker = np.zeros_like(out)
+
+    def keys(midi, dur, vel):
+        f = 440 * 2 ** ((midi - 69) / 12)
+        t = np.arange(int(dur * sr)) / sr
+        env = np.minimum(1, t / 0.006) * np.exp(-t / 1.6)
+        mod = 1.2 * np.exp(-t / 0.25) * np.sin(2 * np.pi * f * t)          # soft bell attack (FM)
+        tone = np.sin(2 * np.pi * f * t + mod) + 0.25 * np.sin(4 * np.pi * f * t)
+        return vel * env * tone * (1 + 0.15 * np.sin(2 * np.pi * 4.5 * t))  # gentle tremolo
+
+    def put(sig, at, buf):
+        s0 = int(at * sr)
+        if s0 < len(buf):
+            buf[s0:s0 + len(sig)] += sig[: len(buf) - s0]
+
+    bar, t = 0, 0.0
+    while t < n / sr:
+        ch = chords[bar % 4]
+        for m in ch:                                                     # chord on beat 1
+            put(keys(m, 4 * beat + 1.5, 0.22), t + r.uniform(0, 0.02), out)
+        put(keys(ch[0] - 24, 4 * beat, 0.35) * 0.8, t, out)               # bass
+        for b in (2.5, 3.0, 3.5):                                        # soft broken chord notes
+            if r.random() < 0.7:
+                put(keys(ch[r.integers(1, 4)] + 12, 1.2, 0.10), t + b * beat, out)
+        if t >= beat_from - 0.01:
+            for b in (0, 2):                                             # soft kick
+                tt = np.arange(int(0.35 * sr)) / sr
+                kick = np.sin(2 * np.pi * (48 + 60 * np.exp(-tt / 0.03)) * tt) * np.exp(-tt / 0.12)
+                put(kick * 0.5, t + b * beat, drums)
+            for e in range(8):                                           # shaker on eighths
+                tt = np.arange(int(0.08 * sr)) / sr
+                sh = r.standard_normal(len(tt)) * np.exp(-tt / 0.02) * (0.05 if e % 2 else 0.03)
+                put(sh, t + e * beat / 2, shaker)
+        t += 4 * beat
+        bar += 1
+    ir_t = np.arange(int(1.6 * sr)) / sr                                  # small warm room
+    ir = r.standard_normal(len(ir_t)) * np.exp(-ir_t / 0.45)
+    ir[0] = 6.0
+    wet = fftconvolve(out, ir)[: len(out)] / 12
+    mix = out * 0.7 + wet * 0.5
+    shaker = sosfilt(butter(2, 6000, "highpass", fs=sr, output="sos"), shaker)
+    mix = sosfilt(butter(2, 5200, "lowpass", fs=sr, output="sos"), mix) + drums + shaker
+    mix = mix[:n]
+    fade = np.clip(np.arange(n) / (1.5 * sr), 0, 1)
+    return mix * fade / max(1e-6, np.abs(mix).max())
+
+
 # ---------- build ----------
 
 def main():
@@ -405,13 +461,7 @@ def main():
 
     # soundtrack: voice + ducked synth music + whooshes on wipes, pops on graphics, a hit on the reveal
     n = len(voice)
-    music = synth.music(total + 1, seed="3d-reel02")
-    music = np.interp(np.arange(n) * synth.SR / sr, np.arange(len(music)), music)
-    music = music / max(1e-6, np.abs(music).max()) * 0.32
-    pad = soft_pad(n, sr) * 0.30
-    tt0 = np.arange(n) / sr
-    x = np.clip((tt0 - (L[4] - 0.6)) / 1.2, 0, 1)        # pad -> plucks around "It all started"
-    music = pad * (1 - x) + music * x
+    music = warm_bed(n, sr, beat_from=L[4]) * 0.30   # owner: "soft and warm bg music, like Everything 3D"
     env = np.convolve((np.abs(voice) > 0.02).astype(float), np.ones(int(0.25 * sr)) / int(0.25 * sr), "same")
     duck = np.convolve(1.0 - 0.7 * np.clip(env * 4, 0, 1), np.ones(int(0.1 * sr)) / int(0.1 * sr), "same")
     mix = voice + music * duck
