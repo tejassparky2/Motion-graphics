@@ -74,6 +74,36 @@ def phrases(text, gap, comma=0.2, stop=0.4):
     return out
 
 
+def turbo_takes(texts, tries=3):
+    """Chatterbox Turbo takes (owner's pick, 12 Oct 2026), each heard back with Whisper medium and re-made if a word
+    is misheard; the first clear take wins (else the last). -> {text: wav path}"""
+    import json
+    from faster_whisper import WhisperModel
+    d = os.path.join(ROOT, "build", "turbo")
+    os.makedirs(d, exist_ok=True)
+    clone_py = os.environ.get("CLONE_PYTHON", os.path.expanduser("~/.venv-clone/bin/python"))
+    checker, chosen, todo = None, {}, list(dict.fromkeys(texts))
+    for n in range(tries):
+        jobs = [[t, os.path.join(d, f"{voice._key(t)}.try{n}.wav")] for t in todo]
+        if any(not os.path.exists(o) for _, o in jobs):
+            json.dump(jobs, open(os.path.join(d, "jobs.json"), "w"))
+            subprocess.run([clone_py, os.path.join(ROOT, "tools", "turbo_clone_tts.py"), os.path.join(d, "jobs.json")],
+                           check=True)
+        checker = checker or WhisperModel("medium.en", device="cpu", compute_type="int8")
+        bad = []
+        for t, o in jobs:
+            heard = " ".join(x.text for x in checker.transcribe(o, language="en", beam_size=5)[0])
+            if t not in chosen or voice._heard_ok(t, heard):
+                chosen[t] = o          # a clear take always wins; otherwise keep the first try
+            if not voice._heard_ok(t, heard):
+                bad.append(t)
+                print(f"turbo try {n + 1}: {t!r} heard as {heard.strip()!r}", file=sys.stderr)
+        todo = bad
+        if not todo:
+            break
+    return chosen
+
+
 def stamp(t):
     ms = int(round(t * 1000))
     return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
@@ -88,6 +118,8 @@ def main():
     ap.add_argument("--flow", action="store_true", help="presenter style: one take per paragraph, short gaps")
     ap.add_argument("--gap", type=float, default=0.3, help="pause after each paragraph with --flow (s)")
     ap.add_argument("--polish", action="store_true", help="presenter EQ, de-ess and compression")
+    ap.add_argument("--engine", choices=["clone", "turbo"], default="clone",
+                    help="clone = Chatterbox (default); turbo = Chatterbox Turbo, Whisper-checked takes")
     ap.add_argument("--phrases", action="store_true", help="one take per phrase, same pace (short phrases can drawl)")
     ap.add_argument("--even", type=float, default=0, metavar="SYL_PER_S",
                     help="even out the speed inside each take: stretch every phrase to this rate (e.g. 5.4)")
@@ -101,22 +133,37 @@ def main():
         lines = paragraphs(text, a.gap) if a.flow else sentences(text)
         line_of = list(range(len(lines)))
     texts = [s for s, _ in lines]
-    voice.clone_prefetch(texts)
-    voice.clone_check([(s, a.pace) for s in texts], slack=0.07 if a.phrases else 0.15)
+    if a.engine == "turbo":
+        takes = turbo_takes(texts)
+    else:
+        voice.clone_prefetch(texts)
+        voice.clone_check([(s, a.pace) for s in texts], slack=0.07 if a.phrases else 0.15)
 
     sr = voice.SR
     track, cues, t = [np.zeros(int(LEAD * sr))], [], LEAD
     for s, pause in lines:
-        path, _ = voice._clone_process(s, a.pace)
+        path = takes[s] if a.engine == "turbo" else voice._clone_process(s, a.pace)[0]
         if a.even:
             from even_pace import even
             evened = path[:-4] + f".even{a.even}.wav"
             if not os.path.exists(evened):
                 for p, r0, r1 in even(path, s, evened, a.even):
                     print(f"  even: {r0:4.1f} -> {r1:4.1f} syl/s  {p}", file=sys.stderr)
-            path = evened
+            # stretching can soften a word ("get a free preview" -> "get a preview"): hear it again, else keep the take
+            import even_pace
+            heard = " ".join(w.word for w in even_pace._words(evened))
+            if voice._heard_ok(s, heard):
+                path = evened
+            else:
+                print(f"  even: kept the original take, evened one heard as {heard.strip()!r}", file=sys.stderr)
         w, wsr = soundfile.read(path)
-        w = voice._clone_trim(w if w.ndim == 1 else w.mean(axis=1))
+        w = w if w.ndim == 1 else w.mean(axis=1)
+        if wsr != sr:   # Turbo writes 24 kHz; the track is built at voice.SR
+            from scipy.signal import resample_poly
+            from math import gcd
+            g = gcd(sr, wsr)
+            w, wsr = resample_poly(w, sr // g, wsr // g), sr
+        w = voice._clone_trim(w)
         cues.append((t, t + len(w) / wsr, s))
         track += [w, np.zeros(int(pause * sr))]
         t += len(w) / wsr + pause

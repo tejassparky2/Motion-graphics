@@ -371,7 +371,9 @@ _checker = None
 
 
 def _heard_ok(text, heard):
-    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28")."""
+    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28") and acronyms heard as one word
+    ("P.O.V." -> "POV")."""
+    text, heard = (re.sub(r"\b((?:[A-Za-z]\.){2,})", lambda m: m.group(1).replace(".", ""), x) for x in (text, heard))
     t = re.sub(r"[^a-z0-9' ]", " ", text.lower().replace("-", " ")).split()
     h = re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
