@@ -1,0 +1,40 @@
+1
+00:00:00,150 --> 00:00:00,788
+P.O.V.
+
+2
+00:00:01,100 --> 00:00:03,385
+Your trip memory just got a mini version.
+
+3
+00:00:04,165 --> 00:00:05,170
+From one photo.
+
+4
+00:00:05,482 --> 00:00:06,679
+To a 3D design.
+
+5
+00:00:06,991 --> 00:00:07,497
+To this.
+
+6
+00:00:08,277 --> 00:00:08,901
+And this one?
+
+7
+00:00:09,291 --> 00:00:09,786
+That's me.
+
+8
+00:00:10,566 --> 00:00:12,095
+Ordering is simple.
+
+9
+00:00:12,407 --> 00:00:14,328
+Everything happens on WhatsApp.
+
+10
+00:00:14,640 --> 00:00:18,729
+Send your photo, get a free preview, ask for changes, and confirm.
+
