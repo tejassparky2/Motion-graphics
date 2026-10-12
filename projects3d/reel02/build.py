@@ -2,7 +2,7 @@
 WhatsApp ordering flow, in the Yours3D brand (gold on near-black, serif type).
 
   NARRATOR_ENGINE=clone python tools/voiceover.py projects3d/reel02/script.txt reel02 --engine turbo --flow --gap 0.9 --polish
-  python projects3d/reel02/build.py MEDIA_DIR          # -> out/3d/reel02.mp4
+  python projects3d/reel02/build.py MEDIA_DIR BEACH_PHOTO          # -> out/3d/reel02.mp4
 
 MEDIA_DIR: the owner's 12 Oct 2026 clips (not committed). Prices, "two free previews in 1-2 minutes" and "free
 delivery across India" are the owner's own WhatsApp bot's words (Screen_Recording_*_WhatsAppBusiness.mp4).
@@ -13,7 +13,7 @@ import sys
 
 import numpy as np
 import soundfile
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "reel01"))
@@ -21,6 +21,8 @@ import build as v1                      # noqa: E402
 import build_v2 as v2                   # noqa: E402
 from build import W, H, FPS, ROOT, CLEAN, media, read_srt   # noqa: E402
 from motion import audio as synth       # noqa: E402
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+from pro_grade import ClipGrade         # noqa: E402
 
 NAME = "reel02"
 GOLD, GOLD_LIGHT, INK = (201, 168, 108), (230, 205, 150), (17, 18, 20)
@@ -43,13 +45,24 @@ def warm(frame):
     return v2.grade(Image.fromarray(np.clip(a, 0, 255).astype(np.uint8)))
 
 
+_graders = {}
+
+
+def graded(path):
+    """Frames from this clip get the shared 'professional' lighting (tools/pro_grade.py)."""
+    if path not in _graders:
+        _graders[path] = ClipGrade(path)
+    return _graders[path]
+
+
 def clip(path, n, start=0.0, end=None, speed=None):
     """n frames from [start, end) of a clip, sped to fit exactly (or at `speed`)."""
     if speed is None:
         dur = (end if end is not None else float(subprocess.check_output(
             ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]))) - start
         speed = dur / (n / FPS)
-    return v1.video_frames(path, n, start=start, speed=speed)
+    g = graded(path)
+    return (g(f) for f in v1.video_frames(path, n, start=start, speed=speed))
 
 
 def chain(*parts):
@@ -100,6 +113,93 @@ def phone_frames(path, n, start, end):
         yield fr
     p.stdout.close()
     p.wait()
+
+
+# ---------- emotional opening: gallery -> precious photo -> figurine ----------
+
+def _tiles(k, size, seed=11):
+    """Soft, out-of-focus 'photos' in holiday colours for the gallery grid."""
+    r = np.random.default_rng(seed)
+    pal = [(120, 170, 215), (226, 196, 150), (240, 150, 90), (90, 150, 110), (200, 120, 140), (70, 90, 140),
+           (250, 215, 170), (150, 200, 220)]
+    out = []
+    for _ in range(k):
+        im = Image.new("RGB", (size, size), pal[r.integers(len(pal))])
+        d = ImageDraw.Draw(im)
+        for _ in range(4):
+            c = pal[r.integers(len(pal))]
+            x, y, rr = r.uniform(0, size), r.uniform(0, size), r.uniform(size * 0.2, size * 0.6)
+            d.ellipse((x - rr, y - rr, x + rr, y + rr), fill=c)
+        from PIL import ImageFilter
+        out.append(im.filter(ImageFilter.GaussianBlur(size * 0.12)))
+    return out
+
+
+def gallery_frames(photo, n):
+    """A phone gallery scrolls; the beach photo lights up in gold, then grows to fill the screen."""
+    cols, gap = 3, 8
+    size = (W - gap * (cols + 1)) // cols
+    rows = 12
+    hero = (7, 1)                                     # row, col of the beach photo
+    tiles = _tiles(rows * cols, size)
+    sq = photo.crop(((photo.width - min(photo.size)) // 2, 0, (photo.width + min(photo.size)) // 2,
+                     min(photo.size))).resize((size, size), Image.LANCZOS)
+    sheet = Image.new("RGB", (W, rows * (size + gap) + gap), (12, 12, 14))
+    for i in range(rows):
+        for j in range(cols):
+            sheet.paste(sq if (i, j) == hero else tiles[i * cols + j], (gap + j * (size + gap), gap + i * (size + gap)))
+    hx, hy = gap + hero[1] * (size + gap), gap + hero[0] * (size + gap)
+    head = 170
+    end_off = hy + size / 2 - (H + head) / 2          # scroll so the hero tile sits mid-screen
+    full = v1.cover(photo)
+    t_scroll, t_glow, t_grow = 0.55, 0.62, 0.80      # fractions of the scene
+    for k in range(n):
+        p = k / max(1, n - 1)
+        off = end_off * v2.ease(p / t_scroll)
+        fr = Image.new("RGB", (W, H), (12, 12, 14))
+        fr.paste(sheet.crop((0, int(off), W, int(off) + H - head)), (0, head))
+        d = ImageDraw.Draw(fr)
+        d.text((48, 95), "Gallery", font=font(64), fill=WHITE, anchor="lm")
+        d.text((W - 48, 95), "Recents", font=ImageFont.truetype(SERIF_REG, 38), fill=(170, 170, 175), anchor="rm")
+        x0, y0 = hx, hy - off + head
+        if p > t_glow:                                   # gold frame + dim the rest
+            g = v2.ease((p - t_glow) / 0.12)
+            dim = Image.new("RGB", (W, H), (0, 0, 0))
+            fr = Image.blend(fr, dim, 0.45 * g)
+            fr.paste(sq, (int(x0), int(y0)))
+            ImageDraw.Draw(fr).rounded_rectangle((x0 - 6, y0 - 6, x0 + size + 6, y0 + size + 6), radius=10,
+                                                 outline=GOLD, width=int(3 + 5 * g))
+        if p > t_grow:                                   # the photo grows to fill the screen
+            g = v2.ease((p - t_grow) / (1 - t_grow))
+            bx = (x0 * (1 - g), y0 * (1 - g), (x0 + size) * (1 - g) + W * g, (y0 + size) * (1 - g) + H * g)
+            w, h = int(bx[2] - bx[0]), int(bx[3] - bx[1])
+            fr.paste(full.resize((w, h), Image.LANCZOS) if g > 0.5 else sq.resize((w, h)), (int(bx[0]), int(bx[1])))
+        yield fr
+
+
+def precious_frames(photo, n):
+    """Slow push-in on the photo with a warm light leak drifting across."""
+    for k, fr in enumerate(v1.image_frames(photo, n, zoom=(1.0, 1.08))):
+        p = k / max(1, n - 1)
+        a = np.asarray(fr).astype(np.float32)
+        y, x = np.mgrid[0:H:8, 0:W:8]
+        cx = -200 + (W + 400) * p
+        leak = np.exp(-(((x - cx) / 520) ** 2 + ((y - 500) / 900) ** 2))
+        leak = np.asarray(Image.fromarray((leak * 255).astype(np.uint8)).resize((W, H), Image.BILINEAR),
+                          np.float32)[..., None] / 255
+        a = a + leak * np.array([70, 38, 6]) * 0.9
+        a = 255 * (np.clip(a, 0, 255) / 255) ** 0.95
+        yield Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
+
+
+def dissolve(first, second, n, overlap=0.45):
+    """Cross-dissolve from the photo (first) into the figurine clip (second) over `overlap` of the scene."""
+    m = int(n * overlap)
+    a_frames = list(first(m))
+    for k, fr in enumerate(second(n)):
+        if k < m:
+            fr = Image.blend(a_frames[k], fr, v2.ease(k / max(1, m - 1)))
+        yield fr
 
 
 # ---------- graphics ----------
@@ -183,6 +283,25 @@ def end_card(frame, t, t0):
     v2.pill(frame, "+91 91647 48401", 1385, t - t0 - 2.55, color=GREEN, size=44, dark_text=True)
 
 
+def soft_pad(n, sr, bpm=72):
+    """Slow, warm chord pad (I-V-vi-IV in C) for the emotional opening: sines with soft attack and release."""
+    chords = [[60, 64, 67, 72], [55, 59, 62, 67], [57, 60, 64, 69], [53, 57, 60, 65]]
+    bar = 4 * 60 / bpm
+    out = np.zeros(n)
+    t = np.arange(int(bar * 1.5 * sr)) / sr
+    env = np.minimum(1, t / 0.8) * np.exp(-np.maximum(0, t - bar) / 0.5)
+    k = 0
+    while k * bar * sr < n:
+        tone = sum(np.sin(2 * np.pi * 440 * 2 ** ((m - 69) / 12) * t) * (0.5 if i else 1)
+                   for i, m in enumerate(chords[k % 4]))
+        tone = tone + 0.3 * np.sin(2 * np.pi * 440 * 2 ** ((chords[k % 4][0] - 81) / 12) * t)
+        s0 = int(k * bar * sr)
+        seg = (tone * env)[: n - s0]
+        out[s0:s0 + len(seg)] += seg
+        k += 1
+    return out / max(1e-6, np.abs(out).max())
+
+
 # ---------- build ----------
 
 def main():
@@ -197,29 +316,34 @@ def main():
     total = len(voice) / sr
     st = lambda txt: cues[texts.index(txt)][0]   # noqa: E731
     L = [c[0] for c in cues]
-    t_end = L[8] - 0.3                            # end card starts just before "Comment below to get a DM."
+    t_end = L[11] - 0.3                           # end card starts just before "Comment below to get a DM."
+    photo = ImageOps.exif_transpose(Image.open(sys.argv[2])).convert("RGB")
     rec1 = media(mdir, "152901_WhatsApp")
     rec2 = media(mdir, "153010_WhatsApp")
     # (start, frames factory, warm grade?, wipe in?, caption y)
     scenes = [
-        (0.0, lambda n: clip(media(mdir, "152343"), n, 0.2, speed=1.0), True, False, CAP_Y),
-        (L[1], lambda n: clip(media(mdir, "152321"), n, 0.0, speed=1.0), True, True, CAP_Y),
-        (L[2], lambda n: clip(media(mdir, "153133"), n, 1.5, speed=1.4), True, True, CAP_Y),
-        (L[3], chain((lambda n: clip(media(mdir, "153348"), n, 2.0, speed=1.6), 0.28),
+        (0.0, lambda n: clip(media(mdir, "152343"), n, 0.2, speed=1.0), False, False, CAP_Y),
+        (L[1], lambda n: gallery_frames(photo, n), False, True, CAP_Y),
+        (L[2], lambda n: precious_frames(photo, n), False, False, CAP_Y),
+        (L[3], lambda n: dissolve(lambda m: precious_frames(photo, m),
+                                  lambda m: clip(media(mdir, "155918"), m, 4.0, speed=0.8), n), False, False, CAP_Y),
+        (L[4], lambda n: clip(media(mdir, "152321"), n, 0.0, speed=1.0), False, True, CAP_Y),
+        (L[5], lambda n: clip(media(mdir, "153133"), n, 1.5, speed=1.4), False, True, CAP_Y),
+        (L[6], chain((lambda n: clip(media(mdir, "153348"), n, 2.0, speed=1.6), 0.28),
                      (lambda n: clip(media(mdir, "155428"), n, 0.5, speed=1.0), 0.32),
-                     (lambda n: clip(media(mdir, "155838"), n, 1.0, speed=1.6), 0.40)), True, True, CAP_Y),
-        (L[4], lambda n: clip(media(mdir, "155918"), n, 0.0, speed=1.0), True, True, CAP_Y),
-        (L[5], lambda n: phone_frames(rec1, n, 27.6, 33.6), False, True, CAP_TOP),
-        (L[6], chain((lambda n: phone_frames(rec1, n, 38.2, 40.2), 0.25),
+                     (lambda n: clip(media(mdir, "155838"), n, 1.0, speed=1.6), 0.40)), False, True, CAP_Y),
+        (L[7], lambda n: clip(media(mdir, "155918"), n, 0.0, speed=1.0), False, True, CAP_Y),
+        (L[8], lambda n: phone_frames(rec1, n, 27.6, 33.6), False, True, CAP_TOP),
+        (L[9], chain((lambda n: phone_frames(rec1, n, 38.2, 40.2), 0.25),
                      (lambda n: phone_frames(rec2, n, 0.5, 7.5), 0.75)), False, False, CAP_TOP),
-        (L[7], chain((lambda n: phone_frames(rec2, n, 18.6, 22.0), 0.55),
-                     (lambda n: phone_frames(rec2, n, 53.0, 60.0), 0.45)), False, False, CAP_TOP),
+        (L[10], chain((lambda n: phone_frames(rec2, n, 18.6, 22.0), 0.55),
+                      (lambda n: phone_frames(rec2, n, 53.0, 60.0), 0.45)), False, False, CAP_TOP),
         (t_end, lambda n: (Image.new("RGB", (W, H), INK) for _ in range(n)), False, True, CAP_Y),
     ]
     nframes = int(round(total * FPS))
     bounds = [round(s[0] * FPS) for s in scenes] + [nframes]
     cuts = [b for b, s in zip(bounds, scenes) if s[3]]
-    t_free = L[7] + 0.55 * (L[8] - 0.3 - L[7])
+    t_free = L[10] + 0.55 * (L[11] - 0.3 - L[10])
 
     os.makedirs(os.path.join(ROOT, "out", "3d"), exist_ok=True)
     out = os.path.join(ROOT, "out", "3d", NAME + ".mp4")
@@ -232,27 +356,27 @@ def main():
     for si, ((s0, make, graded, wiped, cap_y), a, b) in enumerate(zip(scenes, bounds, bounds[1:])):
         for frame in make(b - a):
             t = f / FPS
-            fr = warm(frame) if graded else frame.copy()
+            fr = frame.copy()
             fr = v2.zoom_in_from(fr, t - a / FPS) if wiped else fr
             if si == 0:
                 hook_text(fr, t - 0.1)
-            if si == 1:
-                tag(fr, "IT STARTS WITH 1 PHOTO", 260, t - L[1] - 0.2)
-            if si == 2:
-                tag(fr, "3D DESIGN", 260, t - L[2] - 0.2)
-            if si == 3:
-                tag(fr, "PRINTED IN FULL COLOUR", 260, t - L[3] - 0.2)
             if si == 4:
-                fr = v2.light_sweep(fr, t - L[4])
-                fr = v2.sparkles(fr, t - L[4] - 0.1)
+                tag(fr, "IT STARTS WITH 1 PHOTO", 260, t - L[4] - 0.2)
+            if si == 5:
+                tag(fr, "3D DESIGN", 260, t - L[5] - 0.2)
             if si == 6:
-                tag(fr, "2 FREE PREVIEWS  ·  1–2 MIN", 1405, t - L[6] - 0.3)
+                tag(fr, "PRINTED IN FULL COLOUR", 260, t - L[6] - 0.2)
             if si == 7:
+                fr = v2.light_sweep(fr, t - L[7])
+                fr = v2.sparkles(fr, t - L[7] - 0.1)
+            if si == 9:
+                tag(fr, "2 FREE PREVIEWS  ·  1–2 MIN", 1405, t - L[9] - 0.3)
+            if si == 10:
                 if t < t_free:
-                    price_cards(fr, t - L[7] - 0.2)
+                    price_cards(fr, t - L[10] - 0.2)
                 else:
                     tag(fr, "FREE DELIVERY ACROSS INDIA", 1405, t - t_free)
-            if si == 8:
+            if si == 11:
                 end_card(fr, t, t_end)
             if t < t_end:
                 for k, ((c0, c1, _), ws) in enumerate(zip(cues, words)):
@@ -271,6 +395,10 @@ def main():
     music = synth.music(total + 1, seed="3d-reel02")
     music = np.interp(np.arange(n) * synth.SR / sr, np.arange(len(music)), music)
     music = music / max(1e-6, np.abs(music).max()) * 0.32
+    pad = soft_pad(n, sr) * 0.30
+    tt0 = np.arange(n) / sr
+    x = np.clip((tt0 - (L[4] - 0.6)) / 1.2, 0, 1)        # pad -> plucks around "It all started"
+    music = pad * (1 - x) + music * x
     env = np.convolve((np.abs(voice) > 0.02).astype(float), np.ones(int(0.25 * sr)) / int(0.25 * sr), "same")
     duck = np.convolve(1.0 - 0.7 * np.clip(env * 4, 0, 1), np.ones(int(0.1 * sr)) / int(0.1 * sr), "same")
     mix = voice + music * duck
@@ -283,9 +411,9 @@ def main():
 
     for c in cuts:
         add(synth.sfx("whoosh", 0.45), c / FPS - 0.22, 0.2)
-    for p in [L[1] + 0.2, L[2] + 0.2, L[3] + 0.2, L[6] + 0.3, L[7] + 0.2, t_free, t_end + 1.9, L[8]]:
+    for p in [L[4] + 0.2, L[5] + 0.2, L[6] + 0.2, L[9] + 0.3, L[10] + 0.2, t_free, t_end + 1.9, L[11]]:
         add(synth.sfx("pop", 0.15), p, 0.16)
-    add(synth.sfx("hit", 0.4), L[4], 0.15)
+    add(synth.sfx("hit", 0.4), L[7], 0.15)
     tt = np.arange(n) / sr
     mix *= np.where(tt > total - 0.8, np.clip((total - tt) / 0.8, 0, 1), 1.0)
     mix *= 0.89 / np.abs(mix).max()
