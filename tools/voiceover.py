@@ -62,6 +62,18 @@ POLISH = ("highpass=f=75,equalizer=f=180:t=q:w=1:g=1.5,equalizer=f=3200:t=q:w=1.
           "acompressor=threshold=0.1:ratio=3:attack=8:release=120:makeup=1.6")
 
 
+def phrases(text, gap, comma=0.2, stop=0.4):
+    """Even presenter style (--phrases): every phrase (split at commas and full stops) is its own take, all set to the
+    same pace, joined with short natural pauses; `gap` after each line. -> [(phrase, pause after, line index)]"""
+    out = []
+    for li, para in enumerate(p for p in re.split(r"\n\s*\n", text.strip()) if p.strip()):
+        parts = [x.strip() for x in re.split(r"(?<=[,.?!])\s+", " ".join(para.split())) if x.strip()]
+        for k, x in enumerate(parts):
+            last = k == len(parts) - 1
+            out.append((x, gap if last else comma if x.endswith(",") else stop, li))
+    return out
+
+
 def stamp(t):
     ms = int(round(t * 1000))
     return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
@@ -76,24 +88,46 @@ def main():
     ap.add_argument("--flow", action="store_true", help="presenter style: one take per paragraph, short gaps")
     ap.add_argument("--gap", type=float, default=0.3, help="pause after each paragraph with --flow (s)")
     ap.add_argument("--polish", action="store_true", help="presenter EQ, de-ess and compression")
+    ap.add_argument("--phrases", action="store_true", help="one take per phrase, same pace (short phrases can drawl)")
+    ap.add_argument("--even", type=float, default=0, metavar="SYL_PER_S",
+                    help="even out the speed inside each take: stretch every phrase to this rate (e.g. 5.4)")
     a = ap.parse_args()
 
     text = open(a.script, encoding="utf-8").read()
-    lines = paragraphs(text, a.gap) if a.flow else sentences(text)
+    if a.phrases:
+        trip = phrases(text, a.gap)
+        lines, line_of = [(x, p) for x, p, _ in trip], [li for _, _, li in trip]
+    else:
+        lines = paragraphs(text, a.gap) if a.flow else sentences(text)
+        line_of = list(range(len(lines)))
     texts = [s for s, _ in lines]
     voice.clone_prefetch(texts)
-    voice.clone_check([(s, a.pace) for s in texts])
+    voice.clone_check([(s, a.pace) for s in texts], slack=0.07 if a.phrases else 0.15)
 
     sr = voice.SR
     track, cues, t = [np.zeros(int(LEAD * sr))], [], LEAD
     for s, pause in lines:
         path, _ = voice._clone_process(s, a.pace)
+        if a.even:
+            from even_pace import even
+            evened = path[:-4] + f".even{a.even}.wav"
+            if not os.path.exists(evened):
+                for p, r0, r1 in even(path, s, evened, a.even):
+                    print(f"  even: {r0:4.1f} -> {r1:4.1f} syl/s  {p}", file=sys.stderr)
+            path = evened
         w, wsr = soundfile.read(path)
         w = voice._clone_trim(w if w.ndim == 1 else w.mean(axis=1))
         cues.append((t, t + len(w) / wsr, s))
         track += [w, np.zeros(int(pause * sr))]
         t += len(w) / wsr + pause
     track[-1] = np.zeros(int(TAIL * sr))
+    if a.phrases:   # one caption cue per line, not per phrase
+        merged = {}
+        for (c0, c1, txt), li in zip(cues, line_of):
+            m = merged.setdefault(li, [c0, c1, []])
+            m[1] = c1
+            m[2].append(txt)
+        cues = [(c0, c1, " ".join(t)) for c0, c1, t in merged.values()]
     audio = np.concatenate(track)
     audio *= 0.89 / max(1e-6, np.abs(audio).max())          # peak at -1 dB
 

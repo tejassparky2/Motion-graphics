@@ -270,8 +270,13 @@ CLONE_TONE = ("highpass=f=70,"
               "alimiter=limit=0.95")
 
 
+_DIGIT_WORDS = "zero one two three four five six seven eight nine".split()
+
+
 def syllables(text):
     n = 0
+    # digits are spoken as words ("3D" -> "three D"), so count them that way
+    text = re.sub(r"\d", lambda m: f" {_DIGIT_WORDS[int(m.group())]} ", text)
     for w in re.findall(r"[a-z']+", text.lower()):
         g = len(re.findall(r"[aeiouy]+", w))
         if w.endswith("e") and not w.endswith(("le", "ee")) and g > 1:
