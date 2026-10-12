@@ -7,8 +7,8 @@ typed in when posting.
 Custom 3D printed couple figurine from one photo 💛 Your trip memory, made mini.
 
 Memories shouldn't just stay in your gallery. Send us one photo and we turn it into a
-full-colour 3D printed figurine with your names on the base. A personalised gift for anniversaries,
-birthdays, weddings and couples.
+full-colour 3D printed figurine with your names on the base, hand-finished: supports removed and sanded by hand.
+A personalised gift for anniversaries, birthdays, weddings and couples.
 
 📲 Free preview on WhatsApp in 1–2 minutes: +91 91647 48401
 📏 13 cm ₹5,999 · 15 cm ₹6,999 · 18 cm ₹7,999 (incl. taxes)

@@ -20,6 +20,9 @@ Owner's standing preferences for every video made here (keep them unless the own
   captions), light grade + vignette on phone clips.
 - **Background:** keep the real background. No background replacement (owner, 11 Oct 2026); lighting and colour
   fixes, a blur or a tighter crop are fine. `tools/bgswap.py` exists but is not used by default.
+- **Product facts (owner):** printed in full colour by the printer (not hand-painted); hand-finished = supports
+  removed and sanded by hand. Sizes/prices and "free delivery across India", "free previews in 1-2 minutes" come
+  from the owner's WhatsApp bot (12 Oct 2026): 13 cm ₹5,999 · 15 cm ₹6,999 · 18 cm ₹7,999.
 - Don't write "Pixar" in videos (trademark); say "3D cartoon render".
 - Customer photos/names only with the customer's consent.
 - Finished videos and the owner's raw footage stay out of git (`out/3d/` is ignored).
