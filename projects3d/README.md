@@ -22,7 +22,9 @@ Owner's standing preferences for every video made here (keep them unless the own
   fixes, a blur or a tighter crop are fine. `tools/bgswap.py` exists but is not used by default.
 - **Product facts (owner):** printed in full colour by the printer (not hand-painted); hand-finished = supports
   removed and sanded by hand. Sizes/prices and "free delivery across India", "free previews in 1-2 minutes" come
-  from the owner's WhatsApp bot (12 Oct 2026): 13 cm ₹5,999 · 15 cm ₹6,999 · 18 cm ₹7,999.
+  from the owner's WhatsApp bot (12 Oct 2026). **Pricing rule (owner, 12 Oct 2026): products start from ₹3,599
+  (single figurine); always lead with "from ₹3,599", never ₹5,999.** ₹5,999 / ₹6,999 / ₹7,999 (13 / 15 / 18 cm) are
+  the couple prices: label them "couple" wherever they appear.
 - Don't write "Pixar" in videos (trademark); say "3D cartoon render".
 - Customer photos/names only with the customer's consent.
 - Finished videos and the owner's raw footage stay out of git (`out/3d/` is ignored).

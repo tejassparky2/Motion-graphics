@@ -11,7 +11,7 @@ full-colour 3D printed figurine with your names on the base, hand-finished: supp
 A personalised gift for anniversaries, birthdays, weddings and couples.
 
 📲 Free preview on WhatsApp in 1–2 minutes: +91 91647 48401
-📏 13 cm ₹5,999 · 15 cm ₹6,999 · 18 cm ₹7,999 (incl. taxes)
+💰 Figurines from ₹3,599 · couples: 13 cm ₹5,999 · 15 cm ₹6,999 · 18 cm ₹7,999 (incl. taxes)
 🚚 Free delivery across India
 💬 Comment below and we'll DM you
 
