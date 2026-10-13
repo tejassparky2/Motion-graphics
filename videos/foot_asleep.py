@@ -10,14 +10,11 @@ Facts (sources in research_notes/body_facts_19-22.md):
 """
 import math
 
-from motion.clinic import watermark
-from motion.engine import ease_out, hexc, lerp, seg
-from motion.kit import whip
-from motion.pkit import GOLD, tag
-from motion.polish import OUTLINE, bold_text, camera, captions, ellipse, enter, paint, rrect, sign, lin
-from motion.pbody import CLINIC_CAMS as C, along, blob, clinic, face, finish, shape_fill, spark, step_card, \
-    tip_card, tube
-from motion import pbody
+from motion.captions import captions
+from motion.clinic import A_CLOSE, B_CLOSE, DOC_CLOSE, NEXT_BED, TWO_SHOT, label, ward, watermark
+from motion.engine import INK, WHITE, blob, cue, dot, ease_out, hexc, lerp, line, rrect_pts, seg, shape
+from motion.explain import along, googly, sign, step_card, tip_card, vessel, zap
+from motion.kit import camera, enter_world, set_camera, whip
 
 STYLE = "clean"
 NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
@@ -81,17 +78,42 @@ Sources: Cleveland Clinic, "What that pins-and-needles feeling really means"; UP
     pinned_comment="Worst place your leg ever fell asleep? 😂 👇",
 )
 
-SKIN, NERVE, VESSEL = hexc("#f2c29b"), hexc("#ffcf3f"), hexc("#e8473f")
-NPATH = [(250, 130), (270, 330), (300, 520), (330, 700), (360, 820)]
-VPATH = [(330, 130), (350, 330), (380, 520), (410, 700), (440, 810)]
-PINCH = 0.3                                   # where the weight squeezes (fraction along the leg)
-FOOT = (470, 860)
+# ---------------------------------------------------------------- a leg, cut open (side view, sitting on a chair)
+SKIN, SKIN_NUMB = hexc("#f6c9a4"), hexc("#cfc6d8")
+MUSCLE = hexc("#c4544b")
+BONE = hexc("#f4ead6")
+NERVE, ARTERY = hexc("#f2c032"), hexc("#d8363a")
+# the thigh lies along the chair seat (left to right), the knee bends, the lower leg hangs down, the foot points left
+THIGH = [(700, 300), (330, 300)]
+KNEE = (300, 360)
+SHIN = [(300, 360), (300, 720)]
+LEG = [(720, 230), (330, 228), (250, 290), (240, 420), (250, 700), (240, 760), (90, 780), (70, 840), (330, 850),
+       (370, 760), (370, 440), (400, 380), (720, 380)]
+NPATH = [(720, 350), (420, 352), (340, 400), (330, 560), (320, 700), (250, 790), (130, 810)]   # sciatic nerve
+APATH = [(720, 330), (430, 330), (355, 380), (345, 560), (335, 700), (270, 800), (150, 822)]   # artery
+PINCH = 0.13                     # where the chair edge squeezes them (just behind the thigh)
+FOOT = (170, 810)
 
 
-def leg(cr, t):
-    pbody.backdrop(cr, t, hexc("#e9e3fb"), hexc("#c7bdf0"), seed=21)
-    shape_fill(cr, [(170, 60), (430, 60), (450, 400), (480, 760), (600, 820), (640, 900), (420, 930), (300, 900),
-                    (250, 600), (190, 300)], SKIN)
+def leg(cr, t, numb, press):
+    cr.set_source_rgba(*hexc("#bfe3ef"))
+    cr.paint()
+    # the chair: seat under the thigh, its front edge pressing up into the back of the thigh
+    shape(cr, rrect_pts(380, 380 - 8 * press, 400, 60, 14, 16), hexc("#8f6f4c"), seed=4400, amp=0, lw=4)
+    shape(cr, rrect_pts(700, 440, 40, 400, 10, 16), hexc("#7a5c3e"), seed=4401, amp=0, lw=4)
+    shape(cr, LEG, SKIN, seed=4402, amp=0, lw=4.5)
+    # muscle under the skin
+    shape(cr, [(710, 250), (340, 250), (275, 300), (268, 420), (275, 700), (345, 700), (350, 440), (380, 365),
+               (710, 362)], hexc("#e58f88"), seed=4403, amp=0, lw=3)
+    # bones: thigh bone (femur), kneecap, shin bone (tibia), foot bones
+    line(cr, [(700, 290), (330, 290)], 40, BONE, seed=4404, amp=0)
+    line(cr, [(700, 290), (330, 290)], 4, hexc("#d9c7a3"), seed=4405, amp=0)
+    shape(cr, rrect_pts(250, 300, 70, 80, 30, 16), BONE, seed=4406, amp=0, lw=3.5)          # kneecap
+    line(cr, [(300, 380), (300, 730)], 34, BONE, seed=4407, amp=0)
+    line(cr, [(300, 740), (240, 780), (110, 800)], 22, BONE, seed=4408, amp=0)
+    if numb > 0:           # the numb foot goes grey
+        shape(cr, [(260, 740), (240, 760), (90, 780), (70, 840), (330, 850), (360, 760)],
+              (*SKIN_NUMB[:3], numb), seed=4409, amp=0, lw=0, stroke=None)
 
 
 def scene_leg(cr, t, tl):
@@ -99,82 +121,89 @@ def scene_leg(cr, t, tl):
     lift = ease_out(seg(t, A("n6", "stood") - 0.2, A("n6", "stood") + 0.4))
     press = 1 - lift
     awake = A("n6") <= t
-    cams = [(0, (1.35, 440, 800)), (A("n2"), (1.3, 300, 400)), (A("n3"), (1.3, 380, 420)), (A("n4"), (1.35, 440, 800)),
-            (A("n5"), (1.3, 300, 400)), (A("n6"), (1.05, 380, 560)), (A("n7"), (1.25, 320, 520)),
-            (A("n8"), (1.4, 470, 820))]
-    cr.save()
-    enter(cr, camera(t, cams), drift=0.004, t=t)
-    leg(cr, t)
-    px, py = along(NPATH, PINCH)
-    tube(cr, NPATH, 22, NERVE, glow=1.0 if awake else 0.0)
-    tube(cr, VPATH, lerp(26, 10, press) if t >= A("n3") - 0.4 else 26, VESSEL)
-    # the weight pressing on the thigh
-    wy = lerp(py - 120, -200, lift)
-    rrect(cr, 120, wy - 60, 380, 90, 20)
-    paint(cr, lin(0, wy - 60, 0, wy + 30, [(0, hexc("#8a8f9c")), (1, hexc("#5a5f6a"))]), OUTLINE, 6)
-    bold_text(cr, "HIS WEIGHT", 310, wy + 2, 40, hexc("#ffffff"))
-    # messages piling up at the pinch (before), messy sparks along the nerve (after)
+    numb = 1.0 if not awake else max(0.0, 1 - seg(t, A("n6"), A("n8")))
+    FOOTC, THIGHC, WIDE = (1.5, 240, 820), (1.4, 480, 360), (0.95, 400, 600)
+    keys = [(0, FOOTC), (A("n2"), THIGHC), (A("n3"), THIGHC), (A("n4"), FOOTC), (A("n5"), THIGHC), (A("n6"), WIDE),
+            (A("n7"), (1.25, 330, 520)), (A("n8"), FOOTC)]
+    set_camera(camera(t, keys))
+    enter_world(cr)
+    leg(cr, t, numb, press)
+    vessel(cr, APATH, lerp(16, 6, press) if t >= A("n3") - 0.4 else 16, ARTERY, seed=4410)
+    vessel(cr, NPATH, 12, NERVE if not awake else hexc("#ffe066"), seed=4420)
+    # messages piling up at the squeezed spot (before), messy sparks running down (after)
     if not awake and A("n2") <= t:
         for k in range(3):
-            x, y = along(NPATH, PINCH + 0.05 + 0.05 * k)
-            rrect(cr, x - 22, y - 14, 44, 28, 5)
-            paint(cr, hexc("#ffffff"), OUTLINE, 3)
-            pbody.stroke_line(cr, [(x - 22, y - 14), (x, y + 2), (x + 22, y - 14)], 3, OUTLINE, curve=False)
+            x, y = along(NPATH, PINCH - 0.03 - 0.03 * k)
+            shape(cr, rrect_pts(x - 18, y - 30, 36, 24, 4, 8), WHITE, seed=4430 + k, amp=0, lw=2.5)
+            line(cr, [(x - 18, y - 30), (x, y - 18), (x + 18, y - 30)], 2.5, INK, seed=4433 + k, amp=0)
+        for k in range(2):
+            x, y = along(NPATH, PINCH)
+            line(cr, [(x - 30 + 60 * k, y - 46), (x - 18 + 36 * k, y - 22)], 5, hexc("#d8363a"), seed=4436 + k,
+                 amp=0)
     if awake:
         for k in range(6):
-            u = (t * 1.3 + k / 6) % 1
-            x, y = along(NPATH, u)
-            spark(cr, x + 14 * math.sin(t * 20 + k), y, 0.6)
-    # characters
-    nx, ny = along(NPATH, 0.55)
-    nm = "angry" if A("n2") <= t < A("n6") else ("happy" if awake else "open")
-    blob(cr, nx - 40, ny, 64, 54, NERVE)
-    face(cr, t, nx - 40, ny - 8, 0.8, nm, tl.speaking("nerve", t))
-    vx, vy = along(VPATH, 0.6)
-    blob(cr, vx + 50, vy, 60, 50, VESSEL)
-    face(cr, t, vx + 50, vy - 8, 0.75, "worried" if t < A("n6") else "happy", tl.speaking("vessel", t))
-    numb = not awake
-    fm = "sad" if numb else ("wide" if t < A("n8") else "happy")
-    blob(cr, FOOT[0], FOOT[1], 110, 70, hexc("#c9c4d6") if numb else SKIN)
-    face(cr, t, FOOT[0], FOOT[1] - 12, 0.85, fm, tl.speaking("foot", t))
-    if A("n8") <= t:      # tiny ants marching on the foot
+            x, y = along(NPATH, (t * 1.2 + k / 6) % 1)
+            zap(cr, x + 12 * math.sin(t * 22 + k), y, 0.5)
+    # the talking parts
+    nx, ny = along(NPATH, 0.24)         # faces sit on the nerve and the artery themselves, like the references
+    nm = "angry" if A("n2") <= t < A("n6") else ("happy" if awake else "calm")
+    blob(cr, nx + 6, ny + 4, 44, 38, NERVE if not awake else hexc("#ffe066"), seed=4440, amp=0, lw=3.5)
+    googly(cr, t, nx + 6, ny - 6, 0.55, nm, tl.speaking("nerve", t), mouth_dy=28)
+    vx, vy = along(APATH, 0.66)
+    blob(cr, vx + 4, vy, 40, 36, ARTERY, seed=4441, amp=0, lw=3.5)
+    googly(cr, t, vx + 4, vy - 8, 0.5, "worried" if t < A("n6") else "happy", tl.speaking("vessel", t), mouth_dy=28)
+    fm = "sad" if not awake else ("shock" if t < A("n8") else "happy")
+    googly(cr, t, 190, 795, 0.7, fm, tl.speaking("foot", t), mouth_dy=26)
+    if A("n8") <= t:          # tiny ants marching on the foot
         for k in range(7):
-            x = FOOT[0] - 90 + ((t * 80 + k * 30) % 180)
-            y = FOOT[1] + 48 + 6 * math.sin(t * 12 + k)
+            x = 90 + ((t * 80 + k * 34) % 230)
+            y = 850 + 4 * math.sin(t * 12 + k)
             for j in range(3):
-                ellipse(cr, x + j * 8, y, 5, 4)
-                paint(cr, hexc("#2b1d16"), None, 0)
-    tag(cr, t, A("n2", "squished") - 0.2, nx - 40, ny - 90, "Nerve", end=A("n4"))
-    tag(cr, t, A("n3"), vx + 60, vy - 90, "Blood vessel", end=A("n4"))
-    cr.restore()
+                dot(cr, x + j * 7, y, 4, INK)
+    # labels, like the references
+    if t < A("n2"):
+        label(cr, "Foot", 120, 700, 160, 770)
+    if A("n2") <= t < A("n4"):
+        label(cr, "Sciatic nerve", 430, 170, 450, 350)
+        label(cr, "Chair edge", 600, 480, 560, 400)
+    if A("n3") <= t < A("n4"):
+        label(cr, "Artery", 650, 120, 640, 328)
+    if A("n5") <= t < A("n6"):
+        label(cr, "Thigh bone", 520, 170, 520, 290)
+    for w in (A("n2", "squished"), A("n6", "stood")):
+        cue("hit", t, w)
+    # screen-space signs
     if A("n5", "cut") <= t < A("n6"):
-        sign(cr, t, A("n5", "cut"), 360, 280, "SIGNAL BLOCKED", col=hexc("#e8473f"), size=52)
+        sign(cr, t, A("n5", "cut"), "SIGNAL BLOCKED", y=250, col=hexc("#d8363a"), size=48)
     if A("n7", "messy") <= t < A("n8"):
-        sign(cr, t, A("n7", "messy"), 360, 280, "RESTARTING...", col=GOLD, size=56)
+        sign(cr, t, A("n7", "messy"), "RESTARTING...", y=250, size=52)
 
 
 def scene_ward(cr, t, tl):
     A = tl.at
-    cams = [(A("w1") - 0.1, C["mike"]), (A("w1", "asleep"), C["two"]), (A("w2"), C["doc"]), (A("w3"), C["two"]),
-            (A("w5"), C["doc"]), (A("w6"), C["two"]), (A("w8"), C["danny"]), (A("w9"), C["both"])]
-    cam = camera(t, cams, dur=0.3)
-    mike = dict(eyes="sad", mouth="flat", arms=("down", "down"))
+    keys = [(A("w1") - 0.1, A_CLOSE), (A("w1", "asleep"), TWO_SHOT), (A("w2"), DOC_CLOSE), (A("w3"), TWO_SHOT),
+            (A("w5"), DOC_CLOSE), (A("w6"), TWO_SHOT), (A("w8"), B_CLOSE), (A("w9"), NEXT_BED)]
+    m = dict(eyes="sad", mouth="wobble", arms=("hold", "down"))
     if A("w2") <= t:
-        mike = dict(eyes="open", mouth="smile")
+        m.update(eyes="dot", mouth="smile")
     if A("w8") <= t:
-        mike = dict(eyes="happy", mouth="grin")
-    doc = dict(arms=("point", "down")) if A("w3") <= t < A("w8") else dict(arms=("hold", "down"))
+        m.update(eyes="happy", mouth="grin")
+    n = dict(eyes="dot", mouth="smile", arms=("hold", "down"))
+    if A("w8") <= t:
+        n.update(eyes="happy", mouth="grin", arms=("thumb", "down"))
     if A("w9") <= t:
-        doc = dict(eyes="half", mouth="smug", arms=("hips", "down"))
-    danny = dict(eyes="happy", mouth="grin", arms=("wave", "down")) if A("w8") <= t else dict()
+        n.update(eyes="wide", mouth="o", sweat=True, arms=("hold", "down"))
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("w2") <= t < A("w8"):
+        d.update(arms=("hold", "down"))
     if A("w9") <= t:
-        danny = dict(eyes="wide", mouth="o")
-    clinic(cr, t, tl, cam, mike, danny, doc)
+        d.update(eyes="sly")
+    ward(cr, t, tl, keys, m, n, d)
     step_card(cr, t, A("w3"), 1, "Pressure squeezes a nerve and its blood supply.", end=A("w4") - 0.05)
     step_card(cr, t, A("w4"), 2, "Messages can't get through: the foot goes numb.", end=A("w5") - 0.05)
     step_card(cr, t, A("w5"), 3, "Pressure off: the nerve restarts with messy signals.", end=A("w6") - 0.05)
     tip_card(cr, t, A("w6"), "Harmless. It fades within minutes.", "ok", end=A("w7") - 0.05)
-    tip_card(cr, t, A("w7"), "Often, and without any pressure", "warn", end=A("w8"))
+    tip_card(cr, t, A("w7"), "It happens often, without any pressure.", "warn", end=A("w8"))
 
 
 def draw(cr, t, tl):
@@ -183,6 +212,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     (scene_ward if name == "ward" else scene_leg)(cr, t, tl)
     cr.restore()
-    finish(cr)
     captions(cr, t, tl)
     watermark(cr)

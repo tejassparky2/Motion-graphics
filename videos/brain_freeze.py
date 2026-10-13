@@ -10,14 +10,13 @@ Facts (sources in research_notes/body_facts_19-22.md):
 - Prevention: eat cold things slowly. The "press your tongue to the roof of your mouth" trick isn't in the script
   (no evidence found).
 """
-from motion import pbody
-from motion.clinic import watermark
-from motion.engine import ease_out, hexc, lerp, seg
-from motion.kit import whip
-from motion.pkit import GOLD, RED, tag
-from motion.polish import OUTLINE, bold_text, camera, captions, counter, ellipse, enter, lin, paint, particles, \
-    rrect, sign, stamp, stroke_line
-from motion.pbody import blob, face, finish, step_card, tip_card, tube, spark, along, clinic, CLINIC_CAMS as C
+import math
+
+from motion.captions import captions
+from motion.clinic import A_CLOSE, B_CLOSE, DOC_CLOSE, NEXT_BED, TWO_SHOT, label, ward, watermark
+from motion.engine import INK, WHITE, blob, cue, dot, ease_out, hexc, lerp, line, seg, shape
+from motion.explain import along, googly, sign, stamp, step_card, tip_card, vessel, zap
+from motion.kit import camera, enter_world, set_camera, whip
 
 STYLE = "clean"
 NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
@@ -81,115 +80,155 @@ Sources: Serrador et al., "Cerebral vascular blood flow changes during 'brain fr
     pinned_comment="Ice cream, slushy or cold water: what gives YOU brain freeze? 🧊 👇",
 )
 
-PINK, PINK_D = hexc("#ff9fb0"), hexc("#e0788c")
-VESSEL = hexc("#e8473f")
-NERVE = hexc("#ffcf3f")
-VPATH = [(80, 690), (220, 670), (380, 680), (540, 660), (660, 680)]          # the vessel along the roof of the mouth
-NPATH = [(520, 700), (580, 600), (560, 480), (470, 360)]                    # the nerve up to the brain
-BRAIN = (400, 300)
-FOREHEAD = (190, 330)
+# ---------------------------------------------------------------- the head, cut in half (side view, facing left)
+SKIN, SKIN_D = hexc("#f6c9a4"), hexc("#e2a47c")
+BONE, BONE_D = hexc("#f4ead6"), hexc("#d9c7a3")
+BRAIN, BRAIN_D = hexc("#f2a8b8"), hexc("#c9768c")
+CAVITY = hexc("#7a2a36")
+TONGUE = hexc("#e2707e")
+MUCOSA = hexc("#f19aa2")
+ARTERY, NERVE = hexc("#d8363a"), hexc("#f2c032")
+
+HEAD = [(130, 300), (150, 190), (260, 120), (420, 110), (560, 150), (660, 250), (700, 400), (680, 540), (620, 640),
+        (590, 760), (600, 880), (360, 880), (330, 800), (220, 790), (140, 770), (120, 720), (110, 690), (90, 650),
+        (100, 620), (70, 600), (40, 540), (80, 500), (100, 430), (120, 380)]
+SKULL = [(160, 300), (175, 205), (270, 145), (420, 135), (550, 172), (640, 262), (672, 400), (650, 520), (600, 560),
+         (520, 540), (430, 470), (330, 430), (210, 410), (165, 360)]
+BRAIN_PTS = [(185, 300), (200, 220), (280, 168), (420, 158), (540, 192), (620, 272), (648, 395), (620, 470),
+             (560, 500), (480, 470), (400, 420), (300, 400), (210, 385), (185, 345)]
+NASAL = [(80, 500), (120, 440), (200, 430), (330, 450), (380, 520), (360, 560), (120, 560), (90, 545)]
+MOUTH = [(110, 620), (140, 595), (330, 600), (410, 640), (420, 720), (330, 740), (160, 730), (120, 690)]
+PALATE = [(110, 580), (330, 582), (400, 600), (400, 618), (330, 602), (112, 600)]
+TONGUE_PTS = [(150, 690), (180, 640), (260, 622), (360, 640), (410, 700), (380, 745), (200, 745)]
+VESSEL = [(130, 573), (220, 568), (300, 570), (380, 590)]
+NERVE_PTS = [(300, 575), (330, 520), (380, 470), (440, 455)]
+FOREHEAD = (175, 300)
 
 
-def head_bg(cr, t):
-    pbody.backdrop(cr, t, hexc("#ffd9c9"), hexc("#f2a99a"), seed=19)
-    # the head in profile, facing left: skull outline with the forehead at the left
-    cr.save()
-    ellipse(cr, 380, 480, 330, 380)
-    paint(cr, lin(0, 100, 0, 860, [(0, hexc("#f6c9a4")), (1, hexc("#e9aa82"))]), OUTLINE, 6)
-    cr.restore()
-    # the mouth below the roof (dark cavity) and the roof of the mouth (palate) itself
-    rrect(cr, 90, 720, 560, 180, 80)
-    paint(cr, lin(0, 720, 0, 900, [(0, hexc("#8a2a3a")), (1, hexc("#5a1424"))]), OUTLINE, 5)
-    pbody.shape_fill(cr, [(80, 730), (200, 690), (380, 700), (560, 690), (660, 730), (600, 760), (380, 745),
-                          (160, 760)], PINK, shadow=False)
+def head(cr, t, cold):
+    cr.set_source_rgba(*hexc("#bfe3ef"))
+    cr.paint()
+    shape(cr, HEAD, SKIN, seed=4000, amp=0, lw=4.5)
+    shape(cr, SKULL, BONE, seed=4001, amp=0, lw=4)
+    shape(cr, BRAIN_PTS, BRAIN, seed=4002, amp=0, lw=4)
+    for k, (x, y) in enumerate([(260, 230), (360, 200), (460, 210), (560, 260), (300, 320), (420, 300), (530, 360),
+                                (600, 330), (250, 360)]):   # the folds of the brain
+        line(cr, [(x - 40, y), (x - 14, y - 16), (x + 10, y + 8), (x + 38, y - 6)], 4, BRAIN_D, seed=4010 + k, amp=0)
+    blob(cr, 590, 520, 46, 30, hexc("#e89aae"), seed=4020, amp=0, lw=3.5)          # cerebellum
+    line(cr, [(520, 500), (500, 600)], 34, BRAIN, seed=4021, amp=0)                 # brainstem
+    blob(cr, 175, 330, 22, 18, hexc("#fbe5c8"), seed=4022, amp=0, lw=3)            # frontal sinus
+    shape(cr, NASAL, MUCOSA, seed=4023, amp=0, lw=3.5)
+    for k in range(3):                                                              # turbinates
+        blob(cr, 230 + 10 * k, 470 + 28 * k, 70, 12, hexc("#f7b6bc"), seed=4024 + k, amp=0, lw=2.5)
+    shape(cr, MOUTH, CAVITY, seed=4030, amp=0, lw=3.5)
+    shape(cr, TONGUE_PTS, TONGUE, seed=4031, amp=0, lw=3.5)
+    line(cr, [(220, 690), (340, 690)], 3, hexc("#c45362"), seed=4032, amp=0)
+    shape(cr, PALATE, BONE if cold < 0.3 else hexc("#d9f1ff"), seed=4033, amp=0, lw=3.5)   # the roof of the mouth
+    shape(cr, [(395, 600), (440, 640), (430, 660), (390, 618)], MUCOSA, seed=4034, amp=0, lw=3)   # soft palate
+    for tx, ty in ((104, 600), (106, 712)):                                        # front teeth
+        shape(cr, [(tx - 12, ty - 14), (tx + 12, ty - 14), (tx + 10, ty + 14), (tx - 10, ty + 14)], WHITE,
+              seed=4035 + ty, amp=0, lw=3)
+    line(cr, [(430, 640), (450, 760), (470, 880)], 40, CAVITY, seed=4038, amp=0)   # throat
+    # the eye and the outer face, so it reads as a head at a glance
+    blob(cr, 150, 410, 26, 18, WHITE, seed=4039, amp=0, lw=3)
+    dot(cr, 140, 412, 8, INK)
 
 
 def scene_head(cr, t, tl):
     A = tl.at
+    cold = ease_out(seg(t, 0.2, A("b1", "freezing")))
     squeeze = ease_out(seg(t, A("b2", "squeeze"), A("b2", "heat")))
     widen = ease_out(seg(t, A("b3", "open"), A("b3", "rush") + 0.3))
-    w = lerp(lerp(30, 12, squeeze), 44, widen)
     alarm = A("b4", "alarm") - 0.3
-    cams = [(0, (1.45, 380, 700)), (A("b2"), (1.6, 300, 660)), (A("b4"), (1.3, 470, 560)),
-            (A("b5"), (1.3, 360, 480)), (A("b6"), (1.2, 400, 520)), (A("b7"), (1.5, 380, 700)),
-            (A("b8"), (1.3, 440, 520))]
-    cr.save()
-    enter(cr, camera(t, cams), drift=0.004, t=t)
-    head_bg(cr, t)
-    tube(cr, VPATH, w, VESSEL, glow=widen)
-    # warm blood rushing back in
+    PAL, BRN, FHD, WIDE = (1.7, 260, 600), (1.35, 400, 380), (1.6, 220, 380), (1.25, 380, 500)
+    keys = [(0, WIDE), (A("b1", "freezing"), PAL), (A("b3"), (1.7, 280, 590)), (A("b4"), (1.25, 350, 520)),
+            (A("b5"), FHD), (A("b6"), BRN), (A("b6", "forehead"), FHD), (A("b7"), WIDE), (A("b8"), BRN)]
+    set_camera(camera(t, keys))
+    enter_world(cr)
+    head(cr, t, cold)
+    # the artery along the roof of the mouth: squeezes, then opens wide
+    w = lerp(lerp(14, 6, squeeze), 22, widen)
+    vessel(cr, VESSEL, w, ARTERY, seed=4100)
     if widen > 0:
-        for k in range(6):
-            u = (t * 0.8 + k / 6) % 1
-            x, y = along(VPATH, u)
-            ellipse(cr, x, y, 8, 6)
-            paint(cr, hexc("#ffb0a8"), None, 0)
-    tube(cr, NPATH, 18, NERVE, glow=1.0 if alarm <= t < A("b7") else 0.0)
-    if alarm <= t < A("b7"):
+        for k in range(5):
+            x, y = along(VESSEL, (t * 0.9 + k / 5) % 1)
+            dot(cr, x, y, 4, hexc("#ffb0a8"))
+    # the nerve from the roof of the mouth toward the brain; it lights up with the pain alarm
+    lit = alarm <= t < A("b8")
+    vessel(cr, NERVE_PTS, 9, NERVE if not lit else hexc("#ffe066"), seed=4110)
+    if lit:
         for k in range(2):
-            u = ((t - alarm) * 0.9 + k * 0.5) % 1
-            x, y = along(NPATH, u)
-            spark(cr, x, y, 0.9)
-    # the brain, then the forehead where the pain is felt
-    blob(cr, BRAIN[0], BRAIN[1], 150, 110, hexc("#f7a8c0"))
-    for k in range(5):
-        stroke_line(cr, [(BRAIN[0] - 110 + 50 * k, BRAIN[1] - 40), (BRAIN[0] - 90 + 50 * k, BRAIN[1] + 10),
-                               (BRAIN[0] - 110 + 50 * k, BRAIN[1] + 50)], 4, hexc("#c75f7b"))
-    if A("b7") <= t:
-        bold_text(cr, "?", BRAIN[0] + 140, BRAIN[1] - 60, 110, GOLD)
-    # the talking characters
-    pm = "wide" if t < A("b2") else ("worried" if t < A("b5") else ("open" if t < A("b8") else "happy"))
-    face(cr, t, 370, 728, 1.0, pm, tl.speaking("palate", t))
-    vx, vy = along(VPATH, 0.3)
-    vm = "angry" if A("b2") <= t < A("b3") else "happy"
-    blob(cr, vx, vy - 14, 70 + 12 * widen, 56 + 10 * widen, VESSEL)
-    face(cr, t, vx, vy - 24, 0.85, vm, tl.speaking("vessel", t))
-    nx, ny = along(NPATH, 0.45)
-    nm = "shock" if alarm <= t < A("b6") else ("happy" if t >= A("b8") else "open")
-    blob(cr, nx, ny, 68, 58, NERVE)
-    face(cr, t, nx, ny - 10, 0.85, nm, tl.speaking("nerve", t))
-    # the ice cream arriving, frost on the palate
-    if t < A("b3"):
+            x, y = along(NERVE_PTS, ((t - alarm) * 1.2 + k * 0.5) % 1)
+            zap(cr, x, y, 0.6)
+        if A("b6", "brain") <= t:   # the brain sends the alarm to the forehead
+            u = ((t - A("b6", "brain")) * 1.1) % 1
+            zap(cr, lerp(420, FOREHEAD[0] + 10, u), lerp(260, FOREHEAD[1], u), 0.6)
+    # the ice cream on the tongue, pressed to the roof of the mouth
+    if t < A("b4"):
         u = ease_out(seg(t, 0.0, 0.5))
-        x = lerp(-150, 230, u)
-        cr.move_to(x - 50, 830)
-        cr.line_to(x + 50, 830)
-        cr.line_to(x, 960)
-        cr.close_path()
-        paint(cr, lin(0, 830, 0, 960, [(0, hexc("#f2c27a")), (1, hexc("#c98a3a"))]), OUTLINE, 5)   # the cone
-        ellipse(cr, x, 800, 70, 60)
-        paint(cr, pbody.rad(x - 20, 780, 80, [(0, hexc("#ffe0ec")), (1, hexc("#ff8fb8"))]), OUTLINE, 5)
-        particles(cr, t, 19, 14, hexc("#e9f6ff"), area=(60, 640, 600, 120), r=(2, 5), speed=8)
-    tag(cr, t, 0.4, 470, 660, "Roof of mouth", end=A("b2") - 0.2)
-    cr.restore()
-    # signs and stamps (screen space)
-    sign(cr, t, A("b1", "freezing") - 0.2, 360, 300, "-2°C", col=hexc("#4aa3f0"), size=64, end=A("b2"))
-    sign(cr, t, A("b3", "warm"), 360, 300, "WARM BLOOD IN", col=RED, size=50, end=A("b4"))
-    if A("b6", "forehead") - 0.1 <= t < A("b7"):
-        stamp(cr, t, A("b6", "forehead") - 0.1, 220, 300, "OUCH!", size=70)
+        x = lerp(-60, 210, u)
+        blob(cr, x, 640, 56, 46, hexc("#ffd6e4"), seed=4120, amp=0, lw=3.5)
+        for k in range(5):
+            dot(cr, x - 30 + 15 * k, 628 + 6 * (k % 2), 3.5, hexc("#c9768c"))
+    if A("b5") <= t:        # the forehead aches
+        a = 0.35 + 0.25 * math.sin(t * 8)
+        blob(cr, FOREHEAD[0] - 20, FOREHEAD[1], 50, 60, hexc("#d8363a", a), seed=4130, amp=0, lw=0, stroke=None)
+    # the talking parts
+    pm = "shock" if t < A("b2") else ("worried" if t < A("b5") else ("calm" if t < A("b8") else "happy"))
+    googly(cr, t, 255, 540, 0.75, pm, tl.speaking("palate", t), mouth_dy=30)
+    vm = "angry" if A("b2") <= t < A("b3") else "happy"
+    googly(cr, t, 160, 528, 0.6, vm, tl.speaking("vessel", t), mouth_dy=30)
+    nx, ny = along(NERVE_PTS, 0.55)
+    nm = "shock" if alarm <= t < A("b6") else ("happy" if t >= A("b8") else "calm")
+    googly(cr, t, nx + 44, ny - 10, 0.65, nm, tl.speaking("nerve", t))
+    if A("b7") <= t:
+        sign_x = 470
+        cr.save()
+        from motion.engine import write
+        write(cr, [("?", hexc("#f2b632"))], sign_x, 250, 120, align="center", bold=True)
+        cr.restore()
+    # labels, like the references
+    if t < A("b2"):
+        label(cr, "Roof of mouth", 250, 500, 250, 585)
+        label(cr, "Tongue", 290, 780, 290, 700)
+    if A("b2") <= t < A("b4"):
+        label(cr, "Blood vessel", 230, 500, 220, 566)
+    if A("b4") <= t < A("b6"):
+        label(cr, "Nerve", 470, 540, 400, 470)
+    if A("b6") <= t:
+        label(cr, "Brain", 440, 200, 440, 240)
+        label(cr, "Forehead", 160, 220, 175, 280)
+    for w_ in (A("b1", "freezing"), alarm, A("b6", "forehead")):
+        cue("hit", t, w_)
+    # screen-space signs
+    sign(cr, t, A("b1", "freezing") - 0.2, "-2°C", y=260, col=hexc("#2f7fd6"), end=A("b2"))
+    sign(cr, t, A("b3", "warm"), "WARM BLOOD IN", y=260, col=hexc("#d8363a"), size=48, end=A("b4"))
+    stamp(cr, t, A("b6", "forehead"), "OUCH!", x=360, y=260, end=A("b7"))
 
 
 def scene_ward(cr, t, tl):
     A = tl.at
-    cams = [(A("w1") - 0.1, C["mike"]), (A("w1", "brain"), C["two"]), (A("w2"), C["doc"]), (A("w3"), C["two"]),
-            (A("w5"), C["doc"]), (A("w6"), C["two"]), (A("w8"), C["danny"]), (A("w9"), C["both"])]
-    cam = camera(t, cams, dur=0.3)
-    mike = dict(eyes="wide", mouth="o")
-    if A("w2") <= t < A("w8"):
-        mike = dict(eyes="open", mouth="smile")
+    keys = [(A("w1") - 0.1, A_CLOSE), (A("w1", "brain"), TWO_SHOT), (A("w2"), DOC_CLOSE), (A("w3"), TWO_SHOT),
+            (A("w5"), DOC_CLOSE), (A("w6"), TWO_SHOT), (A("w8"), B_CLOSE), (A("w9"), NEXT_BED)]
+    m = dict(eyes="wide", mouth="o", arms=("hold", "down"))
+    if A("w2") <= t:
+        m.update(eyes="dot", mouth="smile")
     if A("w8") <= t:
-        mike = dict(eyes="happy", mouth="grin")
-    doc = dict(arms=("point", "down")) if A("w3") <= t < A("w8") else dict(arms=("hold", "down"))
+        m.update(eyes="happy", mouth="grin")
+    n = dict(eyes="dot", mouth="smile", arms=("hold", "down"))
+    if A("w8") <= t:
+        n.update(eyes="happy", mouth="grin", arms=("thumb", "down"))
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("w2") <= t < A("w8"):
+        d.update(arms=("hold", "down"))
     if A("w9") <= t:
-        doc = dict(eyes="half", mouth="smug", arms=("hips", "down"))
-    danny = dict(eyes="happy", mouth="grin", arms=("wave", "down")) if A("w8") <= t else dict()
-    clinic(cr, t, tl, cam, mike, danny, doc)
+        d.update(eyes="sly")
+    ward(cr, t, tl, keys, m, n, d)
     step_card(cr, t, A("w3"), 1, "Something very cold touches the roof of your mouth.", end=A("w4") - 0.05)
     step_card(cr, t, A("w4"), 2, "The vessels squeeze, then open wide again.", end=A("w5") - 0.05)
     step_card(cr, t, A("w5"), 3, "A face nerve senses it: pain in the forehead.", end=A("w6") - 0.05)
-    if A("w6", "minute") - 0.4 <= t < A("w7"):
-        counter(cr, t, A("w6", "minute") - 0.4, 360, 330, 60, size=110, dur=1.0, suffix=" s",
-                sub="usually gone within a minute")
+    if A("w6", "harmless") <= t < A("w7"):
+        sign(cr, t, A("w6", "harmless"), "HARMLESS: GONE IN UNDER A MINUTE", y=690, col=hexc("#3fae5c"), size=34)
     tip_card(cr, t, A("w7"), "Eat cold things slowly.", "ok", end=A("w8"))
 
 
@@ -199,6 +238,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     (scene_ward if name == "ward" else scene_head)(cr, t, tl)
     cr.restore()
-    finish(cr)
     captions(cr, t, tl)
     watermark(cr)

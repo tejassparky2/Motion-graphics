@@ -67,12 +67,22 @@ Notes and sources: `research_notes/body_facts_15-18.md`.
 - `videos/funny_bone.py` (the ulnar nerve), `videos/stomach_acid.py` (why acid doesn't digest the stomach),
   `videos/goosebumps.py` (the hair muscle), `videos/tickle.py` (why you can't tickle yourself).
 
-## Videos 19-22: polished style + step-by-step explanations (owner-approved scripts)
-Notes and sources: `research_notes/body_facts_19-22.md`. Built with `motion/pbody.py` on top of the polished
-modules (`POLISHED_STYLE.md`): glossy organ characters, `step_card` (Step 1/2/3), `tip_card` (do this / see a
-doctor), and `clinic()` with the toons doctor, Mike and Danny. Signs and cards sit between y 230 and 400 (clear of
-the corner logo); tags go in world space next to the organ they name.
-- `videos/brain_freeze.py`, `videos/hiccups.py`, `videos/foot_asleep.py`, `videos/earwax.py`.
+## Videos 19-22 and the look to use from now on: REAL ANATOMY, like the owner's references
+The owner rejected the polished style for this channel (13 Oct 2026: "doesn't even look like explaining inside the
+human body, refer to the reference video"). The references (`/root/.claude/uploads/.../Video-*.mp4`, Dr
+Healthcare Shorts) show the real anatomy as a flat, clean cut-away (a womb with placenta and cord, an esophagus with
+its veins, an opened knee), googly eyes and a small mouth on the body part that talks, small white name labels, then
+the masked doctor and the patient in bed. So:
+- Draw the organ scene as an anatomically recognisable cut-away (head in profile with palate/tongue/brain, chest
+  with ribs/lungs/heart/diaphragm/stomach/liver, leg with femur/tibia/sciatic nerve/artery, ear with canal/eardrum/
+  ossicles/cochlea). Clean style (`STYLE = "clean"`), `motion.engine` shapes, `label()` tags, clean captions.
+- Faces go ON the anatomy (`motion.explain.googly`).
+- The doctor's part uses `motion.clinic.ward` (masked doctor, Mike and Danny in bed) with the explanation cards from
+  `motion/explain.py`: `step_card` (Step 1/2/3), `tip_card` (Do this / See a doctor if), `stamp`, `sign`, placed
+  over the bed sheet (y about 690), below the faces and above the captions.
+- `motion/pbody.py` (the polished kit) stays in the repo but isn't used for this channel.
+- Videos: `videos/brain_freeze.py`, `videos/hiccups.py`, `videos/foot_asleep.py`, `videos/earwax.py`
+  (notes and sources: `research_notes/body_facts_19-22.md`).
 
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's

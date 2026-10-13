@@ -11,13 +11,11 @@ Facts (sources in research_notes/body_facts_19-22.md):
 """
 import math
 
-from motion.clinic import watermark
-from motion.engine import ease_out, hexc, lerp, seg
-from motion.kit import whip
-from motion.pkit import tag
-from motion.polish import OUTLINE, camera, captions, ellipse, enter, lin, paint, particles, rrect, sign, stamp
-from motion.pbody import CLINIC_CAMS as C, blob, clinic, face, finish, shape_fill, step_card, tip_card
-from motion import pbody
+from motion.captions import captions
+from motion.clinic import A_CLOSE, B_CLOSE, DOC_CLOSE, NEXT_BED, TWO_SHOT, label, ward, watermark
+from motion.engine import INK, WHITE, at, blob, cue, dot, ease_out, hexc, lerp, line, rrect_pts, seg, shape
+from motion.explain import googly, sign, stamp, step_card, tip_card
+from motion.kit import camera, enter_world, set_camera, whip
 
 STYLE = "clean"
 NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
@@ -79,87 +77,130 @@ Sources: American Academy of Otolaryngology–Head and Neck Surgery Foundation, 
     pinned_comment="Be honest: cotton buds, yes or no? 👂 👇",
 )
 
-SKIN, WAX, BUD = hexc("#f2b59a"), hexc("#f2b632"), hexc("#ffffff")
-CANAL_Y = 560
+# ---------------------------------------------------------------- the ear, cut open (front view of the right ear)
+SKIN, SKIN_D = hexc("#f6c9a4"), hexc("#e2a47c")
+CANAL_WALL = hexc("#e9a08a")
+BONE = hexc("#f4ead6")
+WAX = hexc("#e0a12a")
+DRUM = hexc("#f7d8c8")
+CANAL_Y = 520
+CANAL = [(150, CANAL_Y - 50), (300, CANAL_Y - 58), (420, CANAL_Y - 40), (480, CANAL_Y - 46), (480, CANAL_Y + 46),
+         (420, CANAL_Y + 40), (300, CANAL_Y + 56), (150, CANAL_Y + 52)]
+DRUM_X = 486
 
 
-def ear(cr, t, move):
-    pbody.backdrop(cr, t, hexc("#ffe9d6"), hexc("#f6c8a8"), seed=22)
-    # the ear canal: a tunnel from the outside (left) to the eardrum (right)
-    shape_fill(cr, [(-60, CANAL_Y - 210), (700, CANAL_Y - 170), (760, CANAL_Y - 220), (760, CANAL_Y + 230),
-                    (700, CANAL_Y + 170), (-60, CANAL_Y + 210)], SKIN)
-    rrect(cr, -60, CANAL_Y - 120, 740, 240, 110)
-    paint(cr, lin(0, CANAL_Y - 120, 0, CANAL_Y + 120, [(0, hexc("#7a3a3a")), (1, hexc("#4a1e22"))]), OUTLINE, 5)
-    ellipse(cr, 690, CANAL_Y, 30, 110)
-    paint(cr, hexc("#f7d8c8"), OUTLINE, 4)                                  # the eardrum
-    # the skin "escalator": stripes on the canal wall moving outward (left)
-    for k in range(14):
-        x = 700 - ((move * 60 + k * 54) % 760)
-        for y in (CANAL_Y - 112, CANAL_Y + 112):
-            pbody.stroke_line(cr, [(x, y - 10), (x - 14, y + 10)], 4, hexc("#c98a70"), curve=False)
+def ear(cr, t, move, jaw):
+    cr.set_source_rgba(*hexc("#bfe3ef"))
+    cr.paint()
+    # skull bone (the side of the head) and the skin over it
+    shape(cr, [(160, 120), (720, 120), (720, 900), (160, 900), (190, 700), (200, 340)], SKIN, seed=4500, amp=0,
+          lw=4.5)
+    shape(cr, [(330, 200), (720, 200), (720, 840), (330, 840), (360, 650), (340, 380)], BONE, seed=4501, amp=0,
+          lw=4)
+    # the outer ear (pinna) on the left
+    shape(cr, [(200, 250), (110, 230), (40, 320), (40, 520), (80, 680), (150, 760), (210, 720), (200, 600),
+               (170, 560), (180, 470)], SKIN, seed=4502, amp=0, lw=4.5)
+    line(cr, [(110, 300), (70, 400), (80, 560), (130, 680)], 5, SKIN_D, seed=4503, amp=0)
+    # the ear canal: a tunnel to the eardrum; its outer part has tiny hairs and wax glands
+    shape(cr, CANAL, CANAL_WALL, seed=4504, amp=0, lw=4)
+    shape(cr, [(150, CANAL_Y - 30), (300, CANAL_Y - 36), (480, CANAL_Y - 26), (480, CANAL_Y + 26),
+               (300, CANAL_Y + 34), (150, CANAL_Y + 32)], hexc("#5a1e26"), seed=4505, amp=0, lw=0, stroke=None)
+    for k in range(8):                                                  # the skin "escalator": stripes moving out
+        x = 470 - ((move * 40 + k * 42) % 330)
+        for y in (CANAL_Y - 42, CANAL_Y + 44):
+            line(cr, [(x, y - 6), (x - 10, y + 6)], 3, hexc("#c47a68"), seed=4506 + k, amp=0)
+    for k in range(6):                                                  # hairs and wax glands, outer third
+        x = 170 + 26 * k
+        line(cr, [(x, CANAL_Y - 48), (x + 10, CANAL_Y - 30)], 2.5, INK, seed=4520 + k, amp=0)
+        dot(cr, x + 6, CANAL_Y - 56, 5, hexc("#f2c032"))
+    # eardrum, the three tiny ear bones, the snail-shaped cochlea
+    shape(cr, [(DRUM_X - 6, CANAL_Y - 70), (DRUM_X + 10, CANAL_Y - 60), (DRUM_X + 10, CANAL_Y + 60),
+               (DRUM_X - 6, CANAL_Y + 70)], DRUM, seed=4530, amp=0, lw=3.5)
+    shape(cr, rrect_pts(DRUM_X + 14, CANAL_Y - 90, 120, 180, 30, 16), hexc("#f7e6dc"), seed=4531, amp=0, lw=3)
+    for k, (x, y, r) in enumerate([(DRUM_X + 34, CANAL_Y - 20, 14), (DRUM_X + 66, CANAL_Y - 40, 12),
+                                   (DRUM_X + 98, CANAL_Y - 10, 12)]):
+        blob(cr, x, y, r, r * 1.4, BONE, seed=4532 + k, amp=0, lw=3)
+    with at(cr, 680, CANAL_Y - 30, 1.0):
+        for k in range(18):
+            a = k * 0.6
+            r = 46 - 2.2 * k
+            dot(cr, r * math.cos(a), r * math.sin(a), 12 - 0.4 * k, hexc("#f2a8b8"))
+    line(cr, [(DRUM_X + 20, CANAL_Y + 80), (560, 760)], 16, hexc("#e8a090"), seed=4540, amp=0)   # tube to throat
+    # the jaw joint just under the canal: moves when he chews and talks
+    with at(cr, 300, CANAL_Y + 170, 1.0, rot=0.12 * jaw):
+        shape(cr, [(-60, -40), (40, -50), (70, 0), (40, 260), (-50, 260), (-70, 0)], BONE, seed=4550, amp=0, lw=4)
+        blob(cr, 0, -40, 50, 34, BONE, seed=4551, amp=0, lw=4)
 
 
 def scene_ear(cr, t, tl):
     A = tl.at
     move = t if A("e2") <= t else 0.0
+    jaw = math.sin(t * 7) if A("e3") <= t < A("e4") else 0.0
     bud_in = ease_out(seg(t, A("e4") - 0.3, A("e4") + 0.4))
     push = ease_out(seg(t, A("e5", "deeper"), A("e5", "tight") + 0.3))
-    cams = [(0, (1.35, 360, 580)), (A("e2"), (1.1, 360, 600)), (A("e3"), (1.0, 380, 680)), (A("e4"), (1.2, 260, 560)),
-            (A("e5"), (1.2, 470, 580)), (A("e6"), (1.15, 360, 600))]
-    cr.save()
-    enter(cr, camera(t, cams), drift=0.004, t=t)
-    ear(cr, t, move)
-    particles(cr, t, 22, 12, hexc("#d9c9a8"), area=(0, CANAL_Y - 80, 680, 160), r=(2, 4), speed=6)
-    # the wax: drifts outward with the skin, gets pushed deeper by the bud
-    wx = 420 - 0.15 * (move * 20 % 400) * (1 - bud_in) + 220 * push
-    wy = CANAL_Y + 20
+    CAN, WIDE, JAW, DEEP = (1.6, 300, 520), (1.0, 380, 560), (1.25, 300, 600), (1.5, 400, 520)
+    keys = [(0, CAN), (A("e2"), WIDE), (A("e3"), JAW), (A("e4"), (1.4, 200, 520)), (A("e5"), DEEP), (A("e6"), CAN)]
+    set_camera(camera(t, keys))
+    enter_world(cr)
+    ear(cr, t, move, jaw)
+    # the wax drifts outward with the skin; the cotton bud jams it deeper
+    drift = 40 * math.sin(t * 0.8) if A("e2") <= t < A("e4") else 0.0
+    wx = 300 - drift + 150 * push
+    wy = CANAL_Y + 2
     wm = "happy" if t < A("e4") else ("angry" if t < A("e6") else "happy")
-    blob(cr, wx, wy, 80 + 10 * push, 64 - 8 * push, WAX)
-    face(cr, t, wx, wy - 10, 0.9, wm, tl.speaking("wax", t))
-    # the skin's face on the canal wall
+    blob(cr, wx, wy, 62 - 8 * push, 34, WAX, seed=4560, amp=0, lw=3.5)
+    googly(cr, t, wx, wy - 6, 0.58, wm, tl.speaking("wax", t), mouth_dy=24)
+    # the canal skin's face, on the wall
     sm = "happy" if t < A("e4") else ("worried" if t < A("e6") else "happy")
-    blob(cr, 200, CANAL_Y - 160, 70, 50, SKIN)
-    face(cr, t, 200, CANAL_Y - 170, 0.75, sm, tl.speaking("skin", t))
-    # the cotton bud
+    googly(cr, t, 380, CANAL_Y - 84, 0.48, sm, tl.speaking("skin", t), mouth_dy=24)
     if A("e4") - 0.3 <= t:
-        bx = lerp(-300, lerp(160, 360, push), bud_in)
-        rrect(cr, bx - 420, CANAL_Y - 14, 420, 28, 12)
-        paint(cr, hexc("#e8eef7"), OUTLINE, 4)
-        blob(cr, bx + 20, CANAL_Y, 56, 40, BUD)
-        face(cr, t, bx + 20, CANAL_Y - 6, 0.7, "happy" if t < A("e5") else "shock", tl.speaking("bud", t))
-    tag(cr, t, 0.4, wx, wy - 100, "Earwax", end=A("e2"))
-    cr.restore()
+        bx = lerp(-220, lerp(170, 300, push), bud_in)
+        shape(cr, rrect_pts(bx - 360, CANAL_Y - 9, 360, 18, 8, 12), hexc("#e8eef7"), seed=4570, amp=0, lw=3)
+        blob(cr, bx + 10, CANAL_Y, 40, 26, WHITE, seed=4571, amp=0, lw=3.5)
+        googly(cr, t, bx + 10, CANAL_Y - 4, 0.4, "happy" if t < A("e5") else "shock", tl.speaking("bud", t),
+               mouth_dy=22)
+    # labels, like the references
+    if t < A("e2"):
+        label(cr, "Earwax", 300, 400, 300, CANAL_Y - 20)
+        label(cr, "Ear canal", 200, 650, 230, CANAL_Y + 40)
+    if A("e2") <= t < A("e3"):
+        label(cr, "Eardrum", 470, 380, DRUM_X, CANAL_Y - 60)
+        label(cr, "Canal skin", 250, 640, 300, CANAL_Y + 46)
+    if A("e3") <= t < A("e4"):
+        label(cr, "Jaw joint", 150, 760, 260, CANAL_Y + 160)
+    for w in (A("e4"), A("e5", "deeper")):
+        cue("hit", t, w)
+    # screen-space signs
     if A("e2", "escalator") - 0.2 <= t < A("e3"):
-        sign(cr, t, A("e2", "escalator") - 0.2, 360, 280, "<<< OUTWARD", col=hexc("#3fbf6a"), size=56)
+        sign(cr, t, A("e2", "escalator") - 0.2, "<<< OUTWARD", y=250, col=hexc("#3fae5c"), size=52)
     if A("e3", "chews") - 0.2 <= t < A("e4"):
-        sign(cr, t, A("e3", "chews") - 0.2, 360 + 10 * math.sin(t * 9), 280, "CHEW, CHEW", col=hexc("#ff8a3c"), size=58)
-    if A("e5", "deeper") <= t < A("e6"):
-        stamp(cr, t, A("e5", "deeper"), 360, 300, "PUSHED DEEPER", size=56)
+        sign(cr, t, A("e3", "chews") - 0.2, "CHEW, CHEW", y=250, col=hexc("#ff8a3c"), size=52)
+    stamp(cr, t, A("e5", "deeper"), "PUSHED DEEPER", y=250, end=A("e6"))
 
 
 def scene_ward(cr, t, tl):
     A = tl.at
-    cams = [(A("w1") - 0.1, C["mike"]), (A("w1", "ears"), C["two"]), (A("w2"), C["doc"]), (A("w3"), C["two"]),
-            (A("w5"), C["doc"]), (A("w6"), C["two"]), (A("w8"), C["danny"]), (A("w9"), C["both"])]
-    cam = camera(t, cams, dur=0.3)
-    mike = dict(eyes="open", mouth="smile", arms=("down", "down"))
-    if A("w2") <= t:
-        mike = dict(eyes="open", mouth="smile")
+    keys = [(A("w1") - 0.1, A_CLOSE), (A("w1", "ears"), TWO_SHOT), (A("w2"), DOC_CLOSE), (A("w3"), TWO_SHOT),
+            (A("w5"), DOC_CLOSE), (A("w6"), TWO_SHOT), (A("w8"), B_CLOSE), (A("w9"), NEXT_BED)]
+    m = dict(eyes="dot", mouth="smile", arms=("hold", "down"))
     if A("w6") <= t < A("w7"):
-        mike = dict(eyes="wide", mouth="o")
+        m.update(eyes="wide", mouth="o")
     if A("w8") <= t:
-        mike = dict(eyes="happy", mouth="grin")
-    doc = dict(arms=("point", "down")) if A("w3") <= t < A("w8") else dict(arms=("hold", "down"))
+        m.update(eyes="happy", mouth="grin")
+    n = dict(eyes="dot", mouth="smile", arms=("hold", "down"))
+    if A("w8") <= t:
+        n.update(eyes="happy", mouth="grin", arms=("thumb", "down"))
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("w2") <= t < A("w8"):
+        d.update(arms=("hold", "down"))
     if A("w9") <= t:
-        doc = dict(eyes="half", mouth="smug", arms=("hips", "down"))
-    danny = dict(eyes="happy", mouth="grin", arms=("wave", "down")) if A("w8") <= t else dict()
-    clinic(cr, t, tl, cam, mike, danny, doc)
+        d.update(eyes="sly")
+    ward(cr, t, tl, keys, m, n, d)
     step_card(cr, t, A("w3"), 1, "Glands make wax that traps dust and germs.", end=A("w4") - 0.05)
     step_card(cr, t, A("w4"), 2, "The skin moves outward, carrying the wax.", end=A("w5") - 0.05)
     step_card(cr, t, A("w5"), 3, "Chewing and talking help it fall out.", end=A("w6") - 0.05)
-    if A("w6") <= t < A("w7"):
-        stamp(cr, t, A("w6", "cotton") - 0.1, 360, 320, "NO COTTON BUDS", size=54)
-    tip_card(cr, t, A("w7"), "Ear feels blocked, or hearing drops", "warn", end=A("w8"))
+    stamp(cr, t, A("w6", "cotton") - 0.1, "NO COTTON BUDS", y=690, end=A("w7"))
+    tip_card(cr, t, A("w7"), "Your ear feels blocked, or hearing drops.", "warn", end=A("w8"))
 
 
 def draw(cr, t, tl):
@@ -168,6 +209,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     (scene_ward if name == "ward" else scene_ear)(cr, t, tl)
     cr.restore()
-    finish(cr)
     captions(cr, t, tl)
     watermark(cr)

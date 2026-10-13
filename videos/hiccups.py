@@ -11,13 +11,11 @@ Facts (sources in research_notes/body_facts_19-22.md):
 """
 import math
 
-from motion.clinic import watermark
-from motion.engine import hexc, lerp, seg
-from motion.kit import whip
-from motion.pkit import GOLD, RED, tag
-from motion.polish import OUTLINE, camera, captions, counter, ellipse, enter, paint, particles, sign, stamp
-from motion.pbody import CLINIC_CAMS as C, blob, clinic, face, finish, shape_fill, step_card, tip_card, tube
-from motion import pbody
+from motion.captions import captions
+from motion.clinic import A_CLOSE, B_CLOSE, DOC_CLOSE, NEXT_BED, TWO_SHOT, label, ward, watermark
+from motion.engine import WHITE, at, blob, cue, hexc, lerp, line, seg, shape
+from motion.explain import googly, sign, stamp, step_card, tip_card, vessel
+from motion.kit import camera, enter_world, set_camera, whip
 
 STYLE = "clean"
 NARRATOR = dict(voice="am_adam", speed=0.95, cast={   # the doctor: Kokoro am_adam (Mike is am_fenrir)
@@ -76,14 +74,82 @@ Sources: Steger, Schneemann & Fox, "Hiccups: a common problem with some unusual 
     pinned_comment="Drop your weirdest hiccup cure. 😂 Doc will judge it. 👇",
 )
 
-BG_TOP, BG_BOT = hexc("#d8eef7"), hexc("#a9d3e6")
-LUNG, DIA, STOM, CORD = hexc("#ff9fb0"), hexc("#e8473f"), hexc("#f6b26b"), hexc("#ff8fa3")
-DIA_Y = 640
+# ---------------------------------------------------------------- the chest and belly, cut open (front view)
+SKIN = hexc("#f6c9a4")
+LUNG, LUNG_D = hexc("#f4a6b4"), hexc("#d7788c")
+HEART = hexc("#d8363a")
+DIA = hexc("#c4544b")
+LIVER = hexc("#8e3b32")
+STOMACH = hexc("#f0a08e")
+BONE = hexc("#f4ead6")
+TRACHEA = hexc("#f2d0c8")
+NERVE = hexc("#f2c032")
+DIA_Y = 640                               # top of the diaphragm domes
+
+TORSO = [(250, 100), (470, 100), (480, 200), (640, 250), (690, 330), (680, 700), (640, 900), (80, 900), (40, 700),
+         (30, 330), (80, 250), (240, 200)]
 
 
 def hiccup_times(tl):
     A = tl.at
     return [A("h2", "twitching") - 0.1, A("h4", "hic"), A("h5", "again"), A("h5", "again", nth=2)]
+
+
+def torso(cr, t, jerk, shut):
+    cr.set_source_rgba(*hexc("#bfe3ef"))
+    cr.paint()
+    shape(cr, TORSO, SKIN, seed=4200, amp=0, lw=4.5)
+    shape(cr, [(70, 300), (650, 300), (660, 860), (60, 860)], hexc("#7a2a36"), seed=4201, amp=0, lw=3.5)   # cavity
+    d = 34 * jerk                              # the diaphragm pulls down on each hiccup
+    # lungs (they fill with air as the diaphragm drops)
+    k = 1 + 0.05 * jerk
+    with at(cr, 195, 470, k):
+        shape(cr, [(-110, -120), (-40, -170), (40, -150), (90, -40), (100, 150 + d), (-120, 170 + d)], LUNG,
+              seed=4202, amp=0, lw=4)
+        line(cr, [(-60, 20), (60, -10)], 3, LUNG_D, seed=4203, amp=0)
+    with at(cr, 525, 470, k):
+        shape(cr, [(110, -120), (40, -170), (-40, -150), (-90, -40), (-60, 60), (-100, 150 + d), (120, 170 + d)],
+              LUNG, seed=4204, amp=0, lw=4)
+        line(cr, [(60, 30), (-40, 0)], 3, LUNG_D, seed=4205, amp=0)
+    # heart between the lungs
+    blob(cr, 400, 560, 90, 80, HEART, seed=4206, amp=0, lw=4)
+    line(cr, [(380, 480), (390, 420), (430, 400)], 18, HEART, seed=4207, amp=0)
+    # ribs over everything, light
+    for k_ in range(6):
+        y = 320 + 70 * k_
+        for side in (-1, 1):
+            line(cr, [(360 + side * 30, y), (360 + side * 200, y + 20), (360 + side * 300, y + 60)], 7,
+                 hexc("#f4ead6", 0.55), seed=4210 + k_ + 10 * (side > 0), amp=0)
+    line(cr, [(360, 300), (360, 640)], 22, hexc("#f4ead6", 0.7), seed=4230, amp=0)          # breastbone
+    # windpipe from the voice box down to the lungs; the food pipe beside it
+    vessel(cr, [(360, 120), (360, 260), (360, 330)], 34, TRACHEA, seed=4240)
+    for k_ in range(6):
+        line(cr, [(343, 150 + 30 * k_), (377, 150 + 30 * k_)], 3, hexc("#d9a8a0"), seed=4250 + k_, amp=0)
+    line(cr, [(360, 330), (260, 400)], 22, TRACHEA, seed=4260, amp=0)
+    line(cr, [(360, 330), (460, 400)], 22, TRACHEA, seed=4261, amp=0)
+    vessel(cr, [(395, 140), (400, 400), (420, DIA_Y + 30), (450, DIA_Y + 90)], 14, hexc("#e8a090"), seed=4270)
+    # voice box with the two vocal cords (seen from above, in a circle)
+    blob(cr, 360, 160, 40, 34, hexc("#e8a090"), seed=4280, amp=0, lw=3.5)
+    # liver and stomach under the diaphragm
+    shape(cr, [(80, DIA_Y + 80 + d), (330, DIA_Y + 70 + d), (360, DIA_Y + 150 + d), (200, DIA_Y + 230 + d),
+               (90, DIA_Y + 200 + d)], LIVER, seed=4290, amp=0, lw=4)
+    shape(cr, [(420, DIA_Y + 70 + d), (600, DIA_Y + 60 + d), (640, DIA_Y + 160 + d), (580, DIA_Y + 240 + d),
+               (470, DIA_Y + 230 + d), (430, DIA_Y + 160 + d)], STOMACH, seed=4291, amp=0, lw=4)
+    # the diaphragm: two domes under the lungs
+    dy = DIA_Y + d
+    shape(cr, [(70, dy + 60), (190, dy - 10), (330, dy + 30), (360, dy + 40), (390, dy + 30), (530, dy - 10),
+               (650, dy + 60), (650, dy + 90), (530, dy + 26), (390, dy + 64), (330, dy + 64), (190, dy + 26),
+               (70, dy + 90)], DIA, seed=4292, amp=0, lw=4)
+    # the phrenic nerves from the neck to the diaphragm
+    for x0, x1 in ((330, 230), (390, 500)):
+        vessel(cr, [(x0, 160), (x0 - 10 * (x0 < 360) + 10 * (x0 > 360), 380), (x1, dy)], 6, NERVE, seed=4300 + x0)
+    # vocal cords inset
+    with at(cr, 560, 170, 1.0):
+        blob(cr, 0, 0, 92, 92, hexc("#7a2a36"), seed=4310, amp=0, lw=4)
+        gap = lerp(34, 2, shut)
+        for side in (-1, 1):
+            shape(cr, [(side * 4, -70), (side * (gap + 8), -60), (side * (gap + 14), 60), (side * 4, 70)], WHITE,
+                  seed=4311 + side, amp=0, lw=3)
 
 
 def scene_chest(cr, t, tl):
@@ -93,75 +159,71 @@ def scene_chest(cr, t, tl):
     for h in hics:
         if h <= t < h + 0.5:
             jerk = math.sin(math.pi * seg(t, h, h + 0.5))
-    shut = 0.0
-    for h in hics[1:]:
-        if h <= t < h + 0.4:
-            shut = 1.0
-    cams = [(0, (1.4, 400, 760)), (A("h2"), (1.3, 360, 640)), (A("h4"), (1.5, 360, 340)), (A("h5"), (1.1, 360, 560)),
-            (A("h6"), (1.4, 400, 760)), (A("h7"), (1.2, 360, 620))]
-    cr.save()
-    enter(cr, camera(t, cams), drift=0.004, t=t)
-    pbody.backdrop(cr, t, BG_TOP, BG_BOT, seed=20)
-    # windpipe and lungs
-    tube(cr, [(360, 140), (360, 330), (360, 400)], 46, hexc("#f2c7cf"))
-    for side in (-1, 1):
-        blob(cr, 360 + side * 150, 470 - 20 * jerk, 120, 150 + 18 * jerk, LUNG)
-    # vocal cords: two flaps in the windpipe, snapping shut on each hiccup
-    for side in (-1, 1):
-        x = 360 + side * lerp(30, 6, shut)
-        ellipse(cr, x, 250, 18, 34, side * 0.3)
-        paint(cr, CORD, OUTLINE, 4)
-    face(cr, t, 470, 250, 0.7, "shock" if shut else ("happy" if t < A("h4") else "open"), tl.speaking("cords", t))
-    # the diaphragm: a dome under the lungs that jerks down on each twitch
-    dy = DIA_Y + 40 * jerk
-    shape_fill(cr, [(80, dy + 60), (200, dy - 20), (360, dy - 50), (520, dy - 20), (640, dy + 60),
-                    (520, dy + 30), (360, dy + 10), (200, dy + 30)], DIA)
-    dm = "wide" if jerk > 0.2 else ("angry" if A("h2") <= t < A("h4") else "open")
+    shut = 1.0 if any(h <= t < h + 0.4 for h in hics[1:]) else 0.0
+    WIDE, BELLY, NECK, DIAC = (1.0, 360, 560), (1.45, 500, 820), (1.6, 470, 230), (1.3, 360, 720)
+    keys = [(0, BELLY), (A("h2"), DIAC), (A("h3"), WIDE), (A("h4"), NECK), (A("h5"), WIDE), (A("h6"), BELLY),
+            (A("h7"), DIAC)]
+    set_camera(camera(t, keys))
+    enter_world(cr)
+    torso(cr, t, jerk, shut)
+    d = 34 * jerk
+    # the talking parts
+    sm = "worried" if t < A("h7") else "happy"
+    googly(cr, t, 530, DIA_Y + 140 + d, 0.75, sm, tl.speaking("stomach", t))
+    dm = "shock" if jerk > 0.2 else ("angry" if A("h2") <= t < A("h4") else "calm")
     if A("h7") <= t:
         dm = "happy"
-    face(cr, t, 360, dy - 14, 0.8, dm, tl.speaking("diaphragm", t))
-    # the stomach below, stretched and fizzy
-    sm = "worried" if t < A("h7") else "happy"
-    blob(cr, 420, 820, 150, 100, STOM)
-    face(cr, t, 420, 810, 0.85, sm, tl.speaking("stomach", t))
-    particles(cr, t, 20, 10, hexc("#fff7e0"), area=(300, 740, 240, 140), r=(3, 7), speed=14)
-    if jerk > 0.2:    # air rushing in
+    googly(cr, t, 190, DIA_Y + 28 + d, 0.55, dm, tl.speaking("diaphragm", t), mouth_dy=26)
+    googly(cr, t, 560, 245, 0.5, "shock" if shut else ("happy" if t < A("h4") else "calm"),
+           tl.speaking("cords", t), mouth_dy=-48)
+    if jerk > 0.2:             # air rushing in through the windpipe
         for k in range(3):
-            pbody.stroke_line(cr, [(320 + 40 * k, 60), (330 + 40 * k, 160)], 6, hexc("#ffffff"))
-    tag(cr, t, 0.3, 560, DIA_Y - 40, "Diaphragm", end=A("h3"))
-    tag(cr, t, A("h4"), 300, 180, "Vocal cords", end=A("h5"))
-    cr.restore()
+            line(cr, [(330 + 30 * k, 40), (335 + 30 * k, 110)], 5, WHITE, seed=4320 + k, amp=0)
+    # labels, like the references
+    if t < A("h2"):
+        label(cr, "Stomach", 600, 900 - 140, 560, DIA_Y + 120)
+        label(cr, "Liver", 150, 900 - 140, 200, DIA_Y + 140)
+    if A("h2") <= t < A("h4"):
+        label(cr, "Diaphragm", 200, DIA_Y - 70, 190, DIA_Y)
+        label(cr, "Nerve", 520, 360, 460, 420)
+    if A("h3") <= t < A("h4"):
+        label(cr, "Lungs", 200, 330, 200, 380)
+    if A("h4") <= t < A("h5"):
+        label(cr, "Vocal cords", 560, 50, 560, 82)
+        label(cr, "Windpipe", 440, 330, 365, 280)
+    for h in hics:
+        cue("hit", t, h)
     # screen-space signs
     for k, h in enumerate(hics[1:], 1):
-        sign(cr, t, h, 360, 230 if k % 2 else 260, "HIC!", col=GOLD, size=80, end=h + 0.8, rot=-0.05 * k)
-    if A("h5") <= t < A("h6"):
-        counter(cr, t, A("h5"), 600, 330, 3, size=90, dur=1.6, prefix="x")
+        sign(cr, t, h, "HIC!", x=360, y=230 + 20 * (k % 2), size=74, end=h + 0.8)
     if A("h7", "few") <= t:
-        sign(cr, t, A("h7", "few"), 360, 300, "A FEW MINUTES", col=hexc("#3fbf6a"), size=54)
+        sign(cr, t, A("h7", "few"), "A FEW MINUTES", y=250, col=hexc("#3fae5c"), size=50)
 
 
 def scene_ward(cr, t, tl):
     A = tl.at
-    cams = [(A("w1") - 0.1, C["mike"]), (A("w1", "hiccups"), C["two"]), (A("w2"), C["doc"]), (A("w3"), C["two"]),
-            (A("w5"), C["doc"]), (A("w6"), C["two"]), (A("w8"), C["danny"]), (A("w9"), C["both"])]
-    cam = camera(t, cams, dur=0.3)
-    mike = dict(eyes="wide", mouth="o", arms=("face", "down"))
+    keys = [(A("w1") - 0.1, A_CLOSE), (A("w1", "hiccups"), TWO_SHOT), (A("w2"), DOC_CLOSE), (A("w3"), TWO_SHOT),
+            (A("w5"), DOC_CLOSE), (A("w6"), TWO_SHOT), (A("w8"), B_CLOSE), (A("w9"), NEXT_BED)]
+    m = dict(eyes="wide", mouth="o", arms=("face", "down"))
     if A("w2") <= t:
-        mike = dict(eyes="open", mouth="smile")
+        m.update(eyes="dot", mouth="smile", arms=("hold", "down"))
     if A("w8") <= t:
-        mike = dict(eyes="happy", mouth="grin")
-    doc = dict(arms=("point", "down")) if A("w3") <= t < A("w8") else dict(arms=("hold", "down"))
+        m.update(eyes="happy", mouth="grin")
+    n = dict(eyes="dot", mouth="smile", arms=("hold", "down"))
+    if A("w8") <= t:
+        n.update(eyes="wide", mouth="o", arms=("thumb", "down"))
+    d = dict(eyes="dot", arms=("down", "down"))
+    if A("w2") <= t < A("w8"):
+        d.update(arms=("hold", "down"))
     if A("w9") <= t:
-        doc = dict(eyes="half", mouth="smug", arms=("shrug", "shrug"))
-    danny = dict(eyes="angry", mouth="open", arms=("up", "up")) if A("w8") <= t else dict()
-    clinic(cr, t, tl, cam, mike, danny, doc)
+        d.update(eyes="sly")
+    ward(cr, t, tl, keys, m, n, d)
     step_card(cr, t, A("w3"), 1, "Eating fast or fizzy drinks irritate the nerves.", end=A("w4") - 0.05)
     step_card(cr, t, A("w4"), 2, "The diaphragm twitches: you suck in air.", end=A("w5") - 0.05)
     step_card(cr, t, A("w5"), 3, "The vocal cords snap shut: HIC!", end=A("w6") - 0.05)
     tip_card(cr, t, A("w6"), "Most hiccups stop on their own in minutes.", "ok", end=A("w7") - 0.05)
-    tip_card(cr, t, A("w7"), "Hiccups for more than 2 days (48 hours)", "warn", end=A("w8"))
-    if A("w9", "proven") <= t:
-        stamp(cr, t, A("w9", "proven"), 360, 330, "NOT PROVEN", col=RED, size=62)
+    tip_card(cr, t, A("w7"), "They last more than 2 days (48 hours).", "warn", end=A("w8"))
+    stamp(cr, t, A("w9", "proven"), "NOT PROVEN", y=690)
 
 
 def draw(cr, t, tl):
@@ -170,6 +232,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     (scene_ward if name == "ward" else scene_chest)(cr, t, tl)
     cr.restore()
-    finish(cr)
     captions(cr, t, tl)
     watermark(cr)
