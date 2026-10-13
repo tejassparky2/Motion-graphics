@@ -20,6 +20,9 @@ for line in (REPO / "out/content_calendar.md").read_text().splitlines():
 sheet = ["# Upload sheets, in posting order\n", "Times are IST. File numbers match the rows below.\n"]
 for n, stamp, date, time, name in rows:
     fn = f"{n:02d}_{stamp}_{name}.mp4"
+    if not (REPO / f"out/{name}.mp4").exists():
+        print(f"skipped {n} {name}: not rendered yet")
+        continue
     shutil.copyfile(REPO / f"out/{name}.mp4", OUT / fn)
     meta = (REPO / f"out/{name}_metadata.md").read_text()
     meta = re.sub(r"^# Upload sheet: .*\n", "", meta)
