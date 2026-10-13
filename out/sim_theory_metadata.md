@@ -41,4 +41,4 @@ simulation theory, are we living in a simulation, nick bostrom, simulation argum
 If this IS a simulation... what's the first thing you'd do? 🎮👇
 ```
 
-**Video facts:** 63.4 s, 190 words of narration, voice `am_fenrir` at speed 0.93. Made for kids: **No**.
+**Video facts:** 50.0 s, 146 words of narration, voice `am_fenrir` at speed 0.93. Made for kids: **No**.

@@ -39,4 +39,4 @@ mark twain, reports of my death are greatly exaggerated, mark twain quote, famou
 1897 or 1907: which reply was funnier? 👇 (And yes, he never said "greatly" 😉)
 ```
 
-**Video facts:** 54.8 s, 180 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 50.6 s, 169 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

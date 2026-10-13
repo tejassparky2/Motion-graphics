@@ -38,4 +38,4 @@ achilles and the tortoise, zeno's paradox, zeno paradox explained, paradox, infi
 Be honest: did Zeno fool you for a second? Yes or no? 🐢👇
 ```
 
-**Video facts:** 59.7 s, 174 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.
+**Video facts:** 54.0 s, 157 words of narration, voice `am_fenrir` at speed 0.95. Made for kids: **No**.

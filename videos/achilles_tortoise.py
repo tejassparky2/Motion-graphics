@@ -34,7 +34,7 @@ SCRIPT = [
                                       "further."),
     dict(id="a10", scene="steps", text="The steps never end. So Zeno said, Achilles never catches it."),
     dict(id="a11", scene="math", text="Here's the trick. Add up the times."),
-    dict(id="a12", scene="math", text="[Ten|10] seconds. Plus one. Plus a tenth. Plus a hundredth.", pace=0.95),
+    dict(id="a12", scene="math", text="[Ten|10] seconds. Plus one. Plus a tenth. Plus a hundredth of a second.", pace=0.95),
     dict(id="a13", scene="math", text="The steps never end. But the total never even reaches [eleven point two|11.2] "
                                       "seconds."),
     dict(id="a14", scene="pass", text="So after about [eleven|11] seconds, Achilles is level. Then he zooms past."),
@@ -493,7 +493,7 @@ def scene_math(cr, t, tl):
     soft_rrect(cr, 120, 160, 480, 500, 30, (0, 0, 0, 0.25), sigma=12)
     rrect(cr, 120, 150, 480, 500, 30)
     paint(cr, lin(0, 150, 0, 650, [(0, hexc("#ffffff")), (1, hexc("#ece4d8"))]), OUTLINE, 6)
-    items = [("10 s", "10"), ("+ 1 s", "one."), ("+ 0.1 s", "tenth."), ("+ 0.01 s", "hundredth.")]
+    items = [("10 s", "10"), ("+ 1 s", "one."), ("+ 0.1 s", "tenth."), ("+ 0.01 s", "hundredth")]
     total = 0.0
     for k, (lab, key) in enumerate(items):
         st = A("a12", key)
@@ -501,7 +501,7 @@ def scene_math(cr, t, tl):
             total = (10, 11, 11.1, 11.11)[k]
             cue("pop", t, st)
         sum_line(cr, t, st, 260 + k * 82, lab, OUTLINE if k else RED, 66)
-    sum_line(cr, t, A("a12", "hundredth.") + 0.4, 590, "+ ...", alpha(OUTLINE, 0.6), 56)
+    sum_line(cr, t, A("a12", "second.") + 0.4, 590, "+ ...", alpha(OUTLINE, 0.6), 56)
     if t >= a13:
         crawl = 11.11 + 0.0011 * (1 - math.exp(-(t - a13) * 1.5))
         total = crawl

@@ -38,4 +38,4 @@ does god exist, first cause argument, who made god, thomas aquinas, bertrand rus
 Aquinas or Russell: who makes the better point? Respectful arguments only 🙏👇
 ```
 
-**Video facts:** 52.5 s, 154 words of narration, voice `am_fenrir` at speed 0.92. Made for kids: **No**.
+**Video facts:** 49.1 s, 144 words of narration, voice `am_fenrir` at speed 0.92. Made for kids: **No**.
