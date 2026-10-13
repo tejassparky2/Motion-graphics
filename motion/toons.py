@@ -72,6 +72,14 @@ CAST = {
                 pants=hexc("#3a3e48"), tie=hexc("#8a2a2a"), shoes=hexc("#2b1d16"), glasses=True, build="adult"),
     "dad": dict(skin="brown", hair="short", hair_col=hexc("#2b2b33"), stache=hexc("#1e130d"), shirt=hexc("#f0e6c8"),
                 pants=hexc("#4a5a7a"), shoes=hexc("#5a3a24"), build="adult"),
+    "napoleon": dict(skin="light", hair="short", hair_col=hexc("#3a2418"), shirt=WHITE, suit=hexc("#2a3a7a"),
+                     pants=hexc("#f1ede4"), shoes=hexc("#1b1b1f"), bicorne=hexc("#1b1b1f"), build="adult"),
+    "franklin": dict(skin="light", hair="twain", hair_col=hexc("#d8d8de"), shirt=WHITE, suit=hexc("#7a5a3c"),
+                     pants=hexc("#6a4c32"), shoes=hexc("#2b1d16"), glasses=True, build="adult"),
+    "inventor": dict(skin="light", hair="twain", hair_col=hexc("#f2f2f5"), shirt=WHITE, suit=hexc("#9a2a2a"),
+                     pants=hexc("#2b2b33"), shoes=hexc("#1b1b1f"), bowtie=True, tie=WHITE, build="adult"),
+    "grandpa": dict(skin="tan", hair="twain", hair_col=hexc("#f2f2f5"), stache=hexc("#f2f2f5"), shirt=hexc("#f0e6c8"),
+                    suit=hexc("#8a6a4a"), pants=hexc("#5a5a6a"), shoes=hexc("#3a2418"), glasses=True, build="adult"),
     "lewis": dict(skin="light", hair="short", hair_col=hexc("#6a5a4a"), shirt=WHITE, suit=hexc("#7a6a4e"),
                   pants=hexc("#5a4e3a"), tie=hexc("#5a2a2a"), shoes=hexc("#2b1d16"), glasses=True, build="adult"),
     "fermi": dict(skin="olive", hair="short", hair_col=hexc("#2b1a12"), shirt=WHITE, suit=hexc("#6a7080"),
@@ -223,6 +231,22 @@ def _helmet(cr, r, t):
     paint(cr, alpha(WHITE, 0.6), None, 0)
 
 
+def _bicorne(cr, r, col):
+    """Napoleon's sideways two-cornered hat, with a gold trim and a cockade."""
+    smooth(cr, [(-1.55 * r, -0.62 * r), (-0.9 * r, -1.05 * r), (0, -1.55 * r), (0.9 * r, -1.05 * r),
+                (1.55 * r, -0.62 * r), (0.8 * r, -0.78 * r), (0, -0.86 * r), (-0.8 * r, -0.78 * r)])
+    paint(cr, lin(0, -1.55 * r, 0, -0.62 * r, [(0, shade(col, 0.25)), (1, col)]), OUTLINE, 5)
+    smooth(cr, [(-1.5 * r, -0.66 * r), (-0.8 * r, -0.82 * r), (0, -0.9 * r), (0.8 * r, -0.82 * r),
+                (1.5 * r, -0.66 * r)], closed=False)
+    cr.set_line_width(0.07 * r)
+    cr.set_source_rgba(*hexc("#e0b84a"))
+    cr.stroke()
+    cr.arc(0.15 * r, -1.12 * r, 0.16 * r, 0, 2 * math.pi)
+    paint(cr, hexc("#3a5ad0"), OUTLINE, 3)
+    cr.arc(0.15 * r, -1.12 * r, 0.08 * r, 0, 2 * math.pi)
+    paint(cr, hexc("#e8473f"), None, 0)
+
+
 def _fedora(cr, r, col):
     ellipse(cr, 0, -0.68 * r, 1.45 * r, 0.3 * r)
     paint(cr, lin(0, -r, 0, -0.4 * r, [(0, shade(col, 0.2)), (1, shade(col, -0.25))]), OUTLINE, 5)
@@ -327,6 +351,8 @@ def head(cr, t, x, y, r, who="kid", eyes="open", mouth="smile", look=(0.0, 0.0),
         _helmet(cr, r, t)
     if c.get("fedora") is not None:
         _fedora(cr, r, c["fedora"])
+    if c.get("bicorne") is not None:
+        _bicorne(cr, r, c["bicorne"])
     if sweat:
         k = (t * 1.3) % 1.0
         sx, sy = 0.95 * r, -0.4 * r + k * 0.5 * r

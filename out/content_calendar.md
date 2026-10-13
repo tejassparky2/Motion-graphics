@@ -64,9 +64,9 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 42 | Mon Oct 19 | 9:30 PM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
 | 43 | Tue Oct 20 | 4:30 AM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ |
 | 44 | Tue Oct 20 | 9:30 PM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? *(v2: Last Bencher hook, rendered 11 Oct)* |
-| 45 | Wed Oct 21 | 4:30 AM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ *(script sent)* |
-| 46 | Wed Oct 21 | 9:30 PM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 *(script sent)* |
-| 47 | Thu Oct 22 | 4:30 AM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 *(script sent)* |
+| 45 | Wed Oct 21 | 4:30 AM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ *(approved 13 Oct, rendered)* |
+| 46 | Wed Oct 21 | 9:30 PM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 *(approved 13 Oct, rendered)* |
+| 47 | Thu Oct 22 | 4:30 AM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 *(approved 13 Oct, rendered)* |
 | 48 | Thu Oct 22 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 | 49 | Fri Oct 23 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea)* |
 | 50 | Fri Oct 23 | 9:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
