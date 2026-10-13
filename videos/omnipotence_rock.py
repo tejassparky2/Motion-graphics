@@ -3,7 +3,7 @@ paradox told as a classroom scene, in the polished look.
 
 Thomas Aquinas, Summa Theologiae I, q.25, a.3 (about 1270): God's power covers everything possible, and "whatever
 implies contradiction does not come within the scope of divine omnipotence, because it cannot have the aspect of
-possibility". Line q12 paraphrases him; it is not a quote. God is shown only as light, never as a figure.
+possibility". The on-screen cards paraphrase him; they are not a quote. God is shown only as light, never as a figure.
 v1 (narrator asks the question) was rendered on 11 Oct 2026; the owner asked for a stronger hook the same day, and
 approved this v2 (out/scripts_batch_47-50.md doc, "Hook fix"): the question is in the kid's mouth at second 0, the
 class reacts, and "the teacher just smiles" opens a loop the ending closes.
@@ -30,21 +30,19 @@ voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5),
 
 SCRIPT = [
     dict(id="q1", scene="ask", text="Sir, can God make a rock so heavy, that even God can't lift it?", speaker="kid"),
-    dict(id="q2", scene="freeze", text="The whole class turns around. The teacher freezes."),
+    dict(id="q2", scene="freeze", text="The teacher freezes."),
     dict(id="q3", scene="yes", text="Say yes, and there's a rock God can't lift.", speaker="kid"),
     dict(id="q4", scene="no", text="Say no, and there's a rock God can't make.", speaker="kid"),
     dict(id="q5", scene="trap", text="Either way, God isn't all-powerful. Checkmate, sir.", speaker="kid"),
     dict(id="q6", scene="smile", text="But the teacher just smiles, and hands him the chalk."),
     dict(id="q7", scene="board", text="Then draw me a square circle.", speaker="sir"),
     dict(id="q8", scene="board", text="That's impossible!", speaker="kid"),
-    dict(id="q9", scene="board", text="Exactly. Not because you're weak. A square circle isn't a thing at all.",
+    dict(id="q9", scene="board", text="Exactly. A square circle isn't a thing at all.",
          speaker="sir"),
     dict(id="q10", scene="words", text="And a rock too heavy for an all-powerful God? Same thing. A square circle, "
                                        "made of words.", speaker="sir"),
     dict(id="q11", scene="aquinas", text="That's the answer Thomas Aquinas gave, about [seven hundred and fifty years "
                                          "ago.|750 years ago.]"),
-    dict(id="q12", scene="aquinas", text="All-powerful means able to do anything possible. And a contradiction isn't "
-                                         "anything."),
     dict(id="q13", scene="end", text="So, did the teacher win? Or did he just dodge the question?", pace=0.95),
 ]
 clear_dialogue(SCRIPT, pace=0.95)   # a riddle duel: clear turns between the kid and the teacher
@@ -234,7 +232,7 @@ def scene_ask(cr, t, tl):
 def scene_freeze(cr, t, tl):
     A = tl.at
     room(cr, t, board=True)
-    turned = t >= A("q2", "turns")
+    turned = t >= A("q2")
     frozen = t >= A("q2", "freezes.")
     classroom(cr, t, tl, kid_pose=dict(arms=("hips", "down"), eyes="happy", mouth="smug"),
               look_at=(560, 0) if turned else None, gasp=turned)
@@ -362,7 +360,7 @@ def scene_board(cr, t, tl):
            hold=None if stuck else (lambda c, hx, hy: chalk_stick(c, hx, hy, -0.6)))
     sir(cr, t, tl, 560, 1060, 0.95, eyes="happy" if t >= A("q9") else "half", rest="smug",
         arms=("point", "hips") if t >= A("q9") else ("cross", "cross"), facing=-1)
-    w0 = A("q9", "weak.")
+    w0 = verdict + 99      # (the "not because you're weak" step was cut on 14 Oct)
     if w0 <= t < verdict:          # it's not about strength
         bold_text(cr, "STRENGTH", 360, 515, 44 * appear(t, w0, 0.3), GOLD)
         red_x(cr, t, w0 + 0.1, 360, 500, 56)
@@ -396,18 +394,13 @@ def scene_words(cr, t, tl):
 def scene_aquinas(cr, t, tl):
     A = tl.at
     monastery(cr, t)
-    answer = A("q12")
-    if t < answer:
-        person(cr, t, 360, 960, 1.0, "aquinas", eyes="happy" if t >= A("q11", "750") else "open", mouth="smile",
-               arms=("hold", "down"), hold=book)
-        tag(cr, t, A("q11", "Thomas"), 360, 200, "THOMAS AQUINAS", col=CANDLE)
-        sign(cr, t, A("q11", "750"), 360, 320, "~750 YEARS AGO", col=PURPLE, size=50, rot=0.03)
-    else:
-        person(cr, t, 150, 1010, 0.7, "aquinas", eyes="happy", mouth="smile", arms=("point", "down"))
-        card(cr, t, answer, 400, 330, 560, 230, "ALL-POWERFUL MEANS", ["can do anything", "POSSIBLE"], col=GREEN,
-             title_size=40, line_size=44, mark="ok", mark_at=A("q12", "possible."))
-        card(cr, t, A("q12", "contradiction"), 400, 620, 560, 200, "A CONTRADICTION", ["isn't anything"], col=RED,
-             title_size=40, line_size=44, mark="no", mark_at=A("q12", "anything."))
+    person(cr, t, 150, 1010, 0.7, "aquinas", eyes="happy" if t >= A("q11", "750") else "open", mouth="smile",
+           arms=("point", "down"))
+    tag(cr, t, A("q11", "Thomas"), 400, 160, "THOMAS AQUINAS, ~750 YEARS AGO", col=CANDLE, size=34)
+    card(cr, t, A("q11", "answer"), 400, 380, 560, 230, "ALL-POWERFUL MEANS", ["can do anything", "POSSIBLE"],
+         col=GREEN, title_size=40, line_size=44, mark="ok", mark_at=A("q11", "Aquinas"))
+    card(cr, t, A("q11", "750"), 400, 650, 560, 180, "A CONTRADICTION", ["isn't anything"], col=RED,
+         title_size=40, line_size=44)
     vignette(cr, 0.45)
 
 

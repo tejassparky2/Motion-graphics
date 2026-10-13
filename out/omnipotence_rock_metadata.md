@@ -38,4 +38,4 @@ omnipotence paradox, can god make a rock he can't lift, the last bencher, parado
 Did the teacher win, or did he dodge it? 🪨 Defend your pick (respectfully) 👇
 ```
 
-**Video facts:** 45.1 s, 132 words of narration, voice `am_fenrir` at speed 0.92. Made for kids: **No**.
+**Video facts:** 37.2 s, 111 words of narration, voice `am_fenrir` at speed 0.92. Made for kids: **No**.
