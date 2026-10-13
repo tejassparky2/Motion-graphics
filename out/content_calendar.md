@@ -49,10 +49,10 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 27 | Mon Oct 12 | 4:30 AM | spotlight_effect | You Think 50% Noticed. Only 1 in 4 Did 👀 (Spotlight Effect) |
 | 28 | Mon Oct 12 | 9:30 PM | hanoi_rats | In 1902, a City Paid People to Kill Rats… Got MORE Rats 🐀 |
 | 29 | Tue Oct 13 | 4:30 AM | fermi_paradox | 100 Billion Stars. Zero Aliens. Where Is Everybody? 👽 *(moved from #46; lottery_happiness SKIPPED by owner 11 Oct)* |
-| 30 | Tue Oct 13 | 9:30 PM | socrates_know | Socrates Said "I Know Nothing"… That's WHY He Was Wise 🧠 |
+| 30 | Tue Oct 13 | 9:30 PM | meme_95_marks | Me: 95/100. Dad: Where Are the Other 5? 😭 *(meme; replaces socrates_know, skipped by the owner 13 Oct)* |
 | 31 | Wed Oct 14 | 4:30 AM | machiavelli_feared | Loved or Feared? Machiavelli's 500-Year-Old Answer 😈 |
-| 32 | Wed Oct 14 | 9:30 PM | diogenes_alexander | Alexander Offered Him Anything… His Reply Was Genius ☀️ |
-| 33 | Thu Oct 15 | 4:30 AM | marshmallow_test | The Marshmallow Test Was WRONG? The 2018 Retest 🍬 |
+| 32 | Wed Oct 14 | 9:30 PM | meme_exam_chapter | Teacher: This Won't Come in the Exam. The Exam: 💀 *(meme; replaces diogenes_alexander, skipped 13 Oct)* |
+| 33 | Thu Oct 15 | 4:30 AM | meme_3am | Me at 3 AM: Watched It 47 Times 😭 *(meme; replaces marshmallow_test, skipped 13 Oct)* |
 | 34 | Thu Oct 15 | 9:30 PM | ben_franklin_effect | Ben Franklin's Trick to Make an Enemy Like You 🤝 |
 | 35 | Fri Oct 16 | 4:30 AM | honeybee_life | What If You Were a Honeybee? Your Life in 70 Seconds 🐝 |
 | 36 | Fri Oct 16 | 9:30 PM | last_bencher_4 | "Nobody's Smarter Than Me." 3 Riddles Later 😏 |
@@ -76,16 +76,16 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 54 | Sun Oct 25 | 9:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea)* |
 | 55 | Mon Oct 26 | 4:30 AM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
 | 56 | Mon Oct 26 | 9:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea)* |
-| 57 | Tue Oct 27 | 4:30 AM | meme_95_marks | Me: 95/100. Dad: Where Are the Other 5? 😭 *(meme, rendered 11 Oct)* |
+| 57 | Tue Oct 27 | 4:30 AM | open_slot | *(open: the meme moved to #30)* |
 | 58 | Tue Oct 27 | 9:30 PM | newcomb_box | The Mind-Reading Box *(idea)* |
 | 59 | Wed Oct 28 | 4:30 AM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
 | 60 | Wed Oct 28 | 9:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
 | 61 | Thu Oct 29 | 4:30 AM | pascals_wager | Pascal's Wager *(idea)* |
 | 62 | Thu Oct 29 | 9:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
-| 63 | Fri Oct 30 | 4:30 AM | meme_exam_chapter | Teacher: This Won't Come in the Exam. The Exam: 💀 *(meme, rendered 11 Oct)* |
+| 63 | Fri Oct 30 | 4:30 AM | open_slot | *(open: the meme moved to #32)* |
 | 64 | Fri Oct 30 | 9:30 PM | trolley_problem | The Trolley Problem *(idea)* |
 | 65 | Sat Oct 31 | 4:30 AM | last_bencher_halloween | Last Bencher Halloween Special *(idea)* |
-| 66 | Sat Oct 31 | 9:30 PM | meme_3am | Me at 3 AM: Watched It 47 Times 😭 *(meme, rendered 11 Oct)* |
+| 66 | Sat Oct 31 | 9:30 PM | open_slot | *(open: the meme moved to #33)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
