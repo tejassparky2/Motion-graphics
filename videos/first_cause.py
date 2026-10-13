@@ -41,7 +41,6 @@ SCRIPT = [
                                         "the world."),
     dict(id="g9", scene="reply", text="Believers have an answer too. God isn't something that began. So God doesn't "
                                       "need a cause.", gap=0.35),
-    dict(id="g10", scene="still", text="Seven hundred years later, people are still arguing about it."),
     dict(id="g11", scene="end", text="So who wins this one? Aquinas, or Russell? Keep it respectful in the comments.",
          gap=0.3, pace=0.95),
 ]

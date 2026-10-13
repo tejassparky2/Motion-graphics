@@ -33,16 +33,12 @@ SCRIPT = [
     dict(id="v4", scene="three", text="Two. We could build them, but we never bother."),
     dict(id="v5", scene="three", text="Three. We are almost certainly living inside one right now.", pace=0.93),
     dict(id="v6", scene="games", text="Why number three? Look at video games.", gap=0.35),
-    dict(id="v7", scene="games", text="About fifty years ago, the best game was Pong. Two lines and a dot."),
     dict(id="v8", scene="games", text="Today, games look almost real. Keep improving, and one day you won't be able "
                                       "to tell them from reality."),
     dict(id="v9", scene="worlds", text="A future civilization could run billions of simulated worlds, full of people "
                                        "who think they're real."),
-    dict(id="v10", scene="worlds", text="So for every real world, there could be billions of fake ones."),
     dict(id="v11", scene="dream", text="Imagine a billion dream worlds and one real one. You wake up somewhere. Where "
                                        "are you, probably?", pace=0.95),
-    dict(id="v12", scene="quote", text="In [twenty sixteen,|2016,] Elon Musk said the odds that we are in base reality "
-                                       "are one in billions."),
     dict(id="v13", scene="unsure", text="But Bostrom himself says he doesn't know which of the three is true."),
     dict(id="v14", scene="end", text="So be honest. If this were a simulation, what's the first thing you'd do?",
          gap=0.3, pace=0.95),
@@ -268,19 +264,12 @@ def scene_three(cr, t, tl):
 
 def scene_games(cr, t, tl):
     A = tl.at
-    v7, v8 = A("v7"), A("v8")
+    v8 = A("v8")
     studio(cr, t, hexc("#2b2e48"), hexc("#5a4a7a"), seed=4)
     if t < v8:
         monitor(cr, 360, 520, 560, 400)
-        if t >= A("v7", "Pong."):
-            pong(cr, t, 360, 520, 560, 400)
-        else:
-            rrect(cr, 80, 320, 560, 400, 10)
-            paint(cr, hexc("#0a0a10"), None, 0)
-            if t >= A("v6", "games."):
-                bold_text(cr, "GAME", 360, 540, 80, CODE)
-        calendar(cr, t, A("v7", "fifty"), 590, 230, "ABOUT", "1972", col=RED)
-        sign(cr, t, A("v7", "Pong."), 300, 820, "TWO LINES AND A DOT", col=GOLD, size=40)
+        if t >= A("v6", "games."):
+            pong(cr, t, 360, 520, 560, 400)       # (the Pong line was cut on 14 Oct; the old game stays as a picture)
     else:
         real = ease_out(seg(t, A("v8", "tell"), A("v8", "reality.") + 0.4))
         gw, gh, gy = lerp(560, W + 40, real), lerp(400, H + 40, real), lerp(520, 640, real)
@@ -299,7 +288,7 @@ def scene_games(cr, t, tl):
 def scene_worlds(cr, t, tl):
     A = tl.at
     code_rain(cr, t, 0.35, seed=8)
-    v10 = A("v10")
+    v10 = A("v9", end=True) + 99      # (the "for every real world" line was cut on 14 Oct)
     start = A("v9", "billions")
     n = 0
     if t >= start:
@@ -312,9 +301,7 @@ def scene_worlds(cr, t, tl):
     if t < v10:
         counter(cr, t, start, 360, 900 - 90, 1000000000, size=84, dur=2.2, col=CODE, sub="SIMULATED WORLDS")
     else:
-        planet(cr, 360, 520, 120, real=True, t=t)
-        tag(cr, t, v10, 360, 350, "1 REAL", col=GOLD, size=52)
-        sign(cr, t, A("v10", "billions"), 360, 820, "VS BILLIONS OF FAKES", col=GREEN, size=50)
+        pass
     sign(cr, t, A("v9"), 360, 140, "A FUTURE CIVILIZATION", col=BLUE, size=48, end=A("v9", "people") - 0.05)
     sign(cr, t, A("v9", "people"), 360, 140, "PEOPLE WHO THINK THEY'RE REAL", col=PURPLE, size=40, end=v10 - 0.05)
     vignette(cr, 0.45)

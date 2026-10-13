@@ -32,8 +32,6 @@ SCRIPT = [
     dict(id="m5", scene="door", text="Twain writes him a note."),
     dict(id="m6", scene="note", text="The report of my illness grew out of his illness. The report of my death was "
                                      "an exaggeration.", speaker="twain", pace=0.95),
-    dict(id="m7", scene="misquote", text="That's the real line. Not \"greatly exaggerated.\" That version came "
-                                         "later."),
     dict(id="m8", scene="yacht", text="Ten years later, [nineteen oh seven.|1907.] Twain sails home from Virginia on "
                                       "a friend's yacht."),
     dict(id="m9", scene="yacht", text="The yacht slips away in the fog. Nobody hears from it."),

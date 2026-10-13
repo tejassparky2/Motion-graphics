@@ -21,10 +21,8 @@ NARRATOR = dict()
 TAIL = 0.9
 
 SCRIPT = [
-    dict(id="a1", scene="hook", text="A Greek thinker once proved that the fastest runner alive can never catch a "
-                                     "tortoise."),
-    dict(id="a2", scene="intro", text="His name was Zeno. And the runner was Achilles, the fastest hero in Greek "
-                                      "stories."),
+    dict(id="a1", scene="hook", text="A Greek thinker named Zeno once proved that the fastest runner alive, Achilles, "
+                                     "can never catch a tortoise."),
     dict(id="a3", scene="rules", text="Here's the race. Achilles runs [ten|10] meters every second. The tortoise "
                                       "runs one."),
     dict(id="a4", scene="race", text="So the tortoise gets a [hundred|100] meter head start."),
@@ -35,12 +33,11 @@ SCRIPT = [
     dict(id="a9", scene="steps", text="Every time Achilles reaches where the tortoise was, it has moved a little "
                                       "further."),
     dict(id="a10", scene="steps", text="The steps never end. So Zeno said, Achilles never catches it."),
-    dict(id="a11", scene="math", text="Sounds right? Here's the trick. Add up the times."),
+    dict(id="a11", scene="math", text="Here's the trick. Add up the times."),
     dict(id="a12", scene="math", text="[Ten|10] seconds. Plus one. Plus a tenth. Plus a hundredth.", pace=0.95),
     dict(id="a13", scene="math", text="The steps never end. But the total never even reaches [eleven point two|11.2] "
                                       "seconds."),
     dict(id="a14", scene="pass", text="So after about [eleven|11] seconds, Achilles is level. Then he zooms past."),
-    dict(id="a15", scene="summary", text="Endless steps. But a short race."),
     dict(id="a16", scene="end", text="So, did Zeno's trick fool you? Yes, or no?", gap=0.3),
 ]
 

@@ -28,8 +28,6 @@ SCRIPT = [
                                       "inside."),
     dict(id="t5", scene="doors", text="No person. Just machinery."),
     dict(id="t6", scene="move", text="Then the figure lifted its arm, picked up a piece, and played."),
-    dict(id="t7", scene="tour", text="For over eighty years, it toured Europe and America."),
-    dict(id="t8", scene="franklin", text="It's said to have played Benjamin Franklin too."),
     dict(id="t9", scene="illegal", text="The story goes, Napoleon tried an illegal move. The machine put the piece back.",
          gap=0.3),
     dict(id="t10", scene="how", text="So how did a machine from [seventeen seventy|1770] play chess?", gap=0.3),
