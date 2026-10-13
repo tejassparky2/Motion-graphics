@@ -39,4 +39,4 @@ sorites paradox, heap paradox, bald paradox, paradox explained, logic puzzle, ph
 Pick a number: how many grains make a heap? ⏳ Closest to the crowd's average gets pinned 👇
 ```
 
-**Video facts:** 45.6 s, 154 words of narration, voice `am_fenrir` at speed 0.88. Made for kids: **No**.
+**Video facts:** 49.2 s, 157 words of narration, voice `am_fenrir` at speed 0.88. Made for kids: **No**.

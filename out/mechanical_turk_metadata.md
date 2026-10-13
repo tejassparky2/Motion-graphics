@@ -38,4 +38,4 @@ mechanical turk, chess robot 1770, napoleon chess, chess hoax, history hoax, che
 Would YOU have spotted the trick? ♟️ And does it matter how a machine works if it fools everyone? 👇
 ```
 
-**Video facts:** 55.5 s, 171 words of narration, voice `am_fenrir` at speed 0.96. Made for kids: **No**.
+**Video facts:** 55.5 s, 170 words of narration, voice `am_fenrir` at speed 0.96. Made for kids: **No**.
