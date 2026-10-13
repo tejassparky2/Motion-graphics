@@ -50,23 +50,23 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 28 | Mon Oct 12 | 9:30 PM | hanoi_rats | In 1902, a City Paid People to Kill Rats… Got MORE Rats 🐀 |
 | 29 | Tue Oct 13 | 4:30 AM | fermi_paradox | 100 Billion Stars. Zero Aliens. Where Is Everybody? 👽 *(moved from #46; lottery_happiness SKIPPED by owner 11 Oct)* |
 | 30 | Tue Oct 13 | 9:30 PM | machiavelli_feared | Loved or Feared? Machiavelli's 500-Year-Old Answer 😈 |
-| 31 | Wed Oct 14 | 4:30 AM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ |
-| 32 | Wed Oct 14 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 |
-| 33 | Thu Oct 15 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? |
-| 34 | Thu Oct 15 | 9:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 |
-| 35 | Fri Oct 16 | 4:30 AM | last_bencher_4 | "Nobody's Smarter Than Me." 3 Riddles Later 😏 |
-| 36 | Fri Oct 16 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
+| 31 | Wed Oct 14 | 4:30 AM | ben_franklin_effect | Ben Franklin's Trick to Make an Enemy Like You 🤝 *(scheduled by the owner in Studio)* |
+| 32 | Wed Oct 14 | 9:30 PM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ *(replaces honeybee_life, which the owner deleted as too long, 14 Oct)* |
+| 33 | Thu Oct 15 | 4:30 AM | last_bencher_4 | "Nobody's Smarter Than Me." 3 Riddles Later 😏 *(scheduled by the owner in Studio)* |
+| 34 | Thu Oct 15 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 |
+| 35 | Fri Oct 16 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? |
+| 36 | Fri Oct 16 | 9:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 |
 | 37 | Sat Oct 17 | 4:30 AM | twain_dead_twice | Mark Twain Had To Tell The Papers He Wasn't Dead. Twice. 💀 |
-| 38 | Sat Oct 17 | 9:30 PM | spear_shield | One Lie Became the Chinese Word for "Contradiction" 🛡️ |
+| 38 | Sat Oct 17 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
 | 39 | Sun Oct 18 | 4:30 AM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 |
-| 40 | Sun Oct 18 | 9:30 PM | court_paradox | He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️ |
+| 40 | Sun Oct 18 | 9:30 PM | spear_shield | One Lie Became the Chinese Word for "Contradiction" 🛡️ |
 | 41 | Mon Oct 19 | 4:30 AM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ |
-| 42 | Mon Oct 19 | 9:30 PM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 |
-| 43 | Tue Oct 20 | 4:30 AM | ben_franklin_effect | Ben Franklin's Trick to Make an Enemy Like You 🤝 |
+| 42 | Mon Oct 19 | 9:30 PM | court_paradox | He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️ |
+| 43 | Tue Oct 20 | 4:30 AM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 |
 | 44 | Tue Oct 20 | 9:30 PM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
 | 45 | Wed Oct 21 | 4:30 AM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
 | 46 | Wed Oct 21 | 9:30 PM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
-| 47 | Thu Oct 22 | 4:30 AM | honeybee_life | What If You Were a Honeybee? Your Life in 70 Seconds 🐝 |
+| 47 | Thu Oct 22 | 4:30 AM | open_slot | *(open: needs a new video)* |
 | 48 | Thu Oct 22 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 | 49 | Fri Oct 23 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea)* |
 | 50 | Fri Oct 23 | 9:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
@@ -99,8 +99,8 @@ Rows 27–29 start the "researchers found…" series, built like the owner's Nap
 machiavelli_feared. The memes go to a different channel, so everything from #30 on moved up three slots.
 
 **14 Oct 2026:** Machiavelli (59.5% viewed) and Fermi (61.5%) stalled against a ~90% channel average. Owner: "keeping
-smaller and clearer is better". Rows 31-47 reordered so short stories go first and explainers alternate with stories;
-every queued video is being cut to about 35-40 s.
+smaller and clearer is better". The owner had already scheduled Ben Franklin (Oct 14 4:30 AM) and Last Bencher 4 (Oct 15 4:30 AM) in Studio, so
+those stay; the honeybee video (1:16) was deleted as too long and genie_wish takes its slot.
 
 ## Next up (to produce)
 

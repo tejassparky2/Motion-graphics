@@ -34,8 +34,13 @@
 - Open a loop in the first 5 seconds that only the ending closes ("but the teacher just smiles").
 - Don't trust `hookscore.py` for this channel (it scores our best openings WEAK); judge hooks against these rules.
 
+## Length: short and clear (owner, 14 Oct 2026)
+- Target **35-40 s** (hard ceiling ~42 s). Machiavelli and Fermi (45-50 s talky explainers) stalled at ~60% viewed
+  against a ~90% channel average. Cut repeated steps and side facts, never the core logic or the twist.
+- Alternate formats in the queue: never two explainers back to back; stories (Last Bencher, twist stories) go first.
+
 ## Paradoxes must be explained so any viewer understands
-- Clarity beats length: add a few seconds (45–50 s is fine) rather than skip a step.
+- Clarity first, but within 35-40 s: one step per sentence, no repeated steps or side facts.
 - State the rule plainly first, then walk the logic one step per sentence, with no jumps ("we'd know it's Friday,
   so it's no surprise, so it can't be Friday").
 - Every number the narrator uses must come from something already said (e.g. "one minute for every hundred cars"
