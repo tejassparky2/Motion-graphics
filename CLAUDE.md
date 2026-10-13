@@ -57,5 +57,7 @@
   `python tools/make_pack.py out/packs FIRST LAST` and send every due video plus its upload sheet in the same reply.
 - No metadata or encoder tags in outputs; never strip other parties' provenance watermarks (e.g. SynthID).
 - Riddle series is called **The Last Bencher** (not "Last Row Kid").
+- Memes (the 6–9 s "Me: / Dad:" reaction format) are for a **different channel**, not Interestingly Strange (owner,
+  13 Oct 2026). The three made on 11 Oct (`meme_95_marks`, `meme_exam_chapter`, `meme_3am`) are kept for that channel.
 - The doctor channel ("Body Facts") is a separate channel with its own chat and branch (`ccr-56282fe5-evehq4-doctor`). Don't make doctor videos on this branch.
 - The global news & tech channel is also separate, with its own chat and branch (`ccr-56282fe5-evehq4-news`). Don't make news videos on this branch.
