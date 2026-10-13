@@ -38,7 +38,7 @@ SCRIPT = [
                                         "was never seen."),
     dict(id="t13", scene="inside", text="Magnets under the board showed him every move, and levers moved the arm."),
     dict(id="t14", scene="box", text="The world's first chess computer, was a man in a box.", pace=0.95),
-    dict(id="t15", scene="ai", text="Today we ask the same thing about [A I.|AI.]", gap=0.3),
+    dict(id="t15", scene="ai", text="Today we ask the same thing about [A.I.|AI.]", gap=0.3),
     dict(id="t16", scene="ai", text="If a machine fools everyone, does it matter how it works?", pace=0.95),
 ]
 

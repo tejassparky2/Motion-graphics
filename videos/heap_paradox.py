@@ -31,7 +31,7 @@ SCRIPT = [
                                           "thinker named Eubulides asked it with sand.", gap=0.3),
     dict(id="h6", scene="grains", text="One grain of sand is not a heap."),
     dict(id="h7", scene="grains", text="Add one grain. Still not a heap."),
-    dict(id="h8", scene="grains", text="And one grain can never turn a not-heap into a heap."),
+    dict(id="h8", scene="grains", text="And one grain can never turn something that isn't a heap, into a heap."),
     dict(id="h9", scene="million", text="So, by that rule, a million grains is not a heap either."),
     dict(id="h10", scene="million", text="But that's obviously a heap."),
     dict(id="h11", scene="adult", text="It's everywhere. When do you become an adult?", gap=0.3),
@@ -42,6 +42,8 @@ SCRIPT = [
     dict(id="h15", scene="end", text="So, which grain makes it a heap? Tell me your number.", gap=0.3, pace=0.95),
 ]
 clear_dialogue(SCRIPT, ids=["h1"], pace=0.95)
+for _spec in SCRIPT[1:-1]:      # the logic steps, a touch slower so every step lands
+    _spec.setdefault("pace", 0.94)
 
 METADATA = dict(
     title="Lose 1 Hair. Not Bald. Then When? 🧑‍🦲",
