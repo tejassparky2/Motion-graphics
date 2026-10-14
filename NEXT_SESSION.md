@@ -8,7 +8,8 @@ The old chat can't see the key, so **this new chat takes over both channels** (E
 ## 0. Move the upload reminders to this chat
 The every-2-days upload reminders were bound to the old session (session_011eLEn9HbPwBg7ViAYhwmQ5). List them
 (list_triggers: "Upload reminder: rows 34-37", "rows 38-41", "rows 42-45", "rows 46-49"), recreate each one in this
-session with the same time and prompt, then delete the old ones. Reminders ALWAYS send the video files
+session with the same time, then delete the old ones. Rewrite each prompt from out/content_calendar.md
+(the old ones still name twain_dead_twice at row 37 and achilles at row 46; the calendar is right: 37 is immortal_jellyfish, 46-47 are open). Reminders ALWAYS send the video files
 (python tools/make_pack.py out/packs FIRST LAST + SendUserFile).
 
 ## 1. ElevenLabs voice samples, FIRST (owner: "test elevenlabs English voice; if emotions are good we can switch")
