@@ -545,6 +545,8 @@ def clone_check(takes, tries=3, slack=0.15):
     import shutil
     import soundfile
     takes = list(dict.fromkeys(tuple(x) + (None,) * (3 - len(x)) for x in takes))
+    if CLONE_MODEL == "turbo":   # Turbo's pace varies with emotion; clarity and tag sounds stay strict, pace less so
+        slack = max(slack, 0.3)
     tries = tries + 2 if any(_has_sound(t) for t, _, _ in takes) else tries
     todo = [(t, p, w) for t, p, w in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w) + ".ok")]
     if not todo:

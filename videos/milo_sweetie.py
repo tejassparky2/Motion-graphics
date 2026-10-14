@@ -70,7 +70,7 @@ def plan(tl):
         (A("b5"), S["doorway"], P(dict(focus=(0.5, 0.4), zoom=(1.0, 1.08)))),
         (A("b6"), S["woman"], P(dict(focus=(0.5, 0.3), zoom=(1.05, 1.3), shake=0.25))),
         (A("b7"), S["foot"], P(dict(focus=(0.5, 0.6)))),
-        (A("b7", "coming"), S["woman"], dict(move="push", zoom=(1.35, 1.5), focus=(0.5, 0.3), shake=0.15)),
+        (A("b7", "coming"), "v1_06_woman_b", dict(move="push", zoom=(1.35, 1.5), focus=(0.5, 0.3), shake=0.15)),
         (A("b8"), S["lock"], P(dict(focus=(0.5, 0.5), shake=0.2))),
         (A("b8", "call"), S["face"], dict(move="hold", zoom=(1.25, 1.27), bright=0.45)),
         (A("b9"), S["underbed"], P(dict(focus=(0.65, 0.6), zoom=(1.04, 1.3), shake=0.1))),

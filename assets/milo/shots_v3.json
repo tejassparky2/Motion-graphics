@@ -10,32 +10,28 @@
  {
   "name": "v3_02_knock",
   "seeds": [
-   3,
-   4
+   3
   ],
   "prompt": "basement door at night, dim light leaking from the gap under it, the chains and locks rattling, dark hallway, creepy"
  },
  {
   "name": "v3_03_lily",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "little girl with blonde pigtails sitting at a kitchen table at night drawing with crayons, calm, dim lamp light, slightly unsettling"
  },
  {
   "name": "v3_04_photo",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "framed family photo of a mother, father and one little blonde girl on a fridge door, held by magnets, dim kitchen light"
  },
  {
   "name": "v3_05_listen",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "MC crouched in a dark hallway with his ear pressed against an old basement door, listening, scared"
  },
@@ -52,8 +48,7 @@
  {
   "name": "v3_07_phone",
   "seeds": [
-   3,
-   4
+   3
   ],
   "layout": "build/milo_layouts/v1_phone.png",
   "strength": 0.75,
@@ -62,8 +57,7 @@
  {
   "name": "v3_08_camera",
   "seeds": [
-   1,
-   2
+   1
   ],
   "layout": "build/milo_layouts/v3_camera.png",
   "strength": 0.65,

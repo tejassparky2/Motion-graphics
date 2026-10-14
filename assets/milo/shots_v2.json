@@ -12,8 +12,7 @@
  {
   "name": "v2_02_wave",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "MC seen from behind standing at his dark bedroom window at night, his hand raised against the glass, a lit window across the street, suspense"
  },
@@ -30,8 +29,7 @@
  {
   "name": "v2_04_closet",
   "seeds": [
-   1,
-   2
+   1
   ],
   "layout": "build/milo_layouts/v2_closet.png",
   "strength": 0.65,
@@ -40,8 +38,7 @@
  {
   "name": "v2_05_note",
   "seeds": [
-   1,
-   2
+   1
   ],
   "layout": "build/milo_layouts/v2_note.png",
   "strength": 0.65,
@@ -50,32 +47,28 @@
  {
   "name": "v2_06_eyes",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "extreme close-up of MC wide terrified eyes in the dark, cold moonlight across his face, tears, frozen in fear"
  },
  {
   "name": "v2_07_run",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "MC running down a dark staircase at night toward the front door, motion blur, panic, seen from above"
  },
  {
   "name": "v2_08_police",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "suburban house at night with red and blue police lights flashing on the walls, police car in the driveway, front door open, tense"
  },
  {
   "name": "v2_09_attic",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "dark cramped attic lit by a flashlight beam, a dirty sleeping bag on the wooden floor, empty food cans, someone has been living here, creepy"
  },
@@ -90,8 +83,7 @@
  {
   "name": "v2_11_hatch",
   "seeds": [
-   1,
-   2
+   1
   ],
   "layout": "build/milo_layouts/v2_hatch.png",
   "strength": 0.65,
