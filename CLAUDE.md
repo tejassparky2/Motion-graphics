@@ -76,6 +76,7 @@
   common English words kept: teacher, class, exam, phone). The voice must carry emotion like the owner's reference
   (Abhay Create's Hindi Shorts). Kokoro Hindi and Chatterbox Hindi samples were rejected ("voice not good"); still
   choosing between Indic Parler-TTS, the owner's own recording, or a paid voice (ElevenLabs / Sarvam).
-  From 14 Oct the new chat (which can use ELEVENLABS_API_KEY) runs both channels; see NEXT_SESSION.md.
+  From 14 Oct the new chat (which can use ELEVENLABS_API_KEY) runs both channels; see NEXT_SESSION.md. The full history since
+  Sep 29 is in PROJECT_HISTORY.md, and every owner message word for word is in docs/owner_messages_log.md.
 - The doctor channel ("Body Facts") is a separate channel with its own chat and branch (`ccr-56282fe5-evehq4-doctor`). Don't make doctor videos on this branch.
 - The global news & tech channel is also separate, with its own chat and branch (`ccr-56282fe5-evehq4-news`). Don't make news videos on this branch.

@@ -1,0 +1,163 @@
+# Every message from the owner, in order (Sep 29 - Oct 14, 2026)
+
+Verbatim from the first chat (session_011eLEn9HbPwBg7ViAYhwmQ5), times in UTC. Read with PROJECT_HISTORY.md.
+
+- **2026-09-29T14:30** [uploaded file: 4d0fd410-vidssave.com_How_the_Rich_fools_you__720P.mp4] https://youtube.com/shorts/pw2TULWYTio  Can you make 2d animation as in this video?
+- **2026-09-29T15:31** Can't open any mt4 there is mark like this
+- **2026-09-29T15:32** Add a voiceover narration to the video
+- **2026-09-29T15:53** I don't want silences like that I want narration and video both fast which keeps engaging i don't want pauses take inspiration from the video I uploaded i want good retention and watch rate for video do deep research use deep intelligent go through all avaible articles and discussions on reddit github and other platforms this is serious work no hallucinations deepthink ultrathink
+- **2026-09-29T17:05** Remove any ai waster or synth id i don't want any of that
+- **2026-09-29T17:07** Continue
+- **2026-09-29T17:35** I want voice to be human like easy to understand and with few emotion voice refer to similar creators
+- **2026-09-29T17:57** What will be channel name something creative unique and easy to remember
+- **2026-09-29T17:58** I am not targeting indians so don't give me indian only names
+- **2026-09-29T18:00** No I won't be covering only this rich trips I will be going wiered animals insects inserting history patadory everything
+- **2026-09-29T18:02** Interestingly strange
+- **2026-09-29T18:04** Check for me
+- **2026-09-29T18:09** Design a logo
+- **2026-09-29T18:21** Give me seo title and description for this first video max reach
+- **2026-09-29T18:34** [uploaded file: f6890e45-vidssave.com_The_Secret_of_Wife__720P.mp4] Now for this video make it same slang no generic voice and with each video everytime give me title description tags everything
+- **2026-09-29T18:38** Continue as soon as it resets
+- **2026-09-29T19:55** Bro the video script I gave you has different ending and script and you made different just follow script the voice is good now
+- **2026-09-29T20:05** Which is best upload time to reach usa audience
+- **2026-09-29T20:09** Ok I schedule daily at 9:30 pm ist
+- **2026-09-29T20:10** Which is best 9:30 pm or 6:30 pm ist
+- **2026-09-29T20:12** How many videos daily to reach good views and this channel will be monetizatabke?
+- **2026-09-29T20:14** Will go 2 for day what time for both
+- **2026-09-29T20:19** Should I upload in tiktok with usa vpn and fb
+- **2026-09-29T20:27** Bio for our channel
+- **2026-09-29T20:41** create more stories like this and wiered animal or insect inserting facts and inserting wierd history stories
+- **2026-09-29T21:06** I love wiered interesting theory and paradox write them to animate after I agree
+- **2026-09-30T06:27** [uploaded file: a0f06e73-vidssave.com_East_or_west_Backbenchers_is_best_720P.mp4] Make 1 Monty hall problem then the video i have attached
+- **2026-09-30T08:14** Now generate some interesting wiered histories and time paradox multiverse like that
+- **2026-09-30T08:19** A2 and B6
+- **2026-09-30T08:44** We can create many good quality together so uploading 5 daily is good will it make yt sus or impact on monetization do deep research use deep intelligent go through all avaible articles and discussions on reddit github and other platforms this is serious work no hallucinations deepthink ultrathink
+- **2026-09-30T09:33** Will stay with 3 a day give me timings
+- **2026-09-30T09:35** Have uploaded and scheduled this 4 give me rest videos
+- **2026-09-30T09:55** https://www.instagram.com/reel/Ddzi1kZv4xH/?stkn=MWc3MmZzdDZpajdwag==  For another channel can we create like him latest news omaragammy
+- **2026-09-30T10:05** Should I schedule all 2 days once no schedule daily seems better
+- **2026-09-30T10:08** Ok now for next batch i want you to be creative funny and interesting i want you to create 4 video for next batch 1 paradox interesting one 2 funny story with clever twist 3 animals or incests wiered things 4 wiered interesting or clever history
+- **2026-09-30T13:41** https://youtube.com/shorts/SrQtsTGsn_Q  https://youtube.com/shorts/HN6e7S7ZWKQ  Now make this 2 videos
+- **2026-09-30T14:00** Can't you download with any python modules or download website like save video?
+- **2026-09-30T14:07** [uploaded file: 3b70dc62-Class_of_Scammers_720p.mp4]
+- **2026-09-30T14:59** Make 3 more videos it should be funny good twist inspiration from back bencher video and class of stammers video
+- **2026-09-30T15:31** Now create one about clever man or clever history with good twist
+- **2026-09-30T15:49** Now 1 clever story with good twist and thr story and visuals should keep users engaged throughout the video psychology then list all video with time to upload expect the one already uploaded i have attached screenshot of already uploaded
+- **2026-09-30T17:03** Can you clone my voice so our channel stays safe?
+- **2026-10-01T01:33** I already have my avatar in gemeni omni flash so let's use same voice it uses i can create a give multiple videos from there and upload here
+- **2026-10-01T01:34** It's my own voice clone give me prompt for each video
+- **2026-10-01T01:45** You need 15 videos to clone voice?
+- **2026-10-01T01:46** Can't you clone voice from gemini cloned voice? Option 2 with gemini
+- **2026-10-01T01:56** Let's make more trick riddles one like the last row kid vs teacher
+- **2026-10-01T02:22** Upload schedule: all 15 remaining videos give me all video here so I download all
+- **2026-10-01T04:52** Give me meta data too
+- **2026-10-01T04:57** Would I schedule all of theme now or yt will get sus for mass content if I do?
+- **2026-10-01T05:11** I scheduled 6 will do rest after all published
+- **2026-10-02T06:54** This are the results
+- **2026-10-02T07:01** Last Row Kid Part 3 plus two new paradoxes? Name let me last benchers not last row kid
+- **2026-10-02T08:11** When saying riddles and his answers slow down a little so it's understandable and don't join wrong sentences
+- **2026-10-02T08:41** Remember not only riddles always in any video don't join wrong sentences use full stop where necessary it should be like human pronouncing learn from any example avaible or videos I gave don't join wrong sentences and use full stop where necessary aka pause
+- **2026-10-02T10:01** give me all videos when done
+- **2026-10-02T10:39** It's not from gemini It's my own clone it match to reference video speed and give me sample i will listen
+- **2026-10-02T11:06** Good make slightly little faster and re render video don't render what already uploaded till the teacher Bluffed first render 1 video after my approval go on for rest
+- **2026-10-02T11:47** Can you optimize the voice for better accent and it's very speed in some line and very slow in some optimize the voice accent and sharp base with reference video and speed similar as the teacher Bluffed video optimize voice clear crips sharp inspiration from reference video
+- **2026-10-02T13:31** Okay good we can polish more later hotel video got 15k views i see potential
+- **2026-10-02T14:03** What was speed of our previous voice after fix?
+- **2026-10-02T14:05** Give me all videos when done
+- **2026-10-02T14:30** [uploaded file: d3ece76a-Motion-Graphics-with-Claude-Code.pdf] Is this guide helps us anyway? Don't apply or change any
+- **2026-10-02T14:40** [uploaded file: 8b8a9e77-Video-79044.mp4] Can you make doctor video like this in same quality
+- **2026-10-02T15:01** [uploaded file: f3520f85-Video-20615.mp4] Man this type of video is getting viral and they do part1 2 3 don't build anything if you can build this we do in another chat this session is for only our og 2d videos for doc also will change session once build
+- **2026-10-02T15:07** give me all videos when done and what is the text fonts we use on our video?
+- **2026-10-02T16:35** This is doing amazing we should focus on paradox video and shorter 40 seconds video
+- **2026-10-02T16:42** Skip part 2 and make rest and follow like hotel one which worked starting phase which keep user engaging and end with question which bring down to comment
+- **2026-10-02T17:09** I want you to explain paradox neatly cleanly so viewers understand if want increase few seconds but viewers should understand clearly sentence should be clear Everything should be clear visually voice should sound correctly sentence should sound meaningful  I want you to explain paradox neatly cleanly so viewers understand if want increase few seconds but viewers should understand clearly sentence
+- **2026-10-02T17:56** Give me all videos why it taking so long just to replace voice?
+- **2026-10-02T18:10** give me the rest of the videos when done
+- **2026-10-02T18:11** On which cpu you running them?
+- **2026-10-02T18:12** If I run on my laptop rtx 3080 intel core i7 11th gen 16 gb ram
+- **2026-10-02T18:12** No we will switch later tomorrow don't do anything now
+- **2026-10-02T18:14** 3080 4 gb card now don't shift will do later
+- **2026-10-02T18:20** For Oct 4 there is no video stated for 4:30 there are only 9:30 and 1:30
+- **2026-10-02T19:17** This channel has potential to grow?
+- **2026-10-02T19:30** Send me all at once have scheduled till ship one
+- **2026-10-03T04:48** https://github.com/Jakeschincariol/youtube-agent-skill
+- **2026-10-03T10:34** Give only 1 doctor video
+- **2026-10-03T11:25** Good but I need organs and other things voice to be cute
+- **2026-10-03T19:17** When customer tap buy now or something on mini cracker it should work
+- **2026-10-03T19:18** I mean mini dude
+- **2026-10-03T20:55** Can you make orange and others things voice clear but cute
+- **2026-10-03T22:25** Can you transfer this doctor one for seperate chat so we have our 1st channel here and doctor in seperate chat
+- **2026-10-04T05:52** [uploaded file: 5bf63e7f-videoplayback.mp4] Why don't you research on saying wording researchers said video like this i want more like rhis i have attached the example
+- **2026-10-04T06:20** The Napoleon quote appears unsourced and only on quote sites, so I'll drop it per your rule against disputed claims, and the religion-vs-rich angle is too risky for advertisers. I'll now run three more checks on stronger, safer candidates.  No i want you to do we have freedom to make videos we explore all no risky anything
+- **2026-10-04T11:12** Good now give all video after ship one
+- **2026-10-04T11:16** The Last 4 video you made are good make more video on research and someone wording clever mens clever history arguable words which lead them to comment
+- **2026-10-04T11:49** This are the current stats
+- **2026-10-04T15:14** Skipping 16 18 23 26 30 because no good content and understanding
+- **2026-10-04T16:14** Can gemini or gpt make similar animation if yes give me comments and skills needed for them to make same quality content
+- **2026-10-04T16:23** Make 5 more clever words videos for the free slots and 32 explanation not good it's message story not clear and the explanation don't make it understand clearly try to add example to make understand clear
+- **2026-10-04T17:07** I wanna make different chat for global news and tech channel inspired from omaragamyy
+- **2026-10-04T17:29** https://www.instagram.com/reel/Db5tPewK7g2/?stkn=NjhlcXBjanVrZmo2  Now make video on this
+- **2026-10-04T17:32** You checked the video or only read the caption?
+- **2026-10-04T17:32** [uploaded file: 65722cbf-Video-46177.mp4]
+- **2026-10-05T05:05** After my voice the swiping away increasing allot in all my voice videos should we switch back to the voice before?
+- **2026-10-05T05:07** But it will not be Problem for monetization? Maybe if we twick kokoro voice to make it our own?
+- **2026-10-05T05:29** And push same for doc and news channel let's use previous voice and yeah but posting 3 is risky let's switch back to 2 and for script you give me switch first if anything needed I will add or change so this workflow protect monetization?
+- **2026-10-05T05:51** Change to default voice our boat one
+- **2026-10-05T06:35** Now from here i should upload i will schedule once in 2 days so it's 4
+- **2026-10-05T06:37** Give me all videos
+- **2026-10-05T06:48** There is nothing in Oct 5 9:30
+- **2026-10-05T06:59** Give all together with right date and Metadata in one sheet
+- **2026-10-05T07:03** I am skipping 12 exam answer it's not good rearrange now
+- **2026-10-05T07:20** Remind me 2 days once to upload as we done till Oct7 430
+- **2026-10-05T11:06** I am exchanging principal video with pinaco paradox the nose one change there timings
+- **2026-10-06T17:43** [uploaded file: bf8e08a7-Video-26491.mp4] Can you make animation of this quality and voice like this funny? Just answer don't create any
+- **2026-10-06T18:01** You render here fast or my vps with arm 2 core 12 gb ram?
+- **2026-10-06T18:05** Ok now work on good high quality animation and funny narration from reference video try to produce highest quality you can no hallucinations deepthink ultrathink and you and 2 other channel uses same machine? If yes can we spilt them to different machine
+- **2026-10-07T16:43** approved, give me the video when done
+- **2026-10-07T17:17** Now with same quality of animation make our videos our ideas as before keep quality not the script
+- **2026-10-07T17:33** Slow little my cloned voice and push to new chat
+- **2026-10-07T17:37** approved, make all 4 videos
+- **2026-10-08T16:36** For voice clone which opensouce model you are using?
+- **2026-10-09T11:29** I want to make a for your3d i will make a video i need you to edit and add my cloned voice i need to keep it seperate from this so create new chat for this don't do it here and also give me next videos after parking one
+- **2026-10-09T20:27** Pinocchio one worked good i want something easy to understand debate and mind blowing one like that it can be research paradox or own story
+- **2026-10-09T20:32** Go on with upgraded animation style each with example and clever question in end if possible try to add emotion to voice as reference video
+- **2026-10-09T21:32** You don't need to fact check everything you can use your own knowledge and cretivity yours own clever stories too
+- **2026-10-10T04:10** Push the high quality type of animation for doc channel
+- **2026-10-11T08:25** Give me videos after horn one
+- **2026-10-11T08:58** I am skipping lottery one not good give me replacement
+- **2026-10-11T09:01** approved, make the genie video
+- **2026-10-11T10:32** install it and check all titles
+- **2026-10-11T10:35** yes update the sheets and send them
+- **2026-10-11T11:03** Now can you use all the skills from that repo?
+- **2026-10-11T11:04** How to export that data?
+- **2026-10-11T11:05** Can't we export all at once?
+- **2026-10-11T11:10** [uploaded file: 01ceb54e-Content_2026-09-29_2026-10-11_ItsInterestinglyStrange.zip]
+- **2026-10-11T11:14** Which other skills are useful?
+- **2026-10-11T11:16** Use all from our next videos
+- **2026-10-11T13:19** Now make 1 video with new skills with analysis
+- **2026-10-11T13:28** And focus on hook i want people to stay not swipe
+- **2026-10-11T14:29** [uploaded file: dae8a7fa-vidssave.com_Nokia_se_burl__de_Apple__shorts_480P.mp4] What about 5-6 seconds shorts like this is it monetizatable? He getting millions of views and which is that language
+- **2026-10-11T14:31** yes write 3 short loop scripts
+- **2026-10-11T14:36** approved, make all three loops and #47 v2
+- **2026-10-11T14:38** That's not even funny make high engaging memes
+- **2026-10-11T14:40** make 1, 3 and 6, and #47 v2 now
+- **2026-10-13T12:58** With reminder always send those videos too
+- **2026-10-13T13:01** Only keeping feared video and skipping all 3 because not good
+- **2026-10-13T13:02** No memes we use it for different channel
+- **2026-10-13T13:51** After this which are left?
+- **2026-10-13T13:52** Ok do for already written script
+- **2026-10-13T19:52** Why yt stopped pushing my videos?
+- **2026-10-13T19:55** Yeah keeping smaller and clearer is better
+- **2026-10-13T20:06** 40-50 seconds acceptable but i also want it to be clearly understandable
+- **2026-10-14T17:02** Done? Give me next set of videos to upload
+- **2026-10-14T17:13** Everything good except twai dead it's i am skipping it and can we make one more channel and upload same content in hindi there?
+- **2026-10-14T17:22** Seperate channel but i need the voice to carry emotions like abhay create reference video
+- **2026-10-14T17:51** Good but voice not good
+- **2026-10-14T18:09** Yup I prefer hinglisj
+- **2026-10-14T18:16** First I need good voice sample and i want English version too have emotions
+- **2026-10-14T18:30** The genie one doing good we need to focus more on content like that
+- **2026-10-14T18:33** En turbo is not bad make only 1 video with it to test
+- **2026-10-14T18:50** I have added elevenlabs keys
+- **2026-10-14T18:52** So the new chat remembers all we done from start?
+- **2026-10-14T18:53** I also want to test elevenlabs English voice if emotions if it good we can switch so try to access i added it to same environment ELEVENLABS_API_KEY=
+- **2026-10-14T18:54** I want it to know what all from start

@@ -1,6 +1,7 @@
 # Handoff for the next session (written 14 Oct 2026)
 
-Read CLAUDE.md first. The owner added `ELEVENLABS_API_KEY` to this environment (check it exists; never print it).
+Read CLAUDE.md first, then PROJECT_HISTORY.md (everything since Sep 29) and docs/owner_messages_log.md
+(every owner message, word for word). The owner added `ELEVENLABS_API_KEY` to this environment (check it exists; never print it).
 The old chat can't see the key, so **this new chat takes over both channels** (English and Hindi), on the same branch
 `ccr-56282fe5-evehq4`. Hindi files live under out/hindi/ and videos_hi/ (keep them apart from the English ones).
 
