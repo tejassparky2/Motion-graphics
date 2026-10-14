@@ -1,33 +1,40 @@
 # Handoff for the next session (written 14 Oct 2026)
 
-Read CLAUDE.md first. This session is for the **Hindi (Hinglish) channel only**: work on branch
-`ccr-56282fe5-evehq4-hindi` (create it from `ccr-56282fe5-evehq4` if it doesn't exist) and push there. The English
-channel keeps going in the original chat on `ccr-56282fe5-evehq4` (its upload reminders fire into that chat), so don't
-edit the English calendar, packs or videos here.
+Read CLAUDE.md first. The owner added `ELEVENLABS_API_KEY` to this environment (check it exists; never print it).
+The old chat can't see the key, so **this new chat takes over both channels** (English and Hindi), on the same branch
+`ccr-56282fe5-evehq4`. Hindi files live under out/hindi/ and videos_hi/ (keep them apart from the English ones).
 
-Then pick up here:
+## 0. Move the upload reminders to this chat
+The every-2-days upload reminders were bound to the old session (session_011eLEn9HbPwBg7ViAYhwmQ5). List them
+(list_triggers: "Upload reminder: rows 34-37", "rows 38-41", "rows 42-45", "rows 46-49"), recreate each one in this
+session with the same time and prompt, then delete the old ones. Reminders ALWAYS send the video files
+(python tools/make_pack.py out/packs FIRST LAST + SendUserFile).
 
-## 1. Hindi (Hinglish) channel: ElevenLabs voice samples, FIRST
-- The owner added an ElevenLabs key as the environment secret `ELEVENLABS_API_KEY` (check it exists; never print it).
-- Make 3-4 Hinglish samples of this line with emotional ElevenLabs voices (the eleven_v3 model supports Hindi and
-  audio tags like [excited], [whispers], [laughs]; otherwise eleven_multilingual_v2):
-  "सर, क्या भगवान इतना heavy पत्थर बना सकते हैं, कि वो खुद भी उसे lift ना कर पाएं? पूरी class एकदम silent. और teacher? वो बस smile करते रहे।"
-- Target: emotional storyteller delivery like the owner's reference (Abhay Create's Hindi Shorts). Try 2 male and 1
-  female premade Hindi/Indian voices from the ElevenLabs voice library. Do not clone any real person's voice.
-- Check each sample with Whisper medium (multilingual, cached: WhisperModel("medium", local_files_only=True),
-  language="hi"), save to out/hindi_samples/, send to the owner, ask which one.
-- Rejected so far: Kokoro hm_omega/hm_psi/hf_alpha, Chatterbox multilingual (stock and owner clone).
-- Indic Parler-TTS is ready in ~/.venv-indic (tools/hindi_parler_test.py) but needs `HF_TOKEN` (gated model).
-- Waiting for approval: out/hindi/scripts_batch1_hinglish.md (5 videos). After the voice is chosen and the scripts are
-  approved, add a Hindi narration path to motion/voice.py (ElevenLabs per sentence, cached in build/), Devanagari
-  captions (needs a Noto Sans Devanagari font), and render the Hindi versions into out/hindi/.
+## 1. ElevenLabs voice samples, FIRST (owner: "test elevenlabs English voice; if emotions are good we can switch")
+- **English:** same lines as out/voice_samples/ (Teacher Bluffed): "A teacher finds a pack of cigarettes in the
+  classroom trash can. / The school's cameras have been broken for years. / But the kids don't know that. / So he makes
+  a plan. / Four minutes of silence. Then Tyler stands up. / Everyone leans in. And it's... candy cigarettes!"
+  Make 3 samples with emotional premade storyteller voices (eleven_v3 with audio tags like [whispers], [excited],
+  [gasps], [laughs]; or eleven_multilingual_v2). Compare with the owner's current favourites: Chatterbox Turbo
+  (out/voice_samples/en_turbo_tags.m4a, "not bad") and Kokoro am_fenrir (current narrator).
+- **Hindi (Hinglish):** "सर, क्या भगवान इतना heavy पत्थर बना सकते हैं, कि वो खुद भी उसे lift ना कर पाएं? पूरी class एकदम
+  silent. और teacher? वो बस smile करते रहे।" Make 3 samples (2 male, 1 female), emotional storyteller like the
+  owner's reference (Abhay Create's Hindi Shorts).
+- Never clone a real person's voice; premade/library voices only. Check every sample with Whisper medium (English:
+  medium.en; Hindi: WhisperModel("medium", local_files_only=True), language="hi"). Save to out/voice_samples/ and
+  out/hindi_samples/, send to the owner, ask which ones.
+- Rejected for Hindi so far: Kokoro hm_omega/hm_psi/hf_alpha, Chatterbox multilingual (stock and owner clone).
+- If ElevenLabs wins: add an `elevenlabs` engine to motion/voice.py (one API call per sentence, cached in build/,
+  keep SENTENCE_TAKES / full-stop pauses; characters can use other ElevenLabs voices), then follow the owner's call on
+  which videos to switch.
 
-## 2. (English chat, for reference) Turbo narrator test
-- out/court_paradox_turbo.mp4 = the court paradox with Chatterbox Turbo's stock voice
-  (`NARRATOR_ENGINE=clone CLONE_MODEL=turbo`). Posting slot: row 42 (Oct 19, 9:30 PM). Compare its stayed-to-watch %
-  with similar Shorts before switching more videos to Turbo.
+## 2. Hindi channel
+- Waiting for approval: out/hindi/scripts_batch1_hinglish.md (5 videos: hotel, Last Bencher, Teacher Bluffed, genie,
+  lucky coin). After the voice and scripts are approved: Hindi narration + Devanagari captions (needs a Noto Sans
+  Devanagari font), English on-screen signs for now, render into out/hindi/.
 
-## 3. (English chat, for reference) Waiting on the owner
-- out/scripts_genie_style_batch1.md: 5 genie-style scripts (robot, principal, mirror, genie returns, ghost Halloween).
-  Owner said the genie video is doing well; make these after approval for the open slots from Oct 21, 9:30 PM.
-- Calendar: out/content_calendar.md. Upload reminders (trig_...) send packs via tools/make_pack.py.
+## 3. English channel status
+- Calendar: out/content_calendar.md. Made through row 45 (Oct 21 4:30 AM). Row 42 (Oct 19 9:30 PM) is the Turbo voice
+  test: out/packs/42_Oct19_930PM_court_paradox_TURBO_VOICE_TEST.mp4 (compare its stayed-to-watch %).
+- Waiting for approval: out/scripts_genie_style_batch1.md (robot, principal, mirror, genie returns, ghost Halloween).
+  The genie video is doing well; these fill the open slots from Oct 21 9:30 PM (ghost on Oct 31).
