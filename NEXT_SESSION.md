@@ -1,6 +1,11 @@
 # Handoff for the next session (written 14 Oct 2026)
 
-Read CLAUDE.md first. Then pick up here:
+Read CLAUDE.md first. This session is for the **Hindi (Hinglish) channel only**: work on branch
+`ccr-56282fe5-evehq4-hindi` (create it from `ccr-56282fe5-evehq4` if it doesn't exist) and push there. The English
+channel keeps going in the original chat on `ccr-56282fe5-evehq4` (its upload reminders fire into that chat), so don't
+edit the English calendar, packs or videos here.
+
+Then pick up here:
 
 ## 1. Hindi (Hinglish) channel: ElevenLabs voice samples, FIRST
 - The owner added an ElevenLabs key as the environment secret `ELEVENLABS_API_KEY` (check it exists; never print it).
@@ -17,12 +22,12 @@ Read CLAUDE.md first. Then pick up here:
   approved, add a Hindi narration path to motion/voice.py (ElevenLabs per sentence, cached in build/), Devanagari
   captions (needs a Noto Sans Devanagari font), and render the Hindi versions into out/hindi/.
 
-## 2. English: Turbo narrator test
+## 2. (English chat, for reference) Turbo narrator test
 - out/court_paradox_turbo.mp4 = the court paradox with Chatterbox Turbo's stock voice
   (`NARRATOR_ENGINE=clone CLONE_MODEL=turbo`). Posting slot: row 42 (Oct 19, 9:30 PM). Compare its stayed-to-watch %
   with similar Shorts before switching more videos to Turbo.
 
-## 3. Waiting on the owner
+## 3. (English chat, for reference) Waiting on the owner
 - out/scripts_genie_style_batch1.md: 5 genie-style scripts (robot, principal, mirror, genie returns, ghost Halloween).
   Owner said the genie video is doing well; make these after approval for the open slots from Oct 21, 9:30 PM.
 - Calendar: out/content_calendar.md. Upload reminders (trig_...) send packs via tools/make_pack.py.
