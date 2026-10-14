@@ -57,6 +57,14 @@
   closes on an either/or question ("Grant the wish, or not?"). Original stories, character voices, about 40 s.
 - Vary the character and setting every time (inauthentic-content rule): never two of the same character in a row.
 
+## Milo series: scary stories (owner, 14 Oct 2026)
+- Every scary story stars **Milo** (15, messy black hair, freckles, red hoodie), told by him in first person.
+- **Use every kind of fear**: suspense thriller, creepy real-world (intruders, strangers, secrets), horror, ghosts,
+  the supernatural. Mix them across the queue ("not abandon ghost, use all ways"). As scary as possible, but no gore
+  (keeps ads).
+- Visuals matter as much as the story: film-like realistic shots (tools/shots.py, free, local), never cartoon; a new
+  shot about every 2 s, camera always creeping, silence before each shock. Playbook: out/thriller_playbook.md.
+
 ## Length: 40-50 s and clearly understandable (owner, 14 Oct 2026)
 - Target **40-50 s**; clarity comes first: every step of the logic stays, one step per sentence. Cut side facts,
   repeats and extra examples instead. Machiavelli and Fermi (talky explainers) stalled at ~60% viewed against a ~90%
