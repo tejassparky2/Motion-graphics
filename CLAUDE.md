@@ -21,6 +21,11 @@
 - Pause lengths come from the reference videos the owner supplied (`out/voice_rhythm.md`).
 - Narrator: Kokoro `am_fenrir` (the default). The owner switched back from their cloned voice on 5 Oct 2026 because
   more viewers swiped away on the cloned-voice videos. Use the clone (`NARRATOR_ENGINE=clone`) only if the owner asks.
+- **Turbo + emotion tags (owner, 14 Oct 2026: "This is better")**: the crocodile video re-voiced with Chatterbox Turbo
+  for narrator AND characters (characters via `turbo_ref`), with sound tags placed where a storyteller would make the
+  sound, won over the plain versions. Make new story videos this way (`NARRATOR_ENGINE=clone CLONE_MODEL=turbo`;
+  how-to and what each tag really does: `out/turbo_tags_research.md`). One sound tag per line at most, 4-6 per video,
+  none on logic lines. Keep comparing stayed-to-watch % (rows 36 and 42) against the Kokoro videos.
 
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
