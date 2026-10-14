@@ -112,6 +112,8 @@ def write_metadata(path):
             f.write(f"**Pinned comment**\n```\n{m['pinned_comment']}\n```\n\n")
         words = sum(len(u.spoken) for b in tl.beats for u in b.units)
         voiced = (f"narrated by the channel owner (`{os.path.basename(VIDEO['narration'])}`)" if VIDEO.get("narration")
+                  else "Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned)"
+                  if narrator.ENGINE == "clone" and narrator.CLONE_MODEL == "turbo"
                   else "the channel owner's own cloned voice" if narrator.ENGINE == "clone"
                   else f"ElevenLabs voice `{next((k for k, v in narrator.ELEVEN.items() if v == narrator.VOICE), narrator.VOICE)}` ({narrator.EL_MODEL})"
                   if narrator.ENGINE == "elevenlabs"
@@ -186,7 +188,7 @@ def render_video(out, audio=True, voice=True):
         from motion.audio import build_soundtrack
         wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
-                                seed=VIDEO["name"])
+                                seed=VIDEO["name"], bed=getattr(VIDEO["mod"], "MUSIC", "plucks"))
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])

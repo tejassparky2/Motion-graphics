@@ -151,15 +151,134 @@ def sfx(name, dur):
     return np.zeros(1)
 
 
+def _lowpass(x, k):
+    return np.convolve(x, np.ones(k) / k, mode="same")
+
+
+def _thud(n_sec, f0, f1, decay, noise=0.3):
+    n = int(n_sec * SR)
+    f = np.linspace(f0, f1, n)
+    tone = np.sin(2 * np.pi * np.cumsum(f) / SR)
+    return (tone + noise * _lowpass(_rng.uniform(-1, 1, n), 8)) * _env(n, 0.002, decay)
+
+
+def thriller_sfx(name, dur):
+    """Suspense-thriller effects (the Milo series): all synthesized, no samples."""
+    if name == "heartbeat":            # lub-dub, speeding up over `dur`
+        n = int(max(1.0, dur) * SR)
+        out, t, gap = np.zeros(n + SR), 0.0, 0.9
+        while t < dur:
+            for off, g in ((0.0, 1.0), (0.18, 0.7)):
+                b = _thud(0.25, 70, 40, 0.07, 0.15) * g
+                i = int((t + off) * SR)
+                out[i:i + len(b)] += b[: max(0, len(out) - i)]
+            t += gap
+            gap = max(0.5, gap * 0.93)
+        return out[:n] * 0.9
+    if name == "sting":                # the shock: low hit + dissonant cluster that rings out
+        n = int(2.2 * SR)
+        t = np.arange(n) / SR
+        out = np.zeros(n)
+        for f in (311.1, 329.6, 466.2, 493.9, 622.3):
+            out += np.sin(2 * np.pi * f * t + 2 * np.sin(2 * np.pi * 5.5 * t)) * np.exp(-t / 0.9) * 0.12
+        out += _thud(2.2, 90, 30, 0.35, 0.5) * 0.9
+        return out
+    if name == "riser":                # tension swell that ends exactly at the cue time + dur
+        n = int(max(0.6, dur) * SR)
+        t = np.arange(n) / SR
+        f = np.linspace(180, 900, n)
+        tone = np.sin(2 * np.pi * np.cumsum(f) / SR) * 0.15 + _lowpass(_rng.uniform(-1, 1, n), 6) * 0.5
+        return tone * (t / t[-1]) ** 2.2 * 0.8
+    if name == "creak":                # old wood under weight
+        n = int(max(0.5, dur) * SR)
+        t = np.arange(n) / SR
+        f = 110 + 60 * np.sin(2 * np.pi * 0.9 * t) + 25 * _lowpass(_rng.uniform(-1, 1, n), 2000) * 40
+        saw = 2 * ((np.cumsum(f) / SR) % 1) - 1
+        grit = (np.sin(2 * np.pi * 37 * t) > 0.6)
+        return _lowpass(saw * (0.4 + 0.6 * grit), 6) * np.sin(np.linspace(0, np.pi, n)) * 0.35
+    if name == "knock":                # three knocks on a door
+        out = np.zeros(int(1.2 * SR))
+        for k in range(3):
+            b = _thud(0.2, 220, 120, 0.04, 0.6)
+            i = int(k * 0.32 * SR)
+            out[i:i + len(b)] += b
+        return out * 0.8
+    if name == "buzz":                 # a phone vibrating on a table
+        n = int(0.9 * SR)
+        t = np.arange(n) / SR
+        gate = ((t % 0.45) < 0.32).astype(float)
+        return np.sign(np.sin(2 * np.pi * 160 * t)) * _lowpass(gate, 300) * 0.12
+    if name == "ring":                 # a ringtone heard through a mattress: muffled marimba
+        n = int(max(1.5, dur) * SR)
+        out = np.zeros(n)
+        for k, m in enumerate([76, 79, 83, 81, 76, 79, 83, 86] * 4):
+            i = int(k * 0.18 * SR)
+            if i >= n:
+                break
+            nn = int(0.3 * SR)
+            tt = np.arange(nn) / SR
+            note = np.sin(2 * np.pi * 440 * 2 ** ((m - 69) / 12) * tt) * np.exp(-tt / 0.12)
+            out[i:i + nn] += note[: n - i]
+        return _lowpass(out, 14) * 0.5
+    if name == "step":
+        return _thud(0.3, 120, 50, 0.06, 0.8) * 0.6
+    if name == "lock":
+        out = np.zeros(int(0.35 * SR))
+        for i0 in (0, int(0.12 * SR)):
+            m = int(0.03 * SR)
+            out[i0:i0 + m] += np.diff(_rng.uniform(-1, 1, m + 1)) * np.exp(-np.arange(m) / (0.004 * SR))
+        return out * 0.5
+    if name == "slam":
+        return _thud(0.9, 80, 35, 0.2, 0.9) * 1.0
+    if name == "musicbox":             # the "song" someone hums downstairs, played back as an old music box
+        n = int(max(1.0, dur) * SR)
+        out = np.zeros(n)
+        mel = [72, 76, 79, 77, 76, 72, 74, 71, 72, 76, 79, 84, 83, 79, 77, 76]
+        for k, m in enumerate(mel * 4):
+            i = int(k * 0.36 * SR)
+            if i >= n:
+                break
+            nn = int(1.2 * SR)
+            tt = np.arange(nn) / SR
+            f = 440 * 2 ** ((m - 69) / 12) * (1 + 0.004 * np.sin(2 * np.pi * 0.7 * tt))   # slightly detuned
+            note = (np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.3 * np.sin(4 * np.pi * np.cumsum(f) / SR)) * np.exp(-tt / 0.5)
+            out[i:i + nn] += note[: n - i]
+        return out * np.minimum(1, np.arange(n) / (0.3 * SR)) * 0.1
+    if name == "whisper_air":          # breathy noise under a whisper
+        n = int(max(0.5, dur) * SR)
+        return np.diff(_rng.uniform(-1, 1, n + 1)) * np.sin(np.linspace(0, np.pi, n)) * 0.05
+    if name == "police":               # distant siren wail
+        n = int(max(1.0, dur) * SR)
+        t = np.arange(n) / SR
+        f = 700 + 250 * np.sin(2 * np.pi * 0.5 * t)
+        return _lowpass(np.sin(2 * np.pi * np.cumsum(f) / SR), 10) * np.minimum(1, t / 0.5) * 0.12
+    return None
+
+
+def drone(total, seed=None):
+    """The thriller bed: a low detuned drone that beats against itself, a cold high tone and air, getting slowly
+    more intense toward the end."""
+    n = int(total * SR) + SR
+    t = np.arange(n) / SR
+    rise = 0.6 + 0.4 * np.clip(t / max(total, 1), 0, 1)
+    low = (np.sin(2 * np.pi * 55 * t) + np.sin(2 * np.pi * 55.7 * t) + 0.5 * np.sin(2 * np.pi * 82.4 * t)) * 0.5
+    high = np.sin(2 * np.pi * (987.8 + 6 * np.sin(2 * np.pi * 0.13 * t)) * t) * 0.04 * (0.5 + 0.5 * np.sin(2 * np.pi * 0.07 * t))
+    air = _lowpass(_rng.uniform(-1, 1, n), 60) * 0.35 * (0.6 + 0.4 * np.sin(2 * np.pi * 0.11 * t))
+    return ((low + air) * rise + high)[: int(total * SR)] * 0.16
+
+
 GAINS = {"pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 
-def build_soundtrack(events, total, path, clips=None, seed=None):
-    """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV."""
+def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
+    """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
+    bed="thriller": the suspense drone instead of the plucked loop; a "hush" cue silences bed and effects for its
+    duration (the sudden silence before a shock)."""
     import pyloudnorm
     n = int(total * SR)
-    bed = music(total, seed)[:n]
+    bed = (drone(total, seed) if bed == "thriller" else music(total, seed))[:n]
+    hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()
     for at, name, dur in events:
@@ -167,7 +286,14 @@ def build_soundtrack(events, total, path, clips=None, seed=None):
         if key in seen or GAINS.get(name, 1.0) == 0:
             continue
         seen.add(key)
-        s = sfx(name, dur) * GAINS.get(name, 1.0)
+        if name == "hush":
+            i0, i1 = int(at * SR), int((at + dur) * SR)
+            f = int(0.05 * SR)
+            hush[max(0, i0):max(0, i1)] = 0
+            hush[max(0, i1):max(0, i1 + f)] = np.linspace(0, 1, len(hush[max(0, i1):max(0, i1 + f)]))
+            continue
+        th = thriller_sfx(name, dur)
+        s = (th if th is not None else sfx(name, dur)) * GAINS.get(name, 1.0)
         i = int(at * SR)
         if 0 <= i < n:
             s = s[: n - i]
@@ -180,6 +306,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None):
         loud = speaking > 0.5
         if not loud.any():       # a silent meme: no voice at all, so music + effects only
             clips = None
+    bed *= _lowpass(hush, 400)
     if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps

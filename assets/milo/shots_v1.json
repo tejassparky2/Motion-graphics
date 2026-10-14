@@ -1,0 +1,104 @@
+[
+ {
+  "name": "v1_01_stairs",
+  "seeds": [
+   3,
+   21
+  ],
+  "layout": "build/milo_layouts_s1.png",
+  "strength": 0.72,
+  "prompt": "MC seen from behind at the top of a dark wooden staircase at night, looking down at a warm glowing kitchen doorway below, dark hallway, suspense"
+ },
+ {
+  "name": "v1_02_kitchen",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v1_kitchen.png",
+  "strength": 0.7,
+  "prompt": "view down a dark staircase toward a warm lit kitchen doorway at night, a tall human shadow moving on the kitchen wall, nobody visible, suspense"
+ },
+ {
+  "name": "v1_03_phone",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v1_phone.png",
+  "strength": 0.75,
+  "prompt": "close-up of terrified MC in a pitch dark hallway, face lit from below by cold blue smartphone light, wide frightened eyes"
+ },
+ {
+  "name": "v1_05_doorway",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "empty kitchen doorway at night seen from a dark staircase, warm light, a chair pulled out, a pot steaming on the stove, nobody there, eerie silence"
+ },
+ {
+  "name": "v1_06_woman",
+  "seeds": [
+   7,
+   8
+  ],
+  "layout": "build/milo_layouts_s6.png",
+  "strength": 0.7,
+  "prompt": "view down a dark staircase, a woman silhouette standing still at the bottom, backlit by a bright kitchen doorway, face hidden in shadow, long shadow up the stairs, creepy"
+ },
+ {
+  "name": "v1_07_foot",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "low angle close-up of a woman's bare foot slowly stepping onto the first wooden stair in the dark, warm backlight, long shadow, creepy"
+ },
+ {
+  "name": "v1_08_lock",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "close-up of a shaking teenage boy's hand turning a bedroom door lock in the dark, red hoodie sleeve, cold blue moonlight, tense"
+ },
+ {
+  "name": "v1_09_underbed",
+  "seeds": [
+   9,
+   10
+  ],
+  "layout": "build/milo_layouts/v1_underbed.png",
+  "strength": 0.65,
+  "prompt": "dark gap under a bed at night, a smartphone lying under the bed with its screen glowing, dust, a pale hand in the shadows beside it, creepy"
+ },
+ {
+  "name": "v1_10_feet",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v1_feet.png",
+  "strength": 0.6,
+  "prompt": "closed bedroom door in a dark room, warm light in the gap under the door, the shadows of two feet standing right outside, creepy"
+ },
+ {
+  "name": "v1_11_knob",
+  "seeds": [
+   11,
+   12
+  ],
+  "prompt": "extreme close-up of a brass bedroom doorknob slowly turning in the dark, thin light from under the door, tense, suspense"
+ },
+ {
+  "name": "v1_12_choice",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v1_choice.png",
+  "strength": 0.72,
+  "prompt": "MC pressed against the wall of his dark bedroom between a closed door and a moonlit window, terrified, looking at the door"
+ }
+]

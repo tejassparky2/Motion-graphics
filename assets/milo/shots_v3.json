@@ -1,0 +1,80 @@
+[
+ {
+  "name": "v3_01_door",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "old wooden basement door in a dim hallway at night with three heavy locks and chains, a handwritten note taped to it, creepy, suspense"
+ },
+ {
+  "name": "v3_02_knock",
+  "seeds": [
+   3,
+   4
+  ],
+  "prompt": "basement door at night, dim light leaking from the gap under it, the chains and locks rattling, dark hallway, creepy"
+ },
+ {
+  "name": "v3_03_lily",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "little girl with blonde pigtails sitting at a kitchen table at night drawing with crayons, calm, dim lamp light, slightly unsettling"
+ },
+ {
+  "name": "v3_04_photo",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "framed family photo of a mother, father and one little blonde girl on a fridge door, held by magnets, dim kitchen light"
+ },
+ {
+  "name": "v3_05_listen",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "MC crouched in a dark hallway with his ear pressed against an old basement door, listening, scared"
+ },
+ {
+  "name": "v3_06_gap",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v3_gap.png",
+  "strength": 0.6,
+  "prompt": "gap under a wooden door at night, dim light leaking out, small child fingers reaching out from under the door, creepy"
+ },
+ {
+  "name": "v3_07_phone",
+  "seeds": [
+   3,
+   4
+  ],
+  "layout": "build/milo_layouts/v1_phone.png",
+  "strength": 0.75,
+  "prompt": "close-up of worried MC in a dark kitchen, face lit from below by cold blue smartphone light"
+ },
+ {
+  "name": "v3_08_camera",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v3_camera.png",
+  "strength": 0.65,
+  "prompt": "small security camera in the corner of a dark kitchen ceiling, glowing red recording light, pointed down, creepy"
+ },
+ {
+  "name": "v3_09_smile",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "little girl with blonde pigtails slowly looking up and smiling unsettlingly at the camera, dim kitchen at night, creepy"
+ }
+]

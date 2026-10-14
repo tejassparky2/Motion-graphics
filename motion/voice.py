@@ -60,10 +60,17 @@ TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
 MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference narrator's breaths are ~0.32 s)
 
 
-def configure(voice=None, speed=None, max_pause=None, engine=None):
+def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, turbo_ref=None):
     """Per-video narrator settings (environment variables still win, so you can audition voices).
-    `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris)."""
-    global VOICE, SPEED, MAX_PAUSE, ENGINE
+    `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris).
+    `turbo=True` voices the video with Chatterbox Turbo (and its tags); `turbo_ref="am_puck+1.5"` gives the narrator
+    the timbre of that Kokoro voice (pitch-shifted by the semitones after +/-) instead of Turbo's stock voice."""
+    global VOICE, SPEED, MAX_PAUSE, ENGINE, CLONE_MODEL, NARRATOR_REF
+    if turbo and "NARRATOR_ENGINE" not in os.environ:
+        engine = "clone"
+        if "CLONE_MODEL" not in os.environ:
+            CLONE_MODEL = "turbo"
+    NARRATOR_REF = turbo_ref
     if engine and "NARRATOR_ENGINE" not in os.environ and engine != ENGINE:
         ENGINE = engine
         if engine == "elevenlabs":
@@ -190,22 +197,40 @@ def _char(who):
     return None if (spec and _turbo_char(who)) else spec
 
 
+NARRATOR_REF = None
+
+
 def _turbo_char(who):
-    """The character's Turbo reference voice, if it speaks through Turbo in this render."""
-    spec = SPEAKERS.get(who) if who else None
-    return spec.get("turbo_ref") if (spec and ENGINE == "clone" and CLONE_MODEL == "turbo") else None
+    """The character's (or, for who=None, the narrator's) Turbo reference voice, if it speaks through Turbo."""
+    if not (ENGINE == "clone" and CLONE_MODEL == "turbo"):
+        return None
+    if not who:
+        return NARRATOR_REF
+    spec = SPEAKERS.get(who)
+    return spec.get("turbo_ref") if spec else None
 
 
 TURBO_REF_TEXT = ("Well, well. Look what we have here! Don't worry, I always keep my promises. Mostly. "
                   "Please, I'm begging you. Just this once. You'll see, it's going to be fine.")
 
 
-def _turbo_ref_wav(kvoice):
-    """A ~9 s clip of a Kokoro voice for Turbo to take the timbre from (made once, cached)."""
-    out = os.path.join(ROOT, "build", "turbo_refs", f"{kvoice}.wav")
+def _turbo_ref_wav(ref):
+    """A ~9 s clip of a Kokoro voice for Turbo to take the timbre from (made once, cached).
+    `ref`: "af_heart", or "am_puck+1.5" / "af_heart-2" for a pitch-shifted (younger / deeper) version."""
+    out = os.path.join(ROOT, "build", "turbo_refs", f"{ref}.wav")
     if not os.path.exists(out):
         os.makedirs(os.path.dirname(out), exist_ok=True)
-        _kokoro_wav(TURBO_REF_TEXT, 1.0, out, kvoice)
+        m = re.fullmatch(r"([a-z]{2}_[a-z]+)([+-][0-9.]+)?", ref)
+        kvoice, st = m.group(1), float(m.group(2) or 0)
+        raw = out + ".raw.wav"
+        _kokoro_wav(TURBO_REF_TEXT, 1.0, raw, kvoice)
+        if abs(st) > 0.01:
+            import imageio_ffmpeg
+            subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", raw, "-filter:a",
+                            f"rubberband=pitch={2 ** (st / 12):.5f}:pitchq=quality:formant=shifted", out], check=True)
+            os.remove(raw)
+        else:
+            os.replace(raw, out)
     return out
 
 

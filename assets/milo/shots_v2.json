@@ -1,0 +1,100 @@
+[
+ {
+  "name": "v2_01_window",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v2_window.png",
+  "strength": 0.7,
+  "prompt": "view from a dark bedroom window at night across a quiet suburban street, one lit window in the house opposite, an old man standing in it staring, creepy"
+ },
+ {
+  "name": "v2_02_wave",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "MC seen from behind standing at his dark bedroom window at night, his hand raised against the glass, a lit window across the street, suspense"
+ },
+ {
+  "name": "v2_03_point",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v2_point.png",
+  "strength": 0.7,
+  "prompt": "old man with grey hair in a cardigan standing in a lit window at night, slowly pointing his finger, serious face, creepy, seen through glass"
+ },
+ {
+  "name": "v2_04_closet",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v2_closet.png",
+  "strength": 0.65,
+  "prompt": "closet doors in a dark bedroom at night, open just a crack, pitch black gap between the doors, creepy, suspense"
+ },
+ {
+  "name": "v2_05_note",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v2_note.png",
+  "strength": 0.65,
+  "prompt": "old man in a lit window at night pressing a blank sheet of paper flat against the glass with both hands, urgent face, creepy"
+ },
+ {
+  "name": "v2_06_eyes",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "extreme close-up of MC wide terrified eyes in the dark, cold moonlight across his face, tears, frozen in fear"
+ },
+ {
+  "name": "v2_07_run",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "MC running down a dark staircase at night toward the front door, motion blur, panic, seen from above"
+ },
+ {
+  "name": "v2_08_police",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "suburban house at night with red and blue police lights flashing on the walls, police car in the driveway, front door open, tense"
+ },
+ {
+  "name": "v2_09_attic",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "dark cramped attic lit by a flashlight beam, a dirty sleeping bag on the wooden floor, empty food cans, someone has been living here, creepy"
+ },
+ {
+  "name": "v2_10_photos",
+  "seeds": [
+   1,
+   2
+  ],
+  "prompt": "dozens of polaroid photos pinned to a wooden attic beam, flashlight beam, the photos all show a boy sleeping in bed, creepy, stalker"
+ },
+ {
+  "name": "v2_11_hatch",
+  "seeds": [
+   1,
+   2
+  ],
+  "layout": "build/milo_layouts/v2_hatch.png",
+  "strength": 0.65,
+  "prompt": "open attic hatch in the ceiling of a dark closet, black hole above, a folding ladder hanging down, creepy"
+ }
+]
