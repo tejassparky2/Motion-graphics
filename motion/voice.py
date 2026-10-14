@@ -143,6 +143,9 @@ def _pronounce(text):
 
 
 CLONE_VERSION = "v3"   # bump when the clone generation, pace or tone changes
+# CLONE_MODEL=turbo: Chatterbox Turbo's own stock voice (not a clone of anyone), tested by the owner on 14 Oct 2026
+# ("en turbo is not bad, make only 1 video with it to test"). Same pipeline as the owner clone; separate caches.
+CLONE_MODEL = os.environ.get("CLONE_MODEL", "owner")
 
 
 # Character voices: a video sets voice.SPEAKERS = {"croc": dict(voice="am_onyx", speed=0.95, pitch=-2.5), ...}.
@@ -153,7 +156,7 @@ SPEAKERS = {}
 
 
 def _char(who):
-    return SPEAKERS.get(who) if (who and ENGINE == "kokoro") else None
+    return SPEAKERS.get(who) if (who and (ENGINE == "kokoro" or CLONE_MODEL == "turbo")) else None
 
 
 def _key(text, pace=1.0, who=None):
@@ -164,7 +167,7 @@ def _key(text, pace=1.0, who=None):
     if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     if ENGINE == "clone":
-        return hashlib.sha1(f"clone|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{text}".encode()).hexdigest()[:16]
+        return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
 
 
@@ -349,7 +352,7 @@ def _clone_process(text, pace):
         stretch = (f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
                    f"formant=preserved:pitchq=quality,") if abs(tempo - 1) > 0.005 else ""
         subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text),
-                        "-filter:a", stretch + CLONE_TONE, "-ar", str(SR), "-ac", "1", out], check=True)
+                        "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
     return out, rate * tempo
 
 
@@ -365,7 +368,7 @@ def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
 
 def _clone_raw(text):
     return os.path.join(ROOT, "build", "clone_tts",
-                        hashlib.sha1(f"owner|{CLONE_VERSION}|{text}".encode()).hexdigest()[:16] + ".wav")
+                        hashlib.sha1(f"{CLONE_MODEL}|{CLONE_VERSION}|{text}".encode()).hexdigest()[:16] + ".wav")
 
 
 # Spellings the clone pronounces more clearly (only what it's told to say; captions keep the real word).

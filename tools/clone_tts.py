@@ -32,10 +32,18 @@ def trim(w, sr):
 
 def main():
     jobs = json.load(open(sys.argv[1]))
-    model = ChatterboxTTS.from_pretrained(device="cpu")
-    model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
+    turbo = os.environ.get("CLONE_MODEL") == "turbo"     # Chatterbox Turbo's stock voice, no prompt (not a clone)
+    if turbo:
+        from chatterbox.tts_turbo import ChatterboxTurboTTS
+        model = ChatterboxTurboTTS.from_pretrained(device="cpu")
+    else:
+        model = ChatterboxTTS.from_pretrained(device="cpu")
+        model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
     for k, (text, out) in enumerate(jobs, 1):
-        w = model.generate(text, exaggeration=EXAGGERATION, cfg_weight=CFG)[0].numpy()
+        if turbo:
+            w = model.generate(text)[0].numpy()
+        else:
+            w = model.generate(text, exaggeration=EXAGGERATION, cfg_weight=CFG)[0].numpy()
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sf.write(out + ".tmp.wav", trim(w, model.sr), model.sr)
         os.replace(out + ".tmp.wav", out)
