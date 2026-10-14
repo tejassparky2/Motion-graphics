@@ -56,16 +56,16 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 34 | Thu Oct 15 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 |
 | 35 | Fri Oct 16 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? |
 | 36 | Fri Oct 16 | 9:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 |
-| 37 | Sat Oct 17 | 4:30 AM | twain_dead_twice | Mark Twain Had To Tell The Papers He Wasn't Dead. Twice. 💀 |
+| 37 | Sat Oct 17 | 4:30 AM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 *(replaces twain_dead_twice, skipped by the owner 14 Oct)* |
 | 38 | Sat Oct 17 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
 | 39 | Sun Oct 18 | 4:30 AM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 |
 | 40 | Sun Oct 18 | 9:30 PM | spear_shield | One Lie Became the Chinese Word for "Contradiction" 🛡️ |
 | 41 | Mon Oct 19 | 4:30 AM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ |
 | 42 | Mon Oct 19 | 9:30 PM | court_paradox | He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️ |
-| 43 | Tue Oct 20 | 4:30 AM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 |
-| 44 | Tue Oct 20 | 9:30 PM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
+| 43 | Tue Oct 20 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
+| 44 | Tue Oct 20 | 9:30 PM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
 | 45 | Wed Oct 21 | 4:30 AM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
-| 46 | Wed Oct 21 | 9:30 PM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
+| 46 | Wed Oct 21 | 9:30 PM | open_slot | *(open: needs a new video)* |
 | 47 | Thu Oct 22 | 4:30 AM | open_slot | *(open: needs a new video)* |
 | 48 | Thu Oct 22 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 | 49 | Fri Oct 23 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea)* |
