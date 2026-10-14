@@ -55,7 +55,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 33 | Thu Oct 15 | 4:30 AM | last_bencher_4 | "Nobody's Smarter Than Me." 3 Riddles Later 😏 *(scheduled by the owner in Studio)* |
 | 34 | Thu Oct 15 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 |
 | 35 | Fri Oct 16 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? |
-| 36 | Fri Oct 16 | 9:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 |
+| 36 | Fri Oct 16 | 9:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 *(also made with the Turbo voice + emotion tags: out/crocodile_dilemma_turbo.mp4; the owner picks which to post)* |
 | 37 | Sat Oct 17 | 4:30 AM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 *(replaces twain_dead_twice, skipped by the owner 14 Oct)* |
 | 38 | Sat Oct 17 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
 | 39 | Sun Oct 18 | 4:30 AM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 |
