@@ -5,7 +5,17 @@ Read CLAUDE.md first, then PROJECT_HISTORY.md (everything since Sep 29) and docs
 The old chat can't see the key, so **this new chat takes over both channels** (English and Hindi), on the same branch
 `ccr-56282fe5-evehq4`. Hindi files live under out/hindi/ and videos_hi/ (keep them apart from the English ones).
 
-## 0. Move the upload reminders to this chat
+## Status (14 Oct, new chat session_01G9k2suGZz1hYE4uG6LGe8F)
+- Step 0 done: the 4 upload reminders (rows 34-37, 38-41, 42-45, 46-49) now fire into this chat with prompts rebuilt
+  from the calendar; the old ones are deleted.
+- ElevenLabs account is on the **free plan** (10k characters/month, no commercial licence, attribution required;
+  library voices and Voice Design are blocked through the API). English samples made with premade voices
+  (out/voice_samples/en_eleven_{brian,chris,liam}.m4a, eleven_v3 + audio tags). Hindi native-accent voices
+  (Viraj, Rahul Hinglish, Monika Sogam) need the Creator plan or $5 credits: then run
+  `python tools/elevenlabs_samples.py library`. Free-plan Hindi samples with premade (US-accent) voices:
+  out/hindi_samples/hi_eleven_{brian_male,liam_male,jessica_female}.m4a. Waiting for the owner's pick.
+
+## 0. Move the upload reminders to this chat (done)
 The every-2-days upload reminders were bound to the old session (session_011eLEn9HbPwBg7ViAYhwmQ5). List them
 (list_triggers: "Upload reminder: rows 34-37", "rows 38-41", "rows 42-45", "rows 46-49"), recreate each one in this
 session with the same time, then delete the old ones. Rewrite each prompt from out/content_calendar.md
