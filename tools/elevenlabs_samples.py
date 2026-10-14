@@ -28,6 +28,22 @@ HI = ("[curious] सर, क्या भगवान इतना heavy पत�
       "[whispers] पूरी class एकदम silent.\n"
       "और teacher? [softly] वो बस smile करते रहे।")
 
+# Hindi channel narrator (owner, 14 Oct 2026: "for hindi Liam seems good", emotion like Abhay Create's Hindi Shorts):
+# the Hinglish genie script (out/hindi/scripts_batch1_hinglish.md #4) read like a dramatic Hindi Shorts storyteller.
+HI_GENIE = ("[dramatic] एक genie एक बच्चे को तीन wishes देता है। ... एक rule के साथ।\n"
+            "[deep voice] जो चाहे माँग लो। बस और wishes नहीं!\n"
+            "[excited] पहली wish। Chocolate का पहाड़।\n"
+            "दूसरी wish। दुनिया का सबसे smart बच्चा बनना।\n"
+            "[mischievously] अब वो दुनिया का सबसे smart बच्चा है। तो वो तीसरी wish माँगता है।\n"
+            "[whispers] मेरी wish है कि ये wish पूरी ना हो।\n"
+            "[dramatic] Genie वहीं... freeze हो जाता है।\n"
+            "अगर वो wish पूरी करे, तो wish पूरी हो गई। लेकिन wish तो कहती है कि पूरी ना हो।\n"
+            "अगर वो मना करे, तो wish पूरी नहीं हुई। जो बच्चे ने ठीक यही माँगा था।\n"
+            "[dramatic] दोनों तरफ़, genie का अपना जादू टूटता है।\n"
+            "[amused] तो genie अभी भी वहीं बैठा है। सोच रहा है।\n"
+            "और बच्चा? अभी भी पहली wish पे। Chocolate खा रहा है।\n"
+            "[curious] तो genie को क्या करना चाहिए? Wish पूरी करे, या नहीं?")
+
 # (file, voice_id, voice name, model, text)
 SAMPLES = [
     ("out/voice_samples/en_eleven_brian", "nPczCjzI2devNBz1zQrb", "Brian (deep, resonant)", "eleven_v3", EN),
@@ -38,6 +54,7 @@ SAMPLES = [
     ("out/hindi_samples/hi_eleven_brian_male", "nPczCjzI2devNBz1zQrb", "Brian (premade)", "eleven_v3", HI),
     ("out/hindi_samples/hi_eleven_liam_male", "TX3LPaxmHKxFdv7VOQHJ", "Liam (premade)", "eleven_v3", HI),
     ("out/hindi_samples/hi_eleven_jessica_female", "cgSgspJ2msm6clMCkdW9", "Jessica (premade)", "eleven_v3", HI),
+    ("out/hindi_samples/hi_liam_genie_story", "TX3LPaxmHKxFdv7VOQHJ", "Liam (Hindi narrator)", "eleven_v3", HI_GENIE),
 ]
 HI_LIBRARY = [  # native Hindi narrators from the public voice library (paid API access): (file, voice_id, name)
     ("out/hindi_samples/hi_eleven_viraj_male", "3AMU7jXQuQa3oRvRqUmb", "Viraj - Rich, Confident and Expressive"),

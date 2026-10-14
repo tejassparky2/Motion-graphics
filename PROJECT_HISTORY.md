@@ -69,6 +69,12 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
   emotion wanted too: Chatterbox **Turbo** stock voice was "not bad" → one test video (court paradox, row 42).
   Owner added **ELEVENLABS_API_KEY**; only new sessions can see it → this handoff.
 
+- **Oct 14 (new chat, with the ElevenLabs key):** upload reminders moved to the new chat. ElevenLabs samples: the
+  owner picked **Chris** for English ("Chris is good") and **Liam** for Hindi. The account is on the free plan (no
+  library voices through the API, 10k characters a month). Built the `elevenlabs` voice engine and made all five
+  genie-style videos with Chris: robot_obey, principal_sentence, mirror_never_lies, genie_returns (rows 46-49) and
+  ghost_deal (Oct 31). Hindi: a Liam sample of the Hinglish genie script, styled as a dramatic storyteller.
+
 ## 3. What works and what doesn't (owner feedback + analytics)
 - **Works:** The Last Bencher / teacher-vs-kid stories (Last Row Kid 77.8% stayed, 15.5K views), The Teacher Bluffed
   (77.0%, 15.3K), Infinite Hotel (75.0%, 27.7K), Pinocchio (70%), the **genie** (doing well, Oct 14), Hanoi rats
@@ -81,7 +87,7 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
   (Oct 13), honeybee_life (deleted, Oct 14), twain_dead_twice (Oct 14), the loop scripts L1-L3 (Oct 11).
 
 ## 4. Voices
-- **English narrator now:** Kokoro `am_fenrir` (default). Characters use other Kokoro voices via `voice.SPEAKERS`
+- **English narrator now:** ElevenLabs **Chris** for new videos (from 14 Oct); older videos Kokoro `am_fenrir`. Characters use other Kokoro voices via `voice.SPEAKERS`
   (kid am_puck +2.5 st, sir am_michael, genie am_onyx, teacher af_bella, etc.).
 - **Tried:** Piper (first days), the owner's Chatterbox clone (Oct 2–5, more swipes, dropped), Chatterbox stock
   lively/dramatic, **Chatterbox Turbo stock voice** ("not bad"; test video = row 42; engine:

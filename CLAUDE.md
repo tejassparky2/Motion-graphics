@@ -19,8 +19,17 @@
 - After every render, check every line with Whisper **medium** (not just the small model in verify.py). Any line
   where words merge or get misheard ("No. Your age" heard as "Know your age") gets reworded and re-rendered.
 - Pause lengths come from the reference videos the owner supplied (`out/voice_rhythm.md`).
-- Narrator: Kokoro `am_fenrir` (the default). The owner switched back from their cloned voice on 5 Oct 2026 because
-  more viewers swiped away on the cloned-voice videos. Use the clone (`NARRATOR_ENGINE=clone`) only if the owner asks.
+- Narrator: **ElevenLabs "Chris"** for new videos (owner, 14 Oct 2026: "Chris is good, make the genie scripts with him
+  for emotions"). A video opts in with `NARRATOR = dict(engine="elevenlabs")`; characters get their own ElevenLabs
+  voices in `voice.SPEAKERS` (`el=voice.ELEVEN[...]`, `pitch`, `fx`), each line can carry a `tone` (an eleven_v3 audio
+  tag such as "dramatic", "whispers", never shown in captions). Every take is Whisper-checked and re-made if misheard
+  (`voice.el_check`); `python tools/el_redo.py VIDEO "sentence"` throws a take away. Rushed narrator takes are slowed
+  toward 5.5 syllables/s. Premade or library voices only, never a clone of a real person.
+  Older videos keep Kokoro `am_fenrir`. The owner's cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks
+  (more viewers swiped away on it, 5 Oct 2026).
+- ElevenLabs account: **free plan** (10,000 characters a month, resets on the 14th; no commercial licence, attribution
+  required; library voices and Voice Design blocked through the API). A 40 s video costs ~700 characters plus
+  retakes. Check `GET /v1/user/subscription` before a batch and tell the owner when the quota runs low.
 
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
@@ -74,8 +83,10 @@
   13 Oct 2026). The three made on 11 Oct (`meme_95_marks`, `meme_exam_chapter`, `meme_3am`) are kept for that channel.
 - **Hindi channel** (owner, 14 Oct 2026): a separate channel with the same videos in **Hinglish** (everyday Hindi with
   common English words kept: teacher, class, exam, phone). The voice must carry emotion like the owner's reference
-  (Abhay Create's Hindi Shorts). Kokoro Hindi and Chatterbox Hindi samples were rejected ("voice not good"); still
-  choosing between Indic Parler-TTS, the owner's own recording, or a paid voice (ElevenLabs / Sarvam).
+  (Abhay Create's Hindi Shorts). Kokoro Hindi and Chatterbox Hindi samples were rejected ("voice not good").
+  Narrator: **ElevenLabs "Liam"** (owner, 14 Oct 2026: "for hindi Liam seems good"), read like a dramatic Hindi Shorts
+  storyteller. Liam is a US premade voice, so some Hindi words carry an accent; native Hindi library voices (Viraj,
+  Rahul Hinglish, Monika Sogam) need a paid plan.
   From 14 Oct the new chat (which can use ELEVENLABS_API_KEY) runs both channels; see NEXT_SESSION.md. The full history since
   Sep 29 is in PROJECT_HISTORY.md, and every owner message word for word is in docs/owner_messages_log.md.
 - The doctor channel ("Body Facts") is a separate channel with its own chat and branch (`ccr-56282fe5-evehq4-doctor`). Don't make doctor videos on this branch.

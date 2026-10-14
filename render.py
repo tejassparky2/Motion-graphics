@@ -57,6 +57,7 @@ def load(name):
         takes = Timeline.sentences(mod.SCRIPT)
         narrator.clone_prefetch([t for t, _ in takes])   # own-voice clone: generate all sentences at once
         narrator.clone_check(takes)      # ...and re-make any take Whisper medium mishears
+        narrator.el_check(Timeline.voiced_takes(mod.SCRIPT))   # same check for ElevenLabs takes
     return mod
 
 
@@ -112,6 +113,8 @@ def write_metadata(path):
         words = sum(len(u.spoken) for b in tl.beats for u in b.units)
         voiced = (f"narrated by the channel owner (`{os.path.basename(VIDEO['narration'])}`)" if VIDEO.get("narration")
                   else "the channel owner's own cloned voice" if narrator.ENGINE == "clone"
+                  else f"ElevenLabs voice `{next((k for k, v in narrator.ELEVEN.items() if v == narrator.VOICE), narrator.VOICE)}` ({narrator.EL_MODEL})"
+                  if narrator.ENGINE == "elevenlabs"
                   else f"voice `{narrator.VOICE}` at speed {narrator.SPEED}")
         f.write(f"**Video facts:** {tl.total:.1f} s, {words} words of narration, {voiced}. Made for kids: **No**.\n")
     print(f"wrote {path}", file=sys.stderr)

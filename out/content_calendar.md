@@ -65,10 +65,10 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 43 | Tue Oct 20 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
 | 44 | Tue Oct 20 | 9:30 PM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
 | 45 | Wed Oct 21 | 4:30 AM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
-| 46 | Wed Oct 21 | 9:30 PM | open_slot | *(open: needs a new video)* |
-| 47 | Thu Oct 22 | 4:30 AM | open_slot | *(open: needs a new video)* |
-| 48 | Thu Oct 22 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
-| 49 | Fri Oct 23 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea)* |
+| 46 | Wed Oct 21 | 9:30 PM | robot_obey | 1 Order Broke This Robot 🤖 *(genie-style; ElevenLabs Chris narrator)* |
+| 47 | Thu Oct 22 | 4:30 AM | principal_sentence | Principal: Say 1 Sentence. Kid: …😏 *(genie-style; ElevenLabs Chris)* |
+| 48 | Thu Oct 22 | 9:30 PM | mirror_never_lies | The Mirror Never Lies… Until This Question 🪞 *(genie-style; ElevenLabs Chris)* |
+| 49 | Fri Oct 23 | 4:30 AM | genie_returns | The Genie Came Back With New Rules 🧞 (Kid Wins Again?) *(genie sequel; ElevenLabs Chris)* |
 | 50 | Fri Oct 23 | 9:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
 | 51 | Sat Oct 24 | 4:30 AM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea)* |
 | 52 | Sat Oct 24 | 9:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
@@ -79,12 +79,12 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 57 | Tue Oct 27 | 4:30 AM | pascals_wager | Pascal's Wager *(idea)* |
 | 58 | Tue Oct 27 | 9:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
 | 59 | Wed Oct 28 | 4:30 AM | trolley_problem | The Trolley Problem *(idea)* |
-| 60 | Wed Oct 28 | 9:30 PM | open_slot | *(open: needs a new video)* |
-| 61 | Thu Oct 29 | 4:30 AM | open_slot | *(open: needs a new video)* |
+| 60 | Wed Oct 28 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
+| 61 | Thu Oct 29 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
 | 62 | Thu Oct 29 | 9:30 PM | open_slot | *(open: needs a new video)* |
 | 63 | Fri Oct 30 | 4:30 AM | open_slot | *(open: needs a new video)* |
 | 64 | Fri Oct 30 | 9:30 PM | open_slot | *(open: needs a new video)* |
-| 65 | Sat Oct 31 | 4:30 AM | last_bencher_halloween | Last Bencher Halloween Special *(idea)* |
+| 65 | Sat Oct 31 | 4:30 AM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
 | 66 | Sat Oct 31 | 9:30 PM | open_slot | *(open: needs a new video)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
@@ -101,6 +101,10 @@ machiavelli_feared. The memes go to a different channel, so everything from #30 
 **14 Oct 2026:** Machiavelli (59.5% viewed) and Fermi (61.5%) stalled against a ~90% channel average. Owner: "keeping
 smaller and clearer is better". The owner had already scheduled Ben Franklin (Oct 14 4:30 AM) and Last Bencher 4 (Oct 15 4:30 AM) in Studio, so
 those stay; the honeybee video (1:16) was deleted as too long and genie_wish takes its slot.
+
+**14 Oct 2026 (new chat):** the owner approved the five genie-style scripts and picked ElevenLabs **Chris** as the
+narrator ("Chris is good, make the genie scripts with him for emotions"). Robot, principal, mirror and the genie sequel
+fill rows 46-49; the ghost is the Oct 31 Halloween special. The two ideas they pushed out moved to rows 60-61.
 
 ## Next up (to produce)
 

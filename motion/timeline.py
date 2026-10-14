@@ -35,6 +35,7 @@ class Beat:
     gap: float = 0.18     # silence before this beat
     pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
     hold: float = 0.0     # a silent beat (text ""): this many seconds of picture with no voice (memes)
+    tone: str = None      # ElevenLabs audio tag for this line's takes ("excited", "whispers"); never shown
     units: list = field(default_factory=list)
     start: float = 0.0
     end: float = 0.0
@@ -180,8 +181,8 @@ class Timeline:
         for c, (a0, a1) in enumerate(spans):
             text = " ".join(words[a0:a1])
             who = b.speaker if (b.speaker and a0 >= turn) else None   # the character's own voice, if it has one
-            clip = voice.synth(text, b.pace, who)
-            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who)]
+            clip = voice.synth(text, b.pace, who, b.tone)
+            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who, b.tone)]
             audio.append(clip)
             off += len(clip) / voice.SR
             if c < len(pauses):
@@ -199,6 +200,22 @@ class Timeline:
             words = b.spoken_text.split()
             if words:
                 out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]]
+        return out
+
+    @staticmethod
+    def voiced_takes(script):
+        """Every take with who speaks it and its tone: [(text, pace, who, tone)] (for the ElevenLabs check)."""
+        out = []
+        for spec in script:
+            b = Beat(**spec)
+            b.units = parse(b.text)
+            words = b.spoken_text.split()
+            if not words:
+                continue
+            turn = Timeline._turn(b)
+            for a0, a1 in Timeline._takes(b)[0]:
+                who = b.speaker if (b.speaker and a0 >= turn) else None
+                out.append((" ".join(words[a0:a1]), b.pace, who, b.tone))
         return out
 
     # ---- queries used by scenes

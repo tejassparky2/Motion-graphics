@@ -47,6 +47,9 @@ elif ENGINE == "kokoro":
     # Videos can override via NARRATOR in their module.
     VOICE = os.environ.get("NARRATOR_VOICE", "am_fenrir")
     SPEED = float(os.environ.get("NARRATOR_SPEED", "0.95"))
+elif ENGINE == "elevenlabs":
+    VOICE = os.environ.get("NARRATOR_VOICE", "iP95p4xoKVk53GoZ742B")   # see ELEVEN below
+    SPEED = float(os.environ.get("NARRATOR_SPEED", "1.0"))
 else:
     VOICE = os.environ.get("NARRATOR_VOICE", "en_US-ryan-high")
     # Piper length scale: <1 speaks faster. 0.8 lands the ryan voice at ~230 wpm.
@@ -57,9 +60,15 @@ TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
 MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference narrator's breaths are ~0.32 s)
 
 
-def configure(voice=None, speed=None, max_pause=None):
-    """Per-video narrator settings (environment variables still win, so you can audition voices)."""
-    global VOICE, SPEED, MAX_PAUSE
+def configure(voice=None, speed=None, max_pause=None, engine=None):
+    """Per-video narrator settings (environment variables still win, so you can audition voices).
+    `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris)."""
+    global VOICE, SPEED, MAX_PAUSE, ENGINE
+    if engine and "NARRATOR_ENGINE" not in os.environ and engine != ENGINE:
+        ENGINE = engine
+        if engine == "elevenlabs":
+            VOICE = os.environ.get("NARRATOR_VOICE", ELEVEN["chris"])
+            SPEED = float(os.environ.get("NARRATOR_SPEED", "1.0"))
     if voice and "NARRATOR_VOICE" not in os.environ:
         VOICE = voice
     if speed and "NARRATOR_SPEED" not in os.environ and ENGINE != "clone":   # per-video speeds were tuned for Kokoro
@@ -156,11 +165,13 @@ SPEAKERS = {}
 
 
 def _char(who):
-    return SPEAKERS.get(who) if (who and (ENGINE == "kokoro" or CLONE_MODEL == "turbo")) else None
+    return SPEAKERS.get(who) if (who and (ENGINE in ("kokoro", "elevenlabs") or CLONE_MODEL == "turbo")) else None
 
 
-def _key(text, pace=1.0, who=None):
+def _key(text, pace=1.0, who=None, tone=None):
     spec = _char(who)
+    if ENGINE == "elevenlabs" and (not spec or "el" in spec):
+        return _el_spec(text, pace, who, tone)[0]
     if spec:
         tag = f"{spec.get('voice')}|{spec.get('speed', 1.0)}|{spec.get('pitch', 0.0)}"
         return hashlib.sha1(f"char|{tag}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
@@ -250,12 +261,16 @@ def _kokoro_wav(text, speed, out, voice=None):
     soundfile.write(out, resample_poly(audio, 147, 80), SR, subtype="PCM_16")  # 24 kHz -> 44.1 kHz
 
 
-def synth(text, pace=1.0, who=None):
+def synth(text, pace=1.0, who=None, tone=None):
     """Speech for one line as float samples at 44.1 kHz, silence-trimmed (cached).
 
     `pace` scales the speed for this line only (e.g. 0.9 to land a punchline a touch slower).
-    `who` picks a character voice from SPEAKERS (narrator if unset)."""
+    `who` picks a character voice from SPEAKERS (narrator if unset).
+    `tone` is an ElevenLabs v3 audio tag for this take ("excited", "whispers", ...); other engines ignore it."""
     spec = _char(who)
+    if ENGINE == "elevenlabs" and (not spec or "el" in spec):
+        # the gentler trim: ElevenLabs ends sentences softly, and _trim cut "homework" to "home" (14 Oct 2026)
+        return _squeeze(_clone_trim(_read_wav(_el_finished(text, pace, who, tone))))
     if spec:
         out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace, who)}.wav")
         if not os.path.exists(out):
@@ -402,10 +417,13 @@ _NUMWORDS = set("zero one two three four five six seven eight nine ten eleven tw
 _checker = None
 
 
+SAME_SOUND = {"principle": "principal", "principles": "principals"}   # Whisper's spelling, not a mishearing
+
+
 def _heard_ok(text, heard):
-    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28")."""
+    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28") and same-sounding spellings."""
     t = re.sub(r"[^a-z0-9' ]", " ", text.lower().replace("-", " ")).split()
-    h = re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()
+    h = [SAME_SOUND.get(w, w) for w in re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()]
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
         if op == "equal":
             continue
@@ -472,6 +490,138 @@ def clone_check(takes, tries=3, slack=0.15):
             print(f"clone check: still unclear after {tries} tries: {t!r} heard as {heard!r}", file=sys.stderr)
 
 
+# ---- ElevenLabs (owner, 14 Oct 2026: "Chris is good, make the genie scripts with him for emotions")
+# Premade / library voices only, never a clone of a real person. One API call per sentence take (the pipeline's
+# full-stop pauses stay), eleven_v3 with an optional audio tag per take for emotion. Raw MP3s are cached in
+# build/el_tts/ by request, so re-renders cost no characters. A video's SPEAKERS entry can name an ElevenLabs voice:
+#   "kid": dict(el=ELEVEN["liam"], pitch=2.5, tone="mischievously", fx="aecho=...")   (fx: an ffmpeg audio filter)
+ELEVEN = {"chris": "iP95p4xoKVk53GoZ742B", "brian": "nPczCjzI2devNBz1zQrb", "liam": "TX3LPaxmHKxFdv7VOQHJ",
+          "callum": "N2lVS1w4EtoT3dr4eOWO", "adam": "pNInz6obpgDQGcFmaJgB", "bill": "pqHfZKP75CvOlQylNhV4",
+          "daniel": "onwK4e9ZLuTAKqWW03F9", "lily": "pFZP5JQG7iQjIQuC4Bku", "harry": "SOYHLrjzK2X1ezoPC6cr",
+          "george": "JBFqnCBsd6RMkjVDRZzb", "jessica": "cgSgspJ2msm6clMCkdW9", "laura": "FGY2WhTYpPnrIDTdsKH5"}
+EL_MODEL = os.environ.get("EL_MODEL", "eleven_v3")
+EL_SAY = {"bencher": "benchur"}      # "last bencher" came out as "last bench" (Whisper medium, 14 Oct 2026)
+EL_STABILITY = 0.5      # eleven_v3: 0 creative, 0.5 natural, 1 robust
+EL_VERSION = "v2"       # bump when the processing below changes
+# Narrator pace: ElevenLabs reads some takes much faster than others (a ghost video's logic lines came out at 270 wpm
+# next to 170 elsewhere). Each narrator take is nudged toward CLONE_RATE syllables per second (the Teacher Bluffed
+# pace the owner chose) if it runs faster, by at most 12%; characters keep the pace they were acted at.
+EL_TEMPO = (0.88, 1.0)     # slow rushed takes down; never speed a take up (clarity first)
+
+
+def _el_spec(text, pace, who, tone):
+    """(finished-take key, raw-request key, request body, voice id, tempo, pitch, fx) for one take."""
+    spec = _char(who) or {}
+    vid = spec.get("el", VOICE)
+    tone = tone or spec.get("tone")
+    for word, sub in EL_SAY.items():       # spellings it says more clearly; captions keep the real word
+        text = re.sub(rf"\b{word}", sub, text, flags=re.I)
+    say = f"[{tone}] {text}" if tone else text
+    body = {"text": say, "model_id": EL_MODEL,
+            "voice_settings": {"stability": spec.get("stability", EL_STABILITY), "similarity_boost": 0.75}}
+    tempo = (SPEED if not spec else 1.0) * spec.get("speed", 1.0) * pace
+    pitch, fx = spec.get("pitch", 0.0), spec.get("fx", "")
+    raw = hashlib.sha1(json.dumps([vid, body], ensure_ascii=False).encode()).hexdigest()[:16]
+    paced = "" if spec else f"|rate{CLONE_RATE}|{EL_TEMPO}"
+    key = hashlib.sha1(f"el|{EL_VERSION}|{raw}|{tempo:.3f}|{pitch}|{fx}{paced}".encode()).hexdigest()[:16]
+    return key, raw, body, vid, tempo, pitch, fx
+
+
+def _el_raw(raw, body, vid):
+    path = os.path.join(ROOT, "build", "el_tts", f"{raw}.mp3")
+    if not os.path.exists(path):
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        req = urllib.request.Request(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{vid}?output_format=mp3_44100_128",
+            data=json.dumps(body).encode(), method="POST",
+            headers={"xi-api-key": os.environ["ELEVENLABS_API_KEY"], "Content-Type": "application/json"})
+        for attempt in range(4):
+            try:
+                with urllib.request.urlopen(req, timeout=180) as r:
+                    data = r.read()
+                break
+            except urllib.error.HTTPError as e:
+                if e.code < 500 and e.code != 429 or attempt == 3:
+                    raise RuntimeError(f"ElevenLabs {e.code}: {e.read()[:300]!r}") from None
+                import time
+                time.sleep(2 ** (attempt + 1))
+        open(path + ".part", "wb").write(data)
+        os.replace(path + ".part", path)
+        print(f"elevenlabs: {len(body['text'])} chars: {body['text']!r}", file=sys.stderr, flush=True)
+    return path
+
+
+def _el_finished(text, pace=1.0, who=None, tone=None):
+    """The finished take as a 44.1 kHz mono wav: decoded, tempo (rubberband, pitch kept), pitch shift, effects."""
+    import imageio_ffmpeg
+    key, raw, body, vid, tempo, pitch, fx = _el_spec(text, pace, who, tone)
+    out = os.path.join(ROOT, "build", "tts", f"{key}.wav")
+    if not os.path.exists(out):
+        src = _el_raw(raw, body, vid)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        if not _char(who):         # narrator: toward the channel pace (see EL_TEMPO)
+            dec = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-v", "error", "-i", src, "-f", "f32le", "-ac", "1",
+                                  "-ar", "16000", "-"], capture_output=True, check=True).stdout
+            rate = syllables(text) / max(0.2, speech_secs(np.frombuffer(dec, np.float32), 16000))
+            tempo *= min(EL_TEMPO[1], max(EL_TEMPO[0], CLONE_RATE * pace / rate))
+        chain = []
+        if abs(tempo - 1) > 0.005 or abs(pitch) > 0.01:
+            # a pitch shift moves the formants too (smaller, younger voice, e.g. a kid); tempo alone keeps them
+            chain.append(f"rubberband=tempo={tempo:.4f}:pitch={2 ** (pitch / 12):.5f}:transients=crisp:"
+                         f"pitchq=quality" + (":formant=preserved" if abs(pitch) <= 0.01 else ""))
+        if fx:
+            chain.append(fx)
+        chain.append("highpass=f=60,alimiter=limit=0.95")
+        subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", src, "-filter:a",
+                        ",".join(chain), "-ar", str(SR), "-ac", "1", "-c:a", "pcm_s16le", out], check=True)
+    return out
+
+
+def el_check(takes, tries=3):
+    """Hear every ElevenLabs take with Whisper medium; re-make (up to `tries` in all) any take that's misheard, and
+    keep the first clear one. `takes`: [(text, pace, who, tone)]. Clear takes get a .ok marker, so this runs once."""
+    if ENGINE != "elevenlabs":
+        return
+    global _checker
+    import shutil
+    import soundfile
+    todo = []
+    for t in dict.fromkeys(takes):
+        spec = _char(t[2])
+        if spec and "el" not in spec:
+            continue
+        _, raw, body, vid, *_ = _el_spec(*t)
+        if not os.path.exists(os.path.join(ROOT, "build", "el_tts", f"{raw}.ok")):
+            todo.append(t)
+    if not todo:
+        return
+    if _checker is None:
+        from faster_whisper import WhisperModel
+        _checker = WhisperModel("medium.en", device="cpu", compute_type="int8")
+    for t in todo:
+        key, raw, body, vid, *_ = _el_spec(*t)
+        rawp = os.path.join(ROOT, "build", "el_tts", f"{raw}.mp3")
+        heard = ""
+        for attempt in range(tries):
+            a, sr = soundfile.read(_el_finished(*t))
+            a = np.concatenate([np.zeros(sr // 2), a, np.zeros(sr // 2)])
+            a16 = np.interp(np.arange(int(len(a) * 16000 / sr)) * sr / 16000, np.arange(len(a)), a).astype(np.float32)
+            heard = " ".join(x.text.strip() for x in _checker.transcribe(a16, language="en", beam_size=5)[0])
+            shutil.copy(rawp, f"{rawp}.try{attempt}")
+            if _heard_ok(t[0], heard):
+                break
+            print(f"elevenlabs check: {t[0]!r} heard as {heard!r} (try {attempt + 1}/{tries})", file=sys.stderr)
+            if attempt < tries - 1:     # make it again
+                for f in glob.glob(os.path.join(ROOT, "build", "tts", f"{key}*")) + [rawp]:
+                    os.remove(f)
+        else:
+            shutil.copy(f"{rawp}.try0", rawp)      # nothing clear: keep the first take and say so
+            for f in glob.glob(os.path.join(ROOT, "build", "tts", f"{key}*")):
+                os.remove(f)
+            print(f"elevenlabs check: still unclear after {tries} tries: {t[0]!r}", file=sys.stderr)
+        open(os.path.join(ROOT, "build", "el_tts", f"{raw}.ok"), "w").write(heard)
+
+
 _whisper = None
 
 
@@ -479,13 +629,13 @@ def _norm(w):
     return re.sub(r"[^a-z0-9]", "", w.lower())
 
 
-def word_times(text, audio, pace=1.0, who=None):
+def word_times(text, audio, pace=1.0, who=None, tone=None):
     """[(start, end)] for each whitespace-separated word of `text`, relative to the start of `audio`.
 
     Whisper's timestamps are matched to the script by sequence alignment; words Whisper heard differently
     (e.g. "seventy" -> "70") get times interpolated from their neighbours by character length.
     """
-    cache = os.path.join(ROOT, "build", "tts", f"{_key(text, pace, who)}.p{MAX_PAUSE}.words.json")
+    cache = os.path.join(ROOT, "build", "tts", f"{_key(text, pace, who, tone)}.p{MAX_PAUSE}.words.json")
     if os.path.exists(cache):
         return [tuple(x) for x in json.load(open(cache))]
     global _whisper

@@ -161,3 +161,9 @@ Verbatim from the first chat (session_011eLEn9HbPwBg7ViAYhwmQ5), times in UTC. R
 - **2026-10-14T18:52** So the new chat remembers all we done from start?
 - **2026-10-14T18:53** I also want to test elevenlabs English voice if emotions if it good we can switch so try to access i added it to same environment ELEVENLABS_API_KEY=
 - **2026-10-14T18:54** I want it to know what all from start
+
+## New chat (session_01G9k2suGZz1hYE4uG6LGe8F), 14 Oct 2026 (times approximate, UTC)
+- **2026-10-14T19:00** Read NEXT_SESSION.md and start.
+- **2026-10-14T19:02** Everything is on branch ccr-56282fe5-evehq4, not main. Run git fetch origin ccr-56282fe5-evehq4 && git checkout ccr-56282fe5-evehq4, then read CLAUDE.md, PROJECT_HISTORY.md, docs/owner_messages_log.md and NEXT_SESSION.md, and start. Work and push only on that branch.
+- **2026-10-14T19:20** You read owner_messages_log.md and project_history.md?
+- **2026-10-14T19:25** Chris is good, make the genie scripts with him for emotions takes reference from Abhay creats videos for hindi Liam seems good
