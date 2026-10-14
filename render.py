@@ -55,7 +55,7 @@ def load(name):
         print(f"narration: {media}", file=sys.stderr)
     else:
         takes = Timeline.sentences(mod.SCRIPT)
-        narrator.clone_prefetch([t for t, _ in takes])   # own-voice clone: generate all sentences at once
+        narrator.clone_prefetch([(t, w) for t, _, w in takes])   # clone/Turbo: generate all sentences at once
         narrator.clone_check(takes)      # ...and re-make any take Whisper medium mishears
         narrator.el_check(Timeline.voiced_takes(mod.SCRIPT))   # same check for ElevenLabs takes
     return mod

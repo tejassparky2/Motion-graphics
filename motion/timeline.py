@@ -6,6 +6,8 @@ starts or when a particular word is spoken, and animate to that.
 
 Script markup: `[spoken words|shown]` says one thing and shows another in the captions, e.g.
 `[a hundred rupees|₹100]`. Punctuation right after the bracket is kept.
+A sound or mood tag on its own, e.g. `[chuckle]` or `[sniff]` (Chatterbox Turbo; see voice.TURBO_TAGS), is voiced
+with the next word (or the last word, at the end of a line), never shown, and dropped by the other voice engines.
 """
 import re
 import sys
@@ -13,13 +15,15 @@ from dataclasses import dataclass, field
 
 from . import voice
 
-TOKEN = re.compile(r"\[([^|\]]+)\|([^\]]+)\]([^\s\[]*)|(\S+)")
+TOKEN = re.compile(r"\[([^|\]]+)\|([^\]]+)\]([^\s\[]*)|\[([a-z ]+)\]|(\S+)")
 
 
 @dataclass
 class Unit:
     spoken: list          # spoken words
     shown: str            # caption text
+    pre: str = ""         # voice tags said just before / after this unit (never shown)
+    post: str = ""
     start: float = 0.0
     end: float = 0.0
 
@@ -45,17 +49,34 @@ class Beat:
     def spoken_text(self):
         return " ".join(w for u in self.units for w in u.spoken)
 
+    def say(self, a0, a1):
+        """Spoken words a0..a1 with their voice tags, as the voice engine is given them."""
+        tagged = []
+        for u in self.units:
+            for i, w in enumerate(u.spoken):
+                tagged.append(" ".join(x for x in ((u.pre if i == 0 else ""), w,
+                                                   (u.post if i == len(u.spoken) - 1 else "")) if x))
+        return " ".join(tagged[a0:a1])
+
 
 def parse(text):
-    units = []
+    units, tags = [], []
     for m in TOKEN.finditer(text):
+        if m.group(4):
+            if f"[{m.group(4)}]" not in voice.TURBO_TAGS:
+                raise ValueError(f"unknown voice tag [{m.group(4)}] in: {text}")
+            tags.append(f"[{m.group(4)}]")
+            continue
         if m.group(1):
             spoken = m.group(1).split()
             suffix = m.group(3) or ""
             spoken[-1] += suffix
             units.append(Unit(spoken, m.group(2) + suffix))
         else:
-            units.append(Unit([m.group(4)], m.group(4)))
+            units.append(Unit([m.group(5)], m.group(5)))
+        units[-1].pre, tags = " ".join(tags), []
+    if tags and units:
+        units[-1].post = " ".join(tags)
     return units
 
 
@@ -179,7 +200,7 @@ class Timeline:
         turn = Timeline._turn(b)
         audio, times, off = [], [], 0.0
         for c, (a0, a1) in enumerate(spans):
-            text = " ".join(words[a0:a1])
+            text = b.say(a0, a1)
             who = b.speaker if (b.speaker and a0 >= turn) else None   # the character's own voice, if it has one
             clip = voice.synth(text, b.pace, who, b.tone)
             times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who, b.tone)]
@@ -192,14 +213,16 @@ class Timeline:
 
     @staticmethod
     def sentences(script):
-        """Every take the script needs, so a slow voice engine can generate them all in one batch."""
+        """Every take the script needs, so a slow voice engine can generate them all in one batch.
+        -> [(text with voice tags, pace, character or None)]"""
         out = []
         for spec in script:
             b = Beat(**spec)
             b.units = parse(b.text)
-            words = b.spoken_text.split()
-            if words:
-                out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]]
+            if b.spoken_text:
+                turn = Timeline._turn(b)
+                out += [(b.say(a0, a1), b.pace, b.speaker if (b.speaker and a0 >= turn) else None)
+                        for a0, a1 in Timeline._takes(b)[0]]
         return out
 
     @staticmethod
@@ -215,7 +238,7 @@ class Timeline:
             turn = Timeline._turn(b)
             for a0, a1 in Timeline._takes(b)[0]:
                 who = b.speaker if (b.speaker and a0 >= turn) else None
-                out.append((" ".join(words[a0:a1]), b.pace, who, b.tone))
+                out.append((b.say(a0, a1), b.pace, who, b.tone))
         return out
 
     # ---- queries used by scenes

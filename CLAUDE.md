@@ -19,6 +19,8 @@
 - After every render, check every line with Whisper **medium** (not just the small model in verify.py). Any line
   where words merge or get misheard ("No. Your age" heard as "Know your age") gets reworded and re-rendered.
 - Pause lengths come from the reference videos the owner supplied (`out/voice_rhythm.md`).
+- **Two emotional voices are in play (14 Oct 2026), both chosen by the owner the same evening in two chats; ask the
+  owner which one is the default for new videos before the next batch:**
 - Narrator: **ElevenLabs "Chris"** for new videos (owner, 14 Oct 2026: "Chris is good, make the genie scripts with him
   for emotions"). A video opts in with `NARRATOR = dict(engine="elevenlabs")`; characters get their own ElevenLabs
   voices in `voice.SPEAKERS` (`el=voice.ELEVEN[...]`, `pitch`, `fx`), each line can carry a `tone` (an eleven_v3 audio
@@ -30,6 +32,11 @@
 - ElevenLabs account: **free plan** (10,000 characters a month, resets on the 14th; no commercial licence, attribution
   required; library voices and Voice Design blocked through the API). A 40 s video costs ~700 characters plus
   retakes. Check `GET /v1/user/subscription` before a batch and tell the owner when the quota runs low.
+- **Turbo + emotion tags (owner, 14 Oct 2026: "This is better")**: the crocodile video re-voiced with Chatterbox Turbo
+  for narrator AND characters (characters via `turbo_ref`), with sound tags placed where a storyteller would make the
+  sound, won over the plain versions. Make new story videos this way (`NARRATOR_ENGINE=clone CLONE_MODEL=turbo`;
+  how-to and what each tag really does: `out/turbo_tags_research.md`). One sound tag per line at most, 4-6 per video,
+  none on logic lines. Keep comparing stayed-to-watch % (rows 36 and 42) against the Kokoro videos.
 
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in

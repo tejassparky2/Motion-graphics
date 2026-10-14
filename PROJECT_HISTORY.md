@@ -68,6 +68,9 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
   emotional voice like Abhay Create. Kokoro Hindi and Chatterbox Hindi rejected ("voice not good"). English with
   emotion wanted too: Chatterbox **Turbo** stock voice was "not bad" → one test video (court paradox, row 42).
   Owner added **ELEVENLABS_API_KEY**; only new sessions can see it → this handoff.
+  Then a second Turbo test with researched **emotion tags** (crocodile dilemma, all voices Turbo, laugh/sniff/chuckle
+  where a storyteller would make them): owner: **"This is better"** → new story videos use Turbo + tags.
+  The new chat made ElevenLabs samples the same evening (out/voice_samples/en_eleven_*, out/hindi_samples/hi_eleven_*).
 
 - **Oct 14 (new chat, with the ElevenLabs key):** upload reminders moved to the new chat. ElevenLabs samples: the
   owner picked **Chris** for English ("Chris is good") and **Liam** for Hindi. The account is on the free plan (no

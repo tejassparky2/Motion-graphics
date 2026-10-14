@@ -152,6 +152,25 @@ def _pronounce(text):
 
 
 CLONE_VERSION = "v3"   # bump when the clone generation, pace or tone changes
+
+# Chatterbox Turbo voice tags (the tokens in its tokenizer, added_tokens.json). Tested 14 Oct 2026 on this channel's
+# lines (out/turbo_tags_research.md): the sound tags really make the sound, but only on some takes, so clone_check
+# keeps a take only once the sound is there; the mood tags only shade the delivery a little (slower, more emphatic).
+# Kokoro and the owner clone can't voice them, so they're dropped there.
+TURBO_SOUNDS = {"[laugh]", "[chuckle]", "[sigh]", "[gasp]", "[sniff]", "[groan]", "[cough]", "[clear throat]",
+                "[shush]"}
+TURBO_MOODS = {"[angry]", "[fear]", "[surprised]", "[whispering]", "[dramatic]", "[narration]", "[crying]",
+               "[happy]", "[sarcastic]", "[advertisement]"}
+TURBO_TAGS = TURBO_SOUNDS | TURBO_MOODS
+_TAG = re.compile(r"\[(?:" + "|".join(t[1:-1] for t in sorted(TURBO_TAGS)) + r")\]")
+
+
+def strip_tags(text):
+    return " ".join(_TAG.sub(" ", text).split())
+
+
+def _voice_tags(text):
+    return text if (ENGINE == "clone" and CLONE_MODEL == "turbo") else strip_tags(text)
 # CLONE_MODEL=turbo: Chatterbox Turbo's own stock voice (not a clone of anyone), tested by the owner on 14 Oct 2026
 # ("en turbo is not bad, make only 1 video with it to test"). Same pipeline as the owner clone; separate caches.
 CLONE_MODEL = os.environ.get("CLONE_MODEL", "owner")
@@ -162,10 +181,32 @@ CLONE_MODEL = os.environ.get("CLONE_MODEL", "owner")
 # pitch shift (semitones), so dialogue sounds like a cast and not like the narrator reading quotes. The narrator
 # itself is unchanged. Kokoro only; the clone engine ignores it.
 SPEAKERS = {}
+# With CLONE_MODEL=turbo a character can speak through Turbo too, with its tags: give it `turbo_ref` (a Kokoro voice
+# name). Turbo copies the timbre of a short Kokoro clip in that voice (synthetic, nobody real is cloned).
 
 
 def _char(who):
-    return SPEAKERS.get(who) if (who and (ENGINE in ("kokoro", "elevenlabs") or CLONE_MODEL == "turbo")) else None
+    spec = SPEAKERS.get(who) if (who and (ENGINE in ("kokoro", "elevenlabs") or CLONE_MODEL == "turbo")) else None
+    return None if (spec and _turbo_char(who)) else spec
+
+
+def _turbo_char(who):
+    """The character's Turbo reference voice, if it speaks through Turbo in this render."""
+    spec = SPEAKERS.get(who) if who else None
+    return spec.get("turbo_ref") if (spec and ENGINE == "clone" and CLONE_MODEL == "turbo") else None
+
+
+TURBO_REF_TEXT = ("Well, well. Look what we have here! Don't worry, I always keep my promises. Mostly. "
+                  "Please, I'm begging you. Just this once. You'll see, it's going to be fine.")
+
+
+def _turbo_ref_wav(kvoice):
+    """A ~9 s clip of a Kokoro voice for Turbo to take the timbre from (made once, cached)."""
+    out = os.path.join(ROOT, "build", "turbo_refs", f"{kvoice}.wav")
+    if not os.path.exists(out):
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        _kokoro_wav(TURBO_REF_TEXT, 1.0, out, kvoice)
+    return out
 
 
 def _key(text, pace=1.0, who=None, tone=None):
@@ -178,7 +219,8 @@ def _key(text, pace=1.0, who=None, tone=None):
     if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     if ENGINE == "clone":
-        return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{text}".encode()).hexdigest()[:16]
+        ref = f"{_turbo_char(who)}|" if _turbo_char(who) else ""
+        return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{ref}{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
 
 
@@ -276,7 +318,7 @@ def synth(text, pace=1.0, who=None, tone=None):
         if not os.path.exists(out):
             os.makedirs(os.path.dirname(out), exist_ok=True)
             raw = out + ".raw.wav"
-            _kokoro_wav(_pronounce(text), SPEED * pace * spec.get("speed", 1.0), raw, spec.get("voice"))
+            _kokoro_wav(_pronounce(strip_tags(text)), SPEED * pace * spec.get("speed", 1.0), raw, spec.get("voice"))
             st = spec.get("pitch", 0.0)
             if abs(st) > 0.01:   # pitch only (tempo kept), for a character's colour
                 import imageio_ffmpeg
@@ -291,18 +333,18 @@ def synth(text, pace=1.0, who=None, tone=None):
         return _squeeze(_trim(_read_wav(_EXTERNAL[text])))
     out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
     if ENGINE == "clone":
-        if not os.path.exists(_clone_raw(text)):
-            clone_prefetch([text])
-        return _squeeze(_clone_trim(_read_wav(_clone_process(text, pace)[0])))
+        if not os.path.exists(_clone_raw(text, who)):
+            clone_prefetch([(text, who)])
+        return _squeeze(_clone_trim(_read_wav(_clone_process(text, pace, who)[0])))
     if not os.path.exists(out):
         os.makedirs(os.path.dirname(out), exist_ok=True)
         if ENGINE == "kokoro":
-            _kokoro_wav(_pronounce(text), SPEED * pace, out)
+            _kokoro_wav(_pronounce(strip_tags(text)), SPEED * pace, out)
         else:
             model = _voice_path()
             subprocess.run([sys.executable, "-m", "piper", "-m", model, "-f", out,
                             "--length-scale", str(1 / (SPEED * pace))],
-                           input=text.encode(), check=True, stderr=subprocess.DEVNULL)
+                           input=strip_tags(text).encode(), check=True, stderr=subprocess.DEVNULL)
     return _squeeze(_trim(_read_wav(out)))
 
 
@@ -324,7 +366,7 @@ CLONE_TONE = ("highpass=f=70,"
 
 def syllables(text):
     n = 0
-    for w in re.findall(r"[a-z']+", text.lower()):
+    for w in re.findall(r"[a-z']+", strip_tags(text).lower()):
         g = len(re.findall(r"[aeiouy]+", w))
         if w.endswith("e") and not w.endswith(("le", "ee")) and g > 1:
             g -= 1
@@ -354,19 +396,21 @@ def speech_secs(a, sr):
 TEMPO_MIN, TEMPO_MAX = 0.94, 1.15     # bigger stretches smear short words ("blood" -> "black"), even with rubberband
 
 
-def _clone_process(text, pace):
+def _clone_process(text, pace, who=None):
     """The finished take: nudged toward the target pace (rubberband, crisp mode) and toned. -> (path, final rate)."""
     import imageio_ffmpeg
     import soundfile
-    out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace)}.wav")
-    r, rsr = soundfile.read(_clone_raw(text))
+    out = os.path.join(ROOT, "build", "tts", f"{_key(text, pace, who)}.wav")
+    r, rsr = soundfile.read(_clone_raw(text, who))
     rate = syllables(text) / max(0.2, speech_secs(r, rsr))
     tempo = min(TEMPO_MAX, max(TEMPO_MIN, CLONE_RATE * pace / rate))
+    if _has_sound(text):   # a laugh or a sigh counts as "speech" above, so don't rush the words to make up for it
+        tempo = min(tempo, 1.05)
     if not os.path.exists(out):
         os.makedirs(os.path.dirname(out), exist_ok=True)
         stretch = (f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
                    f"formant=preserved:pitchq=quality,") if abs(tempo - 1) > 0.005 else ""
-        subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text),
+        subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text, who),
                         "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
     return out, rate * tempo
 
@@ -381,9 +425,14 @@ def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
     return a[max(0, loud[0] - int(pre * SR)): loud[-1] + int(post * SR)]
 
 
-def _clone_raw(text):
-    return os.path.join(ROOT, "build", "clone_tts",
-                        hashlib.sha1(f"{CLONE_MODEL}|{CLONE_VERSION}|{text}".encode()).hexdigest()[:16] + ".wav")
+def _clone_raw(text, who=None):
+    ref = _turbo_char(who)
+    key = f"{CLONE_MODEL}|{CLONE_VERSION}|{text}" + (f"|{ref}" if ref else "")
+    return os.path.join(ROOT, "build", "clone_tts", hashlib.sha1(key.encode()).hexdigest()[:16] + ".wav")
+
+
+def _has_sound(text):
+    return any(t in text for t in TURBO_SOUNDS) and CLONE_MODEL == "turbo"
 
 
 # Spellings the clone pronounces more clearly (only what it's told to say; captions keep the real word).
@@ -397,11 +446,13 @@ def _clone_say(text):
 
 
 def clone_prefetch(texts):
-    """Generate every missing sentence in one go (the clone model takes ~20 s to load)."""
+    """Generate every missing sentence in one go (the clone model takes ~20 s to load).
+    `texts`: sentences, or (sentence, character) pairs for characters that speak through Turbo."""
     if ENGINE != "clone":
         return
-    jobs = [[_clone_say(t), _clone_raw(t)] for t in dict.fromkeys(texts)
-            if t not in _EXTERNAL and not os.path.exists(_clone_raw(t))]
+    pairs = [t if isinstance(t, tuple) else (t, None) for t in texts]
+    jobs = [[_voice_tags(_clone_say(t)), _clone_raw(t, w)] + ([_turbo_ref_wav(_turbo_char(w))] if _turbo_char(w) else [])
+            for t, w in dict.fromkeys(pairs) if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w))]
     if not jobs:
         return
     path = os.path.join(ROOT, "build", "clone_tts", f"jobs_{os.getpid()}.json")   # one per render, so parallel renders never collide
@@ -418,12 +469,16 @@ _checker = None
 
 
 SAME_SOUND = {"principle": "principal", "principles": "principals"}   # Whisper's spelling, not a mishearing
+_SOUNDS_HEARD = set("heh hehe ha hah haha hahaha hm hmm mm mhm uh um ugh huh ahem shh sh ah aah oh".split())
 
 
 def _heard_ok(text, heard):
-    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28") and same-sounding spellings."""
-    t = re.sub(r"[^a-z0-9' ]", " ", text.lower().replace("-", " ")).split()
+    """Same words, allowing numbers heard as digits ("twenty-eight" -> "28") and a tag's laugh heard as "heh",
+    and same-sounding spellings ("principle" for "principal")."""
+    t = re.sub(r"[^a-z0-9' ]", " ", strip_tags(text).lower().replace("-", " ")).split()
     h = [SAME_SOUND.get(w, w) for w in re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()]
+    if _has_sound(text):
+        h = [w for w in h if w not in _SOUNDS_HEARD or w in t]
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
         if op == "equal":
             continue
@@ -433,16 +488,40 @@ def _heard_ok(text, heard):
     return True
 
 
+def _sound_ok(text, a, sr, words):
+    """Did a sound tag actually make its sound? Turbo voices it on some takes only. It shows up as a laugh-like word
+    Whisper adds ("heh"), or as >= 0.3 s of sound before the first word / after the last / between two words."""
+    if not _has_sound(text):
+        return True
+    said = set(re.sub(r"[^a-z' ]", " ", strip_tags(text).lower()).split())
+    if any(re.sub(r"[^a-z]", "", w.word.lower()) in _SOUNDS_HEARD - said for w in words):
+        return True
+    if not words:
+        return False
+    env = np.convolve(np.abs(a), np.ones(int(sr * 0.02)) / (sr * 0.02), mode="same")
+    loud = np.nonzero(env > 0.01)[0]
+    if not len(loud):
+        return False
+    on, off = loud[0] / sr, loud[-1] / sr
+    gaps = [b.start - x.end for x, b in zip(words, words[1:])]
+    first = text.lstrip().startswith("[")
+    last = text.rstrip().endswith("]")
+    return ((first and words[0].start - on >= 0.3) or (last and off - words[-1].end >= 0.3)
+            or (not first and not last and max(gaps, default=0) >= 0.3))
+
+
 def clone_check(takes, tries=3, slack=0.15):
-    """Hear every finished take with Whisper medium. Re-make takes that are misheard or whose pace is more than
-    `slack` off the target, and keep the best of `tries`. `takes`: [(text, pace)]."""
+    """Hear every finished take with Whisper medium. Re-make takes that are misheard, whose pace is more than
+    `slack` off the target, or whose sound tag made no sound, and keep the best of `tries`.
+    `takes`: [(text, pace)] or [(text, pace, character)]."""
     if ENGINE != "clone":
         return
     global _checker
     import shutil
     import soundfile
-    takes = list(dict.fromkeys(takes))
-    todo = [(t, p) for t, p in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t) + ".ok")]
+    takes = list(dict.fromkeys(tuple(x) + (None,) * (3 - len(x)) for x in takes))
+    tries = tries + 2 if any(_has_sound(t) for t, _, _ in takes) else tries
+    todo = [(t, p, w) for t, p, w in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w) + ".ok")]
     if not todo:
         return
     if _checker is None:
@@ -451,43 +530,47 @@ def clone_check(takes, tries=3, slack=0.15):
     best = {}
     for attempt in range(tries):
         bad = []
-        for t, p in todo:
-            out, rate = _clone_process(t, p)
+        for t, p, w in todo:
+            out, rate = _clone_process(t, p, w)
             a, sr = soundfile.read(out)
             a = np.concatenate([np.zeros(sr // 2), a, np.zeros(sr // 2)])
             a16 = np.interp(np.arange(int(len(a) * 16000 / sr)) * sr / 16000, np.arange(len(a)), a).astype(np.float32)
             segs = list(_checker.transcribe(a16, language="en", beam_size=5, word_timestamps=True)[0])
             heard = " ".join(x.text.strip() for x in segs)
-            probs = [w.probability for x in segs for w in x.words]
+            words = [x for s in segs for x in s.words]
+            probs = [x.probability for x in words]
             off = abs(rate / (CLONE_RATE * p) - 1)
-            score = (_heard_ok(t, heard), off <= slack, -off, float(np.mean(probs)) if probs else 0.0)
-            keep = f"{_clone_raw(t)}.try{attempt}.wav"
-            shutil.copy(_clone_raw(t), keep)
-            if t not in best or score > best[t][0]:
-                best[t] = (score, keep, heard, p)
-            if not (score[0] and score[1]):
-                bad.append((t, p))
+            score = (_heard_ok(t, heard), _sound_ok(t, a16, 16000, words), off <= slack, -off,
+                     float(np.mean(probs)) if probs else 0.0)
+            keep = f"{_clone_raw(t, w)}.try{attempt}.wav"
+            shutil.copy(_clone_raw(t, w), keep)
+            if (t, w) not in best or score > best[(t, w)][0]:
+                best[(t, w)] = (score, keep, heard, p)
+            if not (score[0] and score[1] and score[2]):
+                bad.append((t, p, w))
         print(f"clone check {attempt + 1}/{tries}: {len(todo) - len(bad)}/{len(todo)} takes clear and on pace",
               file=sys.stderr, flush=True)
         if not bad or attempt == tries - 1:
             break
-        for t, p in bad:
-            if os.path.exists(_clone_raw(t)):   # the same sentence can come twice, at two paces
-                os.remove(_clone_raw(t))
+        for t, p, w in bad:
+            if os.path.exists(_clone_raw(t, w)):   # the same sentence can come twice, at two paces
+                os.remove(_clone_raw(t, w))
             for pc in (p, 1.0, 0.9):
-                f = os.path.join(ROOT, "build", "tts", f"{_key(t, pc)}.wav")
+                f = os.path.join(ROOT, "build", "tts", f"{_key(t, pc, w)}.wav")
                 if os.path.exists(f):
                     os.remove(f)
-        clone_prefetch([t for t, _ in bad])
+        clone_prefetch([(t, w) for t, _, w in bad])
         todo = bad
-    for t, (score, keep, heard, p) in best.items():
-        shutil.copy(keep, _clone_raw(t))
+    for (t, w), (score, keep, heard, p) in best.items():
+        shutil.copy(keep, _clone_raw(t, w))
         for pc in (p, 1.0, 0.9):   # rebuild the finished take from the chosen raw one
-            for f in glob.glob(os.path.join(ROOT, "build", "tts", f"{_key(t, pc)}*")):
+            for f in glob.glob(os.path.join(ROOT, "build", "tts", f"{_key(t, pc, w)}*")):
                 os.remove(f)
-        open(_clone_raw(t) + ".ok", "w").write(heard)
+        open(_clone_raw(t, w) + ".ok", "w").write(heard)
         if not score[0]:
             print(f"clone check: still unclear after {tries} tries: {t!r} heard as {heard!r}", file=sys.stderr)
+        elif not score[1]:
+            print(f"clone check: the sound tag made no sound after {tries} tries: {t!r}", file=sys.stderr)
 
 
 # ---- ElevenLabs (owner, 14 Oct 2026: "Chris is good, make the genie scripts with him for emotions")
@@ -512,6 +595,7 @@ EL_TEMPO = (0.88, 1.0)     # slow rushed takes down; never speed a take up (clar
 def _el_spec(text, pace, who, tone):
     """(finished-take key, raw-request key, request body, voice id, tempo, pitch, fx) for one take."""
     spec = _char(who) or {}
+    text = strip_tags(text)                # Turbo sound tags ([chuckle], ...) are not ElevenLabs tags
     vid = spec.get("el", VOICE)
     tone = tone or spec.get("tone")
     for word, sub in EL_SAY.items():       # spellings it says more clearly; captions keep the real word
@@ -643,6 +727,7 @@ def word_times(text, audio, pace=1.0, who=None, tone=None):
         from faster_whisper import WhisperModel
         _whisper = WhisperModel(os.environ.get("ALIGN_MODEL", "small.en"), device="cpu", compute_type="int8")
     a16 = np.interp(np.arange(int(len(audio) * 16000 / SR)) * SR / 16000, np.arange(len(audio)), audio)
+    text = strip_tags(text)   # times are for the spoken words only
     segs, _ = _whisper.transcribe(a16.astype(np.float32), language="en", word_timestamps=True,
                                   initial_prompt=text)
     heard = [(w.word, w.start, w.end) for s in segs for w in s.words]
