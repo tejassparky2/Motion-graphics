@@ -3,6 +3,8 @@ virtualenv (torch); motion/voice.py calls it once per render with every sentence
 
   /home/user/.venv-clone/bin/python tools/clone_tts.py jobs.json
   jobs.json: [["text", "out.wav"], ...]   ->   24 kHz mono wavs, start/end silence trimmed gently
+  With CLONE_MODEL=turbo a job can add a third item, a reference wav (a character's synthetic Kokoro voice) whose
+  timbre Turbo takes; without it Turbo uses its own stock voice. Turbo voices tags like [chuckle] in the text.
 
 Chatterbox's Perth watermark is left in place.
 """
@@ -39,8 +41,13 @@ def main():
     else:
         model = ChatterboxTTS.from_pretrained(device="cpu")
         model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
-    for k, (text, out) in enumerate(jobs, 1):
+    stock = model.conds if turbo else None
+    for k, (text, out, *ref) in enumerate(jobs, 1):
         if turbo:
+            if ref:
+                model.prepare_conditionals(ref[0])
+            else:
+                model.conds = stock
             w = model.generate(text)[0].numpy()
         else:
             w = model.generate(text, exaggeration=EXAGGERATION, cfg_weight=CFG)[0].numpy()
