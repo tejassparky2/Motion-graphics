@@ -34,6 +34,13 @@
 - Open a loop in the first 5 seconds that only the ending closes ("but the teacher just smiles").
 - Don't trust `hookscore.py` for this channel (it scores our best openings WEAK); judge hooks against these rules.
 
+## What to make more of (owner, 14 Oct 2026): "the genie one is doing good"
+- Lead with **genie-style stories**: a character with ONE rule (genie, robot, magic mirror, principal, ghost) and a kid
+  who turns the rule against itself with one clever line. The authority freezes; the narrator shows both branches in
+  two short sentences ("If he grants it... If he refuses..."), ends "Either way, ...", adds a funny callback, and
+  closes on an either/or question ("Grant the wish, or not?"). Original stories, character voices, about 40 s.
+- Vary the character and setting every time (inauthentic-content rule): never two of the same character in a row.
+
 ## Length: 40-50 s and clearly understandable (owner, 14 Oct 2026)
 - Target **40-50 s**; clarity comes first: every step of the logic stays, one step per sentence. Cut side facts,
   repeats and extra examples instead. Machiavelli and Fermi (talky explainers) stalled at ~60% viewed against a ~90%
