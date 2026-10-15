@@ -40,4 +40,4 @@ heart electricity, what makes your heart beat, sa node, heart conduction system,
 Put two fingers on your neck: what's your heart rate right now? ❤️ 👇
 ```
 
-**Video facts:** 48.2 s, 139 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
+**Video facts:** 48.3 s, 138 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
