@@ -108,7 +108,8 @@ def plan(tl):
         (A("b10", "forty"), S["photos"], dict(move="push", focus=(0.5, 0.45), zoom=(1.03, 1.2), bright=0.6)),
         (A("b11"), S["photos"], dict(move="push", focus=(0.5, 0.45), zoom=(1.3, 1.5), shake=0.1, bright=0.5)),
         (A("b12"), S["hatch"], P(focus=(0.5, 0.15), zoom=(1.03, 1.3))),
-        (A("b13"), S["window"], dict(move="push", focus=(0.5, 0.45), zoom=(1.3, 1.7))),
+        (A("b13"), S["window"], dict(move="push", focus=(0.5, 0.45), zoom=(1.3, 1.5))),
+        (A("b13", "So"), S["point"], dict(move="push", focus=(0.45, 0.25), zoom=(1.5, 1.9), shake=0.05)),
     ]
     _plan[id(tl)] = th.Plan(cuts, tl.total)
     return _plan[id(tl)]
