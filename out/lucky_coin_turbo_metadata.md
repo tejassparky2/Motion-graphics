@@ -39,4 +39,4 @@ twist story, short story, coin flip, lucky coin, story with a twist, life lesson
 Brave, or cheating? 🪙 What's the biggest choice YOU would leave to a coin? 👇
 ```
 
-**Video facts:** 38.4 s, 104 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 37.9 s, 104 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
