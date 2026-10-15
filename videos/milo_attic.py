@@ -18,8 +18,9 @@ SCRIPT = [
     dict(id="b3", scene="s", text="He pointed. Not at me. Behind me.", pace=0.95),
     dict(id="b4", scene="s", text="I turned around. My closet door was open. Just a crack."),
     dict(id="b5", scene="s", text="When I looked back, he was pressing a note to his glass."),
-    dict(id="b6", scene="s", text="Three words. Don't. Turn. Around.", pace=0.9),
-    dict(id="b7", scene="s", text="[gasp] The floor creaked behind me.", gap=0.5),
+    # said in one breath ("Turn." on its own was heard as "Done."); the note still shows one word at a time
+    dict(id="b6", scene="s", text="Three words. [Don't,|Don't.] [turn,|Turn.] [around.|Around.]", pace=0.9),
+    dict(id="b7", scene="s", text="The floor creaked behind me.", gap=0.5),
     dict(id="b8", scene="s", text="I ran. I didn't stop until I was banging on his door."),
     dict(id="b9", scene="s", text="The police searched our house all night."),
     dict(id="b10", scene="s", text="In the attic above my closet, they found a sleeping bag. Empty cans. And forty "
