@@ -30,7 +30,7 @@ EMPHASIS = {"spark", "beat", "squeezing", "pause", "squeeze", "body", "electrici
 
 SCRIPT = [
     dict(id="h1", scene="heart", text="Zap! Zap! I'm the heart's spark. Every beat starts with me.", speaker="sa"),
-    dict(id="h2", scene="heart", text="Got your spark! Squeezing blood down!", speaker="atria"),
+    dict(id="h2", scene="heart", text="Spark received! Squeezing blood down!", speaker="atria"),
     dict(id="h3", scene="heart", text="Hold on. I pause the signal for a split second.", speaker="relay"),
     dict(id="h4", scene="heart", text="Now us! Big squeeze, out to the body!", speaker="vent"),
     dict(id="h5", scene="heart", text="And again. About sixty to a hundred times a minute.", speaker="sa"),
