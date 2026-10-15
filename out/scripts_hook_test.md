@@ -51,13 +51,13 @@ Titles: "A Cat Was Mayor for 20 Years 🐱" · "Did You Know a Cat Ran an Alaska
 | # | Narration | On screen |
 |---|---|---|
 | 1 | Three riddles. Most people get the first two. Only one in a hundred gets the last one. | Frame 0: a big 1 / 2 / 3 on the board, "3" in red. Hook text: **ONLY 1% GET #3** |
-| 2 | Riddle one. What has to be broken before you can use it? | Board: card 1 |
-| 3 | An egg. Easy. | Egg cracks open |
-| 4 | Riddle two. I'm tall when I'm young, and short when I'm old. What am I? | Board: card 2 |
-| 5 | A candle. | Candle melts down fast |
-| 6 | Riddle three. A man pushes his car to a hotel, and tells the owner he's bankrupt. Why? | Card 3 in red; class silent; clock ticking |
+| 2 | Riddle one. What gets wetter, the more it dries? | Board: card 1 |
+| 3 | A towel. Easy. | Towel drying a dog |
+| 4 | Riddle two. What has keys, but can't open a single lock? | Board: card 2 |
+| 5 | A piano. | Piano keys light up |
+| 6 | Riddle three. What can travel around the world, while staying in one corner? | Card 3 in red; class silent; clock ticking |
 | 7 | Three seconds. [gasp] | 3-2-1 countdown |
-| 8 | He's playing Monopoly. | Monopoly board, tiny car token on a hotel |
+| 8 | A stamp. | Envelope flies round a globe, stamp in its corner |
 | 9 | Got it before the answer? Comment "one percent". If not, watch the third one again. | "1%" badge; arrow back to riddle 3 |
 
 Titles: "3 Riddles. Only 1% Get the Last One 🧠" · "Riddle #3 Breaks Everyone"
@@ -102,4 +102,5 @@ Titles: "Your Brain Can't Let This Go 🧠" · "Why You Can't Stop Thinking Abou
 
 **Mishearing check (Turbo):** "Zeigarnik" (spell it "Zay-gar-nik" for the voice), "Talkeetna" ("Tal-keet-na"),
 "Stubbs" fine. Numbers are said in words.
+**Changed 15 Oct:** H3's riddles swapped (the egg and Monopoly were already in "Nobody's Smarter Than Me").
 **Order to post:** H4, H2, H3, H1, H5 (stories first, never two Last Bencher videos back to back: H4 and H3 are split).
