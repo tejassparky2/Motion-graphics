@@ -42,3 +42,7 @@ Tested 3 takes each with the Kokoro-reference voices (Milo am_puck+3, "her" af_n
 - So for character reference voices: keep only tags whose kept take is heard clean (check the `.ok` text in
   build/clone_tts), and make the other reactions with the breath sound effects in motion/audio.py ("sniff",
   "gasp_in", "sigh"), which always work. Turbo's stock voice handles tags much better (crocodile video).
+- **Final (15 Oct):** the full-line Whisper audit showed "[chuckle]" spoken as a word in both reference voices
+  ("...breathing. Chuckle.", and Lily's "Uh, Jekyll" was "chuckle"). Rule: **no [chuckle]/[laugh] with Kokoro-reference
+  voices**; [gasp] before a line in Milo's voice is the only tag that held up (heard as a breath, "Uh"). Use the breath
+  effects for everything else.

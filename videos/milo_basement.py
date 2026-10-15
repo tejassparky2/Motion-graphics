@@ -30,8 +30,8 @@ SCRIPT = [
     dict(id="b9", scene="s", text="How did she know?", pace=0.95),
     dict(id="b10", scene="s", text="Then I saw it. A tiny red light in the corner of the ceiling. A camera. Pointed "
                                    "right at me."),
-    dict(id="b11", scene="s", text="Lily smiled. [chuckle] Mommy's always watching.", speaker="lily",
-         speaker_from="Mommy's", gap=0.4),
+    dict(id="b11", scene="s", text="Lily smiled. Mommy is always watching.", speaker="lily",
+         speaker_from="Mommy", gap=0.4),
     dict(id="b12", scene="s", text="So. Do you open the door? Or pretend you never heard it?"),
 ]
 
@@ -148,15 +148,15 @@ def draw(cr, t, tl):
     cue("riser", t, A("b9"), A("b10", "red") - A("b9"))
     cue("sting", t, A("b10", "red"))
     cue("hush", t, A("b11") - 0.4, 0.4)
-    cue("sting", t, A("b11", "Mommy's"))
+    cue("sting", t, A("b11", "Mommy"))
     cue("heartbeat", t, A("b12"), tl.total - A("b12"))
     th.flash(cr, t, A("b2", "inside"), (1, 1, 1), 0.15, 0.6)
     th.flash(cr, t, A("b10", "red"), (1, 0.1, 0.1), 0.25, 0.5)
-    th.flash(cr, t, A("b11", "Mommy's"), (1, 1, 1), 0.15, 0.6)
+    th.flash(cr, t, A("b11", "Mommy"), (1, 1, 1), 0.15, 0.6)
     th.finish(cr, t, flicker=0.2 if A("b2") <= t < A("b3") else 0.08)
     th.phone(cr, t, A("b8") - 0.6, "Lily's Mom", "Everything okay? Remember the rule.", end=A("b9") + 0.4)
-    if A("b11", "Mommy's") <= t < A("b12"):
-        drawing(cr, t, A("b11", "Mommy's") + 0.6)
+    if A("b11", "Mommy") <= t < A("b12"):
+        drawing(cr, t, A("b11", "Mommy") + 0.6)
     th.choice(cr, t, A("b12", "open"), "OPEN IT", "PRETEND")
     th.hook(cr, t, [("NEVER OPEN THE", False), ("BASEMENT DOOR", True)], end=A("b2"))
     th.captions(cr, t, tl)

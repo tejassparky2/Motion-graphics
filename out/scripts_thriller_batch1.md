@@ -74,7 +74,7 @@ Voices: Milo (Turbo stock). The old man never speaks (scarier). Tags: [gasp] on 
 | 8 | "Everything okay? Remember the rule." | Text overlay types in |
 | 9 | How did she know? | Milo slowly looking up |
 | 10 | Then I saw it. A tiny red light in the corner of the ceiling. A camera. Pointed right at me. | Slow push to the ceiling corner; blinking red light |
-| 11 | [chuckle] Lily smiled. "Mommy's always watching." | Lily looking up from her drawing, smiling; her drawing: four stick figures, one behind a door |
+| 11 | Lily smiled. "Mommy is always watching." | Lily looking up from her drawing, smiling; her drawing: four stick figures, one behind a door |
 | 12 | So. Do you open the door? Or pretend you never heard it? | Two cards: OPEN IT / PRETEND |
 
 Voices: Milo (Turbo stock); Lily and the boy (Turbo, young references); tags: [chuckle] (Lily) on 11.

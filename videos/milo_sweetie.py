@@ -21,7 +21,7 @@ SCRIPT = [
     dict(id="b3", scene="s", text="Then my phone buzzes. A text from Mom."),
     dict(id="b4", scene="s", text="Working late. Order pizza. Love you."),
     dict(id="b5", scene="s", text="The humming stops.", gap=0.5),
-    dict(id="b6", scene="s", text="Milo? I can hear you breathing. [chuckle]", speaker="her", gap=0.6, pace=0.9),
+    dict(id="b6", scene="s", text="Milo? I can hear you breathing.", speaker="her", gap=0.6, pace=0.9),
     dict(id="b7", scene="s", text="One step. Then another. She's coming up."),
     dict(id="b8", scene="s", text="I lock myself in my room. And I call Mom."),
     dict(id="b9", scene="s", text="[gasp] Her ringtone starts playing. Right under my bed.", gap=0.4),

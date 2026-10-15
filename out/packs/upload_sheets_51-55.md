@@ -81,7 +81,7 @@ scary story, thriller story, babysitting story, creepy story, basement, suspense
 Open the door, or pretend you never heard it? 🚪 Be honest 👇
 ```
 
-**Video facts:** 41.9 s, 123 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 41.4 s, 124 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
 
 ---
 
