@@ -42,6 +42,13 @@ def main():
         model = ChatterboxTTS.from_pretrained(device="cpu")
         model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
     stock = model.conds if turbo else None
+    if not turbo and os.environ.get("ALLOW_OWNER_CLONE") != "1":
+        # owner, 15 Oct 2026: "I don't want videos in my cloned voice" / "Don't use my cloned voice"
+        sys.exit("clone_tts: the owner's cloned voice is switched off (owner, 15 Oct 2026). Use CLONE_MODEL=turbo, "
+                 "or set ALLOW_OWNER_CLONE=1 only if the owner asks for it again.")
+    if not turbo and any(len(j) > 2 for j in jobs):
+        sys.exit("clone_tts: jobs carry Turbo reference voices but CLONE_MODEL is not 'turbo'; refusing to voice them "
+                 "in the owner's cloned voice")
     for k, (text, out, *ref) in enumerate(jobs, 1):
         if turbo:
             if ref:

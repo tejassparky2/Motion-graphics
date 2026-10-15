@@ -158,7 +158,7 @@ def _pronounce(text):
     return text
 
 
-CLONE_VERSION = "v3"   # bump when the clone generation, pace or tone changes
+CLONE_VERSION = "v4"   # bump when the clone generation, pace or tone changes (v4: Turbo takes made with the right model)
 
 # Chatterbox Turbo voice tags (the tokens in its tokenizer, added_tokens.json). Tested 14 Oct 2026 on this channel's
 # lines (out/turbo_tags_research.md): the sound tags really make the sound, but only on some takes, so clone_check
@@ -484,7 +484,10 @@ def clone_prefetch(texts):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     json.dump(jobs, open(path, "w"))
     print(f"clone voice: generating {len(jobs)} sentences", file=sys.stderr, flush=True)
-    subprocess.run([CLONE_PYTHON, os.path.join(ROOT, "tools", "clone_tts.py"), path], check=True)
+    # the model choice must reach the subprocess: a video that picks Turbo in its NARRATOR settings (not the shell
+    # environment) was otherwise voiced by the owner-clone model, tags read out as words (found 15 Oct 2026)
+    subprocess.run([CLONE_PYTHON, os.path.join(ROOT, "tools", "clone_tts.py"), path], check=True,
+                   env=dict(os.environ, CLONE_MODEL=CLONE_MODEL))
 
 
 _NUMWORDS = set("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "

@@ -27,8 +27,10 @@
   tag such as "dramatic", "whispers", never shown in captions). Every take is Whisper-checked and re-made if misheard
   (`voice.el_check`); `python tools/el_redo.py VIDEO "sentence"` throws a take away. Rushed narrator takes are slowed
   toward 5.5 syllables/s. Premade or library voices only, never a clone of a real person.
-  Older videos keep Kokoro `am_fenrir`. The owner's cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks
-  (more viewers swiped away on it, 5 Oct 2026).
+  Older videos keep Kokoro `am_fenrir`. **Never the owner's cloned voice** (owner, 15 Oct 2026: "I don't want videos
+  in my cloned voice"); tools/clone_tts.py refuses it unless ALLOW_OWNER_CLONE=1. On 14-15 Oct a bug voiced the Milo
+  videos and the first lucky-coin/rock "Turbo" versions with it (the Turbo setting didn't reach the voice tool); fixed
+  in motion/voice.py (CLONE_MODEL passed to the subprocess, CLONE_VERSION v4) and all of them re-voiced.
 - ElevenLabs account: **free plan** (10,000 characters a month, resets on the 14th; no commercial licence, attribution
   required; library voices and Voice Design blocked through the API). A 40 s video costs ~700 characters plus
   retakes. Check `GET /v1/user/subscription` before a batch and tell the owner when the quota runs low.
