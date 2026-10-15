@@ -11,7 +11,7 @@ from motion import voice
 from motion.engine import W, cue, hexc
 from motion.kit import whip
 from motion.polish import (WHITE, appear, camera, captions, enter, sign, stamp, stroke_line, vignette)
-from motion.toons import person, portrait
+from motion.toons import person, portrait  # noqa: F401
 from videos.last_bencher_4 import (BLUE, GOLD, GREEN, PURPLE, RED, chalk, classroom, mouth_of, room, sparkles,
                                    studio)
 
@@ -73,9 +73,9 @@ def scene_board(cr, t, tl):
     cam = camera(t, [(A("b2") - 0.3, (1.0, 360, 640)), (A("b3"), (1.08, 340, 600))], dur=1.0)
     cr.save()
     enter(cr, cam)
-    chalk(cr, t, A("b3", "Front"), 100, 240, "FRONT ROW  ->  DOCTOR", 40)
-    chalk(cr, t, A("b3", "Second"), 100, 320, "2ND ROW  ->  ENGINEER", 40)
-    chalk(cr, t, A("b3", "engineers.", end=True), 100, 400, "LAST ROW  ->  ???", 40, dur=0.4)
+    chalk(cr, t, A("b3", "Front"), 90, 250, "FRONT: DOCTOR", 56)
+    chalk(cr, t, A("b3", "Second"), 90, 350, "2ND: ENGINEER", 56)
+    chalk(cr, t, A("b3", "Second") + 0.6, 90, 450, "LAST: ???", 56, dur=0.4)
     talk = tl.speaking("sir", t)
     person(cr, t, 560, 900, 1.0, "sir", facing=-1, eyes="half" if talk else "open", mouth="talk" if talk else "smug",
            arms=("point", "hips") if t >= A("b2", "pointed") else ("down", "down"), look=(-0.5, -0.3))
@@ -113,7 +113,7 @@ def scene_kid(cr, t, tl):
     classroom(cr, t, tl, kid_pose=dict(arms=("hips", "hips"), eyes="half" if not talk else "open",
                                        mouth="talk" if talk else "smug", brows="raise"))
     cr.restore()
-    stamp(cr, t, A("b6", "hire"), 360, 230, "THE ONES WHO HIRE THEM", col=RED, size=50)
+    sign(cr, t, A("b6", "hire"), 360, 210, "THE ONES WHO", col=RED, size=62, sub="HIRE THEM", sub_col=WHITE)
     cue("hit", t, A("b6", "hire"))
     sparkles(cr, t, A("b6", "sir."), 560, 520, n=8, seed=3, col=GOLD, spread=140)
     vignette(cr, 0.45)
@@ -143,10 +143,9 @@ def scene_laugh(cr, t, tl):
 def scene_end(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#cdb8ff"), hexc("#fff1d6"), seed=8)
-    sign(cr, t, A("b8"), 360, 200, "WHERE DID YOU SIT?", col=GOLD, size=54)
-    sign(cr, t, A("b8", "Front"), 200, 480, "FRONT ROW", col=BLUE, size=50, sound="pop")
-    sign(cr, t, A("b8", "last"), 520, 480, "LAST ROW", col=RED, size=50, sound="pop")
-    person(cr, t, 360, 900, 0.55, "kid", eyes="happy", mouth="grin", arms=("wave", "hips"))
+    sign(cr, t, A("b8"), 360, 200, "WHERE DID YOU SIT?", col=GOLD, size=60)
+    sign(cr, t, A("b8", "Front"), 360, 430, "FRONT ROW", col=BLUE, size=78, sound="pop")
+    sign(cr, t, A("b8", "last"), 360, 620, "LAST ROW", col=RED, size=78, sound="pop")
     vignette(cr, 0.35)
 
 
