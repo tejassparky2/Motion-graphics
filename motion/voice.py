@@ -494,6 +494,7 @@ _checker = None
 
 
 SAME_SOUND = {"principle": "principal", "principles": "principals"}   # Whisper's spelling, not a mishearing
+_TAG_WORDS = {"chuckle", "laugh", "sigh", "gasp", "sniff", "groan", "cough", "shush", "jekyll", "chuckl"}
 _SOUNDS_HEARD = set("heh hehe hehehe ha hah haha hahaha hm hmm mm mhm uh um ugh huh ahem shh sh ah aah oh ooh phew sniff".split())
 
 
@@ -504,6 +505,9 @@ def _heard_ok(text, heard):
     h = [SAME_SOUND.get(w, w) for w in re.sub(r"[^a-z0-9' ]", " ", heard.lower().replace("-", " ")).split()]
     if _has_sound(text):
         h = [w for w in h if w not in _SOUNDS_HEARD or w in t]
+        # Turbo sometimes SAYS the tag ("Come down for dinner, sweetie. Chuckle."; Lily's "chuckle" heard as "Jekyll")
+        if any(w.rstrip("s") in _TAG_WORDS and w not in t for w in h):
+            return False
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
         if op == "equal":
             continue
