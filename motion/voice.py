@@ -142,7 +142,8 @@ def _squeeze(a):
 # "lakh" defaults to a short "lock"; Indian English says "laakh" with a long vowel.
 PRONOUNCE = {"lakh": "[lakh](/lˈɑːk/)", "emus": "[emus](/ˈimjuz/)", "emu": "[emu](/ˈimju/)",
              "bencher": "[bencher](/bˈɛnʧəɹ/)", "benchers": "[benchers](/bˈɛnʧəɹz/)",
-             "rotationplasty": "[rotationplasty](/ɹˌOtˈAʃənplˌæsti/)"}
+             "rotationplasty": "[rotationplasty](/ɹˌOtˈAʃənplˌæsti/)",
+             "photic": "[photic](/fˈOtɪk/)"}
 
 
 def _pronounce(text):

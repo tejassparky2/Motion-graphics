@@ -84,6 +84,12 @@ the masked doctor and the patient in bed. So:
 - Videos: `videos/brain_freeze.py`, `videos/hiccups.py`, `videos/foot_asleep.py`, `videos/earwax.py`
   (notes and sources: `research_notes/body_facts_19-22.md`).
 
+## Videos 23-26: more hidden body processes (reference style, owner-approved scripts)
+Sun sneeze (`videos/sun_sneeze.py`), wrinkly fingers (`videos/wrinkly_fingers.py`), the heart's own electricity
+(`videos/heart_spark.py`), contagious yawns (`videos/yawn.py`). Same look as 19-22: anatomy cut-away (head in profile
+from `videos/brain_freeze.head`, a fingertip, a four-chamber heart), googly faces on the parts, labels, then the ward
+with Step 1/2/3 cards. Notes and sources: `research_notes/body_facts_23-26.md`; upload sheet `out/upload_sheet_batch4.md`.
+
 ## Channel name and brand (owner's choice)
 The channel is **Doc and the Organs** (tagline "Your organs argue. The doctor explains."). The logo is the owner's
 own: `assets/brand/doc_logo.png` (the doctor with his arms crossed among the organs, in a glowing blue circle). Use
