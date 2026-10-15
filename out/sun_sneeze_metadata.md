@@ -40,4 +40,4 @@ sun sneeze, photic sneeze reflex, why do i sneeze in sunlight, achoo syndrome, s
 Sun sneezers, where you at? ☀️🤧 👇
 ```
 
-**Video facts:** 47.7 s, 137 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
+**Video facts:** 47.8 s, 137 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
