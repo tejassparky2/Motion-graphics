@@ -2,6 +2,8 @@
 
 **Slots (2 a day from Oct 6; was 3 a day until Oct 5):**
 
+**Posting times changed (owner, 15 Oct 2026, from Studio analytics):** from row 35 (Oct 16) every day at **4:30 PM and 7:30 PM IST**. Viewers peak 5-8 PM IST (brightest ~6 PM, Saturday 6-8 PM); 44% of views are India + Philippines + Malaysia + Indonesia, 14% US. Each Short goes up ~1 h before the busy hours so YouTube's first test push has finished and the video is ready for the peak.
+
 | Slot | Until Oct 31 (IST) | From Nov 1 (IST) | US Eastern | US Pacific | Gets |
 |---|---|---|---|---|---|
 | A | **9:30 PM** | 10:30 PM | 12:00 PM (lunch) | 9:00 AM | a solid video |
@@ -54,38 +56,38 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 32 | Wed Oct 14 | 9:30 PM | genie_wish | 3 Wishes. 1 Rule. The Kid Broke the Genie 🧞‍♂️ *(replaces honeybee_life, which the owner deleted as too long, 14 Oct)* |
 | 33 | Thu Oct 15 | 4:30 AM | last_bencher_4 | "Nobody's Smarter Than Me." 3 Riddles Later 😏 *(scheduled by the owner in Studio)* |
 | 34 | Thu Oct 15 | 9:30 PM | lucky_coin | Heads, Yes. Tails, No. For 60 Years 🪙 |
-| 35 | Fri Oct 16 | 4:30 AM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? |
-| 36 | Fri Oct 16 | 9:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 *(also made with the Turbo voice + emotion tags: out/crocodile_dilemma_turbo.mp4; the owner picks which to post)* |
-| 37 | Sat Oct 17 | 4:30 AM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 *(replaces twain_dead_twice, skipped by the owner 14 Oct)* |
-| 38 | Sat Oct 17 | 9:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
-| 39 | Sun Oct 18 | 4:30 AM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 |
-| 40 | Sun Oct 18 | 9:30 PM | spear_shield | One Lie Became the Chinese Word for "Contradiction" 🛡️ |
-| 41 | Mon Oct 19 | 4:30 AM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ |
-| 42 | Mon Oct 19 | 9:30 PM | court_paradox | He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️ |
-| 43 | Tue Oct 20 | 4:30 AM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
-| 44 | Tue Oct 20 | 9:30 PM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
-| 45 | Wed Oct 21 | 4:30 AM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
-| 46 | Wed Oct 21 | 9:30 PM | robot_obey | 1 Order Broke This Robot 🤖 *(genie-style; ElevenLabs Chris narrator)* |
-| 47 | Thu Oct 22 | 4:30 AM | principal_sentence | Principal: Say 1 Sentence. Kid: …😏 *(genie-style; ElevenLabs Chris)* |
-| 48 | Thu Oct 22 | 9:30 PM | mirror_never_lies | The Mirror Never Lies… Until This Question 🪞 *(genie-style; ElevenLabs Chris)* |
-| 49 | Fri Oct 23 | 4:30 AM | genie_returns | The Genie Came Back With New Rules 🧞 (Kid Wins Again?) *(genie sequel; ElevenLabs Chris)* |
-| 50 | Fri Oct 23 | 9:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
-| 51 | Sat Oct 24 | 4:30 AM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea; Milo series skipped by the owner 15 Oct)* |
-| 52 | Sat Oct 24 | 9:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
-| 53 | Sun Oct 25 | 4:30 AM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea)* |
-| 54 | Sun Oct 25 | 9:30 PM | newcomb_box | The Mind-Reading Box *(idea)* |
-| 55 | Mon Oct 26 | 4:30 AM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
-| 56 | Mon Oct 26 | 9:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
-| 57 | Tue Oct 27 | 4:30 AM | pascals_wager | Pascal's Wager *(idea)* |
-| 58 | Tue Oct 27 | 9:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
-| 59 | Wed Oct 28 | 4:30 AM | trolley_problem | The Trolley Problem *(idea)* |
-| 60 | Wed Oct 28 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
-| 61 | Thu Oct 29 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
-| 62 | Thu Oct 29 | 9:30 PM | open_slot | *(open: needs a new video)* |
-| 63 | Fri Oct 30 | 4:30 AM | open_slot | *(open: needs a new video)* |
-| 64 | Fri Oct 30 | 9:30 PM | open_slot | *(open: needs a new video)* |
-| 65 | Sat Oct 31 | 4:30 AM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
-| 66 | Sat Oct 31 | 9:30 PM | open_slot | *(open: needs a new video)* |
+| 35 | Fri Oct 16 | 4:30 PM | omnipotence_rock | 1 Rock. 2 Answers. Both Break God? |
+| 36 | Fri Oct 16 | 7:30 PM | crocodile_dilemma | A Crocodile Made a Deal. One Answer Breaks It. 🐊 *(also made with the Turbo voice + emotion tags: out/crocodile_dilemma_turbo.mp4; the owner picks which to post)* |
+| 37 | Sat Oct 17 | 4:30 PM | immortal_jellyfish | This Jellyfish Turns Back Into a Baby. 10 Times. 🪼 *(replaces twain_dead_twice, skipped by the owner 14 Oct)* |
+| 38 | Sat Oct 17 | 7:30 PM | barber_paradox | The Barber Who Can't Exist 💈 (Try to Solve It) |
+| 39 | Sun Oct 18 | 4:30 PM | heap_paradox | Lose 1 Hair. Not Bald. Then When? 🧑‍🦲 |
+| 40 | Sun Oct 18 | 7:30 PM | spear_shield | One Lie Became the Chinese Word for "Contradiction" 🛡️ |
+| 41 | Mon Oct 19 | 4:30 PM | mechanical_turk | Napoleon Played Chess vs a MACHINE in 1809 ♟️ |
+| 42 | Mon Oct 19 | 7:30 PM | court_paradox | He Sued His Own Student. 2 Arguments. 0 Winners. ⚖️ |
+| 43 | Tue Oct 20 | 4:30 PM | first_cause | Who Made God? The 700-Year-Old Debate ✨ |
+| 44 | Tue Oct 20 | 7:30 PM | achilles_tortoise | Tortoise vs Fastest Runner: A 2,400-Year-Old Paradox 🐢 |
+| 45 | Wed Oct 21 | 4:30 PM | sim_theory | You Might Be Living Inside a Computer Game 🎮 |
+| 46 | Wed Oct 21 | 7:30 PM | robot_obey | 1 Order Broke This Robot 🤖 *(genie-style; ElevenLabs Chris narrator)* |
+| 47 | Thu Oct 22 | 4:30 PM | principal_sentence | Principal: Say 1 Sentence. Kid: …😏 *(genie-style; ElevenLabs Chris)* |
+| 48 | Thu Oct 22 | 7:30 PM | mirror_never_lies | The Mirror Never Lies… Until This Question 🪞 *(genie-style; ElevenLabs Chris)* |
+| 49 | Fri Oct 23 | 4:30 PM | genie_returns | The Genie Came Back With New Rules 🧞 (Kid Wins Again?) *(genie sequel; ElevenLabs Chris)* |
+| 50 | Fri Oct 23 | 7:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
+| 51 | Sat Oct 24 | 4:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea; Milo series skipped by the owner 15 Oct)* |
+| 52 | Sat Oct 24 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
+| 53 | Sun Oct 25 | 4:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea)* |
+| 54 | Sun Oct 25 | 7:30 PM | newcomb_box | The Mind-Reading Box *(idea)* |
+| 55 | Mon Oct 26 | 4:30 PM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
+| 56 | Mon Oct 26 | 7:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
+| 57 | Tue Oct 27 | 4:30 PM | pascals_wager | Pascal's Wager *(idea)* |
+| 58 | Tue Oct 27 | 7:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
+| 59 | Wed Oct 28 | 4:30 PM | trolley_problem | The Trolley Problem *(idea)* |
+| 60 | Wed Oct 28 | 7:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
+| 61 | Thu Oct 29 | 4:30 PM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
+| 62 | Thu Oct 29 | 7:30 PM | open_slot | *(open: needs a new video)* |
+| 63 | Fri Oct 30 | 4:30 PM | open_slot | *(open: needs a new video)* |
+| 64 | Fri Oct 30 | 7:30 PM | open_slot | *(open: needs a new video)* |
+| 65 | Sat Oct 31 | 4:30 PM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
+| 66 | Sat Oct 31 | 7:30 PM | open_slot | *(open: needs a new video)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 

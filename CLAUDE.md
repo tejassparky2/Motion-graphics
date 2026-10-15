@@ -7,7 +7,8 @@
   voice, say so and suggest a fix rather than changing it silently.
 - The owner's own ideas, opinions and edits are what make each video original (YouTube's "inauthentic content" rule
   targets mass-produced, templated videos), so ask for them and vary formats, scenes and characters.
-- Post **2 videos a day** (9:30 PM and 4:30 AM IST until Oct 31), not 3.
+- Post **2 videos a day at 4:30 PM and 7:30 PM IST** (owner, 15 Oct 2026, from analytics: viewers peak 5-8 PM IST;
+  India 21%, Philippines 16%, US 14%). Was 9:30 PM and 4:30 AM until Oct 15.
 
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
