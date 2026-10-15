@@ -64,6 +64,10 @@
   scripts are shelved, not posted. The tools stay in the repo (tools/shots.py, motion/thriller.py) in case the owner
   wants them back.
 
+## Long videos: idea only, not now (owner, 15 Oct 2026)
+- If we ever make long-form videos, the topics are **"what if" scenarios, how finance/money works, and funny history**.
+  Don't make any until the owner says so (monetization route: 4,000 long-form watch hours before the Feb 2027 change).
+
 ## Length: 40-50 s and clearly understandable (owner, 14 Oct 2026)
 - Target **40-50 s**; clarity comes first: every step of the logic stays, one step per sentence. Cut side facts,
   repeats and extra examples instead. Machiavelli and Fermi (talky explainers) stalled at ~60% viewed against a ~90%
