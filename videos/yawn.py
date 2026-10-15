@@ -33,8 +33,8 @@ EMPHASIS = {"yawning", "yawn", "yawns", "movement", "automatic", "contagious", "
 SCRIPT = [
     dict(id="y1", scene="head", text="Alert! Someone in front of us is yawning!", speaker="eye"),
     dict(id="y2", scene="head", text="Copy that. Sending it to the movement area.", speaker="brain"),
-    dict(id="y3", scene="head", text="Uh oh. I can feel it coming.", speaker="jaw"),
-    dict(id="y4", scene="head", text="Too late. Yawn, go!", speaker="brain"),
+    dict(id="y3", scene="head", text="Oh no. I can feel it coming.", speaker="jaw"),
+    dict(id="y4", scene="head", text="Too late. Time to yawn!", speaker="brain"),
     dict(id="y5", scene="head", text="He didn't even want to yawn!", speaker="jaw"),
     dict(id="y6", scene="head", text="That's the funny part. It's mostly automatic.", speaker="brain"),
     dict(id="w1", scene="ward", text="Doctor, why do I yawn when someone else yawns?", speaker="mike"),
@@ -102,7 +102,7 @@ def scene_head(cr, t, tl):
     other = 0.5 + 0.5 * math.sin(t * 3) if t < A("y2") else 0.0
     sent = A("y2", "sending")
     urge = 0.15 * ease_out(seg(t, A("y3"), A("y3", "coming")))
-    big = ease_out(seg(t, A("y4", "yawn"), A("y4", "go") + 0.5)) * (1 - seg(t, A("y6"), A("y6") + 0.8))
+    big = ease_out(seg(t, A("y4", "yawn"), A("y4", "yawn", end=True) + 0.5)) * (1 - seg(t, A("y6"), A("y6") + 0.8))
     open_ = max(urge if t < A("y6") else 0.0, big)
     WIDE, EYEC, BRN, JAWC = (0.9, 230, 500), (1.4, 120, 420), (1.2, 400, 270), (1.2, 380, 640)
     keys = [(0, WIDE), (A("y1", "front"), EYEC), (A("y2"), BRN), (A("y3"), JAWC), (A("y4"), (1.0, 300, 560)),
@@ -160,12 +160,12 @@ def scene_head(cr, t, tl):
         label(cr, "Movement area", 520, 120, 450, 200)
     if A("y3") <= t < A("y4"):
         label(cr, "Jaw muscle", 300, 900, 410, 740)
-    for w in (A("y1", "yawning"), sent, A("y4", "go")):
+    for w in (A("y1", "yawning"), sent, A("y4", "yawn", end=True)):
         cue("hit", t, w)
     # screen-space signs
     if A("y1", "yawning") <= t < A("y2"):
         sign(cr, t, A("y1", "yawning"), "YAWN SPOTTED", y=250, col=hexc("#2f7fd6"), size=52)
-    stamp(cr, t, A("y4", "go"), "YAWN!", x=360, y=250, size=72, end=A("y5"))
+    stamp(cr, t, A("y4", "yawn", end=True), "YAWN!", x=360, y=250, size=72, end=A("y5"))
     if A("y6", "automatic") <= t:
         sign(cr, t, A("y6", "automatic"), "MOSTLY AUTOMATIC", y=250, col=hexc("#7a5bd0"), size=52)
 
