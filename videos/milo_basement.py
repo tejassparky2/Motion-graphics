@@ -71,7 +71,7 @@ def plan(tl):
         (A("b1", "Never"), S["door"], dict(move="push", focus=(0.5, 0.5), zoom=(1.35, 1.5))),
         (A("b2"), S["knock"], P(focus=(0.5, 0.8), zoom=(1.04, 1.3), shake=0.15)),
         (A("b3"), S["lily"], P(focus=(0.5, 0.45))),
-        (A("b4"), S["photo"], P(focus=(0.5, 0.45), zoom=(1.04, 1.3))),
+        (A("b4"), S["lily"], dict(move="push", focus=(0.42, 0.22), zoom=(1.5, 1.75))),   # the photo take showed two kids
         (A("b5"), S["listen"], P(focus=(0.5, 0.4))),
         (A("b5", "Are"), S["gap"], P(focus=(0.5, 0.9), zoom=(1.05, 1.35))),
         (A("b6", "Please."), S["gap"], dict(move="push", focus=(0.5, 0.92), zoom=(1.4, 1.6), shake=0.1)),
