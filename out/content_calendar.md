@@ -71,11 +71,11 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 47 | Thu Oct 22 | 4:30 PM | principal_sentence | Principal: Say 1 Sentence. Kid: …😏 *(genie-style; ElevenLabs Chris)* |
 | 48 | Thu Oct 22 | 7:30 PM | mirror_never_lies | The Mirror Never Lies… Until This Question 🪞 *(genie-style; ElevenLabs Chris)* |
 | 49 | Fri Oct 23 | 4:30 PM | genie_returns | The Genie Came Back With New Rules 🧞 (Kid Wins Again?) *(genie sequel; ElevenLabs Chris)* |
-| 50 | Fri Oct 23 | 7:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
-| 51 | Sat Oct 24 | 4:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea; Milo series skipped by the owner 15 Oct)* |
-| 52 | Sat Oct 24 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
-| 53 | Sun Oct 25 | 4:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea)* |
-| 54 | Sun Oct 25 | 7:30 PM | newcomb_box | The Mind-Reading Box *(idea)* |
+| 50 | Fri Oct 23 | 7:30 PM | last_row_hook | Last-Row Students, This One's for You 😏 *(hook test: identity call-out)* |
+| 51 | Sat Oct 24 | 4:30 PM | cat_mayor | A Cat Was Mayor for 20 Years 🐱 *(hook test: did you know)* |
+| 52 | Sat Oct 24 | 7:30 PM | riddles_one_percent | 3 Riddles. Only 1% Get the Last One 🧠 *(hook test: numbered list)* |
+| 53 | Sun Oct 25 | 4:30 PM | cheat_sheet | This Teacher LET Her Class Cheat 📝 *(hook test: contradict a belief)* |
+| 54 | Sun Oct 25 | 7:30 PM | zeigarnik | Your Brain Can't Let This Go 🧠 *(hook test: abstract concept; loops)* |
 | 55 | Mon Oct 26 | 4:30 PM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
 | 56 | Mon Oct 26 | 7:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
 | 57 | Tue Oct 27 | 4:30 PM | pascals_wager | Pascal's Wager *(idea)* |
@@ -83,11 +83,11 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 59 | Wed Oct 28 | 4:30 PM | trolley_problem | The Trolley Problem *(idea)* |
 | 60 | Wed Oct 28 | 7:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
 | 61 | Thu Oct 29 | 4:30 PM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
-| 62 | Thu Oct 29 | 7:30 PM | open_slot | *(open: needs a new video)* |
-| 63 | Fri Oct 30 | 4:30 PM | open_slot | *(open: needs a new video)* |
-| 64 | Fri Oct 30 | 7:30 PM | open_slot | *(open: needs a new video)* |
+| 62 | Thu Oct 29 | 7:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea, moved for the hook tests)* |
+| 63 | Fri Oct 30 | 4:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea, moved for the hook tests)* |
+| 64 | Fri Oct 30 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea, moved for the hook tests)* |
 | 65 | Sat Oct 31 | 4:30 PM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
-| 66 | Sat Oct 31 | 7:30 PM | open_slot | *(open: needs a new video)* |
+| 66 | Sat Oct 31 | 7:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea, moved for the hook tests)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 

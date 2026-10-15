@@ -16,7 +16,7 @@ Never two of the same character in a row.
 | 2 | One rule. You can bring one cheat sheet. The size of a sticky note. | A tiny yellow sticky note held up, ruler showing how small |
 | 3 | [gasp] The class went crazy. | Kids cheering, papers flying |
 | 4 | That night, everyone tried to squeeze the whole book onto one tiny note. | Kid at a desk at night, writing smaller and smaller, lamp |
-| 5 | They shrank every formula. Picked only the most important ones. Wrote them again and again to make them fit. | Sticky note filling up with microscopic writing, crossed out, rewritten |
+| 5 | They shortened every formula. *(was "shrank": heard as "shrink")* Picked only the most important ones. Wrote them again and again to make them fit. | Sticky note filling up with microscopic writing, crossed out, rewritten |
 | 6 | On exam day, the teacher said: take out your cheat sheets. | Exam hall, every kid holding a sticky note |
 | 7 | Nobody looked at theirs. | Close: notes untouched, kids writing fast |
 | 8 | By making the cheat sheet, they had already learned everything on it. [chuckle] | Teacher smiling, arms crossed |

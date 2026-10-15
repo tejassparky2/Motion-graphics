@@ -27,7 +27,7 @@ SCRIPT = [
     dict(id="b2", scene="rule", text="One rule. You can bring one cheat sheet. The size of a sticky note."),
     dict(id="b3", scene="cheer", text="[gasp] The class went crazy."),
     dict(id="b4", scene="night", text="That night, everyone tried to squeeze the whole book onto one tiny note."),
-    dict(id="b5", scene="note", text="They shrank every formula. Picked only the most important ones. Wrote them "
+    dict(id="b5", scene="note", text="They shortened every formula. Picked only the most important ones. Wrote them "
                                      "again and again to make them fit."),
     dict(id="b6", scene="exam", text="On exam day, the teacher said. Take out your cheat sheets.", speaker="teacher",
          speaker_from="Take"),
@@ -162,7 +162,7 @@ def scene_note(cr, t, tl):
             if t >= st:
                 y = 420 + k * 80
                 stroke_line(cr, [(200, y), (lerp(200, 520, seg(t, st, st + 0.25)), y + 6)], 8, RED, curve=False)
-    sign(cr, t, A("b5", "shrank"), 360, 170, "SHRINK", col=BLUE, size=64, end=A("b5", "Picked") - 0.05)
+    sign(cr, t, A("b5", "shortened"), 360, 170, "SHRINK", col=BLUE, size=64, end=A("b5", "Picked") - 0.05)
     sign(cr, t, A("b5", "Picked"), 360, 170, "PICK", col=GREEN, size=64, end=A("b5", "Wrote") - 0.05)
     sign(cr, t, A("b5", "Wrote"), 360, 170, "REWRITE x10", col=PURPLE, size=64)
     vignette(cr, 0.3)

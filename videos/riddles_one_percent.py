@@ -57,9 +57,9 @@ def board_cards(cr, t, lit):
     for k in range(3):
         x = 150 + k * 210
         col = RED if k == 2 else (GREEN if k + 1 < lit else WHITE)
-        rrect(cr, x - 80, 230, 160, 200, 18)
+        rrect(cr, x - 80, 320, 160, 200, 18)
         paint(cr, (0.1, 0.25, 0.18, 0.8), col, 8)
-        bold_text(cr, str(k + 1), x, 375, 140, col)
+        bold_text(cr, str(k + 1), x, 465, 140, col)
 
 
 def scene_hook(cr, t, tl):
@@ -71,7 +71,7 @@ def scene_hook(cr, t, tl):
     board_cards(cr, t, 1 if t < A("b1", "first") else 3)
     if t >= A("b1", "first"):
         for k in range(2):
-            stamp(cr, t, A("b1", "first") + 0.2 * k, 150 + k * 210, 330, "OK", col=GREEN, size=40)
+            stamp(cr, t, A("b1", "first") + 0.2 * k, 150 + k * 210, 420, "OK", col=GREEN, size=40)
     cr.restore()
     if t >= A("b1", "hundred"):
         stamp(cr, t, A("b1", "hundred"), 360, 820, "ONLY 1%", col=RED, size=80)
@@ -101,8 +101,9 @@ def scene_r1(cr, t, tl):
     ans = A("b3")
     cr.save()
     enter(cr, camera(t, [(A("b2") - 0.3, (1.0, 360, 640))]))
-    chalk(cr, t, A("b2", "What"), 100, 250, "What gets WETTER,", 46)
-    chalk(cr, t, A("b2", "more"), 100, 320, "the more it dries?", 46)
+    chalk(cr, t, A("b2", "What"), 90, 270, "Gets WETTER", 60)
+    chalk(cr, t, A("b2", "more"), 90, 360, "the more", 60)
+    chalk(cr, t, A("b2", "dries?"), 90, 450, "it dries?", 60)
     cr.restore()
     if t >= ans:
         towel(cr, t, 360, 640, appear(t, ans, 0.4), seg(t, ans, ans + 1.0))
@@ -134,8 +135,9 @@ def scene_r2(cr, t, tl):
     ans = A("b5")
     cr.save()
     enter(cr, camera(t, [(A("b4") - 0.3, (1.0, 360, 640))]))
-    chalk(cr, t, A("b4", "What"), 100, 250, "Has KEYS, but can't", 46)
-    chalk(cr, t, A("b4", "open"), 100, 320, "open a single lock?", 46)
+    chalk(cr, t, A("b4", "keys,"), 90, 270, "Has KEYS,", 60)
+    chalk(cr, t, A("b4", "open"), 90, 360, "can't open", 60)
+    chalk(cr, t, A("b4", "lock?"), 90, 450, "a LOCK?", 60)
     cr.restore()
     if t >= A("b4", "keys,"):
         k = appear(t, A("b4", "keys,"), 0.3)                       # a key that won't turn in a lock
@@ -176,8 +178,9 @@ def scene_r3(cr, t, tl):
         room(cr, t, board=True)
         cr.save()
         enter(cr, camera(t, [(A("b6") - 0.3, (1.0, 360, 640)), (b7, (1.12, 360, 600))], dur=0.6))
-        chalk(cr, t, A("b6", "What"), 90, 250, "Travels AROUND THE WORLD,", 40)
-        chalk(cr, t, A("b6", "while"), 90, 320, "but stays in ONE CORNER?", 40)
+        chalk(cr, t, A("b6", "travel"), 90, 270, "Travels the WORLD,", 54)
+        chalk(cr, t, A("b6", "while"), 90, 360, "stays in", 54)
+        chalk(cr, t, A("b6", "corner?"), 90, 450, "ONE CORNER?", 54)
         cr.restore()
         if t >= b7:                                                # the 3-2-1
             n = 3 - int((t - b7) / max(0.3, (ans - b7) / 3))
