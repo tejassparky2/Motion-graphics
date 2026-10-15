@@ -48,7 +48,7 @@ Brave, or cheating? 🪙 What's the biggest choice YOU would leave to a coin? �
 
 ---
 
-## 35. Fri Oct 16, 4:30 AM IST: `35_Oct16_430AM_omnipotence_rock.mp4`
+## 35. Fri Oct 16, 4:30 PM IST: `35_Oct16_430PM_omnipotence_rock.mp4`
 
 **Title** (34 characters)
 ```
@@ -92,7 +92,7 @@ Did the teacher win, or did he dodge it? 🪨 Defend your pick (respectfully) �
 
 ---
 
-## 36. Fri Oct 16, 9:30 PM IST: `36_Oct16_930PM_crocodile_dilemma.mp4`
+## 36. Fri Oct 16, 7:30 PM IST: `36_Oct16_730PM_crocodile_dilemma.mp4`
 
 **Title** (48 characters)
 ```
@@ -136,7 +136,7 @@ What would YOU have said to the crocodile? 🐊 Best answer gets pinned 👇
 
 ---
 
-## 37. Sat Oct 17, 4:30 AM IST: `37_Oct17_430AM_immortal_jellyfish.mp4`
+## 37. Sat Oct 17, 4:30 PM IST: `37_Oct17_430PM_immortal_jellyfish.mp4`
 
 **Title** (50 characters)
 ```
