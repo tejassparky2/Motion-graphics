@@ -70,20 +70,20 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 48 | Thu Oct 22 | 9:30 PM | mirror_never_lies | The Mirror Never Lies… Until This Question 🪞 *(genie-style; ElevenLabs Chris)* |
 | 49 | Fri Oct 23 | 4:30 AM | genie_returns | The Genie Came Back With New Rules 🧞 (Kid Wins Again?) *(genie sequel; ElevenLabs Chris)* |
 | 50 | Fri Oct 23 | 9:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea)* |
-| 51 | Sat Oct 24 | 4:30 AM | milo_sweetie | Mom Never Calls Me Sweetie... 😨 *(Milo thriller #1; 4:30 AM IST = 7 PM in New York, prime time for scary stories)* |
+| 51 | Sat Oct 24 | 4:30 AM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea; Milo series skipped by the owner 15 Oct)* |
 | 52 | Sat Oct 24 | 9:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea)* |
-| 53 | Sun Oct 25 | 4:30 AM | milo_basement | Never Open the Basement Door 🚪 *(Milo thriller #3)* |
+| 53 | Sun Oct 25 | 4:30 AM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea)* |
 | 54 | Sun Oct 25 | 9:30 PM | newcomb_box | The Mind-Reading Box *(idea)* |
-| 55 | Mon Oct 26 | 4:30 AM | milo_attic | He Pointed Behind Me... 😨 *(Milo thriller #2)* |
+| 55 | Mon Oct 26 | 4:30 AM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
 | 56 | Mon Oct 26 | 9:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
 | 57 | Tue Oct 27 | 4:30 AM | pascals_wager | Pascal's Wager *(idea)* |
 | 58 | Tue Oct 27 | 9:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
 | 59 | Wed Oct 28 | 4:30 AM | trolley_problem | The Trolley Problem *(idea)* |
 | 60 | Wed Oct 28 | 9:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
 | 61 | Thu Oct 29 | 4:30 AM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
-| 62 | Thu Oct 29 | 9:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea, moved from #53)* |
-| 63 | Fri Oct 30 | 4:30 AM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea, moved from #55)* |
-| 64 | Fri Oct 30 | 9:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea, moved from #51)* |
+| 62 | Thu Oct 29 | 9:30 PM | open_slot | *(open: needs a new video)* |
+| 63 | Fri Oct 30 | 4:30 AM | open_slot | *(open: needs a new video)* |
+| 64 | Fri Oct 30 | 9:30 PM | open_slot | *(open: needs a new video)* |
 | 65 | Sat Oct 31 | 4:30 AM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
 | 66 | Sat Oct 31 | 9:30 PM | open_slot | *(open: needs a new video)* |
 
