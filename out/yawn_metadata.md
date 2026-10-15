@@ -40,4 +40,4 @@ contagious yawning, why are yawns contagious, yawning, try not to yawn, brain fa
 Did you yawn? Be honest 🥱 👇
 ```
 
-**Video facts:** 46.3 s, 118 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
+**Video facts:** 46.6 s, 119 words of narration, voice `am_adam` at speed 0.95. Made for kids: **No**.
