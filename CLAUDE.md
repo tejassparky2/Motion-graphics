@@ -9,6 +9,8 @@
   targets mass-produced, templated videos), so ask for them and vary formats, scenes and characters.
 - Post **2 videos a day at 4:30 PM and 7:30 PM IST** (owner, 15 Oct 2026, from analytics: viewers peak 5-8 PM IST;
   India 21%, Philippines 16%, US 14%). Was 9:30 PM and 4:30 AM until Oct 15.
+  **2-week trial, Oct 16-29** (owner agreed 15 Oct): then compare first-24-hour views with the old 9:30 PM / 4:30 AM
+  posts and keep whichever does better.
 
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
