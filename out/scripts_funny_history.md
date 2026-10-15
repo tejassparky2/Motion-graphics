@@ -76,3 +76,54 @@ authorities did hire musicians and set up a stage. Numbers of dancers vary (doze
 
 **If approved:** Turbo voice + tags, 2D cartoon characters (Napoleon already exists in our cast), modern-joke signs
 on screen ("BUNNYLOO 1807", "STILL WAITING"), 40-45 s each. Slots: open rows 55+ (calendar).
+
+
+---
+
+# Rewritten in his narration style (owner: "narration style")
+
+His voice-over is the joke: he **talks to you like a friend telling gossip**. So the narration below:
+- talks to the viewer ("Now think about it", "You know what happened next?", "Look at this guy's planning"),
+- calls people **"bro"** and roasts them lovingly,
+- adds **modern comparisons** (404, Google Maps, Instagram, IPO, group chat, Zomato order, customer support),
+- sets up big, then lands flat ("…just jungle. Literally, jungle."),
+- ends on a one-line lesson.
+
+Delivery: fast and playful, a real laugh where the line is funny ([laugh]/[chuckle], Turbo stock voice), a beat of
+silence before each punchline.
+
+## F1 (narration style). "Napoleon Lost a Battle. To Bunnies."
+1. Napoleon conquered half of Europe. Bro was unstoppable. And then he lost a battle. To bunnies.
+2. Eighteen oh seven. He's just signed a peace deal, so his right-hand man says: let's party. A rabbit hunt.
+3. And look at this guy's planning. A thousand rabbits. Ordered. Delivered. Cages ready. [chuckle]
+4. Just one tiny problem. He bought tame rabbits. Pet rabbits. From farmers.
+5. Now think about it. The cages open. And the rabbits look at Napoleon like he's the Zomato delivery guy.
+6. A thousand bunnies. Sprinting. At the most feared man in Europe.
+7. Up his boots. Into his coat. Bro is running to his carriage, swatting rabbits with his hat. [laugh]
+8. Even the carriage got invaded. Ears sticking out of the windows.
+9. Everyone talks about Waterloo. Nobody talks about Bunnyloo.
+10. So who wins: Napoleon, or a thousand bunnies?
+*(Source note unchanged: one general's memoir, published decades later; "the story goes" is said in the
+description and pinned comment.)*
+
+## F2 (narration style). "Two Cities Went to War. Over a Bucket."
+1. In thirteen twenty-five, two cities in Italy went to war. Over a bucket. Not gold. Not land. A bucket.
+2. The legend says some soldiers from Modena sneak into Bologna at night, and steal the bucket from the town well.
+3. Bologna: give it back. Modena: left on seen. [chuckle]
+4. So Bologna sends an army. Thirty thousand soldiers. For a bucket.
+5. Modena has seven thousand. And the bucket.
+6. Now you're thinking, easy win for Bologna, right? [gasp] Modena wins.
+7. Historians say the real reason was politics. Fine. But the bucket? Still in Modena. Seven hundred years. Locked in a tower like a trophy.
+8. Bologna's return request is still pending. Customer support never replied. [laugh]
+9. What's the smallest thing someone ever fought you over?
+
+## F3 (narration style). "The Dancing Plague of 1518"
+1. Fifteen eighteen. A woman walks into the street in Strasbourg. Starts dancing. And just doesn't stop.
+2. One day. Two days. Bro, her legs had more stamina than my phone battery. [chuckle]
+3. Then people start joining. Within weeks, dozens of people dancing. Nonstop.
+4. So the city leaders sit down. Serious faces. Big meeting. And they come up with a plan.
+5. More music.
+6. They hire musicians. They build a stage. Because obviously, the cure for too much dancing is a dance floor. [laugh]
+7. And you know what happened next? It got worse. Way worse.
+8. To this day, nobody knows exactly why. Stress, hunger, fear. Or something else.
+9. If one song could make you dance for days, which song would it be?
