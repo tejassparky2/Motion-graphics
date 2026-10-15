@@ -36,4 +36,4 @@ scary story, thriller story, creepy story, phrogging, someone living in my attic
 Why did the old man wait so long to warn Milo? 🤔 Wrong answers only 👇
 ```
 
-**Video facts:** 40.3 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 41.1 s, 138 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

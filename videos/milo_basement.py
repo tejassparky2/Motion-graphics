@@ -78,8 +78,8 @@ def plan(tl):
         (A("b7"), S["face"], P(focus=(0.5, 0.4))),
         (A("b8"), S["face"], dict(move="hold", zoom=(1.2, 1.22), bright=0.45)),
         (A("b9"), S["face"], dict(move="push", zoom=(1.3, 1.45), focus=(0.5, 0.35))),
-        (A("b10", "red"), S["camera"], P(focus=(0.75, 0.17), zoom=(1.04, 1.5))),
-        (A("b10", "Pointed"), S["camera"], dict(move="push", focus=(0.75, 0.17), zoom=(1.7, 2.0), shake=0.15)),
+        (A("b10", "red"), S["camera"], P(focus=(0.75, 0.17), zoom=(1.04, 1.5), lift=0.7)),
+        (A("b10", "Pointed"), S["camera"], dict(move="push", focus=(0.75, 0.17), zoom=(1.7, 2.0), shake=0.15, lift=0.7)),
         (A("b11"), S["smile"], P(focus=(0.5, 0.4), zoom=(1.03, 1.25))),
         (A("b12"), S["door"], dict(move="push", focus=(0.5, 0.5), zoom=(1.1, 1.5))),
     ]
@@ -93,9 +93,9 @@ def drawing(cr, t, start):
         return
     p = min(1, (t - start) / 0.35)
     cr.save()
-    cr.translate(W / 2, 560)
+    cr.translate(W / 2, 745)                            # below her face, above the captions
     cr.rotate(0.05)
-    cr.scale(0.6 + 0.4 * p, 0.6 + 0.4 * p)
+    cr.scale(0.4 + 0.25 * p, 0.4 + 0.25 * p)
     cr.rectangle(-230, -170, 460, 340)
     cr.set_source_rgba(0.96, 0.95, 0.9, 0.97)
     cr.fill()
@@ -150,9 +150,6 @@ def draw(cr, t, tl):
     th.flash(cr, t, A("b2", "inside"), (1, 1, 1), 0.15, 0.6)
     th.flash(cr, t, A("b10", "red"), (1, 0.1, 0.1), 0.25, 0.5)
     th.flash(cr, t, A("b11", "Mommy's"), (1, 1, 1), 0.15, 0.6)
-    if t >= A("b10", "red") and t < A("b11"):           # the camera's red light, blinking
-        on = int(t * 2.5) % 2
-        th.glow(cr, W * 0.5, 300, 90, (1, 0.1, 0.1), 0.25 * on)
     th.finish(cr, t, flicker=0.2 if A("b2") <= t < A("b3") else 0.08)
     th.phone(cr, t, A("b8") - 0.6, "Lily's Mom", "Everything okay? Remember the rule.", end=A("b9") + 0.4)
     if A("b11", "Mommy's") <= t < A("b12"):

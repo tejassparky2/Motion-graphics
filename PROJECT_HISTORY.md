@@ -130,3 +130,14 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
 4. Turbo voice test (row 42, Oct 19 9:30 PM): compare stayed-to-watch % before switching more videos.
 5. Calendar: made through Oct 21 4:30 AM (row 45); open slots after that.
 6. Move the upload reminders to the new chat (they fire into the old session).
+
+## 8. Oct 14-15 (night): the Milo thriller series
+- Owner shared "That's Not My Dad" (3D first-person creepy Short) and asked for suspense-thriller/creepy videos with
+  strong visuals, not cartoon; no paid tools. Built a free local pipeline: film-like shots with DreamShaper 8 + LCM
+  (tools/shots.py, sketch-guided by tools/milo_layouts.py), motion/thriller.py (grade, creep, shake, flicker, grain,
+  phone/note/choice overlays, red-word captions), thriller sound in motion/audio.py, Turbo voices for everyone.
+- Owner: every video stars Milo (15, red hoodie); "use all ways" (thriller, creepy, horror, ghosts). Auto-approved
+  batch 1 before sleeping; made overnight: milo_sweetie, milo_attic, milo_basement (calendar rows 51/53/55, 4:30 AM
+  IST = 7 PM New York). Batch 2 (twin mirror, room 4, Halloween ghost) waiting for approval.
+- Lessons: never run image generation and Turbo at the same time on this 4-core machine (both slow ~40x); single
+  short words ("Turn.") and "creaked" get misheard, so say them inside a phrase or reword.
