@@ -13,7 +13,6 @@ TAGGED = {
     "c4": "Take the job? He flipped it. Heads. Best job he ever had. [chuckle]",
     "c6": "Ask her out? Heads. They were married for fifty years. [laugh]",
     "c8": "Now the grandson flipped it over. [gasp] And froze.",
-    "c9": "[surprised] Heads. And heads.",
     "c10": "Grandpa, it never decided anything! [laugh]",
     "c11": "I know.[chuckle] I always knew what I wanted. I just needed a reason to be brave.",
 }
