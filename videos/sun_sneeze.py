@@ -32,12 +32,12 @@ EMPHASIS = {"sunlight", "brain", "tickled", "sneezing", "sneeze", "light", "fami
 
 SCRIPT = [
     dict(id="s1", scene="head", text="Whoa! Bright sunlight, coming in!", speaker="eye"),
-    dict(id="s2", scene="head", text="Got it! Sending the light message to the brain.", speaker="optic"),
+    dict(id="s2", scene="head", text="Okay, got it! Sending the light message to the brain.", speaker="optic"),
     dict(id="s3", scene="head", text="Wait, that message is passing right by me. I'm getting tickled!",
          speaker="trig"),
-    dict(id="s4", scene="head", text="If he's tickled, I'm sneezing! Ah-choo!", speaker="nose"),
+    dict(id="s4", scene="head", text="If he's tickled, I'm sneezing! Achoo!", speaker="nose"),
     dict(id="s5", scene="head", text="So light made him sneeze?", speaker="eye"),
-    dict(id="s6", scene="head", text="In some people, yes. Scientists call it the sun sneeze.", speaker="trig"),
+    dict(id="s6", scene="head", text="In some people, yes. Scientists call it sun sneezing.", speaker="trig"),
     dict(id="w1", scene="ward", text="Doctor, why do I sneeze when I look at the sun?", speaker="mike"),
     dict(id="w2", scene="ward", text="It's called the photic sneeze reflex. About one in four people have it.",
          speaker="doctor"),
@@ -103,7 +103,7 @@ def scene_head(cr, t, tl):
     light = ease_out(seg(t, 0.1, A("s1", "sunlight") + 0.2))
     sent = A("s2", "sending")
     tickle = A("s3", "tickled") - 0.4
-    boom = A("s4", "choo")
+    boom = A("s4", "achoo")
     WIDE, EYEC, NERV, NOSE = (1.0, 330, 520), (1.6, 240, 420), (1.55, 350, 440), (1.1, 210, 500)
     keys = [(0, WIDE), (A("s1", "bright") + 0.1, EYEC), (A("s2"), (1.25, 400, 420)), (A("s3"), NERV),
             (A("s4"), NOSE), (A("s5"), EYEC), (A("s6"), (1.2, 340, 470))]
