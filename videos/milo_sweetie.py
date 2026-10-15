@@ -73,10 +73,10 @@ def plan(tl):
         (A("b7", "coming"), "v1_06_woman_b", dict(move="push", zoom=(1.35, 1.5), focus=(0.5, 0.3), shake=0.15)),
         (A("b8"), S["lock"], P(dict(focus=(0.5, 0.5), shake=0.2))),
         (A("b8", "call"), S["face"], dict(move="hold", zoom=(1.25, 1.27), bright=0.45)),
-        (A("b9"), S["underbed"], P(dict(focus=(0.65, 0.6), zoom=(1.04, 1.3), shake=0.1))),
+        (A("b9"), S["underbed"], P(dict(focus=(0.65, 0.6), zoom=(1.04, 1.3), shake=0.1, lift=0.8))),
         (A("b10", "hall"), S["feet"], P(dict(focus=(0.5, 0.9), zoom=(1.04, 1.25)))),
         (A("b11"), S["knob"], P(dict(focus=(0.5, 0.5), shake=0.2))),
-        (A("b11", "bed"), S["underbed"], dict(move="push", zoom=(1.3, 1.45), focus=(0.6, 0.55), shake=0.5)),
+        (A("b11", "bed"), S["underbed"], dict(move="push", zoom=(1.3, 1.45), focus=(0.6, 0.55), shake=0.5, lift=0.8)),
         (A("b12"), S["choice"], P(dict(focus=(0.45, 0.45), zoom=(1.02, 1.12)))),
     ]
     _plan[id(tl)] = th.Plan(cuts, tl.total)

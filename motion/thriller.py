@@ -58,7 +58,7 @@ def _noise(t, seed, freqs=(0.31, 0.53, 0.97)):
     return sum(math.sin(t * f * 2 * math.pi + seed * (k + 1) * 1.7) / (k + 1) for k, f in enumerate(freqs)) / 1.8
 
 
-def shot(cr, name, t, t0, t1, move="push", focus=(0.5, 0.45), zoom=(1.04, 1.16), shake=0.0, bright=1.0):
+def shot(cr, name, t, t0, t1, move="push", focus=(0.5, 0.45), zoom=(1.04, 1.16), shake=0.0, bright=1.0, lift=0.0):
     """Draw a shot filling the frame. `move`: push (creep in), pull (creep out), left/right/up/down (drift), hold.
     `focus`: where the push heads, as fractions of the image. `shake`: handheld shake strength (shocks)."""
     surf = image(name)
@@ -86,6 +86,10 @@ def shot(cr, name, t, t0, t1, move="push", focus=(0.5, 0.45), zoom=(1.04, 1.16),
     cr.set_source_surface(surf, 0, 0)
     cr.get_source().set_filter(cairo.FILTER_GOOD)
     cr.paint()
+    if lift:                                                            # brighten a very dark shot
+        cr.set_operator(cairo.OPERATOR_ADD)
+        cr.set_source_surface(surf, 0, 0)
+        cr.paint_with_alpha(lift)
     cr.restore()
     if bright < 1:
         cr.set_source_rgba(0, 0, 0, 1 - bright)
@@ -230,7 +234,7 @@ def captions(cr, t, tl, y=930, size=64, max_w=600):
 _caps = {}
 
 
-def phone(cr, t, start, sender, msg, y=360, typing=0.7, end=None):
+def phone(cr, t, start, sender, msg, y=330, typing=0.7, end=None):
     """A phone screen sliding up with a text arriving: '...' typing, then the message."""
     if t < start or (end is not None and t > end + 0.3):
         return
@@ -239,7 +243,7 @@ def phone(cr, t, start, sender, msg, y=360, typing=0.7, end=None):
     cr.save()
     cr.translate(0, up)
     cr.push_group()
-    x0, w, h = 110, W - 220, 560
+    x0, w, h = 110, W - 220, 480
     glow(cr, W / 2, y + h / 2, 420, (0.5, 0.7, 1.0), 0.18)
     rrect(cr, x0, y, w, h, 56)
     cr.set_source_rgba(0.04, 0.05, 0.07, 0.96)
