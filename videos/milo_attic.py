@@ -54,6 +54,35 @@ Why did the old man wait until last night to warn me? 👇
     pinned_comment="Why did the old man wait so long to warn Milo? 🤔 Wrong answers only 👇",
 )
 
+def polaroids(cr, t, start, n=7):
+    """The photos they found: Milo asleep, shot from above, pinned up one after another."""
+    import math
+    from motion.engine import W
+    spots = [(-170, -260, -0.12), (150, -300, 0.09), (-40, -60, 0.04), (190, -20, -0.07), (-200, 170, 0.1),
+             (60, 210, -0.05), (-60, 420, 0.07)]
+    for k, (x, y, r) in enumerate(spots[:n]):
+        at = start + 0.18 * k
+        if t < at:
+            break
+        p = min(1, (t - at) / 0.15)
+        img = th.image(("v2_12_sleep_a", "v2_12_sleep_b")[k % 2])
+        cr.save()
+        cr.translate(W / 2 + x, 600 + y)
+        cr.rotate(r)
+        cr.scale(1.25 - 0.25 * p, 1.25 - 0.25 * p)
+        cr.rectangle(-120, -130, 240, 280)
+        cr.set_source_rgba(0.94, 0.93, 0.9, 1)
+        cr.fill()
+        cr.rectangle(-105, -115, 210, 210)
+        cr.clip()
+        sc = 210 / img.get_width()
+        cr.translate(-105, -115)
+        cr.scale(sc, sc)
+        cr.set_source_surface(img, 0, 0)
+        cr.paint()
+        cr.restore()
+
+
 _plan = {}
 
 
@@ -75,8 +104,8 @@ def plan(tl):
         (A("b8"), S["run"], P(focus=(0.5, 0.6), zoom=(1.05, 1.3), shake=0.6)),
         (A("b9"), S["police"], P(focus=(0.5, 0.5))),
         (A("b10"), S["attic"], P(focus=(0.5, 0.6), zoom=(1.03, 1.25))),
-        (A("b10", "forty"), S["photos"], P(focus=(0.5, 0.45), zoom=(1.03, 1.2))),
-        (A("b11"), S["photos"], dict(move="push", focus=(0.5, 0.45), zoom=(1.5, 1.7), shake=0.1)),
+        (A("b10", "forty"), S["photos"], dict(move="push", focus=(0.5, 0.45), zoom=(1.03, 1.2), bright=0.6)),
+        (A("b11"), S["photos"], dict(move="push", focus=(0.5, 0.45), zoom=(1.3, 1.5), shake=0.1, bright=0.5)),
         (A("b12"), S["hatch"], P(focus=(0.5, 0.15), zoom=(1.03, 1.3))),
         (A("b13"), S["window"], dict(move="push", focus=(0.5, 0.45), zoom=(1.3, 1.7))),
     ]
@@ -114,6 +143,8 @@ def draw(cr, t, tl):
         cr.set_source_rgba(*((0.9, 0.05, 0.05) if k else (0.05, 0.2, 0.95)), 0.18)
         cr.paint()
     th.finish(cr, t, flicker=0.25 if A("b10") <= t < A("b12") else 0.1)
+    if A("b10", "forty") <= t < A("b12"):
+        polaroids(cr, t, A("b10", "forty"))
     if A("b6") <= t < A("b7"):
         th.note(cr, t, [("DON'T.", A("b6", "Don't.")), ("TURN.", A("b6", "Turn.")), ("AROUND.", A("b6", "Around."))],
                 y=500)

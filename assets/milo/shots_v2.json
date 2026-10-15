@@ -75,8 +75,7 @@
  {
   "name": "v2_10_photos",
   "seeds": [
-   1,
-   2
+   1
   ],
   "prompt": "dozens of polaroid photos pinned to a wooden attic beam, flashlight beam, the photos all show a boy sleeping in bed, creepy, stalker"
  },

@@ -1,0 +1,21 @@
+[
+ {
+  "name": "v2_11_hatch",
+  "seeds": [
+   1
+  ],
+  "layout": "build/milo_layouts/v2_hatch.png",
+  "strength": 0.65,
+  "prompt": "open attic hatch in the ceiling of a dark closet, black hole above, a folding ladder hanging down, creepy"
+ },
+ {
+  "name": "v2_12_sleep",
+  "seeds": [
+   1,
+   2
+  ],
+  "w": 512,
+  "h": 512,
+  "prompt": "flash photo taken from above of MC asleep in bed at night, eyes closed, dark bedroom, secretly taken, polaroid, creepy"
+ }
+]
