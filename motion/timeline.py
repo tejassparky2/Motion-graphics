@@ -8,6 +8,7 @@ Script markup: `[spoken words|shown]` says one thing and shows another in the ca
 `[a hundred rupees|₹100]`. Punctuation right after the bracket is kept.
 A sound or mood tag on its own, e.g. `[chuckle]` or `[sniff]` (Chatterbox Turbo; see voice.TURBO_TAGS), is voiced
 with the next word (or the last word, at the end of a line), never shown, and dropped by the other voice engines.
+Glued to a word (`know.[chuckle]`) it is voiced right after that word instead.
 """
 import re
 import sys
@@ -73,7 +74,11 @@ def parse(text):
             spoken[-1] += suffix
             units.append(Unit(spoken, m.group(2) + suffix))
         else:
-            units.append(Unit([m.group(5)], m.group(5)))
+            word, post = m.group(5), ""
+            glued = re.fullmatch(r"(.+?)((?:\[[a-z ]+\])+)", word)    # "know.[chuckle]": a reaction right after a word
+            if glued and all(f"[{g}]" in voice.TURBO_TAGS for g in re.findall(r"\[([a-z ]+)\]", glued.group(2))):
+                word, post = glued.group(1), " ".join(re.findall(r"\[[a-z ]+\]", glued.group(2)))
+            units.append(Unit([word], word, post=post))
         units[-1].pre, tags = " ".join(tags), []
     if tags and units:
         units[-1].post = " ".join(tags)

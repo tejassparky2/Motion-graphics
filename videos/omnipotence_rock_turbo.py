@@ -9,7 +9,11 @@ NARRATOR = dict(_N, turbo=True)
 voice.SPEAKERS.update({"kid": dict(voice.SPEAKERS["kid"], turbo_ref="am_puck+3"),
                        "sir": dict(voice.SPEAKERS["sir"], turbo_ref="am_michael")})
 TAGGED = {
+    "q1": "Sir, can God make a rock so heavy, that even God can't lift it? [chuckle]",
     "q2": "[gasp] The teacher freezes.",
+    "q5": "Either way, God isn't all-powerful. Checkmate, sir. [laugh]",
     "q6": "But the teacher just smiles, and hands him the chalk. [chuckle]",
+    "q8": "[gasp] That's impossible!",
+    "q9": "Exactly.[chuckle] A square circle isn't a thing at all.",
 }
 SCRIPT = [dict(spec, text=TAGGED.get(spec["id"], spec["text"])) for spec in _PLAIN]

@@ -10,7 +10,11 @@ NARRATOR = dict(_N, turbo=True)
 voice.SPEAKERS.update({"kid": dict(voice.SPEAKERS["kid"], turbo_ref="am_puck+3"),
                        "grandpa": dict(voice.SPEAKERS["grandpa"], turbo_ref="bm_george-1.5")})
 TAGGED = {
-    "c6": "Ask her out? Heads. They were married for fifty years. [chuckle]",
+    "c4": "Take the job? He flipped it. Heads. Best job he ever had. [chuckle]",
+    "c6": "Ask her out? Heads. They were married for fifty years. [laugh]",
     "c8": "Now the grandson flipped it over. [gasp] And froze.",
+    "c9": "[surprised] Heads. And heads.",
+    "c10": "Grandpa, it never decided anything! [laugh]",
+    "c11": "I know.[chuckle] I always knew what I wanted. I just needed a reason to be brave.",
 }
 SCRIPT = [dict(spec, text=TAGGED.get(spec["id"], spec["text"])) for spec in _PLAIN]
