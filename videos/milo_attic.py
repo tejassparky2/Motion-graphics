@@ -20,7 +20,8 @@ SCRIPT = [
     dict(id="b5", scene="s", text="When I looked back, he was pressing a note to his glass."),
     # said in one breath ("Turn." on its own was heard as "Done."); the note still shows one word at a time
     dict(id="b6", scene="s", text="Three words. [Don't,|Don't.] [turn,|Turn.] [around.|Around.]", pace=0.9),
-    dict(id="b7", scene="s", text="The floor creaked behind me.", gap=0.5),
+    # reworded: this voice said "creaked" as "cleat" on every take (Whisper medium, 6 tries)
+    dict(id="b7", scene="s", text="Then I heard a footstep. Right behind me.", gap=0.5),
     dict(id="b8", scene="s", text="I ran. I didn't stop until I was banging on his door."),
     dict(id="b9", scene="s", text="The police searched our house all night."),
     dict(id="b10", scene="s", text="In the attic above my closet, they found a sleeping bag. Empty cans. And forty "
@@ -127,8 +128,9 @@ def draw(cr, t, tl):
     cue("thud", t, A("b6", "Turn."))
     cue("thud", t, A("b6", "Around."))
     cue("hush", t, A("b7") - 0.45, 0.45)
-    cue("creak", t, A("b7", "floor"), 0.9)
-    cue("sting", t, A("b7", "creaked"))
+    cue("step", t, A("b7", "footstep."))
+    cue("creak", t, A("b7", "footstep."), 0.6)
+    cue("sting", t, A("b7", "behind"))
     for w in ("ran.", "stop", "banging"):
         cue("step", t, A("b8", w))
     cue("knock", t, A("b8", "banging"))
@@ -138,7 +140,7 @@ def draw(cr, t, tl):
     cue("sting", t, A("b11", "Sleeping."))
     cue("heartbeat", t, A("b12"), tl.total - A("b12"))
     th.flash(cr, t, A("b3", "Behind"), (1, 1, 1), 0.15, 0.6)
-    th.flash(cr, t, A("b7", "creaked"), (1, 1, 1), 0.2, 0.75)
+    th.flash(cr, t, A("b7", "behind"), (1, 1, 1), 0.2, 0.75)
     th.flash(cr, t, A("b11", "Sleeping."), (1, 1, 1), 0.2, 0.75)
     if A("b9") <= t < A("b10"):          # red and blue police light washing over the shot
         k = int(t * 3) % 2

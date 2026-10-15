@@ -47,7 +47,7 @@ Voices: Milo (Turbo stock); the woman downstairs (Turbo, warm female reference, 
 | 4 | I turned around. My closet door was open. Just a crack. | Slow turn to the closet; a black gap in the door |
 | 5 | When I looked back, he was pressing a note to his glass. | The old man flattening paper against his window |
 | 6 | Three words. "Don't. Turn. Around." | Note overlay, one word per beat |
-| 7 | [gasp] The floor creaked behind me. | Extreme close on Milo's eyes; a floorboard behind him |
+| 7 | Then I heard a footstep. Right behind me. *(reworded: the voice said "creaked" as "cleat")* | Extreme close on Milo's eyes; a floorboard behind him |
 | 8 | I ran. I didn't stop until I was banging on his door. | Fast cuts: stairs, front door, the street, the neighbour's door |
 | 9 | The police searched our house all night. | Red and blue lights sweeping the house front |
 | 10 | In the attic above my closet, they found a sleeping bag. Empty cans. And forty photos. | Flashlight beam in the attic: sleeping bag, cans, a wall of photos |
