@@ -15,7 +15,7 @@ TAIL = 3.2      # the 3-2-1 countdown after the last line
 voice.SPEAKERS.update({"her": dict(voice="af_nicole", turbo_ref="af_nicole")})
 
 SCRIPT = [
-    dict(id="b1", scene="s", text="Come down for dinner, sweetie. [chuckle]", speaker="her"),
+    dict(id="b1", scene="s", text="Come down for dinner, sweetie.", speaker="her"),
     dict(id="b1b", scene="s", text="But my mom has never called me sweetie."),
     dict(id="b2", scene="s", text="The kitchen light is on. And someone down there is humming her favorite song."),
     dict(id="b3", scene="s", text="Then my phone buzzes. A text from Mom."),
@@ -25,7 +25,7 @@ SCRIPT = [
     dict(id="b7", scene="s", text="One step. Then another. She's coming up."),
     dict(id="b8", scene="s", text="I lock myself in my room. And I call Mom."),
     dict(id="b9", scene="s", text="[gasp] Her ringtone starts playing. Right under my bed.", gap=0.4),
-    dict(id="b10", scene="s", text="Someone in my room has her phone. Someone in the hall is wearing her voice. [sniff]"),
+    dict(id="b10", scene="s", text="Someone in my room has her phone. Someone in the hall is wearing her voice."),
     dict(id="b11", scene="s", text="The doorknob turns. And the bed creaks."),
     dict(id="b12", scene="s", text="Door, or window? You have three seconds.", gap=0.4),
 ]
@@ -100,6 +100,8 @@ def draw(cr, t, tl):
     cue("riser", t, A("b8", "call"), A("b9") - A("b8", "call"))
     cue("ring", t, A("b9", "ringtone"), A("b10") - A("b9", "ringtone"))
     cue("sting", t, A("b9", "Right"))
+    cue("sniff", t, A("b10", "voice.", end=True) + 0.05)
+    cue("gasp_in", t, A("b11") - 0.3)
     cue("hush", t, A("b11") - 0.35, 0.35)
     cue("creak", t, A("b11", "doorknob"), 0.6)
     cue("creak", t, A("b11", "bed"), 1.0)

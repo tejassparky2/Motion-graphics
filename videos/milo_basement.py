@@ -18,12 +18,12 @@ voice.SPEAKERS.update({"lily": dict(voice="af_sky", turbo_ref="af_sky+5"),
 SCRIPT = [
     dict(id="b1", scene="s", text="My first babysitting job came with one rule. Never open the basement door."),
     dict(id="b2", scene="s", text="At [ten p.m.|10 P.M.], something knocked. From inside the basement.", gap=0.4),
-    dict(id="b3", scene="s", text="Lily, the little girl, didn't even look up from her drawing. [sigh] That's just my brother.",
+    dict(id="b3", scene="s", text="Lily, the little girl, didn't even look up from her drawing. That's just my brother.",
          speaker="lily", speaker_from="That's"),
     dict(id="b4", scene="s", text="But her parents told me Lily is an only child."),
     dict(id="b5", scene="s", text="The knocking stopped. Then a whisper through the door. Are they gone?",
          speaker="boy", speaker_from="Are", gap=0.4),
-    dict(id="b6", scene="s", text="A boy's voice. Please. They said you'd be nice. [sniff]", speaker="boy",
+    dict(id="b6", scene="s", text="A boy's voice. Please. They said you'd be nice.", speaker="boy",
          speaker_from="Please."),
     dict(id="b7", scene="s", text="My phone lit up. A text from Lily's mom."),
     dict(id="b8", scene="s", text="Everything okay? Remember the rule."),
@@ -141,6 +141,9 @@ def draw(cr, t, tl):
     cue("thud", t, A("b4", "only"))
     cue("whisper_air", t, A("b5", "Are"), 1.4)
     cue("heartbeat", t, A("b5"), A("b10") - A("b5"))
+    cue("sigh", t, A("b3", "That's") - 0.55)
+    cue("sniff", t, A("b6", "nice.", end=True) + 0.05)
+    cue("gasp_in", t, A("b9") - 0.3)
     cue("buzz", t, A("b7", "lit"))
     cue("riser", t, A("b9"), A("b10", "red") - A("b9"))
     cue("sting", t, A("b10", "red"))

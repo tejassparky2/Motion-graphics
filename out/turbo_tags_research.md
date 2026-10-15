@@ -36,3 +36,9 @@ Tested 3 takes each with the Kokoro-reference voices (Milo am_puck+3, "her" af_n
 - **Before** the line it mostly fails: "[gasp] ..." 0/6 for Milo, "[sniff] Are they gone?" 0/3 for the boy;
   "[sigh] ..." 1/3.
 - So: put the reaction sound at the end of the line it reacts to; the render retries (up to 5) until the sound is there.
+- **In the real renders it was worse** (15 Oct): with these reference voices, "[chuckle]" after "Come down for dinner,
+  sweetie." was spoken as the word "Chuckle."; "[sniff]" after a line came out as garbled noise Whisper heard as "4" /
+  "1. 2."; "[sigh]" never sounded. Only "...I can hear you breathing. [chuckle]" (her) and the two earlier tags worked.
+- So for character reference voices: keep only tags whose kept take is heard clean (check the `.ok` text in
+  build/clone_tts), and make the other reactions with the breath sound effects in motion/audio.py ("sniff",
+  "gasp_in", "sigh"), which always work. Turbo's stock voice handles tags much better (crocodile video).

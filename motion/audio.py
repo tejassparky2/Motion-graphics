@@ -244,6 +244,19 @@ def thriller_sfx(name, dur):
             note = (np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.3 * np.sin(4 * np.pi * np.cumsum(f) / SR)) * np.exp(-tt / 0.5)
             out[i:i + nn] += note[: n - i]
         return out * np.minimum(1, np.arange(n) / (0.3 * SR)) * 0.1
+    if name in ("sniff", "gasp_in", "sigh"):    # breath reactions (scared, crying), reliable where voice tags aren't
+        def breath(dur_s, lo, hi, shape):
+            n = int(dur_s * SR)
+            x = _rng.uniform(-1, 1, n)
+            band = _lowpass(x, lo) - _lowpass(x, hi)                  # crude band-pass: airy, no tone
+            return band * shape(np.linspace(0, 1, n))
+        if name == "sniff":                    # two quick wet inhales through the nose
+            one = breath(0.11, 3, 18, lambda p: np.sin(np.pi * p) ** 0.6)
+            gap = np.zeros(int(0.07 * SR))
+            return np.concatenate([one, gap, one * 0.8]) * 1.6
+        if name == "gasp_in":                  # a sharp frightened inhale
+            return breath(0.32, 2, 10, lambda p: np.minimum(1, p * 6) * np.exp(-p * 2.2)) * 1.8
+        return breath(0.75, 4, 30, lambda p: np.sin(np.pi * p) ** 1.5 * (1 - 0.4 * p)) * 1.2   # shaky exhale
     if name == "whisper_air":          # breathy noise under a whisper
         n = int(max(0.5, dur) * SR)
         return np.diff(_rng.uniform(-1, 1, n + 1)) * np.sin(np.linspace(0, np.pi, n)) * 0.05
@@ -267,7 +280,7 @@ def drone(total, seed=None):
     return ((low + air) * rise + high)[: int(total * SR)] * 0.16
 
 
-GAINS = {"pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
+GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 

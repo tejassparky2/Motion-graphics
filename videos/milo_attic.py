@@ -26,8 +26,8 @@ SCRIPT = [
     dict(id="b9", scene="s", text="The police searched our house all night."),
     dict(id="b10", scene="s", text="In the attic above my closet, they found a sleeping bag. Empty cans. And forty "
                                    "photos."),
-    dict(id="b11", scene="s", text="Of me. Sleeping. [sniff]", pace=0.9, gap=0.4),
-    dict(id="b12", scene="s", text="[sigh] Someone had been living in our house for weeks."),
+    dict(id="b11", scene="s", text="Of me. Sleeping.", pace=0.9, gap=0.4),
+    dict(id="b12", scene="s", text="Someone had been living in our house for weeks."),
     dict(id="b13", scene="s", text="And the old man had seen him every night. So why did he wait until last night to "
                                    "warn me?"),
 ]
@@ -139,6 +139,9 @@ def draw(cr, t, tl):
     cue("hush", t, A("b11") - 0.4, 0.4)
     cue("sting", t, A("b11", "Sleeping."))
     cue("heartbeat", t, A("b12"), tl.total - A("b12"))
+    cue("gasp_in", t, A("b7", "Right") - 0.3)
+    cue("sniff", t, A("b11", "Sleeping.", end=True) + 0.1)
+    cue("sigh", t, A("b12") - 0.6)
     th.flash(cr, t, A("b3", "Behind"), (1, 1, 1), 0.15, 0.6)
     th.flash(cr, t, A("b7", "behind"), (1, 1, 1), 0.2, 0.75)
     th.flash(cr, t, A("b11", "Sleeping."), (1, 1, 1), 0.2, 0.75)
