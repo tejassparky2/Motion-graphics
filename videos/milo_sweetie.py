@@ -15,17 +15,17 @@ TAIL = 3.2      # the 3-2-1 countdown after the last line
 voice.SPEAKERS.update({"her": dict(voice="af_nicole", turbo_ref="af_nicole")})
 
 SCRIPT = [
-    dict(id="b1", scene="s", text="Come down for dinner, sweetie.", speaker="her"),
+    dict(id="b1", scene="s", text="Come down for dinner, sweetie. [chuckle]", speaker="her"),
     dict(id="b1b", scene="s", text="But my mom has never called me sweetie."),
     dict(id="b2", scene="s", text="The kitchen light is on. And someone down there is humming her favorite song."),
     dict(id="b3", scene="s", text="Then my phone buzzes. A text from Mom."),
     dict(id="b4", scene="s", text="Working late. Order pizza. Love you."),
     dict(id="b5", scene="s", text="The humming stops.", gap=0.5),
-    dict(id="b6", scene="s", text="Milo? I can hear you breathing.", speaker="her", gap=0.6, pace=0.9),
+    dict(id="b6", scene="s", text="Milo? I can hear you breathing. [chuckle]", speaker="her", gap=0.6, pace=0.9),
     dict(id="b7", scene="s", text="One step. Then another. She's coming up."),
     dict(id="b8", scene="s", text="I lock myself in my room. And I call Mom."),
     dict(id="b9", scene="s", text="[gasp] Her ringtone starts playing. Right under my bed.", gap=0.4),
-    dict(id="b10", scene="s", text="Someone in my room has her phone. Someone in the hall is wearing her voice."),
+    dict(id="b10", scene="s", text="Someone in my room has her phone. Someone in the hall is wearing her voice. [sniff]"),
     dict(id="b11", scene="s", text="The doorknob turns. And the bed creaks."),
     dict(id="b12", scene="s", text="Door, or window? You have three seconds.", gap=0.4),
 ]

@@ -26,8 +26,8 @@ SCRIPT = [
     dict(id="b9", scene="s", text="The police searched our house all night."),
     dict(id="b10", scene="s", text="In the attic above my closet, they found a sleeping bag. Empty cans. And forty "
                                    "photos."),
-    dict(id="b11", scene="s", text="Of me. Sleeping.", pace=0.9, gap=0.4),
-    dict(id="b12", scene="s", text="Someone had been living in our house for weeks."),
+    dict(id="b11", scene="s", text="Of me. Sleeping. [sniff]", pace=0.9, gap=0.4),
+    dict(id="b12", scene="s", text="[sigh] Someone had been living in our house for weeks."),
     dict(id="b13", scene="s", text="And the old man had seen him every night. So why did he wait until last night to "
                                    "warn me?"),
 ]

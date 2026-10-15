@@ -29,3 +29,10 @@ was 16-33 semitones against 5-9 for the stock narrator, i.e. far more expressive
   `turbo_ref="<kokoro voice>"` in `voice.SPEAKERS`.
 
 Sources: https://huggingface.co/ResembleAI/chatterbox-turbo , https://blog.fal.ai/chatterbox-turbo-is-now-available-on-fal/
+
+## Update 15 Oct 2026: tags with character reference voices (Milo series)
+Tested 3 takes each with the Kokoro-reference voices (Milo am_puck+3, "her" af_nicole, Lily af_sky+5, boy am_puck+6):
+- A sound tag **after** the line works far better: "Of me. Sleeping. [sniff]" 2/3, "...breathing. [chuckle]" 2/3.
+- **Before** the line it mostly fails: "[gasp] ..." 0/6 for Milo, "[sniff] Are they gone?" 0/3 for the boy;
+  "[sigh] ..." 1/3.
+- So: put the reaction sound at the end of the line it reacts to; the render retries (up to 5) until the sound is there.

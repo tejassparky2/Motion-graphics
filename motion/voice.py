@@ -494,7 +494,7 @@ _checker = None
 
 
 SAME_SOUND = {"principle": "principal", "principles": "principals"}   # Whisper's spelling, not a mishearing
-_SOUNDS_HEARD = set("heh hehe ha hah haha hahaha hm hmm mm mhm uh um ugh huh ahem shh sh ah aah oh".split())
+_SOUNDS_HEARD = set("heh hehe hehehe ha hah haha hahaha hm hmm mm mhm uh um ugh huh ahem shh sh ah aah oh ooh phew sniff".split())
 
 
 def _heard_ok(text, heard):
