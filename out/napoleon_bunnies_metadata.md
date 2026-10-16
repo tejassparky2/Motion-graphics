@@ -34,4 +34,4 @@ napoleon rabbits, napoleon bunnies, funny history, napoleon, history facts, weir
 Team Napoleon 🎩 or Team Bunnies 🐰? 👇
 ```
 
-**Video facts:** 49.4 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 49.7 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
