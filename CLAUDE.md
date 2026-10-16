@@ -60,6 +60,9 @@
   answer. Don't concede or say "you're in good company"; stay friendly and never insult anyone.
 - Videos set up a debate: show both sides fairly, let one character take a strong side, and end on a two-sided
   question people will argue about in the comments (e.g. "Did the teacher win, or did he dodge?").
+- **Always meaningful** (owner, 16 Oct 2026: "always it should be meaningful"): every argument carries a real idea
+  the viewer learns something from (a reason, a fact, a thinker's answer), and the closing question has two
+  genuinely defensible sides. No arguing for its own sake, no rage-bait, no "comment YES or NO" filler.
 
 ## What to make more of (owner, 14 Oct 2026): "the genie one is doing good"
 - Lead with **genie-style stories**: a character with ONE rule (genie, robot, magic mirror, principal, ghost) and a kid
