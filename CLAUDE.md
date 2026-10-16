@@ -55,6 +55,12 @@
 - Open a loop in the first 5 seconds that only the ending closes ("but the teacher just smiles").
 - Don't trust `hookscore.py` for this channel (it scores our best openings WEAK); judge hooks against these rules.
 
+## Debate: in comments and in videos (owner, 16 Oct 2026: "we always debate that's what bring engagement also follow debates in video")
+- Comment replies argue back: take a clear side, give one sharp reason, and end on a question the commenter has to
+  answer. Don't concede or say "you're in good company"; stay friendly and never insult anyone.
+- Videos set up a debate: show both sides fairly, let one character take a strong side, and end on a two-sided
+  question people will argue about in the comments (e.g. "Did the teacher win, or did he dodge?").
+
 ## What to make more of (owner, 14 Oct 2026): "the genie one is doing good"
 - Lead with **genie-style stories**: a character with ONE rule (genie, robot, magic mirror, principal, ghost) and a kid
   who turns the rule against itself with one clever line. The authority freezes; the narrator shows both branches in
