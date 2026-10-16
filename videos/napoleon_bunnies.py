@@ -35,7 +35,7 @@ SCRIPT = [
                                     "with his hat. [laugh]"),
     dict(id="b8", scene="carriage", text="Even the carriage got invaded. Ears sticking out of the windows."),
     dict(id="b9", scene="loo", text="Everyone talks about Waterloo. Nobody talks about [Bunny-loo.|Bunnyloo.]"),
-    dict(id="b10", scene="end", text="So who wins. Napoleon, or a thousand bunnies?", gap=0.3),
+    dict(id="b10", scene="end", text="So who wins. Napoleon, or a thousand bunnies?", gap=0.6),
 ]
 
 METADATA = dict(
@@ -180,6 +180,8 @@ def scene_hook(cr, t, tl):
     enter(cr, camera(t, [(0.0, (1.0, 360, 640)), (A("b1", "lost"), (1.15, 360, 640))], dur=0.8))
     person(cr, t, 360, 900, 1.0, "napoleon", eyes="wide" if lost else "half", mouth="o" if lost else "smug",
            arms=("up", "up") if lost else ("chin", "hips"), brows="up" if lost else "raise")
+    for k, (x, f) in enumerate(((210, 1), (520, -1), (150, 1))):   # frame 0: bunnies already eyeing him
+        rabbit(cr, t, x, 960 + 30 * k, 0.7, facing=f, hop=abs(math.sin(t * 5 + k)), seed=20 + k)
     if lost:                                                       # the bunny pile-on
         for k in range(14):
             st = A("b1", "bunnies.") + 0.05 * k
@@ -309,7 +311,7 @@ def scene_carriage(cr, t, tl):
 def scene_loo(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#cfe6ff"), hexc("#fff6e8"), seed=7)
-    sign(cr, t, A("b9", "Waterloo."), 360, 380, "WATERLOO 1815", col=BLUE, size=64)
+    sign(cr, t, A("b9"), 360, 380, "WATERLOO 1815", col=BLUE, size=64)
     if t >= A("b9", "Nobody"):
         k = seg(t, A("b9", "Nobody"), A("b9", "Nobody") + 0.3)
         stroke_line(cr, [(120, 360), (lerp(120, 600, k), 360 - 30 * k)], 14, RED, curve=False)
@@ -322,6 +324,9 @@ def scene_loo(cr, t, tl):
 
 def scene_end(cr, t, tl):
     A = tl.at
+    if t < A("b10"):                                               # hold the Bunnyloo punchline through the pause
+        scene_loo(cr, t, tl)
+        return
     studio(cr, t, hexc("#cdb8ff"), hexc("#fff1d6"), seed=8)
     sign(cr, t, A("b10"), 360, 180, "WHO WINS?", col=GOLD, size=80)
     sign(cr, t, A("b10", "Napoleon,"), 360, 420, "NAPOLEON", col=BLUE, size=72)
@@ -339,5 +344,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("NAPOLEON VS", False), ("1,000 BUNNIES", True)], end=tl.at("b2"), y=170, size=96)
+    th.hook(cr, t, [("NAPOLEON VS", False), ("1,000 BUNNIES", True)], end=tl.at("b1", "bunnies.", end=True), y=170, size=96)
     captions(cr, t, tl)

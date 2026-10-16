@@ -182,6 +182,16 @@ def council_table(cr, t, tl, facepalm=False):
     paint(cr, hexc("#6a4224"), OUTLINE, 7)
 
 
+def more_music(cr, k):
+    cr.save()
+    cr.translate(360, 420)
+    cr.scale(k, k)
+    rrect(cr, -290, -110, 580, 220, 30)
+    paint(cr, WHITE, OUTLINE, 8)
+    bold_text(cr, "MORE MUSIC.", 0, 30, 92, RED)
+    cr.restore()
+
+
 def scene_council(cr, t, tl):
     A = tl.at
     council_table(cr, t, tl)
@@ -189,14 +199,7 @@ def scene_council(cr, t, tl):
     sign(cr, t, A("b4", "Big"), 360, 200, "BIG MEETING", col=PURPLE, size=60, end=A("b4", "plan.") - 0.05)
     sign(cr, t, A("b4", "plan."), 360, 200, "THE PLAN:", col=GOLD, size=66, end=A("b5") - 0.05)
     if t >= A("b5"):
-        k = appear(t, A("b5"), 0.25)
-        cr.save()
-        cr.translate(360, 420)
-        cr.scale(k, k)
-        rrect(cr, -290, -110, 580, 220, 30)
-        paint(cr, WHITE, OUTLINE, 8)
-        bold_text(cr, "MORE MUSIC.", 0, 30, 92, RED)
-        cr.restore()
+        more_music(cr, appear(t, A("b5"), 0.25))
         cue("hit", t, A("b5"))
     vignette(cr, 0.4)
 
@@ -228,6 +231,8 @@ def scene_stage(cr, t, tl):
         paint(cr, hexc("#a8713e"), OUTLINE, 7)
         for k in range(5):
             soft_disc(cr, 120 + k * 120, 640, 70, (1, 0.9, 0.4, 0.35 * built * (0.6 + 0.4 * math.sin(t * 6 + k))))
+    if t < A("b6", "musicians."):                                  # the card stays up through the pause
+        more_music(cr, 1.0)
     if t >= A("b6", "musicians."):
         for k, (x, inst) in enumerate(((150, "drum"), (360, "fiddle"), (570, "drum"))):
             if t >= A("b6", "musicians.") + 0.15 * k:
@@ -254,8 +259,8 @@ def scene_worse(cr, t, tl):
         rows = 1 if t < A("b7", "Way") else 2
         for r in range(rows):
             for k in range(6):
-                dancer(cr, t, 70 + k * 116, 420 + r * 190, 0.36, k=k + r * 6)
-        stamp(cr, t, A("b7", "worse."), 360, 200, "WORSE", col=RED, size=72)
+                dancer(cr, t, 70 + k * 116, 560 + r * 150, 0.32, k=k + r * 6)
+        stamp(cr, t, A("b7", "worse."), 360, 170, "WORSE", col=RED, size=72)
         if rows == 2:
             stamp(cr, t, A("b7", "Way"), 360, 300, "WAY WORSE", col=RED, size=64, rot=0.08)
     vignette(cr, 0.35)
@@ -270,7 +275,7 @@ def scene_why(cr, t, tl):
         if t >= A("b8", key):
             sign(cr, t, A("b8", key), 360, 420 + k * 150, word, col=col, size=60)
     if t >= A("b8", "something"):
-        bold_text(cr, "???", 360, 950, 120, hexc("#2b1d16"), outline=None, shadow=0)
+        bold_text(cr, "???", 360, 1090, 120, hexc("#2b1d16"), outline=None, shadow=0)
     vignette(cr, 0.3)
 
 

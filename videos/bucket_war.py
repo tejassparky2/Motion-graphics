@@ -112,7 +112,7 @@ def scene_hook(cr, t, tl):
     cr.restore()
     for k, key in enumerate(("gold.", "land.")):
         if t >= A("b1", key):
-            stamp(cr, t, A("b1", key), 360, 470 + k * 110, "NOT " + key.rstrip(".").upper(), col=RED, size=56)
+            stamp(cr, t, A("b1", key), 360, 1000 + k * 110, "NOT " + key.rstrip(".").upper(), col=RED, size=56)
     sign(cr, t, A("b1", "Italy"), 360, 360, "ITALY, 1325", col=PURPLE, size=56, end=A("b1", "gold.") - 0.05)
     vignette(cr, 0.3)
 
@@ -230,7 +230,7 @@ def scene_tower(cr, t, tl):
         bucket(cr, 360, 690, 0.8 * k, glow=1.0)
     sign(cr, t, A("b7", "politics."), 360, 150, "HISTORIANS: POLITICS", col=BLUE, size=48, end=A("b7", "bucket?") - 0.05)
     sign(cr, t, A("b7", "Seven"), 360, 150, "700 YEARS LATER", col=PURPLE, size=60)
-    stamp(cr, t, A("b7", "trophy."), 360, 900 - 60, "TROPHY", col=GOLD, size=70)
+    stamp(cr, t, A("b7", "trophy."), 360, 330, "TROPHY", col=GOLD, size=70)
     vignette(cr, 0.3)
 
 
