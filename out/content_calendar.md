@@ -76,11 +76,11 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 52 | Sat Oct 24 | 7:30 PM | riddles_one_percent | 3 Riddles. Only 1% Get the Last One 🧠 *(hook test: numbered list)* |
 | 53 | Sun Oct 25 | 4:30 PM | cheat_sheet | This Teacher LET Her Class Cheat 📝 *(hook test: contradict a belief)* |
 | 54 | Sun Oct 25 | 7:30 PM | zeigarnik | Your Brain Can't Let This Go 🧠 *(hook test: abstract concept; loops)* |
-| 55 | Mon Oct 26 | 4:30 PM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea)* |
+| 55 | Mon Oct 26 | 4:30 PM | napoleon_bunnies | Napoleon Lost a Battle. To Bunnies. 🐰 *(funny history; Turbo + tags)* |
 | 56 | Mon Oct 26 | 7:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
-| 57 | Tue Oct 27 | 4:30 PM | pascals_wager | Pascal's Wager *(idea)* |
+| 57 | Tue Oct 27 | 4:30 PM | bucket_war | Two Cities Went to War. Over a Bucket. 🪣 *(funny history; Turbo + tags)* |
 | 58 | Tue Oct 27 | 7:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
-| 59 | Wed Oct 28 | 4:30 PM | trolley_problem | The Trolley Problem *(idea)* |
+| 59 | Wed Oct 28 | 4:30 PM | dancing_plague | She Couldn't Stop Dancing. For Days. 💃 *(funny history; Turbo + tags)* |
 | 60 | Wed Oct 28 | 7:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
 | 61 | Thu Oct 29 | 4:30 PM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
 | 62 | Thu Oct 29 | 7:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea, moved for the hook tests)* |
@@ -88,6 +88,9 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 64 | Fri Oct 30 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea, moved for the hook tests)* |
 | 65 | Sat Oct 31 | 4:30 PM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
 | 66 | Sat Oct 31 | 7:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea, moved for the hook tests)* |
+| 67 | Sun Nov 1 | 4:30 PM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea, moved for funny history)* |
+| 68 | Sun Nov 1 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, moved for funny history)* |
+| 69 | Mon Nov 2 | 4:30 PM | trolley_problem | The Trolley Problem *(idea, moved for funny history)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
