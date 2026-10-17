@@ -3,7 +3,7 @@ Times are IST. File numbers match the rows below.
 
 ---
 
-## 46. Wed Oct 21, 9:30 PM IST: `46_Oct21_930PM_robot_obey.mp4`
+## 46. Wed Oct 21, 7:30 PM IST: `46_Oct21_730PM_robot_obey.mp4`
 
 **Title** (26 characters)
 ```
@@ -49,7 +49,7 @@ Obey or disobey? Wrong answers only 🤖👇
 
 ---
 
-## 47. Thu Oct 22, 4:30 AM IST: `47_Oct22_430AM_principal_sentence.mp4`
+## 47. Thu Oct 22, 4:30 PM IST: `47_Oct22_430PM_principal_sentence.mp4`
 
 **Title** (34 characters)
 ```
@@ -96,7 +96,7 @@ What sentence would YOU have said? Best one gets pinned 😏👇
 
 ---
 
-## 48. Thu Oct 22, 9:30 PM IST: `48_Oct22_930PM_mirror_never_lies.mp4`
+## 48. Thu Oct 22, 7:30 PM IST: `48_Oct22_730PM_mirror_never_lies.mp4`
 
 **Title** (44 characters)
 ```
@@ -140,7 +140,7 @@ Ask the mirror a question it can't answer 🪞 Best one gets pinned 👇
 
 ---
 
-## 49. Fri Oct 23, 4:30 AM IST: `49_Oct23_430AM_genie_returns.mp4`
+## 49. Fri Oct 23, 4:30 PM IST: `49_Oct23_430PM_genie_returns.mp4`
 
 **Title** (54 characters)
 ```

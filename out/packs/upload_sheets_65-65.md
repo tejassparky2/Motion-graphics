@@ -3,7 +3,7 @@ Times are IST. File numbers match the rows below.
 
 ---
 
-## 65. Sat Oct 31, 4:30 AM IST: `65_Oct31_430AM_ghost_deal.mp4`
+## 65. Sat Oct 31, 4:30 PM IST: `65_Oct31_430PM_ghost_deal.mp4`
 
 **Title** (43 characters)
 ```
