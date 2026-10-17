@@ -1,5 +1,5 @@
 // Record channels/lowpoly/scene.html frame by frame in headless Chromium.
-//   node channels/lowpoly/render.mjs OUT_DIR [fps=30] [scale=1] [t1,t2,...]
+//   [SCENE=scene_skit.html] node channels/lowpoly/render.mjs OUT_DIR [fps=30] [scale=1] [t1,t2,...]
 // Writes OUT_DIR/f00000.png ... (or only the listed times, for quick checks). Needs three + playwright-core
 // installed in build/lowpoly (npm install three playwright-core).
 import http from "node:http";
@@ -16,11 +16,13 @@ const [out, fpsArg = "30", scaleArg = "1", times] = process.argv.slice(2);
 const fps = Number(fpsArg), scale = Number(scaleArg);
 fs.mkdirSync(out, {recursive: true});
 
-const TYPES = {".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript"};
+const TYPES = {".html": "text/html", ".js": "text/javascript", ".mjs": "text/javascript", ".json": "application/json"};
+const SCENE = process.env.SCENE || "scene.html";
 const server = http.createServer((req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
-  const file = url.startsWith("/node_modules/") ? path.join(MODS, url.slice(14)) : path.join(HERE, url === "/" ? "scene.html" : url);
-  if (!file.startsWith(MODS) && !file.startsWith(HERE)) { res.writeHead(403); return res.end(); }
+  const file = url.startsWith("/node_modules/") ? path.join(MODS, url.slice(14))
+    : url === "/timing.json" ? path.join(ROOT, "build/lowpoly/timing.json") : path.join(HERE, url === "/" ? SCENE : url);
+  if (!file.startsWith(MODS) && !file.startsWith(HERE) && !file.endsWith("timing.json")) { res.writeHead(403); return res.end(); }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); return res.end(); }
     res.writeHead(200, {"Content-Type": TYPES[path.extname(file)] || "application/octet-stream"});
@@ -34,7 +36,7 @@ const browser = await chromium.launch({executablePath: exe, args: ["--use-angle=
 const page = await browser.newPage({viewport: {width: 720, height: 1280}, deviceScaleFactor: scale});
 page.on("pageerror", e => console.error("page error:", e.message));
 page.on("console", m => m.type() === "error" && console.error("console:", m.text()));
-await page.goto(`http://127.0.0.1:${server.address().port}/scene.html`);
+await page.goto(`http://127.0.0.1:${server.address().port}/${SCENE}`);
 await page.waitForFunction(() => window.READY === true, null, {timeout: 60000});
 
 const dur = await page.evaluate(() => window.DURATION);
