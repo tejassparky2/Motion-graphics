@@ -261,6 +261,26 @@ const VIS = basic(0x9ff0ff);
 const cxFace = buildFace(cxBody, {y: .022, z: .112, sp: .036, er: .013, eyeMat: VIS, browMat: VIS, mouthMat: VIS, glow: true, mw: .014, my: .032});
 const cxHands = [-1, 1].map(s => { const h = mesh(jitter(new THREE.IcosahedronGeometry(.025, 0), .004), CX); codex.add(h); return h; });
 
+// ---------- floating dust motes in the warm light ----------
+const motes = [];
+{
+  const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(.35, "rgba(255,255,255,.6)");
+  gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+  const tex = new THREE.CanvasTexture(c);
+  for (let i = 0; i < 70; i++) {
+    const m = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      color: new THREE.Color().setHSL(.07 + rnd() * .05, .8, .6), opacity: .25 + rnd() * .45}));
+    const z = .012 + rnd() * .026; m.scale.set(z, z, 1);
+    m.userData = {x: (rnd() - .5) * 1.8, y: .8 + rnd() * .9, z: -1.3 + rnd() * 1.6, sp: .02 + rnd() * .04, ph: rnd() * 6.3};
+    scene.add(m); motes.push(m);
+  }
+}
+function driftMotes(t) {
+  for (const m of motes) { const u = m.userData;
+    m.position.set(u.x + .05 * Math.sin(t * .3 + u.ph), u.y + ((t * u.sp + u.ph) % .9) - .45, u.z + .04 * Math.cos(t * .25 + u.ph)); }
+}
+
 // ---------- props used by some episodes ----------
 const laptop = new THREE.Group(); laptop.visible = false; scene.add(laptop);
 {
@@ -421,6 +441,7 @@ window.renderAt = function (t) {
   }
   if (D.extra) D.extra(t, {cur, prev, scene, THREE, devBody, devHead, claude, clBody, codex, cxBody, laptop});
 
+  driftMotes(t);
   // ----- camera: hard cut per line, slow push within the shot, small handheld drift
   const shot = SHOTS[cur.scene] || SHOTS.wide;
   const k = seg(t, cur.start - .15, cur.end + .6);

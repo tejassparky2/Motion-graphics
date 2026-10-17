@@ -65,7 +65,7 @@ Parody. Not affiliated with Anthropic or OpenAI.
     pinned_comment="Be honest: what's the worst thing past-you left in your code? 👇",
 )
 
-COLORS = {None: (WHITE, hexc("#ffffff")), "claude": (hexc("#f0a070"), hexc("#ff8a3d")),
+COLORS = {None: (WHITE, hexc("#ffffff")), "claude": (hexc("#f5a05f"), hexc("#ff8a3d")),
           "codex": (hexc("#a9b8ff"), hexc("#7f9bff"))}
 MONO = "DejaVu Sans Mono"
 _n_frames = []
@@ -173,8 +173,40 @@ def draw(cr, t, tl):
     cue("hit", t, A("e13", "wrote"))
     cue("gasp_in", t, A("e14") - 0.35)
     th.hook(cr, t, [("MY “COWORKER'S”", False), ("CODE", True)], end=A("e1", end=True), y=170, size=96)
-    who = None                                        # captions take the speaker's colour (Claude orange)
-    for b in tl.beats:
-        if b.start - 0.1 <= t:
-            who = b.speaker
-    captions(cr, t, tl, y=980, colors=COLORS.get(who, COLORS[None]))
+    clean_caption(cr, t, tl)
+
+
+def clean_caption(cr, t, tl, y=1010, size=34):
+    """The references' captions: the whole line in small clean type with a soft shadow, fading in and out,
+    coloured by speaker (Dev white, Claude orange, Codex blue)."""
+    for i, b in enumerate(tl.beats):
+        nxt = tl.beats[i + 1].start if i + 1 < len(tl.beats) else tl.total
+        end = min(b.end + 0.6, nxt - 0.05)
+        if not (b.start - 0.05 <= t < end) or not b.units:
+            continue
+        k = min(appear(t, b.start - 0.05, 0.15), 1 - seg(t, end - 0.15, end))
+        text = " ".join(u.shown for u in b.units)
+        words, lines, cur = text.split(), [], ""
+        for w in words:                                  # wrap to lines of about 30 characters
+            if cur and len(cur) + 1 + len(w) > 30:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = (cur + " " + w).strip()
+        lines.append(cur)
+        col = COLORS.get(b.speaker, COLORS[None])[0]
+        cr.save()
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(size)
+        for j, line in enumerate(lines):
+            ext = cr.text_extents(line)
+            x, yy = W / 2 - ext.x_advance / 2, y + j * size * 1.3
+            for dx, dy, a in ((0, 3, 0.55), (0, 1, 0.75)):   # soft drop shadow
+                cr.move_to(x + dx, yy + dy)
+                cr.set_source_rgba(0, 0, 0, a * k)
+                cr.show_text(line)
+            cr.move_to(x, yy)
+            cr.set_source_rgba(*col[:3], k)
+            cr.show_text(line)
+        cr.restore()
+        return

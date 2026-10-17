@@ -281,6 +281,18 @@ def drone(total, seed=None):
     return ((low + air) * rise + high)[: int(total * SR)] * 0.16
 
 
+def room_tone(total, seed=None):
+    """Quiet room sound under the pad (the references always keep a soft ambience, even when the music stops):
+    a low, slowly breathing rumble and a faint computer-fan hiss."""
+    rng = np.random.default_rng(zlib.crc32(("room" + str(seed)).encode()))
+    n = int(total * SR)
+    t = np.arange(n) / SR
+    rumble = _lowpass(np.cumsum(rng.normal(0, 1, n)) * 0.002, 200)
+    rumble -= _lowpass(rumble, 4000)
+    hiss = _lowpass(rng.uniform(-1, 1, n), 12) * 0.25
+    return (rumble * 3 + hiss) * (0.85 + 0.15 * np.sin(2 * np.pi * 0.05 * t))
+
+
 def pad(total, seed=None):
     """Soft ambient bed (low-poly skits, after the owner's reference videos): slow pad chords and a mellow electric
     piano arpeggio in D minor, washed in a room reverb, very quiet; it swells a little toward the end."""
@@ -294,7 +306,7 @@ def pad(total, seed=None):
              [(-23, -19, -16, -12, -7), (-28, -24, -21, -17, -12), (-19, -16, -12, -9, -5), (-21, -17, -14, -7, -2)]]
     shift = int(rng.integers(-3, 4))
     chords = [tuple(440.0 * 2 ** ((x + shift) / 12) for x in c) for c in progs[int(rng.integers(0, len(progs)))]]
-    span = float(rng.choice([3.6, 4.0, 4.4]))
+    span = float(rng.choice([4.8, 5.2, 5.6]))                         # long, slow chords like the references
     out = np.zeros(n)
     for k in range(int(np.ceil((total + 2) / span))):
         notes = chords[k % len(chords)]
@@ -367,11 +379,14 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         if not loud.any():       # a silent meme: no voice at all, so music + effects only
             clips = None
     bed *= _lowpass(hush, 400)
+    room = room_tone(total, seed)[:n] if style == "pad" else None
     if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
         bed *= (v_rms * 10 ** ((-15 if style == "pad" else -10) / 20)) / rms(bed)   # the pad sits softer
         mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
+        if room is not None:                                      # ~32 dB under the voice, never ducked
+            mix += room * (v_rms * 10 ** (-32 / 20)) / rms(room)
     else:
         mix = bed + fx
     # very short fades so the Short loops cleanly

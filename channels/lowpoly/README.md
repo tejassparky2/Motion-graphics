@@ -32,3 +32,10 @@ UI panels as story beats, captions coloured by speaker (Claude orange), a twist 
   key and progression set per episode; `hush` cues drop it out for punchlines (the comedy reference uses silence).
 - **Camera:** eye level for the desk characters, 3/4 medium shot of Dev from the front-left, over-the-shoulder shot
   past Dev's head, close-ups for punchlines, high wide shot from behind Dev. Presets in scene_skit.html `SHOTS`.
+4. **Campfire confession** (67 s, warm comedy): the kid admits using ChatGPT ("You said delve twice yesterday"),
+   phone insert "11 chats", ends "Paste the code." Firelight key + moonlight fill, floating embers, very shallow
+   focus, shot-reverse-shot close-ups, wide shots only to open/close; small clean white captions; quiet sustained
+   chords (5-6 s each) over a constant fire-crackle ambience, music drops out once for a beat.
+
+Applied to our look: small clean speaker-coloured captions (all four references use them), warm dust motes in the
+light, slower pad chords, and a room tone that keeps going when the music drops out.
