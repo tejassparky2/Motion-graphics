@@ -1,7 +1,8 @@
-"""Build the low-poly skit test: voices -> timing.json -> 3D frames -> captions/cards/soundtrack -> MP4.
+"""Build a low-poly skit: voices -> timing.json -> 3D frames -> captions/cards/soundtrack -> MP4.
 
-    python channels/lowpoly/make_skit.py          -> out/lowpoly/skit_test.mp4 (+ _preview.mp4)
-    python channels/lowpoly/make_skit.py --stills 1.0,5.2   (3D check frames only, after the voices exist)
+    python channels/lowpoly/make_skit.py [EPISODE]          -> out/lowpoly/EPISODE.mp4 (+ _preview.mp4)
+    python channels/lowpoly/make_skit.py [EPISODE] --stills 1.0,5.2   (3D check frames only)
+EPISODE is a module in channels/lowpoly (default skit_test); its DIRECTION names directions/<DIRECTION>.js.
 """
 import importlib.util
 import json
@@ -20,9 +21,10 @@ from render import narrator   # noqa: E402
 
 HERE = os.path.join(ROOT, "channels", "lowpoly")
 BUILD = os.path.join(ROOT, "build", "lowpoly")
-NAME = "lp_skit_test"
+EPISODE = next((a for a in sys.argv[1:] if not a.startswith("--") and "," not in a), "skit_test")
+NAME = f"lp_{EPISODE}"
 
-spec = importlib.util.spec_from_file_location(f"videos.{NAME}", os.path.join(HERE, "skit_test.py"))
+spec = importlib.util.spec_from_file_location(f"videos.{NAME}", os.path.join(HERE, f"{EPISODE}.py"))
 mod = importlib.util.module_from_spec(spec)
 sys.modules[f"videos.{NAME}"] = mod      # so render.load() finds it like a normal video module
 spec.loader.exec_module(mod)
@@ -52,7 +54,7 @@ with open(os.path.join(BUILD, "timing.json"), "w") as f:
 
 frames = mod.FRAMES
 stills = sys.argv[sys.argv.index("--stills") + 1] if "--stills" in sys.argv else None
-os.environ["SCENE"] = "scene_skit.html"
+os.environ["SCENE"] = f"scene_skit.html?dir={getattr(mod, 'DIRECTION', 'test')}"
 if stills:
     out = os.path.join(BUILD, "skit_check")
     shutil.rmtree(out, ignore_errors=True)
@@ -60,5 +62,5 @@ if stills:
     sys.exit(0)
 shutil.rmtree(frames, ignore_errors=True)
 subprocess.check_call(["node", os.path.join(HERE, "render.mjs"), frames, str(fps)])
-out = os.path.join(ROOT, "out", "lowpoly", "skit_test.mp4")
+out = os.path.join(ROOT, "out", "lowpoly", f"{EPISODE}.mp4")
 render.render_video(out)
