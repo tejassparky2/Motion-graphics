@@ -20,7 +20,7 @@ FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.ab
                       "lowpoly", "skit_frames")
 
 voice.SPEAKERS.update({
-    "claude": dict(voice="af_heart", speed=1.0, turbo_ref="af_heart"),
+    "claude": dict(voice="am_michael", speed=1.0, turbo_ref="am_michael+1.5"),   # boy character: male voice (owner, 17 Oct)
     "codex": dict(voice="am_puck", speed=1.05, turbo_ref="am_puck+2"),
 })
 
