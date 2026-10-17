@@ -122,8 +122,9 @@ function buildFace(parent, o) {
       const pu = new THREE.Mesh(new THREE.SphereGeometry(o.er * .55, 12, 8), basic(0x1b1420)); pu.position.z = o.er * .3; pu.scale.z = .4; e.add(pu); f.pupils.push(pu);
       const hi = new THREE.Mesh(new THREE.SphereGeometry(o.er * .16, 6, 4), basic(0xffffff)); hi.position.set(o.er * .2, o.er * .25, o.er * .55); pu.add(hi);
     } else {
-      const pu = new THREE.Mesh(new THREE.SphereGeometry(o.er, 14, 10), o.eyeMat); pu.scale.z = .45; e.add(pu); f.pupils.push(pu);
-      if (!o.glow) { const hi = new THREE.Mesh(new THREE.SphereGeometry(o.er * .28, 6, 4), basic(0xffffff)); hi.position.set(o.er * .3, o.er * .35, o.er * .4); e.add(hi); }
+      const pu = new THREE.Mesh(o.rect ? new THREE.BoxGeometry(o.er * 1.15, o.er * 2.3, o.er * .8) : new THREE.SphereGeometry(o.er, 14, 10), o.eyeMat);
+      if (!o.rect) pu.scale.z = .45; e.add(pu); f.pupils.push(pu);
+      if (!o.glow && !o.rect) { const hi = new THREE.Mesh(new THREE.SphereGeometry(o.er * .28, 6, 4), basic(0xffffff)); hi.position.set(o.er * .3, o.er * .35, o.er * .4); e.add(hi); }
     }
     const arc = new THREE.Mesh(new THREE.TorusGeometry(o.er * .9, o.er * .22, 6, 12, Math.PI), o.eyeMat || basic(0x1b1420));
     arc.position.set(s * o.sp, -o.er * .2, o.er * .3); arc.visible = false; g.add(arc); (f.arcs ||= []).push(arc);
@@ -157,7 +158,7 @@ function poseFace(f, p, t, blinkPh) {
   });
   const open = clamp(p.open);
   f.hole.visible = open > .08;
-  f.arc.visible = !f.hole.visible;
+  f.arc.visible = !f.hole.visible && !(o.quietMouth && Math.abs(p.smile) < .6);
   f.hole.scale.set((p.mwide || 1) * (.75 + .25 * open), .2 + 1.0 * open, .3);
   f.hole.position.y = -o.my - o.mw * .3 * open;
   const sm = p.smile;
@@ -207,21 +208,18 @@ function arm(parent, s, upper, fore, m, hand) {
 }
 const devArms = [arm(devBody, -1, .27, .25, HOOD, SKIN), arm(devBody, 1, .27, .25, HOOD, SKIN)];
 
-// ---------- Claude (orange helper on the desk) ----------
-const CL = mat(0xd9773f), CLD = mat(0xb85f2c);
+// ---------- Claude: the Claude Code mascot (orange block, two upright eyes, side nubs, four legs), in low poly ----------
+const CL = mat(0xc9603a, {roughness: .7}), CLD = mat(0xb0532f);
 const claude = new THREE.Group(); claude.position.set(-.18, .75, -.05); claude.rotation.y = Math.PI; scene.add(claude);
 const clBody = new THREE.Group(); claude.add(clBody);
 {
-  const b = mesh(jitter(new THREE.BoxGeometry(.2, .17, .14, 2, 2, 2), .012), CL); b.position.y = .13; clBody.add(b);
-  for (const s of [-1, 1]) { const ft = mesh(jitter(new THREE.BoxGeometry(.05, .045, .07), .006), CLD); ft.position.set(s * .055, .022, .01); clBody.add(ft); }
-  const tuft = mesh(jitter(new THREE.ConeGeometry(.025, .06, 5), .005), CLD); tuft.position.set(.03, .235, 0); tuft.rotation.z = -.4; clBody.add(tuft);
-  for (const s of [-1, 1]) { const ch = new THREE.Mesh(new THREE.CircleGeometry(.014, 10), new THREE.MeshBasicMaterial({color: 0xff9a7a})); ch.position.set(s * .065, .11, .071); clBody.add(ch); }
+  const b = mesh(new THREE.BoxGeometry(.24, .15, .13), CL); b.position.y = .13; clBody.add(b);
+  for (const x of [-.084, -.03, .03, .084]) { const leg = mesh(new THREE.BoxGeometry(.03, .056, .045), CL); leg.position.set(x, .028, 0); clBody.add(leg); }
 }
-const clFace = buildFace(clBody, {y: .14, z: .071, sp: .042, er: .017, eyeMat: basic(0x1b1420), mw: .02, my: .04});
+const clFace = buildFace(clBody, {y: .145, z: .066, sp: .05, er: .015, rect: true, quietMouth: true, eyeMat: basic(0x1b1420), mw: .016, my: .045});
 const clArms = [-1, 1].map(s => {
-  const sh = new THREE.Group(); sh.position.set(s * .1, .15, 0); clBody.add(sh);
-  const a = mesh(jitter(new THREE.CylinderGeometry(.016, .02, .08, 5), .004), CL); a.position.y = -.04; sh.add(a);
-  const h = mesh(new THREE.IcosahedronGeometry(.022, 0), CLD); h.position.y = -.085; sh.add(h);
+  const sh = new THREE.Group(); sh.position.set(s * .12, .13, 0); clBody.add(sh);
+  const nub = mesh(new THREE.BoxGeometry(.04, .035, .05), CL); nub.position.x = s * .02; sh.add(nub);
   return {sh, s};
 });
 
@@ -331,8 +329,9 @@ window.renderAt = function (t) {
   clBody.scale.set(1 + .06 * cp.talk, 1 - .05 * cp.talk + (clPose === "cheer" ? .04 * hop / .03 : 0), 1);
   clBody.rotation.z = clPose === "headscratch" ? .12 * Math.sin(t * 2) : clPose === "salute" ? .08 : 0;
   clBody.rotation.y = clPose === "headscratch" ? .35 : 0;
-  const armsC = {idle: [[0, .2], [0, .2]], salute: [[0, 2.6], [0, .3]], cheer: [[0, 2.7], [0, 2.7]], headscratch: [[0, 2.9], [0, .2]]}[clPose] || [[0, .2], [0, .2]];
-  clArms.forEach((a, i) => { const z = armsC[i === 1 ? 0 : 1][1]; a.sh.rotation.z = a.s * (z + (clPose === "cheer" ? .25 * Math.sin(t * 12 + i) : 0) + (clPose === "headscratch" && i === 1 ? .15 * Math.sin(t * 14) : 0)); });
+  const nubs = {idle: [-.15, -.15], salute: [.9, -.1], cheer: [1.0, 1.0], headscratch: [1.25, -.2]}[clPose] || [-.15, -.15];   // [right, left] lift
+  clArms.forEach((a, i) => { const lift = nubs[i === 1 ? 0 : 1] + (clPose === "cheer" ? .3 * Math.sin(t * 12 + i) : 0) + (clPose === "headscratch" && i === 1 ? .2 * Math.sin(t * 14) : 0) + .12 * cp.talk * Math.sin(t * 10 + i);
+    a.sh.rotation.z = a.s * lift; });
 
   // ----- Codex: hidden behind the monitor until s6, then pops up
   const sIdx = beats.findIndex(b => b.id === "s6");
