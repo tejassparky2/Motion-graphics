@@ -55,7 +55,8 @@ const backOut = u => { const s = 2.2; u -= 1; return u * u * ((s + 1) * u + s) +
 scene.add(new THREE.HemisphereLight(0x8a9cff, 0x1a1420, .55));
 const lampLight = new THREE.PointLight(0xffb36b, 5, 3.2, 1.6); lampLight.position.set(-.55, 1.25, -.1); lampLight.castShadow = true;
 lampLight.shadow.mapSize.set(1024, 1024); scene.add(lampLight);
-const monLight = new THREE.PointLight(0x7fb4ff, 3.2, 2.2, 1.5); monLight.position.set(.42, 1.0, -.15); scene.add(monLight);
+const monLight = new THREE.PointLight(0x7fb4ff, 1.8, 2.2, 1.5); monLight.position.set(.42, 1.0, -.15); scene.add(monLight);
+const faceLight = new THREE.PointLight(0xffd2b0, 2.4, 1.6, 1.5); faceLight.position.set(-.05, 1.15, -.55); scene.add(faceLight);
 const rim = new THREE.DirectionalLight(0x6f7dff, .9); rim.position.set(-2, 3, -3); scene.add(rim);
 const fill = new THREE.DirectionalLight(0xffe0c8, .35); fill.position.set(1, 2, 3); scene.add(fill);
 {
@@ -237,7 +238,7 @@ const VIS = basic(0x9ff0ff);
   const ant = mesh(new THREE.CylinderGeometry(.004, .004, .05, 4), CXD); ant.position.y = .13; cxBody.add(ant);
   const tip = mesh(new THREE.IcosahedronGeometry(.012, 0), new THREE.MeshBasicMaterial({color: 0x9ff0ff})); tip.position.y = .16; cxBody.add(tip);
 }
-const cxFace = buildFace(cxBody, {y: .01, z: .108, sp: .036, er: .015, eyeMat: VIS, browMat: VIS, mouthMat: VIS, glow: true, mw: .016, my: .04});
+const cxFace = buildFace(cxBody, {y: .022, z: .112, sp: .036, er: .013, eyeMat: VIS, browMat: VIS, mouthMat: VIS, glow: true, mw: .014, my: .032});
 const cxHands = [-1, 1].map(s => { const h = mesh(jitter(new THREE.IcosahedronGeometry(.025, 0), .004), CX); codex.add(h); return h; });
 
 // ---------- direction ----------
@@ -256,10 +257,10 @@ const EMO = {
   watch:    {brow: .1, ang: .2, lid: .1, smile: -.1, wide: 1, look: [0, .3]},
 };
 const SHOTS = {
-  dev:    {pos: [.04, 1.12, .5], look: [0, 1.22, -.95], push: .06},
-  claude: {pos: [-.14, 1.04, -.62], look: [-.18, .88, -.05], push: .05},
-  codex:  {pos: [.15, 1.12, -.6], look: [.2, .99, .02], push: .05},
-  wide:   {pos: [1.45, 1.35, .75], look: [-.05, .95, -.35], push: .1},
+  dev:    {pos: [.05, 1.2, .95], look: [0, 1.1, -.95], push: .15, fov: 42},
+  claude: {pos: [-.33, 1.15, -1.05], look: [-.18, .87, -.05], push: .12, fov: 50},
+  codex:  {pos: [.36, 1.22, -1.05], look: [.2, .96, .02], push: .12, fov: 50},
+  wide:   {pos: [0, 1.75, 1.2], look: [0, .95, -.45], push: .2, fov: 46},
 };
 // per line: shot, and for each character [emotion, pose]; poses are handled in renderAt
 const DIR = {
@@ -267,7 +268,7 @@ const DIR = {
   s2: {dev: ["tired", "rest"], claude: ["eager", "salute"], codex: ["hidden"]},
   s3: {dev: ["tired", "rest"], claude: ["proud", "cheer"], codex: ["hidden"]},
   s4: {dev: ["shocked", "lean"], claude: ["proud", "cheer"], codex: ["hidden"]},
-  s5: {dev: ["shocked", "lean"], claude: ["sheepish", "headscratch"], codex: ["hidden"]},
+  s5: {dev: ["shocked", "rest"], claude: ["sheepish", "headscratch"], codex: ["hidden"]},
   s6: {dev: ["hopeful", "rest"], claude: ["oops", "idle"], codex: ["eager", "popup"]},
   s7: {dev: ["hopeful", "pray"], claude: ["watch", "idle"], codex: ["eager", "bounce"]},
   s8: {dev: ["tired", "rest"], claude: ["watch", "idle"], codex: ["proud", "bounce"]},
@@ -353,6 +354,7 @@ window.renderAt = function (t) {
   const dir = L.clone().sub(P).normalize();
   P.addScaledVector(dir, shot.push * k);
   P.x += Math.sin(t * .9) * .006; P.y += Math.sin(t * 1.3) * .004;
+  camera.fov = shot.fov || 38; camera.updateProjectionMatrix();
   camera.position.copy(P); camera.lookAt(L);
   renderer.render(scene, camera);
 };
