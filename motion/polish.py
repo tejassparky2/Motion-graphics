@@ -404,9 +404,9 @@ def stamp(cr, t, start, x, y, text, col=hexc("#e8473f"), size=70, rot=-0.12, end
 _cap = {}
 
 
-def captions(cr, t, tl, y=CAPTION_Y, size=58, max_w=600):
+def captions(cr, t, tl, y=CAPTION_Y, size=58, max_w=600, colors=None):
     """Bold rounded captions (Fredoka): 1-3 words, white with a dark outline, the spoken word in yellow,
-    each chunk pops in."""
+    each chunk pops in. `colors` = (base, spoken) overrides white/yellow (e.g. per speaker)."""
     from .captions import _chunks
     chunks = _cap.get(id(tl))
     if chunks is None:
@@ -416,11 +416,11 @@ def captions(cr, t, tl, y=CAPTION_Y, size=58, max_w=600):
         nxt = chunks[i + 1][0].start if i + 1 < len(chunks) else tl.total
         stop = nxt if nxt - ch[-1].end < 0.5 else ch[-1].end + 0.25
         if start - 0.02 <= t < stop:
-            _cap_draw(cr, t, ch, start, y, size, max_w)
+            _cap_draw(cr, t, ch, start, y, size, max_w, colors)
             return
 
 
-def _cap_draw(cr, t, chunk, start, y, size, max_w):
+def _cap_draw(cr, t, chunk, start, y, size, max_w, colors=None):
     words = [u.shown.rstrip(",.;:") or u.shown for u in chunk]
     cr.save()
     cr.identity_matrix()
@@ -438,7 +438,8 @@ def _cap_draw(cr, t, chunk, start, y, size, max_w):
     x = -total / 2
     for w, word, u in zip(widths, words, chunk):
         live = u.start - 0.03 <= t
-        col = hexc("#ffd23f") if u.start - 0.03 <= t < u.end + 0.05 else WHITE
+        base, spoken = colors or (WHITE, hexc("#ffd23f"))
+        col = spoken if u.start - 0.03 <= t < u.end + 0.05 else base
         if live or True:
             bold_text(cr, word, x, 0, size, col, font=ROUND, ow=size * 0.2, shadow=0.4, align="left")
         x += w + space

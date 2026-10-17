@@ -88,6 +88,10 @@ const fill = new THREE.DirectionalLight(0xffe0c8, .35); fill.position.set(1, 2, 
   neon.position.set(.05, 1.95, -1.86); scene.add(neon);
   // desk
   const desk = mesh(new THREE.BoxGeometry(1.7, .06, .85), mat(0x5a4032)); desk.position.set(0, .72, 0); scene.add(desk);
+  for (const z of [-.43, .43]) {               // purple neon strip along the desk edges
+    const n = mesh(new THREE.BoxGeometry(1.7, .012, .012), new THREE.MeshBasicMaterial({color: 0x9d7bff}), false); n.position.set(0, .705, z); scene.add(n);
+  }
+  const neonLight = new THREE.PointLight(0x8a6bff, 1.6, 1.6, 1.5); neonLight.position.set(0, .62, .5); scene.add(neonLight);
   for (const [x, z] of [[-.8, -.38], [.8, -.38], [-.8, .38], [.8, .38]]) {
     const l = mesh(new THREE.BoxGeometry(.05, .7, .05), mat(0x3a2a22)); l.position.set(x, .35, z); scene.add(l);
   }

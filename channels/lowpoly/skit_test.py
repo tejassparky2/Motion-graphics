@@ -45,7 +45,8 @@ METADATA = dict(
     pinned_comment="",
 )
 
-NAMES = {None: ("DEV", hexc("#9fb4c8")), "claude": ("CLAUDE", hexc("#e8834a")), "codex": ("CODEX", hexc("#6f8cff"))}
+COLORS = {None: (WHITE, hexc("#ffffff")), "claude": (hexc("#f0a070"), hexc("#ff8a3d")),
+          "codex": (hexc("#a9b8ff"), hexc("#7f9bff"))}
 
 
 def _frame(t):
@@ -84,14 +85,8 @@ def draw(cr, t, tl):
                                                          ("typo: still there", hexc("#ffd23f"), 46)], hexc("#6f8cff"))
     if A("s4") <= t < A("s4") + 0.05:
         cue("hit", t, A("s4"))
-    for b in tl.beats:                                # speaker tag above the captions
-        if b.start - 0.05 <= t < b.end + 0.2:
-            name, col = NAMES.get(b.speaker, NAMES[None])
-            k = appear(t, b.start - 0.05, 0.2)
-            cr.save()
-            cr.translate(W / 2, 905)
-            cr.scale(k, k)
-            bold_text(cr, name, 0, 0, 30, col, ow=6, shadow=0.3)
-            cr.restore()
-            break
-    captions(cr, t, tl, y=980)
+    who = None                                        # captions take the speaker's colour (Claude orange)
+    for b in tl.beats:
+        if b.start - 0.1 <= t:
+            who = b.speaker
+    captions(cr, t, tl, y=980, colors=COLORS.get(who, COLORS[None]))
