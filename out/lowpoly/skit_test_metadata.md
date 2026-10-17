@@ -21,4 +21,4 @@ Style test. Parody; not affiliated with Anthropic or OpenAI.
 claude, codex, ai coding, programmer humor, developer life
 ```
 
-**Video facts:** 16.6 s, 41 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 16.2 s, 41 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
