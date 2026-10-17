@@ -24,3 +24,11 @@ visor and glowing eyes). Set: a floating island at dusk with bokeh lights.
 
 What carries all three: one relatable dev pain point, short lines with real pauses, close-ups for reactions,
 UI panels as story beats, captions coloured by speaker (Claude orange), a twist or a warm last line.
+
+## Look, sound and camera (owner, 17 Oct 2026: "I want mood and music as reference video camera angles too")
+- **Mood:** near-black low-key room, one warm key from the side, the big monitor glowing behind Claude and Codex,
+  shallow depth of field (BokehPass), vignette and light grain.
+- **Music:** `bed="pad"` in motion/audio.py: slow pad chords and a mellow electric piano with room reverb, quiet,
+  key and progression set per episode; `hush` cues drop it out for punchlines (the comedy reference uses silence).
+- **Camera:** eye level for the desk characters, 3/4 medium shot of Dev from the front-left, over-the-shoulder shot
+  past Dev's head, close-ups for punchlines, high wide shot from behind Dev. Presets in scene_skit.html `SHOTS`.

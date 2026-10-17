@@ -12,10 +12,11 @@ import os
 
 from motion import thriller as th, voice
 from motion.engine import FPS, W, cairo, cue, hexc, seg
-from motion.polish import WHITE, appear, bold_text, captions, rrect
+from motion.polish import WHITE, appear, bold_text, captions, rrect, vignette
 
 NARRATOR = dict(turbo=True, turbo_ref="am_michael")      # Dev, a boy: male voice (owner, 17 Oct)
 DIRECTION = "ep01"
+MUSIC = "pad"                      # soft ambient bed like the reference skits (silent drops on punchlines)
 TAIL = 1.4
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build",
                       "lowpoly", "ep01_frames")
@@ -35,9 +36,9 @@ SCRIPT = [
     dict(id="e7", scene="dev", text="Okay. But is it bad?", gap=0.4),
     dict(id="e8", scene="claude", speaker="claude", text="It has [forty-seven|47] if statements. Inside each other.", gap=0.5),
     dict(id="e9", scene="codex", speaker="codex", text="And the password is [password one two three.|password123.]", gap=0.45),
-    dict(id="e10", scene="dev", text="Maybe my coworker was just tired.", gap=0.5),
+    dict(id="e10", scene="devclose", text="Maybe my coworker was just tired.", gap=0.5),
     dict(id="e11", scene="claude", speaker="claude", text="Should I message your coworker?", gap=0.5),
-    dict(id="e12", scene="dev", text="No!", gap=0.2),
+    dict(id="e12", scene="devclose", text="No!", gap=0.2),
     dict(id="e13", scene="codex", speaker="codex", text="Too late. I checked who wrote it.", gap=0.45),
     dict(id="e14", scene="claudeclose", speaker="claude", text="It was you.", gap=0.7),
     dict(id="e15", scene="dev", text="That was past me. I don't know him.", gap=0.5),
@@ -112,7 +113,11 @@ def mono(cr, text, x, y, size, col, k, bold=True):
 def draw(cr, t, tl):
     cr.set_source_surface(_frame(t), 0, 0)
     cr.paint()
+    vignette(cr, 0.6)                                   # the references' dark, filmic edges
+    th.grain(cr, t, 0.05)
     A = tl.at
+    for key, dur in (("e3", 1.0), ("e12", 0.8), ("e14", 1.3)):   # music drops out for the punchlines
+        cue("hush", t, A(key) - 0.25, dur)
     BLUE, PINK, GREEN, RED, GREY, YEL = (hexc(c) for c in ("#7fb4ff", "#ff79c6", "#7ee08a", "#ff5c5c", "#8a93a6", "#ffd23f"))
 
     def pr(cr, k, top):

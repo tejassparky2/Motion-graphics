@@ -3,6 +3,7 @@
 No samples are used — everything is generated with numpy.
 """
 import wave
+import zlib
 
 import numpy as np
 
@@ -280,17 +281,63 @@ def drone(total, seed=None):
     return ((low + air) * rise + high)[: int(total * SR)] * 0.16
 
 
+def pad(total, seed=None):
+    """Soft ambient bed (low-poly skits, after the owner's reference videos): slow pad chords and a mellow electric
+    piano arpeggio in D minor, washed in a room reverb, very quiet; it swells a little toward the end."""
+    rng = np.random.default_rng(zlib.crc32(str(seed).encode()))      # stable per episode (hash() is salted per run)
+    n = int(total * SR) + 2 * SR
+    t = np.arange(n) / SR
+    # chords as semitones above A440 (D minor family), voiced low to high; each episode gets its own progression and
+    # key (YouTube's reused-content policy: no two videos share a bed)
+    progs = [[(-19, -16, -12, -9, -5), (-23, -19, -16, -12, -7), (-28, -24, -21, -17, -12), (-21, -17, -14, -7, -2)],
+             [(-19, -16, -12, -9, -5), (-21, -17, -14, -7, -2), (-23, -19, -16, -12, -7), (-26, -21, -17, -14, -9)],
+             [(-23, -19, -16, -12, -7), (-28, -24, -21, -17, -12), (-19, -16, -12, -9, -5), (-21, -17, -14, -7, -2)]]
+    shift = int(rng.integers(-3, 4))
+    chords = [tuple(440.0 * 2 ** ((x + shift) / 12) for x in c) for c in progs[int(rng.integers(0, len(progs)))]]
+    span = float(rng.choice([3.6, 4.0, 4.4]))
+    out = np.zeros(n)
+    for k in range(int(np.ceil((total + 2) / span))):
+        notes = chords[k % len(chords)]
+        i0, i1 = int(k * span * SR), min(n, int((k + 1) * span * SR + 1.5 * SR))
+        tt = t[i0:i1] - k * span
+        env = np.clip(tt / 1.2, 0, 1) * np.clip((span + 1.5 - tt) / 1.5, 0, 1)
+        for f in notes:
+            for det in (-0.12, 0.0, 0.13):                          # three slightly detuned voices per note
+                out[i0:i1] += env * np.sin(2 * np.pi * f * (1 + det / 100) * tt + rng.uniform(0, 6.3)) * 0.06
+        for j, f0 in enumerate((notes[2], notes[3], notes[4], notes[3])):   # electric piano: one note per beat
+            j0 = i0 + int(j * span / 4 * SR)
+            if j0 >= n:
+                break
+            m = min(n - j0, int(2.5 * SR))
+            tn = np.arange(m) / SR
+            f = f0 * 2
+            ep = (np.sin(2 * np.pi * f * tn + 0.6 * np.sin(2 * np.pi * f * tn)) * np.exp(-tn * 2.2)
+                  + 0.25 * np.sin(4 * np.pi * f * tn) * np.exp(-tn * 5))
+            out[j0:j0 + m] += ep * 0.05 * (0.7 + 0.3 * rng.random())
+    out = _lowpass(out, 6)
+    ir_n = int(1.8 * SR)                                              # small-room reverb: decaying noise
+    ir = rng.normal(0, 1, ir_n) * np.exp(-np.arange(ir_n) / SR * 3.2)
+    ir[0] = 6
+    m = 1 << int(np.ceil(np.log2(n + ir_n)))
+    wet = np.fft.irfft(np.fft.rfft(out, m) * np.fft.rfft(ir / np.abs(ir).sum() * 8, m), m)[:n]
+    mix = 0.55 * out + 0.45 * wet
+    mix += _lowpass(rng.uniform(-1, 1, n), 30) * 0.004                # a little air / tape hiss
+    swell = 0.8 + 0.2 * np.clip((t - total * 0.6) / max(total * 0.4, 1), 0, 1)
+    return (mix * swell)[: int(total * SR)]
+
+
 GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
-    bed="thriller": the suspense drone instead of the plucked loop; a "hush" cue silences bed and effects for its
+    bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; a "hush" cue silences bed and effects for its
     duration (the sudden silence before a shock)."""
     import pyloudnorm
     n = int(total * SR)
-    bed = (drone(total, seed) if bed == "thriller" else music(total, seed))[:n]
+    style = bed
+    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()
@@ -323,7 +370,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
-        bed *= (v_rms * 10 ** (-10 / 20)) / rms(bed)
+        bed *= (v_rms * 10 ** ((-15 if style == "pad" else -10) / 20)) / rms(bed)   # the pad sits softer
         mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
     else:
         mix = bed + fx

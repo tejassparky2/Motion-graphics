@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Low-poly skit</title>
 <style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
-<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
 </head>
 <body>
 <script type="module">
@@ -12,6 +12,10 @@
 // Original designs. timing.json (from make_skit.py) gives each line's start/end and a mouth envelope per character;
 // DIRECTION below says, per line, which shot to use and how each character feels and moves.
 import * as THREE from "three";
+import {EffectComposer} from "three/addons/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
+import {BokehPass} from "three/addons/postprocessing/BokehPass.js";
+import {OutputPass} from "three/addons/postprocessing/OutputPass.js";
 
 const T = await (await fetch("/timing.json")).json();
 const W = 720, H = 1280;
@@ -21,12 +25,18 @@ renderer.setSize(W, H);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.15;
+renderer.toneMappingExposure = 1.0;
 document.body.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x0d0f1a);
-scene.fog = new THREE.Fog(0x0d0f1a, 3.5, 7);
+scene.background = new THREE.Color(0x07070b);          // the references' near-black, low-key room
+scene.fog = new THREE.Fog(0x07070b, 2.2, 5.5);
 const camera = new THREE.PerspectiveCamera(38, W / H, 0.02, 30);
+// a real-camera look: shallow depth of field (background blurred), then tone mapping
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bokeh = new BokehPass(scene, camera, {focus: 1.0, aperture: .04, maxblur: .012});
+composer.addPass(bokeh);
+composer.addPass(new OutputPass());
 
 // ---------- helpers ----------
 let seed = 11;
@@ -51,63 +61,75 @@ const seg = (t, a, b) => ease((t - a) / (b - a));
 const lerp = (a, b, u) => a + (b - a) * u;
 const backOut = u => { const s = 2.2; u -= 1; return u * u * ((s + 1) * u + s) + 1; };
 
-// ---------- room ----------
-scene.add(new THREE.HemisphereLight(0x8a9cff, 0x1a1420, .55));
-const lampLight = new THREE.PointLight(0xffb36b, 5, 3.2, 1.6); lampLight.position.set(-.55, 1.25, -.1); lampLight.castShadow = true;
-lampLight.shadow.mapSize.set(1024, 1024); scene.add(lampLight);
-const monLight = new THREE.PointLight(0x7fb4ff, 1.8, 2.2, 1.5); monLight.position.set(.42, 1.0, -.15); scene.add(monLight);
-const faceLight = new THREE.PointLight(0xffd2b0, 2.4, 1.6, 1.5); faceLight.position.set(-.05, 1.15, -.55); scene.add(faceLight);
-const rim = new THREE.DirectionalLight(0x6f7dff, .9); rim.position.set(-2, 3, -3); scene.add(rim);
-const fill = new THREE.DirectionalLight(0xffe0c8, .35); fill.position.set(1, 2, 3); scene.add(fill);
+// ---------- room: dark and low-key like the reference skits ----------
+scene.add(new THREE.HemisphereLight(0x5a6aaa, 0x0a0810, .22));
+const key = new THREE.SpotLight(0xffb27a, 16, 4.5, .85, .75, 1.3);    // warm key from the front-left side
+key.position.set(-1.0, 1.75, -.55); key.target.position.set(0, 1.0, -.5); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024); scene.add(key, key.target);
+const lampLight = new THREE.PointLight(0xffa860, 2.2, 2.4, 1.6); lampLight.position.set(.62, 1.25, .1); scene.add(lampLight);
+const screenGlow = new THREE.PointLight(0x6f9cff, 2.0, 2.4, 1.4); screenGlow.position.set(0, 1.02, .22); scene.add(screenGlow);
+const faceLight = new THREE.PointLight(0xffd2b0, 1.0, 1.2, 1.5); faceLight.position.set(-.05, 1.15, -.55); scene.add(faceLight);
+const rim = new THREE.DirectionalLight(0x6f7dff, .45); rim.position.set(-2, 3, -3); scene.add(rim);
+// the monitor's UI (generic dark editor and chat), seen blurred behind Claude and Codex
+const uiTex = (() => {
+  const c = document.createElement("canvas"); c.width = 1024; c.height = 600; const g = c.getContext("2d");
+  g.fillStyle = "#0e1016"; g.fillRect(0, 0, 1024, 600);
+  g.fillStyle = "#151925"; g.fillRect(0, 0, 210, 600);
+  for (let i = 0; i < 9; i++) { g.fillStyle = i === 2 ? "#2a3350" : "#1c2131"; g.fillRect(18, 40 + i * 52, 172, 30); }
+  const cols = ["#ff79c6", "#7fb4ff", "#7ee08a", "#ffd23f", "#9aa3b5", "#c792ea"];
+  for (let i = 0; i < 16; i++) { let x = 250 + (i % 4) * 26;
+    for (let j = 0; j < 3 + (i * 7) % 4; j++) { const w = 30 + ((i * 13 + j * 29) % 110); g.fillStyle = cols[(i + j) % cols.length]; g.globalAlpha = .75; g.fillRect(x, 40 + i * 33, w, 14); x += w + 14; } }
+  g.globalAlpha = 1; g.fillStyle = "#1f2638"; g.fillRect(640, 380, 340, 150);
+  g.fillStyle = "#e8834a"; g.fillRect(660, 400, 120, 14); g.fillStyle = "#9aa3b5"; for (let i = 0; i < 4; i++) g.fillRect(660, 428 + i * 22, 280 - i * 40, 10);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+})();
 {
-  const floor = mesh(new THREE.PlaneGeometry(10, 10), mat(0x241c22)); floor.rotation.x = -Math.PI / 2; scene.add(floor);
-  const back = mesh(new THREE.PlaneGeometry(8, 4), mat(0x2a2638)); back.position.set(0, 2, -1.9); scene.add(back);
-  const front = mesh(new THREE.PlaneGeometry(8, 4), mat(0x262234)); front.position.set(0, 2, 1.35); front.rotation.y = Math.PI; scene.add(front);
-  // window with city lights behind the desk (seen in the Claude/Codex shots)
-  const win = mesh(new THREE.PlaneGeometry(1.5, 1.0), basic(0x16204a)); win.position.set(0, 1.55, 1.34); win.rotation.y = Math.PI; scene.add(win);
-  const frameM = mat(0x3a3448);
-  for (const [x, y, w, h] of [[0, 2.06, 1.6, .06], [0, 1.04, 1.6, .06], [-.78, 1.55, .06, 1.06], [.78, 1.55, .06, 1.06], [0, 1.55, .04, 1.0]]) {
-    const b = mesh(new THREE.BoxGeometry(w, h, .05), frameM); b.position.set(x, y, 1.32); scene.add(b);
-  }
+  const floor = mesh(new THREE.PlaneGeometry(10, 10), mat(0x110e12)); floor.rotation.x = -Math.PI / 2; scene.add(floor);
+  const back = mesh(new THREE.PlaneGeometry(8, 4), mat(0x17141d)); back.position.set(0, 2, -1.9); scene.add(back);
+  const front = mesh(new THREE.PlaneGeometry(8, 4), mat(0x121019)); front.position.set(0, 2, 1.35); front.rotation.y = Math.PI; scene.add(front);
+  // window with blinds and city lights (far behind the monitor, only a hint of it)
+  const win = mesh(new THREE.PlaneGeometry(1.5, 1.0), basic(0x0e1534)); win.position.set(0, 1.55, 1.34); win.rotation.y = Math.PI; scene.add(win);
+  for (let i = 0; i < 9; i++) { const sl = mesh(new THREE.BoxGeometry(1.5, .025, .02), mat(0x1a1d2c)); sl.position.set(0, 1.1 + i * .11, 1.31); scene.add(sl); }
   const dot = (() => { const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d");
     const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(.4, "rgba(255,255,255,.5)");
     gr.addColorStop(1, "rgba(255,255,255,0)"); g.fillStyle = gr; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
-  for (let i = 0; i < 40; i++) {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({map: dot, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      color: new THREE.Color().setHSL(rnd() < .5 ? .1 : .6, .7, .65), opacity: .5 + rnd() * .4}));
-    s.position.set((rnd() - .5) * 1.4, 1.1 + rnd() * .85, 1.33); const z = .02 + rnd() * .05; s.scale.set(z, z, 1); scene.add(s);
+  for (let i = 0; i < 26; i++) {
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({map: dot, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+      color: new THREE.Color().setHSL(rnd() < .6 ? .08 : .6, .7, .6), opacity: .35 + rnd() * .3}));
+    sp.position.set((rnd() - .5) * 1.4, 1.1 + rnd() * .85, 1.32); const z = .02 + rnd() * .05; sp.scale.set(z, z, 1); scene.add(sp);
   }
-  // shelves and posters on the back wall (seen behind Dev)
-  const shelf = mesh(new THREE.BoxGeometry(1.0, .04, .22), mat(0x4a3a30)); shelf.position.set(-.55, 1.85, -1.8); scene.add(shelf);
+  // back wall behind Dev: shelf, books, a dim warm poster, a small neon ring
+  const shelf = mesh(new THREE.BoxGeometry(1.0, .04, .22), mat(0x2e241e)); shelf.position.set(-.55, 1.85, -1.8); scene.add(shelf);
   for (let i = 0; i < 6; i++) {
-    const bk = mesh(new THREE.BoxGeometry(.06, .18 + rnd() * .08, .16), mat(new THREE.Color().setHSL(rnd(), .45, .45)));
+    const bk = mesh(new THREE.BoxGeometry(.06, .18 + rnd() * .08, .16), mat(new THREE.Color().setHSL(rnd(), .3, .28)));
     bk.position.set(-.95 + i * .08, 1.97, -1.8); scene.add(bk);
   }
-  const poster = mesh(new THREE.PlaneGeometry(.45, .6), basic(0x2f4f6f)); poster.position.set(.55, 1.75, -1.88); scene.add(poster);
-  const ps = mesh(new THREE.PlaneGeometry(.3, .08), basic(0xffb36b)); ps.position.set(.55, 1.88, -1.875); scene.add(ps);
+  const poster = mesh(new THREE.PlaneGeometry(.45, .6), mat(0x22324a)); poster.position.set(.55, 1.75, -1.88); scene.add(poster);
   const neon = mesh(new THREE.TorusGeometry(.12, .012, 6, 24), new THREE.MeshBasicMaterial({color: 0xff7a59}));
   neon.position.set(.05, 1.95, -1.86); scene.add(neon);
-  // desk
-  const desk = mesh(new THREE.BoxGeometry(1.7, .06, .85), mat(0x5a4032)); desk.position.set(0, .72, 0); scene.add(desk);
-  for (const z of [-.43, .43]) {               // purple neon strip along the desk edges
-    const n = mesh(new THREE.BoxGeometry(1.7, .012, .012), new THREE.MeshBasicMaterial({color: 0x9d7bff}), false); n.position.set(0, .705, z); scene.add(n);
+  const neonWarm = new THREE.PointLight(0xff7a59, .8, 1.2, 1.5); neonWarm.position.set(.05, 1.95, -1.75); scene.add(neonWarm);
+  // desk (dark wood) with a purple neon edge
+  const desk = mesh(new THREE.BoxGeometry(1.7, .06, .85), mat(0x3b2a22)); desk.position.set(0, .72, 0); scene.add(desk);
+  for (const z of [-.43, .43]) {
+    const n = mesh(new THREE.BoxGeometry(1.7, .012, .012), new THREE.MeshBasicMaterial({color: 0x8d6bff}), false); n.position.set(0, .705, z); scene.add(n);
   }
-  const neonLight = new THREE.PointLight(0x8a6bff, 1.6, 1.6, 1.5); neonLight.position.set(0, .62, .5); scene.add(neonLight);
+  const neonLight = new THREE.PointLight(0x7a5bff, 1.0, 1.4, 1.5); neonLight.position.set(0, .62, -.5); scene.add(neonLight);
   for (const [x, z] of [[-.8, -.38], [.8, -.38], [-.8, .38], [.8, .38]]) {
-    const l = mesh(new THREE.BoxGeometry(.05, .7, .05), mat(0x3a2a22)); l.position.set(x, .35, z); scene.add(l);
+    const l = mesh(new THREE.BoxGeometry(.05, .7, .05), mat(0x241a16)); l.position.set(x, .35, z); scene.add(l);
   }
-  // monitor (seen from behind / side), keyboard, mug, desk lamp
-  const mon = new THREE.Group(); mon.position.set(.5, .75, .05); mon.rotation.y = -2.6; scene.add(mon);
-  const panel = mesh(new THREE.BoxGeometry(.62, .38, .03), mat(0x1b1d26)); panel.position.y = .32; mon.add(panel);
-  const glow = mesh(new THREE.PlaneGeometry(.58, .34), new THREE.MeshBasicMaterial({color: 0x8fb6ff})); glow.position.set(0, .32, .017); mon.add(glow);
-  const stand = mesh(new THREE.BoxGeometry(.05, .14, .05), mat(0x2a2c36)); stand.position.y = .07; mon.add(stand);
-  const kb = mesh(new THREE.BoxGeometry(.42, .02, .14), mat(0x2b2d38)); kb.position.set(.15, .76, -.22); scene.add(kb);
-  const mug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xe8e4dc)); mug.position.set(-.45, .8, -.2); scene.add(mug);
-  const lampG = new THREE.Group(); lampG.position.set(-.62, .75, .12); scene.add(lampG);
-  const lb = mesh(new THREE.CylinderGeometry(.07, .08, .03, 8), mat(0x2a2a33)); lampG.add(lb);
-  const la = mesh(new THREE.CylinderGeometry(.012, .012, .45, 6), mat(0x2a2a33)); la.position.set(.0, .22, 0); la.rotation.z = -.25; lampG.add(la);
-  const lh = mesh(new THREE.ConeGeometry(.09, .12, 8, 1, true), mat(0xe86a3a, {side: THREE.DoubleSide})); lh.position.set(.08, .45, -.05); lh.rotation.z = 2.4; lampG.add(lh);
-  const chair = mesh(new THREE.BoxGeometry(.5, .5, .08), mat(0x2b2e3c)); chair.position.set(0, .82, -1.02); scene.add(chair);
+  // big monitor behind Claude and Codex, facing Dev; its UI glows behind them
+  const mon = new THREE.Group(); mon.position.set(0, .75, .36); mon.rotation.y = Math.PI; scene.add(mon);
+  const panel = mesh(new THREE.BoxGeometry(1.0, .6, .03), mat(0x111218)); panel.position.y = .42; mon.add(panel);
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(.96, .56), new THREE.MeshBasicMaterial({map: uiTex, color: 0xb8c4dc}));
+  scr.position.set(0, .42, .017); mon.add(scr);
+  const stand = mesh(new THREE.BoxGeometry(.06, .14, .06), mat(0x1c1d24)); stand.position.y = .07; mon.add(stand);
+  const kb = mesh(new THREE.BoxGeometry(.42, .02, .14), mat(0x22242e)); kb.position.set(.42, .76, -.3); scene.add(kb);
+  const mug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xd8d2c8)); mug.position.set(-.45, .8, -.2); scene.add(mug);
+  const lampG = new THREE.Group(); lampG.position.set(.7, .75, .2); lampG.rotation.y = Math.PI; scene.add(lampG);
+  const lb = mesh(new THREE.CylinderGeometry(.07, .08, .03, 8), mat(0x1e1e26)); lampG.add(lb);
+  const la = mesh(new THREE.CylinderGeometry(.012, .012, .45, 6), mat(0x1e1e26)); la.position.set(.0, .22, 0); la.rotation.z = -.25; lampG.add(la);
+  const lh = mesh(new THREE.ConeGeometry(.09, .12, 8, 1, true), mat(0xc85a32, {side: THREE.DoubleSide})); lh.position.set(.08, .45, -.05); lh.rotation.z = 2.4; lampG.add(lh);
+  const chair = mesh(new THREE.BoxGeometry(.5, .5, .08), mat(0x1c1e28)); chair.position.set(0, .82, -1.02); scene.add(chair);
 }
 
 // ---------- expressive face kit ----------
@@ -278,13 +300,14 @@ const EMO = {
   watch:    {brow: .1, ang: .2, lid: .1, smile: -.1, wide: 1, look: [0, .3]},
   hidden:   {brow: 0, ang: 0, lid: .1, smile: 0, wide: 1, look: [0, 0]},
 };
-const SHOTS = {
-  dev:    {pos: [.05, 1.2, .95], look: [0, 1.1, -.95], push: .15, fov: 42},
-  claude: {pos: [-.33, 1.15, -1.05], look: [-.18, .87, -.05], push: .12, fov: 50},
-  claudeclose: {pos: [-.3, 1.08, -.95], look: [-.18, .88, -.05], push: .35, fov: 46},
-  codex:  {pos: [.36, 1.22, -1.05], look: [.2, .96, .02], push: .12, fov: 50},
-  duo:    {pos: [.0, 1.72, -.85], look: [.01, .9, 0], push: .1, fov: 64},
-  wide:   {pos: [0, 1.75, 1.2], look: [0, .95, -.45], push: .2, fov: 46},
+const SHOTS = {   // eye level for the desk characters, 3/4 side angle for Dev, close-ups for the punchlines
+  dev:    {pos: [-1.0, 1.28, .4], look: [.02, 1.12, -.88], push: .12, fov: 44},
+  devclose: {pos: [-.5, 1.28, -.35], look: [0, 1.25, -.94], push: .08, fov: 42},
+  claude: {pos: [-.58, .96, -1.0], look: [-.18, .88, -.05], push: .12, fov: 40},
+  claudeclose: {pos: [-.38, .93, -.6], look: [-.18, .89, -.05], push: .12, fov: 38},
+  codex:  {pos: [.62, 1.05, -.98], look: [.2, .98, .02], push: .12, fov: 40},
+  duo:    {pos: [.42, 1.34, -1.4], look: [-.02, .92, 0], push: .1, fov: 46},
+  wide:   {pos: [.62, 2.05, -1.7], look: [-.02, .92, -.25], push: .12, fov: 50},   // from behind Dev: all three, screen glowing
 };
 const DIRNAME = new URLSearchParams(location.search).get("dir") || "test";
 const D = await import(`./directions/${DIRNAME}.js`);
@@ -407,7 +430,8 @@ window.renderAt = function (t) {
   P.x += Math.sin(t * .9) * .006; P.y += Math.sin(t * 1.3) * .004;
   camera.fov = shot.fov || 38; camera.updateProjectionMatrix();
   camera.position.copy(P); camera.lookAt(L);
-  renderer.render(scene, camera);
+  bokeh.uniforms.focus.value = P.distanceTo(L);
+  composer.render();
 };
 window.renderAt(0);
 window.READY = true;
