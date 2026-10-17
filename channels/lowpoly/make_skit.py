@@ -2,6 +2,7 @@
 
     python channels/lowpoly/make_skit.py [EPISODE]          -> out/lowpoly/EPISODE.mp4 (+ _preview.mp4)
     python channels/lowpoly/make_skit.py [EPISODE] --stills 1.0,5.2   (3D check frames only)
+    python channels/lowpoly/make_skit.py [EPISODE] --reuse-frames     (redo captions/sound on existing frames)
 EPISODE is a module in channels/lowpoly (default skit_test); its DIRECTION names directions/<DIRECTION>.js.
 """
 import importlib.util
@@ -60,7 +61,8 @@ if stills:
     shutil.rmtree(out, ignore_errors=True)
     subprocess.check_call(["node", os.path.join(HERE, "render.mjs"), out, str(fps), "1", stills])
     sys.exit(0)
-shutil.rmtree(frames, ignore_errors=True)
-subprocess.check_call(["node", os.path.join(HERE, "render.mjs"), frames, str(fps)])
+if "--reuse-frames" not in sys.argv:     # caption/sound-only changes can skip the 3D render
+    shutil.rmtree(frames, ignore_errors=True)
+    subprocess.check_call(["node", os.path.join(HERE, "render.mjs"), frames, str(fps)])
 out = os.path.join(ROOT, "out", "lowpoly", f"{EPISODE}.mp4")
 render.render_video(out)

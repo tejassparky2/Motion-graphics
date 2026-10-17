@@ -65,8 +65,8 @@ Parody. Not affiliated with Anthropic or OpenAI.
     pinned_comment="Be honest: what's the worst thing past-you left in your code? 👇",
 )
 
-COLORS = {None: (WHITE, hexc("#ffffff")), "claude": (hexc("#f5a05f"), hexc("#ff8a3d")),
-          "codex": (hexc("#a9b8ff"), hexc("#7f9bff"))}
+COLORS = {None: (WHITE, hexc("#ffffff")), "claude": (hexc("#ffc08c"), hexc("#ff8a3d")),
+          "codex": (hexc("#b9c6ff"), hexc("#7f9bff"))}
 MONO = "DejaVu Sans Mono"
 _n_frames = []
 
@@ -198,6 +198,10 @@ def clean_caption(cr, t, tl, y=1010, size=34):
         cr.save()
         cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(size)
+        wmax = max(cr.text_extents(line).x_advance for line in lines)   # soft dark backing so it reads on anything
+        rrect(cr, W / 2 - wmax / 2 - 22, y - size * 1.05, wmax + 44, size * 1.3 * len(lines) + size * 0.55, 18)
+        cr.set_source_rgba(0.03, 0.03, 0.06, 0.5 * k)
+        cr.fill()
         for j, line in enumerate(lines):
             ext = cr.text_extents(line)
             x, yy = W / 2 - ext.x_advance / 2, y + j * size * 1.3
