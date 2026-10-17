@@ -14,13 +14,13 @@ from motion import engine, voice
 from motion.engine import FPS, H, W, cairo, cue, hexc, seg
 from motion.polish import OUTLINE, WHITE, appear, bold_text, captions, paint, rrect
 
-NARRATOR = dict(turbo=True)          # the narrator voice is Dev: Turbo's stock voice (tags work best there)
+NARRATOR = dict(turbo=True, turbo_ref="am_michael")   # the narrator voice is Dev, a boy: a male voice (owner, 17 Oct)
 TAIL = 1.2
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build",
                       "lowpoly", "skit_frames")
 
 voice.SPEAKERS.update({
-    "claude": dict(voice="am_michael", speed=1.0, turbo_ref="am_michael+1.5"),   # boy character: male voice (owner, 17 Oct)
+    "claude": dict(voice="af_heart", speed=1.0, turbo_ref="af_heart"),
     "codex": dict(voice="am_puck", speed=1.05, turbo_ref="am_puck+2"),
 })
 
@@ -33,7 +33,7 @@ SCRIPT = [
     dict(id="s6", scene="codex", speaker="codex", text="I can undo that!"),
     dict(id="s7", scene="dev", text="Please."),
     dict(id="s8", scene="codex", speaker="codex", text="Undone! I also undid the typo fix.", gap=0.4),
-    dict(id="s9", scene="wide", text="[sigh] I'll do it myself.", gap=0.5),
+    dict(id="s9", scene="wide", text="I'll do it myself.", gap=0.8),
 ]
 
 METADATA = dict(
@@ -85,6 +85,7 @@ def draw(cr, t, tl):
                                                          ("typo: still there", hexc("#ffd23f"), 46)], hexc("#6f8cff"))
     if A("s4") <= t < A("s4") + 0.05:
         cue("hit", t, A("s4"))
+    cue("sigh", t, A("s9") - 0.65)                    # Dev's sigh before his last line (a breath effect)
     who = None                                        # captions take the speaker's colour (Claude orange)
     for b in tl.beats:
         if b.start - 0.1 <= t:
