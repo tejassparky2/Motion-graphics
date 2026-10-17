@@ -1,0 +1,272 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Low-poly style test</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+</head>
+<body>
+<script type="module">
+// Low-poly style test for a separate channel (not Interestingly Strange). Original characters: Kip (a kid in a
+// yellow beanie) and Orbi (a round floating robot). Everything is driven by time t, so window.renderAt(t) draws an
+// exact frame and render.mjs can record it frame by frame.
+import * as THREE from "three";
+
+const W = 720, H = 1280;
+const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(window.devicePixelRatio || 1);
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
+
+// ---------- helpers ----------
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+function jitter(geo, amt) {          // move coincident vertices together, so faces stay closed (faceted, no cracks)
+  const p = geo.attributes.position, map = new Map();
+  for (let i = 0; i < p.count; i++) {
+    const k = [p.getX(i), p.getY(i), p.getZ(i)].map(v => v.toFixed(3)).join(",");
+    if (!map.has(k)) map.set(k, [(rnd() - .5) * amt, (rnd() - .5) * amt, (rnd() - .5) * amt]);
+    const d = map.get(k);
+    p.setXYZ(i, p.getX(i) + d[0], p.getY(i) + d[1], p.getZ(i) + d[2]);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({color: c, flatShading: true, roughness: .85, metalness: 0, ...o});
+function mesh(geo, m, shadow = true) {
+  const x = new THREE.Mesh(geo, m);
+  x.castShadow = shadow; x.receiveShadow = true;
+  return x;
+}
+const ease = u => u <= 0 ? 0 : u >= 1 ? 1 : u * u * (3 - 2 * u);
+const seg = (t, a, b) => ease((t - a) / (b - a));
+const pulse = (t, a, b, r = .25) => Math.min(seg(t, a, a + r), 1 - seg(t, b - r, b));   // 0 -> 1 -> 0 over [a, b]
+const lerp = (a, b, u) => a + (b - a) * u;
+
+// ---------- sky, stars, bokeh ----------
+{
+  const c = document.createElement("canvas"); c.width = 4; c.height = 512;
+  const g = c.getContext("2d"), gr = g.createLinearGradient(0, 0, 0, 512);
+  gr.addColorStop(0, "#1b1640"); gr.addColorStop(.45, "#4a2c5e"); gr.addColorStop(.75, "#c4646a"); gr.addColorStop(1, "#f2a46a");
+  g.fillStyle = gr; g.fillRect(0, 0, 4, 512);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  scene.background = tex;
+}
+function discTexture(soft) {
+  const c = document.createElement("canvas"); c.width = c.height = 128;
+  const g = c.getContext("2d"), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(soft, "rgba(255,255,255,.55)"); gr.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(c);
+}
+const bokehTex = discTexture(.7), starTex = discTexture(.15);
+const bokeh = [];
+for (let i = 0; i < 26; i++) {
+  const far = i < 14;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map: far ? starTex : bokehTex, transparent: true, depthWrite: false,
+    blending: THREE.AdditiveBlending, color: new THREE.Color().setHSL(far ? .6 : .08 + rnd() * .06, .6, far ? .9 : .6),
+    opacity: far ? .8 : .35 + rnd() * .25}));
+  const z = far ? -14 : -4 - rnd() * 4;
+  s.position.set((rnd() - .5) * (far ? 14 : 8), (far ? 2 : 0) + rnd() * 7, z);
+  const sz = far ? .06 + rnd() * .08 : .35 + rnd() * .6;
+  s.scale.set(sz, sz, 1);
+  s.userData = {y0: s.position.y, ph: rnd() * 6.28, sp: .2 + rnd() * .3};
+  scene.add(s); bokeh.push(s);
+}
+
+// ---------- lights ----------
+scene.add(new THREE.HemisphereLight(0xffd9c0, 0x2a2140, .9));
+const key = new THREE.DirectionalLight(0xffe2c4, 2.2);
+key.position.set(3, 6, 5); key.castShadow = true;
+key.shadow.mapSize.set(1024, 1024);
+Object.assign(key.shadow.camera, {left: -3, right: 3, top: 3, bottom: -3, near: .5, far: 20});
+key.shadow.radius = 4;
+scene.add(key);
+const rim = new THREE.DirectionalLight(0x8fb6ff, 1.4); rim.position.set(-4, 3, -3); scene.add(rim);
+const glow = new THREE.PointLight(0x66e0ff, 0, 3); scene.add(glow);   // the robot's visor light on the kid
+
+// ---------- floating island ----------
+{
+  const top = mesh(jitter(new THREE.CylinderGeometry(3.6, 3.3, .35, 11, 1), .12), mat(0x7fb35a));
+  top.position.y = -.18; scene.add(top);
+  const rock = mesh(jitter(new THREE.ConeGeometry(3.3, 2.4, 11, 2), .3), mat(0x7a5a4a));
+  rock.rotation.x = Math.PI; rock.position.y = -1.62; scene.add(rock);
+  for (const [x, z, s] of [[-1.6, -1.0, 1], [1.7, -1.2, .8], [-1.9, .2, .6]]) {          // low-poly trees
+    const tr = new THREE.Group();
+    const trunk = mesh(new THREE.CylinderGeometry(.06, .09, .5, 5), mat(0x6b4a33)); trunk.position.y = .25;
+    const c1 = mesh(jitter(new THREE.ConeGeometry(.45, .8, 6), .06), mat(0x3f8a55)); c1.position.y = .75;
+    const c2 = mesh(jitter(new THREE.ConeGeometry(.35, .6, 6), .05), mat(0x4fa064)); c2.position.y = 1.1;
+    tr.add(trunk, c1, c2); tr.position.set(x, 0, z); tr.scale.setScalar(s); scene.add(tr);
+  }
+  for (const [x, z, s] of [[.9, .9, .18], [-.8, 1.1, .12], [1.4, .2, .1]]) {               // pebbles
+    const p = mesh(jitter(new THREE.IcosahedronGeometry(s, 0), s * .3), mat(0x9a9aa8)); p.position.set(x, s * .4, z); scene.add(p);
+  }
+  const lamp = new THREE.Group();                                                          // a little lamp post
+  const pole = mesh(new THREE.CylinderGeometry(.03, .04, 1.3, 6), mat(0x3a3448)); pole.position.y = .65;
+  const bulb = mesh(new THREE.IcosahedronGeometry(.11, 0), mat(0xffd27a, {emissive: 0xffb84a, emissiveIntensity: 2.2}), false);
+  bulb.position.y = 1.36; lamp.add(pole, bulb); lamp.position.set(1.75, 0, -1.5); scene.add(lamp);
+  const lampLight = new THREE.PointLight(0xffb060, 3, 3.5); lampLight.position.set(1.75, 1.36, -1.5); scene.add(lampLight);
+}
+
+// ---------- faces (shared by both characters) ----------
+const BLACK = new THREE.MeshBasicMaterial({color: 0x1d1420});
+const WHITE = new THREE.MeshBasicMaterial({color: 0xffffff});
+function face(parent, z, eyeMat = BLACK, mouthMat = BLACK, spacing = .17) {
+  const f = {group: new THREE.Group(), eyes: [], arcs: [], mouth: {}};
+  for (const s of [-1, 1]) {
+    const e = new THREE.Group();
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(.055, 12, 10), eyeMat); ball.scale.z = .45;
+    const hi = new THREE.Mesh(new THREE.SphereGeometry(.016, 8, 6), WHITE); hi.position.set(.018, .02, .03);
+    e.add(ball); if (eyeMat === BLACK) e.add(hi);
+    e.position.set(s * spacing, .04, z); f.group.add(e); f.eyes.push(e);
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(.05, .014, 6, 12, Math.PI), eyeMat);   // ^ ^ happy eyes
+    arc.position.set(s * spacing, .02, z + .01); f.group.add(arc); f.arcs.push(arc);
+    const brow = new THREE.Mesh(new THREE.BoxGeometry(.09, .018, .02), mouthMat);
+    brow.position.set(s * spacing, .14, z); f.group.add(brow); (f.brows ||= []).push(brow);
+  }
+  f.mouth.smile = new THREE.Mesh(new THREE.TorusGeometry(.07, .015, 6, 14, Math.PI), mouthMat);
+  f.mouth.smile.rotation.z = Math.PI; f.mouth.smile.position.set(0, -.08, z);
+  f.mouth.laugh = new THREE.Mesh(new THREE.CircleGeometry(.085, 14, Math.PI, Math.PI), new THREE.MeshBasicMaterial({color: 0x7a1f2b}));
+  f.mouth.laugh.position.set(0, -.07, z + .005);
+  f.mouth.o = new THREE.Mesh(new THREE.TorusGeometry(.04, .016, 6, 14), mouthMat); f.mouth.o.position.set(0, -.11, z);
+  for (const m of Object.values(f.mouth)) f.group.add(m);
+  parent.add(f.group);
+  return f;
+}
+// emotion: "smile" | "happy" | "surprised" | "laugh" | "curious"; blink 0..1
+function setFace(f, emo, blink = 0, talk = 0) {
+  const happy = emo === "happy" || emo === "laugh";
+  const big = emo === "surprised" ? 1.35 : 1;
+  f.eyes.forEach(e => { e.visible = !happy; e.scale.set(big, big * Math.max(.08, 1 - blink), big); });
+  f.arcs.forEach(a => a.visible = happy);
+  f.mouth.smile.visible = emo === "smile" || emo === "happy" || emo === "curious";
+  f.mouth.laugh.visible = emo === "laugh";
+  f.mouth.o.visible = emo === "surprised";
+  f.mouth.laugh.scale.y = 1 + .35 * talk;
+  f.mouth.smile.scale.setScalar(emo === "curious" ? .7 : 1);
+  if (f.brows) f.brows.forEach((b, i) => {
+    const s = i ? 1 : -1;
+    b.position.y = .14 + (emo === "surprised" ? .05 : 0) + (emo === "curious" && i ? .04 : 0);
+    b.rotation.z = emo === "curious" ? (i ? -.25 : .1) : s * -.12 * (emo === "surprised" ? 0 : 1);
+  });
+}
+
+// ---------- Kip: the kid ----------
+const kip = new THREE.Group(); scene.add(kip);
+const kipBody = new THREE.Group(); kip.add(kipBody);
+const JACKET = mat(0xe8742a), SKIN = mat(0xf2b48c), PANTS = mat(0x34405e), SHOE = mat(0xf4f1ea), BEANIE = mat(0xf2c230);
+{
+  const torso = mesh(jitter(new THREE.CylinderGeometry(.26, .32, .62, 7, 2), .04), JACKET); torso.position.y = .78; kipBody.add(torso);
+  const zip = mesh(new THREE.BoxGeometry(.02, .5, .02), mat(0xffe0b0)); zip.position.set(0, .8, .3); kipBody.add(zip);
+  const pack = mesh(jitter(new THREE.BoxGeometry(.38, .42, .18), .03), mat(0x3a8fb0)); pack.position.set(0, .82, -.3); kipBody.add(pack);
+  for (const s of [-1, 1]) {
+    const leg = mesh(new THREE.CylinderGeometry(.09, .1, .42, 6), PANTS); leg.position.set(s * .12, .27, 0); kipBody.add(leg);
+    const shoe = mesh(jitter(new THREE.BoxGeometry(.17, .1, .26), .02), SHOE); shoe.position.set(s * .12, .05, .04); kipBody.add(shoe);
+  }
+}
+const kipHead = new THREE.Group(); kipHead.position.y = 1.36; kipBody.add(kipHead);
+{
+  const head = mesh(jitter(new THREE.IcosahedronGeometry(.36, 1), .05), SKIN); head.scale.set(1, .95, .92); kipHead.add(head);
+  const beanie = mesh(jitter(new THREE.SphereGeometry(.38, 9, 5, 0, Math.PI * 2, 0, Math.PI * .5), .03), BEANIE);
+  beanie.position.y = .12; beanie.rotation.x = -.15; kipHead.add(beanie);
+  const cuff = mesh(new THREE.TorusGeometry(.355, .06, 5, 10), mat(0xd9a520)); cuff.rotation.x = Math.PI / 2 - .15; cuff.position.y = .13; kipHead.add(cuff);
+  const pom = mesh(jitter(new THREE.IcosahedronGeometry(.09, 0), .03), mat(0xfff2c0)); pom.position.set(0, .46, -.06); kipHead.add(pom);
+  for (const s of [-1, 1]) {
+    const ear = mesh(new THREE.IcosahedronGeometry(.07, 0), SKIN); ear.position.set(s * .35, -.03, 0); kipHead.add(ear);
+    const cheek = new THREE.Mesh(new THREE.CircleGeometry(.05, 10), new THREE.MeshBasicMaterial({color: 0xff8a8a, transparent: true, opacity: .55}));
+    cheek.position.set(s * .2, -.07, .33); kipHead.add(cheek);
+  }
+}
+const kipFace = face(kipHead, .335);
+kipFace.group.position.y = -.05;
+const kipArms = [-1, 1].map(s => {
+  const pivot = new THREE.Group(); pivot.position.set(s * .32, 1.02, 0); kipBody.add(pivot);
+  const arm = mesh(new THREE.CylinderGeometry(.065, .075, .48, 6), JACKET); arm.position.y = -.24; pivot.add(arm);
+  const hand = mesh(jitter(new THREE.IcosahedronGeometry(.075, 0), .02), SKIN); hand.position.y = -.5; pivot.add(hand);
+  pivot.rotation.z = s * .12;
+  return pivot;
+});
+
+// ---------- Orbi: the floating robot ----------
+const orbi = new THREE.Group(); scene.add(orbi);
+const orbiBody = new THREE.Group(); orbi.add(orbiBody);
+const VISOR_GLOW = new THREE.MeshBasicMaterial({color: 0x7ff3ff});
+{
+  const shell = mesh(jitter(new THREE.IcosahedronGeometry(.42, 1), .04), mat(0xeef0f5, {roughness: .5}));
+  orbiBody.add(shell);
+  const visor = mesh(new THREE.SphereGeometry(.455, 14, 8, Math.PI * .22, Math.PI * .56, Math.PI * .33, Math.PI * .3),
+    new THREE.MeshStandardMaterial({color: 0x1a1d2e, roughness: .25, metalness: .3, flatShading: true}), false);
+  orbiBody.add(visor);
+  const band = mesh(new THREE.TorusGeometry(.43, .035, 5, 12), mat(0x37c3d6)); band.rotation.x = Math.PI / 2; band.position.y = -.12; orbiBody.add(band);
+  const fin = mesh(jitter(new THREE.ConeGeometry(.08, .22, 5), .02), mat(0x37c3d6)); fin.position.y = .48; orbiBody.add(fin);
+  const jet = new THREE.Sprite(new THREE.SpriteMaterial({map: bokehTex, color: 0x66e0ff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false}));
+  jet.position.y = -.5; jet.scale.set(.35, .35, 1); orbiBody.add(jet); orbiBody.userData.jet = jet;
+}
+const orbiFace = face(orbiBody, .44, VISOR_GLOW, VISOR_GLOW, .13);
+orbiFace.group.position.z = .02;
+const orbiHands = [-1, 1].map(s => {
+  const h = mesh(jitter(new THREE.IcosahedronGeometry(.1, 0), .02), mat(0xeef0f5)); orbi.add(h); h.userData.s = s; return h;
+});
+
+// ---------- the 8-second performance ----------
+window.DURATION = 8;
+window.renderAt = function (t) {
+  // Kip: idle breathing and bounce
+  const bob = Math.sin(t * 3.2) * .015;
+  kipBody.position.y = bob + .06 * pulse(t, 3.7, 4.2, .2);                    // little jump of surprise
+  kip.position.set(-.48, 0, .35);
+  kip.rotation.y = .28 + .12 * seg(t, 2.4, 2.9);                              // turns a bit toward Orbi
+  // head: look at camera, curious tilt, laugh shake
+  kipHead.rotation.z = .22 * pulse(t, 2.5, 3.6) + Math.sin(t * 22) * .03 * pulse(t, 4.6, 6.2);
+  kipHead.rotation.x = -.05 + .06 * Math.sin(t * 2.1);
+  kipHead.rotation.y = .2 * pulse(t, 2.5, 3.6);
+  // arms: wave (1.4-2.5), surprise hands up (3.7-4.4), laugh hold belly, fist pump (6.3-7.2), wave goodbye (7.2-8)
+  const wave = Math.max(pulse(t, 1.3, 2.6), pulse(t, 7.1, 8.3));
+  const pump = pulse(t, 6.2, 7.1, .15);
+  kipArms[1].rotation.z = .12 + lerp(0, 2.6, wave) + lerp(0, 2.9, pump) + Math.sin(t * 13) * .3 * wave + .6 * pulse(t, 3.7, 4.5);
+  kipArms[1].rotation.x = -.5 * pulse(t, 4.6, 6.1);
+  kipArms[0].rotation.z = -.12 - .6 * pulse(t, 3.7, 4.5);
+  kipArms[0].rotation.x = -.5 * pulse(t, 4.6, 6.1);
+  // Orbi floats in from the right, bobbing, then tilts, beeps, laughs
+  const inn = seg(t, 0, 1.2);
+  orbi.position.set(lerp(2.6, .62, inn), 1.25 + Math.sin(t * 2.4) * .07 + .12 * pulse(t, 4.6, 6.2) * Math.abs(Math.sin(t * 14)), .25);
+  orbi.rotation.y = -.35 - .25 * (1 - inn);
+  orbiBody.rotation.z = -.3 * pulse(t, 2.6, 3.6) + .15 * (1 - inn);
+  orbiBody.rotation.x = .1 * Math.sin(t * 1.7);
+  orbiHands.forEach((h, i) => {
+    const s = h.userData.s;
+    const up = i === 1 ? pulse(t, 3.4, 4.1) : 0;
+    h.position.set(s * .58, -.12 + .35 * up + Math.sin(t * 3 + i) * .04 + .15 * pulse(t, 4.6, 6.2) * Math.abs(Math.sin(t * 14 + i)), .05);
+  });
+  orbiBody.userData.jet.material.opacity = .55 + .25 * Math.sin(t * 20);
+  glow.position.copy(orbi.position); glow.intensity = 1.2 + .8 * pulse(t, 3.4, 4.1);
+
+  // faces
+  const blink = (tt => (tt % 3.1) < .12 ? Math.sin((tt % 3.1) / .12 * Math.PI) : 0);
+  const kipEmo = t < 1.3 ? "smile" : t < 2.5 ? "happy" : t < 3.7 ? "curious" : t < 4.6 ? "surprised" : t < 6.2 ? "laugh" : "happy";
+  const orbiEmo = t < 1.2 ? "smile" : t < 2.6 ? "happy" : t < 3.4 ? "curious" : t < 4.6 ? "surprised" : t < 6.2 ? "laugh" : "happy";
+  setFace(kipFace, kipEmo, blink(t + .4), kipEmo === "laugh" ? Math.abs(Math.sin(t * 14)) : 0);
+  setFace(orbiFace, orbiEmo, blink(t + 1.7), orbiEmo === "laugh" ? Math.abs(Math.sin(t * 15)) : 0);
+
+  // bokeh drifts
+  for (const b of bokeh) b.position.y = b.userData.y0 + Math.sin(t * b.userData.sp + b.userData.ph) * .15;
+
+  // camera: slow push in, small handheld drift
+  const push = seg(t, 0, 8);
+  camera.position.set(lerp(.25, .1, push) + Math.sin(t * .7) * .04, lerp(1.7, 1.45, push), lerp(8.8, 7.6, push));
+  camera.lookAt(.05, .95, 0);
+  renderer.render(scene, camera);
+};
+window.renderAt(0);
+window.READY = true;
+</script>
+</body>
+</html>
