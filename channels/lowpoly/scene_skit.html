@@ -252,7 +252,7 @@ const lapLight = new THREE.PointLight(0x9fc2ff, 0, .8, 1.5); scene.add(lapLight)
 const alarm = new THREE.PointLight(0xff3040, 0, 3, 1.2); alarm.position.set(0, 1.4, .2); scene.add(alarm);
 const handMug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xe8e4dc)); handMug.position.set(0, -.3, .05); handMug.visible = false;
 devArms[1].el.add(handMug);
-const hoodUp = mesh(new THREE.SphereGeometry(.205, 10, 7, 0, Math.PI * 2, 0, Math.PI * .6), new THREE.MeshStandardMaterial({color: 0x3d5a6e, flatShading: true, roughness: .8, side: THREE.DoubleSide}));
+const hoodUp = mesh(new THREE.SphereGeometry(.235, 10, 7, 0, Math.PI * 2, 0, Math.PI * .62), new THREE.MeshStandardMaterial({color: 0x35505f, flatShading: true, roughness: .85}));
 hoodUp.position.set(0, .02, -.02); hoodUp.visible = false; devHead.add(hoodUp);
 
 // ---------- direction (per episode: directions/<name>.js, picked with ?dir=<name>) ----------
@@ -283,7 +283,7 @@ const SHOTS = {
   claude: {pos: [-.33, 1.15, -1.05], look: [-.18, .87, -.05], push: .12, fov: 50},
   claudeclose: {pos: [-.3, 1.08, -.95], look: [-.18, .88, -.05], push: .35, fov: 46},
   codex:  {pos: [.36, 1.22, -1.05], look: [.2, .96, .02], push: .12, fov: 50},
-  duo:    {pos: [.02, 1.25, -1.15], look: [.01, .9, 0], push: .12, fov: 52},
+  duo:    {pos: [.0, 1.72, -.85], look: [.01, .9, 0], push: .1, fov: 64},
   wide:   {pos: [0, 1.75, 1.2], look: [0, .95, -.45], push: .2, fov: 46},
 };
 const DIRNAME = new URLSearchParams(location.search).get("dir") || "test";
