@@ -91,6 +91,10 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 67 | Sun Nov 1 | 4:30 PM | free_will_god | God Already Knew. So the Kid Says It's Not His Fault 😏 *(big question; script waiting, out/scripts_big_questions_batch1.md)* |
 | 68 | Sun Nov 1 | 7:30 PM | print_money | This Note Says 100 TRILLION. It Couldn't Buy Bread 💵 *(big question; script waiting)* |
 | 69 | Mon Nov 2 | 4:30 PM | trolley_problem | Everyone Pulled the Lever. Nobody Would Push 🚃 *(big question; script waiting)* |
+| 70 | Mon Nov 2 | 7:30 PM | grandfather_paradox | She Went Back in Time to Stop Her Parents Meeting ⏳ *(big question; script waiting)* |
+| 71 | Tue Nov 3 | 4:30 PM | euthyphro | 1 Question. The Teacher Couldn't Pick an Answer 🤔 *(big question; script waiting)* |
+| 72 | Tue Nov 3 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, big question)* |
+| 73 | Wed Nov 4 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 
@@ -132,10 +136,6 @@ with the principal was dropped (row 47 tells that story); Last Bencher 6 back to
 | 12 | Weird history | The Day London Flooded With Beer | "In 1814, a street in London was hit by a tidal wave... of beer." | London Beer Flood: date, deaths, volume; volume estimates vary, so use a range |
 | 13 | Weird animal | The Salamander That Regrows Its Body Parts | "Cut off its leg... and it grows a new one. Bones and all." | Axolotl regeneration: limbs, spinal cord, parts of the heart; wild population status |
 | 14 | Money trick / twist | A US version of The Pumpkin Trick | "Why would a rich man pay $100 for a $7 pumpkin?" | Re-cost every number in dollars and keep the math consistent |
-| 70 | Mon Nov 2 | 7:30 PM | grandfather_paradox | She Went Back in Time to Stop Her Parents Meeting ⏳ *(big question; script waiting)* |
-| 71 | Tue Nov 3 | 4:30 PM | euthyphro | 1 Question. The Teacher Couldn't Pick an Answer 🤔 *(big question; script waiting)* |
-| 72 | Tue Nov 3 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, big question)* |
-| 73 | Wed Nov 4 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 
 ## Production notes
 
