@@ -4,26 +4,26 @@ Read CLAUDE.md first, then PROJECT_HISTORY.md and docs/owner_messages_log.md (ev
 Branch: `ccr-56282fe5-evehq4` (Interestingly Strange, English). Always `git pull --rebase` before pushing: other chats
 also push here. The repo is **public**.
 
-## Status on 18 Oct 2026, evening (new account chat)
-- The owner moved to another Claude account and uploaded the full chat export (not committed: public repo; owner asked).
-- **Sent:** pack 42-45 (row 42 = court Turbo test, checked to be Turbo's stock voice). Next due: **rows 46-49**
-  (ElevenLabs Chris genie-style; `python tools/make_pack.py out/packs 46 49`), then 50-54 (already sent once), 55-59.
-- **Open slots needing videos:** rows 56, 58 and 60-64, 66-69 are ideas only (no scripts). Scripts first, owner approves.
-- **Owner, 18 Oct: "Turbo default female"** → Turbo stock female narrator is the default (CLAUDE.md). The Oct 26-31
-  batch (out/scripts_batch_oct26-31.md, approved 18 Oct) is **made and sent**: row 56 (last_bencher_5) and rows 58,
-  60-64, 66 (pack out/packs/upload_sheets_58-66.md). Still unanswered: re-voice rows 43-45 in Turbo; commit the full chat
-  export (repo is public); upload reminders in this account (~11 AM IST). Next open slots: Nov 1 onward (rows 67-69 ideas).
-- **Container notes:** run the pipeline with `/home/user/.venv-main/bin/python` (Python 3.12, Kokoro 0.9.4); Turbo in
-  `/home/user/.venv-clone`. Keep each background job under 2 hours (a 7-video chain was killed at the limit).
-- **3D for Interestingly Strange** (owner, 18 Oct, via the low-poly chat: "I want ItsInterestinglyStrange channel to adopt
-  3d animation ... make a sample"): sample made and sent: out/robot_butler.mp4 (40.7 s; engine channels/is3d/, run
-  `python channels/is3d/make_is3d.py robot_butler`; our own cast and sets in scene_is3d.html). Waiting for the owner's
-  verdict on switching to 3D. Rendering costs ~30 min of frames per 40 s video on this machine.
-- **Low-poly 3D channel** (owner, 18 Oct: "Seperate chat and channel for 3d one"): new chat in this account,
-  session_01FVT6MqPXrfUtaaECNhx18u, branch `ccr-56282fe5-evehq4-lowpoly`; it starts by sending the ep02 script for approval.
-- **Container:** this account's container started empty; pip install of requirements (CPU torch, Kokoro,
-  faster-whisper, pycairo) installed 18 Oct (spaCy pinned <4); Chatterbox Turbo venv `/home/user/.venv-clone`
-  (python3.11, latest chatterbox-tts, CPU torch) being installed 18 Oct. No ELEVENLABS_API_KEY in this environment.
+## Status on 19 Oct 2026, early morning (new account chat, session_013CwwMNXoAKQ7CXyLhTs3ka)
+- **Sent to the owner on 18 Oct:** pack 42-45; row 56 and rows 58, 60-64, 66 (the Oct 26-31 batch, pack 58-66);
+  the 3D sample out/robot_butler.mp4 (not in the calendar; owner hasn't decided on 3D yet); the research report
+  reports/Shorts hooks feeling and subscribers.md (47-rule checklist).
+- **Big-question batch, rows 67-71 (Nov 1-3), owner: "After research make 5 videos based on it auto approved"**:
+  free_will_god, print_money, trolley_problem, grandfather_paradox, euthyphro, made with the research-upgraded
+  pipeline (see CLAUDE.md "Research rules"): music drop-out under the twist, sidechain duck, richer bed, slow push-in
+  on every scene, series chip (rows 68 and 70 carry the silent "Subscribe · a new question tomorrow" wording as the
+  E4/E5 test; 67, 69, 71 the plain series tag), 0.5 s tail. Pack: `python tools/make_pack.py out/packs 67 71`.
+- **Owner's standing asks from 18 Oct night:** "improve both animations narration sounds music everything according
+  to research" and "animation upgrade as much you can it should look engaging for users to stay till end". Done in
+  the pipeline for 2D (motion/kit.whip push-in, motion/audio bed + duck + hush, render.py TWIST/SERIES) and 3D
+  (medium-shot opener, same audio). Still open for later: character acting upgrades in 2D (more poses/expressions
+  per line), 3D set variety, and the on-channel tests in the report (CTA on/off, 2D vs 3D, hook text size).
+- **Still unanswered by the owner:** re-voice rows 43-45 in Turbo; make the repo private + commit the chat export;
+  upload reminders in this account (~11 AM IST); 3D or 2D going forward; which slot the 3D sample takes if posted.
+- **Policy warnings to repeat to the owner (from the research):** the genie formula matches YouTube's inauthentic-
+  content wording if outcomes don't rotate; 1,000 subs alone won't monetize (3M/10M/20M Shorts-view tiers).
+- **Container notes:** pipeline = `/home/user/.venv-main/bin/python` (3.12, Kokoro 0.9.4); Turbo in `/home/user/.venv-clone`;
+  3D deps in build/is3d (npm). Keep each background job under 2 h; never `pkill -f` a pattern that matches your own shell.
 
 ## Status on 18 Oct 2026 (from chat session_011eLEn9HbPwBg7ViAYhwmQ5)
 - **Posting:** 4:30 PM and 7:30 PM IST, trial Oct 16-29 (then compare first-24h views with the old times).

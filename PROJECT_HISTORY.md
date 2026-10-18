@@ -187,3 +187,22 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
 - **Never answered:** stop committing .mp4s (repo is ~2.9 GB; GitHub returned 500s on Oct 7); the #47 "And a rock"
   vs "Now, a rock" line; retention-curve CSVs; reviewing rows 34-46; US clock change Nov 1 (times now follow IST
   viewers, so probably no change).
+
+## 11. Oct 18 (new account chat): the long day
+- Pack 42-45 sent (row 42 = Turbo court test, verified to be Turbo's stock voice). Owner: **"Turbo default female"** →
+  the stock female Turbo narrator is the default. Oct 26-31 batch (8 scripts) approved and made: last_bencher_5,
+  newcomb_box, mirror_alibi, moon_hoax, prisoners_dilemma, smell_of_bread, taxicab_circle, cadaver_synod.
+- Low-poly 3D channel got its own chat in the new account (session_01FVT6MqPXrfUtaaECNhx18u). Via that chat the owner
+  asked for a **3D sample for Interestingly Strange** → channels/is3d/ (three.js engine from the low-poly channel, our
+  own cast: the Last Bencher kid, Bolt the robot butler, the teacher; bedroom + classroom), out/robot_butler.mp4.
+- God-rock video numbers (0:34 avg view duration, 70.7% stayed) → owner: **"focus on more video like this which is
+  cotervinal hard to assume arrise questions"** → big-question rule; 5 scripts approved (rows 67-71, Nov 1-3).
+- Owner asked for **deep research** on hooks, staying to the end, feeling and subscribing → four research tracks
+  (official YouTube, psychology, creator data, subscriber conversion) → reports/Shorts hooks feeling and subscribers.md.
+  Key findings: gains are at the two ends (stayed-to-watch ~70% is the weak number); frame 0 needs face + wrong
+  object + big text + sound; curiosity peaks at "almost sure"; clickbait wording shows no lift; Zeigarnik failed its
+  meta-analysis (open loops work via curiosity/Ovsiankina); question = last spoken line, cut fast; series identity in
+  2 s; genie template is a policy risk; 1,000 subs alone won't monetize.
+- Owner: **"After research make 5 videos based on it auto approved"**, "improve both animations narration sounds
+  music everything according to research", "animation upgrade as much you can". Pipeline upgraded (CLAUDE.md
+  "Research rules") and rows 67-71 rendered with it overnight.
