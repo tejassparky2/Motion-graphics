@@ -60,7 +60,7 @@ One of you asked in the comments if a circle can be a square. Here's your answer
 )
 
 TAXI = hexc("#ffcf3f")
-CX, CY, B = 360, 560, 62           # grid centre (the taxi stand) and one block in pixels
+CX, CY, B = 360, 560, 76           # grid centre (the taxi stand) and one block in pixels
 RING = [(x, y) for x in range(-3, 4) for y in range(-3, 4) if abs(x) + abs(y) == 3]
 RING.sort(key=lambda p: math.atan2(-p[1], p[0]) % (2 * math.pi))
 
@@ -186,10 +186,9 @@ def scene_streets(cr, t, tl):
     taxi(cr, t, lerp(ax, bx, f), lerp(ay, by, f) + 10, 0.55, rot=0.0 if ay == by else -math.pi / 2 * 0)
     for k, word in enumerate(("Up,", "down,", "left", "right.")):
         if t >= A("c3", word):
-            bold_text(cr, ("UP", "DOWN", "LEFT", "RIGHT")[k], 140 + k * 150, 1000 - 80, 34, GOLD)
+            bold_text(cr, ("UP", "DOWN", "LEFT", "RIGHT")[k], 120 + k * 160, 790, 44, GOLD)
     if t >= A("c4"):
-        n_blocks = 1 + min(3, int(3 * seg(t, A("c4", "distance"), A("c4", "driven.", end=True))))
-        sign(cr, t, A("c4", "blocks"), 360, 170, f"DISTANCE = BLOCKS: {min(n_blocks, 4)}", col=GOLD, size=50)
+        sign(cr, t, A("c4", "blocks"), 360, 170, "DISTANCE = BLOCKS DRIVEN", col=GOLD, size=46)
     else:
         sign(cr, t, A("c3", "fly"), 360, 170, "NO FLYING", col=RED, size=70)
     vignette(cr, 0.4)
