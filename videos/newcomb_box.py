@@ -202,9 +202,9 @@ def scene_boxes(cr, t, tl):
     studio(cr, t, hexc("#2b1f4a"), hexc("#5a3a6e"), seed=3)
     cr.save()
     enter(cr, camera(t, [(A("n3") - 0.3, (1.0, 360, 640)), (A("n4"), (1.05, 360, 620))]))
-    k = max(0.01, appear(t, A("n3"), 0.4))
+    k = max(0.01, appear(t, A("n3") - 0.5, 0.4)) if t >= A("n3") - 0.5 else 0.01
     glass_box(cr, t, 200, 800, 1.4 * k)
-    k = max(0.01, appear(t, A("n3") + 0.2, 0.4)) if t >= A("n3") + 0.2 else 0.01
+    k = max(0.01, appear(t, A("n3") - 0.3, 0.4)) if t >= A("n3") - 0.3 else 0.01
     closed_box(cr, t, 520, 800, 1.4 * k)
     cr.restore()
     sign(cr, t, A("n3", "thousand"), 200, 400, "$1,000", col=GREEN, size=56, end=A("n4") - 0.05)
