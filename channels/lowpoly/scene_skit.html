@@ -16,6 +16,8 @@ import {EffectComposer} from "three/addons/postprocessing/EffectComposer.js";
 import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
 import {BokehPass} from "three/addons/postprocessing/BokehPass.js";
 import {OutputPass} from "three/addons/postprocessing/OutputPass.js";
+import {mergeVertices} from "three/addons/utils/BufferGeometryUtils.js";
+import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js";
 
 const T = await (await fetch("/timing.json")).json();
 const W = 720, H = 1280;
@@ -405,6 +407,19 @@ const DIR = D.DIR;
 Object.assign(EMO, D.EMO || {});
 const deskTick = D.DETAILS ? devDesk() : null;
 if (D.MOOD === "night") nightMood();
+// SMOOTH (owner, 18 Oct: "You can go for smooth", reference 8): rounded boxes and soft shading instead of facets
+if (D.SMOOTH) scene.traverse(o => {
+  if (!o.isMesh || !o.material || o.material.flatShading === undefined || o.material.isMeshBasicMaterial && o.geometry.type === "PlaneGeometry") return;
+  const g = o.geometry;
+  if (g.type === "BoxGeometry") {
+    const p = g.parameters, r = Math.min(p.width, p.height, p.depth) * .3;
+    o.geometry = new RoundedBoxGeometry(p.width, p.height, p.depth, 3, r);
+  } else if (!["PlaneGeometry", "CircleGeometry"].includes(g.type)) {
+    let m = g.clone(); m.deleteAttribute("normal"); if (m.attributes.uv) m.deleteAttribute("uv");
+    m = mergeVertices(m, 1e-3); m.computeVertexNormals(); o.geometry = m;
+  }
+  if (o.material.flatShading) { o.material.flatShading = false; o.material.needsUpdate = true; }
+});
 if (D.CAST && D.CAST.claude) claude.position.set(D.CAST.claude[0], .75, D.CAST.claude[1]);
 if (D.CAST && D.CAST.claude === false) claude.visible = false;               // a Codex-only episode
 const CX0 = D.CAST && Array.isArray(D.CAST.codex) ? D.CAST.codex : [.2, .02];   // Codex's spot on the desk
