@@ -406,6 +406,8 @@ Object.assign(EMO, D.EMO || {});
 const deskTick = D.DETAILS ? devDesk() : null;
 if (D.MOOD === "night") nightMood();
 if (D.CAST && D.CAST.claude) claude.position.set(D.CAST.claude[0], .75, D.CAST.claude[1]);
+if (D.CAST && D.CAST.claude === false) claude.visible = false;               // a Codex-only episode
+const CX0 = D.CAST && Array.isArray(D.CAST.codex) ? D.CAST.codex : [.2, .02];   // Codex's spot on the desk
 const beats = T.beats;
 window.DURATION = T.total;
 function beatAt(t) { let cur = beats[0], prev = beats[0]; for (const b of beats) { if (b.start - .12 <= t) { prev = cur; cur = b; } } return [cur, prev]; }
@@ -503,9 +505,10 @@ window.renderAt = function (t) {
   const cxPose = dirOf(cur, "codex")[1], cxPrev = dirOf(prev, "codex")[1];
   codex.visible = (popT < 0 || t >= popT) && !(D.CAST && D.CAST.codex === false);
   const back = lerp(cxPrev === "backoff" ? 1 : 0, cxPose === "backoff" ? 1 : 0, seg(t, cur.start - .1, cur.start + .9));
-  codex.position.set(.2, lerp(.72, .98, up) + .012 * Math.sin(t * 2.6) + (cxPose === "bounce" ? .02 * Math.abs(Math.sin(t * 8)) * xp.talk : 0), .02 + .14 * back);
+  codex.position.set(CX0[0], lerp(.72, .98, up) + .012 * Math.sin(t * 2.6) + (cxPose === "bounce" ? .02 * Math.abs(Math.sin(t * 8)) * xp.talk : 0), CX0[1] + .14 * back);
+  codex.rotation.y = Math.PI + (cxPose === "spin" ? 2 * Math.PI * seg(t, cur.start, cur.start + .6) : 0);   // a happy spin
   cxBody.rotation.z = dirOf(cur, "codex")[0] === "oops" ? -.25 * seg(t, cur.start, cur.start + .4) : .05 * Math.sin(t * 1.8);
-  cxBody.rotation.x = cxPose === "lookdown" ? -.3 * u : -.12 * back;
+  cxBody.rotation.x = cxPose === "lookdown" ? -.3 * u : cxPose === "nod" ? .18 * Math.max(0, Math.sin((t - cur.start) * 9)) * (1 - seg(t, cur.start + .6, cur.start + 1.0)) : -.12 * back;
   cxBody.scale.setScalar(1 + .05 * xp.talk);
   const bonk = cxPose === "bonk" ? Math.abs(Math.sin((t - cur.start) * 9)) : 0;
   cxHands.forEach((h, i) => { const s = i ? 1 : -1;
