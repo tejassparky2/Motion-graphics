@@ -172,7 +172,7 @@ def scene_cell(cr, t, tl):
         x = 40 + k * 108
         stroke_line(cr, [(x, 80), (x, 1150)], 16, OUTLINE, curve=False)
         stroke_line(cr, [(x, 80), (x, 1150)], 9, hexc("#6a6a7a"), curve=False)
-    tag(cr, t, A("f6", "Boethius,"), 360, 200, "BOETHIUS, ABOUT 524 AD", col=hexc("#a8713e"), size=40)
+    tag(cr, t, A("f6", "Boethius"), 360, 200, "BOETHIUS, ABOUT 524 AD", col=hexc("#a8713e"), size=40)
     if t >= A("f6", "prison."):
         stamp(cr, t, A("f6", "prison."), 360, 560, "IN PRISON", col=RED, size=60)
     portrait(cr, t, A("f6"), 600, 470, 70, "sir", mouth=mouth_of(tl, "sir", t), eyes="open", bg=hexc("#9fc8ef"),
