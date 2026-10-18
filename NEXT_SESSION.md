@@ -9,12 +9,12 @@ also push here. The repo is **public**.
 - **Sent:** pack 42-45 (row 42 = court Turbo test, checked to be Turbo's stock voice). Next due: **rows 46-49**
   (ElevenLabs Chris genie-style; `python tools/make_pack.py out/packs 46 49`), then 50-54 (already sent once), 55-59.
 - **Open slots needing videos:** rows 56, 58 and 60-64, 66-69 are ideas only (no scripts). Scripts first, owner approves.
-- **Asked the owner (18 Oct):** default voice for new videos (Turbo + tags vs ElevenLabs Chris; Chris needs a paid
-  plan for monetized uploads and the key in this account's environment); re-voice rows 43-45 (Kokoro) in Turbo?;
-  commit the full chat export to the public repo?; recreate the upload reminders in this account (earlier, ~11 AM IST)?
+- **Owner, 18 Oct: "Turbo default female"** → Turbo stock female narrator is the default (CLAUDE.md). Scripts for
+  rows 56, 58, 60-64, 66 written: out/scripts_batch_oct26-31.md, **waiting for approval**. Still unanswered: re-voice
+  rows 43-45 in Turbo; commit the full chat export (repo is public); upload reminders in this account (~11 AM IST).
 - **Container:** this account's container started empty; pip install of requirements (CPU torch, Kokoro,
-  faster-whisper, pycairo) started 18 Oct; Chatterbox Turbo (`/home/user/.venv-clone`) still needs installing before
-  any Turbo voicing. No ELEVENLABS_API_KEY in this environment.
+  faster-whisper, pycairo) installed 18 Oct (spaCy pinned <4); Chatterbox Turbo venv `/home/user/.venv-clone`
+  (python3.11, latest chatterbox-tts, CPU torch) being installed 18 Oct. No ELEVENLABS_API_KEY in this environment.
 
 ## Status on 18 Oct 2026 (from chat session_011eLEn9HbPwBg7ViAYhwmQ5)
 - **Posting:** 4:30 PM and 7:30 PM IST, trial Oct 16-29 (then compare first-24h views with the old times).

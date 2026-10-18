@@ -77,18 +77,18 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 53 | Sun Oct 25 | 4:30 PM | cheat_sheet | This Teacher LET Her Class Cheat 📝 *(hook test: contradict a belief)* |
 | 54 | Sun Oct 25 | 7:30 PM | zeigarnik | Your Brain Can't Let This Go 🧠 *(hook test: abstract concept; loops)* |
 | 55 | Mon Oct 26 | 4:30 PM | napoleon_bunnies | Napoleon Lost a Battle. To Bunnies. 🐰 *(funny history; Turbo + tags)* |
-| 56 | Mon Oct 26 | 7:30 PM | last_bencher_6 | Last Bencher 6 *(idea)* |
+| 56 | Mon Oct 26 | 7:30 PM | last_bencher_5 | One Guard Always Lies. You Get 1 Question. 🚪 *(Last Bencher 5; script waiting, out/scripts_batch_oct26-31.md)* |
 | 57 | Tue Oct 27 | 4:30 PM | bucket_war | Two Cities Went to War. Over a Bucket. 🪣 *(funny history; Turbo + tags)* |
-| 58 | Tue Oct 27 | 7:30 PM | principal_deal | The Kid's Deal With the Principal *(idea)* |
+| 58 | Tue Oct 27 | 7:30 PM | newcomb_box | This Machine Knows What You'll Pick. 2 Boxes. 📦 *(one-rule machine; script waiting)* |
 | 59 | Wed Oct 28 | 4:30 PM | dancing_plague | She Couldn't Stop Dancing. For Days. 💃 *(funny history; Turbo + tags)* |
-| 60 | Wed Oct 28 | 7:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea, moved from #48)* |
-| 61 | Thu Oct 29 | 4:30 PM | last_bencher_5 | Last Bencher 5: Two Guards, One Question *(idea, moved from #49)* |
-| 62 | Thu Oct 29 | 7:30 PM | prisoners_dilemma | The Prisoner's Dilemma *(idea, moved for the hook tests)* |
-| 63 | Fri Oct 30 | 4:30 PM | mirror_alibi | The Mirror Alibi (original detective riddle) *(idea, moved for the hook tests)* |
-| 64 | Fri Oct 30 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial (897) *(idea, moved for the hook tests)* |
+| 60 | Wed Oct 28 | 7:30 PM | mirror_alibi | His Alibi Had 1 Tiny Mistake. A Mirror. 🪞 *(detective twist; script waiting)* |
+| 61 | Thu Oct 29 | 4:30 PM | moon_hoax | 1835 News: Bat-People Found on the Moon 🌙 *(funny history; script waiting)* |
+| 62 | Thu Oct 29 | 7:30 PM | prisoners_dilemma | 2 Best Friends. 1 Broken Window. 2 Rooms. 🪟 *(dilemma story; script waiting)* |
+| 63 | Fri Oct 30 | 4:30 PM | smell_of_bread | He Got Sued for Smelling Bread 🍞 *(folk tale; script waiting)* |
+| 64 | Fri Oct 30 | 7:30 PM | taxicab_circle | This Circle Is a Square. Really. ⬜ *(paradox from the comments; script waiting)* |
 | 65 | Sat Oct 31 | 4:30 PM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
-| 66 | Sat Oct 31 | 7:30 PM | smell_of_bread | The Man Who Paid for the Smell of Bread (folk tale) *(idea, moved for the hook tests)* |
-| 67 | Sun Nov 1 | 4:30 PM | moon_hoax | A Newspaper Found Life on the Moon (1835) *(idea, moved for funny history)* |
+| 66 | Sat Oct 31 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial in 897 💀 *(Halloween funny history; script waiting)* |
+| 67 | Sun Nov 1 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 | 68 | Sun Nov 1 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, moved for funny history)* |
 | 69 | Mon Nov 2 | 4:30 PM | trolley_problem | The Trolley Problem *(idea, moved for funny history)* |
 
@@ -110,6 +110,9 @@ those stay; the honeybee video (1:16) was deleted as too long and genie_wish tak
 **14 Oct 2026 (new chat):** the owner approved the five genie-style scripts and picked ElevenLabs **Chris** as the
 narrator ("Chris is good, make the genie scripts with him for emotions"). Robot, principal, mirror and the genie sequel
 fill rows 46-49; the ghost is the Oct 31 Halloween special. The two ideas they pushed out moved to rows 60-61.
+
+**18 Oct 2026:** next batch of scripts written for rows 56, 58, 60-64, 66 (waiting for approval). The kid's deal
+with the principal was dropped (row 47 tells that story); Last Bencher 6 back to the idea list.
 
 ## Next up (to produce)
 

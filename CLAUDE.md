@@ -22,8 +22,10 @@
 - After every render, check every line with Whisper **medium** (not just the small model in verify.py). Any line
   where words merge or get misheard ("No. Your age" heard as "Know your age") gets reworded and re-rendered.
 - Pause lengths come from the reference videos the owner supplied (`out/voice_rhythm.md`).
-- **Two emotional voices are in play (14 Oct 2026), both chosen by the owner the same evening in two chats; ask the
-  owner which one is the default for new videos before the next batch:**
+- **Default narrator for new videos: Chatterbox Turbo's stock female voice + emotion tags** (owner, 18 Oct 2026:
+  "Turbo default female"; `NARRATOR_ENGINE=clone CLONE_MODEL=turbo` or Turbo in the video's NARRATOR settings),
+  characters in their own Turbo voices (`turbo_ref`). ElevenLabs Chris stays only in the videos already made with it
+  (rows 46-49, 65). Earlier notes on both voices:
 - Narrator: **ElevenLabs "Chris"** for new videos (owner, 14 Oct 2026: "Chris is good, make the genie scripts with him
   for emotions"). A video opts in with `NARRATOR = dict(engine="elevenlabs")`; characters get their own ElevenLabs
   voices in `voice.SPEAKERS` (`el=voice.ELEVEN[...]`, `pitch`, `fx`), each line can carry a `tone` (an eleven_v3 audio
