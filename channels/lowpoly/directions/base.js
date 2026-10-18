@@ -11,7 +11,7 @@ export const SHOTS = {
   ots:        {pos: [-.3, 1.45, -1.38], look: [0, .95, .1], push: .1, fov: 46},
   duo:        {pos: [0, 1.85, -1.1], look: [-.02, .88, -.05], push: .1, fov: 46},            // both AIs, from above Dev
   claude:     {pos: [-.64, .98, -.68], look: [-.24, .88, -.05], push: .12, fov: 40},
-  claudeclose:{pos: [-.5, .96, -.5], look: [-.24, .9, -.05], push: .12, fov: 38},
+  claudeclose:{pos: [-.58, .98, -.6], look: [-.24, .9, -.05], push: .12, fov: 40},
   codex:      {pos: [.6, 1.06, -.74], look: [.2, .98, -.02], push: .12, fov: 40},
   codexclose: {pos: [.48, 1.03, -.54], look: [.2, .99, -.02], push: .12, fov: 38},
   endside:    {pos: [-.62, 1.9, -1.55], look: [-.05, .85, -.15], push: .1, fov: 50},
