@@ -93,6 +93,21 @@ def sfx(name, dur):
         n = int(0.12 * SR)
         f = np.linspace(900, 300, n)
         return np.sin(2 * np.pi * np.cumsum(f) / SR) * _env(n, 0.002, 0.04) * 0.5
+    if name == "typing":                       # fast mechanical-keyboard clatter for `dur` seconds
+        n = int(max(0.2, dur) * SR)
+        out = np.zeros(n)
+        i = 0
+        while i < n:
+            m = int(0.012 * SR)
+            click = _rng.uniform(-1, 1, m) * np.exp(-np.arange(m) / (0.0018 * SR))
+            thock = np.sin(2 * np.pi * _rng.uniform(180, 260) * np.arange(m) / SR) * np.exp(-np.arange(m) / (0.004 * SR))
+            out[i:i + m] += (np.diff(click, prepend=0) * 0.8 + thock * 0.35)[: n - i] * _rng.uniform(0.5, 1)
+            i += int(_rng.uniform(0.055, 0.13) * SR)
+        return out * _env(n, 0.01, 0.05) * 0.5
+    if name == "ding":                         # a soft UI notification chime (counter ticks up)
+        n = int(0.5 * SR)
+        tt = np.arange(n) / SR
+        return (np.sin(2 * np.pi * 1318 * tt) + 0.4 * np.sin(2 * np.pi * 1976 * tt)) * np.exp(-tt / 0.12) * 0.35
     if name == "scribble":
         n = int(max(0.2, dur) * SR)
         noise = _rng.uniform(-1, 1, n)
@@ -338,7 +353,7 @@ def pad(total, seed=None):
     return (mix * swell)[: int(total * SR)]
 
 
-GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
+GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 

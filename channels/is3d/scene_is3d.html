@@ -1,0 +1,473 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Interestingly Strange 3D</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+<script type="module">
+// Interestingly Strange in 3D (owner, 18 Oct 2026: "I want ItsInterestinglyStrange channel to adopt 3d animation").
+// Same renderer, face kit and camera system as the low-poly channel (channels/lowpoly/scene_skit.html), with our own
+// cast and sets in the smooth look: the Last Bencher kid, Bolt the robot butler, the teacher and classmates; a
+// bedroom (around x=0) and a classroom (around x=20). timing.json (make_is3d.py) gives each line's start/end and a
+// mouth envelope per character; directions/<dir>.js says, per line, the shot and how each character feels and moves.
+import * as THREE from "three";
+import {EffectComposer} from "three/addons/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
+import {BokehPass} from "three/addons/postprocessing/BokehPass.js";
+import {OutputPass} from "three/addons/postprocessing/OutputPass.js";
+import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js";
+
+const T = await (await fetch("/timing.json")).json();
+const D = await import(`./directions/${new URLSearchParams(location.search).get("dir") || "robot"}.js`);
+const W = 720, H = 1280, CX0 = 20;
+const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(window.devicePixelRatio || 1);
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x9fc4e8);
+const camera = new THREE.PerspectiveCamera(44, W / H, 0.02, 40);
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bokeh = new BokehPass(scene, camera, {focus: 1.5, aperture: .012, maxblur: .006});
+composer.addPass(bokeh);
+composer.addPass(new OutputPass());
+
+// ---------- helpers ----------
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({color: c, roughness: .75, metalness: 0, ...o});
+const basic = c => new THREE.MeshBasicMaterial({color: c});
+function mesh(geo, m, cast = true) { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = true; return x; }
+const box = (w, h, d, r = .3) => new RoundedBoxGeometry(w, h, d, 3, Math.min(w, h, d) * r);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = u => u <= 0 ? 0 : u >= 1 ? 1 : u * u * (3 - 2 * u);
+const seg = (t, a, b) => ease((t - a) / (b - a));
+const lerp = (a, b, u) => a + (b - a) * u;
+const backOut = u => { const s = 2.2; u -= 1; return u * u * ((s + 1) * u + s) + 1; };
+function canvasTex(w, h, paint) {
+  const c = document.createElement("canvas"); c.width = w; c.height = h; paint(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+const add = (o, x, y, z, parent = scene) => { o.position.set(x, y, z); parent.add(o); return o; };
+
+// ---------- face kit (from the low-poly engine) ----------
+function buildFace(parent, o) {
+  const f = {o, eyes: [], pupils: [], brows: [], arcs: []};
+  const g = new THREE.Group(); g.position.set(0, o.y, o.z); parent.add(g); f.group = g;
+  for (const s of [-1, 1]) {
+    const e = new THREE.Group(); e.position.set(s * o.sp, 0, 0); g.add(e); f.eyes.push(e);
+    const sc = new THREE.Mesh(new THREE.SphereGeometry(o.er, 16, 12), basic(0xf8f5f0)); sc.scale.z = .45; e.add(sc);
+    const pu = new THREE.Mesh(new THREE.SphereGeometry(o.er * .58, 14, 10), basic(0x1b1420)); pu.position.z = o.er * .3; pu.scale.z = .4; e.add(pu); f.pupils.push(pu);
+    const hi = new THREE.Mesh(new THREE.SphereGeometry(o.er * .17, 8, 6), basic(0xffffff)); hi.position.set(o.er * .22, o.er * .25, o.er * .55); pu.add(hi);
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(o.er * .9, o.er * .22, 8, 14, Math.PI), basic(0x1b1420));
+    arc.position.set(s * o.sp, -o.er * .2, o.er * .3); arc.visible = false; g.add(arc); f.arcs.push(arc);
+    const br = mesh(box(o.er * 2.2, o.er * .5, o.er * .4, .45), o.browMat || basic(0x1b1420), false);
+    br.position.set(s * o.sp, o.er * 1.6, o.er * .2); g.add(br); f.brows.push(br);
+  }
+  const mm = basic(0x3a1418);
+  f.arc = new THREE.Mesh(new THREE.TorusGeometry(o.mw, o.mw * .2, 8, 16, Math.PI), mm); f.arc.position.set(0, -o.my, o.er * .2); g.add(f.arc);
+  f.hole = new THREE.Mesh(new THREE.SphereGeometry(o.mw, 16, 12), basic(0x5a1622)); f.hole.position.set(0, -o.my, 0); f.hole.scale.z = .3; g.add(f.hole);
+  f.tongue = new THREE.Mesh(new THREE.SphereGeometry(o.mw * .55, 10, 6), basic(0xd8546a)); f.tongue.position.set(0, -o.mw * .45, o.mw * .1); f.tongue.scale.z = .3; f.hole.add(f.tongue);
+  return f;
+}
+function poseFace(f, p, t, blinkPh) {
+  const o = f.o;
+  const bl = (u => u < .13 ? Math.sin(u / .13 * Math.PI) : 0)((t + blinkPh) % 3.3);
+  const lid = clamp(Math.max(p.lid, bl));
+  const happy = (p.happyEyes || 0) > .5;
+  f.eyes.forEach(e => { e.visible = !happy; const w = p.wide || 1; e.scale.set(w, w * Math.max(.06, 1 - lid), w); e.position.y = -o.er * .25 * lid; });
+  f.arcs.forEach(a => a.visible = happy);
+  f.pupils.forEach(pu => pu.position.set(p.look[0] * o.er * .45, p.look[1] * o.er * .4, o.er * .3));
+  f.brows.forEach((b, i) => { const s = i ? 1 : -1; b.position.y = o.er * 1.6 + p.brow * o.er * 2.2 - lid * o.er * .5; b.rotation.z = -s * p.ang; });
+  const open = clamp(p.open);
+  f.hole.visible = open > .08;
+  f.arc.visible = !f.hole.visible;
+  f.hole.scale.set(.75 + .25 * open, .2 + 1.0 * open, .3);
+  f.hole.position.y = -o.my - o.mw * .3 * open;
+  const sm = p.smile;
+  f.arc.rotation.z = sm >= 0 ? Math.PI : 0;
+  f.arc.scale.set(1, Math.max(.18, Math.abs(sm)), 1);
+  f.arc.position.y = -o.my + (sm >= 0 ? o.mw * .5 : -o.mw * .4) * Math.abs(sm);
+}
+const EMO = {
+  neutral:  {brow: 0, ang: 0, lid: .1, smile: .2, wide: 1, look: [0, 0]},
+  sleep:    {brow: -.05, ang: .05, lid: 1, smile: .1, wide: 1, look: [0, 0]},
+  smug:     {brow: .25, ang: -.25, lid: .42, smile: .75, wide: 1, look: [.5, .1]},
+  shocked:  {brow: .5, ang: .2, lid: 0, smile: -.3, wide: 1.3, look: [0, -.4]},
+  sad:      {brow: .1, ang: .5, lid: .4, smile: -.5, wide: 1, look: [0, -.5]},
+  amazed:   {brow: .45, ang: .1, lid: 0, smile: .4, wide: 1.25, look: [0, 0]},
+  curious:  {brow: .3, ang: .2, lid: .1, smile: .1, wide: 1.1, look: [.6, .2]},
+};
+function arm(parent, s, x, y, upper, fore, m, hand, r = .045) {
+  const sh = new THREE.Group(); sh.position.set(s * x, y, 0); parent.add(sh);
+  const u = mesh(new THREE.CapsuleGeometry(r, upper - r, 4, 10), m); u.position.y = -upper / 2; sh.add(u);
+  const el = new THREE.Group(); el.position.y = -upper; sh.add(el);
+  const f = mesh(new THREE.CapsuleGeometry(r * .9, fore - r, 4, 10), m); f.position.y = -fore / 2; el.add(f);
+  const h = mesh(new THREE.SphereGeometry(r * 1.05, 12, 10), hand); h.position.y = -fore - .01; el.add(h);
+  return {sh, el, s, hand: h};
+}
+function setArm(a, shX, shZ, elX) { a.sh.rotation.set(shX, 0, a.s * shZ); a.el.rotation.set(elX, 0, 0); }
+
+// ---------- people ----------
+const SKINS = [0xe0a07a, 0xc68a5e, 0x9a6544, 0xf0c4a0];
+function kidFigure(o) {           // a seated chibi kid: root at the hips, facing +z
+  const root = new THREE.Group(), body = new THREE.Group(); root.add(body);
+  const skin = mat(o.skin), shirt = mat(o.shirt ?? 0xf4f6fb), hair = mat(o.hair ?? 0x2b1a12);
+  const torso = mesh(new THREE.CapsuleGeometry(.15, .18, 6, 14), shirt); torso.position.y = .2; torso.scale.set(1, 1, .8); body.add(torso);
+  if (o.tie !== false) { const tie = mesh(new THREE.ConeGeometry(.03, .16, 8), mat(0xd8453c)); tie.rotation.x = Math.PI; tie.position.set(0, .26, .12); body.add(tie);
+    const knot = mesh(new THREE.SphereGeometry(.022, 10, 8), mat(0xd8453c)); knot.position.set(0, .35, .115); body.add(knot); }
+  const head = new THREE.Group(); head.position.set(0, .54, 0); body.add(head);
+  const skull = mesh(new THREE.SphereGeometry(.16, 20, 16), skin); skull.scale.set(1, 1.02, .95); head.add(skull);
+  for (const s of [-1, 1]) { const ear = mesh(new THREE.SphereGeometry(.035, 10, 8), skin); ear.position.set(s * .158, -.01, 0); head.add(ear); }
+  const nose = mesh(new THREE.SphereGeometry(.022, 10, 8), skin); nose.position.set(0, -.025, .155); head.add(nose);
+  const cap = mesh(new THREE.SphereGeometry(.168, 18, 12, 0, Math.PI * 2, 0, Math.PI * .46), hair); cap.position.set(0, .02, -.01); cap.rotation.x = -.22; head.add(cap);
+  const style = o.style || "spiky";
+  if (style === "spiky") for (let i = 0; i < 11; i++) {
+    const a = (i / 11) * Math.PI * 2, tuft = mesh(new THREE.ConeGeometry(.055, .15, 8), hair);
+    tuft.position.set(Math.cos(a) * .09, .13 + rnd() * .02, Math.sin(a) * .08 - .02); tuft.rotation.set(Math.sin(a) * .9 - .25, 0, -Math.cos(a) * .9); head.add(tuft);
+  } else if (style === "pony") { const p = mesh(new THREE.CapsuleGeometry(.05, .14, 4, 10), hair); p.position.set(0, .02, -.17); p.rotation.x = .5; head.add(p); }
+  else if (style === "curly") for (let i = 0; i < 12; i++) { const a = (i / 12) * Math.PI * 2, c = mesh(new THREE.SphereGeometry(.055, 10, 8), hair);
+    c.position.set(Math.cos(a) * .12, .1 + .03 * Math.sin(i * 2.3), Math.sin(a) * .1 - .02); head.add(c); }
+  const face = buildFace(head, {y: .02, z: .148, sp: .062, er: .03, mw: .03, my: .08, browMat: basic(0x2b1a12)});
+  const arms = [arm(body, -1, .17, .32, .19, .17, shirt, skin, .042), arm(body, 1, .17, .32, .19, .17, shirt, skin, .042)];
+  return {root, body, head, face, arms};
+}
+function teacherFigure() {        // standing adult: root at the feet, facing +z
+  const root = new THREE.Group(), body = new THREE.Group(); root.add(body);
+  const skin = mat(0xf0c4a0), top = mat(0x7a5bd0), hairM = mat(0x6b3a22);
+  const skirt = mesh(new THREE.CylinderGeometry(.16, .28, .55, 18), mat(0x2f3550)); skirt.position.y = .55; body.add(skirt);
+  for (const s of [-1, 1]) { const leg = mesh(new THREE.CapsuleGeometry(.045, .3, 4, 10), skin); leg.position.set(s * .08, .18, 0); body.add(leg);
+    const shoe = mesh(box(.09, .06, .16, .4), mat(0x5a2a3a)); shoe.position.set(s * .08, .03, .03); body.add(shoe); }
+  const torso = mesh(new THREE.CapsuleGeometry(.17, .28, 6, 14), top); torso.position.y = 1.0; torso.scale.set(1, 1, .75); body.add(torso);
+  const collar = mesh(new THREE.TorusGeometry(.08, .02, 8, 16), mat(0xffffff)); collar.rotation.x = Math.PI / 2; collar.position.y = 1.24; body.add(collar);
+  const head = new THREE.Group(); head.position.set(0, 1.45, 0); body.add(head);
+  const skull = mesh(new THREE.SphereGeometry(.17, 20, 16), skin); head.add(skull);
+  const cap = mesh(new THREE.SphereGeometry(.178, 18, 12, 0, Math.PI * 2, 0, Math.PI * .48), hairM); cap.position.set(0, .02, -.01); cap.rotation.x = -.25; head.add(cap);
+  const bun = mesh(new THREE.SphereGeometry(.085, 14, 10), hairM); bun.position.set(0, .12, -.14); head.add(bun);
+  const nose = mesh(new THREE.SphereGeometry(.022, 10, 8), skin); nose.position.set(0, -.02, .165); head.add(nose);
+  for (const s of [-1, 1]) { const rim = new THREE.Mesh(new THREE.TorusGeometry(.045, .007, 8, 20), basic(0x2a1a22)); rim.position.set(s * .065, .025, .162); head.add(rim); }
+  const face = buildFace(head, {y: .025, z: .158, sp: .065, er: .028, mw: .03, my: .085, browMat: basic(0x4a2a1a)});
+  const arms = [arm(body, -1, .2, 1.18, .27, .25, top, skin), arm(body, 1, .2, 1.18, .27, .25, top, skin)];
+  const chalk = mesh(new THREE.CylinderGeometry(.01, .01, .07, 8), mat(0xffffff)); chalk.rotation.x = Math.PI / 2; chalk.position.set(0, -.03, .03); arms[1].hand.add(chalk);
+  return {root, body, head, face, arms, chalk};
+}
+
+// ---------- Bolt, the robot butler (round body, one eye-screen, bow tie) ----------
+const scrCanvas = document.createElement("canvas"); scrCanvas.width = scrCanvas.height = 256;
+const scrTex = new THREE.CanvasTexture(scrCanvas); scrTex.colorSpace = THREE.SRGBColorSpace;
+function drawScreen(state, t, talk) {
+  const g = scrCanvas.getContext("2d");
+  const bg = g.createRadialGradient(128, 128, 10, 128, 128, 128); bg.addColorStop(0, "#14304a"); bg.addColorStop(1, "#05101c");
+  g.fillStyle = bg; g.fillRect(0, 0, 256, 256);
+  g.save(); g.translate(128, 120);
+  const glow = (c, b) => { g.shadowColor = c; g.shadowBlur = b; };
+  if (state === "load") {
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + t * 6; const k = ((i / 10) + t * .95) % 1;
+      g.fillStyle = `rgba(110,230,255,${.25 + .75 * k})`; glow("#6ee6ff", 12); g.beginPath(); g.arc(Math.cos(a) * 62, Math.sin(a) * 62, 13, 0, Math.PI * 2); g.fill(); }
+  } else if (state === "bulb") {
+    glow("#ffd84a", 40); g.fillStyle = "#ffe066"; g.beginPath(); g.arc(0, -14, 58, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#c8c8d0"; g.fillRect(-28, 44, 56, 30); g.fillStyle = "#9a9aa8"; g.fillRect(-28, 54, 56, 6); g.fillRect(-28, 66, 56, 6);
+    g.strokeStyle = "#fff8c0"; g.lineWidth = 6; g.beginPath(); g.moveTo(-18, 20); g.lineTo(-8, -20); g.lineTo(8, 0); g.lineTo(18, -24); g.stroke();
+  } else if (state === "happy") {
+    glow("#6ee6ff", 22); g.strokeStyle = "#8ff0ff"; g.lineWidth = 18; g.lineCap = "round";
+    g.beginPath(); g.arc(0, 14, 50, Math.PI * 1.15, Math.PI * 1.85); g.stroke();
+  } else {                                   // the eye: a big glowing ring with a pupil, blinking
+    const bl = (u => u < .12 ? Math.sin(u / .12 * Math.PI) : 0)(t % 3.1);
+    g.scale(1 + .08 * talk, (1 - .92 * bl) * (1 + .08 * talk));
+    glow("#6ee6ff", 26); g.fillStyle = "#8ff0ff"; g.beginPath(); g.arc(0, 0, 66, 0, Math.PI * 2); g.fill();
+    g.shadowBlur = 0; g.fillStyle = "#0a2236"; g.beginPath(); g.arc(8 * Math.sin(t * .7), 0, 34, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#ffffff"; g.beginPath(); g.arc(20, -20, 10, 0, Math.PI * 2); g.fill();
+  }
+  g.restore();
+  if (talk > .05) {                          // voice bars under the eye while Bolt speaks
+    g.fillStyle = "#8ff0ff";
+    for (let i = 0; i < 7; i++) { const h = 6 + 26 * talk * Math.abs(Math.sin(t * 17 + i * 1.3)); g.fillRect(84 + i * 13, 222 - h / 2, 8, h); }
+  }
+  scrTex.needsUpdate = true;
+}
+const bolt = new THREE.Group(); scene.add(bolt);
+const boltBody = new THREE.Group(); bolt.add(boltBody);
+const WHITE_M = mat(0xf2f0ea, {roughness: .35, metalness: .1}), ORANGE_M = mat(0xff8a3c, {roughness: .45}), DARK_M = mat(0x2a2d38, {roughness: .5});
+{
+  const base = mesh(new THREE.CylinderGeometry(.17, .2, .1, 24), DARK_M); base.position.y = .05; boltBody.add(base);
+  const neck0 = mesh(new THREE.CylinderGeometry(.06, .08, .12, 16), DARK_M); neck0.position.y = .14; boltBody.add(neck0);
+  const torso = mesh(new THREE.SphereGeometry(.27, 28, 20), WHITE_M); torso.scale.set(1, 1.15, .9); torso.position.y = .46; boltBody.add(torso);
+  const stripe = mesh(new THREE.TorusGeometry(.262, .022, 10, 40), ORANGE_M); stripe.rotation.x = Math.PI / 2; stripe.scale.set(1, .9, 1); stripe.position.y = .42; boltBody.add(stripe);
+  for (const s of [-1, 1]) { const w = mesh(new THREE.ConeGeometry(.05, .09, 12), DARK_M); w.rotation.z = s * Math.PI / 2; w.position.set(s * .05, .74, .2); boltBody.add(w); }
+  const knot = mesh(new THREE.SphereGeometry(.022, 10, 8), DARK_M); knot.position.set(0, .74, .21); boltBody.add(knot);
+  const neck = mesh(new THREE.CylinderGeometry(.05, .06, .08, 16), DARK_M); neck.position.y = .78; boltBody.add(neck);
+}
+const boltHead = new THREE.Group(); boltHead.position.y = .98; boltBody.add(boltHead);
+{
+  const dome = mesh(new THREE.SphereGeometry(.2, 28, 20), WHITE_M); dome.scale.set(1.12, 1, 1); boltHead.add(dome);
+  const rimS = mesh(new THREE.TorusGeometry(.14, .018, 10, 32), ORANGE_M); rimS.position.z = .2; boltHead.add(rimS);
+  const screen = new THREE.Mesh(new THREE.CircleGeometry(.135, 40), new THREE.MeshBasicMaterial({map: scrTex, toneMapped: false, color: 0xcfd8e0})); screen.position.z = .207; boltHead.add(screen);
+  for (const s of [-1, 1]) { const ear = mesh(new THREE.CylinderGeometry(.045, .045, .04, 16), ORANGE_M); ear.rotation.z = Math.PI / 2; ear.position.x = s * .225; boltHead.add(ear); }
+  const ant = mesh(new THREE.CylinderGeometry(.006, .006, .09, 8), DARK_M); ant.position.y = .23; boltHead.add(ant);
+  const tip = mesh(new THREE.SphereGeometry(.02, 10, 8), new THREE.MeshBasicMaterial({color: 0xff8a3c})); tip.position.y = .285; boltHead.add(tip);
+}
+const boltEyeLight = new THREE.PointLight(0x6ee6ff, .6, .9, 1.6); boltEyeLight.position.set(0, 0, .3); boltHead.add(boltEyeLight);
+const boltArms = [arm(boltBody, -1, .29, .62, .2, .19, WHITE_M, ORANGE_M, .04), arm(boltBody, 1, .29, .62, .2, .19, WHITE_M, ORANGE_M, .04)];
+
+// ---------- the bedroom (around x=0): morning sun through the window, a lamp at night ----------
+const bed = {};
+{
+  const floor = mesh(new THREE.PlaneGeometry(8, 8), mat(0xc49a6c, {roughness: .9})); floor.rotation.x = -Math.PI / 2; add(floor, 0, 0, 0);
+  const rug = mesh(new THREE.CircleGeometry(.75, 40), mat(0x5aa0c8)); rug.rotation.x = -Math.PI / 2; add(rug, .9, .005, .4);
+  const wallM = mat(0xa8cfee, {roughness: .95});
+  const back = mesh(new THREE.PlaneGeometry(8, 4), wallM); add(back, 0, 2, -1.35);
+  const left = mesh(new THREE.PlaneGeometry(8, 4), wallM); left.rotation.y = Math.PI / 2; add(left, -1.65, 2, 0);
+  const right = mesh(new THREE.PlaneGeometry(8, 4), wallM); right.rotation.y = -Math.PI / 2; add(right, 2.6, 2, 0);
+  const front = mesh(new THREE.PlaneGeometry(8, 4), wallM); front.rotation.y = Math.PI; add(front, 0, 2, 2.6);
+  bed.skyDay = canvasTex(256, 256, (g) => { const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, "#7ec8ff"); gr.addColorStop(1, "#e8f6ff"); g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    g.fillStyle = "rgba(255,255,255,.9)"; for (const [x, y, r] of [[70, 80, 26], [100, 72, 32], [130, 84, 24], [190, 150, 20], [214, 144, 26]]) { g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); } });
+  bed.skyNight = canvasTex(256, 256, (g) => { const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, "#0b1442"); gr.addColorStop(1, "#2a3070"); g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    g.fillStyle = "#fff7d0"; g.beginPath(); g.arc(180, 70, 26, 0, 7); g.fill(); g.fillStyle = "#ffffff"; for (let i = 0; i < 40; i++) g.fillRect(rnd() * 256, rnd() * 180, 2, 2); });
+  bed.win = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), new THREE.MeshBasicMaterial({map: bed.skyDay})); bed.win.rotation.y = Math.PI / 2; add(bed.win, -1.63, 1.55, -.2);
+  const frameM = mat(0xffffff);
+  for (const [w, h, y, z] of [[1.08, .06, 2.05, -.2], [1.08, .06, 1.05, -.2], [.06, 1.06, 1.55, -.73], [.06, 1.06, 1.55, .33], [.04, 1.0, 1.55, -.2], [1.0, .04, 1.55, -.2]]) {
+    const b = mesh(box(.04, h, w, .3), frameM); add(b, -1.62, y, z); }
+  const poster = mesh(new THREE.PlaneGeometry(.5, .7), new THREE.MeshStandardMaterial({map: canvasTex(128, 180, (g) => {
+    g.fillStyle = "#1e2a5a"; g.fillRect(0, 0, 128, 180); g.fillStyle = "#ffcf3f"; g.beginPath(); g.arc(64, 70, 34, 0, 7); g.fill();
+    g.fillStyle = "#ff8a3c"; g.fillRect(20, 120, 88, 12); g.fillStyle = "#ffffff"; g.font = "bold 18px sans-serif"; g.fillText("SPACE", 34, 160); })}));
+  add(poster, 1.2, 1.6, -1.34);
+  // bed
+  add(mesh(box(1.12, .3, 2.0, .2), mat(0x8a5a3a)), 0, .2, -.25);
+  add(mesh(box(1.2, .95, .1, .3), mat(0x8a5a3a)), 0, .5, -1.27);
+  add(mesh(box(1.02, .16, 1.9, .4), mat(0xf4f1ea)), 0, .43, -.25);
+  add(mesh(box(.62, .14, .3, .5), mat(0xffffff)), 0, .58, -1.02);
+  bed.blanket = add(mesh(box(1.08, .14, 1.25, .5), mat(0x4a7fd0)), 0, .57, .12);
+  for (let i = 0; i < 4; i++) add(mesh(box(1.09, .02, .06, .3), mat(0xffcf3f), false), 0, .64, -.3 + i * .3);
+  // nightstand, alarm clock, lamp
+  add(mesh(box(.38, .5, .36, .2), mat(0xa8713e)), -.82, .25, -1.0);
+  bed.clock = new THREE.Group(); add(bed.clock, -.86, .5, -.95);
+  const cb = mesh(new THREE.CylinderGeometry(.075, .075, .05, 24), mat(0xe8473f)); cb.rotation.x = Math.PI / 2; cb.position.y = .08; bed.clock.add(cb);
+  const cf = new THREE.Mesh(new THREE.CircleGeometry(.062, 24), basic(0xffffff)); cf.position.set(0, .08, .026); bed.clock.add(cf);
+  for (const s of [-1, 1]) { const bell = mesh(new THREE.SphereGeometry(.03, 12, 8, 0, 7, 0, Math.PI / 2), mat(0xe8473f)); bell.position.set(s * .05, .16, 0); bed.clock.add(bell);
+    const leg = mesh(new THREE.CylinderGeometry(.008, .008, .04, 6), DARK_M); leg.position.set(s * .045, .02, 0); bed.clock.add(leg); }
+  const lamp = new THREE.Group(); add(lamp, -.72, .5, -1.08);
+  lamp.add(add(mesh(new THREE.CylinderGeometry(.05, .06, .03, 16), DARK_M), 0, .015, 0, lamp));
+  lamp.add(add(mesh(new THREE.CylinderGeometry(.01, .01, .25, 8), DARK_M), 0, .14, 0, lamp));
+  bed.shade = add(mesh(new THREE.CylinderGeometry(.06, .11, .12, 20, 1, true), mat(0xfff0c8, {side: THREE.DoubleSide, emissive: 0xffc070, emissiveIntensity: 0})), 0, .28, 0, lamp);
+  // a desk with books by the right wall
+  add(mesh(box(.8, .05, .45, .3), mat(0xa8713e)), 2.25, .72, -.6);
+  for (let i = 0; i < 4; i++) add(mesh(box(.06, .22, .17, .2), mat([0xe8473f, 0x3fbf6a, 0xffcf3f, 0x7a5bd0][i])), 2.0 + i * .07, .86, -.75);
+  // lights
+  bed.hemi = new THREE.HemisphereLight(0xcfe6ff, 0x8a6a4a, .75); add(bed.hemi, 0, 3, 0);
+  bed.sun = new THREE.DirectionalLight(0xffe2b0, 2.4); bed.sun.position.set(-3.5, 3.2, .6); bed.sun.target.position.set(.2, .6, -.5);
+  bed.sun.castShadow = true; bed.sun.shadow.mapSize.set(1024, 1024); Object.assign(bed.sun.shadow.camera, {left: -3, right: 3, top: 3, bottom: -3, near: .5, far: 9});
+  scene.add(bed.sun, bed.sun.target);
+  bed.fill = new THREE.PointLight(0xfff0e0, .9, 5, 1.4); add(bed.fill, 1.5, 2.0, 1.4);
+  bed.lampLight = new THREE.PointLight(0xffb060, 0, 3, 1.4); add(bed.lampLight, -.72, .85, -1.0);
+  bed.moon = new THREE.DirectionalLight(0x6f86ff, 0); bed.moon.position.set(-3, 2.5, 0); bed.moon.target.position.set(0, .6, -.4); scene.add(bed.moon, bed.moon.target);
+  // the stack of notes that lands on the bed (10 pages)
+  bed.notes = new THREE.Group(); bed.notes.visible = false; scene.add(bed.notes);
+  for (let i = 0; i < 10; i++) { const p = mesh(box(.22, .008, .3, .2), mat(0xfbfbf6)); p.position.y = i * .011; p.rotation.y = (rnd() - .5) * .25; bed.notes.add(p); }
+  const tag = new THREE.Mesh(new THREE.PlaneGeometry(.2, .07), new THREE.MeshBasicMaterial({map: canvasTex(200, 70, (g) => {
+    g.fillStyle = "#fffbe8"; g.fillRect(0, 0, 200, 70); g.fillStyle = "#1e2a5a"; g.font = "bold 30px sans-serif"; g.fillText("NOTES x10", 18, 46); })}));
+  tag.rotation.x = -Math.PI / 2; tag.position.set(0, .115, 0); bed.notes.add(tag);
+}
+const kid = kidFigure({skin: SKINS[1], shirt: 0xf4f6fb, hair: 0x2b1a12, style: "spiky"});
+kid.root.position.set(0, .56, -.78); scene.add(kid.root);
+// pyjama top instead of the school shirt at home: soft blue
+kid.body.children[0].material = mat(0x9fd0f0);
+
+// ---------- the classroom (around x=20): board at the front (z=-3.2), the last row at the back ----------
+const cls = {students: []};
+{
+  const o = CX0;
+  const floor = mesh(new THREE.PlaneGeometry(9, 9), mat(0xd9a46a, {roughness: .9})); floor.rotation.x = -Math.PI / 2; add(floor, o, 0, 0);
+  const wallM = mat(0xcfe8dc, {roughness: .95});
+  const front = mesh(new THREE.PlaneGeometry(9, 4), wallM); add(front, o, 2, -3.25);
+  const back = mesh(new THREE.PlaneGeometry(9, 4), wallM); back.rotation.y = Math.PI; add(back, o, 2, 2.6);
+  const left = mesh(new THREE.PlaneGeometry(9, 4), wallM); left.rotation.y = Math.PI / 2; add(left, o - 3.1, 2, 0);
+  const right = mesh(new THREE.PlaneGeometry(9, 4), wallM); right.rotation.y = -Math.PI / 2; add(right, o + 3.1, 2, 0);
+  const strip = mesh(new THREE.PlaneGeometry(9, .9), mat(0x8cc0b2)); add(strip, o, .45, 2.58); strip.rotation.y = Math.PI;
+  const paintBoard = (answered) => canvasTex(1024, 470, (g) => {
+    g.fillStyle = "#2f6a4c"; g.fillRect(0, 0, 1024, 470);
+    g.fillStyle = "rgba(255,255,255,.04)"; for (let i = 0; i < 60; i++) { g.beginPath(); g.arc(rnd() * 1024, rnd() * 470, 10 + rnd() * 40, 0, 7); g.fill(); }
+    g.fillStyle = "#f4f4ee"; g.font = "bold 64px sans-serif";
+    const Q = [["7 x 8 =", "56"], ["144 / 12 =", "12"], ["√81 =", "9"]];
+    Q.forEach(([q, a], i) => { g.fillStyle = "#f4f4ee"; g.fillText(q, 70, 120 + i * 130);
+      if (answered) { g.fillStyle = "#ffe066"; g.fillText(a, 470, 120 + i * 130);
+        g.strokeStyle = "#7ee08a"; g.lineWidth = 14; g.beginPath(); g.moveTo(650, 95 + i * 130); g.lineTo(680, 125 + i * 130); g.lineTo(740, 60 + i * 130); g.stroke(); } });
+  });
+  cls.boardQ = paintBoard(false); cls.boardA = paintBoard(true);
+  add(mesh(box(2.7, 1.3, .06, .2), mat(0x8a5a2e)), o, 1.55, -3.2);
+  cls.board = new THREE.Mesh(new THREE.PlaneGeometry(2.55, 1.17), new THREE.MeshBasicMaterial({map: cls.boardQ, color: 0xdddddd})); add(cls.board, o, 1.55, -3.16);
+  // windows on the left wall
+  const sky = canvasTex(256, 256, (g) => { const gr = g.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, "#7ec8ff"); gr.addColorStop(1, "#e8f6ff"); g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    g.fillStyle = "#6ab86a"; g.fillRect(0, 200, 256, 56); });
+  for (const z of [-1.6, .4]) { const w = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 1.0), new THREE.MeshBasicMaterial({map: sky})); w.rotation.y = Math.PI / 2; add(w, o - 3.08, 1.6, z);
+    const fr = mesh(box(.05, 1.06, 1.26, .3), mat(0xffffff)); add(fr, o - 3.07, 1.6, z); }
+  // the door at the back on the right
+  add(mesh(box(.06, 2.0, .9, .1), mat(0x9a6a3a)), o + 3.07, 1.0, 1.85);
+  // teacher's desk
+  add(mesh(box(1.0, .06, .55, .2), mat(0x8a5a2e)), o - 1.2, .76, -2.45);
+  add(mesh(box(.9, .7, .05, .2), mat(0x7a4a24)), o - 1.2, .4, -2.2);
+  // student desks: rows at z = -1.2, 0, 1.2; columns at x = -1.3, 0, 1.3; students face the board (-z)
+  const looks = [[SKINS[0], 0xe0a33a, "pony"], [SKINS[2], 0x1e130d, "curly"], [SKINS[3], 0x4a2c1c, "spiky"], [SKINS[1], 0x1e130d, "pony"],
+                 [SKINS[0], 0x6b3a22, "spiky"], [SKINS[2], 0x1e130d, "spiky"], [SKINS[3], 0xe0a33a, "curly"], [SKINS[1], 0x2b1a12, "pony"]];
+  let li = 0;
+  for (const z of [-1.2, 0, 1.2]) for (const x of [-1.3, 0, 1.3]) {
+    add(mesh(box(.72, .05, .46, .3), mat(0xc98a4a)), o + x, .62, z);
+    for (const [dx, dz] of [[-.3, -.18], [.3, -.18], [-.3, .18], [.3, .18]]) add(mesh(new THREE.CylinderGeometry(.018, .018, .6, 8), DARK_M), o + x + dx, .3, z + dz);
+    add(mesh(box(.42, .05, .38, .3), mat(0x3b5b9a)), o + x, .42, z + .38);
+    add(mesh(box(.42, .4, .05, .3), mat(0x3b5b9a)), o + x, .64, z + .58);
+    if (x === 1.3 && z === 1.2) { cls.seat = [o + x, z + .4]; continue; }       // the last bench: Bolt's seat
+    const [skin, hair, style] = looks[li++ % looks.length];
+    const s = kidFigure({skin, hair, style, shirt: 0xf4f6fb});
+    s.root.position.set(o + x, .44, z + .36); s.root.rotation.y = Math.PI; s.root.scale.setScalar(.92); scene.add(s.root);
+    setArm(s.arms[0], -.75, .1, -.9); setArm(s.arms[1], -.75, .1, -.9);
+    const book = mesh(box(.2, .02, .26, .3), mat([0xe8473f, 0x4aa3f0, 0x3fbf6a][li % 3])); add(book, o + x, .655, z + .02);
+    cls.students.push({fig: s, x: o + x, z: z + .36, ph: rnd() * 6});
+  }
+  cls.hemi = new THREE.HemisphereLight(0xeaf4ff, 0x9a7a5a, .95); add(cls.hemi, o, 3, 0);
+  cls.sun = new THREE.DirectionalLight(0xfff0d0, 2.0); cls.sun.position.set(o - 4, 3.5, -.5); cls.sun.target.position.set(o, .5, 0);
+  cls.sun.castShadow = true; cls.sun.shadow.mapSize.set(1024, 1024); Object.assign(cls.sun.shadow.camera, {left: -4, right: 4, top: 4, bottom: -4, near: .5, far: 12});
+  scene.add(cls.sun, cls.sun.target);
+  add(new THREE.PointLight(0xfff4e8, .8, 7, 1.3), o + 1, 2.4, -1);
+}
+const teacher = teacherFigure(); teacher.root.position.set(CX0 + .3, 0, -2.55); scene.add(teacher.root);
+
+// ---------- direction ----------
+const beats = T.beats, SHOTS = D.SHOTS, DIR = D.DIR;
+window.DURATION = T.total;
+function beatAt(t) { let cur = beats[0], prev = beats[0]; for (const b of beats) { if (b.start - .12 <= t) { prev = cur; cur = b; } } return [cur, prev]; }
+const dirOf = (b, who) => (DIR[b.id] && DIR[b.id][who]) || null;
+function envAt(who, t) { const e = T.env[who]; if (!e) return 0; const i = Math.round(t * T.fps); return e[Math.min(e.length - 1, Math.max(0, i))] || 0; }
+function mixEmo(a, b, u) { const r = {}; for (const k of ["brow", "ang", "lid", "smile", "wide", "happyEyes"]) r[k] = lerp(a[k] || 0, b[k] || 0, u);
+  r.look = [lerp(a.look[0], b.look[0], u), lerp(a.look[1], b.look[1], u)]; return r; }
+function lastDir(who, upto) {    // a character keeps its last direction on lines that don't mention it
+  let d = null; for (const b of beats) { if (b.start > upto) break; if (dirOf(b, who)) d = dirOf(b, who); } return d || ["neutral", "rest"];
+}
+function emotionFor(who, t) {
+  const [cur, prev] = beatAt(t);
+  const a = EMO[lastDir(who, prev.start)[0]] || EMO.neutral, b = EMO[lastDir(who, cur.start)[0]] || EMO.neutral;
+  const p = mixEmo(a, b, seg(t, cur.start - .12, cur.start + .12));
+  const talk = Math.max(envAt(who, t), envAt(who, t - 1 / 30) * .6);
+  p.open = clamp(talk * 1.15); if (talk > .1) p.happyEyes = Math.min(p.happyEyes, .4); p.talk = talk;
+  return p;
+}
+function shotAt(t) {
+  const [cur] = beatAt(t);
+  let name = cur.scene, s0 = cur.start - .15, s1 = cur.end + .6, cutT = null;
+  const cuts = DIR[cur.id] && DIR[cur.id].cuts;
+  if (cuts) { const len = Math.max(.3, cur.end - cur.start);
+    cuts.forEach(([f, n], i) => { const a = cur.start + f * len; if (i === 0 || t >= a) { name = n; s0 = i === 0 ? cur.start - .15 : a; s1 = i + 1 < cuts.length ? cur.start + cuts[i + 1][0] * len : cur.end + .6; } if (i > 0) cutT = cutT ?? a; }); }
+  return {name, s0, s1, cutT, shot: SHOTS[name]};
+}
+const KID_POSES = {   // [right shoulder x, z, elbow x], [left ...]; body lean (negative = back)
+  sleep: {arms: [[-.2, .25, -.5], [-.2, .25, -.5]], lean: -.5, tilt: .25},
+  smug:  {arms: [[-2.7, .7, -2.3], [-2.7, .7, -2.3]], lean: -.18, tilt: .08},
+  rest:  {arms: [[-.5, .15, -.9], [-.5, .15, -.9]], lean: -.1, tilt: 0},
+  shock: {arms: [[-1.6, .5, -.6], [-1.6, .5, -.6]], lean: .1, tilt: 0},
+  sad:   {arms: [[-.6, .1, -1.0], [-.6, .1, -1.0]], lean: .05, tilt: -.05},
+};
+const TEACH_POSES = {rest: [[-.15, .12, -.3], [-.15, .12, -.3]], point: [[-1.4, .1, -.1], [-.15, .12, -.3]], chalk: [[-2.3, .15, -1.2], [-.4, .2, -.9]]};
+
+window.renderAt = function (t) {
+  const [cur, prev] = beatAt(t);
+  const u = seg(t, cur.start - .15, cur.start + .2);
+  const S = shotAt(t), d = DIR[cur.id] || {};
+  const atNight = (cur.id === "r11" && S.cutT !== null && t >= S.cutT) || ["r12", "r13"].includes(cur.id);
+  // ----- bedroom mood: morning sun, then night with the lamp on
+  bed.sun.intensity = atNight ? 0 : 2.4; bed.hemi.intensity = atNight ? .16 : .75; bed.fill.intensity = atNight ? .12 : .9;
+  bed.lampLight.intensity = atNight ? 2.4 : 0; bed.moon.intensity = atNight ? .55 : 0; bed.shade.material.emissiveIntensity = atNight ? 1.2 : 0;
+  bed.win.material.map = atNight ? bed.skyNight : bed.skyDay;
+  scene.background.setHex(S.shot.set === "class" ? 0xcfe8dc : atNight ? 0x0a1030 : 0xa8cfee);
+  bed.clock.rotation.z = d.alarm ? .12 * Math.sin(t * 60) * (1 - seg(t, cur.end - .3, cur.end)) : 0;
+  bed.clock.position.y = .5 + (d.alarm ? .006 * Math.abs(Math.sin(t * 45)) : 0);
+
+  // ----- the kid (always in the bedroom)
+  const kd = lastDir("kid", cur.start), kp = lastDir("kid", prev.start);
+  const KA = KID_POSES[kp[1]] || KID_POSES.rest, KB = KID_POSES[kd[1]] || KID_POSES.rest;
+  kid.arms.forEach((a, i) => { const A = KA.arms[1 - i], B = KB.arms[1 - i]; setArm(a, lerp(A[0], B[0], u), lerp(A[1], B[1], u), lerp(A[2], B[2], u)); });
+  if (kd[1] === "shock") kid.arms.forEach((a, i) => a.el.rotation.x += .1 * Math.sin(t * 20 + i));
+  kid.body.rotation.x = lerp(KA.lean, KB.lean, u) + .01 * Math.sin(t * 2.1);
+  kid.head.rotation.z = lerp(KA.tilt, KB.tilt, u) + .03 * Math.sin(t * 1.3);
+  const ke = emotionFor("kid", t);
+  kid.head.rotation.x = -.05 + .06 * ke.talk * Math.sin(t * 11);
+  poseFace(kid.face, ke, t, .4);
+  // the notes land on his lap
+  const notesT = d.notesAt !== undefined && S.cutT !== null ? S.cutT + .35 : (["r12", "r13"].includes(cur.id) ? -1e9 : null);
+  bed.notes.visible = notesT !== null && t >= notesT;
+  if (bed.notes.visible) { const k = clamp((t - notesT) / .35); bed.notes.position.set(0, lerp(1.4, .655, k * k), -.25); bed.notes.rotation.y = .3 * (1 - k); }
+
+  // ----- Bolt: bedroom or classroom, walking, sitting, frozen, raising a hand, presenting the notes
+  const bd = lastDir("bolt", cur.start);
+  let screen = bd[0];
+  if (d.bulbAt !== undefined && t >= cur.start + d.bulbAt * (cur.end - cur.start)) screen = "bulb";
+  const inClass = S.shot.set === "class";
+  const bpose = inClass ? bd[1] : (["walk", "sit", "raise"].includes(bd[1]) ? "present" : bd[1]);
+  boltBody.position.set(0, 0, 0); boltBody.rotation.set(0, 0, 0); boltHead.rotation.set(0, 0, 0);
+  if (!inClass) { bolt.position.set(.95, 0, -.45); bolt.rotation.y = -1.25; }
+  else if (bpose === "walk") {
+    const k = seg(t, cur.start, cur.start + .62 * (cur.end - cur.start));
+    const [sx, sz] = cls.seat;
+    bolt.position.set(lerp(CX0 + 2.8, sx, k), 0, lerp(1.95, sz, k)); bolt.rotation.y = lerp(-Math.PI / 2, Math.PI, k);
+    boltBody.position.y = .02 * Math.abs(Math.sin(t * 9)) * (1 - k);
+    if (k >= 1) boltBody.position.y = -.24 * seg(t, cur.start + .62 * (cur.end - cur.start), cur.start + .62 * (cur.end - cur.start) + .4);
+  } else { bolt.position.set(cls.seat[0], 0, cls.seat[1]); bolt.rotation.y = Math.PI; boltBody.position.y = -.24; }
+  const be = emotionFor("bolt", t);
+  drawScreen(screen, t, be.talk);
+  const tremble = bpose === "freeze" ? .004 : bpose === "strain" ? .004 + .01 * seg(t, cur.start, cur.end) : 0;
+  boltBody.position.x = tremble * Math.sin(t * 63);
+  boltBody.rotation.z = bpose === "strain" ? .02 * Math.sin(t * 41) : .02 * Math.sin(t * 1.4);
+  boltHead.rotation.y = bpose === "idle" ? .12 * Math.sin(t * .8) : 0;
+  boltHead.rotation.z = be.talk * .06 * Math.sin(t * 9);
+  const BA = {idle: [[-.25, .2, -.5], [-.25, .2, -.5]], freeze: [[-.9, .5, -.9], [-.9, .5, -.9]], strain: [[-2.6, .3, -2.2], [-2.6, .3, -2.2]],
+              walk: [[-.3, .15, -.4], [-.3, .15, -.4]], sit: [[-.7, .15, -1.0], [-.7, .15, -1.0]], raise: [[-2.9, .15, -.3], [-.7, .15, -1.0]],
+              present: [[-1.3, .1, -.6], [-1.3, .1, -.6]], proud: [[-.2, .55, -1.9], [-.2, .55, -1.9]]}[bpose] || [[-.25, .2, -.5], [-.25, .2, -.5]];
+  boltArms.forEach((a, i) => { setArm(a, BA[1 - i][0], BA[1 - i][1], BA[1 - i][2]);
+    if (bpose === "walk") a.sh.rotation.x += .35 * Math.sin(t * 9 + i * Math.PI);
+    if (bpose === "raise" && i === 1) a.sh.rotation.z += .08 * Math.sin(t * 5); });
+  boltEyeLight.color.setHex(screen === "bulb" ? 0xffd84a : 0x6ee6ff);
+
+  // ----- teacher and classmates
+  const td = lastDir("teacher", cur.start);
+  const tp = TEACH_POSES[td[1]] || TEACH_POSES.rest;
+  teacher.arms.forEach((a, i) => setArm(a, tp[1 - i][0], tp[1 - i][1], tp[1 - i][2]));
+  teacher.chalk.visible = td[1] === "chalk";
+  const te = emotionFor("teacher", t);
+  poseFace(teacher.face, te, t, 1.3);
+  teacher.head.rotation.x = .05 + .05 * te.talk * Math.sin(t * 10);
+  teacher.body.rotation.y = td[0] === "shocked" ? .15 : 0;
+  const turned = d.turn || (cur.id === "r11" && (S.cutT === null || t < S.cutT));
+  cls.students.forEach((s, i) => { const k = turned ? seg(t, cur.start + .3 + .05 * i, cur.start + .7 + .05 * i) : 0;
+    const toBolt = Math.atan2(cls.seat[0] - s.x, cls.seat[1] - s.z) - Math.PI;
+    s.fig.head.rotation.y = lerp(.05 * Math.sin(t + s.ph), clamp(toBolt, -1.3, 1.3), turned ? 1 : k);
+    poseFace(s.fig.face, {...(turned ? EMO.curious : EMO.neutral), look: [turned ? .4 : 0, 0], open: 0}, t, s.ph); });
+  cls.board.material.map = (d.answers || ["r12", "r13"].includes(cur.id)) ? cls.boardA : cls.boardQ;
+
+  // ----- camera: hard cut per line (or at its cuts), slow push within the shot, small handheld drift
+  const shot = S.shot, k = seg(t, S.s0, S.s1);
+  const P = new THREE.Vector3(...shot.pos), L = new THREE.Vector3(...shot.look);
+  if (shot.track) {
+    const tgt = {kid: kid.head, bolt: boltHead, teacher: teacher.head}[shot.track].getWorldPosition(new THREE.Vector3());
+    const off = new THREE.Vector3(...shot.look).sub(new THREE.Vector3(...shot.pos));
+    L.copy(tgt); if (shot.track === "bolt" && !inClass) { P.set(tgt.x - 1.2, tgt.y + .08, tgt.z + .5); L.y -= .18; }
+    else if (shot.track === "bolt") { P.set(tgt.x - .5, tgt.y + .62, tgt.z - 1.35); L.y -= .1; }
+    else P.copy(tgt).sub(off.setLength(off.length()));
+  }
+  const dir = L.clone().sub(P).normalize();
+  P.addScaledVector(dir, shot.push * k);
+  P.x += Math.sin(t * .9) * .006; P.y += Math.sin(t * 1.3) * .004;
+  camera.fov = shot.fov || 44; camera.updateProjectionMatrix();
+  camera.position.copy(P); camera.lookAt(L);
+  bokeh.uniforms.focus.value = P.distanceTo(L);
+  composer.render();
+};
+window.renderAt(0);
+window.READY = true;
+</script>
+</body>
+</html>
