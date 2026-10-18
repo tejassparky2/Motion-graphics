@@ -63,3 +63,15 @@ card), very short deadpan replies with real pauses, and a last line that shows n
 
 ## Length (owner, 18 Oct 2026): "we can go duration upto 60 seconds only for this channel"
 Low-poly episodes may run **up to 60 s** (Interestingly Strange keeps its 40-50 s rule). Never over 60 s.
+8. **"Forget everything about me"** (60 s, warm/emotional; owner, 18 Oct: "More reference just keep making better"):
+   Dev on a beanbag at night, phone glow on his face, asks Claude to forget everything. A **Memory panel** ("4
+   things about you": morning person, says please every time, calls Claude "buddy", first message Mar 2025) is the
+   story device: items get struck through one by one; "Out of money. It's over. I start a real job Monday."; the last
+   item is his first message, "I'm scared. But I want to try." / "I did try." / "You did." / "Keep this one?"; Claude
+   quietly keeps "buddy" too. Smooth rounded 3D (not faceted), big glossy eyes, purple hoodie, navy dark with warm
+   bokeh, slow pauses, Memory UI as full-screen cut-ins. Lesson: alternate comedy with a warm episode now and then;
+   a real product UI (memory, context, usage) can carry the whole story; small true details (a date) sell it.
+
+## Future idea (owner, 18 Oct 2026)
+"maybe after few days we might make skit on our own conversation": a skit about this very chat, the owner and the AI
+making these videos (references, "revert", "one AI only... no, mix them", "Approved, render it"). Not yet; ask first.
