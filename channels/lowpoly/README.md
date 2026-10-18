@@ -84,3 +84,10 @@ making these videos (references, "revert", "one AI only... no, mix them", "Appro
    What to learn for our scripts: lines of two to five words traded fast ("A real one?" / "Real email. Real
    human."); a small mystery that unfolds one clue per line; the turn from dev-joke to a human moment at the reveal;
    the last line repeats a dev/startup term with a new, warm meaning; the AI's lines are short and kind, not jokes.
+
+## Posting schedule (owner, 18 Oct 2026)
+"I will upload 2 videos a day same as ItsInterestinglyStrange channel, we target US audience, so will follow that time
+for 2 week then adapt to yt analysis". **2 videos a day at 4:30 PM and 7:30 PM IST** (= 7:00 AM and 10:00 AM US
+Eastern while the US is on daylight time; 6:00 AM / 9:00 AM after US clocks go back on 2 Nov). **2-week trial from
+19 Oct to 1 Nov 2026**, then move the times to what YouTube Analytics shows for this channel's audience.
+Kept separate from the Interestingly Strange calendar.
