@@ -15,6 +15,10 @@ also push here. The repo is **public**.
   export (repo is public); upload reminders in this account (~11 AM IST). Next open slots: Nov 1 onward (rows 67-69 ideas).
 - **Container notes:** run the pipeline with `/home/user/.venv-main/bin/python` (Python 3.12, Kokoro 0.9.4); Turbo in
   `/home/user/.venv-clone`. Keep each background job under 2 hours (a 7-video chain was killed at the limit).
+- **3D for Interestingly Strange** (owner, 18 Oct, via the low-poly chat: "I want ItsInterestinglyStrange channel to adopt
+  3d animation ... make a sample"): sample made and sent: out/robot_butler.mp4 (40.7 s; engine channels/is3d/, run
+  `python channels/is3d/make_is3d.py robot_butler`; our own cast and sets in scene_is3d.html). Waiting for the owner's
+  verdict on switching to 3D. Rendering costs ~30 min of frames per 40 s video on this machine.
 - **Low-poly 3D channel** (owner, 18 Oct: "Seperate chat and channel for 3d one"): new chat in this account,
   session_01FVT6MqPXrfUtaaECNhx18u, branch `ccr-56282fe5-evehq4-lowpoly`; it starts by sending the ep02 script for approval.
 - **Container:** this account's container started empty; pip install of requirements (CPU torch, Kokoro,
