@@ -58,3 +58,6 @@ card), very short deadpan replies with real pauses, and a last line that shows n
    panels (Read / Edit / Write / Bash rows with +/- counts, "✓ 12 passed", an orange "Running tests…" line); small
    white captions above the characters. Adapted from episode 1 (new): `MOOD = "night"` (navy room, city window
    behind Dev), the lived-in desk (`DETAILS`), tool-log cards and small white captions in the upper middle.
+
+## Length (owner, 18 Oct 2026): "we can go duration upto 60 seconds only for this channel"
+Low-poly episodes may run **up to 60 s** (Interestingly Strange keeps its 40-50 s rule). Never over 60 s.
