@@ -69,7 +69,7 @@ The Last Bencher doesn't even stand up. 😏 (The answer is in the video.)
 
 DOOR = hexc("#b5763e")
 GUARD = dict(skin="tan", hair="short", hair_col=hexc("#1e130d"), stache=hexc("#1e130d"), shirt=hexc("#2f3f73"),
-             suit=hexc("#2f3f73"), pants=hexc("#1f2a4d"), build="adult")
+             suit=hexc("#2f3f73"), pants=hexc("#1f2a4d"), build="adult", glasses=False)
 GUARD2 = dict(GUARD, skin="light", hair_col=hexc("#3a2418"), stache=hexc("#3a2418"))
 
 
@@ -177,13 +177,13 @@ def scene_rules(cr, t, tl):
         guard(cr, t, 520 + 90 * (1 - k), 900, 0.72, 1, facing=-1)
     cr.restore()
     if t >= A("g3", "which.", nth=1) and t < A("g4"):
-        chip(cr, t, A("g3", "which.", nth=1), 200, 400, "TRUTH? LIE?", PURPLE, 32)
-        chip(cr, t, A("g3", "which.", nth=1), 520, 400, "TRUTH? LIE?", PURPLE, 32)
+        chip(cr, t, A("g3", "which.", nth=1), 200, 400, "TRUTH? LIE?", PURPLE, 44)
+        chip(cr, t, A("g3", "which.", nth=1), 520, 400, "TRUTH? LIE?", PURPLE, 44)
     elif t < A("g4"):
         if t >= A("g3", "truth."):
-            chip(cr, t, A("g3", "truth."), 360, 330, "ONE ALWAYS TRUTHFUL", BLUE, 32)
+            chip(cr, t, A("g3", "truth."), 300, 320, "ONE ALWAYS TRUTHFUL", BLUE, 40)
         if t >= A("g3", "lies."):
-            chip(cr, t, A("g3", "lies."), 360, 410, "ONE ALWAYS LIES", PURPLE, 32)
+            chip(cr, t, A("g3", "lies."), 300, 420, "ONE ALWAYS LIES", PURPLE, 40)
     sign(cr, t, A("g2", "Forever."), 360, 170, "EVERY DAY. FOREVER.", col=RED, size=52, end=A("g3") - 0.05)
     sign(cr, t, A("g4"), 360, 170, "1 QUESTION. 1 GUARD.", col=GOLD, size=54)
     portrait(cr, t, A("g2"), 630, 300, 66, "sir", mouth=mouth_of(tl, "sir", t, "smug"), eyes="half",
@@ -252,10 +252,10 @@ def _column(cr, t, x, title, first, second, c1, c2, key_times):
     t0, t1, t2, t3 = key_times
     if t < t0:
         return
-    bold_text(cr, title, x, 300, 36, WHITE)
-    chip(cr, t, t1, x, 370, first, c1, 40)
+    bold_text(cr, title, x, 300, 46, WHITE)
+    chip(cr, t, t1, x, 375, first, c1, 54)
     arrow(cr, t, t2, x, 410, x, 470, WHITE)
-    chip(cr, t, t2, x, 520, second, c2, 36)
+    chip(cr, t, t2, x, 525, second, c2, 40 if len(second) > 10 else 50)
     arrow(cr, t, t3, x, 560, x, 640, WHITE)
     if t >= t3:
         door(cr, x, 860, 0.62)
@@ -277,14 +277,14 @@ def scene_chain(cr, t, tl):
 def scene_flip(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#2b2f4a"), hexc("#55406e"), seed=11)
-    chip(cr, t, A("g11", "true"), 230, 400, "1 TRUTH", BLUE, 44)
-    chip(cr, t, A("g11", "lie."), 490, 400, "1 LIE", PURPLE, 44)
+    chip(cr, t, A("g11", "true"), 200, 400, "1 TRUTH", BLUE, 56)
+    chip(cr, t, A("g11", "lie."), 520, 400, "1 LIE", PURPLE, 56)
     if t >= A("g11", "flipped."):
         k = ease_out(seg(t, A("g11", "flipped."), A("g11", "flipped.") + 0.5))
         cr.save()
         cr.translate(360, 560)
         cr.rotate(k * math.pi)
-        bold_text(cr, "WRONG", 0, 22, 70, RED)
+        bold_text(cr, "WRONG", 0, 30, 96, RED)
         cr.restore()
         sign(cr, t, A("g11", "flipped."), 360, 170, "ALWAYS FLIPPED", col=RED, size=62, end=A("g11", "So") - 0.05)
     if t >= A("g11", "So"):
