@@ -120,7 +120,7 @@ def thinking(cr, t, beat):
         return
     k = appear(t, beat.start, 0.2)
     cr.save()
-    cr.translate(W / 2, 880)
+    cr.translate(W / 2, 1010)
     rrect(cr, -150, -36, 300, 72, 36)
     cr.set_source_rgba(0.08, 0.08, 0.11, 0.9 * k)
     cr.fill_preserve()
@@ -187,7 +187,7 @@ def toolcard(cr, t, start, end, title, rows, y=880):
     cr.restore()
 
 
-def caption(cr, t, tl, y=470, size=30):
+def caption(cr, t, tl, y=345, size=30):
     """Reference 7's captions: small clean white type with a soft shadow, above the characters, whole line at once."""
     for i, b in enumerate(tl.beats):
         nxt = tl.beats[i + 1].start if i + 1 < len(tl.beats) else tl.total
@@ -253,5 +253,5 @@ def draw(cr, t, tl):
     cue("hush", t, B["a13"].start, B["a13"].end - B["a13"].start + 0.2)
     cue("sigh", t, A("a15") - 0.7)
     cue("thud", t, B["a16"].end + 0.55)
-    th.hook(cr, t, [("I TRIED TO MAKE", False), ("CLAUDE DISAGREE", True)], end=A("a1", end=True) + 0.3, y=250, size=80)
+    th.hook(cr, t, [("I TRIED TO MAKE", False), ("CLAUDE DISAGREE", True)], end=A("a1", end=True) + 0.3, y=175, size=80)
     caption(cr, t, tl)
