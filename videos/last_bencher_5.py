@@ -19,7 +19,7 @@ from videos.last_bencher_4 import (BLUE, GOLD, GREEN, PURPLE, RED, chalk, classr
                                    sparkles, studio)
 
 NARRATOR = dict(turbo=True)
-TAIL = 1.0
+TAIL = 0.8
 voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo_ref="am_puck+3"),
                        "sir": dict(voice="am_michael", speed=1.0, turbo_ref="am_michael")})
 
@@ -31,7 +31,7 @@ SCRIPT = [
     dict(id="g3", scene="rules", text="Each door has a guard. One always tells the truth. One always lies. And you "
                                       "don't know which is which.", speaker="sir"),
     dict(id="g4", scene="rules", text="You get one question. To one guard.", speaker="sir"),
-    dict(id="g5", scene="panic", text="The front row starts writing. Diagrams. Equations. Panic. [laugh]"),
+    dict(id="g5", scene="panic", text="The front row starts writing. Equations. Panic. [laugh]"),
     dict(id="g6", scene="panic", text="The last bencher doesn't even stand up."),
     dict(id="g7", scene="ask", text="Easy. I ask either guard. Which door would the other guard say leads home?",
          speaker="kid"),
@@ -40,13 +40,13 @@ SCRIPT = [
                                       "door."),
     dict(id="g10", scene="chain", text="If he asks the liar, he lies about the honest guard's answer. The wrong door "
                                        "again."),
-    dict(id="g11", scene="flip", text="One truth, and one lie, in a chain. The answer always comes out flipped. So "
-                                      "the other door is home."),
-    dict(id="g12", scene="out", text="The teacher unlocks the door. Class dismissed. [sigh]", gap=0.3),
+    dict(id="g11", scene="flip", text="One true answer, one lie. The answer always comes out flipped. So the other "
+                                      "door is home."),
+    dict(id="g12", scene="out", text="Class dismissed. [sigh]", gap=0.3),
     dict(id="g13", scene="end", text="But wait. The honest guard just helped send you to the wrong door. Is he still "
                                      "honest? Yes, or no?", gap=0.3),
 ]
-clear_dialogue(SCRIPT, ids={"g3", "g4", "g7", "g9", "g10"}, pace=0.94)
+clear_dialogue(SCRIPT, ids={"g9", "g10"}, pace=0.96)
 
 METADATA = dict(
     title="One Guard Always Lies. You Get 1 Question. 🚪",
@@ -141,9 +141,9 @@ def scene_lock(cr, t, tl):
     room(cr, t, board=True)
     cr.save()
     enter(cr, camera(t, [(0.0, (1.0, 360, 640)), (A("g1", "Nobody"), (1.15, 380, 660))], dur=0.8))
-    chalk(cr, t, 0.2, 110, 300, "2 DOORS", 56, dur=0.4)
-    chalk(cr, t, 0.6, 110, 390, "2 GUARDS", 56, dur=0.4)
-    chalk(cr, t, A("g1", "Nobody"), 110, 480, "1 QUESTION", 56, dur=0.4)
+    chalk(cr, t, 0.2, 100, 395, "2 DOORS", 46, dur=0.4)
+    chalk(cr, t, 0.6, 100, 460, "2 GUARDS", 46, dur=0.4)
+    chalk(cr, t, A("g1", "Nobody"), 100, 525, "1 QUESTION", 46, dur=0.4)
     door(cr, 590, 880, 0.9, col=hexc("#8a5a2e"))
     turn = seg(t, A("g1", "locks"), A("g1", "locks") + 0.5)          # key turning in the lock
     cr.save()
@@ -164,32 +164,29 @@ def scene_lock(cr, t, tl):
 def scene_rules(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#2b2f4a"), hexc("#55406e"), seed=3)
-    soft_disc(cr, 360, 560, 420, (1, 0.9, 0.6, 0.12))
-    cam = camera(t, [(A("g2") - 0.3, (1.0, 360, 640)), (A("g3"), (1.0, 360, 640)), (A("g4"), (1.08, 360, 600))])
+    soft_disc(cr, 360, 640, 420, (1, 0.9, 0.6, 0.12))
     cr.save()
-    enter(cr, cam)
-    lit = t >= A("g2", "home.")
-    door(cr, 200, 840, 0.95, open_=0.0, glow=0.0)
-    door(cr, 520, 840, 0.95, open_=0.0)
-    if t >= A("g2", "home."):
-        chip(cr, t, A("g2", "home."), 200, 455, "HOME?", GREEN)
-    if t >= A("g2", "test."):
-        chip(cr, t, A("g2", "test."), 520, 455, "TEST?", RED)
-    if t >= A("g3"):
-        k = appear(t, A("g3"), 0.4)
-        guard(cr, t, 200 - 140 + 40 * (1 - k), 900, 0.62, 0, eyes="open", mouth="flat")
-        guard(cr, t, 520 + 140 - 40 * (1 - k), 900, 0.62, 1, eyes="open", mouth="flat", facing=-1)
+    enter(cr, camera(t, [(A("g2") - 0.3, (1.0, 360, 640)), (A("g4"), (1.06, 360, 640))]))
+    for k, (x, word, label, col) in enumerate(((200, "home.", "HOME?", GREEN), (520, "test.", "TEST?", RED))):
+        door(cr, x, 860, 1.1)
+        if t >= A("g2", word):
+            bold_text(cr, label, x, 660, 40, col)
+    if t >= A("g3"):                                                # a guard steps in front of each door
+        k = ease_out(seg(t, A("g3"), A("g3") + 0.4))
+        guard(cr, t, 200 - 90 * (1 - k), 900, 0.72, 0)
+        guard(cr, t, 520 + 90 * (1 - k), 900, 0.72, 1, facing=-1)
     cr.restore()
-    if t >= A("g3", "truth."):
-        chip(cr, t, A("g3", "truth."), 140, 1000 - 40, "ALWAYS TRUTH", BLUE, 30)
-    if t >= A("g3", "lies."):
-        chip(cr, t, A("g3", "lies."), 580, 1000 - 40, "ALWAYS LIES", PURPLE, 30)
     if t >= A("g3", "which.", nth=1) and t < A("g4"):
-        bold_text(cr, "?", 140, 330, 120, GOLD)
-        bold_text(cr, "?", 580, 330, 120, GOLD)
+        chip(cr, t, A("g3", "which.", nth=1), 200, 400, "TRUTH? LIE?", PURPLE, 32)
+        chip(cr, t, A("g3", "which.", nth=1), 520, 400, "TRUTH? LIE?", PURPLE, 32)
+    elif t < A("g4"):
+        if t >= A("g3", "truth."):
+            chip(cr, t, A("g3", "truth."), 360, 330, "ONE ALWAYS TRUTHFUL", BLUE, 32)
+        if t >= A("g3", "lies."):
+            chip(cr, t, A("g3", "lies."), 360, 410, "ONE ALWAYS LIES", PURPLE, 32)
     sign(cr, t, A("g2", "Forever."), 360, 170, "EVERY DAY. FOREVER.", col=RED, size=52, end=A("g3") - 0.05)
     sign(cr, t, A("g4"), 360, 170, "1 QUESTION. 1 GUARD.", col=GOLD, size=54)
-    portrait(cr, t, A("g2"), 620, 300, 70, "sir", mouth=mouth_of(tl, "sir", t, "smug"), eyes="half",
+    portrait(cr, t, A("g2"), 630, 300, 66, "sir", mouth=mouth_of(tl, "sir", t, "smug"), eyes="half",
              bg=hexc("#cdb8ff"), end=A("g4", end=True))
     vignette(cr, 0.5)
 
@@ -250,17 +247,19 @@ def scene_ask(cr, t, tl):
     vignette(cr, 0.45)
 
 
-def _chain(cr, t, start, y, first, second, c1, c2, key_times):
-    """Kid -> guard (first) -> what the other guard would say (second) -> the wrong door."""
-    t1, t2, t3 = key_times
-    person(cr, t, 90, y + 90, 0.32, "kid", eyes="open", mouth="smile", arms=("point", "down"))
-    arrow(cr, t, t1, 140, y - 40, 215, y - 40, WHITE)
-    chip(cr, t, t1, 300, y - 40, first, c1, 32)
-    arrow(cr, t, t2, 385, y - 40, 445, y - 40, WHITE)
-    chip(cr, t, t2, 535, y - 40, second, c2, 32)
+def _column(cr, t, x, title, first, second, c1, c2, key_times):
+    """Ask a guard (first) -> his answer about the other guard (second) -> the wrong door, top to bottom."""
+    t0, t1, t2, t3 = key_times
+    if t < t0:
+        return
+    bold_text(cr, title, x, 300, 36, WHITE)
+    chip(cr, t, t1, x, 370, first, c1, 40)
+    arrow(cr, t, t2, x, 410, x, 470, WHITE)
+    chip(cr, t, t2, x, 520, second, c2, 36)
+    arrow(cr, t, t3, x, 560, x, 640, WHITE)
     if t >= t3:
-        door(cr, 640, y + 90, 0.38)
-        red_x(cr, t, t3, 640, y - 40, 48)
+        door(cr, x, 860, 0.62)
+        red_x(cr, t, t3, x, 760, 60)
 
 
 def scene_chain(cr, t, tl):
@@ -268,19 +267,18 @@ def scene_chain(cr, t, tl):
     studio(cr, t, hexc("#1f3a4a"), hexc("#3f5a6e"), seed=9)
     sign(cr, t, A("g9"), 360, 170, "ASK THE HONEST ONE", col=BLUE, size=50, end=A("g10") - 0.05)
     sign(cr, t, A("g10"), 360, 170, "ASK THE LIAR", col=PURPLE, size=58)
-    _chain(cr, t, A("g9"), 420, "TRUTH", "LIAR SAYS", BLUE, PURPLE,
-           (A("g9", "honest"), A("g9", "repeats"), A("g9", "wrong")))
-    if t >= A("g10"):
-        _chain(cr, t, A("g10"), 700, "LIAR", "FLIPS IT", PURPLE, RED,
-               (A("g10", "liar,"), A("g10", "lies"), A("g10", "wrong")))
+    _column(cr, t, 190, "HONEST GUARD", "TRUTH", "LIAR'S ANSWER", BLUE, PURPLE,
+            (A("g9"), A("g9", "honest"), A("g9", "repeats"), A("g9", "wrong")))
+    _column(cr, t, 530, "LYING GUARD", "LIE", "FLIPS IT", PURPLE, RED,
+            (A("g10"), A("g10", "liar,"), A("g10", "lies"), A("g10", "wrong")))
     vignette(cr, 0.4)
 
 
 def scene_flip(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#2b2f4a"), hexc("#55406e"), seed=11)
-    chip(cr, t, A("g11", "truth,"), 230, 400, "1 TRUTH", BLUE, 44)
-    chip(cr, t, A("g11", "lie,"), 490, 400, "1 LIE", PURPLE, 44)
+    chip(cr, t, A("g11", "true"), 230, 400, "1 TRUTH", BLUE, 44)
+    chip(cr, t, A("g11", "lie."), 490, 400, "1 LIE", PURPLE, 44)
     if t >= A("g11", "flipped."):
         k = ease_out(seg(t, A("g11", "flipped."), A("g11", "flipped.") + 0.5))
         cr.save()
@@ -303,8 +301,7 @@ def scene_out(cr, t, tl):
     room(cr, t, board=True)
     cr.save()
     enter(cr, camera(t, [(A("g12") - 0.3, (1.3, 360, 600))]))
-    door(cr, 590, 880, 0.9, col=hexc("#8a5a2e"), open_=seg(t, A("g12", "unlocks"), A("g12", "unlocks") + 0.5),
-         glow=1.0 if t >= A("g12", "unlocks") else 0)
+    door(cr, 590, 880, 0.9, col=hexc("#8a5a2e"), open_=seg(t, A("g12"), A("g12") + 0.5), glow=1.0)
     slump = t >= A("g12", "dismissed.", end=True)
     person(cr, t, 330, 920, 1.0, "sir", eyes="half" if slump else "sad", mouth="flat", brows="sad",
            arms=("down", "down") if slump else ("push", "down"), tilt=0.06 if slump else 0.0)
