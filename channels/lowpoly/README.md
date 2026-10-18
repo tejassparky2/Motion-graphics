@@ -41,8 +41,10 @@ Applied to our look: small clean speaker-coloured captions (all four references 
 light, slower pad chords, and a room tone that keeps going when the music drops out.
 
 ## Owner, 18 Oct 2026: one AI per video, funny like references 5 and 6
-"I always don't want both claude and codex together in videos" and "Funny like this". **Each episode has Dev and ONE
-AI (Claude or Codex), never both together**; alternate which AI stars. Episode 1 (code review) and the ep02 draft
+"I always don't want both claude and codex together in videos" and "Funny like this". Clarified the same day: "I don't
+want always only claude or always only codex, both can mix, both can be different, we do everything possible".
+**Rule: vary the cast.** Some episodes Dev + Claude, some Dev + Codex, some all three; don't fall into one fixed
+format. Episode 1 (code review) and the ep02 draft
 used both, so the channel's first reel is a new one-AI episode 1 (scripts/ep01_absolutely_right.md).
 5. **Usage meter** (51 s, comedy): Dev and Claude only, night city window. Running visual gag: a "Usage %" card
    ticks up on every line while Dev watches it "like a taxi meter"; tiny deadpan lines ("Seventeen." "Thinking.");
