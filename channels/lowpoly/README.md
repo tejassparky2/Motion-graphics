@@ -62,7 +62,11 @@ card), very short deadpan replies with real pauses, and a last line that shows n
    behind Dev), the lived-in desk (`DETAILS`), tool-log cards and small white captions in the upper middle.
 
 ## Length (owner, 18 Oct 2026): "we can go duration upto 60 seconds only for this channel"
-Low-poly episodes may run **up to 60 s** (Interestingly Strange keeps its 40-50 s rule). Never over 60 s.
+Low-poly episodes may run **up to 60 s** (Interestingly Strange keeps its 40-50 s rule).
+**Updated the same day** (after episodes 3-6 came out at 30-34 s): "we can make videos upto 1 minutes or more like
+more funny more relatable no 40sec limit for this as ItsInterestinglyStrange channel". So: **aim for about 60-75 s**
+(Shorts allow up to 3 min), with more escalation beats, more jokes per idea and a stronger build to the last line.
+No 40-50 s cap on this channel.
 8. **"Forget everything about me"** (60 s, warm/emotional; owner, 18 Oct: "More reference just keep making better"):
    Dev on a beanbag at night, phone glow on his face, asks Claude to forget everything. A **Memory panel** ("4
    things about you": morning person, says please every time, calls Claude "buddy", first message Mar 2025) is the
