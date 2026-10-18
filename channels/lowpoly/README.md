@@ -39,3 +39,16 @@ UI panels as story beats, captions coloured by speaker (Claude orange), a twist 
 
 Applied to our look: small clean speaker-coloured captions (all four references use them), warm dust motes in the
 light, slower pad chords, and a room tone that keeps going when the music drops out.
+
+## Owner, 18 Oct 2026: one AI per video, funny like references 5 and 6
+"I always don't want both claude and codex together in videos" and "Funny like this". **Each episode has Dev and ONE
+AI (Claude or Codex), never both together**; alternate which AI stars. Episode 1 (code review) and the ep02 draft
+used both, so the channel's first reel is a new one-AI episode 1 (scripts/ep01_absolutely_right.md).
+5. **Usage meter** (51 s, comedy): Dev and Claude only, night city window. Running visual gag: a "Usage %" card
+   ticks up on every line while Dev watches it "like a taxi meter"; tiny deadpan lines ("Seventeen." "Thinking.");
+   twist: usage resets to 0% and Dev instantly says "Claude. Fix every button!"
+6. **Mushroom** (57 s, dark comedy): a kid and one chatbot robot in a bright low-poly forest. The bot says "Great
+   question!", confidently calls the mushroom safe, the kid turns green and becomes a ghost, then "You're absolutely
+   right! I apologize for the confusion." and a cheerful "5 mushrooms you should never eat" list as the punchline.
+What makes them funny: one recognisable AI habit pushed further on every line, a running visual gag (a meter, a
+card), very short deadpan replies with real pauses, and a last line that shows nothing was learned.
