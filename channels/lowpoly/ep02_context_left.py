@@ -100,6 +100,7 @@ def context_card(cr, t, tl):
     dev = t >= B["c21"].start + 0.4
     gone = A("c19") <= t < B["c21"].start + 0.4          # Codex is off: card slides away
     k = 1 - seg(t, A("c19"), A("c19") + 0.3) if gone else appear(t, B["c21"].start + 0.4, 0.3) if dev else 1
+    k *= appear(t, A("c1", end=True) + 0.3, 0.3)          # comes in once the hook text has gone
     if k <= 0:
         return
     col = RED if val <= 3 else YEL if val < 50 else GREEN
