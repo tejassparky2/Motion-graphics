@@ -124,7 +124,7 @@ def chip(cr, t, start, x, y, text, col, size=40):
     """A small rounded label that pops in."""
     if t < start:
         return
-    k = appear(t, start, 0.3)
+    k = max(0.01, appear(t, start, 0.3))
     cr.save()
     cr.translate(x, y)
     cr.scale(k, k)

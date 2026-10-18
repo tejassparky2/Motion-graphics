@@ -77,23 +77,24 @@ def coach(cr, t, x, y, s, tl=None, **kw):
 
 
 def payoff(cr, t, start, x, y, a, b, label_a, label_b, col_a, col_b, s=1.0, hot=False):
-    """A deal card: two small choices and the days each friend gets."""
+    """A deal card: what each friend does, and the days each one gets."""
     if t < start:
         return
-    k = appear(t, start, 0.35)
+    k = max(0.01, appear(t, start, 0.35))
     cr.save()
     cr.translate(x, y)
     cr.scale(k * s, k * s)
-    rrect(cr, -300, -70, 600, 140, 26)
-    paint(cr, (1, 1, 1, 0.92) if not hot else hexc("#fff3c4"), OUTLINE, 6)
-    bold_text(cr, label_a, -210, -10, 34, col_a)
-    bold_text(cr, "+", -120, -10, 34, OUTLINE, outline=None, shadow=0)
-    bold_text(cr, label_b, -30, -10, 34, col_b)
-    bold_text(cr, "=", 50, -10, 34, OUTLINE, outline=None, shadow=0)
-    bold_text(cr, a, 140, 0, 46, col_a)
-    bold_text(cr, "/", 190, 0, 40, OUTLINE, outline=None, shadow=0)
-    bold_text(cr, b, 240, 0, 46, col_b)
-    bold_text(cr, "DAYS", 190, 50, 26, OUTLINE, outline=None, shadow=0)
+    rrect(cr, -330, -85, 660, 170, 30)
+    paint(cr, (1, 1, 1, 0.94) if not hot else hexc("#fff3c4"), OUTLINE, 7)
+    bold_text(cr, label_a, -235, -18, 44, col_a)
+    bold_text(cr, "+", -150, -18, 44, OUTLINE, outline=None, shadow=0)
+    bold_text(cr, label_b, -60, -18, 44, col_b)
+    bold_text(cr, a, 120, 6, 70, col_a)
+    bold_text(cr, "/", 185, 6, 56, OUTLINE, outline=None, shadow=0)
+    bold_text(cr, b, 250, 6, 70, col_b)
+    bold_text(cr, "DAYS", 185, 62, 30, OUTLINE, outline=None, shadow=0)
+    bold_text(cr, "YOU", -235, 40, 26, alpha(OUTLINE, 0.6), outline=None, shadow=0)
+    bold_text(cr, "FRIEND", -60, 40, 26, alpha(OUTLINE, 0.6), outline=None, shadow=0)
     cr.restore()
 
 
@@ -102,12 +103,12 @@ def small_room(cr, t, x, y, w, h, who, eyes="open", mouth="flat", arms=("front",
     paint(cr, lin(0, y, 0, y + h, [(0, hexc("#d8e4ee")), (1, hexc("#a8b8c8"))]), OUTLINE, 6)
     rrect(cr, x + w * 0.2, y + h - 70, w * 0.6, 22, 6)               # little table
     paint(cr, hexc("#8a5a2e"), OUTLINE, 4)
-    person(cr, t, x + w / 2, y + h - 20, 0.45 * w / 320, who, eyes=eyes, mouth=mouth, arms=arms, sweat=sweat,
-           shadow=False)
+    person(cr, t, x + w / 2, y + h - 20, min(0.62, 0.62 * h / 460), who, eyes=eyes, mouth=mouth, arms=arms,
+           sweat=sweat, shadow=False)
     if bubble:
-        cr.arc(x + w * 0.78, y + 70, 52, 0, 2 * math.pi)
-        paint(cr, WHITE, OUTLINE, 4)
-        bold_text(cr, bubble, x + w * 0.78, y + 84, 32, RED)
+        rrect(cr, x + w / 2 - 110, y - 110, 220, 90, 30)
+        paint(cr, WHITE, OUTLINE, 5)
+        bold_text(cr, bubble, x + w / 2, y - 48, 46, RED)
 
 
 def scene_window(cr, t, tl):
@@ -144,8 +145,8 @@ def scene_deal(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#2b2f4a"), hexc("#4a4f6e"), seed=3)
     payoff(cr, t, A("p2", "quiet,"), 360, 330, "1", "1", "QUIET", "QUIET", GREEN, GREEN)
-    payoff(cr, t, A("p3", "blame"), 360, 500, "0", "10", "BLAME", "QUIET", RED, GREEN)
-    payoff(cr, t, A("p4", "both"), 360, 670, "5", "5", "BLAME", "BLAME", RED, RED)
+    payoff(cr, t, A("p3", "blame"), 360, 535, "0", "10", "BLAME", "QUIET", RED, GREEN)
+    payoff(cr, t, A("p4", "both"), 360, 740, "5", "5", "BLAME", "BLAME", RED, RED)
     portrait(cr, t, A("p2"), 600, 140, 70, "sir", mouth=mouth_of(tl, "coach", t, "flat"), eyes="angry",
              bg=hexc("#ffb3a8"), end=A("p4", end=True), **{k: v for k, v in COACH.items() if k != "build"})
     vignette(cr, 0.45)
@@ -154,24 +155,20 @@ def scene_deal(cr, t, tl):
 def scene_think(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f3a4a"), hexc("#3f5a6e"), seed=5)
-    small_room(cr, t, 60, 640, 600, 380, FRIEND_A, eyes="half", mouth="flat", arms=("think", "front"))
-    sign(cr, t, A("p5", "first"), 360, 170, "FRIEND #1 THINKS", col=BLUE, size=56, end=A("p6") - 0.05)
-    if t >= A("p6"):
-        bold_text(cr, "IF HE STAYS QUIET:", 360, 260, 40, WHITE)
-        bold_text(cr, "BLAME = 0", 230, 330, 46, RED)
-        bold_text(cr, "QUIET = 1", 490, 330, 46, GREEN)
-        if t >= A("p6", "Better"):
-            cr.arc(230, 318, 90, 0, 2 * math.pi)
-            paint(cr, None, GOLD, 8)
-    if t >= A("p7"):
-        bold_text(cr, "IF HE BLAMES ME:", 360, 430, 40, WHITE)
-        bold_text(cr, "BLAME = 5", 230, 500, 46, RED)
-        bold_text(cr, "QUIET = 10", 490, 500, 46, GREEN)
-        if t >= A("p7", "Better"):
-            cr.arc(230, 488, 90, 0, 2 * math.pi)
+    small_room(cr, t, 200, 640, 320, 260, FRIEND_A, eyes="half", mouth="flat", arms=("think", "front"))
+    sign(cr, t, A("p5", "first"), 360, 170, "FRIEND #1 THINKS", col=BLUE, size=56, end=A("p8") - 0.05)
+    for row, (beat, title, a_, b_, y) in enumerate((("p6", "IF HE STAYS QUIET", "0", "1", 290),
+                                                    ("p7", "IF HE BLAMES ME", "5", "10", 470))):
+        if t < A(beat):
+            continue
+        bold_text(cr, title, 360, y, 44, WHITE)
+        bold_text(cr, f"BLAME: {a_}", 200, y + 80, 56, RED)
+        bold_text(cr, f"QUIET: {b_}", 520, y + 80, 56, GREEN)
+        if t >= A(beat, "Better"):
+            rrect(cr, 60, y + 22, 280, 80, 24)
             paint(cr, None, GOLD, 8)
     if t >= A("p8", "blaming"):
-        stamp(cr, t, A("p8", "blaming"), 360, 600, "BLAME WINS", col=RED, size=66)
+        sign(cr, t, A("p8", "blaming"), 360, 170, "BLAME WINS... RIGHT?", col=RED, size=56)
         cue("hit", t, A("p8", "blaming"))
     vignette(cr, 0.4)
 
@@ -180,8 +177,8 @@ def scene_split(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f2a3a"), hexc("#3a4a5e"), seed=6)
     same = t >= A("p9", "same")
-    small_room(cr, t, 30, 360, 320, 460, FRIEND_A, eyes="half", mouth="smug", bubble="BLAME")
-    small_room(cr, t, 370, 360, 320, 460, FRIEND_B, eyes="half", mouth="smug" if same else "flat",
+    small_room(cr, t, 30, 420, 320, 460, FRIEND_A, eyes="half", mouth="smug", bubble="BLAME")
+    small_room(cr, t, 370, 420, 320, 460, FRIEND_B, eyes="half", mouth="smug" if same else "flat",
                bubble="BLAME" if same else "...")
     if same:
         sign(cr, t, A("p9", "same"), 360, 170, "THE EXACT SAME THING", col=RED, size=52)
@@ -221,13 +218,15 @@ def scene_shops(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#ffe7a8"), hexc("#fff6e8"), seed=7)
     if t < A("p11", "shops"):
+        person(cr, t, 250, 880, 0.75, FRIEND_A, eyes="sad", mouth="sad", arms=("down", "down"), seed=1)
+        person(cr, t, 470, 880, 0.75, FRIEND_B, eyes="sad", mouth="sad", arms=("down", "down"), seed=2)
         sign(cr, t, A("p11"), 360, 300, "SMART ALONE = BOTH LOSE", col=PURPLE, size=46, end=A("p11", "called") - 0.05)
         sign(cr, t, A("p11", "prisoner's"), 360, 300, "THE PRISONER'S DILEMMA", col=GOLD, size=50)
     else:
         u = seg(t, A("p11", "cut"), A("p11", "money.", end=True))
         price = max(1, int(round(10 - 9 * u)))
-        shop(cr, t, 190, 860, price, RED, 0.9)
-        shop(cr, t, 530, 860, max(1, price - (1 if u < 0.95 else 0)), BLUE, 0.9)
+        shop(cr, t, 190, 860, price, RED, 1.2)
+        shop(cr, t, 530, 860, max(1, price - (1 if u < 0.95 else 0)), BLUE, 1.2)
         if t >= A("p11", "neither"):
             stamp(cr, t, A("p11", "money."), 360, 300, "NOBODY WINS", col=RED, size=62)
     vignette(cr, 0.3)
@@ -236,7 +235,7 @@ def scene_shops(cr, t, tl):
 def scene_end(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#cdb8ff"), hexc("#fff1d6"), seed=8)
-    small_room(cr, t, 160, 560, 400, 380, FRIEND_A, eyes="half", mouth="flat", arms=("think", "front"))
+    small_room(cr, t, 180, 560, 360, 320, FRIEND_A, eyes="half", mouth="flat", arms=("think", "front"))
     sign(cr, t, A("p12", "room."), 360, 190, "YOU'RE IN THAT ROOM", col=GOLD, size=52)
     sign(cr, t, A("p12", "Trust"), 190, 400, "TRUST", col=GREEN, size=60, rot=-0.06)
     sign(cr, t, A("p12", "save"), 530, 400, "SAVE MYSELF", col=RED, size=44, rot=0.05)

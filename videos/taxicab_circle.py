@@ -260,7 +260,7 @@ def scene_named(cr, t, tl):
 def scene_comment(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1a1a2e"), hexc("#3a2a5a"), seed=5)
-    k = appear(t, A("c11"), 0.4)
+    k = max(0.01, appear(t, A("c11"), 0.4))
     cr.save()
     cr.translate(360, 520)
     cr.scale(k, k)

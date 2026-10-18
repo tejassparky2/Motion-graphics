@@ -63,7 +63,16 @@ A short detective story (fiction).
 
 GRANDMA = dict(hair="bun", hair_col=hexc("#d8d8de"), shirt=hexc("#c86a8a"), pants=hexc("#5a3a5a"), skin="light")
 SUSPECT = dict(skin="olive", hair="short", hair_col=hexc("#2b1a12"), stache=hexc("#2b1a12"), shirt=hexc("#9fc8ef"),
-               pants=hexc("#9fc8ef"), build="adult")
+               pants=hexc("#9fc8ef"), build="adult", glasses=False)
+
+
+def nclock(cr, t, x, y, r, minutes):
+    """A wall clock with 12 / 3 / 6 / 9 on its face (drawn mirrored too when the caller flips the canvas)."""
+    clock(cr, t, x, y, r, minutes)
+    for k, n in enumerate(("12", "3", "6", "9")):
+        a = k * math.pi / 2 - math.pi / 2
+        bold_text(cr, n, x + 0.6 * r * math.cos(a), y + 0.6 * r * math.sin(a) + 0.11 * r, 0.3 * r, OUTLINE,
+                  outline=None, shadow=0)
 
 
 def suspect(cr, t, x, y, s, tl=None, **kw):
@@ -103,7 +112,7 @@ def scene_case(cr, t, tl):
     _hotel_room(cr, t)
     cr.save()
     enter(cr, camera(t, [(0.0, (1.0, 360, 640)), (A("m1", "only"), (1.1, 330, 660))], dur=0.7))
-    clock(cr, t, 160, 250, 80, 540)                                 # 9:00 on the wall
+    nclock(cr, t, 110, 440, 62, 540)                                # 9:00 on the wall
     rrect(cr, 120, 640, 220, 200, 10)                               # the display stand
     paint(cr, hexc("#5a3a2a"), OUTLINE, 6)
     rrect(cr, 150, 520, 160, 130, 10)                               # empty glass case
@@ -150,7 +159,7 @@ def mirrored_clock(cr, t, x, y, r, minutes):
     cr.save()
     cr.translate(x, y)
     cr.scale(-1, 1)
-    clock(cr, t, 0, 0, r, minutes)
+    nclock(cr, t, 0, 0, r, minutes)
     cr.restore()
 
 
@@ -201,7 +210,7 @@ def scene_flip(cr, t, tl):
     if t >= A("m6", "flips"):
         mirrored_clock(cr, t, 530, 520, 110, 540)
         bold_text(cr, "IN THE MIRROR", 530, 340, 38, WHITE)
-    clock(cr, t, 180, 520, 110, 540)
+    nclock(cr, t, 180, 520, 110, 540)
     if t >= A("m6", "flips"):                                       # a swap arrow between them
         u = ease_out(seg(t, A("m6", "flips"), A("m6", "right.", end=True)))
         stroke_line(cr, [(300, 700), (lerp(300, 410, u), 700)], 10, GOLD, curve=False)
@@ -227,7 +236,7 @@ def scene_selfie(cr, t, tl):
     cr.save()
     cr.translate(360, 840)
     cr.scale(-1, 1)                                                  # backwards shirt text
-    bold_text(cr, "COOL", 0, 0, 38, RED)
+    bold_text(cr, "COOL", 0, -10, 60, RED)
     cr.restore()
     cr.restore()
     sign(cr, t, A("m8", "backwards."), 360, 170, "BACKWARDS!", col=PURPLE, size=64)
@@ -239,7 +248,7 @@ def scene_awake(cr, t, tl):
     studio(cr, t, hexc("#2a1420"), hexc("#5a2a3a"), seed=7)
     cr.save()
     cr.translate(360, 560)
-    clock(cr, t, 0, 0, 150, 540)
+    nclock(cr, t, 0, 0, 150, 540)
     cr.restore()
     if t >= A("m9", "awake."):
         u = ease_out(seg(t, A("m9", "awake."), A("m9", "awake.") + 0.4))
@@ -256,7 +265,7 @@ def scene_sweat(cr, t, tl):
     A = tl.at
     _hotel_room(cr, t)
     cr.save()
-    enter(cr, camera(t, [(A("m10") - 0.3, (1.3, 470, 600)), (A("m11"), (1.3, 250, 600))], dur=0.5))
+    enter(cr, camera(t, [(A("m10") - 0.3, (1.12, 380, 620)), (A("m11"), (1.12, 340, 620))], dur=0.5))
     suspect(cr, t, 520, 980, 0.95, tl, eyes="wide", arms=("out", "out"), sweat=True,
             brows="sad" if t >= A("m11") else "angry")
     grandma(cr, t, 200, 980, 0.95, tl, cup=True, eyes="half", brows="raise", arms=("hold", "hips"))

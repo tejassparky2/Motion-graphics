@@ -31,13 +31,12 @@ SCRIPT = [
     dict(id="n5", scene="predict", text="Last night, I predicted your choice. If you take only the closed box, it has a "
                                         "million dollars. If you take both, it's empty.", speaker="machine"),
     dict(id="n6", scene="record", text="It has played ten thousand times. It has never been wrong."),
-    dict(id="n7", scene="think", text="So the kid thinks. The money is already in the box, or it isn't. Nothing I do "
-                                      "now can change it."),
+    dict(id="n7", scene="think", text="So the kid thinks. The money is already in the box, or it isn't."),
     dict(id="n8", scene="think", text="So taking both always gets me a thousand dollars more."),
     dict(id="n9", scene="lines", text="But then. Everyone who took both, walked away with a thousand. Everyone who "
                                       "took one, walked away a millionaire."),
-    dict(id="n10", scene="teacher", text="It's like a teacher who always knows who studied, and writes the exam the "
-                                         "night before."),
+    dict(id="n10", scene="teacher", text="Like a teacher who knows who studied, and writes the exam the night "
+                                         "before."),
     dict(id="n11", scene="named", text="Philosophers have argued about this for fifty years. It's called Newcomb's "
                                        "problem."),
     dict(id="n12", scene="nice", text="Okay, machine. What am I going to pick?", speaker="kid"),
@@ -178,7 +177,7 @@ def scene_fair(cr, t, tl):
     named = t >= A("n1", "name.")
     machine(cr, t, 490, 960, 0.85, screen_text="HELLO, SAM" if named else None)
     stop = A("n1", "says")
-    kx = lerp(-60, 230, ease_out(seg(t, 0.0, stop)))
+    kx = lerp(70, 230, ease_out(seg(t, 0.0, stop)))
     person(cr, t, kx, 1000, 0.75, "kid", eyes="wide" if named else "open", mouth="o" if named else "smile",
            arms=("down", "down"), walk=t * 9 if t < stop else None, look=(0.5, -0.3) if named else (0.3, 0))
     cr.restore()
@@ -203,12 +202,10 @@ def scene_boxes(cr, t, tl):
     studio(cr, t, hexc("#2b1f4a"), hexc("#5a3a6e"), seed=3)
     cr.save()
     enter(cr, camera(t, [(A("n3") - 0.3, (1.0, 360, 640)), (A("n4"), (1.05, 360, 620))]))
-    if t >= A("n3", "glass"):
-        k = appear(t, A("n3", "glass"), 0.4)
-        glass_box(cr, t, 200, 780, 1.1 * k)
-    if t >= A("n3", "closed"):
-        k = appear(t, A("n3", "closed"), 0.4)
-        closed_box(cr, t, 520, 780, 1.1 * k)
+    k = max(0.01, appear(t, A("n3"), 0.4))
+    glass_box(cr, t, 200, 800, 1.4 * k)
+    k = max(0.01, appear(t, A("n3") + 0.2, 0.4)) if t >= A("n3") + 0.2 else 0.01
+    closed_box(cr, t, 520, 800, 1.4 * k)
     cr.restore()
     sign(cr, t, A("n3", "thousand"), 200, 400, "$1,000", col=GREEN, size=56, end=A("n4") - 0.05)
     sign(cr, t, A("n3", "closed"), 520, 400, "???", col=GOLD, size=56, end=A("n4") - 0.05)
@@ -261,7 +258,7 @@ def scene_think(cr, t, tl):
         rrect(cr, -40, -30, 80, 60, 10)
         paint(cr, GOLD, OUTLINE, 5)
         cr.restore()
-    sign(cr, t, A("n7", "Nothing"), 360, 170, "CAN'T CHANGE IT NOW", col=BLUE, size=52, end=A("n8") - 0.05)
+    sign(cr, t, A("n7", "already"), 360, 170, "CAN'T CHANGE IT NOW", col=BLUE, size=52, end=A("n8") - 0.05)
     if t >= A("n8"):
         glass_box(cr, t, 200, 560, 0.8)
         sign(cr, t, A("n8", "both"), 360, 170, "BOTH = +$1,000", col=GREEN, size=60)
@@ -271,24 +268,22 @@ def scene_think(cr, t, tl):
 def scene_lines(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f2f4a"), hexc("#4a5a7e"), seed=9)
-    for row, (key, label, col, rich) in enumerate((("both,", "BOTH", PURPLE, False), ("one,", "ONE BOX", BLUE, True))):
+    rows = (("both,", "TOOK BOTH: $1,000", PURPLE, False, 540, 245), ("one,", "TOOK ONE: $1,000,000", GREEN, True, 860, 575))
+    for row, (key, label, col, rich, y, ly) in enumerate(rows):
         st = A("n9", key)
         if t < st:
             continue
-        y = 560 + row * 300
-        bold_text(cr, label, 110, y - 200, 40, col)
         for k in range(4):
-            x = 140 + k * 140
-            person(cr, t, x, y, 0.42, ("kid", "teacher", "sir", "reporter")[(k + row) % 4], eyes="happy" if rich else
+            x = 120 + k * 160
+            person(cr, t, x, y, 0.46, ("kid", "teacher", "sir", "reporter")[(k + row) % 4], eyes="happy" if rich else
                    "half", mouth="grin" if rich else "flat", arms=("up", "up") if rich else ("down", "down"),
                    seed=k + row * 4)
             if rich:
-                for j in range(3):
-                    money(cr, x - 30 + j * 30, y - 280 - j * 14 - 10 * math.sin(t * 3 + k), 0.2 * j, 0.45)
+                for j in range(2):
+                    money(cr, x - 20 + j * 40, y - 140 - 8 * math.sin(t * 3 + k + j), 0.2 * j, 0.45)
             else:
-                money(cr, x + 40, y - 120, 0.2, 0.35)
-        sign(cr, t, st + 0.3, 560, y - 200, "$1,000,000" if rich else "$1,000", col=GREEN if rich else hexc("#8a8a9a"),
-             size=40)
+                money(cr, x + 40, y - 100, 0.2, 0.35)
+        sign(cr, t, st, 360, ly, label, col=col, size=46)
     vignette(cr, 0.4)
 
 
@@ -309,11 +304,11 @@ def scene_teacher(cr, t, tl):
 def scene_named(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#f4e6c8"), hexc("#e8d0a0"), seed=11)
-    for k, (x, s) in enumerate(((180, 0.55), (540, 0.55))):         # two thinkers arguing
+    for k, (x, s) in enumerate(((190, 0.78), (530, 0.78))):         # two thinkers arguing
         person(cr, t, x, 960, s, ("russell", "aquinas")[k], facing=1 if k == 0 else -1, eyes="angry", brows="angry",
                mouth="talk" if int(t * 3 + k) % 2 else "open", arms=("point", "hips"), seed=k)
-    bold_text(cr, "ONE BOX!", 180, 520, 40, BLUE)
-    bold_text(cr, "BOTH!", 540, 520, 40, PURPLE)
+    bold_text(cr, "ONE BOX!", 190, 440, 56, BLUE)
+    bold_text(cr, "BOTH!", 530, 440, 56, PURPLE)
     sign(cr, t, A("n11", "fifty"), 360, 170, "50 YEARS OF ARGUING", col=RED, size=52, end=A("n11", "called") - 0.05)
     sign(cr, t, A("n11", "Newcomb's"), 360, 170, "NEWCOMB'S PROBLEM", col=GOLD, size=56, sub="1969", sub_col=WHITE)
     vignette(cr, 0.35)

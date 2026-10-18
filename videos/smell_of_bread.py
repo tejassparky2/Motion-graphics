@@ -22,7 +22,7 @@ TAIL = 1.0
 voice.SPEAKERS.update({"baker": dict(voice="am_santa", speed=1.0, turbo_ref="am_santa"),
                        "judge": dict(voice="bm_george", speed=0.95, turbo_ref="bm_george")})
 POOR = dict(skin="tan", hair="short", hair_col=hexc("#5a3418"), beard=hexc("#5a3418"), shirt=hexc("#b8a088"),
-            pants=hexc("#7a6a5a"), tunic=True, build="adult")
+            pants=hexc("#7a6a5a"), tunic=True, belt=hexc("#5a3a20"), build="adult")
 BAKER = dict(skin="light", hair="short", hair_col=hexc("#8a5a3a"), stache=hexc("#8a5a3a"), shirt=WHITE,
              pants=hexc("#5a5a6a"), apron=WHITE, build="adult")
 

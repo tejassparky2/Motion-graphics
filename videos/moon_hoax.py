@@ -34,8 +34,8 @@ SCRIPT = [
                                       "can print."),
     dict(id="h5", scene="africa", text="Just one tiny problem. The astronomer was real. But he was busy in South "
                                        "Africa, and had no idea any of this was printed in his name. [chuckle]"),
-    dict(id="h6", scene="office", text="The whole thing was made up. In an office. Bat-people. Invented by a writer "
-                                       "with a deadline."),
+    dict(id="h6", scene="office", text="The whole thing was made up. In an office. The bats, the unicorns, all of it. "
+                                       "Invented by a writer with a deadline."),
     dict(id="h7", scene="click", text="Bro invented clickbait almost two hundred years ago. Before the internet. "
                                       "Before the light bulb."),
     dict(id="h8", scene="name", text="Today it's called the Great Moon Hoax."),
@@ -213,8 +213,8 @@ def scene_moon(cr, t, tl):
     if t >= A("h2", "Beavers"):
         beaver(cr, t, lerp(820, 560, ease_out(seg(t, A("h2", "Beavers"), A("h2", "Beavers") + 0.6))), 960, 1.0)
     if t >= A("h2", "people."):
-        k = appear(t, A("h2", "people."), 0.5)
-        batperson(cr, t, 360, 620 + 40 * math.sin(t * 2), 0.75 * k)
+        k = max(0.01, appear(t, A("h2", "people."), 0.5))
+        batperson(cr, t, 360, 720 + 30 * math.sin(t * 2), 0.7 * k)
     cr.restore()
     sign(cr, t, A("h2", "germs,"), 360, 170, "NOT JUST GERMS", col=PURPLE, size=56, end=A("h2", "Unicorns.") - 0.05)
     sign(cr, t, A("h2", "wings."), 360, 170, "BAT-PEOPLE", col=RED, size=76)
@@ -276,7 +276,7 @@ def scene_office(cr, t, tl):
     rrect(cr, 120, 760, 480, 40, 8)                                  # desk
     paint(cr, hexc("#7a4a2a"), OUTLINE, 6)
     person(cr, t, 360, 1000, 0.95, "reporter", eyes="half", mouth="smug", arms=("write", "write"))
-    if t >= A("h6", "Bat-people."):
+    if t >= A("h6", "bats,"):
         rrect(cr, 380, 640, 180, 120, 6)                             # his doodle of a bat-person
         paint(cr, PAPER, OUTLINE, 4)
         batperson(cr, t, 470, 750, 0.18, flap=0.3)
