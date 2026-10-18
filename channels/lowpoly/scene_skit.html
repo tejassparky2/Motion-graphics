@@ -191,37 +191,8 @@ function poseFace(f, p, t, blinkPh) {
   f.arc.position.y = -o.my + (sm >= 0 ? o.mw * .5 : -o.mw * .4) * Math.abs(sm);
 }
 
-// ---------- Dev ----------
+// ---------- Dev (and guests built the same way: buildPerson) ----------
 const SKIN = mat(0xe0a07a), HOOD = mat(0x3d5a6e), HAIR = mat(0x2a1d18);
-const dev = new THREE.Group(); dev.position.set(0, 0, -.95); scene.add(dev);
-const devBody = new THREE.Group(); dev.add(devBody);
-{
-  const legs = mesh(new THREE.BoxGeometry(.34, .14, .42), mat(0x2b3045)); legs.position.set(0, .5, .12); devBody.add(legs);
-  const torso = mesh(jitter(new THREE.CylinderGeometry(.17, .21, .5, 7, 2), .02), HOOD); torso.position.y = .82; devBody.add(torso);
-  const hood = mesh(jitter(new THREE.TorusGeometry(.14, .055, 5, 9), .01), HOOD); hood.position.set(0, 1.07, -.03); hood.rotation.x = 1.3; devBody.add(hood);
-  for (const s of [-1, 1]) { const st = mesh(new THREE.CylinderGeometry(.006, .006, .12, 4), mat(0xe8e2d8)); st.position.set(s * .04, .99, .19); devBody.add(st); }
-}
-const devHead = new THREE.Group(); devHead.position.set(0, 1.27, 0); devBody.add(devHead);
-{
-  const head = mesh(jitter(new THREE.IcosahedronGeometry(.16, 1), .015), SKIN); head.scale.set(1, 1.08, .95); devHead.add(head);
-  const neck = mesh(new THREE.CylinderGeometry(.05, .06, .1, 6), SKIN); neck.position.y = -.17; devHead.add(neck);
-  for (let i = 0; i < 9; i++) {               // messy low-poly hair
-    const a = (i / 9) * Math.PI * 2;
-    const tuft = mesh(jitter(new THREE.ConeGeometry(.07, .16, 4), .015), HAIR);
-    tuft.position.set(Math.cos(a) * .1, .12 + rnd() * .03, Math.sin(a) * .09 - .02);
-    tuft.rotation.set(Math.sin(a) * .9 - .2, 0, -Math.cos(a) * .9); devHead.add(tuft);
-  }
-  const capH = mesh(jitter(new THREE.SphereGeometry(.165, 9, 6, 0, Math.PI * 2, 0, Math.PI * .45), .015), HAIR);
-  capH.position.set(0, .03, -.015); capH.rotation.x = -.25; devHead.add(capH);
-  const fringe = mesh(jitter(new THREE.ConeGeometry(.06, .12, 4), .01), HAIR); fringe.position.set(.05, .12, .12); fringe.rotation.set(1.9, 0, .4); devHead.add(fringe);
-  for (const s of [-1, 1]) { const ear = mesh(new THREE.IcosahedronGeometry(.035, 0), SKIN); ear.position.set(s * .16, 0, 0); devHead.add(ear); }
-  const nose = mesh(new THREE.IcosahedronGeometry(.025, 0), SKIN); nose.position.set(0, -.02, .155); devHead.add(nose);
-  for (const s of [-1, 1]) {                   // round glasses
-    const rimG = new THREE.Mesh(new THREE.TorusGeometry(.042, .006, 5, 16), basic(0x1a1a22)); rimG.position.set(s * .06, .02, .155); devHead.add(rimG);
-  }
-  const bridge = new THREE.Mesh(new THREE.BoxGeometry(.035, .006, .006), basic(0x1a1a22)); bridge.position.set(0, .025, .158); devHead.add(bridge);
-}
-const devFace = buildFace(devHead, {y: .02, z: .148, sp: .06, er: .022, sclera: true, mw: .028, my: .085, browMat: basic(0x2a1d18)});
 function arm(parent, s, upper, fore, m, hand) {
   const sh = new THREE.Group(); sh.position.set(s * .21, 1.0, 0); parent.add(sh);
   const u = mesh(new THREE.CylinderGeometry(.045, .05, upper, 6), m); u.position.y = -upper / 2; sh.add(u);
@@ -230,7 +201,52 @@ function arm(parent, s, upper, fore, m, hand) {
   const h = mesh(jitter(new THREE.IcosahedronGeometry(.045, 0), .01), hand); h.position.y = -fore - .02; el.add(h);
   return {sh, el, s};
 }
-const devArms = [arm(devBody, -1, .27, .25, HOOD, SKIN), arm(devBody, 1, .27, .25, HOOD, SKIN)];
+// o: {skin, cloth, hair, hoodie, glasses, pos:[x,z], scale, bald}
+function buildPerson(o) {
+  const skin = mat(o.skin), cloth = mat(o.cloth), hair = mat(o.hair);
+  const group = new THREE.Group(); group.position.set(o.pos[0], 0, o.pos[1]); group.scale.setScalar(o.scale || 1); scene.add(group);
+  const body = new THREE.Group(); group.add(body);
+  const legs = mesh(new THREE.BoxGeometry(.34, .14, .42), mat(o.pants || 0x2b3045)); legs.position.set(0, .5, .12); body.add(legs);
+  const torso = mesh(jitter(new THREE.CylinderGeometry(.17, .21, .5, 7, 2), .02), cloth); torso.position.y = .82; body.add(torso);
+  if (o.hoodie !== false) {
+    const hood = mesh(jitter(new THREE.TorusGeometry(.14, .055, 5, 9), .01), cloth); hood.position.set(0, 1.07, -.03); hood.rotation.x = 1.3; body.add(hood);
+    for (const s of [-1, 1]) { const st = mesh(new THREE.CylinderGeometry(.006, .006, .12, 4), mat(0xe8e2d8)); st.position.set(s * .04, .99, .19); body.add(st); }
+  } else {                                                  // cardigan: a collar and buttons
+    const col = mesh(new THREE.TorusGeometry(.1, .03, 5, 9), cloth); col.position.set(0, 1.05, .02); col.rotation.x = 1.4; body.add(col);
+    for (let i = 0; i < 3; i++) { const b = new THREE.Mesh(new THREE.SphereGeometry(.012, 6, 4), basic(0x3a2a1a)); b.position.set(0, .95 - i * .09, .19 - i * .01); body.add(b); }
+  }
+  const head = new THREE.Group(); head.position.set(0, 1.27, 0); body.add(head);
+  const hd = mesh(jitter(new THREE.IcosahedronGeometry(.16, 1), .015), skin); hd.scale.set(1, 1.08, .95); head.add(hd);
+  const neck = mesh(new THREE.CylinderGeometry(.05, .06, .1, 6), skin); neck.position.y = -.17; head.add(neck);
+  if (!o.bald) {
+    for (let i = 0; i < 9; i++) {               // messy low-poly hair
+      const a = (i / 9) * Math.PI * 2;
+      const tuft = mesh(jitter(new THREE.ConeGeometry(.07, .16, 4), .015), hair);
+      tuft.position.set(Math.cos(a) * .1, .12 + rnd() * .03, Math.sin(a) * .09 - .02);
+      tuft.rotation.set(Math.sin(a) * .9 - .2, 0, -Math.cos(a) * .9); head.add(tuft);
+    }
+    const fringe = mesh(jitter(new THREE.ConeGeometry(.06, .12, 4), .01), hair); fringe.position.set(.05, .12, .12); fringe.rotation.set(1.9, 0, .4); head.add(fringe);
+  } else {                                      // thin grey hair at the sides only
+    for (const sgn of [-1, 1]) { const sd = mesh(jitter(new THREE.SphereGeometry(.07, 7, 5), .01), hair); sd.position.set(sgn * .13, .02, -.03); sd.scale.set(.6, 1, 1.1); head.add(sd); }
+  }
+  const capH = mesh(jitter(new THREE.SphereGeometry(.165, 9, 6, 0, Math.PI * 2, 0, Math.PI * (o.bald ? .2 : .45)), .015), hair);
+  capH.position.set(0, .03, -.015); capH.rotation.x = -.25; capH.visible = !o.bald; head.add(capH);
+  for (const s of [-1, 1]) { const ear = mesh(new THREE.IcosahedronGeometry(.035, 0), skin); ear.position.set(s * .16, 0, 0); head.add(ear); }
+  const nose = mesh(new THREE.IcosahedronGeometry(o.bald ? .03 : .025, 0), skin); nose.position.set(0, -.02, .155); head.add(nose);
+  if (o.glasses !== false) {
+    for (const s of [-1, 1]) { const rimG = new THREE.Mesh(new THREE.TorusGeometry(.042, .006, 5, 16), basic(0x1a1a22)); rimG.position.set(s * .06, .02, .155); head.add(rimG); }
+    const bridge = new THREE.Mesh(new THREE.BoxGeometry(.035, .006, .006), basic(0x1a1a22)); bridge.position.set(0, .025, .158); head.add(bridge);
+  }
+  if (o.moustache) { const m = mesh(new THREE.BoxGeometry(.07, .018, .02), hair); m.position.set(0, -.05, .15); head.add(m); }
+  const face = buildFace(head, {y: .02, z: .148, sp: .06, er: .022, sclera: true, mw: .028, my: .085, browMat: basic(o.hair)});
+  const arms = [arm(body, -1, .27, .25, cloth, skin), arm(body, 1, .27, .25, cloth, skin)];
+  const mug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xe8e4dc)); mug.position.set(0, -.3, .05); mug.visible = false; arms[1].el.add(mug);
+  const hoodUp = mesh(new THREE.SphereGeometry(.235, 10, 7, 0, Math.PI * 2, 0, Math.PI * .62), new THREE.MeshStandardMaterial({color: 0x35505f, flatShading: true, roughness: .85}));
+  hoodUp.position.set(0, .02, -.02); hoodUp.visible = false; head.add(hoodUp);
+  return {group, body, head, face, arms, mug, hoodUp};
+}
+const DEV = buildPerson({skin: 0xe0a07a, cloth: 0x3d5a6e, hair: 0x2a1d18, pos: [0, -.95]});
+const dev = DEV.group, devBody = DEV.body, devHead = DEV.head, devFace = DEV.face, devArms = DEV.arms;
 
 // ---------- Claude: the Claude Code mascot (orange block, two upright eyes, side nubs, four legs), in low poly ----------
 const CL = mat(0xc9603a, {roughness: .7}), CLD = mat(0xb0532f);
@@ -294,10 +310,7 @@ const laptop = new THREE.Group(); laptop.visible = false; scene.add(laptop);
 }
 const lapLight = new THREE.PointLight(0x9fc2ff, 0, .8, 1.5); scene.add(lapLight);
 const alarm = new THREE.PointLight(0xff3040, 0, 3, 1.2); alarm.position.set(0, 1.4, .2); scene.add(alarm);
-const handMug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xe8e4dc)); handMug.position.set(0, -.3, .05); handMug.visible = false;
-devArms[1].el.add(handMug);
-const hoodUp = mesh(new THREE.SphereGeometry(.235, 10, 7, 0, Math.PI * 2, 0, Math.PI * .62), new THREE.MeshStandardMaterial({color: 0x35505f, flatShading: true, roughness: .85}));
-hoodUp.position.set(0, .02, -.02); hoodUp.visible = false; devHead.add(hoodUp);
+const handMug = DEV.mug, hoodUp = DEV.hoodUp;
 
 // ---------- direction (per episode: directions/<name>.js, picked with ?dir=<name>) ----------
 // emotions: brow, ang (inner-up), lid, smile, wide, look, happyEyes
@@ -426,6 +439,9 @@ if (D.SMOOTH) scene.traverse(o => {
 if (D.CAST && D.CAST.claude) claude.position.set(D.CAST.claude[0], .75, D.CAST.claude[1]);
 if (D.CAST && D.CAST.claude === false) claude.visible = false;               // a Codex-only episode
 const CX0 = D.CAST && Array.isArray(D.CAST.codex) ? D.CAST.codex : [.2, .02];   // Codex's spot on the desk
+const GUEST = D.CAST && D.CAST.guest ? Object.assign({name: "dad"}, D.CAST.guest, {rig: buildPerson(D.CAST.guest)}) : null;
+if (D.CAST && D.CAST.dev) dev.position.set(D.CAST.dev[0], 0, D.CAST.dev[1]);
+if (D.CAST && D.CAST.devTurn) dev.rotation.y = D.CAST.devTurn;
 const beats = T.beats;
 window.DURATION = T.total;
 function beatAt(t) { let cur = beats[0], prev = beats[0]; for (const b of beats) { if (b.start - .12 <= t) { prev = cur; cur = b; } } return [cur, prev]; }
@@ -443,6 +459,15 @@ function emotionFor(who, t) {
   p.open = clamp(talkS * 1.15);
   if (talkS > .1) p.happyEyes = Math.min(p.happyEyes, .4);
   p.talk = talkS;
+  // life: small eye darts every ~0.7 s, and listeners glance toward whoever is speaking
+  const sac = Math.floor(t / .7), jx = ((sac * 7919) % 13) / 13 - .5, jy = ((sac * 104729) % 7) / 7 - .5;
+  const dart = Math.exp(-((t % .7) / .12)) ;                        // quick move, then hold
+  p.look = [p.look[0] + .12 * jx * (1 - dart * .5), p.look[1] + .08 * jy * (1 - dart * .5)];
+  const sp = cur.who;
+  if (sp && sp !== who && talkS < .05 && cur.start - .1 <= t && t < cur.end + .4) {
+    const side = {claude: -.35, codex: .35, dev: 0, dad: 0}[sp];
+    if (side !== undefined && (who === "dev" || who === "dad")) p.look = [p.look[0] + side * .7, p.look[1]];
+  }
   return p;
 }
 function setArm(a, shX, shZ, elX) { a.sh.rotation.set(shX, 0, a.s * shZ); a.el.rotation.set(elX, 0, 0); }
@@ -472,28 +497,45 @@ const popT = (dirOf(beats[0], "codex")[0] === "hidden" && firstShown) ? firstSho
 window.renderAt = function (t) {
   const [cur, prev] = beatAt(t);
   const u = seg(t, cur.start - .15, cur.start + .2);
-  // ----- Dev
-  const dp = emotionFor("dev", t);
-  const devPose = dirOf(cur, "dev")[1], devPrev = dirOf(prev, "dev")[1];
-  const pa = poseFrom(devPrev), pb = poseFrom(devPose);
-  devArms.forEach((a, i) => { const A = pa[1 - i], B = pb[1 - i]; setArm(a, lerp(A[0], B[0], u), lerp(A[1], B[1], u), lerp(A[2], B[2], u)); });
-  if (devPose === "point") devArms[1].el.rotation.x += Math.sin(t * 9) * .08 * envAt("dev", t);
-  if (devPose === "lunge") devArms.forEach((a, i) => a.el.rotation.x += Math.sin(t * 18 + i) * .12);
-  if (devPose === "type") devArms.forEach((a, i) => { a.el.rotation.x += Math.abs(Math.sin(t * 21 + i * 1.7)) * .22; a.sh.rotation.x += Math.sin(t * 15 + i) * .04; });
-  const ba = bodyFrom(devPrev), bb = bodyFrom(devPose);
-  const lean = lerp(ba[0], bb[0], u), sink = lerp(ba[1], bb[1], u), hdown = lerp(ba[2], bb[2], u);
-  devBody.position.z = .1 * lean;
-  devBody.position.y = Math.sin(t * 2.2) * .004 - .06 * sink;
-  devBody.rotation.x = .12 * lean - .08 * sink;
-  devHead.rotation.x = .18 + hdown + .25 * dp.talk * Math.sin(t * 11) * .3;
-  devHead.rotation.z = .06 * Math.sin(t * 1.3) + (dirOf(cur, "dev")[0] === "hopeful" ? .15 * u : 0);
-  devHead.rotation.y = dirOf(cur, "dev")[0] === "casual" ? -.35 * u : -.05;
-  handMug.visible = devPose === "sip";
-  const hood = devPose === "hood" ? seg(t, cur.start - .1, cur.start + .5) : (devPrev === "hood" ? 1 - u : 0);
-  hoodUp.visible = hood > .02 || !!(cur.id === beats[beats.length - 1].id && D.HOOD_AT_END);   // !!: undefined would still draw
-  hoodUp.rotation.x = lerp(-1.7, .35, hood);
-  poseFace(devFace, dp, t, .4);
-  devFace.group.visible = hood < .85;
+  // ----- Dev (and the guest): one routine, keyed by the character's name in the direction file
+  function animatePerson(who, R, cur, prev, u, t) {
+    const dp = emotionFor(who, t);
+    const pose = dirOf(cur, who)[1], pprev = dirOf(prev, who)[1], emo = dirOf(cur, who)[0];
+    const pa = poseFrom(pprev), pb = poseFrom(pose);
+    R.arms.forEach((a, i) => { const A = pa[1 - i], B = pb[1 - i]; setArm(a, lerp(A[0], B[0], u), lerp(A[1], B[1], u), lerp(A[2], B[2], u)); });
+    if (pose === "point" || pose === "pointscreen") R.arms[1].el.rotation.x += Math.sin(t * 9) * .08 * envAt(who, t);
+    if (pose === "lunge") R.arms.forEach((a, i) => a.el.rotation.x += Math.sin(t * 18 + i) * .12);
+    if (pose === "type") R.arms.forEach((a, i) => { a.el.rotation.x += Math.abs(Math.sin(t * 21 + i * 1.7)) * .22; a.sh.rotation.x += Math.sin(t * 15 + i) * .04; });
+    if (pose === "shrug") { const k = seg(t, cur.start, cur.start + .35) * (1 - seg(t, cur.end, cur.end + .4)); R.arms.forEach(a => { a.sh.rotation.z += a.s * .9 * k; a.el.rotation.x -= 1.2 * k; }); }
+    const ba = bodyFrom(pprev), bb = bodyFrom(pose);
+    const lean = lerp(ba[0], bb[0], u), sink = lerp(ba[1], bb[1], u), hdown = lerp(ba[2], bb[2], u);
+    R.body.position.z = .1 * lean;
+    R.body.position.y = Math.sin(t * 2.2) * .004 - .06 * sink;
+    R.body.rotation.x = .12 * lean - .08 * sink;
+    R.head.rotation.x = .18 + hdown + .25 * dp.talk * Math.sin(t * 11) * .3;
+    R.head.rotation.z = .06 * Math.sin(t * 1.3) + (emo === "hopeful" ? .15 * u : 0);
+    R.head.rotation.y = emo === "casual" ? -.35 * u : -.05;
+    // reactions: flinch (jolt back on a shock), doubletake (look away, snap back), slump (sink over the line), sitback
+    if (pose === "flinch") { const k = Math.exp(-(t - cur.start + .1) * 6) * (t > cur.start - .1 ? 1 : 0); R.body.position.z -= .08 * k; R.body.rotation.x -= .25 * k; R.head.rotation.x -= .2 * k; }
+    if (pose === "doubletake") {                           // glance away, hold, snap back with a small overshoot
+      const q = (t - cur.start) / Math.max(.8, cur.end - cur.start);
+      const away = q < .3 ? ease(q / .3) : q < .5 ? 1 : 1 - ease((q - .5) / .14);
+      const over = q >= .64 && q < .9 ? Math.sin((q - .64) / .26 * Math.PI) * .25 : 0;
+      R.head.rotation.y += -.55 * Math.max(0, away) + over;
+    }
+    if (pose === "slump") { const k = seg(t, cur.start, cur.end + .5); R.body.position.y -= .07 * k; R.body.rotation.x -= .1 * k; R.head.rotation.x += .35 * k; }
+    if (pose === "nod") R.head.rotation.x += .16 * Math.max(0, Math.sin((t - cur.start) * 9)) * (1 - seg(t, cur.start + .6, cur.start + 1.0)) * (t >= cur.start ? 1 : 0);
+    if (pose === "sitback") { const k = seg(t, cur.start - .1, cur.start + .4); R.body.position.z -= .1 * k; R.body.rotation.x -= .18 * k; R.head.rotation.x -= .1 * k; }
+    R.mug.visible = pose === "sip";
+    const hood = pose === "hood" ? seg(t, cur.start - .1, cur.start + .5) : (pprev === "hood" ? 1 - u : 0);
+    R.hoodUp.visible = hood > .02 || !!(who === "dev" && cur.id === beats[beats.length - 1].id && D.HOOD_AT_END);
+    R.hoodUp.rotation.x = lerp(-1.7, .35, hood);
+    poseFace(R.face, dp, t, who === "dev" ? .4 : 1.1);
+    R.face.group.visible = hood < .85;
+  }
+  animatePerson("dev", DEV, cur, prev, u, t);
+  if (GUEST) animatePerson(GUEST.name, GUEST.rig, cur, prev, u, t);
+  const devPose = dirOf(cur, "dev")[1];
 
   // ----- Claude (CAST.claudeFrom: hidden until that line, then pops up from behind the monitor)
   if (D.CAST && D.CAST.claudeFrom) {
@@ -509,6 +551,7 @@ window.renderAt = function (t) {
   const talkBob = cp.talk * .012 * Math.abs(Math.sin(t * 16));
   clBody.position.y = hop + talkBob + (frozen ? 0 : .004 * Math.sin(t * 3));
   clBody.scale.set(1 + .06 * cp.talk, 1 - .05 * cp.talk + (clPose === "cheer" ? .04 * hop / .03 : 0) - (frozen ? .03 * u : 0), 1);
+  if (clPose === "shrink") { const k = seg(t, cur.start - .1, cur.start + .5); clBody.scale.multiplyScalar(1 - .22 * k); clBody.position.y -= .01 * k; }
   if (clPose === "strain") {                     // thinking so hard it trembles and squashes, getting worse
     const k = seg(t, cur.start, cur.end);
     clBody.position.x = .004 * (1 + 2 * k) * Math.sin(t * 61);
@@ -516,7 +559,7 @@ window.renderAt = function (t) {
   } else clBody.position.x = 0;
   clBody.rotation.z = clPose === "headscratch" ? .12 * Math.sin(t * 2) : clPose === "salute" ? .08 : frozen ? .03 * Math.sin(t * 40) * (1 - seg(t, cur.start, cur.start + .3)) : 0;
   clBody.rotation.y = clPose === "headscratch" ? .35 : clPose === "lookother" ? -.4 * seg(t, cur.start - .1, cur.start + .3) : 0;
-  clBody.rotation.x = clPose === "lookdown" ? -.25 * u : 0;
+  clBody.rotation.x = clPose === "lookdown" ? -.25 * u : clPose === "nod" ? .2 * Math.max(0, Math.sin((t - cur.start) * 9)) * (1 - seg(t, cur.start + .6, cur.start + 1.0)) : 0;
   const nubs = {idle: [-.15, -.15], salute: [.9, -.1], cheer: [1.0, 1.0], headscratch: [1.25, -.2], nubup: [.75, -.15], freeze: [.6, .6], lookdown: [-.25, -.25]}[clPose] || [-.15, -.15];
   clArms.forEach((a, i) => { const lift = nubs[i === 1 ? 0 : 1] + (clPose === "cheer" ? .3 * Math.sin(t * 12 + i) : 0) + (clPose === "headscratch" && i === 1 ? .2 * Math.sin(t * 14) : 0) + .12 * cp.talk * Math.sin(t * 10 + i);
     a.sh.rotation.z = a.s * lift; });
@@ -530,7 +573,9 @@ window.renderAt = function (t) {
   const back = lerp(cxPrev === "backoff" ? 1 : 0, cxPose === "backoff" ? 1 : 0, seg(t, cur.start - .1, cur.start + .9));
   codex.position.set(CX0[0], lerp(.72, .98, up) + .012 * Math.sin(t * 2.6) + (cxPose === "bounce" ? .02 * Math.abs(Math.sin(t * 8)) * xp.talk : 0), CX0[1] + .14 * back);
   codex.rotation.y = Math.PI + (cxPose === "spin" ? 2 * Math.PI * seg(t, cur.start, cur.start + .6) : 0);   // a happy spin
-  if (cxPose === "lookother") cxBody.rotation.y = .4 * seg(t, cur.start - .1, cur.start + .3); else cxBody.rotation.y = 0;
+  if (cxPose === "lookother") cxBody.rotation.y = .4 * seg(t, cur.start - .1, cur.start + .3);
+  else if (cxPose === "headshake") cxBody.rotation.y = .35 * Math.sin((t - cur.start) * 14) * (1 - seg(t, cur.start + .5, cur.start + .9)) * (t >= cur.start ? 1 : 0);
+  else cxBody.rotation.y = 0;
   cxBody.rotation.z = dirOf(cur, "codex")[0] === "oops" ? -.25 * seg(t, cur.start, cur.start + .4) : .05 * Math.sin(t * 1.8);
   cxBody.rotation.x = cxPose === "lookdown" ? -.3 * u : cxPose === "nod" ? .18 * Math.max(0, Math.sin((t - cur.start) * 9)) * (1 - seg(t, cur.start + .6, cur.start + 1.0)) : -.12 * back;
   cxBody.scale.setScalar(1 + .05 * xp.talk);
@@ -583,12 +628,15 @@ window.renderAt = function (t) {
   const shot = SHOTS[shotName] || SHOTS.wide;
   const k = seg(t, s0, s1);
   const P = new THREE.Vector3(...shot.pos), L = new THREE.Vector3(...shot.look);
-  if (shot.track === "dev") {                              // keep Dev's face framed however far he leans
-    const h = devHead.getWorldPosition(new THREE.Vector3());
-    L.set(L.x, h.y + (shot.look[1] - 1.27), h.z + (shot.look[2] + .95));
+  const trackRig = shot.track === "dev" ? DEV : (GUEST && shot.track === GUEST.name) ? GUEST.rig : null;
+  if (trackRig) {                                          // keep the face framed however far the character leans
+    const h = trackRig.head.getWorldPosition(new THREE.Vector3());
+    L.set(L.x, h.y + (shot.look[1] - 1.27), h.z + (shot.look[2] - trackRig.group.position.z));
   }
   const dir = L.clone().sub(P).normalize();
   P.addScaledVector(dir, shot.push * k);
+  const pun = DIR[cur.id] && DIR[cur.id].punch;              // punch-in: a quick extra push that lands on the reveal word
+  if (pun) P.addScaledVector(dir, (typeof pun === "number" ? pun : .14) * seg(t, cur.end - .5, cur.end - .05));
   P.x += Math.sin(t * .9) * .006; P.y += Math.sin(t * 1.3) * .004;
   camera.fov = shot.fov || 38; camera.updateProjectionMatrix();
   camera.position.copy(P); camera.lookAt(L);
