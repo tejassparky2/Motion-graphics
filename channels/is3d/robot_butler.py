@@ -39,7 +39,7 @@ SCRIPT = [
     dict(id="r10", scene="bolt_class", text="I am here for the kid. I will learn for him.", speaker="bolt"),
     dict(id="r11", scene="class_wide", text="The robot gets every answer right. And that night, it hands the kid ten "
                                             "pages of notes. [laugh]"),
-    dict(id="r12", scene="bed_night", text="Engineers building real A.I. argue about this exact rule."),
+    dict(id="r12", scene="bed_night", text="Engineers building real AI argue about this exact rule."),
     dict(id="r13", scene="bed_night", text="So who should decide what's best for you? You, or the machine?", gap=0.3),
 ]
 
@@ -120,9 +120,9 @@ def draw(cr, t, tl):
     sign(cr, t, A("r11", "ten"), 360, 190, "10 PAGES OF NOTES", col=PURPLE, size=56, end=B["r11"].end + 0.3)
     sign(cr, t, A("r12", "Engineers"), 360, 220, "WHAT'S BEST FOR YOU?", col=GOLD, size=54, end=B["r12"].end + 0.2)
     if t >= B["r13"].start:
-        sign(cr, t, A("r13", "decide"), 360, 200, "WHO DECIDES?", col=GOLD, size=62)
-        sign(cr, t, A("r13", "You,"), 190, 400, "ME", col=GREEN, size=78, rot=-0.06)
-        sign(cr, t, A("r13", "machine?"), 520, 400, "THE MACHINE", col=BLUE, size=48, rot=0.05)
+        sign(cr, t, A("r13", "decide"), 360, 180, "WHO DECIDES?", col=GOLD, size=62)
+        sign(cr, t, A("r13", "You,"), 180, 310, "ME", col=GREEN, size=72, rot=-0.06)
+        sign(cr, t, A("r13", "machine?"), 520, 310, "THE MACHINE", col=BLUE, size=46, rot=0.05)
 
     cue("ding", t, 0.05)
     cue("whoosh", t, B["r8"].start)
