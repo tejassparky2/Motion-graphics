@@ -477,7 +477,12 @@ window.renderAt = function (t) {
   poseFace(devFace, dp, t, .4);
   devFace.group.visible = hood < .85;
 
-  // ----- Claude
+  // ----- Claude (CAST.claudeFrom: hidden until that line, then pops up from behind the monitor)
+  if (D.CAST && D.CAST.claudeFrom) {
+    const pc = beats.find(b => b.id === D.CAST.claudeFrom).start - .5;
+    claude.visible = t >= pc;
+    claude.position.y = lerp(.5, .75, backOut(clamp((t - pc) / .45)));
+  }
   const cp = emotionFor("claude", t);
   poseFace(clFace, cp, t, 1.9);
   const clPose = dirOf(cur, "claude")[1];
@@ -513,6 +518,19 @@ window.renderAt = function (t) {
   const bonk = cxPose === "bonk" ? Math.abs(Math.sin((t - cur.start) * 9)) : 0;
   cxHands.forEach((h, i) => { const s = i ? 1 : -1;
     h.position.set(s * lerp(.15, .035, bonk), -.02 + (cxPose === "bounce" || cxPose === "popup" ? .06 * Math.abs(Math.sin(t * 7 + i)) : 0) + .05 * (cxPose === "bonk" ? 1 : 0), .02 + .06 * (cxPose === "bonk" ? 1 : 0)); });
+  // more Codex moves: wave, glitch (visor stutters), stuck mid-spin, off (waves, then visor dies and it sinks), gone
+  const waveHand = () => cxHands[1].position.set(.14, .07 + .025 * Math.sin(t * 14), 0);
+  if (cxPose === "wave") waveHand();
+  let dark = cxPose === "glitch" && Math.sin(t * 47) * Math.sin(t * 13.7) > .15;
+  if (cxPose === "glitch") cxBody.position.x = .006 * Math.sin(t * 53); else cxBody.position.x = 0;
+  if (cxPose === "stuck") { codex.rotation.y = Math.PI + 2.3; cxBody.rotation.z = .02; codex.position.y = .98; }
+  if (cxPose === "off" || cxPose === "gone") {
+    const k = cxPose === "gone" ? 1 : seg(t, cur.end - .05, cur.end + .8);
+    if (k < .02) waveHand();
+    codex.position.y -= .5 * k; dark = k > .02;
+    codex.visible = codex.visible && k < 1;
+  }
+  VIS.color.setHex(dark ? 0x18202c : 0x9ff0ff);
 
   // ----- props and lights the episode asks for
   const fl = DIR[cur.id] && DIR[cur.id].flash;
