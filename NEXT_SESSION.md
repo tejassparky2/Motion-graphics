@@ -1,4 +1,26 @@
-# Handoff for the next session (written 14 Oct 2026)
+# Handoff for the next session (updated 18 Oct 2026; older notes below)
+
+Read CLAUDE.md first, then PROJECT_HISTORY.md and docs/owner_messages_log.md (every owner message, word for word).
+Branch: `ccr-56282fe5-evehq4` (Interestingly Strange, English). Always `git pull --rebase` before pushing: other chats
+also push here.
+
+## Status on 18 Oct 2026 (from chat session_011eLEn9HbPwBg7ViAYhwmQ5)
+- **Posting:** 4:30 PM and 7:30 PM IST, trial Oct 16-29 (then compare first-24h views with the old times).
+- **Sent to the owner as packs:** rows 34-37 (Turbo versions), 38-41 (barber, heap, spear & shield, mechanical turk;
+  Kokoro am_fenrir), 50-54 hook tests, 55/57/59 funny history (napoleon_bunnies, bucket_war, dancing_plague; Turbo +
+  tags). Next due pack: rows 42-45 (`python tools/make_pack.py out/packs 42 45`, send files + sheet).
+- **Voice:** never the owner's cloned voice. Story videos: Chatterbox Turbo stock narrator + tags. ElevenLabs Chris /
+  Liam in the other chat's videos (needs ELEVENLABS_API_KEY in the environment).
+- **Comments:** debate rule (take a side, one sharp, meaningful reason, end on a question); see CLAUDE.md.
+- **Waiting on the owner:** swipe-away / APV screenshots for hook tests 50-54 (2-3 days after posting); Oct 29 timing
+  comparison; whether to re-voice rows 38-49 (Kokoro) in Turbo.
+- **Other channels, other chats:** low-poly Claude/Codex skits -> chat session_012rinrNzawPSmYoY5bBrYza, branch
+  `ccr-56282fe5-evehq4-lowpoly` (handoff: channels/lowpoly/NEW_CHAT_PROMPT.md); doctor, news and 3D-print on their
+  own branches; Hindi in the ElevenLabs chat.
+- **New container setup:** the voice/whisper tools in this repo expect Chatterbox (Turbo) in `/home/user/.venv-clone`,
+  Kokoro, faster-whisper (medium) and rubberband; a fresh container may need them installed before voicing.
+
+# Older handoff (written 14 Oct 2026)
 
 Read CLAUDE.md first, then PROJECT_HISTORY.md (everything since Sep 29) and docs/owner_messages_log.md
 (every owner message, word for word). The owner added `ELEVENLABS_API_KEY` to this environment (check it exists; never print it).
