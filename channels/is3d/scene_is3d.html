@@ -409,7 +409,7 @@ window.renderAt = function (t) {
   const inClass = S.shot.set === "class";
   const bpose = inClass ? bd[1] : (["walk", "sit", "raise"].includes(bd[1]) ? "present" : bd[1]);
   boltBody.position.set(0, 0, 0); boltBody.rotation.set(0, 0, 0); boltHead.rotation.set(0, 0, 0);
-  if (!inClass) { bolt.position.set(.95, 0, -.45); bolt.rotation.y = -1.25; }
+  if (!inClass) { bolt.position.set(.95, 0, -.4); bolt.rotation.y = -.7; }
   else if (bpose === "walk") {
     const k = seg(t, cur.start, cur.start + .62 * (cur.end - cur.start));
     const [sx, sz] = cls.seat;
@@ -454,7 +454,7 @@ window.renderAt = function (t) {
   if (shot.track) {
     const tgt = {kid: kid.head, bolt: boltHead, teacher: teacher.head}[shot.track].getWorldPosition(new THREE.Vector3());
     const off = new THREE.Vector3(...shot.look).sub(new THREE.Vector3(...shot.pos));
-    L.copy(tgt); if (shot.track === "bolt" && !inClass) { P.set(tgt.x - 1.2, tgt.y + .08, tgt.z + .5); L.y -= .18; }
+    L.copy(tgt); if (shot.track === "bolt" && !inClass) { const a = bolt.rotation.y; P.set(tgt.x + 1.2 * Math.sin(a) + .15, tgt.y + .08, tgt.z + 1.2 * Math.cos(a)); L.y -= .18; }
     else if (shot.track === "bolt") { P.set(tgt.x - .5, tgt.y + .62, tgt.z - 1.35); L.y -= .1; }
     else P.copy(tgt).sub(off.setLength(off.length()));
   }
