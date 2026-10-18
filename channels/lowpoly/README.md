@@ -52,3 +52,9 @@ used both, so the channel's first reel is a new one-AI episode 1 (scripts/ep01_a
    right! I apologize for the confusion." and a cheerful "5 mushrooms you should never eat" list as the punchline.
 What makes them funny: one recognisable AI habit pushed further on every line, a running visual gag (a meter, a
 card), very short deadpan replies with real pauses, and a last line that shows nothing was learned.
+7. **Train / "I'm switching to Codex"** (53 s, comedy; owner, 18 Oct: "1 more reference please adapt"): Dev and
+   Claude on a night train; Codex appears **only as a chat panel** ("Hey! 👋 Want me to take this one?"), never as a
+   character. Navy-blue night with warm key light and blurred city lights behind; realistic coding-agent tool-log
+   panels (Read / Edit / Write / Bash rows with +/- counts, "✓ 12 passed", an orange "Running tests…" line); small
+   white captions above the characters. Adapted from episode 1 (new): `MOOD = "night"` (navy room, city window
+   behind Dev), the lived-in desk (`DETAILS`), tool-log cards and small white captions in the upper middle.

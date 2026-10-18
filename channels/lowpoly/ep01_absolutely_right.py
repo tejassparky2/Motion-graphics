@@ -18,7 +18,7 @@ from importlib import util as _u
 _spec = _u.spec_from_file_location("lp_ep01", os.path.join(os.path.dirname(os.path.abspath(__file__)), "ep01_code_review.py"))
 _ep1 = _u.module_from_spec(_spec)
 _spec.loader.exec_module(_ep1)
-panel, mono, clean_caption = _ep1.panel, _ep1.mono, _ep1.clean_caption      # same panels and captions as before
+mono = _ep1.mono
 
 NARRATOR = dict(turbo=True, turbo_ref="am_michael")      # Dev: male voice (owner, 17 Oct)
 DIRECTION = "ep01ar"
@@ -39,7 +39,7 @@ SCRIPT = [
     dict(id="a6", scene="claude", speaker="claude", text=f"{AR} Rewriting the [C S S.|CSS.]", gap=0.35),
     dict(id="a7", scene="devclose", text="There is no [C S S.|CSS.]", gap=0.6),
     dict(id="a8", scene="claudeclose", speaker="claude", text=f"{AR} Creating the [C S S.|CSS.]", gap=0.35),
-    dict(id="a9", scene="devlean", text="Just once. Tell me I'm wrong.", gap=0.7),
+    dict(id="a9", scene="dev", text="Just once. Tell me I'm wrong.", gap=0.7),
     dict(id="a10", scene="claudecu", speaker="claude", text="", hold=2.2, gap=0.2),
     dict(id="a11", scene="claude", speaker="claude", text="You're absolutely right. You're wrong.", gap=0.2),
     dict(id="a12", scene="devclose", text="Okay. Last one. Am I a good programmer?", gap=0.9),
@@ -120,7 +120,7 @@ def thinking(cr, t, beat):
         return
     k = appear(t, beat.start, 0.2)
     cr.save()
-    cr.translate(W / 2, 300)
+    cr.translate(W / 2, 880)
     rrect(cr, -150, -36, 300, 72, 36)
     cr.set_source_rgba(0.08, 0.08, 0.11, 0.9 * k)
     cr.fill_preserve()
@@ -144,6 +144,82 @@ def thinking(cr, t, beat):
     cr.restore()
 
 
+def toolcard(cr, t, start, end, title, rows, y=880):
+    """A coding agent's tool log (reference 7): title bar, then one step per row, revealed one by one.
+    rows: (verb, target, note, colour of note); verb "*" = a working line in orange, "ok" = a green tick line."""
+    if not (start <= t < end):
+        return
+    k = appear(t, start, 0.2) * (1 - seg(t, end - 0.15, end))
+    h = 78 + 46 * len(rows)
+    cr.save()
+    cr.translate(W / 2, y)
+    s = 0.92 + 0.08 * k
+    cr.scale(s, s)
+    rrect(cr, -320, -h / 2, 640, h, 18)
+    cr.set_source_rgba(0.09, 0.09, 0.12, 0.95 * k)
+    cr.fill_preserve()
+    cr.set_source_rgba(1, 1, 1, 0.12 * k)
+    cr.set_line_width(2)
+    cr.stroke()
+    top = -h / 2
+    mono(cr, title, -296, top + 38, 20, GREY, k)
+    cr.move_to(-320, top + 56)
+    cr.line_to(320, top + 56)
+    cr.set_source_rgba(1, 1, 1, 0.08 * k)
+    cr.stroke()
+    for i, (verb, target, note, col) in enumerate(rows):
+        at = start + 0.25 + 0.32 * i
+        if t < at:
+            break
+        kk = k * appear(t, at, 0.12)
+        yy = top + 96 + 46 * i
+        if verb == "*":
+            pulse = 0.6 + 0.4 * math.sin(t * 6)
+            mono(cr, "✻ " + target, -296, yy, 24, ORANGE, kk * pulse)
+            continue
+        if verb == "ok":
+            mono(cr, "✓ " + target, -296, yy, 24, GREEN, kk)
+            continue
+        xx = -296 + mono(cr, verb, -296, yy, 24, WHITE, kk) + 16
+        xx += mono(cr, target, xx, yy, 24, (0.68, 0.71, 0.78), kk) + 16
+        if note:
+            mono(cr, note, xx, yy, 24, col, kk)
+    cr.restore()
+
+
+def caption(cr, t, tl, y=470, size=30):
+    """Reference 7's captions: small clean white type with a soft shadow, above the characters, whole line at once."""
+    for i, b in enumerate(tl.beats):
+        nxt = tl.beats[i + 1].start if i + 1 < len(tl.beats) else tl.total
+        end = min(b.end + 0.5, nxt - 0.05)
+        if not (b.start - 0.05 <= t < end) or not b.units:
+            continue
+        k = min(appear(t, b.start - 0.05, 0.12), 1 - seg(t, end - 0.12, end))
+        words, lines, cur = " ".join(u.shown for u in b.units).split(), [], ""
+        for w in words:
+            if cur and len(cur) + 1 + len(w) > 28:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = (cur + " " + w).strip()
+        lines.append(cur)
+        cr.save()
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(size)
+        for j, line in enumerate(lines):
+            ext = cr.text_extents(line)
+            x, yy = W / 2 - ext.x_advance / 2, y + j * size * 1.3
+            for dy, a in ((3, 0.6), (1, 0.8)):
+                cr.move_to(x, yy + dy)
+                cr.set_source_rgba(0, 0, 0, a * k)
+                cr.show_text(line)
+            cr.move_to(x, yy)
+            cr.set_source_rgba(1, 1, 1, k)
+            cr.show_text(line)
+        cr.restore()
+        return
+
+
 def draw(cr, t, tl):
     cr.set_source_surface(_frame(t), 0, 0)
     cr.paint()
@@ -151,30 +227,17 @@ def draw(cr, t, tl):
     th.grain(cr, t, 0.05)
     A, B = tl.at, tl.by_id
 
-    def diff(old_first):
-        def body(cr, k, top):
-            rows = [("- ", "for (i = 0; i <= 10; i++)", RED), ("+ ", "for (i = 0; i < 10; i++)", GREEN)]
-            if not old_first:
-                rows = [("- ", "for (i = 0; i < 10; i++)", RED), ("+ ", "for (i = 0; i <= 10; i++)", GREEN)]
-            mono(cr, "app.js  line 42", -280, top + 60, 24, GREY, k)
-            for j, (sign, code, col) in enumerate(rows):
-                x = -280 + mono(cr, sign, -280, top + 115 + j * 50, 30, col, k)
-                mono(cr, code, x, top + 115 + j * 50, 28, col, k)
-        return body
-    panel(cr, t, A("a2", "Fixing"), A("a2", end=True) + 0.5, diff(True), h=210)
-    panel(cr, t, A("a4", "Putting"), A("a4", end=True) + 0.5, diff(False), h=210)
-
-    def css(cr, k, top):
-        mono(cr, "styles.css", -280, top + 80, 34, BLUE, k)
-        n = int(2000 * min(1, seg(t, A("a6", "Rewriting"), A("a6", end=True))))
-        mono(cr, f"{n:,} lines changed", -280, top + 140, 32, YEL, k)
-    panel(cr, t, A("a6", "Rewriting"), A("a6", end=True) + 0.5, css, h=190)
-
-    def newfile(cr, k, top):
-        mono(cr, "+ new file:", -280, top + 80, 30, GREEN, k)
-        mono(cr, "styles.css", -280, top + 135, 38, BLUE, k)
-    panel(cr, t, A("a8", "Creating"), A("a8", end=True) + 0.5, newfile, h=190, accent=GREEN)
-    panel(cr, t, A("a14", "loop"), A("a14", end=True) + 0.7, diff(True), h=210)
+    T = "my-app · fix loop   Claude ▾"
+    toolcard(cr, t, A("a2", "Fixing"), A("a2", end=True) + 0.6, T,
+             [("Read", "app.js", "", GREY), ("Edit", "app.js", "+1 −1", GREEN), ("ok", "Fixed line 42", "", GREEN)])
+    toolcard(cr, t, A("a4", "Putting"), A("a4", end=True) + 0.6, T,
+             [("Edit", "app.js", "+1 −1", GREEN), ("ok", "Reverted line 42", "", GREEN)])
+    toolcard(cr, t, A("a6", "Rewriting"), A("a6", end=True) + 0.6, T,
+             [("Read", "styles.css", "", GREY), ("Edit", "styles.css", "+2,000 −1,987", YEL), ("*", "Rewriting CSS…", "", ORANGE)])
+    toolcard(cr, t, A("a8", "Creating"), A("a8", end=True) + 0.6, T,
+             [("Write", "styles.css", "+1", GREEN), ("ok", "Created styles.css", "", GREEN)])
+    toolcard(cr, t, A("a14", "look"), A("a14", end=True) + 0.9, T,
+             [("Read", "app.js", "", GREY), ("Read", "app.js", "(again)", GREY), ("*", "Looking at that loop…", "", ORANGE)])
 
     hits = [A(i) for i in ("a2", "a4", "a6", "a8", "a11", "a16")]
     for h in hits:
@@ -191,4 +254,4 @@ def draw(cr, t, tl):
     cue("sigh", t, A("a15") - 0.7)
     cue("thud", t, B["a16"].end + 0.55)
     th.hook(cr, t, [("I TRIED TO MAKE", False), ("CLAUDE DISAGREE", True)], end=A("a1", end=True) + 0.3, y=250, size=80)
-    clean_caption(cr, t, tl)
+    caption(cr, t, tl)
