@@ -30,7 +30,7 @@ SCRIPT = [
                                       "ahead."),
     dict(id="t2", scene="lever", text="You can pull a lever. The train turns, and hits one person instead. Do you pull "
                                       "it?", speaker="teacher"),
-    dict(id="t3", scene="hands", text="Almost every hand goes up. One life, to save five. Easy."),
+    dict(id="t3", scene="hands", text="Almost every hand goes up. One life, to rescue five. Easy."),
     dict(id="t4", scene="bridge", text="New version. No lever. You're on a bridge, next to a big man. Push him, and the "
                                        "train stops. Five saved.", speaker="teacher"),
     dict(id="t5", scene="down", text="Every hand goes down. [gasp]", gap=0.45),

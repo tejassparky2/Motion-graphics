@@ -75,7 +75,7 @@ def machine(cr, t, x, y, s=1.0, on=1.0, dial="2008", a=1.0):
     cr.translate(x, y)
     cr.scale(s, s)
     cr.push_group()
-    soft_disc(cr, 0, -230, 260 * on, (0.43, 0.9, 1.0, 0.35 * on))
+    soft_disc(cr, 0, -230, 260 * max(0.05, on), (0.43, 0.9, 1.0, 0.35 * on))
     rrect(cr, -130, -440, 260, 440, 30)
     paint(cr, lin(-130, 0, 130, 0, [(0, hexc("#5a6a88")), (0.5, hexc("#8a9ab8")), (1, hexc("#4a5a78"))]), OUTLINE, 6)
     cr.arc(0, -260, 92, 0, 2 * math.pi)
@@ -131,7 +131,7 @@ def photo(cr, x, y, s=1.0, fade=0.0):
 def scene_garage(cr, t, tl):
     A = tl.at
     garage(cr, t)
-    on = seg(t, 0.0, 0.6)
+    on = max(0.05, seg(t, 0.0, 0.6))
     machine(cr, t, 470, 1000, 1.0, on=on)
     if t < 0.6:
         sparkles(cr, t, 0.0, 470, 740, n=8, seed=2, col=CYAN, spread=160)
