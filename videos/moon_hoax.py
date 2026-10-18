@@ -34,8 +34,7 @@ SCRIPT = [
                                       "can print."),
     dict(id="h5", scene="africa", text="Just one tiny problem. The astronomer was real. But he was busy in South "
                                        "Africa, and had no idea any of this was printed in his name. [chuckle]"),
-    dict(id="h6", scene="office", text="The whole thing was made up. In an office. The bats, the unicorns, all of it. "
-                                       "Invented by a writer with a deadline."),
+    dict(id="h6", scene="office", text="The whole thing was made up. In an office. By a writer with a deadline."),
     dict(id="h7", scene="click", text="Bro invented clickbait almost two hundred years ago. Before the internet. "
                                       "Before the light bulb."),
     dict(id="h8", scene="name", text="Today it's called the Great Moon Hoax."),
@@ -276,7 +275,7 @@ def scene_office(cr, t, tl):
     rrect(cr, 120, 760, 480, 40, 8)                                  # desk
     paint(cr, hexc("#7a4a2a"), OUTLINE, 6)
     person(cr, t, 360, 1000, 0.95, "reporter", eyes="half", mouth="smug", arms=("write", "write"))
-    if t >= A("h6", "bats,"):
+    if t >= A("h6", "office."):
         rrect(cr, 380, 640, 180, 120, 6)                             # his doodle of a bat-person
         paint(cr, PAPER, OUTLINE, 4)
         batperson(cr, t, 470, 750, 0.18, flap=0.3)

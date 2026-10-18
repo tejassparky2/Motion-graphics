@@ -106,21 +106,24 @@ def steam(cr, t, x, y, n=3, h=220, col=(1, 1, 1, 0.55)):
         stroke_line(cr, pts, 8 * (1 - ph) + 2, (col[0], col[1], col[2], col[3] * (1 - ph)))
 
 
-def coins(cr, t, x, y, n=3, shake=0.0):
+def coins(cr, t, x, y, n=3, shake=0.0, s=1.0):
     for k in range(n):
         dx = 22 * math.sin(t * 40 + k) * shake
-        cr.arc(x + k * 26 - 26 + dx, y - k * 6, 18, 0, 2 * math.pi)
+        cr.arc(x + (k * 26 - 26) * s + dx, y - k * 6 * s, 18 * s, 0, 2 * math.pi)
         paint(cr, rad(x - 6, y - 6, 24, [(0, hexc("#ffe680")), (1, hexc("#c8961e"))]), OUTLINE, 4)
 
 
 def _court_bg(cr, t):
     cr.rectangle(0, 0, W, H)
-    cr.set_source(lin(0, 0, 0, H, [(0, hexc("#5a3a2a")), (0.62, hexc("#8a5a3a")), (0.62, hexc("#a87a4a")),
+    cr.set_source(lin(0, 0, 0, H, [(0, hexc("#e8d8b8")), (0.62, hexc("#d4bf98")), (0.62, hexc("#a87a4a")),
                                    (1, hexc("#6a4a2a"))]))
     cr.fill()
-    for k in range(5):                                              # columns
-        rrect(cr, 30 + k * 150, 100, 60, 690, 8)
-        paint(cr, lin(0, 0, 60, 0, [(0, hexc("#e8dcc0")), (1, hexc("#b8a888"))]), OUTLINE, 4)
+    for x in (20, 590):                                             # two big marble columns
+        rrect(cr, x, 80, 110, 710, 10)
+        paint(cr, lin(x, 0, x + 110, 0, [(0, hexc("#fbf4e4")), (1, hexc("#c8b898"))]), OUTLINE, 5)
+    rrect(cr, 250, 120, 220, 70, 10)                                 # a scales-of-justice plaque
+    paint(cr, hexc("#c8961e"), OUTLINE, 5)
+    bold_text(cr, "COURT", 360, 170, 40, hexc("#5a3a10"), outline=None, shadow=0)
     rrect(cr, 180, 560, 360, 230, 12)                               # the judge's bench
     paint(cr, hexc("#6a3a1a"), OUTLINE, 6)
 
@@ -249,9 +252,9 @@ def scene_paid(cr, t, tl):
 def scene_verdict(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#2b2f4a"), hexc("#55406e"), seed=4)
-    loaf(cr, 190, 500, 1.4)
-    steam(cr, t, 150, 440, n=3, h=160)
-    coins(cr, t, 530, 510, 3, shake=1.0 if t >= A("s9", "sound") else 0.0)
+    loaf(cr, 190, 540, 2.0)
+    steam(cr, t, 140, 470, n=3, h=180)
+    coins(cr, t, 530, 560, 3, shake=1.0 if t >= A("s9", "sound") else 0.0, s=2.2)
     if t >= A("s9", "smell"):
         sign(cr, t, A("s9", "smell"), 190, 740, "THE SMELL", col=hexc("#a8713e"), size=46)
     if t >= A("s9", "sound"):
@@ -280,6 +283,21 @@ def scene_today(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f3a4a"), hexc("#3f5a6e"), seed=6)
     sign(cr, t, A("s11", "folk"), 360, 170, "AN OLD FOLK TALE", col=hexc("#a8713e"), size=56, end=A("s11", "real") - 0.05)
+    if t < A("s11", "music"):                                        # an open storybook
+        cr.save()
+        cr.translate(360, 600)
+        for side in (-1, 1):
+            cr.move_to(0, -120)
+            cr.curve_to(side * 80, -150, side * 200, -140, side * 230, -120)
+            cr.line_to(side * 230, 120)
+            cr.curve_to(side * 200, 100, side * 80, 110, 0, 140)
+            cr.close_path()
+            paint(cr, hexc("#f4ead0"), OUTLINE, 6)
+            for k in range(5):
+                stroke_line(cr, [(side * 40, -80 + k * 40), (side * 190, -90 + k * 40)], 4, alpha(OUTLINE, 0.3))
+        cr.restore()
+        loaf(cr, 250, 560, 0.6)
+        coins(cr, t, 470, 570, 3, s=1.2)
     sign(cr, t, A("s11", "real"), 360, 170, "STILL A REAL QUESTION", col=PURPLE, size=52)
     if t >= A("s11", "music"):                                       # a café with music notes floating out
         rrect(cr, 60, 470, 280, 320, 14)
