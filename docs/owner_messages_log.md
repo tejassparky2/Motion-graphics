@@ -241,3 +241,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-18** [screenshot: "1 Rock. 2 Answers. Both B.." engagement: avg view duration 0:34, 70.7% stayed to watch, 29.3% swiped away] This did well we need to focus on more video like this which is cotervinal hard to assume arrise questions
 - **2026-10-18** (after asking for deep research on hooks, retention, feeling and subscribers) After research make 5 videos based on it auto approved for this 5 i will be back morning
 - **2026-10-18** And also try to improve both animations narration sounds music everything according to research
+- **2026-10-18** Yup also do animation upgrade as much you can it should look engaging for users to stay till end
