@@ -77,17 +77,17 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 53 | Sun Oct 25 | 4:30 PM | cheat_sheet | This Teacher LET Her Class Cheat 📝 *(hook test: contradict a belief)* |
 | 54 | Sun Oct 25 | 7:30 PM | zeigarnik | Your Brain Can't Let This Go 🧠 *(hook test: abstract concept; loops)* |
 | 55 | Mon Oct 26 | 4:30 PM | napoleon_bunnies | Napoleon Lost a Battle. To Bunnies. 🐰 *(funny history; Turbo + tags)* |
-| 56 | Mon Oct 26 | 7:30 PM | last_bencher_5 | One Guard Always Lies. You Get 1 Question. 🚪 *(Last Bencher 5; script waiting, out/scripts_batch_oct26-31.md)* |
+| 56 | Mon Oct 26 | 7:30 PM | last_bencher_5 | One Guard Always Lies. You Get 1 Question. 🚪 *(Last Bencher 5; Turbo female narrator + tags, made 18 Oct)* |
 | 57 | Tue Oct 27 | 4:30 PM | bucket_war | Two Cities Went to War. Over a Bucket. 🪣 *(funny history; Turbo + tags)* |
-| 58 | Tue Oct 27 | 7:30 PM | newcomb_box | This Machine Knows What You'll Pick. 2 Boxes. 📦 *(one-rule machine; script waiting)* |
+| 58 | Tue Oct 27 | 7:30 PM | newcomb_box | This Machine Knows What You'll Pick. 2 Boxes. 📦 *(one-rule machine; Turbo female narrator + tags, made 18 Oct)* |
 | 59 | Wed Oct 28 | 4:30 PM | dancing_plague | She Couldn't Stop Dancing. For Days. 💃 *(funny history; Turbo + tags)* |
-| 60 | Wed Oct 28 | 7:30 PM | mirror_alibi | His Alibi Had 1 Tiny Mistake. A Mirror. 🪞 *(detective twist; script waiting)* |
-| 61 | Thu Oct 29 | 4:30 PM | moon_hoax | 1835 News: Bat-People Found on the Moon 🌙 *(funny history; script waiting)* |
-| 62 | Thu Oct 29 | 7:30 PM | prisoners_dilemma | 2 Best Friends. 1 Broken Window. 2 Rooms. 🪟 *(dilemma story; script waiting)* |
-| 63 | Fri Oct 30 | 4:30 PM | smell_of_bread | He Got Sued for Smelling Bread 🍞 *(folk tale; script waiting)* |
-| 64 | Fri Oct 30 | 7:30 PM | taxicab_circle | This Circle Is a Square. Really. ⬜ *(paradox from the comments; script waiting)* |
+| 60 | Wed Oct 28 | 7:30 PM | mirror_alibi | His Alibi Had 1 Tiny Mistake. A Mirror. 🪞 *(detective twist; Turbo female narrator + tags, made 18 Oct)* |
+| 61 | Thu Oct 29 | 4:30 PM | moon_hoax | 1835 News: Bat-People Found on the Moon 🌙 *(funny history; Turbo female narrator + tags, made 18 Oct)* |
+| 62 | Thu Oct 29 | 7:30 PM | prisoners_dilemma | 2 Best Friends. 1 Broken Window. 2 Rooms. 🪟 *(dilemma story; Turbo female narrator + tags, made 18 Oct)* |
+| 63 | Fri Oct 30 | 4:30 PM | smell_of_bread | He Got Sued for Smelling Bread 🍞 *(folk tale; Turbo female narrator + tags, made 18 Oct)* |
+| 64 | Fri Oct 30 | 7:30 PM | taxicab_circle | This Circle Is a Square. Really. ⬜ *(paradox from the comments; Turbo female narrator + tags, made 18 Oct)* |
 | 65 | Sat Oct 31 | 4:30 PM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
-| 66 | Sat Oct 31 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial in 897 💀 *(Halloween funny history; script waiting)* |
+| 66 | Sat Oct 31 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial in 897 💀 *(Halloween funny history; Turbo female narrator + tags, made 18 Oct)* |
 | 67 | Sun Nov 1 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 | 68 | Sun Nov 1 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, moved for funny history)* |
 | 69 | Mon Nov 2 | 4:30 PM | trolley_problem | The Trolley Problem *(idea, moved for funny history)* |

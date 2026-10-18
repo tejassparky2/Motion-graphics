@@ -9,9 +9,12 @@ also push here. The repo is **public**.
 - **Sent:** pack 42-45 (row 42 = court Turbo test, checked to be Turbo's stock voice). Next due: **rows 46-49**
   (ElevenLabs Chris genie-style; `python tools/make_pack.py out/packs 46 49`), then 50-54 (already sent once), 55-59.
 - **Open slots needing videos:** rows 56, 58 and 60-64, 66-69 are ideas only (no scripts). Scripts first, owner approves.
-- **Owner, 18 Oct: "Turbo default female"** → Turbo stock female narrator is the default (CLAUDE.md). Scripts for
-  rows 56, 58, 60-64, 66 written: out/scripts_batch_oct26-31.md, **waiting for approval**. Still unanswered: re-voice
-  rows 43-45 in Turbo; commit the full chat export (repo is public); upload reminders in this account (~11 AM IST).
+- **Owner, 18 Oct: "Turbo default female"** → Turbo stock female narrator is the default (CLAUDE.md). The Oct 26-31
+  batch (out/scripts_batch_oct26-31.md, approved 18 Oct) is **made and sent**: row 56 (last_bencher_5) and rows 58,
+  60-64, 66 (pack out/packs/upload_sheets_58-66.md). Still unanswered: re-voice rows 43-45 in Turbo; commit the full chat
+  export (repo is public); upload reminders in this account (~11 AM IST). Next open slots: Nov 1 onward (rows 67-69 ideas).
+- **Container notes:** run the pipeline with `/home/user/.venv-main/bin/python` (Python 3.12, Kokoro 0.9.4); Turbo in
+  `/home/user/.venv-clone`. Keep each background job under 2 hours (a 7-video chain was killed at the limit).
 - **Low-poly 3D channel** (owner, 18 Oct: "Seperate chat and channel for 3d one"): new chat in this account,
   session_01FVT6MqPXrfUtaaECNhx18u, branch `ccr-56282fe5-evehq4-lowpoly`; it starts by sending the ep02 script for approval.
 - **Container:** this account's container started empty; pip install of requirements (CPU torch, Kokoro,
