@@ -86,8 +86,9 @@ making these videos (references, "revert", "one AI only... no, mix them", "Appro
    the last line repeats a dev/startup term with a new, warm meaning; the AI's lines are short and kind, not jokes.
 
 ## Posting schedule (owner, 18 Oct 2026)
-"I will upload 2 videos a day same as ItsInterestinglyStrange channel, we target US audience, so will follow that time
-for 2 week then adapt to yt analysis". **2 videos a day at 4:30 PM and 7:30 PM IST** (= 7:00 AM and 10:00 AM US
-Eastern while the US is on daylight time; 6:00 AM / 9:00 AM after US clocks go back on 2 Nov). **2-week trial from
-19 Oct to 1 Nov 2026**, then move the times to what YouTube Analytics shows for this channel's audience.
+First "2 videos a day same as ItsInterestinglyStrange", then the same day: "Will go for usa timing first".
+**2 videos a day for US viewers: 12:00 PM and 7:00 PM US Eastern = 9:30 PM and 4:30 AM IST** (while the US is on
+daylight time; from 2 Nov, when US clocks go back, the same US times are 10:30 PM and 5:30 AM IST). Lunch break and
+the evening peak. Schedule the uploads in YouTube Studio so nobody has to be awake at 4:30 AM.
+**2-week trial, 19 Oct to 1 Nov 2026**, then move to what this channel's YouTube Analytics shows.
 Kept separate from the Interestingly Strange calendar.
