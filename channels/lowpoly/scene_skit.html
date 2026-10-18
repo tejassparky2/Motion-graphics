@@ -515,7 +515,7 @@ window.renderAt = function (t) {
     clBody.scale.y *= 1 - .07 * k; clBody.scale.x *= 1 + .05 * k;
   } else clBody.position.x = 0;
   clBody.rotation.z = clPose === "headscratch" ? .12 * Math.sin(t * 2) : clPose === "salute" ? .08 : frozen ? .03 * Math.sin(t * 40) * (1 - seg(t, cur.start, cur.start + .3)) : 0;
-  clBody.rotation.y = clPose === "headscratch" ? .35 : clPose === "lookother" ? -.75 * seg(t, cur.start - .1, cur.start + .3) : 0;
+  clBody.rotation.y = clPose === "headscratch" ? .35 : clPose === "lookother" ? -.4 * seg(t, cur.start - .1, cur.start + .3) : 0;
   clBody.rotation.x = clPose === "lookdown" ? -.25 * u : 0;
   const nubs = {idle: [-.15, -.15], salute: [.9, -.1], cheer: [1.0, 1.0], headscratch: [1.25, -.2], nubup: [.75, -.15], freeze: [.6, .6], lookdown: [-.25, -.25]}[clPose] || [-.15, -.15];
   clArms.forEach((a, i) => { const lift = nubs[i === 1 ? 0 : 1] + (clPose === "cheer" ? .3 * Math.sin(t * 12 + i) : 0) + (clPose === "headscratch" && i === 1 ? .2 * Math.sin(t * 14) : 0) + .12 * cp.talk * Math.sin(t * 10 + i);
@@ -530,7 +530,7 @@ window.renderAt = function (t) {
   const back = lerp(cxPrev === "backoff" ? 1 : 0, cxPose === "backoff" ? 1 : 0, seg(t, cur.start - .1, cur.start + .9));
   codex.position.set(CX0[0], lerp(.72, .98, up) + .012 * Math.sin(t * 2.6) + (cxPose === "bounce" ? .02 * Math.abs(Math.sin(t * 8)) * xp.talk : 0), CX0[1] + .14 * back);
   codex.rotation.y = Math.PI + (cxPose === "spin" ? 2 * Math.PI * seg(t, cur.start, cur.start + .6) : 0);   // a happy spin
-  if (cxPose === "lookother") cxBody.rotation.y = .75 * seg(t, cur.start - .1, cur.start + .3); else cxBody.rotation.y = 0;
+  if (cxPose === "lookother") cxBody.rotation.y = .4 * seg(t, cur.start - .1, cur.start + .3); else cxBody.rotation.y = 0;
   cxBody.rotation.z = dirOf(cur, "codex")[0] === "oops" ? -.25 * seg(t, cur.start, cur.start + .4) : .05 * Math.sin(t * 1.8);
   cxBody.rotation.x = cxPose === "lookdown" ? -.3 * u : cxPose === "nod" ? .18 * Math.max(0, Math.sin((t - cur.start) * 9)) * (1 - seg(t, cur.start + .6, cur.start + 1.0)) : -.12 * back;
   cxBody.scale.setScalar(1 + .05 * xp.talk);

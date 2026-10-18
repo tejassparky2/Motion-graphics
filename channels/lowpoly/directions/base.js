@@ -9,7 +9,7 @@ export const SHOTS = {
   dev:        {pos: [-1.0, 1.28, .4], look: [.02, 1.12, -.88], push: .12, fov: 44, track: "dev"},
   devclose:   {pos: [-.75, 1.32, -.1], look: [0, 1.25, -.94], push: .08, fov: 44, track: "dev"},
   ots:        {pos: [-.3, 1.45, -1.38], look: [0, .95, .1], push: .1, fov: 46},
-  duo:        {pos: [0, 1.15, -.66], look: [-.02, .93, -.05], push: .1, fov: 50},          // both AIs, from Dev's seat
+  duo:        {pos: [0, 1.85, -1.1], look: [-.02, .88, -.05], push: .1, fov: 46},            // both AIs, from above Dev
   claude:     {pos: [-.64, .98, -.68], look: [-.24, .88, -.05], push: .12, fov: 40},
   claudeclose:{pos: [-.5, .96, -.5], look: [-.24, .9, -.05], push: .12, fov: 38},
   codex:      {pos: [.6, 1.06, -.74], look: [.2, .98, -.02], push: .12, fov: 40},

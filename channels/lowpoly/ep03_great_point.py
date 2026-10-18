@@ -25,10 +25,10 @@ voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=1.0, turbo_ref="af
 
 SCRIPT = [
     dict(id="d1", scene="dev", text="The site is down. Both of you. Fix it."),
-    dict(id="d2", scene="claude", speaker="claude", text="Codex, would you like to go first?", gap=0.4),
-    dict(id="d3", scene="codex", speaker="codex", text="Oh no, Claude. After you!", gap=0.3),
-    dict(id="d4", scene="claude", speaker="claude", text="I insist. Your last fix was lovely.", gap=0.3),
-    dict(id="d5", scene="codex", speaker="codex", text="Your plan was lovelier!", gap=0.3),
+    dict(id="d2", scene="duo", speaker="claude", text="Codex, would you like to go first?", gap=0.4),
+    dict(id="d3", scene="duo", speaker="codex", text="Oh no, Claude. After you!", gap=0.3),
+    dict(id="d4", scene="duo", speaker="claude", text="I insist. Your last fix was lovely.", gap=0.3),
+    dict(id="d5", scene="duo", speaker="codex", text="Your plan was lovelier!", gap=0.3),
     dict(id="d6", scene="devclose", text="The site. Is. Down.", gap=0.5),
     dict(id="d7", scene="claudeclose", speaker="claude", text="Great point, Dev.", gap=0.4),
     dict(id="d8", scene="codexclose", speaker="codex", text="Such a great point.", gap=0.3),
