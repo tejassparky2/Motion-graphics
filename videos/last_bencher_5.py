@@ -43,10 +43,10 @@ SCRIPT = [
     dict(id="g11", scene="flip", text="One true answer, one lie. The answer always comes out flipped. So the other "
                                       "door is home."),
     dict(id="g12", scene="out", text="Class dismissed. [sigh]", gap=0.3),
-    dict(id="g13", scene="end", text="But wait. The honest guard just helped send you to the wrong door. Is he still "
-                                     "honest? Yes, or no?", gap=0.3),
+    dict(id="g13", scene="end", text="But wait. The honest guard just pointed you to the wrong door. Still honest? "
+                                     "Yes, or no?", gap=0.3),
 ]
-clear_dialogue(SCRIPT, ids={"g9", "g10"}, pace=0.96)
+clear_dialogue(SCRIPT, ids={"g9", "g10"}, pace=0.96, turn_gap=0.34)
 
 METADATA = dict(
     title="One Guard Always Lies. You Get 1 Question. 🚪",
@@ -214,7 +214,7 @@ def scene_panic(cr, t, tl):
                       shadow=0)
             cr.restore()
         sign(cr, t, A("g5", "Panic."), 360, 170, "PANIC", col=RED, size=80)
-        cue("whoosh", t, A("g5", "Diagrams."))
+        cue("whoosh", t, A("g5", "Equations."))
     else:
         sign(cr, t, A("g6", "stand"), 360, 170, "NOT EVEN STANDING UP", col=GOLD, size=50)
     vignette(cr, 0.45)
@@ -319,7 +319,7 @@ def scene_end(cr, t, tl):
           mouth="o" if t >= A("g13", "honest?") else "flat", arms=("shrug", "shrug") if t >= A("g13", "honest?")
           else ("point", "hips"), badge="TRUTH" if t < A("g13", "honest?") else None)
     if t < A("g13", "honest?"):
-        arrow(cr, t, A("g13", "send"), 470, 470, 640, 470, RED)
+        arrow(cr, t, A("g13", "pointed"), 470, 470, 640, 470, RED)
     sign(cr, t, A("g13", "honest?"), 360, 190, "STILL HONEST?", col=GOLD, size=64)
     sign(cr, t, A("g13", "Yes,"), 190, 420, "YES", col=GREEN, size=70, rot=-0.06)
     sign(cr, t, A("g13", "no?"), 530, 420, "NO", col=RED, size=70, rot=0.05)
