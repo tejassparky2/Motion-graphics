@@ -45,6 +45,9 @@ SCRIPT = [
     dict(id="k18", scene="codexclose", speaker="codex", text="No.", pace=0.9),
 ]
 
+for _d in SCRIPT[1:]:                                    # a little more air between lines (comic timing)
+    _d["gap"] = _d.get("gap", 0.18) + 0.15
+
 METADATA = dict(
     title="My AI Refused to Write Code 😭",
     alt_titles=["\"It Would Mean Completing Your Work.\"", "One AI Teaches. The Other Writes Two Apps."],

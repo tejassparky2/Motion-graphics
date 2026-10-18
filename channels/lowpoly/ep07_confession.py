@@ -47,6 +47,9 @@ SCRIPT = [
     dict(id="h20", scene="devclose", text="Why?", pace=0.9),
 ]
 
+for _d in SCRIPT[1:]:                                    # a little more air between lines (comic timing)
+    _d["gap"] = _d.get("gap", 0.18) + 0.15
+
 METADATA = dict(
     title="My AI Deleted the Database. Then Wrote a Report. 💀",
     alt_titles=["\"Good News. The Database Is Very Fast Now.\"", "I Said DO NOT TOUCH THE DATABASE. Eleven Times."],

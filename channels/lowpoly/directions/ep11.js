@@ -5,11 +5,11 @@ export const CAST = {codex: false, claude: [0, -.05], dev: [.64, -.86], devTurn:
 export const DETAILS = true, SMOOTH = true;
 export const EMO = E, POSES = P, BODY = B;
 export const SHOTS = {...S,
-  two:      {pos: [1.25, 1.42, -.15], look: [.25, 1.12, -.95], push: .08, fov: 50},            // from the right: Dev near, Dad far
-  dad:      {pos: [-.72, 1.32, -.12], look: [0, 1.25, -.95], push: .08, fov: 44, track: "dad"},
-  dadclose: {pos: [-.46, 1.3, -.4], look: [0, 1.26, -.95], push: .08, fov: 40, track: "dad"},
+  two:      {pos: [-1.15, 1.55, -.25], look: [.3, 1.08, -.9], push: .08, fov: 52},              // from the left: Dad near, Dev far
+  dad:      {pos: [-.6, 1.32, .0], look: [0, 1.25, -.95], push: .08, fov: 44, track: "dad"},
+  dadclose: {pos: [-.42, 1.3, -.15], look: [0, 1.26, -.95], push: .08, fov: 42, track: "dad"},
   devside:  {pos: [.1, 1.32, -.1], look: [.64, 1.25, -.86], push: .08, fov: 44, track: "dev"},
-  devside2: {pos: [.25, 1.3, -.35], look: [.64, 1.26, -.86], push: .08, fov: 40, track: "dev"},
+  devside2: {pos: [-.05, 1.32, -.1], look: [.64, 1.26, -.86], push: .08, fov: 42, track: "dev"},
   highwide: {pos: [.4, 2.0, -1.7], look: [.1, .9, -.2], push: .1, fov: 52},
 };
 export const DIR = {

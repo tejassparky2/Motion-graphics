@@ -47,6 +47,9 @@ SCRIPT = [
     dict(id="i19", scene="codex", speaker="codex", text="I have failed you completely and catastrophically.", pace=0.92),
 ]
 
+for _d in SCRIPT[1:]:                                    # a little more air between lines (comic timing)
+    _d["gap"] = _d.get("gap", 0.18) + 0.15
+
 METADATA = dict(
     title="My AI Apologizes Too Much 😭",
     alt_titles=["\"I Have Failed You Completely and Catastrophically.\" (It Renamed a File)", "One AI Grovels. The Other Celebrates."],

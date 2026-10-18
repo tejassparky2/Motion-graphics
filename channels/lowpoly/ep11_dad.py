@@ -46,6 +46,9 @@ SCRIPT = [
     dict(id="m19", scene="dadclose", speaker="dad", text="You're absolutely right.", pace=0.9),
 ]
 
+for _d in SCRIPT[1:]:                                    # a little more air between lines (comic timing)
+    _d["gap"] = _d.get("gap", 0.18) + 0.15
+
 METADATA = dict(
     title="My Dad Found My AI at 3 AM",
     alt_titles=["\"I Thought My Days of Side Projects Were Over.\"", "My Dad Built 3 Apps Last Night"],

@@ -48,6 +48,9 @@ SCRIPT = [
     dict(id="j22", scene="devclose", text="No.", pace=0.9),
 ]
 
+for _d in SCRIPT[1:]:                                    # a little more air between lines (comic timing)
+    _d["gap"] = _d.get("gap", 0.18) + 0.15
+
 METADATA = dict(
     title="I Built an App in an Hour. Nobody Knows How It Works.",
     alt_titles=["Vibe Coding Is Easy. Vibe Debugging Isn't.", "\"What Does Line 42 Do?\" \"Nobody Knows.\""],
