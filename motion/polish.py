@@ -444,3 +444,22 @@ def _cap_draw(cr, t, chunk, start, y, size, max_w, colors=None):
             bold_text(cr, word, x, 0, size, col, font=ROUND, ow=size * 0.2, shadow=0.4, align="left")
         x += w + space
     cr.restore()
+
+
+def series_tag(cr, t, text, start, end, x=36, y=58, size=26, col=(0.07, 0.07, 0.1, 0.72)):
+    """A small rounded chip (top-left, clear of the hook text and the Shorts UI) naming the series, shown between
+    `start` and `end`: series identity inside the first 2 s and again on the final line (research 18 Oct 2026, F3/E4)."""
+    if not (start <= t < end + 0.25):
+        return
+    k = appear(t, start, 0.3) * (1 - seg(t, end, end + 0.25))
+    if k <= 0.01:
+        return
+    cr.save()
+    w = text_width(cr, text, size, ROUND) + 34
+    cr.translate(x, y)
+    cr.scale(k, k)
+    rrect(cr, 0, -size * 0.9, w, size * 1.6, size * 0.8)
+    cr.set_source_rgba(*col)
+    cr.fill()
+    bold_text(cr, text, w / 2, size * 0.32, size, WHITE, font=ROUND, outline=None, shadow=0)
+    cr.restore()

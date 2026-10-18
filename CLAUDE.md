@@ -45,6 +45,29 @@
   how-to and what each tag really does: `out/turbo_tags_research.md`). One sound tag per line at most, 4-6 per video,
   none on logic lines. Keep comparing stayed-to-watch % (rows 36 and 42) against the Kokoro videos.
 
+## Research rules (18 Oct 2026; full evidence in reports/Shorts hooks feeling and subscribers.md, 47-rule checklist)
+- The gains are at the two ends: stayed-to-watch (~70%) is the channel's weak number, average % viewed (~92%) is strong.
+  Frame 0: a face, the "wrong" object, big hook text, and sound from the first frame (SnapUGC: survival at 5 s
+  correlates 0.93 with watch %). 3D opens on a medium/close shot, never a wide or dark establishing shot.
+- The hook's question must be one the viewer can almost answer (curiosity peaks at "almost sure"); no clickbait
+  wording (no measurable lift, costs credibility); never spoil the twist in the title.
+- Ending: the either/or question is the literal last spoken line, cut within ~0.5 s (`TAIL = 0.5`); at most ~4 s of
+  material after the twist; the callback is one sentence or folded into the question. No outro, no "comment below".
+- Pipeline: `TWIST = "<beat id>"` drops the music under the twist line (a tick before it); `SERIES = "..."` shows a
+  small series chip in the first 2 s and on the final line (`END_TAG` = silent subscribe wording, tested on
+  alternate videos only, never a spoken ask before the payoff); every scene has a slow push-in (`motion/kit.whip`);
+  music is a plucks + sub-bass + shaker bed with a sidechain duck (20 ms / 300 ms). Captions stay at 71% (moving
+  them would cover faces; the band position is only anecdotal evidence).
+- Rotate story outcomes (kid wins / authority wins / rule backfires / both lose / reframe): YouTube's inauthentic-
+  content rule bans "characters put in the same situation over and over again with the same outcome". Log the
+  outcome per calendar row; no two consecutive videos share one.
+- Big questions are thought experiments about ideas, never contests between groups; both sides voiced by characters
+  with one real reason each; moral words ("fair", "cheat", "deserve") in the debate line. Money videos never give
+  financial advice.
+- Measure against the channel's own median: stayed-to-watch >= 75%, APV >= 85%, subs per 1,000 engaged views >= 2.
+  Monetization: 1,000 subs alone is not enough; the Shorts-view tiers are 3M/90 days (500-sub tier), 10M until
+  31 Jan 2027, 20M after. The posting-time trial compares 7- and 28-day views too, not only the first 24 h.
+
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
   one second with something already wrong or tense ("A kid in the last row raises his hand…", "A teacher finds a pack

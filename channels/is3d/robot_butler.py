@@ -16,7 +16,9 @@ from motion.polish import OUTLINE, WHITE, appear, bold_text, captions, rrect, si
 
 NARRATOR = dict(turbo=True)
 DIRECTION = "robot"
-TAIL = 1.0
+TAIL = 0.5
+TWIST = "r7"          # music drops out under "Calculating. Solution found." (research A5)
+SERIES = "Interestingly Strange"
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build",
                       "is3d", "robot_frames")
 

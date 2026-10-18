@@ -21,7 +21,9 @@ from motion.toons import person, portrait
 from videos.last_bencher_4 import classroom, room
 
 NARRATOR = dict(turbo=True)
-TAIL = 0.9
+TAIL = 0.5
+TWIST = "f3"          # music drops out under this line (research 18 Oct 2026, A5)
+SERIES = "The Last Bencher"
 voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo_ref="am_puck+3"),
                        "sir": dict(voice="am_michael", speed=1.0, turbo_ref="am_michael")})
 
@@ -30,7 +32,7 @@ SCRIPT = [
     dict(id="f2", scene="ask", text="Sir, God knows everything, right? So yesterday, God already knew I wouldn't do "
                                     "it.", speaker="kid"),
     dict(id="f3", scene="ask", text="If God knew, I couldn't do anything else. So it's not my fault. [chuckle]",
-         speaker="kid"),
+         speaker="kid", gap=0.45),
     dict(id="f4", scene="silent", text="The class goes silent. Even sir stops writing."),
     dict(id="f5", scene="puzzle", text="Because it's a real puzzle. If someone knows your future for sure, can you "
                                        "still choose?"),

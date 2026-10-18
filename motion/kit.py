@@ -2,7 +2,7 @@
 scene transitions and colour grades. Every video in videos/ can build on these."""
 import math
 
-from .engine import INK, W, at, cairo, cue, ease_out, hexc, lerp, pop, seg, shape, smooth, write, write_t
+from .engine import INK, W, at, cairo, cue, ease_out, hexc, lerp, pop, seg, shape, smooth, write, write_t, H
 
 ANCHOR = (360, 780)   # where the camera focus point lands on screen
 _cam = [(1.2, 360, 760)]
@@ -91,8 +91,15 @@ def sepia(cr, strength=1.0):
     cr.restore()
 
 
-def whip(cr, t, start, dur=0.16):
-    """Whip-pan into a new scene: call before drawing it. Returns True while the whip is running."""
+def whip(cr, t, start, dur=0.16, push=0.03, over=6.0):
+    """Scene transition. Always applies a slow push-in (scale 1 -> 1+push over `over` s from the scene start, centred),
+    so no shot is ever static (research 18 Oct 2026, F4); on top, a whip-pan into the new scene for its first `dur`
+    seconds. Call before drawing the scene. Returns True while the whip is running."""
+    k = min(1.0, max(0.0, (t - start) / over))
+    z = 1 + push * (k * k * (3 - 2 * k))
+    cr.translate(W / 2, H / 2)
+    cr.scale(z, z)
+    cr.translate(-W / 2, -H / 2)
     if start <= 0 or t - start >= dur:
         return False
     u = ease_out((t - start) / dur)

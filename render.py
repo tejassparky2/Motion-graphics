@@ -130,7 +130,15 @@ def draw(surface, frame):
     t = frame / FPS
     engine.set_frame(frame)
     cr = cairo.Context(surface)
-    VIDEO["mod"].draw(cr, t, timeline())
+    mod = VIDEO["mod"]
+    mod.draw(cr, t, timeline())
+    series = getattr(mod, "SERIES", None)
+    if series:                                   # series identity in the first 2 s and on the final line (research F3/E4)
+        from motion.polish import series_tag
+        tl = timeline()
+        last = tl.beats[-1]
+        series_tag(cr, t, series, 0.0, 2.2)
+        series_tag(cr, t, getattr(mod, "END_TAG", None) or series, last.start, tl.total)
     surface.flush()
 
 
@@ -186,6 +194,11 @@ def render_video(out, audio=True, voice=True):
         os.remove(p)
     if audio:
         from motion.audio import build_soundtrack
+        twist = getattr(VIDEO["mod"], "TWIST", None)   # the bed drops out under the twist line (research A5)
+        if twist:
+            b = timeline().by_id[twist]
+            engine.EVENTS.append((max(0.0, b.start - 0.12), "hush", b.end - b.start + 0.12))
+            engine.EVENTS.append((max(0.0, b.start - 0.5), "tick", 0.0))
         wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
                                 seed=VIDEO["name"], bed=getattr(VIDEO["mod"], "MUSIC", "plucks"))

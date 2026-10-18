@@ -802,7 +802,17 @@ def narration_track(clips, total):
         i = int(at * SR)
         clip = clip[: max(0, len(track) - i)]
         track[i:i + len(clip)] += clip
-    env = (np.abs(track) > 0.01).astype(np.float64)
-    k = int(0.3 * SR)  # ~300 ms release so the music doesn't pump between words
-    env = np.convolve(env, np.ones(k) / k, mode="same")
-    return track, np.clip(env * 4, 0, 1)
+    gate = (np.abs(track) > 0.01).astype(np.float64)
+    # sidechain-style envelope: ~20 ms attack (the bed drops the moment a word starts), ~300 ms release (no pumping
+    # between words); a hop of 1 ms keeps it cheap (research 18 Oct 2026, A4)
+    hop = SR // 1000
+    g = gate[: len(gate) // hop * hop].reshape(-1, hop).max(axis=1)
+    a_up, a_dn = 1 - np.exp(-1 / 20), 1 - np.exp(-1 / 300)
+    env = np.empty_like(g)
+    v = 0.0
+    for i, x in enumerate(g):
+        v += (a_up if x > v else a_dn) * (x - v)
+        env[i] = v
+    env = np.repeat(env, hop)
+    env = np.concatenate([env, np.full(len(gate) - len(env), env[-1] if len(env) else 0.0)])
+    return track, np.clip(env, 0, 1)

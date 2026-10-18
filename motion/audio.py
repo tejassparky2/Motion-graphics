@@ -68,24 +68,45 @@ def _voicing(root, quality, key):
 
 
 def music(total, seed=None):
+    """The story bed: a plucked arpeggio with a soft sub-bass on the downbeat and a light shaker on the off-beats
+    (research 18 Oct 2026, A4/A5: a fuller bed that still sits 20-25 dB under the voice; it swells a little in the
+    last third so the payoff lands on a rise). Key, progression, tempo and tone are picked per video from `seed`."""
     st = _style(seed)
     beat = 60 / st["bpm"]   # tempos stay >=116 BPM (fast beds tend to lift watch-through)
-    out = np.zeros(int(total * SR) + SR)
+    n = int(total * SR) + SR
+    out = np.zeros(n)
     cache = {}
     t = 0.0
     bar = 0
+    rng = np.random.default_rng(zlib.crc32((seed or "bed").encode()))
+    sh_n = int(0.07 * SR)
+    shaker = rng.uniform(-1, 1, sh_n) * np.exp(-np.arange(sh_n) / (0.012 * SR))
+    shaker -= _lowpass(shaker, 3000)                                 # keep only the bright part
     while t < total:
         ch = _voicing(*st["prog"][bar % 4], st["key"])
         for k, idx in enumerate(st["pattern"]):   # arpeggio over 8 eighth notes
             m = ch[idx] if k else ch[0]
             if m not in cache:
                 cache[m] = pluck(440.0 * 2 ** ((m - 69) / 12), 1.2, st["decay"])
-            s = int((t + k * beat / 2) * SR)
+            s0 = int((t + k * beat / 2) * SR)
             seg = cache[m] * (0.9 if k == 0 else 0.5)
-            out[s:s + len(seg)] += seg[: max(0, len(out) - s)]
+            out[s0:s0 + len(seg)] += seg[: max(0, n - s0)]
+            if k % 2 == 1:                                           # shaker on the off-beats, very quiet
+                out[s0:s0 + sh_n] += shaker[: max(0, n - s0)] * 0.18
+        # sub-bass: the chord root an octave down, on beats 1 and 3
+        f = 440.0 * 2 ** ((ch[0] - 12 - 69) / 12)
+        for b in (0, 2):
+            s0 = int((t + b * beat) * SR)
+            m_ = min(n - s0, int(1.6 * beat * SR))
+            if m_ <= 0:
+                continue
+            tt = np.arange(m_) / SR
+            out[s0:s0 + m_] += np.sin(2 * np.pi * f * tt) * np.exp(-tt * 2.5) * 0.35 * np.minimum(1, tt / 0.01)
         t += 4 * beat
         bar += 1
-    return out[: int(total * SR)] * 0.16
+    tt = np.arange(n) / SR
+    swell = 0.85 + 0.15 * np.clip((tt - total * 0.62) / max(total * 0.38, 1), 0, 1)
+    return (out * swell)[: int(total * SR)] * 0.16
 
 
 def sfx(name, dur):
@@ -108,6 +129,10 @@ def sfx(name, dur):
         n = int(0.5 * SR)
         tt = np.arange(n) / SR
         return (np.sin(2 * np.pi * 1318 * tt) + 0.4 * np.sin(2 * np.pi * 1976 * tt)) * np.exp(-tt / 0.12) * 0.35
+    if name == "tick":                         # a clock tick for the "guess it" beat before a reveal
+        n = int(0.05 * SR)
+        tt = np.arange(n) / SR
+        return (np.sin(2 * np.pi * 2200 * tt) + 0.5 * np.sin(2 * np.pi * 3300 * tt)) * np.exp(-tt / 0.006) * 0.5
     if name == "scribble":
         n = int(max(0.2, dur) * SR)
         noise = _rng.uniform(-1, 1, n)
@@ -353,7 +378,7 @@ def pad(total, seed=None):
     return (mix * swell)[: int(total * SR)]
 
 
-GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
+GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 

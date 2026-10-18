@@ -20,7 +20,9 @@ from motion.toons import person, portrait
 from videos.last_bencher_4 import chalk, classroom, room
 
 NARRATOR = dict(turbo=True)
-TAIL = 0.9
+TAIL = 0.5
+TWIST = "e3"          # music drops out under this line (research 18 Oct 2026, A5)
+SERIES = "The Last Bencher"
 voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo_ref="am_puck+3"),
                        "teacher": dict(voice="af_bella", speed=1.0, turbo_ref="af_bella")})
 
@@ -29,7 +31,7 @@ SCRIPT = [
                                       "the last bencher raises his hand."),
     dict(id="e2", scene="ask", text="Ma'am, is lying wrong because God says so? Or does God say so, because it's "
                                     "wrong?", speaker="kid"),
-    dict(id="e3", scene="freeze", text="The teacher opens her mouth. And closes it."),
+    dict(id="e3", scene="freeze", text="The teacher opens her mouth. And closes it.", gap=0.45),
     dict(id="e4", scene="doors", text="Because both answers have a problem."),
     dict(id="e5", scene="doors", text="If it's wrong only because God says so, then if God said lie, lying would be "
                                       "good."),

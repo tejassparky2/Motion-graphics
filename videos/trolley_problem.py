@@ -19,7 +19,9 @@ from motion.toons import person, portrait
 from videos.last_bencher_4 import ROWS, desk, room
 
 NARRATOR = dict(turbo=True)
-TAIL = 0.9
+TAIL = 0.5
+TWIST = "t5"          # music drops out under this line (research 18 Oct 2026, A5)
+SERIES = "Big Questions"
 voice.SPEAKERS.update({"teacher": dict(voice="af_bella", speed=1.0, turbo_ref="af_bella")})
 CHALK = (0.97, 0.97, 0.94, 0.95)
 
@@ -31,7 +33,7 @@ SCRIPT = [
     dict(id="t3", scene="hands", text="Almost every hand goes up. One life, to save five. Easy."),
     dict(id="t4", scene="bridge", text="New version. No lever. You're on a bridge, next to a big man. Push him, and the "
                                        "train stops. Five saved.", speaker="teacher"),
-    dict(id="t5", scene="down", text="Every hand goes down. [gasp]"),
+    dict(id="t5", scene="down", text="Every hand goes down. [gasp]", gap=0.45),
     dict(id="t6", scene="math", text="But it's the same math. One dies. Five live."),
     dict(id="t7", scene="named", text="Philosophers have argued about this since [nineteen sixty seven.|1967.]"),
     dict(id="t8", scene="sides", text="Some say only the result matters. Others say using a person as a tool is wrong, "

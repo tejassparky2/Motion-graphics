@@ -20,7 +20,10 @@ from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, cap
 from motion.toons import person, portrait
 
 NARRATOR = dict(turbo=True)
-TAIL = 0.9
+TAIL = 0.5
+TWIST = "m3"          # music drops out under this line (research 18 Oct 2026, A5)
+SERIES = "Big Questions"
+END_TAG = "Subscribe · a new question tomorrow"      # alternate videos test the silent subscribe wording (research E4/E5)
 voice.SPEAKERS.update({"girl": dict(voice="af_sky", speed=1.05, turbo_ref="af_sky+3"),
                        "grandpa": dict(voice="bm_george", speed=0.95, pitch=-1.5, turbo_ref="bm_george-1.5")})
 GIRL = dict(shirt=hexc("#ff8ab0"), tie=None, pants=hexc("#3b5b9a"))

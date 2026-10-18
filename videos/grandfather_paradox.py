@@ -18,7 +18,10 @@ from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, cap
 from motion.toons import person, portrait
 
 NARRATOR = dict(turbo=True)
-TAIL = 0.9
+TAIL = 0.5
+TWIST = "g5"          # music drops out under this line (research 18 Oct 2026, A5)
+SERIES = "Big Questions"
+END_TAG = "Subscribe · a new question tomorrow"      # alternate videos test the silent subscribe wording (research E4/E5)
 voice.SPEAKERS.update({"girl": dict(voice="af_sky", speed=1.05, turbo_ref="af_sky+3")})
 GIRL = dict(skin="brown", hair="curly", hair_col=hexc("#1e130d"), shirt=hexc("#7a5bd0"), tie=None,
             pants=hexc("#2f3550"))
@@ -30,7 +33,7 @@ SCRIPT = [
                                      "[chuckle]", speaker="girl"),
     dict(id="g3", scene="fade", text="Think about it. If they never meet, she's never born."),
     dict(id="g4", scene="vanish", text="If she's never born, she never builds the machine. So nobody stops them."),
-    dict(id="g5", scene="loop", text="So they meet. She's born. She goes back. And stops them again."),
+    dict(id="g5", scene="loop", text="So they meet. She's born. She goes back. And stops them again.", gap=0.45),
     dict(id="g6", scene="named", text="It's called the grandfather paradox. And physicists take it seriously."),
     dict(id="g7", scene="fixed", text="One idea. The past fixes itself. Whatever she tries, her parents meet anyway."),
     dict(id="g8", scene="branch", text="Another idea. She lands in a different branch of the universe, where she's "
