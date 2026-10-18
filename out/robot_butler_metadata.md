@@ -36,4 +36,4 @@ robot story, robot butler, ai rules, kid outsmarts robot, plot twist, school sto
 Who should decide what's best for you: you 🙋 or the machine 🤖? Pick a side 👇
 ```
 
-**Video facts:** 40.7 s, 126 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 40.2 s, 126 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
