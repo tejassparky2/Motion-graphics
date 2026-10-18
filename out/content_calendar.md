@@ -88,11 +88,11 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 64 | Fri Oct 30 | 7:30 PM | taxicab_circle | This Circle Is a Square. Really. ⬜ *(paradox from the comments; Turbo female narrator + tags, made 18 Oct)* |
 | 65 | Sat Oct 31 | 4:30 PM | ghost_deal | A Ghost Made a Deal With the Last Bencher 👻 *(Halloween special; ElevenLabs Chris)* |
 | 66 | Sat Oct 31 | 7:30 PM | cadaver_synod | They Put a Dead Pope on Trial in 897 💀 *(Halloween funny history; Turbo female narrator + tags, made 18 Oct)* |
-| 67 | Sun Nov 1 | 4:30 PM | free_will_god | God Already Knew. So the Kid Says It's Not His Fault 😏 *(big question; made 18 Oct, Turbo female + tags; outcome: authority wins (detention))* |
-| 68 | Sun Nov 1 | 7:30 PM | print_money | This Note Says 100 TRILLION. It Couldn't Buy Bread 💵 *(big question; made 18 Oct, Turbo female + tags; outcome: reframe (both sides))* |
-| 69 | Mon Nov 2 | 4:30 PM | trolley_problem | Everyone Pulled the Lever. Nobody Would Push 🚃 *(big question; made 18 Oct, Turbo female + tags; outcome: the class contradicts itself)* |
-| 70 | Mon Nov 2 | 7:30 PM | grandfather_paradox | She Went Back in Time to Stop Her Parents Meeting ⏳ *(big question; made 18 Oct, Turbo female + tags; outcome: rule backfires (she can't win))* |
-| 71 | Tue Nov 3 | 4:30 PM | euthyphro | 1 Question. The Teacher Couldn't Pick an Answer 🤔 *(big question; made 18 Oct, Turbo female + tags; outcome: teacher answers, kid concedes)* |
+| 67 | Sun Nov 1 | 4:30 PM | free_will_god | God Already Knew. So the Kid Says It's Not His Fault 😏 *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: authority wins (detention))* |
+| 68 | Sun Nov 1 | 7:30 PM | print_money | This Note Says 100 TRILLION. It Couldn't Buy Bread 💵 *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: reframe (both sides))* |
+| 69 | Mon Nov 2 | 4:30 PM | trolley_problem | Everyone Pulled the Lever. Nobody Would Push 🚃 *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: the class contradicts itself)* |
+| 70 | Mon Nov 2 | 7:30 PM | grandfather_paradox | She Went Back in Time to Stop Her Parents Meeting ⏳ *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: rule backfires (she can't win))* |
+| 71 | Tue Nov 3 | 4:30 PM | euthyphro | 1 Question. The Teacher Couldn't Pick an Answer 🤔 *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: teacher answers, kid concedes)* |
 | 72 | Tue Nov 3 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, big question)* |
 | 73 | Wed Nov 4 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 

@@ -13,6 +13,11 @@ also push here. The repo is **public**.
   pipeline (see CLAUDE.md "Research rules"): music drop-out under the twist, sidechain duck, richer bed, slow push-in
   on every scene, series chip (rows 68 and 70 carry the silent "Subscribe · a new question tomorrow" wording as the
   E4/E5 test; 67, 69, 71 the plain series tag), 0.5 s tail. Pack: `python tools/make_pack.py out/packs 67 71`.
+  **All five rendered, Whisper-medium clean, packed (out/packs/67-71) and sent to the owner on 18 Oct night.**
+  Lengths 43.9 / 39.9 / 36.0 / 40.8 / 40.3 s. One script change from the approved text: trolley "One life, to save
+  five" was heard as "say five", so it reads "One life, to rescue five." print_money's only audit flag ("dollars"
+  missing) is Whisper writing "$100 trillion": the word is spoken (checked with word timestamps).
+  Owner may also have meant 5 *additional* research-based videos (rows 72-76): ask in the morning.
 - **Owner's standing asks from 18 Oct night:** "improve both animations narration sounds music everything according
   to research" and "animation upgrade as much you can it should look engaging for users to stay till end". Done in
   the pipeline for 2D (motion/kit.whip push-in, motion/audio bed + duck + hush, render.py TWIST/SERIES) and 3D
