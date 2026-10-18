@@ -96,3 +96,34 @@ daylight time; from 2 Nov, when US clocks go back, the same US times are 10:30 P
 the evening peak. Schedule the uploads in YouTube Studio so nobody has to be awake at 4:30 AM.
 **2-week trial, 19 Oct to 1 Nov 2026**, then move to what this channel's YouTube Analytics shows.
 Kept separate from the Interestingly Strange calendar.
+
+## Standing rules from the research (18 Oct 2026; full report: reports/Shorts retention and AI dev humor.md)
+Evidence grades in the report: [Data] measured, [Official] YouTube's own words, [Practitioner] sketch teaching or a
+primary production text, [Inference]. The short version used on every episode from ep 7 on:
+- **Hook:** frame 0 is a character mid-action with something already wrong; line 1 carries the contradiction; the
+  on-screen hook text says what the skit then delivers; never a title card, logo, "Meet X" or a bare question.
+- **Structure:** one game per episode, statable in one sentence; heighten by specifics, then emotion, then stakes;
+  a re-engagement (new rule, reversal or third character) near the middle; one blowout; one-line blackout. Dev,
+  the deadline and the bug are normal; only the assistants' one behaviour is strange ("everything but the game").
+- **Dialogue:** one idea per sentence, reveal word last, every sentence its own take; a longer pre-gap and a slightly
+  slower pace on the blow line; everyone plays it straight (the assistants' cheer stays flat over disasters).
+- **Ending:** the punchline is the last spoken line and the video cuts about half a second after it; no outro, no
+  spoken subscribe ask; the last line re-uses a word or image from line 1 (a loop point, treated as polish).
+  End on a laugh spike or a warm-then-surprise turn, never flat or merely sweet.
+- **Cast:** Dev is the straight man whose funny lines are reactions and who carries one quiet feeling line before
+  the blow; Claude is the relentless agreer/over-doer; Codex is the blunt refuser/over-reacher. Personalities stay
+  predictable, situations and which one is the fool rotate; never the same game twice in a row. Guests (Dad etc.)
+  for one episode when the premise needs them.
+- **Length:** default 35-50 s; 60-75 s only for a real escalation ladder; never pad. Judge by this channel's own
+  stayed-to-watch and first-24-hour views by length (no public data covers 60-180 s Shorts).
+- **Upload:** title names the archetype and the situation (<100 chars); "No, it's not made for kids" on every upload
+  and dispute any auto-label (cartoon styles get it, and it strips most revenue and all comments); the pinned
+  comment carries the two-sided question and the subscribe ask; hashtags optional; never re-upload a deleted Short;
+  track engaged views and stayed-to-watch, not the public view count.
+- **Policy:** recurring cast is allowed when each video has its own storyline and outcome; animated characters
+  with premade synthetic voices need no AI label; never clone a real person. From 1 Feb 2027 Shorts revenue sharing
+  needs 10M qualified Shorts views per 90 days, so plan income around subscribers and off-platform, not Shorts RPM.
+- **Cadence:** every channel that grew posted daily or near daily with a fixed cheap cast; post the same file to
+  TikTok and Reels (YouTube converts skit viewers slowest); read the comments as the writers' room.
+- **Unverified claims we do not build on:** "90% fail in the first 3 s", "cuts every 2-4 s", "captions +15-25%",
+  "series convert 67% better", "10% replay rate boosts distribution", "500-800 ms pause", "85% watch without sound".
