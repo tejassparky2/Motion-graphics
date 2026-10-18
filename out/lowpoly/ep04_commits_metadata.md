@@ -34,4 +34,4 @@ claude, claude code, imposter syndrome, developer, learning to code, git commit,
 Be honest: how many of your commits just say "fix"? 👇
 ```
 
-**Video facts:** 33.2 s, 74 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 33.3 s, 74 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

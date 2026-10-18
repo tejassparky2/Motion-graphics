@@ -108,7 +108,7 @@ def draw(cr, t, tl):
              [("$", 'git commit -m "fix"', "", GREY), ("$", "git push", "", GREY), ("ok", "pushed", "", GREEN)])
     graph(cr, t, A("e16") - 0.3, tl.total + 1, push + 0.4)
     cue("hush", t, B["e11"].start - 0.2, B["e11"].end - B["e11"].start + 0.4)
-    cue("sigh", t, A("e1") - 0.1)
+    cue("sigh", t, A("e1", end=True) + 0.1)          # after the line (on top of "Claude." it masked the word)
     cue("typing", t, A("e15", end=True) - 0.1, 0.8)
     cue("ding", t, push)
     th.hook(cr, t, [("3 AM.", False), ("ANOTHER CRASH.", True)], end=A("e1", end=True) + 0.3, y=175, size=84)
