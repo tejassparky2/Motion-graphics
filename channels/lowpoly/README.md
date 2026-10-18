@@ -75,3 +75,12 @@ Low-poly episodes may run **up to 60 s** (Interestingly Strange keeps its 40-50 
 ## Future idea (owner, 18 Oct 2026)
 "maybe after few days we might make skit on our own conversation": a skit about this very chat, the owner and the AI
 making these videos (references, "revert", "one AI only... no, mix them", "Approved, render it"). Not yet; ask first.
+
+## Writing references (owner sends some for the skit, not the look)
+9. **"Daily active users: one"** (54 s; owner, 18 Oct: "Skit reference not visual ref"). Dev and Claude get their first
+   real user at 3 AM; it made one note, zero features used: a grocery list and a daily reminder "Did you eat?"; it's
+   his mom, who spent 11 minutes on the About page ("Nobody reads the About page." "She did. Twice."); "What do I
+   reply?" "The truth. This time." "Eating now." Last line: "Daily active users. One."
+   What to learn for our scripts: lines of two to five words traded fast ("A real one?" / "Real email. Real
+   human."); a small mystery that unfolds one clue per line; the turn from dev-joke to a human moment at the reveal;
+   the last line repeats a dev/startup term with a new, warm meaning; the AI's lines are short and kind, not jokes.
