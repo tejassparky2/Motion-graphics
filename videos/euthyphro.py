@@ -182,7 +182,7 @@ def scene_answer(cr, t, tl):
     enter(cr, camera(t, [(A("e8") - 0.3, (1.15, 360, 640))]))
     teacher(cr, t, tl, 560, 1100, 1.0, eyes="happy", arms=("point", "hips"))
     cr.restore()
-    card(cr, t, A("e8", "rule"), 360, 640, 520, 110, "NOT A RULE GOD PICKS", [], col=GREEN, title_size=34,
+    card(cr, t, A("e8", "rule"), 230, 640, 400, 110, "NOT A RULE GOD PICKS", [], col=GREEN, title_size=30,
          end=A("e8", "what") - 0.05)
     vignette(cr, 0.4)
 

@@ -153,11 +153,11 @@ def grandpa(cr, t, tl, x, y, s, **kw):
 def scene_drawer(cr, t, tl):
     A = tl.at
     home(cr, t)
-    girl(cr, t, None, 470, 1000, 0.9, eyes="wide", mouth="o", arms=("hold", "hold"), look=(-0.2, -0.3))
     z = int(lerp(2, 14, seg(t, A("m1", "says,"), A("m1", "dollars.", end=True))))
     cr.save()
-    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("m1", "says,"), (1.12, 360, 560))], dur=0.6))
-    note(cr, 360, 540, 1.0 + 0.04 * math.sin(t * 3), -0.05, big=t >= A("m1", "trillion"), zeros=z)
+    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("m1", "says,"), (1.1, 330, 600))], dur=0.6))
+    girl(cr, t, None, 520, 1000, 0.95, eyes="wide", mouth="o", arms=("point", "down"), look=(-0.6, -0.2))
+    note(cr, 215, 600, 0.9 + 0.03 * math.sin(t * 3), -0.08, big=t >= A("m1", "trillion"), zeros=z)
     cr.restore()
     vignette(cr, 0.35)
 
@@ -254,9 +254,9 @@ def scene_sack(cr, t, tl):
     studio(cr, t, hexc("#c8b898"), hexc("#f2e6c8"), seed=9)
     x = lerp(150, 430, seg(t, A("m9"), A("m9", end=True)))
     person(cr, t, x, 1000, 0.85, "villager", eyes="half", mouth="flat", arms=("hold", "down"), walk=t * 8, sweat=True)
-    ellipse(cr, x + 70, 720, 90, 110)                              # the sack of cash
+    ellipse(cr, x + 100, 800, 90, 110)                             # the sack of cash, on his hip
     paint(cr, hexc("#c8a878"), OUTLINE, 5)
-    cash_pile(cr, x + 70, 640, 5, seed=4, s=0.22)
+    cash_pile(cr, x + 100, 720, 5, seed=4, s=0.22)
     loaf(cr, 560, 900, 0.6)
     tag(cr, t, A("m9", "bags"), 360, 230, "A BAG OF CASH", col=GOLD, size=48)
     tag(cr, t, A("m9", "loaf."), 360, 310, "= 1 LOAF", col=RED, size=48)
@@ -269,6 +269,8 @@ def scene_covid(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f2f4a"), hexc("#4a5a7e"), seed=10)
     tag(cr, t, A("m10"), 360, 190, "2020", col=BLUE, size=70)
+    if t >= A("m10", "pandemic."):
+        tag(cr, t, A("m10", "pandemic."), 360, 290, "PRINTED FOR THE PANDEMIC", col=PURPLE, size=40)
     if t < A("m10", "Some"):
         for k in range(5):                                          # printers running around the world
             ph = (t * 1.1 + k / 5) % 1
