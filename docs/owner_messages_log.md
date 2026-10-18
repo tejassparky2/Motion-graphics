@@ -1,4 +1,4 @@
-# Every message from the owner, in order (Sep 29 - Oct 14, 2026)
+# Every message from the owner, in order (Sep 29 - Oct 18, 2026)
 
 Verbatim from the first chat (session_011eLEn9HbPwBg7ViAYhwmQ5), times in UTC. Read with PROJECT_HISTORY.md.
 
@@ -180,3 +180,60 @@ Verbatim from the first chat (session_011eLEn9HbPwBg7ViAYhwmQ5), times in UTC. R
 - 17 Oct 2026: "1 more reference" (campfire skit: Claude robot and a kid, ChatGPT confession)
 - 17 Oct 2026: "Give next set of video after Jellyfish one and low poly goes to different chat"
 - 17-18 Oct 2026: "Create new chat for low poly" / "And how can I continue this chat on another claude account? Continue"
+
+## Main chat (session_011eLEn9HbPwBg7ViAYhwmQ5), 14 Oct evening - 18 Oct 2026, verbatim (times UTC)
+Added 18 Oct from the full chat export the owner uploaded to the next chat (the short Oct 16-17 notes above are paraphrases).
+- **2026-10-14T18:58** So i can completely shift there and remove this?
+- **2026-10-14T19:01** The file isn't on main; checking the other branches for it.
+- **2026-10-14T19:06** Would I paste api key here only anyways it's free tier test account?
+- **2026-10-14T19:07** But now it's same texting in this chat or another because both have same things?
+- **2026-10-14T19:08** Yeah will but i miss our journey with you
+- **2026-10-14T19:40** Now make another video with turbo tags do deep research use correct emotions tags on right place make it human give 1 video
+- **2026-10-14T20:37** This is better
+- **2026-10-14T20:44** [uploaded file: b730461a-vidssave.com_Thats_Not_My_Dad__480P.mp4] Can you make videos like this suspense thriller engaging creepy with good animation
+- **2026-10-14T20:49** First on animation can you make that level of 3d animation it is suspense thriller so it can't be cartoon like
+- **2026-10-14T20:51** I don't want paid options for now
+- **2026-10-14T20:55** Yes delete them and make test shots i want high quality high user engaging good quality video animation and should be main mc in every video i want script to real freak viewers not simple one you have rights to go extreme
+- **2026-10-14T21:09** Yup as scary as scripts the image should also be scary suspen and high quality and more thing suspense thriller creepy only don't means it's horror or ghost and i want you to keep user engaging with both story and visually in shorts visual matters
+- **2026-10-14T21:33** No i am not saying abounded ghost i said we use all ways / Yup as scary as scripts the image should also be scary suspen and high quality and more thing suspense thriller creepy only don't means it's horror or ghost and i want you to keep user engaging with both story and visually in shorts visual matters
+- **2026-10-15T04:41** You didn't used emotions tags for this video?
+- **2026-10-15T09:59** Sent next set of video after nobody is smarter
+- **2026-10-15T13:09** Can you apply new voice to this videos that we approved turbo one with tags not my voice
+- **2026-10-15T13:11** Use shock laughs all tags in needed
+- **2026-10-15T13:25** Send when done
+- **2026-10-15T14:15** My goal is to reach monetization before youtube policy charges on monetization is it possible? Should we also be making long form content don't make any just answer
+- **2026-10-15T14:24** Don't want milo videos i didn't liked it skip it
+- **2026-10-15T14:25** If we ever make long videos we go to topics on what if or how finance works or funny history like that don't do any now just a idea
+- **2026-10-15T14:29** According to analytics what is best time yt suggesting us
+- **2026-10-15T14:31** So my channel attracting Indians not usa?
+- **2026-10-15T14:33** So according to analytics set the best time for our shorts reach as best it could which is best upload on that same time or upload 15 minutes earlier then that heat time?
+- **2026-10-15T14:47** Ok we will follow the new yt suggested time from now on for 2 weeks
+- **2026-10-15T14:52** https://youtu.be/VUT6HhqKkBA / See if information any useful
+- **2026-10-15T14:56** https://drive.google.com/drive/folders/1HLg4xc91pJ3SRdCt8jt6qrF8n8R52CtB
+- **2026-10-15T15:04** Yup after this video renders we try all those new hooks type and see how it performs
+- **2026-10-15T15:12** [uploaded file: 4a034675-How-To-Upload-SnapYT.App.mp4] Approved check attached video if is any useful
+- **2026-10-15T20:10** [uploaded file: 5c7c5739-Country-seller-SnapYT.App.mp4] Can you make funny and humar like this
+- **2026-10-15T20:14** Narration style
+- **2026-10-15T20:45** Approved
+- **2026-10-16T14:29** Answer for mr fool first for god and rock video then continue
+- **2026-10-16T14:31** Give me answer first to comment
+- **2026-10-16T14:33** No i wanna debate your first answer is good we always debate that's what bring engagement also follow debates in video
+- **2026-10-16T14:35** Yeah good but always it should be meaningful
+- **2026-10-16T14:42** 2 reply from him
+- **2026-10-17T05:51** http://agentpolystudios.com/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAb21jcAU_6-xleHRuA2FlbQIxMQBwZG9mAnNydGMGYXBwX2lkDzU2NzA2NzM0MzM1MjQyNwABp622VpJxFc1FA3rjNNkpZYQaJLBB6oLA5z_R-7aqzgm-FjtL7v5S6mMNPpqB_aem_ayE5HQJ2IsXYAu4KPCnIOg / Can't you make videos like this?
+- **2026-10-17T05:57** Yes make the style test not for this channel its for different channel
+- **2026-10-17T06:09** [uploaded file: c24df466-Video-70202.mp4] Make the characters more expressive and add voices have attached the reference video we will be making video around claude codex
+- **2026-10-17T06:31** [uploaded file: ca67ffea-Video-74783.mp4] One more reference
+- **2026-10-17T06:47** The character is boy but the voice is girl change character or voice to match it
+- **2026-10-17T06:48** No not claude i am saying another character
+- **2026-10-17T07:38** Claude character should be claude's moscot
+- **2026-10-17T07:43** Comedy, write the first episode script
+- **2026-10-17T08:25** I want mood and music as reference video camera angeles too
+- **2026-10-17T08:38** [uploaded file: 2c3f550f-Video-7952.mp4] 1 more reference
+- **2026-10-17T16:43** Give next set of video after Jellyfish one and low poly goes to different chat
+- **2026-10-17T18:26** Create new chat for low poly
+- **2026-10-17T18:27** And how can I continue this chat on another claude account?
+- **2026-10-18T01:32** Yes new account chat remember what all we talked even including till now
+
+## New account chat, 18 Oct 2026
+- **2026-10-18** [uploaded the full chat export] This is our full chat history from my other account. Read all of it first, then CLAUDE.md, NEXT_SESSION.md (status on 18 Oct), PROJECT_HISTORY.md and docs/owner_messages_log.md. Continue my Interestingly Strange channel from where it stopped. Work on branch ccr-56282fe5-evehq4 and always pull before pushing.

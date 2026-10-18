@@ -38,4 +38,4 @@ crocodile dilemma, crocodile paradox, logic paradox, paradox, brain teaser, ridd
 What would YOU have said to the crocodile? 🐊 Best answer gets pinned 👇
 ```
 
-**Video facts:** 40.1 s, 138 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 40.1 s, 138 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

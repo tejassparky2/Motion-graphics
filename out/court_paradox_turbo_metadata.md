@@ -41,4 +41,4 @@ paradox of the court, protagoras paradox, protagoras and euathlus, logic paradox
 You're the judge 👨‍⚖️ Who pays: the student, or nobody? Explain your ruling 👇
 ```
 
-**Video facts:** 49.3 s, 163 words of narration, the channel owner's own cloned voice. Made for kids: **No**.
+**Video facts:** 49.3 s, 163 words of narration, Chatterbox Turbo stock narrator (synthetic; nobody real is cloned), characters in Kokoro voices. Made for kids: **No**.

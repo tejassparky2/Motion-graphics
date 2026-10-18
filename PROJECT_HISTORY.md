@@ -1,4 +1,4 @@
-# Interestingly Strange: the whole story so far (Sep 29 – Oct 14, 2026)
+# Interestingly Strange: the whole story so far (Sep 29 – Oct 18, 2026)
 
 For any new chat: read **CLAUDE.md** (the standing rules), then this file, then **NEXT_SESSION.md** (what to do next).
 Every owner message, word for word, is in **docs/owner_messages_log.md**.
@@ -141,3 +141,49 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
   IST = 7 PM New York). Batch 2 (twin mirror, room 4, Halloween ghost) waiting for approval.
 - Lessons: never run image generation and Turbo at the same time on this 4-core machine (both slow ~40x); single
   short words ("Turn.") and "creaked" get misheard, so say them inside a phrase or reword.
+
+## 9. Oct 15-18 (from the full chat export the owner uploaded on Oct 18)
+- **Oct 15:** Owner: "You didn't used emotions tags?" on the Milo videos → found the bug: videos choosing Turbo in
+  NARRATOR were voiced with the owner-clone model (tags spoken as words). Fixed (c9b8afe), owner clone blocked.
+  Owner: "Don't want milo videos" → shelved. Rows 34-37 re-voiced in real Turbo + tags ("Use shock laughs all tags
+  in needed"). Monetization question answered: YPP bar roughly doubles on **Feb 1 2027**; at Oct 15 the channel had
+  **207 subscribers** and ~170K views in 28 days (Shorts route needs ~20x). Long videos only as an idea
+  ("what if", how finance works, funny history). Analytics audience: India 21%, Philippines 16%, US 14%; viewers
+  peak 5-8 PM IST → posting moved to **4:30 PM and 7:30 PM IST** (2-week trial Oct 16-29; post ~1 h before peak).
+  DecodingYT guide (Drive) → 5 hook-test videos (identity call-out, "did you know", numbered list, contradict a
+  belief, abstract/looping) = rows 50-54, sent. Owner asked for Abhay Create-style funny history, in his
+  **narration style** (talks to the viewer, "bro", modern comparisons, flat landings) → Napoleon bunnies, bucket war,
+  dancing plague, approved.
+- **Oct 16:** Debate rule for comments and videos ("we always debate", "always it should be meaningful"); replies
+  to _mr._fool_ on the God-rock video (Aquinas, taxicab geometry, string-theory dimensions). Funny-history trio
+  rendered and sent (rows 55, 57, 59). Offered a "circle that's actually a square" (taxicab geometry) script: **no
+  answer yet**.
+- **Oct 17:** Low-poly 3D style test (three.js), then Claude/Codex dev-comedy skits for a separate channel (Claude =
+  the Claude Code mascot; Dev got a male voice; episode 1 "I Asked AI to Review My Coworker's Code" with reference
+  mood, music and camera) → moved to its own chat/branch. Pack 38-41 sent (Kokoro am_fenrir; owner not yet asked
+  again about re-voicing them in Turbo).
+- **Oct 18:** Low-poly chat created (session_012rinrNzawPSmYoY5bBrYza). Owner moved to another Claude account and
+  uploaded the full chat export to the new chat; the new chat sent **pack 42-45** (row 42 = the Turbo court test).
+  Checked that the court Turbo narrator is Turbo's stock voice, not the owner's clone (narrator pitch ~210-270 Hz vs
+  the owner's ~150 Hz); its sheet had an old wrong label, corrected.
+
+## 10. Details from Sep 29 - Oct 13 not written down elsewhere (from the chat export)
+- **One everyday example per video** (owner, Oct 4 / Oct 9: "add example to make understand clear", "each with
+  example and clever question in end"); keep one relatable example, cut extra ones.
+- **Fonts:** Kalam Bold/Regular (assets/fonts, OFL); captions white with dark outline, spoken word yellow; headlines
+  ink black with red/blue key words; stamps yellow on a dark tilted banner. Kalam has no arrows, ≠, ∞ or emoji.
+- **Upload sheets:** title (<60 chars, a real number from the video; old title kept as first alternative),
+  alternative titles, description (hook in the first two lines, a comment question, the 🔔 channel line), 3
+  hashtags, tags, pinned comment, Made for kids: No. One combined sheet per pack ("Give all together with right
+  date and Metadata in one sheet").
+- **Packs:** check every slot is covered before sending (owner caught missing slots on Oct 2 and Oct 5). When a
+  video is swapped, re-send it under its dated name and say which old file to ignore. Skipped video → fill its slot
+  without moving the others (they may already be scheduled). Owner schedules 4 videos every 2 days.
+- **Reminders** were set for 6:00 PM IST (fine for the old 9:30 PM slot); with the 4:30 PM slot they must come
+  earlier (e.g. ~11 AM IST). Old reminders live in the old account and don't carry over.
+- **References:** YouTube links can't be downloaded here (bot check); ask for the file. Say plainly if only a
+  caption was read.
+- **Owner's typos:** "orange" = organ, "boat one" = the bot voice am_fenrir, "pinaco" = Pinocchio.
+- **Never answered:** stop committing .mp4s (repo is ~2.9 GB; GitHub returned 500s on Oct 7); the #47 "And a rock"
+  vs "Now, a rock" line; retention-curve CSVs; reviewing rows 34-46; US clock change Nov 1 (times now follow IST
+  viewers, so probably no change).
