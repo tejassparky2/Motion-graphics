@@ -12,6 +12,8 @@ also push here. The repo is **public**.
 - **Owner, 18 Oct: "Turbo default female"** → Turbo stock female narrator is the default (CLAUDE.md). Scripts for
   rows 56, 58, 60-64, 66 written: out/scripts_batch_oct26-31.md, **waiting for approval**. Still unanswered: re-voice
   rows 43-45 in Turbo; commit the full chat export (repo is public); upload reminders in this account (~11 AM IST).
+- **Low-poly 3D channel** (owner, 18 Oct: "Seperate chat and channel for 3d one"): new chat in this account,
+  session_01FVT6MqPXrfUtaaECNhx18u, branch `ccr-56282fe5-evehq4-lowpoly`; it starts by sending the ep02 script for approval.
 - **Container:** this account's container started empty; pip install of requirements (CPU torch, Kokoro,
   faster-whisper, pycairo) installed 18 Oct (spaCy pinned <4); Chatterbox Turbo venv `/home/user/.venv-clone`
   (python3.11, latest chatterbox-tts, CPU torch) being installed 18 Oct. No ELEVENLABS_API_KEY in this environment.

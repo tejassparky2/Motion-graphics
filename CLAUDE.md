@@ -126,4 +126,6 @@
   own chat** (owner, 17 Oct: "low poly goes to different chat"). Code and notes: `channels/lowpoly/` (README.md has
   the references, look, music and camera rules; episode 1 is out/lowpoly/ep01_code_review.mp4). Don't make low-poly
   videos in this chat, and don't put them in the Interestingly Strange calendar.
+  Since the owner's account move (18 Oct 2026) its chat in this account is session_01FVT6MqPXrfUtaaECNhx18u
+  ("Low-poly 3D channel: Claude & Codex skits"), branch `ccr-56282fe5-evehq4-lowpoly`.
 - The global news & tech channel is also separate, with its own chat and branch (`ccr-56282fe5-evehq4-news`). Don't make news videos on this branch.
