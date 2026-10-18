@@ -66,6 +66,14 @@
   the viewer learns something from (a reason, a fact, a thinker's answer), and the closing question has two
   genuinely defensible sides. No arguing for its own sake, no rage-bait, no "comment YES or NO" filler.
 
+## Big questions that are hard to answer (owner, 18 Oct 2026: "This did well we need to focus on more video like this which is cotervinal hard to assume arrise questions")
+- The Last Bencher God-rock video (row 35, Turbo) held 0:34 of ~37 s (~92% viewed), 70.7% stayed to watch.
+- Make more videos built on a **controversial, hard-to-answer question** (God, free will, right and wrong, money,
+  life and death choices, time travel) that viewers can't guess the answer to and that makes them ask more.
+- Put the question in a character's mouth in a scene (kid vs teacher works best), show why both answers break,
+  then give a real thinker's answer (sourced: Aquinas, Boethius, Plato...) and end on a two-sided question.
+  Respectful and honest, especially on religion: argue ideas, never mock believers or non-believers.
+
 ## What to make more of (owner, 14 Oct 2026): "the genie one is doing good"
 - Lead with **genie-style stories**: a character with ONE rule (genie, robot, magic mirror, principal, ghost) and a kid
   who turns the rule against itself with one clever line. The authority freezes; the narrator shows both branches in
