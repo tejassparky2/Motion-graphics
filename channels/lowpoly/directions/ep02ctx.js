@@ -4,6 +4,7 @@ import {EMO as E1, POSES as P1, BODY as B1} from "./ep01ar.js";
 export const CAST = {codex: [.1, -.02], claude: [-.24, -.05], claudeFrom: "c20"};
 export const DETAILS = true;
 export const MOOD = "night";
+export const SMOOTH = true;
 export const EMO = {...E1,
   exhausted: {brow: -.1, ang: .3, lid: .55, smile: -.3, wide: 1, look: [0, .3]},
   calm:      {brow: 0, ang: .2, lid: .45, smile: .05, wide: 1, look: [0, .35]},
