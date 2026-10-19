@@ -37,14 +37,13 @@ HALF = H // 2
 SPLIT_CAP = HALF                         # captions sit on the gold divider in the split-screen scenes
 
 # Points of interest (original pixels). Birthday photo 2766x1856; figurine still (20261019_183012) 3000x4000.
-PHOTO = {"full": (1370, 928, 1856), "face": (1330, 640, 1000), "dress": (1340, 1180, 760), "bow": (1450, 340, 820),
+PHOTO = {"full": (1370, 928, 1856), "face": (1330, 640, 1000), "dress": (1340, 1180, 760), "bow": (1380, 340, 820),
          "bag": (1280, 870, 560), "mini": (1330, 700, 1000)}
-FIG = {"full": (2050, 2100, 3100), "face": (2120, 1480, 1500), "dress": (1830, 2150, 1100), "bow": (2530, 980, 800),
+FIG = {"full": (2050, 2100, 3100), "face": (2120, 1480, 1500), "dress": (1830, 2150, 1100), "bow": (2450, 1150, 1300),
        "bag": (1740, 2350, 760), "mini": (2050, 2100, 3100)}
 
 
-def view(im, poi, size=(W, H)):
-    """Crop of `im` centred on poi = (cx, cy, crop height), at the output aspect, resized to `size`."""
+def _box(im, poi, size):
     cx, cy, ch = poi
     cw = ch * size[0] / size[1]
     if cw > im.width:
@@ -52,7 +51,22 @@ def view(im, poi, size=(W, H)):
     ch = min(ch, im.height)
     cx = np.clip(cx, cw / 2, im.width - cw / 2)
     cy = np.clip(cy, ch / 2, im.height - ch / 2)
-    return im.resize(size, Image.BILINEAR, box=(cx - cw / 2, cy - ch / 2, cx + cw / 2, cy + ch / 2))
+    return (cx - cw / 2, cy - ch / 2, cx + cw / 2, cy + ch / 2)
+
+
+RING = {"bow": (1470, 255)}           # the bow sits at the photo's top edge: ring it where it is
+RING_FIG = {"bow": (2530, 1000)}
+
+
+def view(im, poi, size=(W, H)):
+    """Crop of `im` centred on poi = (cx, cy, crop height), at the output aspect, resized to `size`."""
+    return im.resize(size, Image.BILINEAR, box=_box(im, poi, size))
+
+
+def spot(im, poi, size, pt):
+    """Where image point pt lands in view(im, poi, size) (the crop is clamped at the image edges)."""
+    b = _box(im, poi, size)
+    return ((pt[0] - b[0]) * size[0] / (b[2] - b[0]), (pt[1] - b[1]) * size[1] / (b[3] - b[1]))
 
 
 def glide(a, b, x):
@@ -150,7 +164,8 @@ def main():
             i = which(starts, t)
             a = PHOTO["full"] if i == 0 else PHOTO[stops[i - 1]]
             fr = view(photo, glide(a, PHOTO[stops[i]], (t - starts[i] + 0.15) / 0.45))
-            ring(fr, W / 2, H / 2, 330, t - starts[i] - 0.35)
+            x, y = spot(photo, PHOTO[stops[i]], (W, H), RING[stops[i]]) if stops[i] == "bow" else (W / 2, H / 2)
+            ring(fr, x, y, 260 if stops[i] == "bow" else 330, t - starts[i] - 0.35)
             yield fr
 
     def design(n):
@@ -172,8 +187,10 @@ def main():
             bot = view(fig, glide(FIG[a], FIG[stops[i]], x), (W, HALF))
             fr = split(top, bot)
             if i < 3:
-                ring(fr, W / 2, HALF / 2, 210, t - starts[i] - 0.35)
-                ring(fr, W / 2, HALF * 1.5, 210, t - starts[i] - 0.45)
+                x, y = spot(photo, PHOTO[stops[i]], (W, HALF), RING[stops[i]]) if i == 1 else (W / 2, HALF / 2)
+                ring(fr, x, y, 160 if i == 1 else 210, t - starts[i] - 0.35)
+                x, y = spot(fig, FIG[stops[i]], (W, HALF), RING_FIG[stops[i]]) if i == 1 else (W / 2, HALF / 2)
+                ring(fr, x, HALF + y, 160 if i == 1 else 210, t - starts[i] - 0.45)
             yield fr
 
     def whatsapp(n):
