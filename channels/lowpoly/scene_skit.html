@@ -241,9 +241,14 @@ function buildPerson(o) {
   const face = buildFace(head, {y: .02, z: .148, sp: .06, er: .022, sclera: true, mw: .028, my: .085, browMat: basic(o.hair)});
   const arms = [arm(body, -1, .27, .25, cloth, skin), arm(body, 1, .27, .25, cloth, skin)];
   const mug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xe8e4dc)); mug.position.set(0, -.3, .05); mug.visible = false; arms[1].el.add(mug);
+  const phone = new THREE.Group(); phone.position.set(0, -.3, .03); phone.rotation.set(-.4, 0, 0); phone.visible = false; arms[1].el.add(phone);   // held up, screen toward the face
+  phone.add(mesh(new THREE.BoxGeometry(.075, .14, .01), mat(0x15161c)));
+  const pscr = new THREE.Mesh(new THREE.PlaneGeometry(.066, .128), new THREE.MeshBasicMaterial({color: 0xbfd6ff})); pscr.position.z = -.006; pscr.rotation.y = Math.PI; phone.add(pscr);
+  const pglow = new THREE.PointLight(0x9fc2ff, 0, .5, 1.6); pglow.position.set(0, 0, -.08); phone.add(pglow);
+  phone.userData.glow = pglow;
   const hoodUp = mesh(new THREE.SphereGeometry(.235, 10, 7, 0, Math.PI * 2, 0, Math.PI * .62), new THREE.MeshStandardMaterial({color: 0x35505f, flatShading: true, roughness: .85}));
   hoodUp.position.set(0, .02, -.02); hoodUp.visible = false; head.add(hoodUp);
-  return {group, body, head, face, arms, mug, hoodUp};
+  return {group, body, head, face, arms, mug, phone, hoodUp};
 }
 const DEV = buildPerson({skin: 0xe0a07a, cloth: 0x3d5a6e, hair: 0x2a1d18, pos: [0, -.95]});
 const dev = DEV.group, devBody = DEV.body, devHead = DEV.head, devFace = DEV.face, devArms = DEV.arms;
@@ -527,6 +532,7 @@ window.renderAt = function (t) {
     if (pose === "nod") R.head.rotation.x += .16 * Math.max(0, Math.sin((t - cur.start) * 9)) * (1 - seg(t, cur.start + .6, cur.start + 1.0)) * (t >= cur.start ? 1 : 0);
     if (pose === "sitback") { const k = seg(t, cur.start - .1, cur.start + .4); R.body.position.z -= .1 * k; R.body.rotation.x -= .18 * k; R.head.rotation.x -= .1 * k; }
     R.mug.visible = pose === "sip";
+    R.phone.visible = pose === "phone"; R.phone.userData.glow.intensity = pose === "phone" ? 1.6 : 0;
     const hood = pose === "hood" ? seg(t, cur.start - .1, cur.start + .5) : (pprev === "hood" ? 1 - u : 0);
     R.hoodUp.visible = hood > .02 || !!(who === "dev" && cur.id === beats[beats.length - 1].id && D.HOOD_AT_END);
     R.hoodUp.rotation.x = lerp(-1.7, .35, hood);
