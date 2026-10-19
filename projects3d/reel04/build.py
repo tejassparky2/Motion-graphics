@@ -37,10 +37,10 @@ HALF = H // 2
 SPLIT_CAP = HALF                         # captions sit on the gold divider in the split-screen scenes
 
 # Points of interest (original pixels). Birthday photo 2766x1856; figurine still (20261019_183012) 3000x4000.
-PHOTO = {"full": (1370, 928, 1856), "face": (1385, 640, 1150), "dress": (1340, 1180, 760), "bow": (1470, 250, 520),
-         "bag": (1280, 870, 560)}
+PHOTO = {"full": (1370, 928, 1856), "face": (1330, 640, 1000), "dress": (1340, 1180, 760), "bow": (1450, 340, 820),
+         "bag": (1280, 870, 560), "mini": (1330, 700, 1000)}
 FIG = {"full": (2050, 2100, 3100), "face": (2120, 1480, 1500), "dress": (1830, 2150, 1100), "bow": (2530, 980, 800),
-       "bag": (1740, 2350, 760)}
+       "bag": (1740, 2350, 760), "mini": (2050, 2100, 3100)}
 
 
 def view(im, poi, size=(W, H)):
@@ -150,7 +150,7 @@ def main():
             i = which(starts, t)
             a = PHOTO["full"] if i == 0 else PHOTO[stops[i - 1]]
             fr = view(photo, glide(a, PHOTO[stops[i]], (t - starts[i] + 0.15) / 0.45))
-            ring(fr, W / 2, H / 2 - 40, 300, t - starts[i] - 0.35)
+            ring(fr, W / 2, H / 2, 330, t - starts[i] - 0.35)
             yield fr
 
     def design(n):
@@ -162,7 +162,7 @@ def main():
     def compare(n):
         """'Same dress. Same bow. Same handbag. Just mini.' -- photo on top, figurine below, same detail."""
         starts = [s for s, _ in sent[7]]
-        stops = ["dress", "bow", "bag", "full"]
+        stops = ["dress", "bow", "bag", "mini"]
         for k in range(n):
             t = L[7] + k / FPS
             i = min(which(starts, t), 3)
@@ -193,7 +193,7 @@ def main():
         (L[4], r2.chain((lambda n: clip(md("023303"), n, 0.0, 8.6, post=STEADY), 0.36),
                         (lambda n: clip(md("110913"), n, 6.0, 16.5, post=STEADY), 0.34),
                         (lambda n: clip(md("110932"), n, 0.0, 3.2, post=STEADY), 0.30)), True, r2.CAP_Y),
-        (L[5], lambda n: clip(md("023315"), n, 0.0, 8.3, post=STEADY), True, r2.CAP_Y),
+        (L[5], lambda n: clip(md("023315"), n, 0.0, 8.3, post=STEADY), True, 1450),   # clear of the name plate
         (L[6], lambda n: clip(md("182700"), n, 0.0, speed=1.0), True, r2.CAP_Y),
         (L[7], compare, True, SPLIT_CAP),
         (L[8], lambda n: clip(md("183018"), n, 0.0, speed=1.4), True, r2.CAP_Y),
@@ -233,8 +233,8 @@ def main():
                 fr = v2.light_sweep(fr, t - L[6])
                 fr = v2.sparkles(fr, t - L[6] - 0.1)
             if si == 7:
-                tag(fr, "PHOTO", 70, t - L[7] - 0.1, size=34)
-                tag(fr, "FIGURINE", HALF + 70, t - L[7] - 0.2, size=34)
+                tag(fr, "PHOTO", 190, t - L[7] - 0.1, size=34)
+                tag(fr, "FIGURINE", HALF + 80, t - L[7] - 0.2, size=34)
             if si == 8:
                 tag(fr, "A GIFT TO KEEP FOREVER", 260, t - L[8] - 0.2)
             if si == 9:
