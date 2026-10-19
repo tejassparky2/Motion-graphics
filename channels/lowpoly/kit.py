@@ -76,3 +76,37 @@ def stat_card(cr, t, x, y, label, value, col, changed, k=1.0, w=276, bar=None):
         rrect(cr, x - w / 2 + 20, y + 58, max(6, (w - 40) * min(1, bar)), 8, 4)
         cr.fill()
         cr.restore()
+
+
+def pill_caption(cr, t, tl, y=318, size=27):
+    """Reference 10's captions: the whole line in small white type on a dark rounded pill near the top."""
+    from motion.engine import W
+    for i, b in enumerate(tl.beats):
+        nxt = tl.beats[i + 1].start if i + 1 < len(tl.beats) else tl.total
+        end = min(b.end + 0.45, nxt - 0.05)
+        if not (b.start - 0.05 <= t < end) or not b.units:
+            continue
+        k = min(appear(t, b.start - 0.05, 0.1), 1 - seg(t, end - 0.1, end))
+        words, lines, cur = " ".join(u.shown for u in b.units).split(), [], ""
+        for w in words:
+            if cur and len(cur) + 1 + len(w) > 26:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = (cur + " " + w).strip()
+        lines.append(cur)
+        cr.save()
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(size)
+        wmax = max(cr.text_extents(l).x_advance for l in lines)
+        h = size * 1.35 * len(lines) + size * 0.7
+        rrect(cr, W / 2 - wmax / 2 - 22, y - size * 1.1, wmax + 44, h, 16)
+        cr.set_source_rgba(0.05, 0.05, 0.07, 0.72 * k)
+        cr.fill()
+        for j, line in enumerate(lines):
+            ext = cr.text_extents(line)
+            cr.move_to(W / 2 - ext.x_advance / 2, y + j * size * 1.35)
+            cr.set_source_rgba(1, 1, 1, k)
+            cr.show_text(line)
+        cr.restore()
+        return

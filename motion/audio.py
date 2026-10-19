@@ -104,6 +104,14 @@ def sfx(name, dur):
             out[i:i + m] += (np.diff(click, prepend=0) * 0.8 + thock * 0.35)[: n - i] * _rng.uniform(0.5, 1)
             i += int(_rng.uniform(0.055, 0.13) * SR)
         return out * _env(n, 0.01, 0.05) * 0.5
+    if name == "rain":                         # soft rain on a window for `dur` seconds: filtered hiss + random drips
+        n = int(max(1.0, dur) * SR)
+        hiss = _lowpass(_rng.uniform(-1, 1, n), 6) - _lowpass(_rng.uniform(-1, 1, n), 60) * 0.5
+        drips = np.zeros(n)
+        for at in _rng.integers(0, n - 2000, int(dur * 9)):
+            m = int(0.02 * SR)
+            drips[at:at + m] += np.sin(2 * np.pi * _rng.uniform(1800, 3200) * np.arange(m) / SR) * np.exp(-np.arange(m) / (0.003 * SR)) * _rng.uniform(.2, .6)
+        return (hiss * 0.5 + drips * 0.4) * _env(n, 0.8, 0.8) * 0.5
     if name == "ding":                         # a soft UI notification chime (counter ticks up)
         n = int(0.5 * SR)
         tt = np.arange(n) / SR
@@ -353,7 +361,7 @@ def pad(total, seed=None):
     return (mix * swell)[: int(total * SR)]
 
 
-GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
+GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "rain": 0.22, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 

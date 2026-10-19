@@ -420,6 +420,19 @@ function nightMood() {
   const win = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: tex})); win.position.set(0, 1.55, -1.88); scene.add(win);
   for (const x of [-.4, .4]) { const f = mesh(new THREE.BoxGeometry(.04, 1.5, .04), mat(0x0c0f22)); f.position.set(x, 1.55, -1.86); scene.add(f); }
   const moon = new THREE.DirectionalLight(0x6f86ff, .7); moon.position.set(0, 2.2, -3); scene.add(moon);     // cold rim on Dev's back
+  if (D.RAIN) {                                             // rain streaks in front of the glass (instanced thin quads)
+    const n = 260, geo = new THREE.PlaneGeometry(.004, .09);
+    const rm = new THREE.MeshBasicMaterial({color: 0xa9c4ff, transparent: true, opacity: .32, depthWrite: false});
+    const rain = new THREE.InstancedMesh(geo, rm, n); scene.add(rain);
+    const seeds = Array.from({length: n}, () => [(rnd() - .5) * 2.3, rnd(), -1.86 + rnd() * .06, .7 + rnd() * .6]);
+    const m4 = new THREE.Matrix4();
+    window.__rain = t => seeds.forEach(([x, y0, z, sp], i) => {
+      const y = .82 + ((y0 * 1.45 - t * sp * 1.6) % 1.45 + 1.45) % 1.45;
+      m4.makeTranslation(x + .02 * Math.sin(t + i), y, z); rain.setMatrixAt(i, m4); });
+    window.__rain(0);
+    const glass = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({color: 0x8fb0ff, transparent: true, opacity: .05, depthWrite: false}));
+    glass.position.set(0, 1.55, -1.83); scene.add(glass);
+  }
 }
 const DIRNAME = new URLSearchParams(location.search).get("dir") || "test";
 const D = await import(`./directions/${DIRNAME}.js`);
@@ -449,7 +462,15 @@ if (D.CAST && D.CAST.dev) dev.position.set(D.CAST.dev[0], 0, D.CAST.dev[1]);
 if (D.CAST && D.CAST.devTurn) dev.rotation.y = D.CAST.devTurn;
 const beats = T.beats;
 window.DURATION = T.total;
-function beatAt(t) { let cur = beats[0], prev = beats[0]; for (const b of beats) { if (b.start - .12 <= t) { prev = cur; cur = b; } } return [cur, prev]; }
+function beatAt(t) {        // REACTION_CUTS: cut to the next speaker right after a line ends (their face holds the pause)
+  let cur = beats[0], prev = beats[0];
+  for (let i = 0; i < beats.length; i++) {
+    const b = beats[i], pe = i ? beats[i - 1].end : -1;
+    const at = D.REACTION_CUTS && i ? Math.min(b.start - .12, Math.max(pe + .12, b.start - .9)) : b.start - .12;
+    if (at <= t) { prev = cur; cur = b; }
+  }
+  return [cur, prev];
+}
 const dirOf = (b, who) => (DIR[b.id] && DIR[b.id][who]) || ["neutral", "idle"];
 function mixEmo(a, b, u) {
   const r = {}; for (const k of ["brow", "ang", "lid", "smile", "wide", "happyEyes"]) r[k] = lerp(a[k] || 0, b[k] || 0, u);
@@ -620,6 +641,7 @@ window.renderAt = function (t) {
   if (D.extra) D.extra(t, {cur, prev, scene, THREE, devBody, devHead, claude, clBody, codex, cxBody, laptop});
 
   driftMotes(t);
+  if (window.__rain) { window.__rain(t); scene.traverse(o => { if (o.isInstancedMesh) o.instanceMatrix.needsUpdate = true; }); }
   if (deskTick) deskTick(t);
   // ----- camera: hard cut per line (or at the line's own cuts), slow push within the shot, small handheld drift
   let shotName = cur.scene, s0 = cur.start - .15, s1 = cur.end + .6;
@@ -647,6 +669,7 @@ window.renderAt = function (t) {
   camera.fov = shot.fov || 38; camera.updateProjectionMatrix();
   camera.position.copy(P); camera.lookAt(L);
   bokeh.uniforms.focus.value = P.distanceTo(L);
+  bokeh.uniforms.aperture.value = shot.aperture || .04;
   composer.render();
 };
 window.renderAt(0);
