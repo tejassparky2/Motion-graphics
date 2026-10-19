@@ -19,7 +19,7 @@ from motion.polish import appear, vignette   # noqa: E402
 NARRATOR = dict(turbo=True, turbo_ref="am_michael")
 DIRECTION = "ep08"
 MUSIC = "pad"
-TAIL = 1.2                                               # the head hits the desk after the last line
+TAIL = 0.7                                               # cut on the laugh (rule 20)
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build", "lowpoly", "ep08_frames")
 _frame = frames(FRAMES)
 voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=1.0, turbo_ref="af_heart"),
@@ -90,6 +90,6 @@ def draw(cr, t, tl):
     cue("thud", t, A("i15") + 0.1)
     cue("sigh", t, A("i16") - 0.4)
     cue("hush", t, A("i17", end=True), 0.8)
-    cue("thud", t, A("i19", end=True) + 0.9)
+    cue("thud", t, A("i19", end=True) + 0.4)
     th.hook(cr, t, [("MY AI APOLOGIZES", False), ("TOO MUCH", True)], end=A("i1", end=True) + 0.3, y=175, size=84)
     caption(cr, t, tl)
