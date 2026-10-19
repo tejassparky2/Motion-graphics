@@ -13,8 +13,8 @@ export const EMO = {...E,
 export const POSES = {...P, phone: [[-1.25, .12, -1.95], [-.5, .15, -1.1]]};
 export const BODY = {...B, phone: [.3, .2, .32]};
 export const SHOTS = {...S,
-  devphone: {pos: [-.62, 1.24, -.3], look: [0, 1.2, -.92], push: .1, fov: 42, track: "dev"},
-  devcu:    {pos: [-.5, 1.3, -.35], look: [0, 1.27, -.95], push: .08, fov: 36, track: "dev"},
+  devphone: {pos: [-.72, 1.16, -.22], look: [0, 1.1, -.8], push: .1, fov: 48, track: "dev"},
+  devcu:    {pos: [-.62, 1.31, -.22], look: [0, 1.27, -.95], push: .06, fov: 38, track: "dev"},
   clcu:     {pos: [-.2, .95, -.62], look: [0, .9, -.05], push: .12, fov: 36},
 };
 export const DIR = {
