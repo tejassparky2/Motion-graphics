@@ -68,12 +68,25 @@ def heard_ok(text, heard, need=0.82):
     return difflib.SequenceMatcher(None, a, b).ratio() >= need and not misheard(text, heard)
 
 
+def speech_only(w, sr, rel=0.12, keep=0.12):
+    """Cut the faint murmur Chatterbox Multilingual often leaves after (or before) the words: keep from the first to
+    the last 20 ms window louder than `rel` of the take's peak, plus `keep` seconds, with a short fade."""
+    hop = int(0.02 * sr)
+    env = np.array([np.sqrt(np.mean(w[i:i + hop] ** 2)) for i in range(0, len(w) - hop, hop)])
+    loud = np.flatnonzero(env > rel * env.max())
+    a, b = max(0, (loud[0] * hop) - int(keep * sr)), min(len(w), (loud[-1] + 1) * hop + int(keep * sr))
+    w = w[a:b].copy()
+    f = int(0.03 * sr)
+    w[-f:] *= np.linspace(1, 0, f)
+    return w
+
+
 def takes(texts, lang="hi", tries=3):
     from faster_whisper import WhisperModel
     d = os.path.join(ROOT, "build", "mtl")
     os.makedirs(d, exist_ok=True)
     clone_py = os.environ.get("CLONE_PYTHON", os.path.expanduser("~/.venv-clone/bin/python"))
-    checker, chosen, todo = None, {}, list(dict.fromkeys(texts))
+    checker, chosen, score, todo = None, {}, {}, list(dict.fromkeys(texts))
     for n in range(tries):
         jobs = [[t, os.path.join(d, f"{vo.voice._key(t)}.{lang}.try{n}.wav")] for t in todo]
         if any(not os.path.exists(o) for _, o in jobs):
@@ -85,8 +98,9 @@ def takes(texts, lang="hi", tries=3):
         for t, o in jobs:
             heard = " ".join(x.text for x in checker.transcribe(o, language=lang, beam_size=5)[0])
             ok = heard_ok(t, heard)
-            if t not in chosen or ok:
-                chosen[t] = o
+            miss = 0 if ok else 1 + len(misheard(t, heard))
+            if t not in chosen or miss < score[t]:      # a clear take wins, else the one with fewest misheard words
+                chosen[t], score[t] = o, miss
             if not ok:
                 bad.append(t)
             print(f"try {n + 1} {'ok ' if ok else 'BAD'} {t!r} heard as {heard.strip()!r}", file=sys.stderr)
@@ -108,7 +122,7 @@ def main():
     track, cues, t = [np.zeros(int(vo.LEAD * SR))], [], vo.LEAD
     for s, pause in lines:
         w, wsr = soundfile.read(got[s])
-        w = w if w.ndim == 1 else w.mean(axis=1)
+        w = speech_only(w if w.ndim == 1 else w.mean(axis=1), wsr)
         if wsr != SR:
             from math import gcd
             from scipy.signal import resample_poly
