@@ -140,6 +140,8 @@
 - Each video ships with an upload sheet: title, alternative titles, description, hashtags, tags, pinned comment.
 - Upload reminders always come with the files (owner, 13 Oct 2026): build the pack with
   `python tools/make_pack.py out/packs FIRST LAST` and send every due video plus its upload sheet in the same reply.
+  **Send 5 videos per set** (owner, 19 Oct 2026: "from now send 5 video in 1 set"), starting from the row after the
+  last one the owner posted (set 1 = rows 42-46, after row 41 mechanical_turk "Napoleon chess").
 - No metadata or encoder tags in outputs; never strip other parties' provenance watermarks (e.g. SynthID).
 - Riddle series is called **The Last Bencher** (not "Last Row Kid").
 - Memes (the 6–9 s "Me: / Dad:" reaction format) are for a **different channel**, not Interestingly Strange (owner,
