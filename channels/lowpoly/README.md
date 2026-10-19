@@ -127,3 +127,8 @@ primary production text, [Inference]. The short version used on every episode fr
   TikTok and Reels (YouTube converts skit viewers slowest); read the comments as the writers' room.
 - **Unverified claims we do not build on:** "90% fail in the first 3 s", "cuts every 2-4 s", "captions +15-25%",
   "series convert 67% better", "10% replay rate boosts distribution", "500-800 ms pause", "85% watch without sound".
+
+## Catchphrase rationing (owner, 19 Oct 2026: "claude won't say you are absolutely right always")
+"You're absolutely right!" at most once every four or five episodes (it was in eps 1, 8, 10 and 11). Claude has
+other sides to play: the overconfident fixer ("Fixed!"), the over-doer, the gentle one with outsiders, and the honest
+one in warm episodes. Every premise must come from a verified, relatable moment (owner: "I want reliable").
