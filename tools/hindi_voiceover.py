@@ -32,8 +32,40 @@ def norm(s):
     return "".join(s.split())
 
 
+# Whisper writes some words in Latin or digits; aspiration and a few vowel/voicing spellings vary in its Hindi output
+LATIN = {"whatsapp": "व्हाट्सऐप", "dm": "डी एम", "3d": "थ्री डी", "3599": "तीन हज़ार पाँच सौ निन्यानवे"}
+SAME = str.maketrans({"भ": "ब", "छ": "च", "ध": "त", "थ": "त", "ठ": "ट", "ख": "क", "घ": "ग", "झ": "ज", "ढ": "त",
+                      "ष": "स", "श": "स", "ी": "ि", "ू": "ु", "ं": "", "ँ": "", "ृ": "र", "ऐ": "ै",
+                      "ड": "त", "ट": "त", "द": "त"})
+
+
+def _words(s):
+    s = re.sub(r"[।.,?!'\"“”‘’\-–—:;]", " ", s.lower())
+    s = " " + " ".join(LATIN.get(w, w) for w in s.split()) + " "
+    s = re.sub(r"ये(?=\s|$)", "ए", s.replace("\u093c", "").replace(" यह ", " ये "))   # चाहिये = चाहिए; यह = ये
+    return [re.sub(r"य$", "ए", w).translate(SAME) for w in s.split()]
+
+
+def misheard(text, heard, need=0.78):
+    """Script words with no close match in what Whisper heard, in order (empty = clear)."""
+    a, b = _words(text), _words(heard)
+    bad, j = [], 0
+    for w in a:
+        best, at = 0.0, j
+        for k in range(max(0, j - 2), min(len(b), j + 4)):
+            r = difflib.SequenceMatcher(None, w, b[k]).ratio()
+            if r > best:
+                best, at = r, k
+        if best < need:
+            bad.append(w)
+        else:
+            j = at + 1
+    return bad
+
+
 def heard_ok(text, heard, need=0.82):
-    return difflib.SequenceMatcher(None, norm(text), norm(heard)).ratio() >= need
+    a, b = "".join(_words(text)), "".join(_words(heard))
+    return difflib.SequenceMatcher(None, a, b).ratio() >= need and not misheard(text, heard)
 
 
 def takes(texts, lang="hi", tries=3):
