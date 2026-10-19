@@ -117,9 +117,14 @@ def main():
     ap.add_argument("name")
     ap.add_argument("--gap", type=float, default=0.9)
     ap.add_argument("--lang", default="hi")
+    ap.add_argument("--picks", help='JSON {"line number": take number}: takes chosen by ear/transcript (Whisper often '
+                                    "writes Hinglish in Latin letters, which the automatic check can't compare)")
     a = ap.parse_args()
     lines = vo.paragraphs(open(a.script, encoding="utf-8").read(), a.gap)
-    got = takes([s for s, _ in lines], a.lang)
+    picks = {int(k): v for k, v in json.load(open(a.picks)).items()} if a.picks else {}
+    got = {s: os.path.join(ROOT, "build", "mtl", f"{vo.voice._key(s)}.{a.lang}.try{picks[i + 1]}.wav")
+           for i, (s, _) in enumerate(lines) if i + 1 in picks}
+    got.update(takes([s for i, (s, _) in enumerate(lines) if i + 1 not in picks], a.lang))
     track, cues, t = [np.zeros(int(vo.LEAD * SR))], [], vo.LEAD
     for s, pause in lines:
         w, wsr = soundfile.read(got[s])
