@@ -242,3 +242,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-18** (after asking for deep research on hooks, retention, feeling and subscribers) After research make 5 videos based on it auto approved for this 5 i will be back morning
 - **2026-10-18** And also try to improve both animations narration sounds music everything according to research
 - **2026-10-18** Yup also do animation upgrade as much you can it should look engaging for users to stay till end
+- **2026-10-19** Search you have 3d business voice over editing in same git where we make video reels for your3d if you can find open a new chat for it

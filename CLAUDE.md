@@ -159,4 +159,7 @@
   videos in this chat, and don't put them in the Interestingly Strange calendar.
   Since the owner's account move (18 Oct 2026) its chat in this account is session_01FVT6MqPXrfUtaaECNhx18u
   ("Low-poly 3D channel: Claude & Codex skits"), branch `ccr-56282fe5-evehq4-lowpoly`.
+- **Yours3D India business reels** (owner's 3D figurine business, Instagram; voice-over + editing): separate chat
+  session_0156jCxcSbUyKaKSLzbUk5am, branch `ccr-56282fe5-evehq4-3d` (rules in projects3d/README.md there). Don't make
+  them on this branch.
 - The global news & tech channel is also separate, with its own chat and branch (`ccr-56282fe5-evehq4-news`). Don't make news videos on this branch.

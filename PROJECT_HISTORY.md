@@ -105,6 +105,8 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
 - **Global news & tech**: branch `ccr-56282fe5-evehq4-news`.
 - **3D business voice-over/editing** (owner's cloned voice): chat session_015ciz34JsfciV5Yzyk9A6zE, branch
   `ccr-56282fe5-evehq4-3d`.
+  After the account move (19 Oct 2026, owner: "open a new chat for it") its chat in this account is
+  session_0156jCxcSbUyKaKSLzbUk5am ("Yours3D India: 3D business reels").
 - **Memes channel**: not set up yet; the three memes are kept in `videos/meme_*.py` / `out/meme_*.mp4`.
 - **Hindi (Hinglish) channel**: being set up now (this handoff).
 
