@@ -32,4 +32,4 @@ dad, claude, ai coding, learning to code, side projects, vibe coding, wholesome,
 Who in your family would secretly love coding with AI? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 37.4 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 37.5 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
