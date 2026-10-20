@@ -35,7 +35,7 @@ GOLD, GOLD_LIGHT, INK, WHITE, GREEN = r2.GOLD, r2.GOLD_LIGHT, r2.INK, r2.WHITE, 
 font = r2.font
 SR = 48000
 CAP_Y = 1420            # below the figurine she holds at chest height, above the Reels buttons
-END_HOLD = 3.6
+END_HOLD = 5.5         # logo builds (~2 s), then the price and WhatsApp labels stay ~3 s
 VOICE_FX = ("highpass=f=80,afftdn=nf=-28,equalizer=f=200:t=q:w=1:g=-1.5,equalizer=f=3200:t=q:w=1.2:g=2.5,"
             "deesser=i=0.3,acompressor=threshold=0.12:ratio=2.5:attack=10:release=150:makeup=1.4")
 
