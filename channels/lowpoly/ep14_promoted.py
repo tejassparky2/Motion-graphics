@@ -136,7 +136,7 @@ def draw(cr, t, tl):
     th.grain(cr, t, 0.05)
     A, B = tl.at, tl.by_id
     toolcard(cr, t, A("p1", "promoted") - 0.1, B["p2"].end + 0.3, "Boss · 5:02 PM",
-             [("", "Senior Engineer,", "", GREEN), ("", "effective Monday 🎉", "", GREEN)], y=900)
+             [("", "Senior Engineer,", "", GREEN), ("", "effective Monday!", "", GREEN)], y=900)
     p9 = B["p9"]
     toolcard(cr, t, p9.start + 0.3, A("p10", end=True) + 0.4, "Boss · 5:04 PM",
              [("", "Present it to the", "", GREY), ("", "whole company Friday?", "", YEL)], y=900)
