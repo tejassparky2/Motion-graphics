@@ -14,10 +14,10 @@ export const EMO = {...E,
 export const POSES = P, BODY = B;
 export const SHOTS = {...S,
   two:     {pos: [-1.15, 1.55, -.25], look: [.3, 1.08, -.9], push: .06, fov: 50},
-  jr:      {pos: [.1, 1.32, -.1], look: [.66, 1.25, -.86], push: .06, fov: 42, track: "junior"},
-  jrclose: {pos: [.0, 1.32, -.15], look: [.66, 1.26, -.86], push: .06, fov: 36, track: "junior", aperture: .07},
-  devjr:   {pos: [1.25, 1.42, -.2], look: [.15, 1.15, -.92], push: .05, fov: 44, track: "dev", aperture: .07},   // past her shoulder at Dev
-  screen:  {pos: [.2, 1.45, -1.4], look: [0, .98, .3], push: .1, fov: 44},
+  jr:      {pos: [.02, 1.36, .07], look: [.66, 1.2, -.86], push: .06, fov: 44, track: "junior"},
+  jrclose: {pos: [.0, 1.34, .02], look: [.66, 1.22, -.86], push: .06, fov: 42, track: "junior", aperture: .07},
+  devjr:   {pos: [-.95, 1.3, .3], look: [.25, 1.15, -.9], push: .05, fov: 46, track: "dev", aperture: .06},   // Dev, her behind him
+  screen:  {pos: [-.3, 1.45, -1.38], look: [0, .95, .1], push: .1, fov: 46},   // over Dev's shoulder at the code
 };
 const D3 = (dev, jr, cl, extra = {}) => ({dev, junior: jr, claude: cl, ...extra});
 const W = ["watch", "idle"];

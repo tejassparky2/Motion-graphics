@@ -218,7 +218,10 @@ function buildPerson(o) {
   const head = new THREE.Group(); head.position.set(0, 1.27, 0); body.add(head);
   const hd = mesh(jitter(new THREE.IcosahedronGeometry(.16, 1), .015), skin); hd.scale.set(1, 1.08, .95); head.add(hd);
   const neck = mesh(new THREE.CylinderGeometry(.05, .06, .1, 6), skin); neck.position.y = -.17; head.add(neck);
-  if (!o.bald) {
+  if (o.ponytail) {                             // smooth hair: side-swept fringe, curtains to the jaw (spikes read as Dev)
+    const fr = mesh(jitter(new THREE.SphereGeometry(.1, 8, 5), .008), hair); fr.position.set(.03, .11, .09); fr.scale.set(1.25, .38, .75); fr.rotation.set(.35, 0, -.25); head.add(fr);
+    for (const sgn of [-1, 1]) { const cur = mesh(jitter(new THREE.SphereGeometry(.07, 7, 5), .008), hair); cur.position.set(sgn * .145, -.03, -.01); cur.scale.set(.42, 1.85, .95); head.add(cur); }
+  } else if (!o.bald) {
     for (let i = 0; i < 9; i++) {               // messy low-poly hair
       const a = (i / 9) * Math.PI * 2;
       const tuft = mesh(jitter(new THREE.ConeGeometry(.07, .16, 4), .015), hair);
@@ -229,7 +232,7 @@ function buildPerson(o) {
   } else {                                      // thin grey hair at the sides only
     for (const sgn of [-1, 1]) { const sd = mesh(jitter(new THREE.SphereGeometry(.07, 7, 5), .01), hair); sd.position.set(sgn * .13, .02, -.03); sd.scale.set(.6, 1, 1.1); head.add(sd); }
   }
-  const capH = mesh(jitter(new THREE.SphereGeometry(.165, 9, 6, 0, Math.PI * 2, 0, Math.PI * (o.bald ? .2 : .45)), .015), hair);
+  const capH = mesh(jitter(new THREE.SphereGeometry(.165, 9, 6, 0, Math.PI * 2, 0, Math.PI * (o.bald ? .2 : o.ponytail ? .55 : .45)), .015), hair);
   capH.position.set(0, .03, -.015); capH.rotation.x = -.25; capH.visible = !o.bald; head.add(capH);
   for (const s of [-1, 1]) { const ear = mesh(new THREE.IcosahedronGeometry(.035, 0), skin); ear.position.set(s * .16, 0, 0); head.add(ear); }
   const nose = mesh(new THREE.IcosahedronGeometry(o.bald ? .03 : .025, 0), skin); nose.position.set(0, -.02, .155); head.add(nose);
@@ -237,10 +240,10 @@ function buildPerson(o) {
     for (const s of [-1, 1]) { const rimG = new THREE.Mesh(new THREE.TorusGeometry(.042, .006, 5, 16), basic(0x1a1a22)); rimG.position.set(s * .06, .02, .155); head.add(rimG); }
     const bridge = new THREE.Mesh(new THREE.BoxGeometry(.035, .006, .006), basic(0x1a1a22)); bridge.position.set(0, .025, .158); head.add(bridge);
   }
-  if (o.ponytail) {                             // a tied-back ponytail and a fuller hair cap
-    const tie = mesh(new THREE.TorusGeometry(.03, .01, 5, 8), mat(0xd84a6a)); tie.position.set(0, .06, -.15); tie.rotation.x = .3; head.add(tie);
-    const tail = mesh(jitter(new THREE.ConeGeometry(.06, .22, 6), .01), hair); tail.position.set(0, -.04, -.21); tail.rotation.x = -2.6; head.add(tail);
-    for (const sgn of [-1, 1]) { const side = mesh(jitter(new THREE.SphereGeometry(.07, 7, 5), .01), hair); side.position.set(sgn * .13, .03, -.02); side.scale.set(.5, 1.2, 1); head.add(side); }
+  if (o.ponytail) {                             // a high ponytail with a pink tie, visible from the side and behind
+    const bun = mesh(jitter(new THREE.SphereGeometry(.055, 7, 5), .008), hair); bun.position.set(0, .1, -.16); head.add(bun);
+    const tie = mesh(new THREE.TorusGeometry(.04, .013, 5, 10), mat(0xd84a6a)); tie.position.set(0, .085, -.2); tie.rotation.x = .9; head.add(tie);
+    const tail = mesh(jitter(new THREE.ConeGeometry(.065, .32, 6), .01), hair); tail.position.set(0, -.06, -.25); tail.rotation.x = Math.PI - .3; head.add(tail);
   }
   if (o.moustache) { const m = mesh(new THREE.BoxGeometry(.07, .018, .02), hair); m.position.set(0, -.05, .15); head.add(m); }
   const face = buildFace(head, {y: .02, z: .148, sp: .06, er: .022, sclera: true, mw: .028, my: .085, browMat: basic(o.hair)});
