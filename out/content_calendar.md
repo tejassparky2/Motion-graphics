@@ -93,8 +93,10 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 69 | Mon Nov 2 | 4:30 PM | trolley_problem | Everyone Pulled the Lever. Nobody Would Push 🚃 *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: the class contradicts itself)* |
 | 70 | Mon Nov 2 | 7:30 PM | grandfather_paradox | She Went Back in Time to Stop Her Parents Meeting ⏳ *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: rule backfires (she can't win))* |
 | 71 | Tue Nov 3 | 4:30 PM | euthyphro | 1 Question. The Teacher Couldn't Pick an Answer 🤔 *(big question; made 18 Oct, Turbo female + tags, packed + sent; outcome: teacher answers, kid concedes)* |
-| 72 | Tue Nov 3 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, big question)* |
-| 73 | Wed Nov 4 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
+| 72 | Tue Nov 3 | 7:30 PM | grandma_dog | Grandma Asked About Her Dog. He Ran Away 3 Days Ago 🐶 *(big question, original story; owner auto-approved 20 Oct; Turbo female + tags; outcome: both lied (twist reveal))* |
+| 73 | Wed Nov 4 | 4:30 PM | perfect_life | A Booth Offered Him a Perfect Life. One Catch 🔘 *(big question; owner auto-approved 20 Oct; Turbo female + tags; outcome: reframe (the viewer is flipped))* |
+| 74 | Wed Nov 4 | 7:30 PM | pascals_wager | Pascal's Wager *(idea, big question)* |
+| 75 | Thu Nov 5 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea)* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 

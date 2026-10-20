@@ -244,3 +244,5 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-18** Yup also do animation upgrade as much you can it should look engaging for users to stay till end
 - **2026-10-19** Search you have 3d business voice over editing in same git where we make video reels for your3d if you can find open a new chat for it
 - **2026-10-19** Send next set after nepelion chess on from now send 5 video in 1 set
+- **2026-10-19** (with a reference video, Video-1877.mp4) Don't apply anything just a brief question can you make funny videos like this in this animation quality
+- **2026-10-20** Make more 2 auto approved be creative be controversy you have full freedom to show your creativity to max watcher should feed relatable or happy or sad or mind blowing or should argue watching it
