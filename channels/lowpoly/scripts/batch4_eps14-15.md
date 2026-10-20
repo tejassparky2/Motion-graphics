@@ -14,8 +14,8 @@ regardless of usage", 1,513 points.)
 4 Codex: I wrote the payments rewrite.
 5 Dev: I know.
 6 Claude: You reviewed it.
-7 Dev: I clicked approve.
-8 Claude: You clicked it with conviction.
+7 Dev: I pressed the green button.
+8 Claude: You pressed it with conviction.
 9 (Boss bubble: "Present it to the whole company on Friday?")
 10 Dev: Oh no.
 11 Codex: Put my name on the slide.
@@ -36,6 +36,8 @@ regardless of usage", 1,513 points.)
 26 Codex: Same font?
 27 Dev: Same font. | cut
 Title: My AI Wrote It. I Got Promoted. · Pinned: "AI wrote the code. Do you deserve the promotion? Yes or no? 👇 Subscribe for the next one."
+
+Whisper medium heard "I clicked approve." as "I click to prove." in 5 takes, so p7/p8 became "pressed".
 
 ## Ep 15: "My Junior Asked Me, Not the AI." (Dev, a new junior developer, Claude) ~50 s, quiet then warm
 Debate: do juniors still need people, or is the AI enough? (HN AWS-CEO thread, "First, juniors are miserable.",
@@ -67,7 +69,7 @@ Title: My Junior Asked Me, Not the AI · Pinned: "Do juniors still need a human,
 ## Emotion tags (owner, 20 Oct 2026: "Use tags for emotions so it feels human")
 Chatterbox Turbo sound tags, placed where a person would make the sound (out/turbo_tags_research.md): reactions after
 the line, a gasp or sigh before it; one per line, 4-5 per episode, none on the logic lines or the final punchline.
-- Ep 14: p2 "Congratulations! [laugh]", p5 "I know. [sigh]", p8 "...with conviction. [chuckle]", p10 "[gasp] Oh no.",
+- Ep 14: p2 "Congratulations! [laugh]", p5 "I know. [sigh]", p8 "...with conviction. [chuckle]", p10 gasp (sound effect; the [gasp] tag made no sound in 5 takes),
   p22 "Fair. [chuckle]"
 - Ep 15: r11 "...I'll figure it out. [sniff]", r13 "[sigh] Wait.", r15 "[gasp] Really?", r19 "...Let's find out. [chuckle]"
 Each tagged take is re-made (up to 5 tries) until Whisper medium hears the words right and the sound is there. Any tag

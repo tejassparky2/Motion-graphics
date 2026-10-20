@@ -33,10 +33,10 @@ _lines = [   # (id, shot, speaker, text, gap before)
     ("p4", "codexclose", CX, "I wrote the payments rewrite.", .35),
     ("p5", "devclose", DEV, "I know. [sigh]", .5),
     ("p6", "clots", CL, "You reviewed it.", .45),
-    ("p7", "devmid", DEV, "I clicked approve.", .4),
-    ("p8", "claudeclose", CL, "You clicked it with conviction. [chuckle]", .35),
+    ("p7", "devmid", DEV, "I pressed the green button.", .4),
+    ("p8", "claudeclose", CL, "You pressed it with conviction. [chuckle]", .35),
     ("p9", "ots", DEV, "", .5),
-    ("p10", "devclose", DEV, "[gasp] Oh no.", .2),
+    ("p10", "devclose", DEV, "Oh no.", .2),
     ("p11", "cxots", CX, "Put my name on the slide.", .4),
     ("p12", "devmid", DEV, "I can't.", .4),
     ("p13", "codexclose", CX, "Why not?", .3),
@@ -144,6 +144,7 @@ def draw(cr, t, tl):
     slide(cr, t, p23.start + 0.2, tl.total + 1, t >= A("p27", "Same"))
     cue("ding", t, A("p1", "promoted") - 0.1)
     cue("ding", t, p9.start + 0.3)
+    cue("gasp_in", t, B["p10"].start - 0.4)   # Turbo's [gasp] made no sound in 5 takes
     cue("hush", t, B["p15"].start - 0.1, B["p15"].end - B["p15"].start + 0.2)
     cue("typing", t, p23.start + 0.2, 1.3)
     cue("pop", t, A("p27", "Same"))
