@@ -70,7 +70,7 @@ def talk_frames(path, n, start, zoom):
     for fr in r2.clip(path, n, start, speed=1.0):
         if zoom > 1.001:
             cw, ch = W / zoom, H / zoom
-            cx, cy = W / 2, min(H / 2, 820)
+            cx, cy = W / 2, max(ch / 2, min(H / 2, 820))      # toward her face, never past the top edge
             fr = fr.resize((W, H), Image.BILINEAR, box=(cx - cw / 2, cy - ch / 2, cx + cw / 2, cy + ch / 2))
         yield fr
 
