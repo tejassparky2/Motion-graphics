@@ -237,6 +237,11 @@ function buildPerson(o) {
     for (const s of [-1, 1]) { const rimG = new THREE.Mesh(new THREE.TorusGeometry(.042, .006, 5, 16), basic(0x1a1a22)); rimG.position.set(s * .06, .02, .155); head.add(rimG); }
     const bridge = new THREE.Mesh(new THREE.BoxGeometry(.035, .006, .006), basic(0x1a1a22)); bridge.position.set(0, .025, .158); head.add(bridge);
   }
+  if (o.ponytail) {                             // a tied-back ponytail and a fuller hair cap
+    const tie = mesh(new THREE.TorusGeometry(.03, .01, 5, 8), mat(0xd84a6a)); tie.position.set(0, .06, -.15); tie.rotation.x = .3; head.add(tie);
+    const tail = mesh(jitter(new THREE.ConeGeometry(.06, .22, 6), .01), hair); tail.position.set(0, -.04, -.21); tail.rotation.x = -2.6; head.add(tail);
+    for (const sgn of [-1, 1]) { const side = mesh(jitter(new THREE.SphereGeometry(.07, 7, 5), .01), hair); side.position.set(sgn * .13, .03, -.02); side.scale.set(.5, 1.2, 1); head.add(side); }
+  }
   if (o.moustache) { const m = mesh(new THREE.BoxGeometry(.07, .018, .02), hair); m.position.set(0, -.05, .15); head.add(m); }
   const face = buildFace(head, {y: .02, z: .148, sp: .06, er: .022, sclera: true, mw: .028, my: .085, browMat: basic(o.hair)});
   const arms = [arm(body, -1, .27, .25, cloth, skin), arm(body, 1, .27, .25, cloth, skin)];
@@ -458,6 +463,7 @@ if (D.CAST && D.CAST.claude) claude.position.set(D.CAST.claude[0], .75, D.CAST.c
 if (D.CAST && D.CAST.claude === false) claude.visible = false;               // a Codex-only episode
 const CX0 = D.CAST && Array.isArray(D.CAST.codex) ? D.CAST.codex : [.2, .02];   // Codex's spot on the desk
 const GUEST = D.CAST && D.CAST.guest ? Object.assign({name: "dad"}, D.CAST.guest, {rig: buildPerson(D.CAST.guest)}) : null;
+if (GUEST && GUEST.turn) GUEST.rig.group.rotation.y = GUEST.turn;
 if (D.CAST && D.CAST.dev) dev.position.set(D.CAST.dev[0], 0, D.CAST.dev[1]);
 if (D.CAST && D.CAST.devTurn) dev.rotation.y = D.CAST.devTurn;
 const beats = T.beats;
@@ -491,8 +497,8 @@ function emotionFor(who, t) {
   p.look = [p.look[0] + .12 * jx * (1 - dart * .5), p.look[1] + .08 * jy * (1 - dart * .5)];
   const sp = cur.who;
   if (sp && sp !== who && talkS < .05 && cur.start - .1 <= t && t < cur.end + .4) {
-    const side = {claude: -.35, codex: .35, dev: 0, dad: 0}[sp];
-    if (side !== undefined && (who === "dev" || who === "dad")) p.look = [p.look[0] + side * .7, p.look[1]];
+    const side = {claude: -.35, codex: .35, dev: 0, dad: 0, junior: 0}[sp];
+    if (side !== undefined && (who === "dev" || who === "dad" || who === "junior")) p.look = [p.look[0] + side * .7, p.look[1]];
   }
   return p;
 }

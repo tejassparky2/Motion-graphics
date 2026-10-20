@@ -34,7 +34,7 @@ tl = render.timeline()
 
 # timing.json: beats, word times and a mouth-opening envelope per character, sampled at the frame rate
 fps, n = render.FPS, int(round(tl.total * render.FPS)) + 1
-env = {who: np.zeros(n) for who in ("dev", "claude", "codex", "dad")}
+env = {who: np.zeros(n) for who in ("dev", "claude", "codex", "dad", "junior")}
 beats = []
 for b in tl.beats:
     who = b.speaker or "dev"
