@@ -25,7 +25,7 @@ def main():
         S(take(4164), 0.0, 4.70, "I was looking for a very premium and memorable gift to be gifted for my husband."),
         S(take(4171), 0.0, 2.72, "Then I came across Yours 3D India page.", tags=[("@yours3dindia", 250, 1.0, T.GOLD)]),
         S(take(4189), 0.0, 3.40, "Then I shared me and my husband's photo to them in WhatsApp.",
-          broll=[(0.6, 3.40, lambda n: ph(rec1, n, 27.6, 33.6))]),
+          broll=[(0.5, 3.40, lambda n: ph(rec1, n, 29.0, 34.0))]),
         S(take(4192), 0.0, 2.48, "Then they gave me two options to select from.",
           broll=[(0.0, 2.48, lambda n: ph(rec2, n, 0.5, 6.5))], tags=[("2 FREE PREVIEWS  ·  1–2 MIN", 250, 0.3, T.GOLD)]),
         S(take(4193), 0.0, 1.76, "Then I selected what I like."),

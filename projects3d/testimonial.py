@@ -122,7 +122,7 @@ def phone_still(photo, n, title="Yours3D India", appear=0.25):
 def end_card(frame, t, t0, extra=None):
     r3.end_card(frame, t, t0)
     if extra:
-        r3.pill(frame, extra, 1490, t - t0 - 2.7, (40, 38, 36), ImageFont.truetype(r2.RUPEE, 32), dark=False)
+        r3.pill(frame, extra, 1490, t - t0 - 2.7, GOLD_LIGHT, ImageFont.truetype(r2.RUPEE, 36))
 
 
 def build(name, segs, title, end_extra=None):
