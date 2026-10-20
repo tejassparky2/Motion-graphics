@@ -101,14 +101,14 @@ def phone_still(photo, n, title="Yours3D India", appear=0.25):
     ds.text((90, 55), title, font=font(34), fill=WHITE, anchor="lm")
     mask = Image.new("L", (sw, ph_h), 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, sw - 1, ph_h - 1), radius=42, fill=255)
-    pw = int(sw * 0.62)
+    pw = int(sw * 0.8)
     thumb = ImageOps.fit(photo, (pw, int(pw * 1.25)), Image.LANCZOS)
     for k in range(n):
         t = k / FPS
         scr = screen.copy()
         a = v2.ease((t - appear) / 0.35)
         if a > 0:
-            bx1, by1 = sw - 24, ph_h - 120 - 60 * (1 - a)
+            bx1, by1 = sw - 20, ph_h - 90 - 60 * (1 - a)
             bx0, by0 = bx1 - pw - 16, by1 - thumb.height - 16
             ImageDraw.Draw(scr).rounded_rectangle((bx0, by0, bx1, by1), radius=16, fill=(220, 248, 198))
             scr.paste(thumb, (int(bx0 + 8), int(by0 + 8)))
