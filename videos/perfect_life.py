@@ -220,7 +220,7 @@ def scene_dream(cr, t, tl):
     A = tl.at
     items = 1 + (t >= A("b3", "full")) + (t >= A("b3", "mother"))
     dream_world(cr, t, items=items)
-    card(cr, t, A("b3", "dream"), 200, 300, 300, 150, "NEW JOB", ["YOU'RE HIRED!"], col=GREEN, title_size=34,
+    card(cr, t, tl.scene_at(t)[1], 200, 300, 300, 150, "NEW JOB", ["YOU'RE HIRED!"], col=GREEN, title_size=34,
          line_size=40, rot=-0.05)
     if t >= A("b3", "full"):
         sparkles(cr, t, A("b3", "full"), 190, 560, n=6, seed=31, col=WHITE)
@@ -244,7 +244,7 @@ def scene_catch(cr, t, tl):
 def scene_nozick(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#f4e6c8"), hexc("#fff6e8"), seed=32)
-    card(cr, t, A("b5"), 360, 300, 460, 220, "ROBERT NOZICK · 1974", ["THE EXPERIENCE", "MACHINE"], col=BLUE,
+    card(cr, t, tl.scene_at(t)[1], 360, 300, 460, 220, "ROBERT NOZICK · 1974", ["THE EXPERIENCE", "MACHINE"], col=BLUE,
          title_size=32, line_size=46)
     if t >= A("b6"):
         sign(cr, t, A("b6", "no"), 360, 520, "MOST PEOPLE: NO", col=RED, size=58)
@@ -261,7 +261,7 @@ def scene_pod(cr, t, tl):
         cr.translate(360, 560)
         cr.scale(math.cos(math.pi * seg(t, A("b7", "flipped"), A("b7", "question", end=True))) or 0.01, 1)
         cr.translate(-360, -560)
-        card(cr, t, A("b7"), 360, 560, 460, 240, "THE QUESTION", ["WOULD YOU", "PLUG IN?"], col=BLUE,
+        card(cr, t, tl.scene_at(t)[1], 360, 560, 460, 240, "THE QUESTION", ["WOULD YOU", "PLUG IN?"], col=BLUE,
              title_size=34, line_size=48)
         cr.restore()
         if t >= A("b7", "flipped"):
@@ -271,17 +271,17 @@ def scene_pod(cr, t, tl):
         enter(cr, camera(t, [(A("b8"), (1.0, 360, 640)), (A("b8", "fake"), (1.15, 360, 600))], dur=0.6))
         pod(cr, t, 360, 860, 0.95)
         cr.restore()
+        if t >= A("b8", "This"):
+            tag(cr, t, A("b8", "This"), 360, 180, "THIS LIFE = THE FAKE ONE", col=RED, size=40)
         if t >= A("b8", "fake"):
-            tag(cr, t, A("b8", "fake"), 360, 180, "THIS LIFE = THE FAKE ONE", col=RED, size=40)
-        if t >= A("b8", "Do"):
-            sign(cr, t, A("b8", "Do"), 360, 300, "UNPLUG?", col=GOLD, size=64)
+            sign(cr, t, A("b8", "fake"), 360, 300, "UNPLUG?", col=GOLD, size=64)
     vignette(cr, 0.45)
 
 
 def scene_stay(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1e2650"), hexc("#3a2f60"), seed=34)
-    counter(cr, t, A("b9"), 360, 500, 46, size=170, dur=0.9, col=NEON, suffix="%", sub="STAYED INSIDE")
+    counter(cr, t, tl.scene_at(t)[1], 360, 500, 46, size=170, dur=0.9, col=NEON, suffix="%", sub="STAYED INSIDE")
     if t >= A("b9", "stay"):
         stamp(cr, t, A("b9", "stay"), 360, 760, "STAY", col=PURPLE, size=70)
     vignette(cr, 0.4)
@@ -305,7 +305,7 @@ def scene_prison(cr, t, tl):
 def scene_habit(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#ffd8e0"), hexc("#fff0d8"), seed=36)
-    card(cr, t, A("b11", "real"), 190, 470, 300, 220, "WHAT'S REAL", ["THE TRUTH"], col=BLUE, title_size=34,
+    card(cr, t, tl.scene_at(t)[1], 190, 470, 300, 220, "WHAT'S REAL", ["THE TRUTH"], col=BLUE, title_size=34,
          mark="x", mark_at=A("b11", "used"))
     card(cr, t, A("b11", "used"), 530, 470, 300, 220, "WHAT WE KNOW", ["OUR LIFE", "RIGHT NOW"], col=GREEN, title_size=34,
          mark="ok", mark_at=A("b11", "used") + 0.3)
@@ -320,8 +320,8 @@ def scene_end(cr, t, tl):
     enter(cr, camera(t, [(A("b12"), (1.15, 470, 700))], dur=0.5))
     reach = seg(t, A("b12"), A("b12", "button", end=True))
     booth(cr, t, 560, 1000, 0.95, press=0.0)
-    man(cr, t, None, 330, 1010, 0.9, eyes="half", mouth="flat", arms=("down", (lerp(60, 150, reach),
-        lerp(40, -150, reach))), look=(0.7, -0.2))
+    man(cr, t, None, 330, 1010, 0.9, eyes="half", mouth="flat", arms=((lerp(40, 140, reach),
+        lerp(120, 132, reach)), "down"), look=(0.7, -0.2))
     cr.restore()
     if t >= A("b12", "Would"):
         sign(cr, t, A("b12", "Would"), 360, 190, "WOULD YOU PRESS IT?", col=GOLD, size=54)

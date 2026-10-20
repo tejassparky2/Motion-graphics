@@ -274,7 +274,7 @@ def scene_scale(cr, t, tl):
          line_size=40)
     if t >= A("a4", "lie") + 0.3:
         bold_text(cr, "z Z z", 530 + 6 * math.sin(t * 2), 520, 54, hexc("#6aa8e8"), outline=OUTLINE, shadow=0)
-    sign(cr, t, A("a4"), 360, 220, "WHAT DO YOU SAY?", col=GOLD, size=56)
+    sign(cr, t, tl.scene_at(t)[1], 360, 220, "WHAT DO YOU SAY?", col=GOLD, size=56)
     vignette(cr, 0.4)
 
 
@@ -300,7 +300,7 @@ def door(cr, t, x, y, open_=0.0):
 def scene_kant(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f2230"), hexc("#3a3048"), seed=13)
-    card(cr, t, A("a5"), 360, 330, 420, 230, "IMMANUEL KANT · 1797", ["NEVER LIE.", "NOT EVEN ONCE."], col=BLUE,
+    card(cr, t, tl.scene_at(t)[1], 360, 330, 420, 230, "IMMANUEL KANT · 1797", ["NEVER LIE.", "NOT EVEN ONCE."], col=BLUE,
          title_size=34, line_size=46)
     if t >= A("a5", "murderer") - 0.3:
         door(cr, t, 360, 860, seg(t, A("a5", "murderer"), A("a5", "door", end=True)))
@@ -313,7 +313,7 @@ def scene_kant(cr, t, tl):
 def scene_mill(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#f4e6c8"), hexc("#fff6e8"), seed=14)
-    card(cr, t, A("a6"), 360, 330, 440, 260, "JOHN STUART MILL · 1861", ["HIDE BAD NEWS", "FROM SOMEONE",
+    card(cr, t, tl.scene_at(t)[1], 360, 330, 440, 260, "JOHN STUART MILL · 1861", ["HIDE BAD NEWS", "FROM SOMEONE",
          "DANGEROUSLY ILL"], col=GREEN, title_size=32, line_size=42)
     stamp(cr, t, A("a6", "disagreed"), 560, 150, "DISAGREED", col=PURPLE, size=44)
     k = appear(t, A("a6", "Keeping"))
@@ -377,9 +377,9 @@ def scene_reveal(cr, t, tl):
 def scene_both(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#ffd8e0"), hexc("#fff0d8"), seed=15)
-    card(cr, t, A("a11"), 190, 470, 300, 220, "HIS LIE", ["BRUNO ATE", "2 ROTIS"], col=BLUE, title_size=36,
+    card(cr, t, tl.scene_at(t)[1], 190, 470, 300, 220, "HIS LIE", ["BRUNO ATE", "2 ROTIS"], col=BLUE, title_size=36,
          line_size=40)
-    card(cr, t, A("a11") + 0.15, 530, 470, 300, 220, "HER LIE", ["BRUNO IS", "NOT HERE"], col=PURPLE, title_size=36,
+    card(cr, t, tl.scene_at(t)[1] + 0.15, 530, 470, 300, 220, "HER LIE", ["BRUNO IS", "NOT HERE"], col=PURPLE, title_size=36,
          line_size=40)
     if t >= A("a11", "love"):
         heart(cr, 360, 720, 1.1 + 0.05 * math.sin(t * 8), hexc("#ff5a7a"))
