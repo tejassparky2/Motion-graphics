@@ -65,10 +65,13 @@ def words_for(path, start, end, caption, model):
     return [(w, tt[i], tt[i + 1]) for i, w in enumerate(ws)]
 
 
-# iPhone takes are HDR (HLG, BT.2020): read straight they look flat and washed out, and the phone-clip grade then
-# pushes them further off. Convert them to standard video (npl 350 keeps her face natural without blowing out the white
-# wall) and give only a light finish.
-HLG_TO_SDR = "zscale=tin=arib-std-b67:min=bt2020nc:pin=bt2020:t=bt709:m=bt709:p=bt709:npl=350"
+# iPhone takes are HDR (HLG, BT.2020): read straight they look flat and washed out. Owner (20 Oct 2026): "I just want
+# natural like this" (a screenshot from their iPhone) -- so convert to standard video and apply the per-channel curves
+# fitted to that screenshot (iphone_natural.json), which reproduce how the takes look on the phone.
+import json as _json
+_NAT = _json.load(open(os.path.join(HERE, "iphone_natural.json")))
+HLG_TO_SDR = f"zscale=tin=arib-std-b67:min=bt2020nc:pin=bt2020:t=bt709:m=bt709:p=bt709:npl={_NAT['npl']}"
+_LUT = np.array([_NAT["r"], _NAT["g"], _NAT["b"]], np.float32)
 
 
 def is_hdr(path):
@@ -77,18 +80,14 @@ def is_hdr(path):
     return "arib-std-b67" in tr or "smpte2084" in tr
 
 
-def soft_finish(fr):
-    """Gentle S-curve, a little colour, a touch warmer."""
-    a = np.asarray(fr).astype(np.float32) / 255
-    a = a + 0.12 * (a * a * (3 - 2 * a) - a)
-    g = a.mean(axis=2, keepdims=True)
-    a = (g + (a - g) * 1.04) * np.array([1.01, 1.0, 0.985])
-    return Image.fromarray((np.clip(a, 0, 1) * 255).astype(np.uint8))
+def natural(fr):
+    a = np.asarray(fr)
+    return Image.fromarray(np.stack([_LUT[c][a[..., c]] for c in range(3)], -1).astype(np.uint8))
 
 
 def take_frames(path, n, start):
     if is_hdr(path):
-        return (soft_finish(f) for f in v1.video_frames(path, n, start=start, speed=1.0, post=HLG_TO_SDR))
+        return (natural(f) for f in v1.video_frames(path, n, start=start, speed=1.0, post=HLG_TO_SDR))
     return r2.clip(path, n, start, speed=1.0)
 
 
