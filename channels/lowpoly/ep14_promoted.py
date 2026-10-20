@@ -1,7 +1,8 @@
 """Low-poly channel, episode 14 (credit debate): "My AI Wrote It. I Got Promoted."
 
 Script: channels/lowpoly/scripts/batch4_eps14-15.md (auto-approved by the owner, 20 Oct 2026). Reference-10 form:
-short lines, a reaction cut before each line, caption pill. Dev, Claude, Codex; the boss only as chat messages.
+short lines, a reaction cut before each line, caption pill, Turbo sound tags
+(owner, 20 Oct 2026: "Use tags for emotions so it feels human"). Dev, Claude, Codex; the boss only as chat messages.
 Parody, not affiliated with Anthropic or OpenAI.
 
     python channels/lowpoly/make_skit.py ep14_promoted
@@ -27,15 +28,15 @@ voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=0.97, turbo_ref="a
 DEV, CL, CX = None, "claude", "codex"
 _lines = [   # (id, shot, speaker, text, gap before)
     ("p1", "devmid", DEV, "I got promoted.", 0),
-    ("p2", "cxots", CX, "Congratulations!", .35),
+    ("p2", "cxots", CX, "Congratulations! [laugh]", .35),
     ("p3", "devmid", DEV, "For the payments rewrite.", .4),
     ("p4", "codexclose", CX, "I wrote the payments rewrite.", .35),
-    ("p5", "devclose", DEV, "I know.", .5),
+    ("p5", "devclose", DEV, "I know. [sigh]", .5),
     ("p6", "clots", CL, "You reviewed it.", .45),
     ("p7", "devmid", DEV, "I clicked approve.", .4),
-    ("p8", "claudeclose", CL, "You clicked it with conviction.", .35),
+    ("p8", "claudeclose", CL, "You clicked it with conviction. [chuckle]", .35),
     ("p9", "ots", DEV, "", .5),
-    ("p10", "devclose", DEV, "Oh no.", .2),
+    ("p10", "devclose", DEV, "[gasp] Oh no.", .2),
     ("p11", "cxots", CX, "Put my name on the slide.", .4),
     ("p12", "devmid", DEV, "I can't.", .4),
     ("p13", "codexclose", CX, "Why not?", .3),
@@ -47,7 +48,7 @@ _lines = [   # (id, shot, speaker, text, gap before)
     ("p19", "claudeclose", CL, "You knew when it was wrong. Twice.", .45),
     ("p20", "clots", CL, "That part was you.", .55),
     ("p21", "cxots", CX, "The typing part was me.", .5),
-    ("p22", "devmid", DEV, "Fair.", .35),
+    ("p22", "devmid", DEV, "Fair. [chuckle]", .35),
     ("p23", "ots", DEV, "", .4),
     ("p24", "codexclose", CX, "Bigger font for my name.", .2),
     ("p25", "devclose", DEV, "No.", .3),

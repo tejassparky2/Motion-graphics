@@ -1,7 +1,8 @@
 """Low-poly channel, episode 15 (quiet, then warm): "My Junior Asked Me, Not the AI."
 
 Script: channels/lowpoly/scripts/batch4_eps14-15.md (auto-approved by the owner, 20 Oct 2026). Dev at his desk, a
-new junior developer (guest) beside him, Claude. Reference-10 form: short lines, reaction cuts, caption pill, rain.
+new junior developer (guest) beside him, Claude. Reference-10 form: short lines, reaction cuts, caption pill, rain, Turbo sound tags
+(owner, 20 Oct 2026: "Use tags for emotions so it feels human").
 Parody, not affiliated with Anthropic.
 
     python channels/lowpoly/make_skit.py ep15_junior
@@ -36,15 +37,15 @@ _lines = [   # (id, shot, speaker, text, gap before)
     ("r8", "solo", CL, "I could.", .45),
     ("r9", "soloclose", CL, "But she asked you.", .5),
     ("r10", "devclose", DEV, "I'm busy.", .5),
-    ("r11", "jrclose", JR, "It's okay. I'll figure it out.", .4),
+    ("r11", "jrclose", JR, "It's okay. I'll figure it out. [sniff]", .4),
     ("r12", "two", DEV, "", .2),
-    ("r13", "devclose", DEV, "Wait.", .2),
+    ("r13", "devclose", DEV, "[sigh] Wait.", .2),
     ("r14", "devjr", DEV, "Pull your chair over.", .45),
-    ("r15", "jrclose", JR, "Really?", .35),
+    ("r15", "jrclose", JR, "[gasp] Really?", .35),
     ("r16", "devclose", DEV, "Someone did this for me once.", .5),
     ("r17", "screen", DEV, "See line twelve? That's where it breaks.", .6),
     ("r18", "jr", JR, "Why?", .35),
-    ("r19", "devjr", DEV, "I don't know yet. Let's find out.", .4),
+    ("r19", "devjr", DEV, "I don't know yet. Let's find out. [chuckle]", .4),
     ("r20", "soloclose", CL, "Should I just fix it?", .7),
     ("r21", "devclose", DEV, "No.", .3),
     ("r22", "jrclose", JR, "No.", .2),

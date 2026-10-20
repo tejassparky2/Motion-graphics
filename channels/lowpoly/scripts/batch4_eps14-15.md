@@ -63,3 +63,13 @@ Debate: do juniors still need people, or is the AI enough? (HN AWS-CEO thread, "
 21 Dev: No.
 22 Junior: No. | cut
 Title: My Junior Asked Me, Not the AI · Pinned: "Do juniors still need a human, or is AI enough? 👇 Subscribe for the next one."
+
+## Emotion tags (owner, 20 Oct 2026: "Use tags for emotions so it feels human")
+Chatterbox Turbo sound tags, placed where a person would make the sound (out/turbo_tags_research.md): reactions after
+the line, a gasp or sigh before it; one per line, 4-5 per episode, none on the logic lines or the final punchline.
+- Ep 14: p2 "Congratulations! [laugh]", p5 "I know. [sigh]", p8 "...with conviction. [chuckle]", p10 "[gasp] Oh no.",
+  p22 "Fair. [chuckle]"
+- Ep 15: r11 "...I'll figure it out. [sniff]", r13 "[sigh] Wait.", r15 "[gasp] Really?", r19 "...Let's find out. [chuckle]"
+Each tagged take is re-made (up to 5 tries) until Whisper medium hears the words right and the sound is there. Any tag
+that never sounds clean (with reference voices [chuckle] has been read out as the word) is dropped and replaced by the
+breath sound effect at the same spot.

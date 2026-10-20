@@ -132,3 +132,11 @@ primary production text, [Inference]. The short version used on every episode fr
 "You're absolutely right!" at most once every four or five episodes (it was in eps 1, 8, 10 and 11). Claude has
 other sides to play: the overconfident fixer ("Fixed!"), the over-doer, the gentle one with outsiders, and the honest
 one in warm episodes. Every premise must come from a verified, relatable moment (owner: "I want reliable").
+
+## Emotion tags in every episode (owner, 20 Oct 2026: "Use tags for emotions so it feels human")
+- Write Chatterbox Turbo sound tags into the lines: [laugh] [chuckle] [sigh] [gasp] [sniff] [groan] (list and test
+  results: out/turbo_tags_research.md). Put a reaction after the line it reacts to; put [gasp] or [sigh] before the
+  line. One per line, 4-6 per episode, none on logic lines or the last punchline.
+- The render retries a tagged take until Whisper medium hears the words and the sound is there. After the render,
+  listen for tags read out as words ("chuckle") and swap any that fail for the breath effects (cue "sigh",
+  "gasp_in", "sniff").
