@@ -7,7 +7,8 @@ to a murderer at the door asking where your friend is hiding. J. S. Mill, Utilit
 exception to truthfulness is "when the withholding of some fact (as of information from a male-factor, or of bad news
 from a person dangerously ill) would preserve some one ... from great and unmerited evil". Twist: the dog never ran
 away; Grandma hid him under her blanket (a bump that moves from frame 0, for rewatches). Turbo stock female narrator
-with tags; Grandma and the boy through Turbo with Kokoro reference voices (no tags on them).
+with tags; Grandma and the boy through Turbo with Kokoro reference voices (no tags on them). The dog was first
+called Moti, but Whisper medium heard it as "mote", "Motti" and "Mahdi" (20 Oct 2026), so he is Bruno.
 """
 import math
 
@@ -33,8 +34,8 @@ FUR, FUR_D = hexc("#e2a866"), hexc("#b87a3c")
 
 SCRIPT = [
     dict(id="a1", scene="ask", text="Grandma is sick in bed. She asks her grandson just one question."),
-    dict(id="a2", scene="ask", text="Beta, is Moti eating properly?", speaker="grandma"),
-    dict(id="a3", scene="gone", text="Moti ran away three days ago. Nobody told her. [sigh]"),
+    dict(id="a2", scene="ask", text="Beta, is Bruno eating properly?", speaker="grandma"),
+    dict(id="a3", scene="gone", text="Bruno ran away three days ago. Nobody told her. [sigh]"),
     dict(id="a4", scene="scale", text="The truth could break her heart. A lie would let her rest."),
     dict(id="a5", scene="kant", text="Immanuel Kant said: never lie. Not even to a murderer at your door."),
     dict(id="a6", scene="mill", text="John Stuart Mill disagreed. Keeping bad news from someone dangerously ill can "
@@ -42,7 +43,7 @@ SCRIPT = [
     dict(id="a7", scene="lie", text="So the boy takes a breath, and lies."),
     dict(id="a8", scene="lie", text="He's fine, Grandma. He ate two rotis today.", speaker="boy"),
     dict(id="a9", scene="reveal", text="Really? Then who is this?", speaker="grandma", gap=0.35),
-    dict(id="a10", scene="reveal", text="Moti never ran away. He sneaked into her room, and she hid him, so nobody "
+    dict(id="a10", scene="reveal", text="Bruno never ran away. He sneaked into her room, and she hid him, so nobody "
                                         "would make him sleep outside. [laugh]"),
     dict(id="a11", scene="both", text="Two lies. Both out of love."),
     dict(id="a12", scene="end", text="So, was the boy's lie kind, or was it still wrong?", gap=0.3),
@@ -51,7 +52,7 @@ SCRIPT = [
 METADATA = dict(
     title="Grandma Asked About Her Dog. He Ran Away 3 Days Ago 🐶",
     alt_titles=["Would You Lie to Your Sick Grandma? 🐶", "The Kindest Lie... or Still a Lie? 🐶"],
-    description="""Grandma is sick in bed. She asks one question: "Beta, is Moti eating properly?" But Moti ran away three days ago, and nobody told her. 🐶
+    description="""Grandma is sick in bed. She asks one question: "Beta, is Bruno eating properly?" But Bruno ran away three days ago, and nobody told her. 🐶
 
 The truth could break her heart. A lie would let her rest.
 
@@ -74,7 +75,7 @@ An original story. Kant: "On a Supposed Right to Lie from Philanthropy" (1797). 
 
 # ---------------------------------------------------------------- props
 def dog(cr, t, x, y, s=1.0, facing=1, tongue=True, wag=1.0, eyes="happy"):
-    """Moti: a round, sandy Indian street dog, sitting; (x, y) = where the body meets the floor."""
+    """Bruno: a round, sandy Indian street dog, sitting; (x, y) = where the body meets the floor."""
     cr.save()
     cr.translate(x, y)
     cr.scale(s * facing, s)
@@ -137,7 +138,7 @@ def bowl(cr, x, y, s=1.0, food=False):
     cr.line_to(-46, 0)
     cr.close_path()
     paint(cr, lin(0, -30, 0, 0, [(0, hexc("#e8473f")), (1, hexc("#a82a24"))]), OUTLINE, 5)
-    bold_text(cr, "MOTI", 0, -6, 22, WHITE, outline=None, shadow=0)
+    bold_text(cr, "BRUNO", 0, -6, 20, WHITE, outline=None, shadow=0)
     if food:
         ellipse(cr, 0, -32, 50, 10)
         paint(cr, hexc("#d8a060"), OUTLINE, 3)
@@ -153,7 +154,7 @@ def room(cr, t):
     paint(cr, lin(0, 330, 0, 560, [(0, hexc("#ffb878")), (1, hexc("#ffe2b8"))]), OUTLINE, 6)
     stroke_line(cr, [(565, 330), (565, 560)], 5, OUTLINE, curve=False)
     stroke_line(cr, [(470, 445), (660, 445)], 5, OUTLINE, curve=False)
-    rrect(cr, 210, 300, 120, 150, 8)                               # framed photo: Grandma and Moti
+    rrect(cr, 210, 300, 120, 150, 8)                               # framed photo: Grandma and Bruno
     paint(cr, hexc("#c8954a"), OUTLINE, 5)
     rrect(cr, 224, 314, 92, 122, 4)
     paint(cr, hexc("#fff0d8"), None, 0)
@@ -172,7 +173,7 @@ def bed(cr, t, x=60, y=820, bump=True, lift=0.0):
 
 def blanket(cr, t, x=60, y=820, bump=True, lift=0.0, wiggle=1.0):
     b = 0.0
-    if bump:                                                       # the "empty" blanket breathes: it's Moti
+    if bump:                                                       # the "empty" blanket breathes: it's Bruno
         b = 6 * math.sin(t * 2.6) * wiggle + 4 * max(0.0, math.sin(t * 9)) * wiggle * (math.sin(t * 0.7) > 0.6)
     top = y - 120
     bx = x + 330 + 30 * lift
@@ -210,11 +211,11 @@ def bedroom(cr, t, tl, gx=170, gy=590, g=None, b=None, lift=0.0, dog_up=0.0, wig
     room(cr, t)
     bed(cr, t)
     grandma(cr, t, tl, gx, gy, **(g or {}))
-    if dog_up > 0:                                                 # Moti pops out from under the blanket
+    if dog_up > 0:                                                 # Bruno pops out from under the blanket
         dog_head(cr, t, 400, lerp(760, 640, dog_up), 1.0, eyes="happy")
     blanket(cr, t, lift=lift, wiggle=wiggle)
     if b is not False:
-        boy(cr, t, tl, 590, 1010, **(b or {}))
+        boy(cr, t, tl, 560, 1010, **(b or {}))
 
 
 # ---------------------------------------------------------------- scenes
@@ -227,7 +228,7 @@ def scene_ask(cr, t, tl):
                    hold=lambda c, hx, hy: bowl(c, hx + 10, hy + 20, 0.7)))
     cr.restore()
     if t >= A("a2"):
-        tag(cr, t, A("a2", "Moti"), 220, 330, "MOTI = HER DOG", col=GOLD, size=36)
+        tag(cr, t, A("a2", "Bruno"), 220, 330, "BRUNO = HER DOG", col=GOLD, size=36)
     vignette(cr, 0.35)
 
 
@@ -239,7 +240,7 @@ def scene_gone(cr, t, tl):
     bold_text(cr, "MISSING", 360, 375, 66, RED, outline=None, shadow=0)
     soft_disc(cr, 360, 590, 120, alpha(hexc("#f0d8b8"), 1), blur=0.05)
     dog(cr, t, 340, 690, 0.95, eyes="open", wag=0.0, tongue=False)
-    bold_text(cr, "MOTI", 360, 755, 44, OUTLINE, outline=None, shadow=0)
+    bold_text(cr, "BRUNO", 360, 755, 44, OUTLINE, outline=None, shadow=0)
     for xx in (190, 530):
         rrect(cr, xx - 30, 285, 60, 30, 4)
         paint(cr, alpha(hexc("#e8e0c8"), 0.8), None, 0)
@@ -314,7 +315,7 @@ def scene_mill(cr, t, tl):
     studio(cr, t, hexc("#f4e6c8"), hexc("#fff6e8"), seed=14)
     card(cr, t, A("a6"), 360, 330, 440, 260, "JOHN STUART MILL · 1861", ["HIDE BAD NEWS", "FROM SOMEONE",
          "DANGEROUSLY ILL"], col=GREEN, title_size=32, line_size=42)
-    stamp(cr, t, A("a6", "disagreed"), 560, 190, "DISAGREED", col=PURPLE, size=44)
+    stamp(cr, t, A("a6", "disagreed"), 560, 150, "DISAGREED", col=PURPLE, size=44)
     k = appear(t, A("a6", "Keeping"))
     if k > 0.02:                                                   # Grandma in a little window: she is the one
         cr.save()
@@ -367,7 +368,7 @@ def scene_reveal(cr, t, tl):
     if t >= A("a9", "this"):
         cue("pop", t, A("a9", "this"), 0.2)
         sparkles(cr, t, A("a9", "this"), 400, 620, n=7, seed=21, col=GOLD)
-        sign(cr, t, A("a9", "this"), 360, 230, "MOTI WAS HERE ALL ALONG", col=GREEN, size=46)
+        sign(cr, t, A("a9", "this"), 360, 230, "BRUNO WAS HERE ALL ALONG", col=GREEN, size=42)
     if t >= A("a10", "hid"):
         tag(cr, t, A("a10", "hid"), 360, 360, "SHE HID HIM", col=PURPLE, size=44)
     vignette(cr, 0.3)
@@ -376,9 +377,9 @@ def scene_reveal(cr, t, tl):
 def scene_both(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#ffd8e0"), hexc("#fff0d8"), seed=15)
-    card(cr, t, A("a11"), 190, 470, 300, 220, "HIS LIE", ["MOTI ATE", "2 ROTIS"], col=BLUE, title_size=36,
+    card(cr, t, A("a11"), 190, 470, 300, 220, "HIS LIE", ["BRUNO ATE", "2 ROTIS"], col=BLUE, title_size=36,
          line_size=40)
-    card(cr, t, A("a11") + 0.15, 530, 470, 300, 220, "HER LIE", ["MOTI IS", "NOT HERE"], col=PURPLE, title_size=36,
+    card(cr, t, A("a11") + 0.15, 530, 470, 300, 220, "HER LIE", ["BRUNO IS", "NOT HERE"], col=PURPLE, title_size=36,
          line_size=40)
     if t >= A("a11", "love"):
         heart(cr, 360, 720, 1.1 + 0.05 * math.sin(t * 8), hexc("#ff5a7a"))

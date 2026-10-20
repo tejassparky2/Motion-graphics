@@ -273,8 +273,8 @@ def scene_pod(cr, t, tl):
         cr.restore()
         if t >= A("b8", "fake"):
             tag(cr, t, A("b8", "fake"), 360, 180, "THIS LIFE = THE FAKE ONE", col=RED, size=40)
-        if t >= A("b8", "unplug"):
-            sign(cr, t, A("b8", "unplug"), 360, 300, "UNPLUG?", col=GOLD, size=64)
+        if t >= A("b8", "Do"):
+            sign(cr, t, A("b8", "Do"), 360, 300, "UNPLUG?", col=GOLD, size=64)
     vignette(cr, 0.45)
 
 
@@ -305,9 +305,9 @@ def scene_prison(cr, t, tl):
 def scene_habit(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#ffd8e0"), hexc("#fff0d8"), seed=36)
-    card(cr, t, A("b11", "real"), 190, 470, 300, 220, "WHAT'S REAL", ["", ""], col=BLUE, title_size=34,
+    card(cr, t, A("b11", "real"), 190, 470, 300, 220, "WHAT'S REAL", ["THE TRUTH"], col=BLUE, title_size=34,
          mark="x", mark_at=A("b11", "used"))
-    card(cr, t, A("b11", "used"), 530, 470, 300, 220, "WHAT WE KNOW", ["", ""], col=GREEN, title_size=34,
+    card(cr, t, A("b11", "used"), 530, 470, 300, 220, "WHAT WE KNOW", ["OUR LIFE", "RIGHT NOW"], col=GREEN, title_size=34,
          mark="ok", mark_at=A("b11", "used") + 0.3)
     sign(cr, t, A("b11", "love"), 360, 220, "WE LOVE THE FAMILIAR", col=RED, size=48)
     vignette(cr, 0.3)
@@ -317,15 +317,15 @@ def scene_end(cr, t, tl):
     A = tl.at
     street(cr, t)
     cr.save()
-    enter(cr, camera(t, [(A("b12"), (1.35, 470, 760))], dur=0.5))
+    enter(cr, camera(t, [(A("b12"), (1.15, 470, 700))], dur=0.5))
     reach = seg(t, A("b12"), A("b12", "button", end=True))
     booth(cr, t, 560, 1000, 0.95, press=0.0)
     man(cr, t, None, 330, 1010, 0.9, eyes="half", mouth="flat", arms=("down", (lerp(60, 150, reach),
         lerp(40, -150, reach))), look=(0.7, -0.2))
     cr.restore()
     if t >= A("b12", "Would"):
-        sign(cr, t, A("b12", "Would"), 360, 210, "WOULD YOU PRESS IT?", col=GOLD, size=54)
-        buttons(cr, t, A("b12", "press"), [("PRESS", RED), ("WALK AWAY", GREEN)], y=350, size=46)
+        sign(cr, t, A("b12", "Would"), 360, 190, "WOULD YOU PRESS IT?", col=GOLD, size=54)
+        buttons(cr, t, A("b12", "press"), [("PRESS", RED), ("WALK AWAY", GREEN)], y=320, size=46)
     vignette(cr, 0.35)
 
 
