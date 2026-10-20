@@ -11,7 +11,7 @@ Grandma Asked About Her Dog. He Ran Away 3 Days Ago 🐶
 
 **Description**
 ```
-Grandma is sick in bed. She asks one question: "Beta, is Moti eating properly?" But Moti ran away three days ago, and nobody told her. 🐶
+Grandma is sick in bed. She asks one question: "Beta, is Bruno eating properly?" But Bruno ran away three days ago, and nobody told her. 🐶
 
 The truth could break her heart. A lie would let her rest.
 
