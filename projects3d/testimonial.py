@@ -65,9 +65,36 @@ def words_for(path, start, end, caption, model):
     return [(w, tt[i], tt[i + 1]) for i, w in enumerate(ws)]
 
 
+# iPhone takes are HDR (HLG, BT.2020): read straight they look flat and washed out, and the phone-clip grade then
+# pushes them further off. Convert them to standard video (npl 350 keeps her face natural without blowing out the white
+# wall) and give only a light finish.
+HLG_TO_SDR = "zscale=tin=arib-std-b67:min=bt2020nc:pin=bt2020:t=bt709:m=bt709:p=bt709:npl=350"
+
+
+def is_hdr(path):
+    tr = subprocess.check_output(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                  "stream=color_transfer", "-of", "csv=p=0", path]).decode()
+    return "arib-std-b67" in tr or "smpte2084" in tr
+
+
+def soft_finish(fr):
+    """Gentle S-curve, a little colour, a touch warmer."""
+    a = np.asarray(fr).astype(np.float32) / 255
+    a = a + 0.12 * (a * a * (3 - 2 * a) - a)
+    g = a.mean(axis=2, keepdims=True)
+    a = (g + (a - g) * 1.04) * np.array([1.01, 1.0, 0.985])
+    return Image.fromarray((np.clip(a, 0, 1) * 255).astype(np.uint8))
+
+
+def take_frames(path, n, start):
+    if is_hdr(path):
+        return (soft_finish(f) for f in v1.video_frames(path, n, start=start, speed=1.0, post=HLG_TO_SDR))
+    return r2.clip(path, n, start, speed=1.0)
+
+
 def talk_frames(path, n, start, zoom):
-    """Her take, graded, with a fixed punch-in toward her face (upper part of the frame)."""
-    for fr in r2.clip(path, n, start, speed=1.0):
+    """Her take, with a fixed punch-in toward her face (upper part of the frame)."""
+    for fr in take_frames(path, n, start):
         if zoom > 1.001:
             cw, ch = W / zoom, H / zoom
             cx, cy = W / 2, max(ch / 2, min(H / 2, 820))      # toward her face, never past the top edge
