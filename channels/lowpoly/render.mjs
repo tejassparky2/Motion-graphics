@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
   const file = url.startsWith("/node_modules/") ? path.join(MODS, url.slice(14))
     : url === "/timing.json" ? (process.env.TIMING || path.join(ROOT, "build/lowpoly/timing.json")) : path.join(HERE, url === "/" ? SCENE : url);
-  if (!file.startsWith(MODS) && !file.startsWith(HERE) && !file.endsWith("timing.json")) { res.writeHead(403); return res.end(); }
+  if (!file.startsWith(MODS) && !file.startsWith(HERE) && !/timing(_[a-z0-9_]+)?\.json$/.test(file)) { res.writeHead(403); return res.end(); }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); return res.end(); }
     res.writeHead(200, {"Content-Type": TYPES[path.extname(file)] || "application/octet-stream"});

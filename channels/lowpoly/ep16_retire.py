@@ -26,7 +26,8 @@ _frame = frames(FRAMES)
 voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=0.97, turbo_ref="af_heart"),
                        "claude2": dict(voice="af_heart", speed=1.0, turbo_ref="af_heart+1.5")})   # the new version: brighter
 
-voice.CLONE_RATE = 4.3   # skits: Turbo's natural pace, slowed a touch, never sped up (refs ~165 wpm while speaking)
+voice.CLONE_RATE = 4.0   # skits: Turbo's natural pace slowed a little, never sped up (refs ~165 wpm while speaking)
+voice.TEMPO_MIN = 0.88   # (Turbo speaks ~200 wpm; allow a slightly deeper stretch than the narrator's 0.94)
 GAP = 1.15               # and a little more air between lines (refs: 10-21 pauses over 0.6 s a minute)
 
 DEV, CL, C2 = None, "claude", "claude2"

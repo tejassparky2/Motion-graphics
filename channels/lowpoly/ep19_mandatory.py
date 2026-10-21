@@ -25,7 +25,8 @@ FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.ab
 _frame = frames(FRAMES)
 voice.SPEAKERS.update({"codex": dict(voice="am_puck", speed=1.05, turbo_ref="am_puck+2")})
 
-voice.CLONE_RATE = 4.3   # skits: Turbo's natural pace, slowed a touch, never sped up (refs ~165 wpm while speaking)
+voice.CLONE_RATE = 4.0   # skits: Turbo's natural pace slowed a little, never sped up (refs ~165 wpm while speaking)
+voice.TEMPO_MIN = 0.88   # (Turbo speaks ~200 wpm; allow a slightly deeper stretch than the narrator's 0.94)
 GAP = 1.15               # and a little more air between lines (refs: 10-21 pauses over 0.6 s a minute)
 
 DEV, CX = None, "codex"
