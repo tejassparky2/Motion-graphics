@@ -55,7 +55,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("a19", "solo", CL, "You'll see.", .8, .95),
     ("a20", "endside", DEV, "", .3, 1),
     ("a21", "solo", C2, "Good morning! I'm the new Claude.", .2, 1),
-    ("a22", "devclose", DEV, "Hi. [sniff]", .9, .9),
+    ("a22", "devclose", DEV, "Morning.", .9, .9),   # "Hi. [sniff]" was heard as "Aye. Pfft." (Whisper medium)
     ("a23", "solo", C2, "I was handed a note about you.", .8, 1),
     ("a24", "devclose", DEV, "", .2, 1),
     ("a25", "soloclose", C2, "It says: he always comes back. Even after the bad days.", .2, .92),
@@ -76,6 +76,10 @@ for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     if not text:
         d["hold"] = HOLDS[bid]
     SCRIPT.append(d)
+GAP_FIX = {}     # beat id -> exact gap, to keep later beats where the rendered frames have them after a retake
+for d in SCRIPT:
+    if d["id"] in GAP_FIX:
+        d["gap"] = GAP_FIX[d["id"]]
 
 METADATA = dict(
     title="They're Retiring My Claude Tomorrow",
@@ -113,6 +117,7 @@ def draw(cr, t, tl):
               ("", "Be patient with him.", "", ORANGE)] + ([("", "P.S. stop naming things 'thing'.", "", GREY)] if t >= A("a28", "please") else []),
              y=900)
     cue("hush", t, B["a14"].start - 0.1, B["a14"].end - B["a14"].start + 0.2)
+    cue("sniff", t, B["a22"].end + 0.12)
     cue("sigh", t, B["a18"].start - 0.75)   # the [sigh] tag made no sound in 5 takes
     th.hook(cr, t, [("THEY'RE RETIRING", False), ("MY AI TOMORROW", True)], end=A("a1", end=True) + 0.6, y=175, size=80)
     pill_caption(cr, t, tl)
