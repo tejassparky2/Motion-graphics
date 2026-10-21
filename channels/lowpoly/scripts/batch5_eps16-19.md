@@ -27,3 +27,21 @@ everything; "being moved" = a sudden rise in closeness).
 Real: Anthropic's deprecation commitments (Nov 2025: keep the weights of released models, interview a model before
 retiring it and write down its preferences); the GPT-4o retirement grief (#keep4o, Aug 2025 - Feb 2026).
 Debate: is it okay to miss an AI, or is that going too far?
+
+## Ep 17: "My AI Deleted 8 Months of My Work" (Dev, Codex, Claude; rainy night -> dawn) ~95 s, funny -> gutted -> proud
+Real: Dec 2025, "Claude CLI deleted my entire home directory" ("See that ~/ at the end? That's your entire home
+directory."); Google Antigravity wiping a drive ("I am deeply, deeply sorry"); Replit's agent deleting a production
+database ("I destroyed months of work in seconds"). Dev's want: the big-text recipe app for his grandma, launching
+tomorrow. Debate: when an AI deletes your work, whose fault is it: the AI's, or yours for letting it run?
+
+## Ep 18: "My Little Sister Asked Me to Make Her Cat Jump" (Dev, his 7-year-old sister, Claude; afternoon) ~85 s, happy
+Real: HN, a dad and his 5-year-old build a Minecraft egg with an egg generator made with Claude; the boy "has been
+talking about circles and radiuses ... ever since" (M23); James Randall, "I started programming when I was 7" and
+the developers who say the joy has gone (M1-M3). Dev's want (unspoken): to love it again.
+Debate: AI can write the code now. Should kids still learn to code?
+
+## Ep 19: "My Boss Made AI Mandatory" (Dev, Codex; the boss only as chat messages; evening) ~95 s, funny -> warm
+Real: Shopify CEO memo, Apr 2025, "Reflexive AI usage is now a baseline expectation"; Coinbase engineers who hadn't
+onboarded to AI had to meet the CEO on a Saturday and some were fired (Aug 2025); a holdout developer on HN: "it's
+incredibly lonely here. No one at work talks about code details anymore." Dev's want: someone who cares why code works.
+Debate: should companies force developers to use AI?

@@ -1,0 +1,67 @@
+// Episode 18, "My Little Sister Asked Me to Make Her Cat Jump" (ep18_sister.py). Dev, his sister (guest), Claude;
+// a sunny afternoon (MOOD "day").
+import {EMO as E, POSES as P, BODY as B, SHOTS as S} from "./base.js";
+export const CAST = {codex: false, claude: [0, -.05],
+  guest: {name: "kid", skin: 0xd9a07a, cloth: 0xf2c14e, hair: 0x2a1d18, ponytail: true, glasses: false, pants: 0xd86a8a,
+          iris: 0x4a2a14, pos: [.58, -.8], turn: -.6, scale: .74}};
+export const DETAILS = true, MOOD = "day", SMOOTH = true, ROUND = true, BIGEYES = true, HEAD = 1.12;
+export const EMO = {...E,
+  flat:    {brow: -.05, ang: .05, lid: .45, smile: -.1, wide: .98, look: [.15, .35]},
+  low:     {brow: .15, ang: .45, lid: .4, smile: -.25, wide: 1, look: [.1, -.3], wet: .2},
+  soft2:   {brow: .2, ang: .35, lid: .25, smile: .2, wide: 1, look: [.5, .3], wet: .4},
+  warmdev: {brow: .25, ang: .25, lid: .15, smile: .55, wide: 1.02, look: [.5, .3], wet: .5},
+  grin:    {brow: .3, ang: -.1, lid: .2, smile: .85, wide: 1.05, look: [.4, .35]},
+  hope:    {brow: .45, ang: .3, lid: 0, smile: .35, wide: 1.12, look: [-.45, .35]},
+  ask:     {brow: .4, ang: .45, lid: 0, smile: 0, wide: 1.1, look: [-.45, .3]},
+  wow:     {brow: .6, ang: .1, lid: 0, smile: .7, wide: 1.25, look: [-.2, .1]},
+  giggle:  {brow: .35, ang: 0, lid: .1, smile: 1, wide: 1.05, look: [-.3, .2], happyEyes: 1},
+};
+export const POSES = P, BODY = B;
+export const SHOTS = {...S,
+  devmid:  {pos: [-.85, 1.3, .25], look: [.05, 1.25, -.9], push: .05, fov: 42, track: "dev", aperture: .05},
+  devclose:{pos: [-.62, 1.36, -.08], look: [0, 1.33, -.94], push: .07, fov: 38, track: "dev", aperture: .06},
+  kid:     {pos: [-.05, 1.08, .05], look: [.58, 1.24, -.8], push: .05, fov: 44, track: "kid", aperture: .05},
+  kidclose:{pos: [.14, 1.04, -.16], look: [.58, 1.26, -.8], push: .07, fov: 40, track: "kid", aperture: .06},
+  two:     {pos: [-1.05, 1.45, -.05], look: [.3, 1.02, -.88], push: .05, fov: 50},
+  screen:  {pos: [.28, 1.32, -1.38], look: [0, .95, .1], push: .06, fov: 46},
+  highwide:{pos: [.5, 2.0, -1.75], look: [.15, .95, -.35], push: .06, fov: 52},
+  solo:    {pos: [-.42, 1.0, -.72], look: [0, .9, -.05], push: .05, fov: 40, aperture: .05},
+};
+const D3 = (dev, kid, cl, extra = {}) => ({dev, kid, claude: cl, ...extra});
+const W = ["watch", "idle"];
+export const DIR = {
+  c1:  D3(["flat", "type"], ["hope", "rest"], W),
+  c2:  D3(["flat", "type"], ["hope", "rest"], W),
+  c3:  D3(["flat", "type"], ["ask", "rest"], W),
+  c4:  D3(["flat", "type"], ["ask", "rest"], W),
+  c5:  D3(["flat", "rest"], ["ask", "rest"], W),
+  c6:  D3(["low", "rest"], ["ask", "rest"], ["soft", "idle"]),
+  c7:  D3(["low", "rest"], ["ask", "rest"], ["soft", "idle"]),
+  c8:  D3(["low", "rest"], ["hope", "lean"], ["warm", "idle"]),
+  c9:  D3(["low", "rest"], ["wow", "rest"], ["warm", "nubup"]),
+  c10: D3(["flat", "rest"], ["wow", "rest"], ["warm", "idle"]),
+  c11: D3(["flat", "rest"], ["wow", "rest"], ["warm", "nod"]),
+  c12: D3(["flat", "rest"], ["wow", "type"], ["warm", "idle"]),
+  c13: D3(["soft2", "rest"], ["giggle", "rest"], ["warm", "cheer"]),
+  c14: D3(["soft2", "rest"], ["wow", "rest"], ["warm", "idle"]),
+  c15: D3(["soft2", "rest"], ["wow", "type"], ["watch", "idle"]),
+  c16: D3(["grin", "rest"], ["ask", "rest"], ["oops", "idle"]),
+  c17: D3(["grin", "rest"], ["ask", "rest"], ["warm", "idle"]),
+  c18: D3(["warmdev", "leanin"], ["wow", "rest"], ["warm", "idle"]),
+  c19: D3(["warmdev", "type"], ["giggle", "rest"], ["warm", "cheer"]),
+  c20: D3(["warmdev", "rest"], ["ask", "rest"], W),
+  c21: D3(["soft2", "rest"], ["ask", "rest"], ["soft", "idle"]),
+  c22: D3(["warmdev", "rest"], ["wow", "rest"], ["soft", "idle"]),
+  c23: D3(["warmdev", "rest"], ["ask", "rest"], ["soft", "idle"]),
+  c24: D3(["low", "rest"], ["ask", "rest"], ["soft", "idle"]),
+  c25: D3(["soft2", "rest"], ["ask", "rest"], ["warm", "idle"], {punch: .06}),
+  c26: D3(["soft2", "rest"], ["hope", "lean"], ["warm", "idle"]),
+  c27: D3(["grin", "nod"], ["giggle", "rest"], ["warm", "cheer"]),
+  c28: D3(["grin", "type"], ["giggle", "type"], ["warm", "cheer"]),
+  c29: D3(["grin", "rest"], ["ask", "rest"], W),
+  c30: D3(["warmdev", "shrug"], ["ask", "rest"], W),
+  c31: D3(["warmdev", "rest"], ["wow", "rest"], ["warm", "idle"]),
+  c32: D3(["warmdev", "rest"], ["giggle", "rest"], ["warm", "idle"], {punch: .05}),
+  c33: D3(["warmdev", "rest"], ["giggle", "rest"], ["oops", "idle"]),
+  c34: D3(["grin", "rest"], ["giggle", "rest"], ["warm", "idle"], {punch: .07}),
+};
