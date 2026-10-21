@@ -140,3 +140,21 @@ one in warm episodes. Every premise must come from a verified, relatable moment 
 - The render retries a tagged take until Whisper medium hears the words and the sound is there. After the render,
   listen for tags read out as words ("chuckle") and swap any that fail for the breath effects (cue "sigh",
   "gasp_in", "sniff").
+
+## Connection rules (owner, 21 Oct 2026: eps 14-15 "very bad not connecting ... i just want best connecting relatable
+emotions feelable"; measured on the references + research_notes/Emotional AI dev skits that connect/)
+These replace the old "default 35-50 s" length rule and the reaction-cut-before-every-line habit.
+- **Pace like the references:** ~90 words a minute overall (refs 84-97; eps 14-15 ran 132-143), 0.6-1.2 s between
+  lines, 1.5-2.5 s silent holds on the feeling beats. 60-100 s is fine; length comes from air and story, never padding.
+- **Hold shots:** 3-7 s average (refs 3.6-7.5 s); no REACTION_CUTS on emotional episodes; hold on the listener's face.
+- **Make me care:** in the first 10 s we learn what Dev wants or stands to lose (grandma's app, the model he talks to
+  every night, the joy he lost). A story device on screen (notice, terminal, note, usage report) carries it.
+- **Two plus two:** hold back one piece (what the note says) and pay it off; the reveal re-frames what came before.
+- **Shape:** jokes first, then the jokes stop; one sincere act or line; the peak is closeness restored; a callback
+  laugh last, cut ~0.5 s after.
+- **Faces:** BIGEYES + ROUND + HEAD 1.12 (big glossy eyes, rounded heads, like reference 8); EMO entries can carry
+  `wet` (glistening eyes) and `tear` (a tear rolls) for the peak; blinks on every new line; breathing in holds.
+- **Music:** MUSIC = "score" with SCORE cues (light / tender / out / swell / end): the piano motif comes early, drops
+  out before the key line, swells on the payoff (motion/audio.py `score`).
+- **Grounded:** every premise comes from a real, sourced moment (developer_emotions.md); stories are fiction, and the
+  description says what's real.
