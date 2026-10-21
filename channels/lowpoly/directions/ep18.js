@@ -19,7 +19,7 @@ export const EMO = {...E,
 export const POSES = P, BODY = B;
 export const SHOTS = {...S,
   devmid:  {pos: [-.85, 1.3, .25], look: [.05, 1.25, -.9], push: .05, fov: 42, track: "dev", aperture: .05},
-  devclose:{pos: [-.62, 1.36, -.08], look: [0, 1.33, -.94], push: .07, fov: 38, track: "dev", aperture: .06},
+  devclose:{pos: [-.72, 1.37, .02], look: [0, 1.32, -.94], push: .06, fov: 41, track: "dev", aperture: .06},
   kid:     {pos: [-.05, 1.08, .05], look: [.58, 1.24, -.8], push: .05, fov: 44, track: "kid", aperture: .05},
   kidclose:{pos: [.14, 1.04, -.16], look: [.58, 1.26, -.8], push: .07, fov: 40, track: "kid", aperture: .06},
   two:     {pos: [-1.05, 1.45, -.05], look: [.3, 1.02, -.88], push: .05, fov: 50},

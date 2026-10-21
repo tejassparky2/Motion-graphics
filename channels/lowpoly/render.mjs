@@ -21,7 +21,7 @@ const SCENE = process.env.SCENE || "scene.html";
 const server = http.createServer((req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
   const file = url.startsWith("/node_modules/") ? path.join(MODS, url.slice(14))
-    : url === "/timing.json" ? path.join(ROOT, "build/lowpoly/timing.json") : path.join(HERE, url === "/" ? SCENE : url);
+    : url === "/timing.json" ? (process.env.TIMING || path.join(ROOT, "build/lowpoly/timing.json")) : path.join(HERE, url === "/" ? SCENE : url);
   if (!file.startsWith(MODS) && !file.startsWith(HERE) && !file.endsWith("timing.json")) { res.writeHead(403); return res.end(); }
   fs.readFile(file, (err, data) => {
     if (err) { res.writeHead(404); return res.end(); }

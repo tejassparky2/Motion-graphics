@@ -50,8 +50,10 @@ for who, e in env.items():
     peak = np.percentile(e[e > 0], 95) if (e > 0).any() else 1.0
     env[who] = np.clip(e / peak, 0, 1).round(3).tolist()
 os.makedirs(BUILD, exist_ok=True)
-with open(os.path.join(BUILD, "timing.json"), "w") as f:
-    json.dump(dict(total=tl.total, fps=fps, beats=beats, env=env), f)
+for name in ("timing.json", f"timing_{EPISODE}.json"):     # per-episode copy so two episodes can run at once
+    with open(os.path.join(BUILD, name), "w") as f:
+        json.dump(dict(total=tl.total, fps=fps, beats=beats, env=env), f)
+os.environ["TIMING"] = os.path.join(BUILD, f"timing_{EPISODE}.json")
 
 frames = mod.FRAMES
 stills = sys.argv[sys.argv.index("--stills") + 1] if "--stills" in sys.argv else None

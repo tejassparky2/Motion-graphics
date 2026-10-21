@@ -14,7 +14,7 @@ export const EMO = {...E,
 export const POSES = P, BODY = B;
 export const SHOTS = {...S,
   devmid:  {pos: [-.85, 1.3, .25], look: [.02, 1.25, -.9], push: .05, fov: 40, track: "dev", aperture: .06},
-  devclose:{pos: [-.62, 1.36, -.08], look: [0, 1.33, -.94], push: .07, fov: 38, track: "dev", aperture: .07},
+  devclose:{pos: [-.72, 1.37, .02], look: [0, 1.32, -.94], push: .06, fov: 41, track: "dev", aperture: .07},
   cx:      {pos: [.45, 1.06, -.76], look: [0, .98, -.02], push: .05, fov: 40, aperture: .05},
   cxclose: {pos: [.3, 1.03, -.56], look: [0, .99, -.02], push: .08, fov: 38, aperture: .06},
   ots:     {pos: [-.3, 1.48, -1.42], look: [0, .95, .05], push: .06, fov: 44},
