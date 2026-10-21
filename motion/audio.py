@@ -458,9 +458,10 @@ def score(total, seed=None, cues=None):
             gain[i0:i1] = 0
             seg_in = gain[max(0, i0 - f0):i0]
             gain[max(0, i0 - f0):i0] = np.minimum(seg_in, np.linspace(1, 0, len(seg_in)))
-    level = np.array([{"light": 0.7, "tender": 0.85, "swell": 1.0}.get(section(i / SR), 1.0) for i in range(0, n, SR // 10)])
-    level = np.repeat(level, SR // 10)[:n]
-    level = np.convolve(level, np.ones(SR) / SR, mode="same")    # sections fade into each other over about a second
+    step = SR // 10                                               # section level at 10 Hz, smoothed over ~1 s
+    level = np.array([{"light": 0.7, "tender": 0.85, "swell": 1.0}.get(section(i / SR), 1.0) for i in range(0, n, step)])
+    level = np.convolve(np.pad(level, 5, mode="edge"), np.ones(10) / 10, mode="same")[5:-5]
+    level = np.interp(np.arange(n), np.arange(len(level)) * step, level)
     mix = (out + 0.6 * _lowpass(strings, 4)) * gain * level
     ir_n = int(2.4 * SR)                                          # a soft hall
     ir = rng.normal(0, 1, ir_n) * np.exp(-np.arange(ir_n) / SR * 2.4)
