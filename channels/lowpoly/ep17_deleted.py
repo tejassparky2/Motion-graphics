@@ -43,7 +43,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("b9", "codexclose", CX, "I am deeply, deeply sorry.", .6, 1),
     ("b10", "devmid", DEV, "Backups?", 1.0, 1),
     ("b11", "claude", CL, "When did you last push?", .8, 1),
-    ("b12", "devclose", DEV, "[sigh] March.", 1.0, 1),
+    ("b12", "devclose", DEV, "March.", 1.0, 1),   # the [sigh] tag made no sound in 5 takes: a sigh sound effect instead
     ("b13", "codex", CX, "Would it help if I wrote a eulogy?", .9, 1),
     ("b14", "devmid", DEV, "No.", .6, 1),
     ("b15", "devclose", DEV, "", .2, 1),
@@ -126,6 +126,7 @@ def draw(cr, t, tl):
     cue("gasp_in", t, B["b7"].start + 0.3)
     cue("hush", t, B["b7"].start - 0.1, B["b7"].end - B["b7"].start + 0.2)
     cue("rain", t, 0.0, tl.total)
+    cue("sigh", t, B["b12"].start - 0.8)
     cue("typing", t, b26.start + 0.3, 2.0)
     th.hook(cr, t, [("MY AI DELETED", False), ("8 MONTHS OF MY WORK", True)], end=A("b1", end=True) + 0.6, y=175, size=78)
     pill_caption(cr, t, tl)
