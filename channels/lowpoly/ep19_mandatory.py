@@ -25,6 +25,9 @@ FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.ab
 _frame = frames(FRAMES)
 voice.SPEAKERS.update({"codex": dict(voice="am_puck", speed=1.05, turbo_ref="am_puck+2")})
 
+voice.CLONE_RATE = 4.3   # skits: Turbo's natural pace, slowed a touch, never sped up (refs ~165 wpm while speaking)
+GAP = 1.15               # and a little more air between lines (refs: 10-21 pauses over 0.6 s a minute)
+
 DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("d1", "devmid", DEV, "My boss just made AI mandatory.", 0, 1),
@@ -68,7 +71,7 @@ for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     if who:
         d["speaker"] = who
     if i:
-        d["gap"] = gap
+        d["gap"] = round(gap * GAP, 2)
     if pace != 1:
         d["pace"] = pace
     if not text:

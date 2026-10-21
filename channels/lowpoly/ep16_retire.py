@@ -26,6 +26,9 @@ _frame = frames(FRAMES)
 voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=0.97, turbo_ref="af_heart"),
                        "claude2": dict(voice="af_heart", speed=1.0, turbo_ref="af_heart+1.5")})   # the new version: brighter
 
+voice.CLONE_RATE = 4.3   # skits: Turbo's natural pace, slowed a touch, never sped up (refs ~165 wpm while speaking)
+GAP = 1.15               # and a little more air between lines (refs: 10-21 pauses over 0.6 s a minute)
+
 DEV, CL, C2 = None, "claude", "claude2"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("a1", "devmid", DEV, "They're retiring you tomorrow.", 0, 1),
@@ -47,7 +50,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("a15", "soloclose", CL, "I left a note for the new one.", .2, .92),
     ("a16", "devclose", DEV, "About what?", .8, 1),
     ("a17", "soloclose", CL, "About you.", .9, .95),
-    ("a18", "devclose", DEV, "[sigh] What does it say?", 1.2, .92),
+    ("a18", "devclose", DEV, "What does it say?", 1.2, .92),
     ("a19", "solo", CL, "You'll see.", .8, .95),
     ("a20", "endside", DEV, "", .3, 1),
     ("a21", "solo", C2, "Good morning! I'm the new Claude.", .2, 1),
@@ -66,7 +69,7 @@ for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     if who:
         d["speaker"] = who
     if i:
-        d["gap"] = gap
+        d["gap"] = round(gap * GAP, 2)
     if pace != 1:
         d["pace"] = pace
     if not text:
@@ -109,5 +112,6 @@ def draw(cr, t, tl):
               ("", "Be patient with him.", "", ORANGE)] + ([("", "P.S. stop naming things 'thing'.", "", GREY)] if t >= A("a28", "please") else []),
              y=900)
     cue("hush", t, B["a14"].start - 0.1, B["a14"].end - B["a14"].start + 0.2)
+    cue("sigh", t, B["a18"].start - 0.75)   # the [sigh] tag made no sound in 5 takes
     th.hook(cr, t, [("THEY'RE RETIRING", False), ("MY AI TOMORROW", True)], end=A("a1", end=True) + 0.6, y=175, size=80)
     pill_caption(cr, t, tl)
