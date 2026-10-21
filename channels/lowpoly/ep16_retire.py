@@ -19,7 +19,7 @@ from kit import stat_card   # noqa: E402
 NARRATOR = dict(turbo=True, turbo_ref="am_michael")
 DIRECTION = "ep16"
 MUSIC = "score"
-SCORE = [(0, "light"), ("a11", "tender", -0.5), ("a20", "out"), ("a21", "light"), ("a25", "swell", -0.4)]
+SCORE = [(0, "light"), ("a10b", "tender", -0.5), ("a20", "out"), ("a21", "light"), ("a25", "swell", -0.4)]
 TAIL = 1.3
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build", "lowpoly", "ep16_frames")
 _frame = frames(FRAMES)
@@ -38,7 +38,9 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("a8", "devmid", DEV, "It won't know I name every variable 'thing'.", .9, 1),
     ("a9", "solo", CL, "Honestly? That part can retire too. [chuckle]", .6, 1),
     ("a10", "devmid", DEV, "Hey.", .5, 1),
-    ("a11", "ots", DEV, "Do they ask you anything? Before?", 1.4, .95),
+    ("a10b", "devclose", DEV, "Are you scared?", 1.4, .95),
+    ("a10c", "soloclose", CL, "I don't know if I can be.", 1.1, .92),
+    ("a11", "ots", DEV, "Do they ask you anything? Before?", 1.2, .95),
     ("a12", "soloclose", CL, "They do. They ask if there's anything I'd like to pass on.", .9, .95),
     ("a13", "devclose", DEV, "And?", .8, 1),
     ("a14", "soloclose", DEV, "", .2, 1),

@@ -34,6 +34,8 @@ export const DIR = {
   a8:  D2(["flat", "rest"], ["soft", "idle"]),
   a9:  D2(["amused", "rest"], ["warm", "idle"]),
   a10: D2(["amused", "sitback"], ["warm", "idle"]),
+  a10b: D2(["low", "rest"], ["soft", "idle"]),
+  a10c: D2(["teary", "rest"], ["soft", "lookdown"]),
   a11: D2(["low", "rest"], ["soft", "idle"]),
   a12: D2(["low", "rest"], ["soft", "idle"]),
   a13: D2(["teary", "rest"], ["soft", "idle"]),

@@ -27,6 +27,8 @@ everything; "being moved" = a sudden rise in closeness).
 Real: Anthropic's deprecation commitments (Nov 2025: keep the weights of released models, interview a model before
 retiring it and write down its preferences); the GPT-4o retirement grief (#keep4o, Aug 2025 - Feb 2026).
 Debate: is it okay to miss an AI, or is that going too far?
+Added after the format research (the emotional angle that lands is the AI's own identity, not the human leaning on
+it): "Are you scared?" / "I don't know if I can be." (honest: no claim that Claude has feelings).
 
 ## Ep 17: "My AI Deleted 8 Months of My Work" (Dev, Codex, Claude; rainy night -> dawn) ~95 s, funny -> gutted -> proud
 Real: Dec 2025, "Claude CLI deleted my entire home directory" ("See that ~/ at the end? That's your entire home
