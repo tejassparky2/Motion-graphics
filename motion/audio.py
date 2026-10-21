@@ -361,18 +361,130 @@ def pad(total, seed=None):
     return (mix * swell)[: int(total * SR)]
 
 
+def _piano(freq, dur, vel, rng):
+    """A soft felt-piano note: inharmonic partials that die away faster the higher they are, a little hammer
+    thump, and a damper that stops the note `dur` seconds in (with a short release)."""
+    n = int((dur + 0.6) * SR)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    for k in range(1, 7):
+        fk = k * freq * np.sqrt(1 + 0.0003 * k * k)
+        if fk > 9000:
+            break
+        out += (0.6 / k ** 1.4) * np.exp(-t * (0.9 + 0.8 * k) * (freq / 262) ** 0.35) * np.sin(2 * np.pi * fk * t + rng.uniform(0, 6.3))
+    out *= np.minimum(1, t / 0.006)
+    hammer = _lowpass(rng.normal(0, 1, n), 18) * np.exp(-t / 0.012) * 0.15
+    damper = np.clip(1 - (t - dur) / 0.45, 0, 1)
+    return (out + hammer) * damper * vel
+
+
+def score(total, seed=None, cues=None):
+    """An emotional piano score that follows the story (low-poly skits; acting/sound research, 21 Oct 2026: state a
+    short motif early and bring it back at the payoff; drop the music out before the key line).
+    `cues`: [(time, section)], sections "light" (sparse chords), "tender" (arpeggios + the motif), "swell" (motif an
+    octave up over strings), "out" (silence, the room tone carries on) and "end" (one last chord left to ring).
+    Key, progression, tempo and the motif's rhythm are picked from the episode name, so no two episodes share music."""
+    rng = np.random.default_rng(zlib.crc32(("score" + str(seed)).encode()))
+    cues = sorted(cues or [(0.0, "tender")])
+    n = int(total * SR) + 3 * SR
+    out = np.zeros(n)
+    strings = np.zeros(n)
+    key = 48 + int(rng.choice([0, 2, 3, 5, 7]))                  # C, D, Eb, F or G major (MIDI root, octave 3)
+    prog = PROGRESSIONS[int(rng.choice([0, 1, 2, 4]))]
+    bpm = float(rng.choice([66, 69, 72]))
+    beat = 60 / bpm
+    bar = 4 * beat
+    shapes = [[(0, 2, 1.5), (1.5, 1, .5), (2, 0, 2)], [(0, 1, 1), (1, 2, 1), (2, 3, 1.5), (3.5, 2, .5)],
+              [(0, 3, 2), (2, 2, 1), (3, 1, 1)], [(.5, 1, .5), (1, 2, 1), (2, 1, 1), (3, 0, 1)]]
+    shape = shapes[int(rng.integers(len(shapes)))]                # the motif: the same contour on every chord
+    arp = [0, 2, 3, 1, 2, 3, 1, 2]
+    hz = lambda m: 440.0 * 2 ** ((m - 69) / 12)
+
+    def section(t):
+        cur = cues[0][1]
+        for at, name in cues:
+            if t >= at - 1e-6:
+                cur = name
+        return cur
+
+    def add(buf, t0, wave):
+        i = int(t0 * SR)
+        if 0 <= i < n:
+            m = min(len(wave), n - i)
+            buf[i:i + m] += wave[:m]
+    end_at = next((at for at, name in cues if name == "end"), None)
+    for b in range(int(np.ceil((total + 2) / bar))):
+        t0 = b * bar
+        root, q = prog[b % len(prog)]
+        r = key + root
+        third = r + (3 if q == "m" else 4)
+        tones = [r + 12, third + 12, r + 19, r + 24]              # chord tones for the arpeggio and the motif
+        sec = section(t0)
+        if end_at is not None and t0 >= end_at + bar:
+            break
+        if end_at is not None and t0 >= end_at - 1e-6:            # the last chord, left to ring out
+            for m in (r, r + 12, third + 12, r + 19):
+                add(out, end_at, _piano(hz(m), 6.0, 0.32, rng))
+            break
+        if sec == "out":
+            continue
+        add(out, t0, _piano(hz(r), bar * 0.98, 0.34, rng))         # bass
+        if sec == "light":
+            for m in (third + 12, r + 19):
+                add(out, t0, _piano(hz(m), bar * 0.5, 0.14, rng))
+            add(out, t0 + 2 * beat, _piano(hz(r + 24), beat * 1.5, 0.12, rng))
+            continue
+        for j, k in enumerate(arp):                                # eighth-note arpeggio
+            add(out, t0 + j * beat / 2, _piano(hz(tones[k]), beat * 0.9, 0.12 + 0.03 * (j == 0), rng))
+        if sec == "swell" or b % 2 == 0:                          # the motif (every bar, doubled, once it swells)
+            for at, idx, d in shape:
+                add(out, t0 + at * beat, _piano(hz(tones[idx] + 12), d * beat, 0.32 if sec == "swell" else 0.24, rng))
+                if sec == "swell":
+                    add(out, t0 + at * beat, _piano(hz(tones[idx]), d * beat, 0.16, rng))
+        if sec == "swell":
+            tt = np.arange(int(bar * SR) + SR) / SR
+            env = np.clip(tt / 1.0, 0, 1) * np.clip((bar + 1 - tt) / 1.0, 0, 1)
+            w = np.zeros(len(tt))
+            for m in (r + 12, third + 12, r + 19, third + 24):
+                for det in (-0.15, 0.0, 0.16):
+                    w += np.sin(2 * np.pi * hz(m) * (1 + det / 100) * tt + 0.004 * np.sin(2 * np.pi * 5.2 * tt) * 60) * 0.05
+            add(strings, t0, w * env)
+    gain = np.ones(n)                                             # "out" fades over 0.8 s and comes back over 0.4 s
+    for at, name in cues:
+        if name == "out":
+            nxt = next((a for a, nm in cues if a > at), total + 3)
+            i0, i1 = int(at * SR), int(nxt * SR)
+            f0, f1 = int(0.8 * SR), int(0.4 * SR)
+            gain[i0:i1] = 0
+            seg_in = gain[max(0, i0 - f0):i0]
+            gain[max(0, i0 - f0):i0] = np.minimum(seg_in, np.linspace(1, 0, len(seg_in)))
+    level = np.array([{"light": 0.7, "tender": 0.85, "swell": 1.0}.get(section(i / SR), 1.0) for i in range(0, n, SR // 10)])
+    level = np.repeat(level, SR // 10)[:n]
+    level = np.convolve(level, np.ones(SR) / SR, mode="same")    # sections fade into each other over about a second
+    mix = (out + 0.6 * _lowpass(strings, 4)) * gain * level
+    ir_n = int(2.4 * SR)                                          # a soft hall
+    ir = rng.normal(0, 1, ir_n) * np.exp(-np.arange(ir_n) / SR * 2.4)
+    ir[0] = 8
+    m = 1 << int(np.ceil(np.log2(n + ir_n)))
+    wet = np.fft.irfft(np.fft.rfft(mix, m) * np.fft.rfft(ir / np.abs(ir).sum() * 8, m), m)[:n]
+    mix = 0.6 * mix + 0.4 * wet
+    mix += _lowpass(rng.uniform(-1, 1, n), 30) * 0.003
+    return mix[: int(total * SR)]
+
+
 GAINS = {"sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "rain": 0.22, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 
-def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
+def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks", cues=None):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
     bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; a "hush" cue silences bed and effects for its
     duration (the sudden silence before a shock)."""
     import pyloudnorm
     n = int(total * SR)
     style = bed
-    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
+    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad"
+           else score(total, seed, cues) if bed == "score" else music(total, seed))[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()
@@ -402,11 +514,11 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         if not loud.any():       # a silent meme: no voice at all, so music + effects only
             clips = None
     bed *= _lowpass(hush, 400)
-    room = room_tone(total, seed)[:n] if style == "pad" else None
+    room = room_tone(total, seed)[:n] if style in ("pad", "score") else None
     if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
-        bed *= (v_rms * 10 ** ((-15 if style == "pad" else -10) / 20)) / rms(bed)   # the pad sits softer
+        bed *= (v_rms * 10 ** ({"pad": -15, "score": -13}.get(style, -10) / 20)) / rms(bed)   # the pad sits softer
         mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
         if room is not None:                                      # ~32 dB under the voice, never ducked
             mix += room * (v_rms * 10 ** (-32 / 20)) / rms(room)

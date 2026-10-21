@@ -95,13 +95,14 @@ def pill_caption(cr, t, tl, y=318, size=27):
             else:
                 cur = (cur + " " + w).strip()
         lines.append(cur)
+        vo = getattr(b, "speaker", None) == "vo"      # Dev's inner voice: italic, no pill, like a thought
         cr.save()
-        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_ITALIC if vo else cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(size)
         wmax = max(cr.text_extents(l).x_advance for l in lines)
         h = size * 1.35 * len(lines) + size * 0.7
         rrect(cr, W / 2 - wmax / 2 - 22, y - size * 1.1, wmax + 44, h, 16)
-        cr.set_source_rgba(0.05, 0.05, 0.07, 0.72 * k)
+        cr.set_source_rgba(0.05, 0.05, 0.07, (0.35 if vo else 0.72) * k)
         cr.fill()
         for j, line in enumerate(lines):
             ext = cr.text_extents(line)

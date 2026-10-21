@@ -21,6 +21,9 @@ import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js"
 
 const T = await (await fetch("/timing.json")).json();
 const W = 720, H = 1280;
+const BLINKS = T.beats.map(b => b.start - .16);   // people blink when a thought changes (each new line), not only on a timer
+const DIRNAME = new URLSearchParams(location.search).get("dir") || "test";
+const D = await import(`./directions/${DIRNAME}.js`);
 const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
 renderer.setPixelRatio(window.devicePixelRatio || 1);
 renderer.setSize(W, H);
@@ -44,6 +47,7 @@ composer.addPass(new OutputPass());
 let seed = 11;
 const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 function jitter(geo, amt) {
+  if (D.ROUND) { geo.computeVertexNormals(); return geo; }   // ROUND: clean rounded shapes like reference 8
   const p = geo.attributes.position, map = new Map();
   for (let i = 0; i < p.count; i++) {
     const k = [p.getX(i), p.getY(i), p.getZ(i)].map(v => v.toFixed(4)).join(",");
@@ -141,7 +145,19 @@ function buildFace(parent, o) {
   const g = new THREE.Group(); g.position.set(0, o.y, o.z); parent.add(g); f.group = g;
   for (const s of [-1, 1]) {
     const e = new THREE.Group(); e.position.set(s * o.sp, 0, 0); g.add(e); f.eyes.push(e);
-    if (o.sclera) {
+    if (o.sclera && o.big) {                    // reference-8 eyes: white, a coloured iris, pupil, two catch-lights
+      const sc = new THREE.Mesh(new THREE.SphereGeometry(o.er, 18, 12), basic(0xf7f4ef)); sc.scale.z = .45; e.add(sc);
+      const ir = new THREE.Mesh(new THREE.SphereGeometry(o.er * .7, 16, 10), basic(o.iris || 0x6b4426)); ir.position.z = o.er * .3; ir.scale.z = .36; e.add(ir); f.pupils.push(ir);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(o.er * .68, o.er * .06, 5, 18), basic(0x2a170c)); ring.position.z = o.er * .1; ir.add(ring);
+      const pu = new THREE.Mesh(new THREE.SphereGeometry(o.er * .36, 12, 8), basic(0x120c10)); pu.position.z = o.er * .12; ir.add(pu);
+      const h1 = new THREE.Mesh(new THREE.SphereGeometry(o.er * .21, 8, 6), basic(0xffffff)); h1.position.set(o.er * .24, o.er * .28, o.er * .3); ir.add(h1);
+      const h2 = new THREE.Mesh(new THREE.SphereGeometry(o.er * .1, 6, 4), basic(0xffffff)); h2.position.set(-o.er * .22, -o.er * .24, o.er * .3); ir.add(h2);
+      (f.his ||= []).push(h1, h2);
+      const wl = new THREE.Mesh(new THREE.TorusGeometry(o.er * .82, o.er * .07, 4, 14, Math.PI), new THREE.MeshBasicMaterial({color: 0xdff3ff, transparent: true, opacity: 0}));
+      wl.position.set(s * o.sp, -o.er * .1, o.er * .42); wl.rotation.z = Math.PI; g.add(wl); (f.wets ||= []).push(wl);
+      const tr = new THREE.Mesh(new THREE.SphereGeometry(o.er * .32, 10, 8), new THREE.MeshBasicMaterial({color: 0xe6f6ff, transparent: true, opacity: 0}));
+      tr.scale.set(1, 1.5, .6); tr.visible = false; g.add(tr); (f.tears ||= []).push(tr);
+    } else if (o.sclera) {
       const sc = new THREE.Mesh(new THREE.SphereGeometry(o.er, 14, 10), basic(0xf4f1ec)); sc.scale.z = .45; e.add(sc);
       const pu = new THREE.Mesh(new THREE.SphereGeometry(o.er * .55, 12, 8), basic(0x1b1420)); pu.position.z = o.er * .3; pu.scale.z = .4; e.add(pu); f.pupils.push(pu);
       const hi = new THREE.Mesh(new THREE.SphereGeometry(o.er * .16, 6, 4), basic(0xffffff)); hi.position.set(o.er * .2, o.er * .25, o.er * .55); pu.add(hi);
@@ -163,7 +179,8 @@ function buildFace(parent, o) {
 }
 function poseFace(f, p, t, blinkPh) {
   const o = f.o;
-  const bl = (u => u < .13 ? Math.sin(u / .13 * Math.PI) : 0)((t + blinkPh) % 3.3);
+  let bl = (u => u < .13 ? Math.sin(u / .13 * Math.PI) : 0)((t + blinkPh) % 3.3);
+  for (const bt of BLINKS) { const d = t - bt - blinkPh * .03; if (d >= 0 && d < .2) bl = Math.max(bl, Math.sin(d / .2 * Math.PI)); }
   const lid = clamp(Math.max(p.lid, bl));
   const happy = (p.happyEyes || 0) > .5;
   f.eyes.forEach((e, i) => {
@@ -174,6 +191,17 @@ function poseFace(f, p, t, blinkPh) {
   });
   f.arcs.forEach(a => a.visible = happy);
   f.pupils.forEach(pu => { if (o.sclera) pu.position.set(p.look[0] * o.er * .45, p.look[1] * o.er * .4, o.er * .3); });
+  const wet = clamp(p.wet || 0);                // glistening eyes: bigger catch-lights and a bright water line
+  (f.his || []).forEach(h => h.scale.setScalar(1 + .8 * wet));
+  (f.wets || []).forEach(w => { w.material.opacity = .85 * wet * (1 - lid * .8); w.visible = wet > .03; });
+  (f.tears || []).forEach((tr, i) => {          // one tear at a time rolls down the cheek, then the next
+    const on = (p.tear || 0) > .3;
+    tr.visible = on;
+    if (!on) return;
+    const u = (t * .3 + i * .5) % 1;
+    tr.position.set((i ? 1 : -1) * (o.sp + o.er * .35), -o.er * .9 - u * o.er * 5.5, o.er * .55);
+    tr.material.opacity = .9 * Math.min(1, u * 8) * (1 - seg(u, .75, 1));
+  });
   if (!o.sclera && !o.glow) f.pupils.forEach((pu, i) => f.eyes[i].position.x = (i ? 1 : -1) * o.sp + p.look[0] * o.er * .4);
   f.brows.forEach((b, i) => {
     const s = i ? 1 : -1;
@@ -207,7 +235,7 @@ function buildPerson(o) {
   const group = new THREE.Group(); group.position.set(o.pos[0], 0, o.pos[1]); group.scale.setScalar(o.scale || 1); scene.add(group);
   const body = new THREE.Group(); group.add(body);
   const legs = mesh(new THREE.BoxGeometry(.34, .14, .42), mat(o.pants || 0x2b3045)); legs.position.set(0, .5, .12); body.add(legs);
-  const torso = mesh(jitter(new THREE.CylinderGeometry(.17, .21, .5, 7, 2), .02), cloth); torso.position.y = .82; body.add(torso);
+  const torso = mesh(jitter(new THREE.CylinderGeometry(.17, .21, .5, D.ROUND ? 24 : 7, 2), .02), cloth); torso.position.y = .82; body.add(torso);
   if (o.hoodie !== false) {
     const hood = mesh(jitter(new THREE.TorusGeometry(.14, .055, 5, 9), .01), cloth); hood.position.set(0, 1.07, -.03); hood.rotation.x = 1.3; body.add(hood);
     for (const s of [-1, 1]) { const st = mesh(new THREE.CylinderGeometry(.006, .006, .12, 4), mat(0xe8e2d8)); st.position.set(s * .04, .99, .19); body.add(st); }
@@ -216,7 +244,7 @@ function buildPerson(o) {
     for (let i = 0; i < 3; i++) { const b = new THREE.Mesh(new THREE.SphereGeometry(.012, 6, 4), basic(0x3a2a1a)); b.position.set(0, .95 - i * .09, .19 - i * .01); body.add(b); }
   }
   const head = new THREE.Group(); head.position.set(0, 1.27, 0); body.add(head);
-  const hd = mesh(jitter(new THREE.IcosahedronGeometry(.16, 1), .015), skin); hd.scale.set(1, 1.08, .95); head.add(hd);
+  const hd = mesh(jitter(new THREE.IcosahedronGeometry(.16, D.ROUND ? 5 : 1), .015), skin); hd.scale.set(1, 1.08, .95); head.add(hd);
   const neck = mesh(new THREE.CylinderGeometry(.05, .06, .1, 6), skin); neck.position.y = -.17; head.add(neck);
   if (o.ponytail) {                             // smooth hair: side-swept fringe, curtains to the jaw (spikes read as Dev)
     const fr = mesh(jitter(new THREE.SphereGeometry(.1, 8, 5), .008), hair); fr.position.set(.03, .11, .09); fr.scale.set(1.25, .38, .75); fr.rotation.set(.35, 0, -.25); head.add(fr);
@@ -232,7 +260,7 @@ function buildPerson(o) {
   } else {                                      // thin grey hair at the sides only
     for (const sgn of [-1, 1]) { const sd = mesh(jitter(new THREE.SphereGeometry(.07, 7, 5), .01), hair); sd.position.set(sgn * .13, .02, -.03); sd.scale.set(.6, 1, 1.1); head.add(sd); }
   }
-  const capH = mesh(jitter(new THREE.SphereGeometry(.165, 9, 6, 0, Math.PI * 2, 0, Math.PI * (o.bald ? .2 : o.ponytail ? .55 : .45)), .015), hair);
+  const capH = mesh(jitter(new THREE.SphereGeometry(.165, D.ROUND ? 28 : 9, D.ROUND ? 16 : 6, 0, Math.PI * 2, 0, Math.PI * (o.bald ? .2 : o.ponytail ? .55 : .45)), .015), hair);
   capH.position.set(0, .03, -.015); capH.rotation.x = -.25; capH.visible = !o.bald; head.add(capH);
   for (const s of [-1, 1]) { const ear = mesh(new THREE.IcosahedronGeometry(.035, 0), skin); ear.position.set(s * .16, 0, 0); head.add(ear); }
   const nose = mesh(new THREE.IcosahedronGeometry(o.bald ? .03 : .025, 0), skin); nose.position.set(0, -.02, .155); head.add(nose);
@@ -246,7 +274,10 @@ function buildPerson(o) {
     const tail = mesh(jitter(new THREE.ConeGeometry(.065, .32, 6), .01), hair); tail.position.set(0, -.06, -.25); tail.rotation.x = Math.PI - .3; head.add(tail);
   }
   if (o.moustache) { const m = mesh(new THREE.BoxGeometry(.07, .018, .02), hair); m.position.set(0, -.05, .15); head.add(m); }
-  const face = buildFace(head, {y: .02, z: .148, sp: .06, er: .022, sclera: true, mw: .028, my: .085, browMat: basic(o.hair)});
+  const big = !!D.BIGEYES;
+  const face = buildFace(head, {y: .02, z: .148, sp: big ? .062 : .06, er: big ? .031 : .022, sclera: true, big, iris: o.iris,
+                                mw: .028, my: .085, browMat: basic(o.hair)});
+  if (D.HEAD) head.scale.setScalar(D.HEAD);
   const arms = [arm(body, -1, .27, .25, cloth, skin), arm(body, 1, .27, .25, cloth, skin)];
   const mug = mesh(new THREE.CylinderGeometry(.045, .04, .1, 8), mat(0xe8e4dc)); mug.position.set(0, -.3, .05); mug.visible = false; arms[1].el.add(mug);
   const phone = new THREE.Group(); phone.position.set(0, -.3, .03); phone.rotation.set(-.4, 0, 0); phone.visible = false; arms[1].el.add(phone);   // held up, screen toward the face
@@ -411,10 +442,26 @@ function devDesk() {
   return t => steam.forEach((sp, i) => { const u = ((t * .35 + i / 5) % 1); sp.position.set(-.48 + .015 * Math.sin(t * 2 + i), .86 + u * .18, -.28); sp.material.opacity = .12 * Math.sin(Math.PI * u); sp.scale.setScalar(.02 + .04 * u); });
 }
 // ---------- night-blue mood (reference 7, the train skit): navy room, city-light window behind Dev ----------
-function nightMood() {
+function skyTex(kind) {             // the city through the window: "dawn" (pale gold sky) or "day" (blue sky, clouds)
+  const c = document.createElement("canvas"); c.width = 1024; c.height = 640; const g = c.getContext("2d");
+  const sky = g.createLinearGradient(0, 0, 0, 640);
+  if (kind === "dawn") { sky.addColorStop(0, "#6f8fd0"); sky.addColorStop(.55, "#f2b98a"); sky.addColorStop(1, "#ffd9a8"); }
+  else { sky.addColorStop(0, "#5aa0e8"); sky.addColorStop(1, "#cfe6fb"); }
+  g.fillStyle = sky; g.fillRect(0, 0, 1024, 640);
+  if (kind === "day") for (let i = 0; i < 7; i++) { const cx = rnd() * 1024, cy = 60 + rnd() * 200;
+    for (let j = 0; j < 5; j++) { g.fillStyle = "rgba(255,255,255,.75)"; g.beginPath(); g.arc(cx + j * 26, cy + Math.sin(j) * 8, 22 + rnd() * 16, 0, 7); g.fill(); } }
+  if (kind === "dawn") { const gr = g.createRadialGradient(700, 470, 0, 700, 470, 260); gr.addColorStop(0, "rgba(255,236,190,.95)"); gr.addColorStop(1, "rgba(255,200,140,0)"); g.fillStyle = gr; g.fillRect(0, 0, 1024, 640); }
+  let x = 0; while (x < 1024) { const w = 50 + rnd() * 110, h = 180 + rnd() * 360;
+    g.fillStyle = kind === "dawn" ? "#5b5576" : "#8fa3bf"; g.fillRect(x, 640 - h, w, h);
+    for (let yy = 640 - h + 14; yy < 630; yy += 22) for (let xx = x + 8; xx < x + w - 10; xx += 16) if (rnd() < .3) {
+      g.fillStyle = kind === "dawn" ? "#ffd59a" : "#dce9f7"; g.globalAlpha = .35; g.fillRect(xx, yy, 7, 9); g.globalAlpha = 1; }
+    x += w + 4; }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+function nightMood(kind = "night") {
   scene.children.forEach(o => { if (o.position.z < -1.7 && o.position.y > 1.1) o.visible = false; });   // shelf, poster, neon make way
   scene.background = new THREE.Color(0x0a1030); scene.fog = new THREE.Fog(0x0a1030, 2.4, 6);
-  scene.add(new THREE.HemisphereLight(0x3a4fb0, 0x0a0820, .35));
+  const hemiN = new THREE.HemisphereLight(0x3a4fb0, 0x0a0820, .35); scene.add(hemiN);
   const tex = (() => { const c = document.createElement("canvas"); c.width = 1024; c.height = 640; const g = c.getContext("2d");
     const sky = g.createLinearGradient(0, 0, 0, 640); sky.addColorStop(0, "#0b1442"); sky.addColorStop(1, "#28307a"); g.fillStyle = sky; g.fillRect(0, 0, 1024, 640);
     let x = 0; while (x < 1024) { const w = 50 + rnd() * 110, h = 180 + rnd() * 360; g.fillStyle = "#0a0e26"; g.fillRect(x, 640 - h, w, h);
@@ -428,6 +475,23 @@ function nightMood() {
   const win = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: tex})); win.position.set(0, 1.55, -1.88); scene.add(win);
   for (const x of [-.4, .4]) { const f = mesh(new THREE.BoxGeometry(.04, 1.5, .04), mat(0x0c0f22)); f.position.set(x, 1.55, -1.86); scene.add(f); }
   const moon = new THREE.DirectionalLight(0x6f86ff, .7); moon.position.set(0, 2.2, -3); scene.add(moon);     // cold rim on Dev's back
+  // DAWN: a beat id; the night city fades to a gold morning sky around it, and warm sun comes through the window.
+  // MOOD "day": the morning/day look from the first frame.
+  const morning = kind === "day" ? "day" : D.DAWN ? "dawn" : null;
+  if (morning) {
+    const mwin = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.5), new THREE.MeshBasicMaterial({map: skyTex(morning), transparent: true, opacity: 0}));
+    mwin.position.set(0, 1.55, -1.875); scene.add(mwin);
+    const sun = new THREE.DirectionalLight(morning === "day" ? 0xfff1dc : 0xffc58a, 0); sun.position.set(.6, 2.4, -3); scene.add(sun);
+    const fill = new THREE.HemisphereLight(morning === "day" ? 0xcfe3ff : 0xffd6b0, 0x3a2e28, 0); scene.add(fill);
+    const bgN = new THREE.Color(0x0a1030), bgM = new THREE.Color(morning === "day" ? 0x8fb8e8 : 0x9a8aa8);
+    const b0 = D.DAWN && T.beats.find(b => b.id === D.DAWN), at = kind === "day" ? -9 : b0 ? b0.start : 1e9;
+    window.__dawn = t => {
+      const k = seg(t, at - 1.2, at + 1.6);
+      mwin.material.opacity = k; sun.intensity = 2.2 * k; fill.intensity = .9 * k; moon.intensity = .7 * (1 - k);
+      hemiN.intensity = .35 * (1 - k); scene.background.copy(bgN).lerp(bgM, k); scene.fog.color.copy(scene.background);
+    };
+    window.__dawn(0);
+  }
   if (D.RAIN) {                                             // rain streaks in front of the glass (instanced thin quads)
     const n = 260, geo = new THREE.PlaneGeometry(.004, .09);
     const rm = new THREE.MeshBasicMaterial({color: 0xa9c4ff, transparent: true, opacity: .32, depthWrite: false});
@@ -442,13 +506,11 @@ function nightMood() {
     glass.position.set(0, 1.55, -1.83); scene.add(glass);
   }
 }
-const DIRNAME = new URLSearchParams(location.search).get("dir") || "test";
-const D = await import(`./directions/${DIRNAME}.js`);
 Object.assign(SHOTS, D.SHOTS || {});
 const DIR = D.DIR;
 Object.assign(EMO, D.EMO || {});
 const deskTick = D.DETAILS ? devDesk() : null;
-if (D.MOOD === "night") nightMood();
+if (D.MOOD === "night" || D.MOOD === "day") nightMood(D.MOOD);
 // SMOOTH (owner, 18 Oct: "You can go for smooth", reference 8): rounded boxes and soft shading instead of facets
 if (D.SMOOTH) scene.traverse(o => {
   if (!o.isMesh || !o.material || o.material.flatShading === undefined || o.material.isMeshBasicMaterial && o.geometry.type === "PlaneGeometry") return;
@@ -482,7 +544,7 @@ function beatAt(t) {        // REACTION_CUTS: cut to the next speaker right afte
 }
 const dirOf = (b, who) => (DIR[b.id] && DIR[b.id][who]) || ["neutral", "idle"];
 function mixEmo(a, b, u) {
-  const r = {}; for (const k of ["brow", "ang", "lid", "smile", "wide", "happyEyes"]) r[k] = lerp(a[k] || 0, b[k] || 0, u);
+  const r = {}; for (const k of ["brow", "ang", "lid", "smile", "wide", "happyEyes", "wet", "tear"]) r[k] = lerp(a[k] || 0, b[k] || 0, u);
   r.look = [lerp(a.look[0], b.look[0], u), lerp(a.look[1], b.look[1], u)]; return r;
 }
 function envAt(who, t) { const e = T.env[who]; const i = Math.round(t * T.fps); return e[Math.min(e.length - 1, Math.max(0, i))] || 0; }
@@ -500,8 +562,8 @@ function emotionFor(who, t) {
   p.look = [p.look[0] + .12 * jx * (1 - dart * .5), p.look[1] + .08 * jy * (1 - dart * .5)];
   const sp = cur.who;
   if (sp && sp !== who && talkS < .05 && cur.start - .1 <= t && t < cur.end + .4) {
-    const side = {claude: -.35, codex: .35, dev: 0, dad: 0, junior: 0}[sp];
-    if (side !== undefined && (who === "dev" || who === "dad" || who === "junior")) p.look = [p.look[0] + side * .7, p.look[1]];
+    const side = {claude: -.35, codex: .35}[sp] ?? 0;
+    if (who === "dev" || (GUEST && who === GUEST.name)) p.look = [p.look[0] + side * .7, p.look[1]];
   }
   return p;
 }
@@ -546,6 +608,7 @@ window.renderAt = function (t) {
     const lean = lerp(ba[0], bb[0], u), sink = lerp(ba[1], bb[1], u), hdown = lerp(ba[2], bb[2], u);
     R.body.position.z = .1 * lean;
     R.body.position.y = Math.sin(t * 2.2) * .004 - .06 * sink;
+    R.body.scale.y = 1 + .008 * Math.sin(t * 1.7 + (who === "dev" ? 0 : 2));   // breathing, so a held pose never dies
     R.body.rotation.x = .12 * lean - .08 * sink;
     R.head.rotation.x = .18 + hdown + .25 * dp.talk * Math.sin(t * 11) * .3;
     R.head.rotation.z = .06 * Math.sin(t * 1.3) + (emo === "hopeful" ? .15 * u : 0);
@@ -650,6 +713,7 @@ window.renderAt = function (t) {
   if (D.extra) D.extra(t, {cur, prev, scene, THREE, devBody, devHead, claude, clBody, codex, cxBody, laptop});
 
   driftMotes(t);
+  if (window.__dawn) window.__dawn(t);
   if (window.__rain) { window.__rain(t); scene.traverse(o => { if (o.isInstancedMesh) o.instanceMatrix.needsUpdate = true; }); }
   if (deskTick) deskTick(t);
   // ----- camera: hard cut per line (or at the line's own cuts), slow push within the shot, small handheld drift

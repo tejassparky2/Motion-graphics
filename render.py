@@ -158,6 +158,15 @@ def _encode_part(args):
     return _encode_frames(*args)
 
 
+def _score_cues():
+    """A video's SCORE = [(beat id or seconds, section[, offset s])] -> [(seconds, section)] for audio.score."""
+    sc = getattr(VIDEO["mod"], "SCORE", None)
+    if not sc:
+        return None
+    tl = timeline()
+    return [((tl.at(c[0]) if isinstance(c[0], str) else c[0]) + (c[2] if len(c) > 2 else 0), c[1]) for c in sc]
+
+
 def render_video(out, audio=True, voice=True):
     """Frames are drawn in parallel (one process per CPU core; every frame depends only on its time), each process
     encodes its own part, and the parts are joined without re-encoding."""
@@ -188,7 +197,7 @@ def render_video(out, audio=True, voice=True):
         from motion.audio import build_soundtrack
         wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
-                                seed=VIDEO["name"], bed=getattr(VIDEO["mod"], "MUSIC", "plucks"))
+                                seed=VIDEO["name"], bed=getattr(VIDEO["mod"], "MUSIC", "plucks"), cues=_score_cues())
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])

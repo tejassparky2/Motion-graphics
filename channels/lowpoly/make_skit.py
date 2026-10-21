@@ -34,10 +34,10 @@ tl = render.timeline()
 
 # timing.json: beats, word times and a mouth-opening envelope per character, sampled at the frame rate
 fps, n = render.FPS, int(round(tl.total * render.FPS)) + 1
-env = {who: np.zeros(n) for who in ("dev", "claude", "codex", "dad", "junior")}
+env = {who: np.zeros(n) for who in ("dev", "claude", "codex", "dad", "junior", "vo", "mom", "kid")}   # "vo": Dev's inner voice (mouth shut)
 beats = []
 for b in tl.beats:
-    who = b.speaker or "dev"
+    who = {"claude2": "claude", "vo": "vo"}.get(b.speaker, b.speaker) or "dev"   # claude2: a new Claude version, same body
     beats.append(dict(id=b.id, scene=b.scene, who=who, start=b.start, end=b.end,
                       words=[[u.start, u.end] for u in b.units]))
     a = np.asarray(b.audio, dtype=float)
