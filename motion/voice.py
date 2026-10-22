@@ -804,5 +804,7 @@ def narration_track(clips, total):
         track[i:i + len(clip)] += clip
     env = (np.abs(track) > 0.01).astype(np.float64)
     k = int(0.3 * SR)  # ~300 ms release so the music doesn't pump between words
-    env = np.convolve(env, np.ones(k) / k, mode="same")
+    ep = np.pad(env, (k // 2, k - 1 - k // 2))           # moving average via a running sum (O(n); np.convolve
+    c = np.concatenate(([0.0], np.cumsum(ep)))          # with a 13k-sample kernel crawled under load)
+    env = (c[k:] - c[:-k]) / k
     return track, np.clip(env * 4, 0, 1)
