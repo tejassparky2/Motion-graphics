@@ -46,7 +46,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("p18", "cxclose", CX, "Nothing. But confidently.", .5, 1),
 ]
 HOLDS = {"p13": 1.6, "p14": 1.6}
-GAP_FIX = {}
+GAP_FIX = {"p2": 0.362}   # keeps p2 on where the rendered frames have it after the p1 retake
 SCRIPT = build_script(_lines, HOLDS, gap_fix=GAP_FIX)
 
 METADATA = dict(
