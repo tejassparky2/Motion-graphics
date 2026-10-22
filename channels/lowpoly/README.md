@@ -89,6 +89,10 @@ making these videos (references, "revert", "one AI only... no, mix them", "Appro
    human."); a small mystery that unfolds one clue per line; the turn from dev-joke to a human moment at the reveal;
    the last line repeats a dev/startup term with a new, warm meaning; the AI's lines are short and kind, not jokes.
 
+## Delivery: always a set of 4, ready to schedule (owner, 22 Oct 2026: "send 4 video always in set to schedule")
+Send finished videos in sets of four, each file named with its calendar slot (NN_MonDD_TIME_episode.mp4, from
+channels/lowpoly/calendar.md) plus one combined upload sheet for the four. Add new episodes to the calendar first.
+
 ## Posting schedule (owner, 18 Oct 2026)
 First "2 videos a day same as ItsInterestinglyStrange", then the same day: "Will go for usa timing first".
 **2 videos a day for US viewers: 12:00 PM and 7:00 PM US Eastern = 9:30 PM and 4:30 AM IST** (while the US is on
