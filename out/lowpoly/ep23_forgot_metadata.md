@@ -34,4 +34,4 @@ ai memory, codex, ai forgot me, imposter syndrome, developer life, programmer li
 Would you want your AI to remember everything about you? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 48.6 s, 86 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 48.6 s, 88 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
