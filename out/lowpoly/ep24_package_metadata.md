@@ -35,4 +35,4 @@ ai hallucination, slopsquatting, npm install, codex, programmer humor, coding me
 Your AI suggests a package. Do you check it exists, or just install it? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 40.2 s, 61 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 40.2 s, 62 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
