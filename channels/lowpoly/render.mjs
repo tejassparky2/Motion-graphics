@@ -42,7 +42,9 @@ await page.waitForFunction(() => window.READY === true, null, {timeout: 60000});
 const dur = await page.evaluate(() => window.DURATION);
 const list = times ? times.split(",").map(Number) : Array.from({length: Math.round(dur * fps)}, (_, i) => i / fps);
 const t0 = Date.now();
+const resume = !times && process.env.RESUME === "1";     // container restarts: keep frames already on disk
 for (let i = 0; i < list.length; i++) {
+  if (resume && fs.existsSync(path.join(out, `f${String(i).padStart(5, "0")}.png`))) continue;
   const data = await page.evaluate(t => { window.renderAt(t); return document.querySelector("canvas").toDataURL("image/png"); }, list[i]);
   const name = times ? `t${list[i].toFixed(2)}.png` : `f${String(i).padStart(5, "0")}.png`;
   fs.writeFileSync(path.join(out, name), Buffer.from(data.split(",")[1], "base64"));
