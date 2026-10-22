@@ -34,4 +34,4 @@ ai lawyer, fake cases, chatgpt lawyer, ai hallucination, claude, parking ticket,
 Would you trust an AI as your lawyer? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 50.7 s, 94 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 51.1 s, 94 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
