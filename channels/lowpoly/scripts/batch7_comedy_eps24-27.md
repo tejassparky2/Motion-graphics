@@ -45,10 +45,10 @@ Game: Claude's case law gets more absurd; the judge gets more tired. Running gag
 10 Judge: Young man. None of these cases exist.
 11 (beat)
 12 Claude: You're absolutely right!               (the rationed catchphrase; last used ep 11)
-13 Dev: Claude!
+13 Dev: Seriously, Claude?  (was "Claude!"; Whisper heard "Claw")
 14 Judge: In twenty twenty-three, real lawyers were fined five thousand dollars for this.
 15 Dev: My ticket is forty dollars.
-16 Judge: Then the ticket stands. Forty dollars.
+16 Judge: The ticket stands. Forty dollars.  (was "Then the ticket stands"; heard "and the ticket")
 17 Claude: I found a case where that ruling was overturned.
 18 Judge: Fifty dollars.                          [cut]
 Pinned: "Would you trust an AI as your lawyer? 👇"

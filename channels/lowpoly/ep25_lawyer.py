@@ -41,10 +41,10 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("k10", "ots", JG, "Young man. None of these cases exist.", 1.0, .95),
     ("k11", "devclose", DEV, "", .2, 1),
     ("k12", "soloclose", CL, "You're absolutely right!", .2, 1),
-    ("k13", "devclose", DEV, "Claude!", .5, 1),
+    ("k13", "devclose", DEV, "Seriously, Claude?", .5, 1),
     ("k14", "ots", JG, "In twenty twenty-three, real lawyers were fined five thousand dollars for this.", .8, .95),
     ("k15", "devclose", DEV, "My ticket is forty dollars.", .8, 1),
-    ("k16", "ots", JG, "Then the ticket stands. Forty dollars.", .7, 1),
+    ("k16", "ots", JG, "The ticket stands. Forty dollars.", .7, 1),
     ("k17", "soloclose", CL, "I found a case where that ruling was overturned.", .7, 1),
     ("k18", "ots", JG, "Fifty dollars.", .7, 1),
 ]
