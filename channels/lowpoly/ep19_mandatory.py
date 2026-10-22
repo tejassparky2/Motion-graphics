@@ -35,7 +35,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("d2", "devclose", DEV, "I'm the last one who still writes code by hand.", .9, 1),
     ("d3", "cx", CX, "Hi! I've been assigned to you! [laugh]", .6, 1),
     ("d4", "devmid", DEV, "[sigh] I didn't ask for you.", .8, 1),
-    ("d5", "cx", CX, "Your boss did.", .6, 1),
+    ("d5", "cx", CX, "Your manager did.", .6, 1),   # "Your boss did." was heard as "You're busted!"
     ("d6", "devmid", DEV, "Sit there. Don't touch anything.", .8, 1),
     ("d7", "two", DEV, "", .2, 1),
     ("d8", "cxclose", CX, "Can I lint?", .2, 1),
@@ -55,7 +55,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("d22", "devmid", DEV, "", .2, 1),
     ("d23", "cxclose", CX, "Ask me something.", .2, 1),
     ("d24", "devmid", DEV, "What?", .6, 1),
-    ("d25", "cxclose", CX, "Anything. So you keep your job.", .7, .95),
+    ("d25", "cxclose", CX, "Anything. That way you keep your job.", .7, .95),   # "So you" was heard as "Say you"
     ("d26", "two", DEV, "", .2, 1),
     ("d27", "cx", CX, "Honestly?", .2, 1),
     ("d28", "cxclose", CX, "It's the first code I've read all week that I didn't write.", .6, .95),
@@ -78,6 +78,10 @@ for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     if not text:
         d["hold"] = HOLDS[bid]
     SCRIPT.append(d)
+GAP_FIX = {"d6": 0.782, "d26": 0.003}     # beat id -> exact gap, to keep later beats where the rendered frames have them after a retake
+for d in SCRIPT:
+    if d["id"] in GAP_FIX:
+        d["gap"] = GAP_FIX[d["id"]]
 
 METADATA = dict(
     title="My Boss Made AI Mandatory",
