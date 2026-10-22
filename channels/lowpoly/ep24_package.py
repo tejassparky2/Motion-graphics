@@ -27,7 +27,7 @@ skit_voice(voice)
 DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("p1", "cx", CX, "Just install fix-everything.", 0, 1),
-    ("p2", "devmid", DEV, "What's fix-everything?", .7, 1),
+    ("p2", "devmid", DEV, "Fix-everything? What is that?", .7, 1),   # "What's fix-everything?" was heard as "Let's fix everything."
     ("p3", "cx", CX, "Very popular. Two million downloads a week.", .5, 1),
     ("p4", "devclose", DEV, "It doesn't exist.", .9, 1),
     ("p5", "cxclose", CX, "Try fix-everything-pro.", .4, 1),
