@@ -158,6 +158,8 @@ next batches that way (keep varying which AI, the set and the topic).
   laugh last, cut ~0.5 s after.
 - **Faces:** BIGEYES + ROUND + HEAD 1.12 (big glossy eyes, rounded heads, like reference 8); EMO entries can carry
   `wet` (glistening eyes) and `tear` (a tear rolls) for the peak; blinks on every new line; breathing in holds.
+- **Never cover a face with a card** (eps 18, 20, 21 had to be re-mixed): story cards sit at the bottom edge
+  (toolcard y ~1085), and big screen cards show only on the shots that look at the screen, never on a close-up.
 - **Music:** MUSIC = "score" with SCORE cues (light / tender / out / swell / end): the piano motif comes early, drops
   out before the key line, swells on the payoff (motion/audio.py `score`).
 - **Grounded:** every premise comes from a real, sourced moment (developer_emotions.md); stories are fiction, and the
