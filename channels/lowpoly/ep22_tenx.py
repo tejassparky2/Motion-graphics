@@ -83,17 +83,17 @@ def draw(cr, t, tl):
     th.grain(cr, t, 0.05)
     A, B = tl.at, tl.by_id
     toolcard(cr, t, 0.0, B["g3"].end + 0.3, "Manager  ·  #team",
-             [("", "With AI, I expect 10x output", "", YEL), ("", "from everyone this quarter.", "", GREY)], y=930)
+             [("", "With AI, I expect 10x output", "", YEL), ("", "from everyone this quarter.", "", GREY)], y=1085)
     g6 = B["g6"]
     rows = [("1", "login page", "done", GREEN), ("2", "search", "broken by #4", RED), ("4", "cart", "done", GREEN),
             ("7", "checkout", "undid #4", RED), ("9", "emails", "running...", YEL)]
     shown = rows[:max(1, min(len(rows), int((t - g6.start) * 3.5) + 1))]
-    toolcard(cr, t, g6.start, B["g9"].end + 0.3, "Claude  ·  10 tickets at once", shown, y=930)
+    toolcard(cr, t, g6.start, B["g9"].end + 0.3, "Claude  ·  10 tickets at once", shown, y=1085)
     toolcard(cr, t, B["g13"].start, B["g14"].end + 0.8, "METR study, July 2025",
-             [("", "felt: 20% faster", "", GREEN), ("", "measured: 19% slower", "", RED)], y=930)
+             [("", "felt: 20% faster", "", GREEN), ("", "measured: 19% slower", "", RED)], y=1085)
     g23 = B["g23"]
     toolcard(cr, t, g23.start, tl.total + 1, "Manager  ·  #team",
-             [("", "Fine. 1x, done well.", "", GREY), ("", "Can Claude do 10x then?", "", YEL)], y=930)
+             [("", "Fine. 1x, done well.", "", GREY), ("", "Can Claude do 10x then?", "", YEL)], y=1085)
     cue("ding", t, 0.05)
     cue("typing", t, g6.start, 1.4)
     cue("hush", t, B["g15"].start - 0.1, B["g15"].end - B["g15"].start + 0.2)

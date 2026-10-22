@@ -84,13 +84,13 @@ def draw(cr, t, tl):
     th.grain(cr, t, 0.05)
     A, B = tl.at, tl.by_id
     toolcard(cr, t, B["h5"].start, B["h10"].end + 0.4, "Codex  ·  Memory",
-             [("", "0 items", "", GREY), ("", "(memory was reset)", "", GREY)], y=930)
+             [("", "0 items", "", GREY), ("", "(memory was reset)", "", GREY)], y=1085)
     rows = [("1", "Dev is a good developer.", "", GREEN)]
     if t >= B["h23"].start:
         rows.append(("2", "Codex likes Dev.", "", BLUE))
     if t >= B["h24"].start:
         rows.append(("", "(unverified)", "", YEL))
-    toolcard(cr, t, B["h19"].start, tl.total + 1, "Codex  ·  Memory", rows, y=930)
+    toolcard(cr, t, B["h19"].start, tl.total + 1, "Codex  ·  Memory", rows, y=1085)
     cue("pop", t, B["h19"].start + 0.1)
     cue("pop", t, B["h23"].start + 0.1)
     cue("hush", t, B["h15"].start - 0.1, B["h15"].end - B["h15"].start + 0.2)

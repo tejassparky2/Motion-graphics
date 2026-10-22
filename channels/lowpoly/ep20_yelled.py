@@ -85,14 +85,14 @@ def draw(cr, t, tl):
     th.grain(cr, t, 0.05)
     A, B = tl.at, tl.by_id
     toolcard(cr, t, 0.0, B["e3"].end + 0.4, "terminal",
-             [("$", "npm test", "", GREY), ("x", "checkout.test.js  FAILED", "", RED), ("", "attempt 23", "", GREY)], y=930)
+             [("$", "npm test", "", GREY), ("x", "checkout.test.js  FAILED", "", RED), ("", "attempt 23", "", GREY)], y=1085)
     stat_card(cr, t, 150, 112, "TIME", "3:07 AM", GREY, 0, appear(t, A("e1", end=True) + 0.3, 0.4), w=210)
     toolcard(cr, t, B["e8"].start + 0.3, B["e9"].end + 0.3, "Claude",
-             [("", "End conversation?", "", GREY), ("", "(for rare, abusive chats only)", "", GREY)], y=930)
+             [("", "End conversation?", "", GREY), ("", "(for rare, abusive chats only)", "", GREY)], y=1085)
     toolcard(cr, t, B["e16"].start, B["e17"].end + 0.4, "checkout.js",
-             [("213", "const qty = cart.qty", "", GREY), ("214", "total = price * qty", "<- ;", YEL)], y=930)
+             [("213", "const qty = cart.qty", "", GREY), ("214", "total = price * qty", "<- ;", YEL)], y=1085)
     toolcard(cr, t, B["e23"].start, tl.total + 1, "terminal",
-             [("$", "npm test", "", GREY), ("ok", "All tests passed", "", GREEN)], y=930)
+             [("$", "npm test", "", GREY), ("ok", "All tests passed", "", GREEN)], y=1085)
     cue("rain", t, 0.0, tl.total)
     cue("typing", t, 0.0, 1.2)
     cue("hush", t, B["e10"].start - 0.1, B["e10"].end - B["e10"].start + 0.2)
