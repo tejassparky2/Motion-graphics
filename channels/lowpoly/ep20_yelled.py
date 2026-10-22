@@ -49,7 +49,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("e20", "devclose", DEV, "Sorry.", .2, .88),
     ("e21", "soloclose", CL, "I know. Go eat something.", .9, .95),
     ("e22", "devmid", DEV, "Can you fix it while I eat?", .9, 1),
-    ("e23", "solo", CL, "Already did.", .6, 1),
+    ("e23", "solo", CL, "Fixed it already.", .6, 1),   # "Already did." was heard as "Already dead."
     ("e24", "devclose", DEV, "Thanks, Claude.", .9, .92),
     ("e25", "solo", CL, "Also. I'm not useless.", .7, 1),
     ("e26", "devmid", DEV, "You're not useless. [chuckle]", .5, 1),
