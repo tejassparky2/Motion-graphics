@@ -51,7 +51,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("b17", "devclose", DEV, "Her recipes. In big letters. She can't read small text anymore.", .9, .92),
     ("b18", "devmid", DEV, "She was going to try it tomorrow.", .9, .9),
     ("b19", "codexclose", DEV, "", .2, 1),
-    ("b20", "codexclose", CX, "[sigh] I'm sorry.", .2, .9),
+    ("b20", "codexclose", CX, "I'm sorry.", .2, .9),   # Codex's voice read "[sigh]" as the word "Sigh": a sound effect instead
     ("b21", "devclose", DEV, "I know.", 1.0, .9),
     ("b22", "claudeclose", CL, "Do you remember how it worked?", 1.2, 1),
     ("b23", "devclose", DEV, "Every line.", .9, .95),
@@ -78,6 +78,10 @@ for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     if not text:
         d["hold"] = HOLDS[bid]
     SCRIPT.append(d)
+GAP_FIX = {}     # beat id -> exact gap, to keep later beats where the rendered frames have them after a retake
+for d in SCRIPT:
+    if d["id"] in GAP_FIX:
+        d["gap"] = GAP_FIX[d["id"]]
 
 METADATA = dict(
     title="My AI Deleted 8 Months of My Work",
@@ -127,6 +131,7 @@ def draw(cr, t, tl):
     cue("hush", t, B["b7"].start - 0.1, B["b7"].end - B["b7"].start + 0.2)
     cue("rain", t, 0.0, tl.total)
     cue("sigh", t, B["b12"].start - 0.8)
+    cue("sigh", t, B["b20"].start - 0.05)
     cue("typing", t, b26.start + 0.3, 2.0)
     th.hook(cr, t, [("MY AI DELETED", False), ("8 MONTHS OF MY WORK", True)], end=A("b1", end=True) + 0.6, y=175, size=78)
     pill_caption(cr, t, tl)

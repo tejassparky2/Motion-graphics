@@ -26,7 +26,7 @@ export const DIR = {
   b2:  D3(["flat", "type"], W, ["eager", "nod"]),
   b3:  D3(["flat", "rest"], ["suspicious", "idle"], ["proud", "idle"]),
   b4:  D3(["flat", "rest"], ["shocked", "idle"], ["proud", "idle"]),
-  b5:  D3(["squint", "leanin"], ["shocked", "idle"], ["watch", "idle"]),
+  b5:  D3(["squint", "rest"], ["shocked", "idle"], ["watch", "idle"]),
   b6:  D3(["stunned", "rest"], ["sad", "idle"], ["watch", "idle"]),
   b7:  D3(["blank", "rest"], ["sad", "idle"], ["horrified", "idle"], {punch: .07}),
   b8:  D3(["blank", "rest"], ["sad", "idle"], ["horrified", "idle"]),
