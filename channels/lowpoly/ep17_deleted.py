@@ -78,7 +78,7 @@ for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     if not text:
         d["hold"] = HOLDS[bid]
     SCRIPT.append(d)
-GAP_FIX = {}     # beat id -> exact gap, to keep later beats where the rendered frames have them after a retake
+GAP_FIX = {"b21": 1.696}     # beat id -> exact gap, to keep later beats where the rendered frames have them after a retake
 for d in SCRIPT:
     if d["id"] in GAP_FIX:
         d["gap"] = GAP_FIX[d["id"]]
