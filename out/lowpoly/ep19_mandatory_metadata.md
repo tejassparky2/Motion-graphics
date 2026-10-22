@@ -35,4 +35,4 @@ ai mandatory at work, codex, ai coding, software engineer, coding by hand, devel
 Should companies force developers to use AI? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 68.6 s, 127 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 68.4 s, 127 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
