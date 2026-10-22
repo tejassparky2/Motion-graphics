@@ -44,7 +44,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("h14", "devclose", DEV, "Never.", .8, .9),
     ("h15", "devclose", DEV, "", .2, 1),
     ("h16", "devclose", DEV, "Okay. Fresh start.", .2, .95),
-    ("h17", "devclose", DEV, "Hi. I'm Dev.", .7, .92),
+    ("h17", "devclose", DEV, "Hi. My name is Dev.", .7, .92),   # "Hi. I'm Dev." was heard as "I'm Deb."
     ("h18", "devclose", DEV, "I'm a good developer.", 1.0, .88),
     ("h19", "cxclose", CX, "Saving that.", .8, .95),
     ("h20", "endside", DEV, "", .2, 1),
@@ -54,7 +54,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("h24", "cxclose", CX, "Unverified.", .5, 1),
 ]
 HOLDS = {"h11": 1.3, "h15": 1.6, "h20": 2.0}
-GAP_FIX = {}
+GAP_FIX = {"h18": 0.779}   # keeps h18 on onward where the rendered frames have them after the h17 retake
 SCRIPT = build_script(_lines, HOLDS, gap_fix=GAP_FIX)
 
 METADATA = dict(
