@@ -176,7 +176,11 @@ def sfx(name, dur):
 
 
 def _lowpass(x, k):
-    return np.convolve(x, np.ones(k) / k, mode="same")
+    """Moving average over k samples (same length, zero-padded), via a running sum: O(n) whatever k is."""
+    x = np.asarray(x, dtype=float)
+    xp = np.pad(x, (k // 2, k - 1 - k // 2))
+    c = np.concatenate(([0.0], np.cumsum(xp)))
+    return (c[k:] - c[:-k]) / k
 
 
 def _thud(n_sec, f0, f1, decay, noise=0.3):
