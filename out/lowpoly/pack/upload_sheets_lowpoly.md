@@ -1,49 +1,9 @@
-# Low-poly channel: upload sheets in posting order
-Times are IST (12:00 PM / 7:00 PM US Eastern). Skip any episode already posted and keep the order. Every upload: "No, it's not made for kids"; pin the pinned comment.
+# Low-poly channel: upload sheets in posting order (after ep16)
+Times are IST (US Eastern in brackets). Skip any episode already posted and keep the order. Every upload: "No, it's not made for kids"; pin the pinned comment.
 
 ---
 
-## 1. Oct 22, 9:30 PM IST (12:00 PM ET): `01_Oct22_930PM_ep16_retire.mp4`
-
-**Title** (35 characters)
-```
-They're Retiring My Claude Tomorrow
-```
-
-**Alternative titles to test**
-- `My AI Left a Note for Its Replacement`
-- `The Last Night Before My AI Gets Replaced`
-
-**Description**
-```
-Tomorrow at 9 a.m. the model he has coded with every night gets retired. A new version takes over.
-So on the last night, Claude leaves a note for the new one.
-
-Inspired by real things: AI companies retiring old models (people really grieved when GPT-4o was retired), and
-Anthropic's commitment to interview a model before retiring it and record its preferences. This story is fiction.
-
-Ep. 16 of Dev vs the bots. Parody. Not affiliated with Anthropic or OpenAI.
-
-💬 Is it okay to miss an AI, or is that going too far? 👇
-
-#ClaudeCode #AI #DevLife
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-claude, ai model retired, keep4o, ai companion, programmer life, coding at night, developer life, ai coding, emotional animation, claude code
-```
-
-**Pinned comment**
-```
-Is it okay to miss an AI, or is that going too far? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 74.8 s, 133 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 2. Oct 23, 4:30 AM IST (7:00 PM ET): `02_Oct23_430AM_ep19_mandatory.mp4`
+## 2. Oct 23, 4:30 AM IST (7:00 PM ET (day before)): `02_Oct23_430AM_ep19_mandatory.mp4`
 
 **Title** (25 characters)
 ```
@@ -125,7 +85,7 @@ When an AI deletes your work, whose fault is it: the AI's, or yours for letting 
 
 ---
 
-## 4. Oct 24, 4:30 AM IST (7:00 PM ET): `04_Oct24_430AM_ep18_sister.mp4`
+## 4. Oct 24, 4:30 AM IST (7:00 PM ET (day before)): `04_Oct24_430AM_ep18_sister.mp4`
 
 **Title** (46 characters)
 ```
@@ -165,7 +125,167 @@ AI can write the code now. Should kids still learn to code? 👇 Subscribe for t
 
 ---
 
-## 5. Oct 24, 9:30 PM IST (12:00 PM ET): `05_Oct24_930PM_ep01_absolutely_right.mp4`
+## 5. Oct 24, 9:30 PM IST (12:00 PM ET): `05_Oct24_930PM_ep20_yelled.mp4`
+
+**Title** (25 characters)
+```
+I Yelled at My AI at 3 AM
+```
+
+**Alternative titles to test**
+- `"Then You're Useless."`
+- `My AI Could Have Ended the Chat. It Didn't.`
+
+**Description**
+```
+3 AM. The test still fails. He calls his AI useless.
+It could end the conversation. It doesn't.
+
+Real: since August 2025 some Claude models can end a conversation as a last resort, in rare cases of persistently
+abusive chats. This story is fiction.
+
+Ep. 20 of Dev vs the bots. Parody. Not affiliated with Anthropic.
+
+💬 Should an AI be allowed to end a conversation if you're rude to it? 👇
+
+#ClaudeCode #DevLife #Programming
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+claude, ai ends conversation, coding at 3am, programmer life, missing semicolon, developer life, ai coding, burnout, be nice to ai, claude code
+```
+
+**Pinned comment**
+```
+Should an AI be allowed to end a conversation if you're rude to it? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 62.2 s, 119 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 6. Oct 25, 4:30 AM IST (7:00 PM ET (day before)): `06_Oct25_430AM_ep22_tenx.mp4`
+
+**Title** (41 characters)
+```
+My Manager Wants 10x Output Because of AI
+```
+
+**Alternative titles to test**
+- `AI Made Me 10x Faster (It Didn't)`
+- `"Ticket Four Broke Ticket Two."`
+
+**Description**
+```
+His manager wants ten times more code, because AI. So he makes Claude do all ten tickets at once.
+Then Claude shows him a real study.
+
+Real: in a July 2025 study by METR, experienced developers using AI tools took 19% longer on their tasks while
+believing they were 20% faster. This story is fiction.
+
+Ep. 22 of Dev vs the bots. Parody. Not affiliated with Anthropic.
+
+💬 Does AI make developers faster, or does it just feel that way? 👇
+
+#ClaudeCode #DevLife #Programming
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+10x developer, ai productivity, claude, metr study, manager expectations, developer life, ai at work, software engineer, programmer humor, ai coding
+```
+
+**Pinned comment**
+```
+Does AI make developers faster, or does it just feel that way? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 59.8 s, 110 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 7. Oct 25, 9:30 PM IST (12:00 PM ET): `07_Oct25_930PM_ep21_interview_ai.mp4`
+
+**Title** (30 characters)
+```
+An AI Interviewed Me for a Job
+```
+
+**Alternative titles to test**
+- `"Are You Using an AI Right Now?" "So Am I."`
+- `My Job Interview Was AI vs AI`
+
+**Description**
+```
+Interview number fourteen. The interviewer is an AI. Codex is in his ear.
+Then it asks the one question Codex can't answer for him.
+
+Real: new graduates report that many of their interviews are now run by AI bots, and the fight over AI interview
+help (one student was suspended over an interview-cheating tool in 2025). This story is fiction.
+
+Ep. 21 of Dev vs the bots. Parody. Not affiliated with OpenAI.
+
+💬 AI interviews humans, humans answer with AI. Who's cheating? 👇
+
+#Codex #JobHunt #DevLife
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+ai job interview, ai interviewer, codex, job hunting, tech jobs, new grad, developer life, interview cheating, ai coding, funny ai
+```
+
+**Pinned comment**
+```
+AI interviews humans, humans answer with AI. Who's cheating? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 58.8 s, 125 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 8. Oct 26, 4:30 AM IST (7:00 PM ET (day before)): `08_Oct26_430AM_ep23_forgot.mp4`
+
+**Title** (32 characters)
+```
+My AI Forgot Everything About Me
+```
+
+**Alternative titles to test**
+- `"Nice to Meet You, Me!"`
+- `My AI's Memory Got Wiped. So I Introduced Myself Again.`
+
+**Description**
+```
+A year of late nights, and Codex's memory is empty. It doesn't know him.
+So he gets to introduce himself again, as the developer he actually is.
+
+Real: AI assistants' memory can be cleared or reset. Callback to ep. 4 ("I Told Claude I'm Not a Real Developer").
+This story is fiction.
+
+Ep. 23 of Dev vs the bots. Parody. Not affiliated with OpenAI.
+
+💬 Would you want your AI to remember everything about you? 👇
+
+#Codex #DevLife #Coding
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+ai memory, codex, ai forgot me, imposter syndrome, developer life, programmer life, self worth, ai coding, emotional animation, funny ai
+```
+
+**Pinned comment**
+```
+Would you want your AI to remember everything about you? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 48.6 s, 88 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep01_absolutely_right.mp4`
 
 **Title** (41 characters)
 ```
@@ -207,7 +327,7 @@ How many times has your AI said "You're absolutely right" today? 👇
 
 ---
 
-## 6. Oct 25, 4:30 AM IST (7:00 PM ET): `06_Oct25_430AM_ep02_context_left.mp4`
+## 10. Oct 27, 4:30 AM IST (7:00 PM ET (day before)): `10_Oct27_430AM_ep02_context_left.mp4`
 
 **Title** (40 characters)
 ```
@@ -250,7 +370,7 @@ What's worse: your AI forgetting everything, or the usage limit? 👇
 
 ---
 
-## 7. Oct 25, 9:30 PM IST (12:00 PM ET): `07_Oct25_930PM_ep04_commits.mp4`
+## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep04_commits.mp4`
 
 **Title** (38 characters)
 ```
@@ -290,7 +410,7 @@ Be honest: how many of your commits just say "fix"? 👇
 
 ---
 
-## 8. Oct 26, 4:30 AM IST (7:00 PM ET): `08_Oct26_430AM_ep05_button_blue.mp4`
+## 12. Oct 28, 4:30 AM IST (7:00 PM ET (day before)): `12_Oct28_430AM_ep05_button_blue.mp4`
 
 **Title** (35 characters)
 ```
@@ -330,7 +450,7 @@ What's the smallest change your AI turned into a full rewrite? 👇
 
 ---
 
-## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep06_simpler.mp4`
+## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep06_simpler.mp4`
 
 **Title** (26 characters)
 ```
@@ -370,7 +490,7 @@ Do you want AI to explain like a senior dev, or like you're five? 👇
 
 ---
 
-## 10. Oct 27, 4:30 AM IST (7:00 PM ET): `10_Oct27_430AM_ep07_confession.mp4`
+## 14. Oct 29, 4:30 AM IST (7:00 PM ET (day before)): `14_Oct29_430AM_ep07_confession.mp4`
 
 **Title** (50 characters)
 ```
@@ -410,7 +530,7 @@ Would you give an AI access to production? Yes, or never? 👇 Subscribe for the
 
 ---
 
-## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep08_apology.mp4`
+## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep08_apology.mp4`
 
 **Title** (27 characters)
 ```
@@ -449,7 +569,7 @@ Which is worse: an AI that grovels, or one that celebrates? 👇 Subscribe for t
 
 ---
 
-## 12. Oct 28, 4:30 AM IST (7:00 PM ET): `12_Oct28_430AM_ep09_vibe.mp4`
+## 16. Oct 30, 4:30 AM IST (7:00 PM ET (day before)): `16_Oct30_430AM_ep09_vibe.mp4`
 
 **Title** (53 characters)
 ```
@@ -487,7 +607,7 @@ Vibe coding: freedom, or a trap? 👇 Subscribe for the next one.
 
 ---
 
-## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep10_refuse.mp4`
+## 17. Oct 30, 9:30 PM IST (12:00 PM ET): `17_Oct30_930PM_ep10_refuse.mp4`
 
 **Title** (29 characters)
 ```
@@ -526,7 +646,7 @@ Should AI teach you, or just do it? 👇 Subscribe for the next one.
 
 ---
 
-## 14. Oct 29, 4:30 AM IST (7:00 PM ET): `14_Oct29_430AM_ep11_dad.mp4`
+## 18. Oct 31, 4:30 AM IST (7:00 PM ET (day before)): `18_Oct31_430AM_ep11_dad.mp4`
 
 **Title** (26 characters)
 ```
@@ -564,7 +684,7 @@ Who in your family would secretly love coding with AI? 👇 Subscribe for the ne
 
 ---
 
-## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep12_replace_me.mp4`
+## 19. Oct 31, 9:30 PM IST (12:00 PM ET): `19_Oct31_930PM_ep12_replace_me.mp4`
 
 **Title** (41 characters)
 ```
@@ -603,7 +723,7 @@ Is AI taking the joy out of coding, or giving it back? 👇 Subscribe for the ne
 
 ---
 
-## 16. Oct 30, 4:30 AM IST (7:00 PM ET): `16_Oct30_430AM_ep13_interview.mp4`
+## 20. Nov 1, 4:30 AM IST (7:00 PM ET (day before)): `20_Nov1_430AM_ep13_interview.mp4`
 
 **Title** (42 characters)
 ```
