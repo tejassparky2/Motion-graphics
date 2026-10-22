@@ -144,6 +144,7 @@ one in warm episodes. Every premise must come from a verified, relatable moment 
 ## Connection rules (owner, 21 Oct 2026: eps 14-15 "very bad not connecting ... i just want best connecting relatable
 emotions feelable"; measured on the references + research_notes/Emotional AI dev skits that connect/)
 These replace the old "default 35-50 s" length rule and the reaction-cut-before-every-line habit.
+**Owner on batch 5 (eps 16-19, made with these rules), 22 Oct 2026: "This is better".** Keep this form as the default.
 - **Pace like the references:** ~90 words a minute overall (refs 84-97; eps 14-15 ran 132-143), 0.6-1.2 s between
   lines, 1.5-2.5 s silent holds on the feeling beats. 60-100 s is fine; length comes from air and story, never padding.
 - **Hold shots:** 3-7 s average (refs 3.6-7.5 s); no REACTION_CUTS on emotional episodes; hold on the listener's face.
