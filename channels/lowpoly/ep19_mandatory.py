@@ -65,7 +65,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("d32", "devmid", DEV, "Don't tell anyone I liked that. [chuckle]", .3, 1),
     ("d33", "cxclose", CX, "Don't tell anyone I liked your code.", .5, 1),
 ]
-HOLDS = {"d7": 1.6, "d15": 1.1, "d21": 1.4, "d22": 2.2, "d26": 1.8, "d31": 1.6}
+HOLDS = {"d7": 1.6, "d15": 1.1, "d21": 1.4, "d22": 2.2, "d26": 1.562, "d31": 1.6}
 SCRIPT = []
 for i, (bid, shot, who, text, gap, pace) in enumerate(_lines):
     d = dict(id=bid, scene=shot, text=text)
