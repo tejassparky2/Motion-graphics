@@ -111,3 +111,31 @@ def pill_caption(cr, t, tl, y=318, size=27):
             cr.show_text(line)
         cr.restore()
         return
+
+
+def build_script(lines, holds, gap=1.15, gap_fix=None):
+    """lines = [(id, shot, speaker or None, text, gap before, pace)] -> SCRIPT. Empty text = a silent hold (holds[id]
+    seconds). Gaps are scaled by `gap` (batch-5 rules: a little more air); gap_fix pins exact gaps after a retake."""
+    script = []
+    for i, (bid, shot, who, text, g, pace) in enumerate(lines):
+        d = dict(id=bid, scene=shot, text=text)
+        if who:
+            d["speaker"] = who
+        if i:
+            d["gap"] = (gap_fix or {}).get(bid, round(g * gap, 2))
+        if pace != 1:
+            d["pace"] = pace
+        if not text:
+            d["hold"] = holds[bid]
+        script.append(d)
+    return script
+
+
+def skit_voice(voice):
+    """Batch-5 voice settings for skits: Turbo's natural pace slowed a little, never sped up, and two clone-check tries
+    with a looser pace test (one-word lines can't pass a strict one; the full-line Whisper check after the render
+    still applies)."""
+    voice.CLONE_RATE = 4.0
+    voice.TEMPO_MIN = 0.88
+    check = voice.clone_check
+    voice.clone_check = lambda takes, tries=3, slack=0.15: check(takes, 2, max(slack, 0.45))
