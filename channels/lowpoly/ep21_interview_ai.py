@@ -85,7 +85,14 @@ def recruiter(cr, t, tl):
     start = B["f5"].start + 0.2
     if t < start:
         return
-    k = appear(t, start, 0.35)
+    # only on the shots that look at the screen, never over Dev's or Codex's face
+    beats = tl.beats
+    wins = [(b.start - 0.12, min(b.end + 0.3, beats[i + 1].start - 0.12) if i + 1 < len(beats) else tl.total)
+            for i, b in enumerate(beats) if b.scene == "ots" and b.start >= B["f5"].start]
+    win = next(((a, z) for a, z in wins if a <= t < z), None)
+    if not win:
+        return
+    k = min(appear(t, max(start, win[0]), 0.2), 1 - seg(t, win[1] - 0.15, win[1]))
     from motion.engine import W
     x0, y0, w, h = W / 2 - 230, 420, 460, 300
     cr.save()
