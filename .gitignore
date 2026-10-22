@@ -1,3 +1,4 @@
 build/
 __pycache__/
 .venv/
+out/lowpoly/pack/*.mp4
