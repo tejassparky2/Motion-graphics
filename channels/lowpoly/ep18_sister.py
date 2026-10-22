@@ -131,12 +131,14 @@ def cat(cr, x, y, s, rot=0.0, k=1.0):
 def code_screen(cr, t, tl):
     """The little program: a code line she types and the cat it moves (jump, jump(100), jump(10), flip)."""
     B = tl.by_id
-    start, end = B["c11"].end, B["c28"].end + 0.4
-    if not (start - 0.2 <= t < end):
+    # only while the cat is the scene (the jumps, then the flip montage), never over their faces at the heart of it
+    windows = [(B["c11"].end - 0.2, B["c19"].end + 0.4), (B["c28"].start - 0.1, B["c28"].end + 0.4)]
+    win = next(((a, b) for a, b in windows if a <= t < b), None)
+    if not win:
         return
-    k = appear(t, start - 0.2, 0.3) * (1 - seg(t, end - 0.3, end))
+    k = appear(t, win[0], 0.3) * (1 - seg(t, win[1] - 0.3, win[1]))
     from motion.engine import W
-    x0, y0, w, h = W / 2 - 300, 690, 600, 420
+    x0, y0, w, h = W / 2 - 250, 860, 500, 340
     cr.save()
     rrect(cr, x0, y0, w, h, 20)
     cr.set_source_rgba(0.98, 0.97, 0.93, 0.96 * k)
@@ -179,10 +181,10 @@ def draw(cr, t, tl):
         k = appear(t, 0.0, 0.2) * (1 - seg(t, B["c3"].end - 0.2, B["c3"].end))
         from motion.engine import W
         cr.save()
-        rrect(cr, W / 2 - 170, 760, 340, 300, 14)
+        rrect(cr, W / 2 - 150, 900, 300, 260, 14)
         cr.set_source_rgba(0.99, 0.98, 0.95, 0.96 * k)
         cr.fill()
-        cat(cr, W / 2, 905, 1.2, -0.08, k)
+        cat(cr, W / 2, 1035, 1.05, -0.08, k)
         cr.restore()
     code_screen(cr, t, tl)
     cue("typing", t, B["c12"].start + 0.2, 1.0)
