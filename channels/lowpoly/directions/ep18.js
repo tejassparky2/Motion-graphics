@@ -23,7 +23,7 @@ export const SHOTS = {...S,
   kid:     {pos: [-.05, 1.08, .05], look: [.58, 1.24, -.8], push: .05, fov: 44, track: "kid", aperture: .05},
   kidclose:{pos: [.14, 1.04, -.16], look: [.58, 1.26, -.8], push: .07, fov: 40, track: "kid", aperture: .06},
   two:     {pos: [-1.05, 1.45, -.05], look: [.3, 1.02, -.88], push: .05, fov: 50},
-  screen:  {pos: [.28, 1.32, -1.38], look: [0, .95, .1], push: .06, fov: 46},
+  screen:  {pos: [-.62, 1.4, -1.15], look: [.05, .95, .15], push: .05, fov: 44},   // from Dev's left, clear of his head
   highwide:{pos: [.5, 2.0, -1.75], look: [.15, .95, -.35], push: .06, fov: 52},
   solo:    {pos: [-.42, 1.0, -.72], look: [0, .9, -.05], push: .05, fov: 40, aperture: .05},
 };
