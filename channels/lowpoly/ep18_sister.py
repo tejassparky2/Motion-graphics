@@ -27,6 +27,8 @@ _frame = frames(FRAMES)
 voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=0.97, turbo_ref="af_heart"),
                        "kid": dict(voice="af_sky", speed=1.0, turbo_ref="af_sky+4")})
 
+_check = voice.clone_check   # one-word lines ("Stuff." "Mom!") never pass the per-take pace test, so keep the best of
+voice.clone_check = lambda takes, tries=3, slack=0.15: _check(takes, 1, slack)   # one try; the full-line check after the render still applies
 voice.CLONE_RATE = 4.0   # skits: Turbo's natural pace slowed a little, never sped up (refs ~165 wpm while speaking)
 voice.TEMPO_MIN = 0.88   # (Turbo speaks ~200 wpm; allow a slightly deeper stretch than the narrator's 0.94)
 GAP = 1.15               # and a little more air between lines (refs: 10-21 pauses over 0.6 s a minute)
