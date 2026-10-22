@@ -35,7 +35,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("g6", "ots", DEV, "", .2, 1),
     ("g7", "soloclose", CL, "Ticket four broke ticket two.", .2, 1),
     ("g8", "soloclose", CL, "Ticket seven undid ticket four.", .6, 1),
-    ("g9", "devclose", DEV, "[sigh] How is this ten times faster?", .8, 1),
+    ("g9", "devclose", DEV, "How is this ten times faster?", .8, 1),   # the [sigh] tag made no sound: a sound effect
     ("g10", "solo", CL, "Can I show you something?", 1.0, .95),
     ("g11", "devclose", DEV, "What?", .7, 1),
     ("g12", "soloclose", CL, "A study last year. Experienced developers, using AI.", .8, .95),
@@ -95,6 +95,7 @@ def draw(cr, t, tl):
     toolcard(cr, t, g23.start, tl.total + 1, "Manager  ·  #team",
              [("", "Fine. 1x, done well.", "", GREY), ("", "Can Claude do 10x then?", "", YEL)], y=1085)
     cue("ding", t, 0.05)
+    cue("sigh", t, B["g9"].start - 0.8)
     cue("typing", t, g6.start, 1.4)
     cue("hush", t, B["g15"].start - 0.1, B["g15"].end - B["g15"].start + 0.2)
     cue("typing", t, B["g21"].start + 0.2, 1.0)
