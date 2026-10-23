@@ -85,7 +85,7 @@ def _build(start):
         cr.set_source_rgba(1, 1, 1, 0.1)
         cr.fill()
         rrect(cr, x + 30, y + 260, max(12, (w - 60) * u), 34, 12)
-        cr.set_source_rgb(*ORANGE)
+        cr.set_source_rgb(*ORANGE[:3])
         cr.fill()
         mono(cr, f"{int(u * 100)}%", x + 30, y + 345, 30, WHITE, k)
         if u >= 0.97:

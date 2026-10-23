@@ -112,7 +112,7 @@ def _scan(rise):
             cr.set_source_rgba(1, 1, 1, 0.1)
             cr.fill()
             rrect(cr, x + 30, yy + 22, max(10, (w - 60) * f * seg(t, at, at + 0.4)), 26, 10)
-            cr.set_source_rgb(*RED)
+            cr.set_source_rgb(*RED[:3])
             cr.fill()
     return paint
 

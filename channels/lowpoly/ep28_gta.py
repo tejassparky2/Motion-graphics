@@ -115,10 +115,10 @@ def _game(police=False, hud=None, fast=1.0):
             _cube(cr, px, py, 46, (0.45, 0.6, 1.0), (0.2, 0.32, 0.75), (0.3, 0.45, 0.9))
             on = int(t * 6) % 2
             cr.rectangle(px - 14, py - 62, 12, 9)
-            cr.set_source_rgb(*(RED if on else (0.4, 0.1, 0.1)))
+            cr.set_source_rgb(*(RED[:3] if on else (0.4, 0.1, 0.1)))
             cr.fill()
             cr.rectangle(px + 2, py - 62, 12, 9)
-            cr.set_source_rgb(*((0.1, 0.1, 0.4) if on else BLUE))
+            cr.set_source_rgb(*((0.1, 0.1, 0.4) if on else BLUE[:3]))
             cr.fill()
         _cube(cr, bx, by, 58, (0.78, 0.78, 0.8), (0.5, 0.5, 0.54), (0.64, 0.64, 0.68))
         if police:
