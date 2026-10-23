@@ -7,7 +7,7 @@ Claude, Your Little Brother Is 90% Cheaper
 
 **Alternative titles to test**
 - `Should I Switch to Haiku?`
-- `"Your Prompts Aren't Short."`
+- `"You Pasted the Whole Repo. Twice."`
 
 **Description**
 ```
