@@ -29,6 +29,10 @@ Every upload: "No, it's not made for kids"; pin the pinned comment from its uplo
 | 18 | Sat Oct 31 | 4:30 AM | 7:00 PM ET (day before) | ep11_dad | My Dad Found My AI at 3 AM |
 | 19 | Sat Oct 31 | 9:30 PM | 12:00 PM ET | ep12_replace_me | I Asked My AI If It's Going to Replace Me |
 | 20 | Sun Nov 1 | 4:30 AM | 7:00 PM ET (day before) | ep13_interview | I Interviewed Claude and Codex for One Job |
+| 21 | Sun Nov 1 | 10:30 PM | 12:00 PM ET | ep28_gta | I Asked Claude to Make GTA 5 |
+| 22 | Mon Nov 2 | 5:30 AM | 7:00 PM ET (day before) | ep29_flycar | I Asked Codex to Make My Car Fly |
+| 23 | Mon Nov 2 | 10:30 PM | 12:00 PM ET | ep30_jarvis | I Made Claude My JARVIS |
+| 24 | Tue Nov 3 | 5:30 AM | 7:00 PM ET (day before) | ep31_timemachine | I Asked Codex for a Time Machine |
 
 Eps 24-27 (comedy batch 7) are shelved, not posted (owner, 23 Oct 2026: "I didn't liked all 4 comedy reels").
 From Nov 1 US clocks fall back, so the same US slots are 10:30 PM and 5:30 AM IST.
