@@ -33,7 +33,7 @@ Real: GTA V was made by a team Rockstar put at about 1,000 people (Leslie Benzie
 | 7 | Claude | That's the city. | |
 | 8 | Dev | Where are the cars? | |
 | 9 | Claude | In the box. | |
-| 10 | Dev | Add police. | |
+| 10 | Dev | Give me police. (was "Add police.", heard "at police") | |
 | 11 | Claude | Done. | Insert: a blue box chases the grey box, "WANTED ★" |
 | 12 | Dev | Why is the police a box? | |
 | 13 | Claude | Your laptop. | |

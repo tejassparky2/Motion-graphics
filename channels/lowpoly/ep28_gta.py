@@ -38,7 +38,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("g7", "soloclose", CL, "That's the city.", .5, 1),
     ("g8", "devclose", DEV, "Where are the cars?", .6, 1),
     ("g9", "soloclose", CL, "In the box.", .5, 1),
-    ("g10", "devmid", DEV, "Add police.", .8, 1),
+    ("g10", "devmid", DEV, "Give me police.", .8, 1),
     ("g11", "solo", CL, "Done.", .5, 1),
     ("g12", "ots", DEV, "Why is the police a box?", 1.0, 1),
     ("g13", "soloclose", CL, "Your laptop.", .5, 1),
