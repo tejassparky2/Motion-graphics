@@ -214,3 +214,49 @@ def screen_insert(cr, t, start, end, title, clock, paint, y=800, h=640):
     cr.clip()
     paint(cr, x0 + 2, y0 + 56, w - 4, h - 58, t, k)
     cr.restore()
+
+
+def build_caption(cr, t, tl, y=330, size=30):
+    """@agentmorphy's captions (owner, 23 Oct 2026): small plain white type that builds up word by word as the line
+    is spoken. The line is laid out in full first, so words never jump when the next one appears."""
+    from motion.engine import W
+    for i, b in enumerate(tl.beats):
+        nxt = tl.beats[i + 1].start if i + 1 < len(tl.beats) else tl.total
+        end = min(b.end + 0.45, nxt - 0.05)
+        if not (b.start - 0.05 <= t < end) or not b.units:
+            continue
+        k = 1 - seg(t, end - 0.1, end)
+        cr.save()
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(size)
+        words = []                                   # (word, time it appears)
+        for u in b.units:
+            for w in u.shown.split():
+                words.append((w, u.start))
+        lines, cur = [], []
+        for w in words:
+            if cur and len(" ".join(x for x, _ in cur)) + 1 + len(w[0]) > 28:
+                lines.append(cur)
+                cur = [w]
+            else:
+                cur.append(w)
+        lines.append(cur)
+        space = cr.text_extents(" a").x_advance - cr.text_extents("a").x_advance
+        for j, line in enumerate(lines):
+            full = " ".join(x for x, _ in line)
+            x = W / 2 - cr.text_extents(full).x_advance / 2
+            yy = y + j * size * 1.3
+            for w, at in line:
+                kw = k * appear(t, at - 0.04, 0.08)
+                adv = cr.text_extents(w).x_advance
+                if kw > 0:
+                    for dx, dy, a in ((0, 3, 0.55), (2, 2, 0.35), (-2, 2, 0.35)):
+                        cr.move_to(x + dx, yy + dy)
+                        cr.set_source_rgba(0, 0, 0, a * kw)
+                        cr.show_text(w)
+                    cr.move_to(x, yy)
+                    cr.set_source_rgba(1, 1, 1, kw)
+                    cr.show_text(w)
+                x += adv + space
+        cr.restore()
+        return
