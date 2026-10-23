@@ -131,12 +131,12 @@ def build_script(lines, holds, gap=1.15, gap_fix=None):
     return script
 
 
-def skit_voice(voice):
+def skit_voice(voice, rate=4.0, tempo_min=0.88):
     """Batch-5 voice settings for skits: Turbo's natural pace slowed a little, never sped up, and two clone-check tries
     with a looser pace test (one-word lines can't pass a strict one; the full-line Whisper check after the render
-    still applies)."""
-    voice.CLONE_RATE = 4.0
-    voice.TEMPO_MIN = 0.88
+    still applies). Batch 8 passes rate=3.4, tempo_min=0.8: reference 10 talks at ~140 wpm, our takes ran ~190."""
+    voice.CLONE_RATE = rate
+    voice.TEMPO_MIN = tempo_min
     check = voice.clone_check
     voice.clone_check = lambda takes, tries=3, slack=0.15: check(takes, 2, max(slack, 0.45))
 

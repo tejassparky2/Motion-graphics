@@ -22,7 +22,7 @@ TAIL = 0.7
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build", "lowpoly", "ep30_frames")
 _frame = frames(FRAMES)
 voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=0.97, turbo_ref="af_heart")})
-skit_voice(voice)
+skit_voice(voice, rate=3.4, tempo_min=0.8)
 
 DEV, CL = None, "claude"
 _lines = [   # (id, shot, speaker, text, gap before, pace)

@@ -59,7 +59,7 @@ frames = mod.FRAMES
 stills = sys.argv[sys.argv.index("--stills") + 1] if "--stills" in sys.argv else None
 os.environ["SCENE"] = f"scene_skit.html?dir={getattr(mod, 'DIRECTION', 'test')}"
 if stills:
-    out = os.path.join(BUILD, "skit_check")
+    out = os.path.join(BUILD, f"skit_check_{EPISODE}")     # per episode, so two episodes can make stills at once
     shutil.rmtree(out, ignore_errors=True)
     subprocess.check_call(["node", os.path.join(HERE, "render.mjs"), out, str(fps), "1", stills])
     sys.exit(0)

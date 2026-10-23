@@ -25,11 +25,11 @@ TAIL = 0.7
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build", "lowpoly", "ep28_frames")
 _frame = frames(FRAMES)
 voice.SPEAKERS.update({"claude": dict(voice="af_heart", speed=0.97, turbo_ref="af_heart")})
-skit_voice(voice)
+skit_voice(voice, rate=3.4, tempo_min=0.8)
 
 DEV, CL = None, "claude"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
-    ("g1", "devmid", DEV, "My laptop can't run [G.T.A. five|GTA 5].", 0, 1),
+    ("g1", "devmid", DEV, "My laptop can't run [G T A five|GTA 5].", 0, 1),
     ("g2", "devclose", DEV, "Claude. Make me my own.", .6, 1),
     ("g3", "soloclose", CL, "Sure.", .5, 1),
     ("g4", "devmid", DEV, "A whole city. Cars. Police. Helicopters.", .7, 1),

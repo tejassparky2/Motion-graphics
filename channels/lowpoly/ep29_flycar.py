@@ -24,7 +24,7 @@ TAIL = 0.7
 FRAMES = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "build", "lowpoly", "ep29_frames")
 _frame = frames(FRAMES)
 voice.SPEAKERS.update({"codex": dict(voice="am_puck", speed=1.05, turbo_ref="am_puck+2")})
-skit_voice(voice)
+skit_voice(voice, rate=3.4, tempo_min=0.8)
 
 DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
