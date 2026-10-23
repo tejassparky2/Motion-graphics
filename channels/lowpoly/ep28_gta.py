@@ -54,7 +54,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("g21", "soloclose", CL, "Sure.", .6, 1),
 ]
 HOLDS = {"g13h": 1.5, "g17h": 2.0}
-GAP_FIX = {}
+GAP_FIX = {"g11": 0.256}
 SCRIPT = build_script(_lines, HOLDS, gap_fix=GAP_FIX)
 
 METADATA = dict(
