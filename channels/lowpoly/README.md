@@ -168,3 +168,17 @@ next batches that way (keep varying which AI, the set and the topic).
   out before the key line, swells on the payoff (motion/audio.py `score`).
 - **Grounded:** every premise comes from a real, sourced moment (developer_emotions.md); stories are fiction, and the
   description says what's real.
+
+## Owner, 23 Oct 2026: comedy batch 7 (eps 24-27) rejected; reference 10 and "big ask" ideas
+"I didn't liked all 4 comedy reels I will send you reference video and ideas like asking claude to make gta5 asking to
+make tesla flying car like that and refer the reference video". Eps 24-27 are shelved (off the calendar).
+10. **"I'm doing this one myself"** (60 s, comedy into warm): Dev refuses help; the AI answers in one or two flat words
+   ("Sure." "Nothing." "It's Python." "The computer is fine."); Dev's own ladder is the comedy ("Is it the
+   semicolon?" / "Is the computer broken?" / "Am I broken?"); full-screen code inserts with a clock that jumps
+   (12:40 → 4:58 AM); reveal ("I spelled length wrong." "Since 2023. It's in every file."); small win; warm last line
+   ("I know. That's why I didn't say anything."). 21 lines, ~95 words in 60 s; small plain white captions, no title
+   card; music almost silent (-43 dB) through the struggle, comes in only at the win.
+Why batch 7 missed (our reading): its premises were AI-news problems (fake packages, fake legal cases, sycophancy,
+deleted tests) with the AI as the fool and cards everywhere; the reference makes Dev the human, relatable fool, keeps
+the AI dry, and ends warm. Next: Dev asks an AI for something huge (GTA 5, a flying car); the AI answers flat and
+literal; the ask shrinks on screen; one honest line; the AI's care shows; callback laugh (scripts/batch8_big_asks_eps28-31.md).
