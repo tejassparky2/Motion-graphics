@@ -182,3 +182,15 @@ Why batch 7 missed (our reading): its premises were AI-news problems (fake packa
 deleted tests) with the AI as the fool and cards everywhere; the reference makes Dev the human, relatable fool, keeps
 the AI dry, and ends warm. Next: Dev asks an AI for something huge (GTA 5, a flying car); the AI answers flat and
 literal; the ask shrinks on screen; one honest line; the AI's care shows; callback laugh (scripts/batch8_big_asks_eps28-31.md).
+
+## Owner, 23 Oct 2026: follow @agentmorphy ("make reels as this page doing"), current tech news works
+Studied the 6 newest @agentmorphy reels (the other 35 need an Instagram login) and a TechWebster PHP-news reel the
+owner sent ("Even current tech news like this works"). Agent Morphy: 22k followers, ~2 posts a day; its best of the 6
+("Claude, half the internet's broken. Are we PHP?", 3,893 likes) went up the day the PHP bugs were patched.
+- **Line 1 = "Claude, <today's news or situation>."** Real, this-week dev/AI news makes the strongest hook.
+- **The AI states embarrassing facts about Dev flatly** ("Your admin password is admin." "Since March."); three
+  exposures climb; a twist or a small warm turn ends it.
+- 35-50 s, 16-23 lines, ~0.4 s between lines, a soft music bed all the way (~14 dB under the voices), small white
+  captions that build up word by word (kit.build_caption), UI panels as evidence.
+- Post news episodes fast: the news is the hook, so they go to the front of the calendar.
+Batch 9 (eps 32-35, scripts/batch9_morphy_eps32-35.md) is the first set in this form; every fact checked at the source.
