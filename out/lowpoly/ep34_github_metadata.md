@@ -7,7 +7,7 @@ Codex, GitHub Is Down Again
 
 **Alternative titles to test**
 - `My Branch Resets Every 10 Minutes`
-- `"Your Deploys Failed First."`
+- `"No. Your Code Failed First."`
 
 **Description**
 ```
@@ -35,4 +35,4 @@ github down, github outage, cron job, git reset, codex, programmer humor, coding
 Last time you blamed a tool, whose fault was it really? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 38.0 s, 90 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 38.1 s, 91 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

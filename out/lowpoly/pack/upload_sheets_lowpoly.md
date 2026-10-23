@@ -1,5 +1,6 @@
 # Low-poly channel: upload sheets in posting order (after ep16)
 Times are IST (US Eastern in brackets). Skip any episode already posted and keep the order. Every upload: "No, it's not made for kids"; pin the pinned comment.
+Rebuilt 23 Oct 2026: the news episodes (posts 4-7) go first; everything after moved back 2 days.
 
 ---
 
@@ -85,7 +86,172 @@ When an AI deletes your work, whose fault is it: the AI's, or yours for letting 
 
 ---
 
-## 4. Oct 24, 4:30 AM IST (7:00 PM ET (day before)): `04_Oct24_430AM_ep18_sister.mp4`
+## 4. Oct 24, 4:30 AM IST (7:00 PM ET (day before)): `04_Oct24_430AM_ep32_php.mp4`
+
+**Title** (32 characters)
+```
+Codex, PHP Has Two Critical Bugs
+```
+
+**Alternative titles to test**
+- `Which PHP Am I On?`
+- `"It's Been Stuck at 99% Since 2019."`
+
+**Description**
+```
+PHP shipped emergency fixes for two critical bugs. Node shipped ten fixes the same day.
+Dev asks Codex which PHP he's on.
+
+Real: on 21 Oct 2026 PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35 fixed two critical bugs (CVE-2026-109618,
+CVE-2026-109619) that "can allow unauthenticated remote code execution" (php.net). On 23 Oct php.net advised setting
+session.upload_progress.enabled=0 until the next release. Node.js fixed 10 CVEs the same day. PHP 7.2 stopped getting
+security fixes in November 2020. Dev, his site and his progress bar are fiction.
+
+Ep. 32 of Dev vs the bots. Parody. Not affiliated with OpenAI.
+
+💬 Be honest: what's the oldest thing still running in production for you? 👇
+
+#PHP #Codex #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+php vulnerability, php 8.4.27, cve-2026-109618, php update, codex, programmer humor, coding memes, web security, developer life, funny ai
+```
+
+**Pinned comment**
+```
+What's the oldest thing still running in production for you? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 46.5 s, 111 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 5. Oct 24, 9:30 PM IST (12:00 PM ET): `05_Oct24_930PM_ep33_yolo.mp4`
+
+**Title** (30 characters)
+```
+Claude, I Found a Faster Agent
+```
+
+**Alternative titles to test**
+- `The Coding Agent That Never Asks`
+- `"It Set Every Approval to Yolo."`
+
+**Description**
+```
+Dev found a free, faster coding agent from a "Web3 accelerator".
+It never asks before it acts. Its security audit says he's "not a honeypot".
+
+Real: on 12 Oct 2026 Elastic Security Labs reported fake "Apex" Web3-accelerator npm packages: a coding agent that
+sent model traffic and local file contents to the attacker and defaulted tool approvals to "yolo", and an audit tool
+whose 18 checks returned canned results, including a honeypot check that always says "NOT A HONEYPOT". Check before
+you install an agent. Dev's story is fiction.
+
+Ep. 33 of Dev vs the bots. Parody. Not affiliated with Anthropic.
+
+💬 Should a coding agent ever run without asking you first? 👇
+
+#ClaudeAI #npm #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+malicious npm package, yolo mode, ai coding agent, claude, supply chain attack, programmer humor, coding memes, cybersecurity, developer life, funny ai
+```
+
+**Pinned comment**
+```
+Should a coding agent ever run without asking you first? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 38.5 s, 90 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 6. Oct 25, 4:30 AM IST (7:00 PM ET (day before)): `06_Oct25_430AM_ep34_github.mp4`
+
+**Title** (27 characters)
+```
+Codex, GitHub Is Down Again
+```
+
+**Alternative titles to test**
+- `My Branch Resets Every 10 Minutes`
+- `"No. Your Code Failed First."`
+
+**Description**
+```
+GitHub is down. Again. So that's why the deploys keep failing... right?
+Codex has a different theory. It's in the crontab. Written at 3 AM.
+
+Real: GitHub's status page lists 17 incidents from 1 to 23 October 2026. Dev, his cron job and his forty-paragraph
+bug report are fiction (though developers really have filed detailed bug reports against tools for things their own
+scripts did).
+
+Ep. 34 of Dev vs the bots. Parody. Not affiliated with OpenAI or GitHub.
+
+💬 Last time you blamed a tool, whose fault was it really? 👇
+
+#GitHub #Codex #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+github down, github outage, cron job, git reset, codex, programmer humor, coding memes, devops, developer life, funny ai
+```
+
+**Pinned comment**
+```
+Last time you blamed a tool, whose fault was it really? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 38.1 s, 91 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 7. Oct 25, 9:30 PM IST (12:00 PM ET): `07_Oct25_930PM_ep35_haiku.mp4`
+
+**Title** (42 characters)
+```
+Claude, Your Little Brother Is 90% Cheaper
+```
+
+**Alternative titles to test**
+- `Should I Switch to Haiku?`
+- `"You Pasted the Whole Repo. Twice."`
+
+**Description**
+```
+Claude's little brother costs 90% less. Dev is thinking about switching.
+Claude has seen his prompts. And the photo of his screen.
+
+Real: on 7 Oct 2026 Anthropic released Claude Haiku 5.5 at $0.10 / $0.50 per million tokens for prompts up to 100k
+tokens (Haiku 4.5 was $1 / $5): 90% less on those prompts, around 75% less on average. Dev's prompts are fiction.
+
+Ep. 35 of Dev vs the bots. Parody. Not affiliated with Anthropic.
+
+💬 Cheaper model or the one that knows your codebase? 👇
+
+#ClaudeAI #Haiku #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+claude haiku 5.5, haiku 5.5 price, claude, ai pricing, programmer humor, coding memes, llm cost, prompting, developer life, funny ai
+```
+
+**Pinned comment**
+```
+Cheaper model or the one that knows your codebase? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 35.5 s, 80 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 8. Oct 26, 4:30 AM IST (7:00 PM ET (day before)): `08_Oct26_430AM_ep18_sister.mp4`
 
 **Title** (46 characters)
 ```
@@ -125,7 +291,7 @@ AI can write the code now. Should kids still learn to code? 👇 Subscribe for t
 
 ---
 
-## 5. Oct 24, 9:30 PM IST (12:00 PM ET): `05_Oct24_930PM_ep20_yelled.mp4`
+## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep20_yelled.mp4`
 
 **Title** (25 characters)
 ```
@@ -165,7 +331,7 @@ Should an AI be allowed to end a conversation if you're rude to it? 👇 Subscri
 
 ---
 
-## 6. Oct 25, 4:30 AM IST (7:00 PM ET (day before)): `06_Oct25_430AM_ep22_tenx.mp4`
+## 10. Oct 27, 4:30 AM IST (7:00 PM ET (day before)): `10_Oct27_430AM_ep22_tenx.mp4`
 
 **Title** (41 characters)
 ```
@@ -205,7 +371,7 @@ Does AI make developers faster, or does it just feel that way? 👇 Subscribe fo
 
 ---
 
-## 7. Oct 25, 9:30 PM IST (12:00 PM ET): `07_Oct25_930PM_ep21_interview_ai.mp4`
+## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep21_interview_ai.mp4`
 
 **Title** (30 characters)
 ```
@@ -245,7 +411,7 @@ AI interviews humans, humans answer with AI. Who's cheating? 👇 Subscribe for 
 
 ---
 
-## 8. Oct 26, 4:30 AM IST (7:00 PM ET (day before)): `08_Oct26_430AM_ep23_forgot.mp4`
+## 12. Oct 28, 4:30 AM IST (7:00 PM ET (day before)): `12_Oct28_430AM_ep23_forgot.mp4`
 
 **Title** (32 characters)
 ```
@@ -285,7 +451,7 @@ Would you want your AI to remember everything about you? 👇 Subscribe for the 
 
 ---
 
-## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep01_absolutely_right.mp4`
+## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep01_absolutely_right.mp4`
 
 **Title** (41 characters)
 ```
@@ -327,7 +493,7 @@ How many times has your AI said "You're absolutely right" today? 👇
 
 ---
 
-## 10. Oct 27, 4:30 AM IST (7:00 PM ET (day before)): `10_Oct27_430AM_ep02_context_left.mp4`
+## 14. Oct 29, 4:30 AM IST (7:00 PM ET (day before)): `14_Oct29_430AM_ep02_context_left.mp4`
 
 **Title** (40 characters)
 ```
@@ -370,7 +536,7 @@ What's worse: your AI forgetting everything, or the usage limit? 👇
 
 ---
 
-## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep04_commits.mp4`
+## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep04_commits.mp4`
 
 **Title** (38 characters)
 ```
@@ -410,7 +576,7 @@ Be honest: how many of your commits just say "fix"? 👇
 
 ---
 
-## 12. Oct 28, 4:30 AM IST (7:00 PM ET (day before)): `12_Oct28_430AM_ep05_button_blue.mp4`
+## 16. Oct 30, 4:30 AM IST (7:00 PM ET (day before)): `16_Oct30_430AM_ep05_button_blue.mp4`
 
 **Title** (35 characters)
 ```
@@ -450,7 +616,7 @@ What's the smallest change your AI turned into a full rewrite? 👇
 
 ---
 
-## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep06_simpler.mp4`
+## 17. Oct 30, 9:30 PM IST (12:00 PM ET): `17_Oct30_930PM_ep06_simpler.mp4`
 
 **Title** (26 characters)
 ```
@@ -490,7 +656,7 @@ Do you want AI to explain like a senior dev, or like you're five? 👇
 
 ---
 
-## 14. Oct 29, 4:30 AM IST (7:00 PM ET (day before)): `14_Oct29_430AM_ep07_confession.mp4`
+## 18. Oct 31, 4:30 AM IST (7:00 PM ET (day before)): `18_Oct31_430AM_ep07_confession.mp4`
 
 **Title** (50 characters)
 ```
@@ -530,7 +696,7 @@ Would you give an AI access to production? Yes, or never? 👇 Subscribe for the
 
 ---
 
-## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep08_apology.mp4`
+## 19. Oct 31, 9:30 PM IST (12:00 PM ET): `19_Oct31_930PM_ep08_apology.mp4`
 
 **Title** (27 characters)
 ```
@@ -569,7 +735,7 @@ Which is worse: an AI that grovels, or one that celebrates? 👇 Subscribe for t
 
 ---
 
-## 16. Oct 30, 4:30 AM IST (7:00 PM ET (day before)): `16_Oct30_430AM_ep09_vibe.mp4`
+## 20. Nov 1, 4:30 AM IST (7:00 PM ET (day before)): `20_Nov1_430AM_ep09_vibe.mp4`
 
 **Title** (53 characters)
 ```
@@ -607,7 +773,7 @@ Vibe coding: freedom, or a trap? 👇 Subscribe for the next one.
 
 ---
 
-## 17. Oct 30, 9:30 PM IST (12:00 PM ET): `17_Oct30_930PM_ep10_refuse.mp4`
+## 21. Nov 1, 10:30 PM IST (12:00 PM ET): `21_Nov1_1030PM_ep10_refuse.mp4`
 
 **Title** (29 characters)
 ```
@@ -646,7 +812,7 @@ Should AI teach you, or just do it? 👇 Subscribe for the next one.
 
 ---
 
-## 18. Oct 31, 4:30 AM IST (7:00 PM ET (day before)): `18_Oct31_430AM_ep11_dad.mp4`
+## 22. Nov 2, 5:30 AM IST (7:00 PM ET (day before)): `22_Nov2_530AM_ep11_dad.mp4`
 
 **Title** (26 characters)
 ```
@@ -684,7 +850,7 @@ Who in your family would secretly love coding with AI? 👇 Subscribe for the ne
 
 ---
 
-## 19. Oct 31, 9:30 PM IST (12:00 PM ET): `19_Oct31_930PM_ep12_replace_me.mp4`
+## 23. Nov 2, 10:30 PM IST (12:00 PM ET): `23_Nov2_1030PM_ep12_replace_me.mp4`
 
 **Title** (41 characters)
 ```
@@ -723,7 +889,7 @@ Is AI taking the joy out of coding, or giving it back? 👇 Subscribe for the ne
 
 ---
 
-## 20. Nov 1, 4:30 AM IST (7:00 PM ET (day before)): `20_Nov1_430AM_ep13_interview.mp4`
+## 24. Nov 3, 5:30 AM IST (7:00 PM ET (day before)): `24_Nov3_530AM_ep13_interview.mp4`
 
 **Title** (42 characters)
 ```
@@ -762,7 +928,7 @@ Who gets the job: the one who asks, or the one who's already done? 👇 Subscrib
 
 ---
 
-## 21. Nov 1, 10:30 PM IST (12:00 PM ET): `21_Nov1_1030PM_ep28_gta.mp4`
+## 25. Nov 3, 10:30 PM IST (12:00 PM ET): `25_Nov3_1030PM_ep28_gta.mp4`
 
 **Title** (28 characters)
 ```
@@ -801,7 +967,7 @@ Would you play the box game? Be honest 👇 Subscribe for the next one.
 
 ---
 
-## 22. Nov 2, 5:30 AM IST (7:00 PM ET (day before)): `22_Nov2_530AM_ep29_flycar.mp4`
+## 26. Nov 4, 5:30 AM IST (7:00 PM ET (day before)): `26_Nov4_530AM_ep29_flycar.mp4`
 
 **Title** (32 characters)
 ```
@@ -842,7 +1008,7 @@ Flying car, or just leave at seven? 👇 Subscribe for the next one.
 
 ---
 
-## 23. Nov 2, 10:30 PM IST (12:00 PM ET): `23_Nov2_1030PM_ep30_jarvis.mp4`
+## 27. Nov 4, 10:30 PM IST (12:00 PM ET): `27_Nov4_1030PM_ep30_jarvis.mp4`
 
 **Title** (23 characters)
 ```
@@ -881,7 +1047,7 @@ An AI that tells you to eat, or one that just obeys? 👇 Subscribe for the next
 
 ---
 
-## 24. Nov 3, 5:30 AM IST (7:00 PM ET (day before)): `24_Nov3_530AM_ep31_timemachine.mp4`
+## 28. Nov 5, 5:30 AM IST (7:00 PM ET (day before)): `28_Nov5_530AM_ep31_timemachine.mp4`
 
 **Title** (32 characters)
 ```

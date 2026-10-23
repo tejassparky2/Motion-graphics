@@ -1,9 +1,9 @@
-# Low-poly set: posts 21-24
+# Low-poly set: posts 25-28
 Times are IST (US Eastern in brackets). Every upload: "No, it's not made for kids"; pin the pinned comment.
 
 ---
 
-## 21. Nov 1, 10:30 PM IST (12:00 PM ET): `21_Nov1_1030PM_ep28_gta.mp4`
+## 25. Nov 3, 10:30 PM IST (12:00 PM ET): `25_Nov3_1030PM_ep28_gta.mp4`
 
 **Title** (28 characters)
 ```
@@ -42,7 +42,7 @@ Would you play the box game? Be honest 👇 Subscribe for the next one.
 
 ---
 
-## 22. Nov 2, 5:30 AM IST (7:00 PM ET (day before)): `22_Nov2_530AM_ep29_flycar.mp4`
+## 26. Nov 4, 5:30 AM IST (7:00 PM ET (day before)): `26_Nov4_530AM_ep29_flycar.mp4`
 
 **Title** (32 characters)
 ```
@@ -83,7 +83,7 @@ Flying car, or just leave at seven? 👇 Subscribe for the next one.
 
 ---
 
-## 23. Nov 2, 10:30 PM IST (12:00 PM ET): `23_Nov2_1030PM_ep30_jarvis.mp4`
+## 27. Nov 4, 10:30 PM IST (12:00 PM ET): `27_Nov4_1030PM_ep30_jarvis.mp4`
 
 **Title** (23 characters)
 ```
@@ -122,7 +122,7 @@ An AI that tells you to eat, or one that just obeys? 👇 Subscribe for the next
 
 ---
 
-## 24. Nov 3, 5:30 AM IST (7:00 PM ET (day before)): `24_Nov3_530AM_ep31_timemachine.mp4`
+## 28. Nov 5, 5:30 AM IST (7:00 PM ET (day before)): `28_Nov5_530AM_ep31_timemachine.mp4`
 
 **Title** (32 characters)
 ```
