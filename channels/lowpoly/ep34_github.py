@@ -31,7 +31,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("z1", "devmid", DEV, "Codex. GitHub is down. Again.", 0, 1),
     ("z2", "cxclose", CX, "Seventeen incidents in October.", .35, 1),
     ("z3", "devclose", DEV, "That's why my deploys keep failing.", .45, 1),
-    ("z4", "cxclose", CX, "Your deploys failed first.", .35, 1),
+    ("z4", "cxclose", CX, "No. Your code failed first.", .35, 1),
     ("z5", "devclose", DEV, "Then why does my branch reset every ten minutes?", .5, 1),
     ("z6", "cxclose", CX, "Your cron job.", .35, 1),
     ("z7", "devclose", DEV, "I don't have a cron job.", .4, 1),
@@ -54,7 +54,7 @@ SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="Codex, GitHub Is Down Again",
-    alt_titles=["My Branch Resets Every 10 Minutes", "\"Your Deploys Failed First.\""],
+    alt_titles=["My Branch Resets Every 10 Minutes", "\"No. Your Code Failed First.\""],
     description="""GitHub is down. Again. So that's why the deploys keep failing... right?
 Codex has a different theory. It's in the crontab. Written at 3 AM.
 

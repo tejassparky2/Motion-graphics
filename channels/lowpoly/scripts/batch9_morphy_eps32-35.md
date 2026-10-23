@@ -88,7 +88,7 @@ Agent Morphy: 22,182 followers, 41 posts, ~2 a day; best of the 6: "Claude, half
 | 1 | Dev | Codex. GitHub is down. Again. | status card |
 | 2 | Codex | Seventeen incidents in October. | |
 | 3 | Dev | That's why my deploys keep failing. | |
-| 4 | Codex | Your deploys failed first. | |
+| 4 | Codex | No. Your code failed first. (was "Your deploys failed first.", heard "Your deploy is failed") | |
 | 5 | Dev | Then why does my branch reset every ten minutes? | |
 | 6 | Codex | Your cron job. | |
 | 7 | Dev | I don't have a cron job. | |
