@@ -33,4 +33,4 @@ gta 5, ai made a game, claude, vibe coding, programmer humor, coding memes, game
 Would you play the box game? Be honest 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 47.0 s, 80 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 47.0 s, 81 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
