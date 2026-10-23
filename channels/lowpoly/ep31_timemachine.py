@@ -29,7 +29,7 @@ DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("m1", "devmid", DEV, "Codex. Build me a time machine.", 0, 1),
     ("m2", "cxclose", CX, "Why?", .5, 1),
-    ("m3", "devclose", DEV, "I broke production. On a Friday.", .6, 1),
+    ("m3", "devclose", DEV, "I broke production. It's Friday.", .6, 1),
     ("m4", "cxclose", CX, "That's called git revert.", .5, 1),
     ("m5", "devclose", DEV, "Further back.", .6, 1),
     ("m6", "cxclose", CX, "How far?", .4, 1),
@@ -51,13 +51,13 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("m21", "cxclose", CX, "Nobody can do that.", .6, 1),
 ]
 HOLDS = {"m17h": 1.4}
-GAP_FIX = {"m4": 0.382}
+GAP_FIX = {"m4": 0.41}
 SCRIPT = build_script(_lines, HOLDS, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="I Asked Codex for a Time Machine",
-    alt_titles=["I Pushed to Main on a Friday", "\"That's Called Git Revert.\""],
-    description="""He pushed to main. On a Friday. Now he wants a time machine.
+    alt_titles=["I Broke Production on a Friday", "\"That's Called Git Revert.\""],
+    description="""He broke production. On a Friday. Now he wants a time machine.
 Not to yesterday. To 2019. Before he learned JavaScript.
 
 Real: "don't deploy on Fridays" is an old developer rule, and `git revert` undoes a pushed commit by adding a new

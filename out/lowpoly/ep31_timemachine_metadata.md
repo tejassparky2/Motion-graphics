@@ -6,12 +6,12 @@ I Asked Codex for a Time Machine
 ```
 
 **Alternative titles to test**
-- `I Pushed to Main on a Friday`
+- `I Broke Production on a Friday`
 - `"That's Called Git Revert."`
 
 **Description**
 ```
-He pushed to main. On a Friday. Now he wants a time machine.
+He broke production. On a Friday. Now he wants a time machine.
 Not to yesterday. To 2019. Before he learned JavaScript.
 
 Real: "don't deploy on Fridays" is an old developer rule, and `git revert` undoes a pushed commit by adding a new
@@ -34,4 +34,4 @@ time machine, git revert, push to main, friday deploy, codex, programmer humor, 
 One trip back in time: what would you undo? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 47.5 s, 79 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 47.5 s, 77 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

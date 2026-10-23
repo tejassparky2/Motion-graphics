@@ -113,7 +113,7 @@ commit (git docs).
 |---|---|---|---|
 | 1 | Dev | Codex. Build me a time machine. | Dev, head in hands, Friday 5:02 PM clock |
 | 2 | Codex | Why? | |
-| 3 | Dev | I broke production. On a Friday. (was "I pushed to main", heard "I pushed remain on a fried") | Insert: red "production down" alert |
+| 3 | Dev | I broke production. It's Friday. (was "I pushed to main. On a Friday.", heard "I pushed remain on a fried") | Insert: red "production down" alert |
 | 4 | Codex | That's called git revert. | |
 | 5 | Dev | Further back. | |
 | 6 | Codex | How far? | |
