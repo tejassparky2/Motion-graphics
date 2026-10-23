@@ -9,7 +9,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from kit import build_script, frames, mono, plain_caption, screen_insert, skit_voice, toolcard   # noqa: E402
+from kit import build_script, frames, mono, plain_caption, screen_insert, skit_voice   # noqa: E402
 from motion import thriller as th, voice   # noqa: E402
 from motion.engine import cue, hexc, seg   # noqa: E402
 from motion.polish import rrect, vignette   # noqa: E402
@@ -126,8 +126,6 @@ def draw(cr, t, tl):
     screen_insert(cr, t, B["j6"].end + 0.3, B["j7"].end + 0.4, "shop", "11:20 PM", _cart)
     screen_insert(cr, t, B["j12"].end + 0.2, B["j13"].start - 0.1, "jarvis_mode", "11:31 PM", _threat)
     screen_insert(cr, t, B["j16"].start, B["j16"].end + 0.4, "jarvis_mode", "2:10 AM", _scan(B["j16"].start + 0.2))
-    toolcard(cr, t, B["j20"].start + 0.4, tl.total + 1, "chat", [("", "Order a pizza?", "", WHITE),
-             ("", "I can't. I'm a chat window.", "", GREY)], y=1085)
     cue("pop", t, B["j6"].end + 0.3)
     cue("ding", t, B["j12"].end + 0.2)
     cue("typing", t, B["j16"].start, 1.0)
