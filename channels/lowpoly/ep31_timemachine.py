@@ -48,7 +48,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("m18", "devclose", DEV, "Revert to Thursday.", .2, 1),
     ("m19", "cx", CX, "Reverting.", .5, 1),
     ("m20", "devclose", DEV, "Now revert JavaScript.", 1.0, 1),
-    ("m21", "endside", CX, "Nobody can do that.", .6, 1),
+    ("m21", "cxclose", CX, "Nobody can do that.", .6, 1),
 ]
 HOLDS = {"m17h": 1.4}
 GAP_FIX = {}

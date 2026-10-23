@@ -51,7 +51,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("g18", "devclose", DEV, "This is the worst game ever made. [laugh]", .3, 1),
     ("g19", "solo", CL, "You've played it for four hours.", .6, 1),
     ("g20", "devclose", DEV, "One more round.", 1.5, .95),
-    ("g21", "endside", CL, "Sure.", .6, 1),
+    ("g21", "soloclose", CL, "Sure.", .6, 1),
 ]
 HOLDS = {"g13h": 1.5, "g17h": 2.0}
 GAP_FIX = {}

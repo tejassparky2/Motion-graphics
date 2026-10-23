@@ -46,7 +46,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("j18", "devclose", DEV, "What would [Jarvis|JARVIS] say?", .8, .95),
     ("j19", "soloclose", CL, "Eat something. Then save the world.", 1.2, .95),
     ("j20", "devclose", DEV, "Order a pizza. [chuckle]", 1.3, 1),
-    ("j21", "endside", CL, "I'm a chat window, sir.", .5, 1),
+    ("j21", "soloclose", CL, "I'm a chat window, sir.", .5, 1),
 ]
 HOLDS = {}
 GAP_FIX = {}

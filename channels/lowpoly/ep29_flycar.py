@@ -53,7 +53,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("f21", "devmid", DEV, "Twenty-four minutes. [chuckle]", .3, 1),
     ("f22", "cxclose", CX, "Told you.", .5, 1),
     ("f23", "devclose", DEV, "Still want wings.", .7, 1),
-    ("f24", "endside", CX, "Ordering stickers.", .5, 1),
+    ("f24", "cxclose", CX, "Ordering stickers.", .5, 1),
 ]
 HOLDS = {"f11h": 1.6, "f20h": 1.8}
 GAP_FIX = {}
