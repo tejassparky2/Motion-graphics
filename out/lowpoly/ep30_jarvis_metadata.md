@@ -33,4 +33,4 @@ jarvis, iron man, claude, ai assistant, programmer humor, coding memes, tony sta
 An AI that tells you to eat, or one that just obeys? 👇 Subscribe for the next one.
 ```
 
-**Video facts:** 49.8 s, 88 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 49.8 s, 89 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

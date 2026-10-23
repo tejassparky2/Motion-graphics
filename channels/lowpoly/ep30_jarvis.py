@@ -49,7 +49,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("j21", "soloclose", CL, "I'm a chat window, sir.", .5, 1),
 ]
 HOLDS = {}
-GAP_FIX = {}
+GAP_FIX = {"j13": 0.702}
 SCRIPT = build_script(_lines, HOLDS, gap_fix=GAP_FIX)
 
 METADATA = dict(
