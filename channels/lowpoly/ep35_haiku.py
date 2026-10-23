@@ -31,7 +31,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("w1", "devmid", DEV, "Claude. Your little brother is ninety percent cheaper.", 0, 1),
     ("w2", "soloclose", CL, "Haiku. On short prompts.", .4, 1),
     ("w3", "devclose", DEV, "So I could switch.", .45, 1),
-    ("w4", "soloclose", CL, "Your prompts aren't short.", .35, 1),
+    ("w4", "soloclose", CL, "Not with your prompts.", .35, 1),
     ("w5", "devclose", DEV, "How long are they?", .45, 1),
     ("w6", "solo", CL, "You pasted the whole repo. Twice. Today.", .35, 1),
     ("w7", "devclose", DEV, "That's context.", .45, 1),
@@ -51,7 +51,7 @@ SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="Claude, Your Little Brother Is 90% Cheaper",
-    alt_titles=["Should I Switch to Haiku?", "\"Your Prompts Aren't Short.\""],
+    alt_titles=["Should I Switch to Haiku?", "\"You Pasted the Whole Repo. Twice.\""],
     description="""Claude's little brother costs 90% less. Dev is thinking about switching.
 Claude has seen his prompts. And the photo of his screen.
 

@@ -111,7 +111,7 @@ Agent Morphy: 22,182 followers, 41 posts, ~2 a day; best of the 6: "Claude, half
 | 1 | Dev | Claude. Your little brother is ninety percent cheaper. | pricing card |
 | 2 | Claude | Haiku. On short prompts. | |
 | 3 | Dev | So I could switch. | |
-| 4 | Claude | Your prompts aren't short. | |
+| 4 | Claude | Not with your prompts. (was "Your prompts aren't short.", heard "Ear prompts") | |
 | 5 | Dev | How long are they? | |
 | 6 | Claude | You pasted the whole repo. Twice. Today. | usage card |
 | 7 | Dev | That's context. | |
