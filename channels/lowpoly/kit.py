@@ -139,3 +139,78 @@ def skit_voice(voice):
     voice.TEMPO_MIN = 0.88
     check = voice.clone_check
     voice.clone_check = lambda takes, tries=3, slack=0.15: check(takes, 2, max(slack, 0.45))
+
+
+def plain_caption(cr, t, tl, y=330, size=30):
+    """Reference 10's captions (owner, 23 Oct 2026): the whole line in small plain white type with a soft dark
+    shadow, no box."""
+    from motion.engine import W
+    for i, b in enumerate(tl.beats):
+        nxt = tl.beats[i + 1].start if i + 1 < len(tl.beats) else tl.total
+        end = min(b.end + 0.45, nxt - 0.05)
+        if not (b.start - 0.05 <= t < end) or not b.units:
+            continue
+        k = min(appear(t, b.start - 0.05, 0.1), 1 - seg(t, end - 0.1, end))
+        words, lines, cur = " ".join(u.shown for u in b.units).split(), [], ""
+        for w in words:
+            if cur and len(cur) + 1 + len(w) > 28:
+                lines.append(cur)
+                cur = w
+            else:
+                cur = (cur + " " + w).strip()
+        lines.append(cur)
+        cr.save()
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(size)
+        for j, line in enumerate(lines):
+            ext = cr.text_extents(line)
+            x, yy = W / 2 - ext.x_advance / 2, y + j * size * 1.3
+            for dx, dy, a in ((0, 3, 0.55), (2, 2, 0.35), (-2, 2, 0.35), (0, 0, 0.0)):
+                if a:
+                    cr.move_to(x + dx, yy + dy)
+                    cr.set_source_rgba(0, 0, 0, a * k)
+                    cr.show_text(line)
+            cr.move_to(x, yy)
+            cr.set_source_rgba(1, 1, 1, k)
+            cr.show_text(line)
+        cr.restore()
+        return
+
+
+def screen_insert(cr, t, start, end, title, clock, paint, y=800, h=640):
+    """Reference 10's cut to the screen: the room goes dark behind a big app window (title bar, a clock top right that
+    can jump) and `paint(cr, x, y, w, h, t, k)` draws what's inside. A hard cut in and out, like the reference.
+    clock: a string, or [(time, string), ...] steps."""
+    from motion.engine import W
+    if not (start <= t < end):
+        return
+    k = 1.0
+    cr.save()
+    cr.set_source_rgba(0.02, 0.02, 0.05, 0.88)
+    cr.paint()
+    w = W - 40
+    x0, y0 = 20, y - h / 2
+    rrect(cr, x0, y0, w, h, 14)
+    cr.set_source_rgba(0.07, 0.075, 0.1, 1)
+    cr.fill_preserve()
+    cr.set_source_rgba(1, 1, 1, 0.1)
+    cr.set_line_width(2)
+    cr.stroke()
+    mono(cr, title, x0 + 22, y0 + 34, 19, (0.62, 0.66, 0.74), k)
+    if isinstance(clock, (list, tuple)):
+        clock = steps_at(t, clock)[0]
+    if clock:
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(30)
+        ext = cr.text_extents(clock)
+        cr.move_to(x0 + w - 22 - ext.x_advance, y0 + 38)
+        cr.set_source_rgba(1, 1, 1, 0.95)
+        cr.show_text(clock)
+    cr.move_to(x0, y0 + 54)
+    cr.line_to(x0 + w, y0 + 54)
+    cr.set_source_rgba(1, 1, 1, 0.08)
+    cr.stroke()
+    cr.rectangle(x0 + 2, y0 + 56, w - 4, h - 58)
+    cr.clip()
+    paint(cr, x0 + 2, y0 + 56, w - 4, h - 58, t, k)
+    cr.restore()
