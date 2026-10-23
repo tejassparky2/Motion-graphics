@@ -116,7 +116,8 @@ def _chart(cr, x, y, w, h, t, k):
         cr.set_source_rgba(*col[:3], 0.9 * k)
         cr.fill()
         txt = f"{mins} min" if mins < 60 else "2 hours"
-        mono(cr, txt, x + 40 + min(bw, w - 220), yy + 46, 24, (0.05, 0.05, 0.07) if bw > 160 else WHITE, k)
+        inside = bw > w - 240                     # the long bar carries its label inside; the others after the bar
+        mono(cr, txt, x + 30 + bw - 120 if inside else x + 44 + bw, yy + 44, 24, (0.05, 0.05, 0.07) if inside else WHITE, k)
 
 
 def _map(cr, x, y, w, h, t, k):
