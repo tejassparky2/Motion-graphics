@@ -29,7 +29,7 @@ DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("m1", "devmid", DEV, "Codex. Build me a time machine.", 0, 1),
     ("m2", "cxclose", CX, "Why?", .5, 1),
-    ("m3", "devclose", DEV, "I pushed to main. On a Friday.", .6, 1),
+    ("m3", "devclose", DEV, "I broke production. On a Friday.", .6, 1),
     ("m4", "cxclose", CX, "That's called git revert.", .5, 1),
     ("m5", "devclose", DEV, "Further back.", .6, 1),
     ("m6", "cxclose", CX, "How far?", .4, 1),
@@ -111,7 +111,7 @@ def draw(cr, t, tl):
     screen_insert(cr, t, B["m8"].end + 0.2, B["m9"].start - 0.05, "time_machine", "5:09 PM", _build(B["m8"].end + 0.3))
     toolcard(cr, t, B["m13"].start + 0.3, B["m13"].end + 0.6, "battery", [("", "11%", "", RED)], y=1085)
     screen_insert(cr, t, B["m19"].end + 0.2, B["m20"].start - 0.05, "terminal", "5:31 PM", _revert)
-    cue("buzz", t, B["m3"].start + 0.3, 0.6)
+    cue("buzz", t, B["m2"].end + 0.05, 0.5)
     cue("typing", t, B["m8"].end + 0.2, 1.2)
     cue("ding", t, B["m19"].end + 0.3)
     plain_caption(cr, t, tl)

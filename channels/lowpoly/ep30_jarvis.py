@@ -37,7 +37,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("j9", "devmid", DEV, "Scan the room for threats.", .8, 1),
     ("j10", "solo", CL, "One threat found.", .6, 1),
     ("j11", "devclose", DEV, "Where?", .4, 1),
-    ("j12", "soloclose", CL, "Your sink.", .5, 1),
+    ("j12", "soloclose", CL, "The kitchen sink.", .5, 1),
     ("j13", "devclose", DEV, "[Jarvis|JARVIS] never talks about dishes.", 1.0, 1),
     ("j14", "soloclose", CL, "Tony Stark has robots for dishes.", .5, 1),
     ("j15", "devclose", DEV, "Fine. Run a scan on me.", 1.0, 1),
@@ -124,7 +124,7 @@ def draw(cr, t, tl):
     th.grain(cr, t, 0.05)
     A, B = tl.at, tl.by_id
     screen_insert(cr, t, B["j6"].end + 0.3, B["j7"].end + 0.4, "shop", "11:20 PM", _cart)
-    screen_insert(cr, t, B["j12"].end + 0.2, B["j13"].start - 0.1, "jarvis_mode", "11:31 PM", _threat)
+    screen_insert(cr, t, B["j12"].end + 0.2, B["j13"].start + 1.3, "jarvis_mode", "11:31 PM", _threat)
     screen_insert(cr, t, B["j16"].start, B["j16"].end + 0.4, "jarvis_mode", "2:10 AM", _scan(B["j16"].start + 0.2))
     cue("pop", t, B["j6"].end + 0.3)
     cue("ding", t, B["j12"].end + 0.2)

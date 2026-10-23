@@ -94,7 +94,7 @@ Real: nothing to claim; a fan fantasy (Iron Man's AI butler). Parody, not affili
 | 9 | Dev | Scan the room for threats. | |
 | 10 | Claude | One threat found. | |
 | 11 | Dev | Where? | |
-| 12 | Claude | Your sink. | Insert: "Dishes: 14 days" |
+| 12 | Claude | The kitchen sink. (was "Your sink.", heard "You're sync") | Insert: "Dishes: 14 days" |
 | 13 | Dev | JARVIS never talks about dishes. | |
 | 14 | Claude | Tony Stark has robots for dishes. | |
 | 15 | Dev | Fine. Run a scan on me. | Clock 2:10 AM |
@@ -113,7 +113,7 @@ commit (git docs).
 |---|---|---|---|
 | 1 | Dev | Codex. Build me a time machine. | Dev, head in hands, Friday 5:02 PM clock |
 | 2 | Codex | Why? | |
-| 3 | Dev | I pushed to main. On a Friday. | Insert: red "production down" alert |
+| 3 | Dev | I broke production. On a Friday. (was "I pushed to main", heard "I pushed remain on a fried") | Insert: red "production down" alert |
 | 4 | Codex | That's called git revert. | |
 | 5 | Dev | Further back. | |
 | 6 | Codex | How far? | |
