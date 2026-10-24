@@ -5,7 +5,15 @@ organs are characters and a doctor explains the real fact. The first channel (In
 weird history, The Last Bencher) lives on `ccr-56282fe5-evehq4` and has its own chat. Keep the two apart: doctor
 videos are made, committed and pushed here only.
 
-## The format
+## NEW FORMAT FROM 24 OCT 2026: English explainers (owner's decision)
+The owner sent 9 Hindi reference reels (instagram.com/meanwhilemayank) and asked for "same type of reels but in
+English". Decisions (24 Oct): this **replaces** the talking-organs format; voice **Chatterbox Turbo stock female with
+tags**; length **75-90 s**; art drawn by us in the vintage-paper style + public-domain Gray's Anatomy (1918) plates;
+topics our choice. Study of the references: `research_notes/explainer_study.md`. First three scripts (snakebite
+antivenom, superbugs, malaria) with sources: `research_notes/explainer_1-3.md`; script approval before rendering.
+Everything below describes the old format (videos 1-26), kept for reference.
+
+## The old format (videos 1-26)
 - First half: organs (and tools) as cute characters arguing about something happening to the body.
 - Second half: a hospital scene where the doctor explains what's actually true, with fact cards on screen.
 - End on a joke and a question for the comments.
