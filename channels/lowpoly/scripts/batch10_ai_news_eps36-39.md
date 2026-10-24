@@ -69,12 +69,12 @@ th.captions in Anton (white, the spoken word red).
 | 2 | Claude | My company stopped using git. | headline |
 | 3 | Dev | Wait, what? Everyone uses git. | |
 | 4 | Claude | Not in our main repo. Not anymore. | |
-| 5 | Dev | Why? | |
+| 5 | Dev | Why would they stop? (was "Why?", heard "What?") | |
 | 6 | Claude | Because of agents like me. In May, we merged about twenty-five hundred changes a day. | 2,500 |
 | 7 | Claude | By September, over thirty thousand. | 30,000 |
 | 8 | Dev | Thirty thousand a day? | |
 | 9 | Claude | And twenty-five million code checkouts a day, just for testing. | 25,000,000 |
-| 10 | Dev | Git can't handle that? | |
+| 10 | Dev | Too much for git? (was "Git can't handle that?", heard "Git can handle that") | |
 | 11 | Claude | Done the normal way, that's over six hundred petabytes a day. | 600 PB |
 | 12 | Dev | So what did they build? | |
 | 13 | Claude | Scion. Their own version control. Two hundred times lighter than the old git mirrors. | 200x |
