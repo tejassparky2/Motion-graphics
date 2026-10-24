@@ -20,7 +20,7 @@ SCRIPT = [
     dict(id="s5", scene="s5", text="So how does a horse fix a snakebite? First, let's see what venom does."),
     dict(id="s6", scene="s6", text="Your body runs on messages."),
     dict(id="s7", scene="s7", text="Your nerves tell your muscles when to move, and when to breathe."),
-    dict(id="s8", scene="s8", text="Cobra and [kryte|krait] venom jams that signal."),
+    dict(id="s8", scene="s8", text="The venom of a cobra or a [kryte|krait] jams that signal."),
     dict(id="s9", scene="s9", text="The eyelids droop first. Then the breathing muscles can stop."),
     dict(id="s10", scene="s10", text="Viper venom does something else. It stops your blood from clotting."),
     dict(id="s11", scene="s11", text="Now, the horse."),

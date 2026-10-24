@@ -2,6 +2,7 @@
 # Render each video, then check it: verify.py (Whisper small: words, pace, no encoder tags) and audit.py
 # (Whisper medium on every line, the standing rule). Run from the repo root:  tools/render_check.sh machiavelli_feared
 cd "$(dirname "$0")/.."
+export PATH=/home/user/.venv-main/bin:$PATH
 for v in "$@"; do
   if ! python render.py --video "$v" > "build/$v.log" 2>&1; then echo "== $v FAILED"; grep -a -A4 Traceback "build/$v.log" | tail -5; continue; fi
   PYTHONPATH=. python tools/verify.py "$v" > "build/verify_$v.log" 2>&1
