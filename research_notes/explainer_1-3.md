@@ -30,15 +30,13 @@ Alt titles: Why Snakebite Medicine Comes From Horses / India's Deadliest Animal 
 | 14 | The horse's immune army learns the enemy, and builds antibodies. | THE HORSE | ITS ARMY / LEARNS | Microscope circle: Y-shaped antibodies appear and grab venom blobs |
 | 15 | Doctors take some of its blood, and purify those antibodies. | THE HORSE | PURIFIED / ANTIBODIES | Blood bag -> filter -> clear vial labelled ANTIVENOM |
 | 16 | That's antivenom. Borrowed bodyguards that grab the venom before it does more damage. | THE CURE | BORROWED / BODYGUARDS | Antibodies swarm venom in the blood; venom neutralised (greyed out) |
-| 17 | The idea is from the 1890s, and it still saves lives today. | THE CURE | SINCE / THE 1890s | Old sepia photo frame "1895"; then today's vial |
-| 18 | But many people don't die from the snake. They die from the delay. | THE DELAY | NOT THE SNAKE / THE DELAY | Stopwatch, red sector growing |
-| 19 | A krait often bites at night, while people sleep on the floor. | THE DELAY | AT NIGHT / ON THE FLOOR | Paper room at night, moon in window, mat on floor, krait sliding past |
-| 20 | The bite can be almost painless, so people go back to sleep. | THE DELAY | ALMOST / PAINLESS | Tiny two-dot bite; "PAIN" meter barely moves |
-| 21 | Others lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
-| 22 | None of these remove the venom. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
-| 23 | Doctors say: stay calm, keep the limb still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
-| 24 | Antivenom works best when it's given early. | WHAT TO DO | EARLY / SAVES LIVES | Stopwatch resets; vial glows |
-| 25 | Did you know your life could depend on a horse? Tell me in the comments. | END | A HORSE / SAVED YOU? | Horse with a tiny red cross badge; comment bubble |
+| 17 | But many people don't die from the snake. They die from the delay. | THE DELAY | NOT THE SNAKE / THE DELAY | Stopwatch, red sector growing |
+| 18 | A krait often bites at night, while people sleep on the floor. | THE DELAY | AT NIGHT / ON THE FLOOR | Paper room at night, moon in window, mat on floor, krait sliding past |
+| 19 | The bite can be almost painless, so people go back to sleep. | THE DELAY | ALMOST / PAINLESS | Tiny two-dot bite; "PAIN" meter barely moves |
+| 20 | Others lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
+| 21 | None of these remove the venom. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
+| 22 | Doctors say: stay calm, keep the limb still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
+| 23 | Did you know your life could depend on a horse? Tell me in the comments. | END | A HORSE / SAVED YOU? | Horse with a tiny red cross badge; comment bubble |
 
 Facts and sources:
 - 1.2 million snakebite deaths in India 2000-2019, average 58,000/year: Suraweera et al., eLife 2020;9:e54076
@@ -59,6 +57,7 @@ Facts and sources:
   Snakebite Management Protocol text before upload.
 
 ---
+
 
 ## Explainer 2: Superbugs (about 85 s)
 
@@ -106,7 +105,7 @@ Facts and sources:
 
 ---
 
-## Explainer 3: Malaria (about 85 s)
+## Explainer 3: Malaria (about 90 s)
 
 **Title:** This Parasite Hides in Your Liver Before It Attacks
 Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in Your Liver / How Malaria Actually Works
@@ -126,15 +125,13 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 | 11 | Then the liver cells burst, and the parasites flood your blood. | THE BLOOD | THEN / THEY BURST | Liver cell pops; flood into a red blood vessel |
 | 12 | Each one breaks into a red blood cell, multiplies again, and bursts it open. | THE BLOOD | INVADE / AND BURST | Red cell fills with parasites and splits |
 | 13 | That's when you get sick, usually ten to fifteen days after the bite. Fever, chills, headache. | THE BLOOD | DAY 10-15 / FEVER | Calendar DAY 12; thermometer rising; blanket |
-| 14 | In some types, the bursts happen together, so the fever comes back in waves. | THE BLOOD | FEVER / IN WAVES | Fever chart with regular spikes |
-| 15 | And one type, called vivax, can leave sleeping parasites in the liver. They can wake up weeks or even years later. | THE LIVER | IT CAN / SLEEP | Liver plate with a tiny sleeping parasite and an alarm clock; calendar pages flying |
-| 16 | We know mosquitoes spread it because of a discovery in India. | INDIA | DISCOVERED / IN INDIA | Paper map of India, pin on Secunderabad |
-| 17 | In 1897, in Secunderabad, Ronald Ross found the parasite inside a mosquito. | 1897 | SECUNDERABAD / 1897 | Old microscope, sepia notebook page, mosquito specimen |
-| 18 | He won the Nobel Prize for it. | 1902 | A NOBEL / PRIZE | Medal drops onto the notebook |
-| 19 | Malaria doesn't spread from person to person. It needs the mosquito. | MYTHS | NOT PERSON / TO PERSON | Two paper people with a tick between them; mosquito circled |
-| 20 | And it can be treated. With a fever in a malaria area, see a doctor. A simple blood test can find it. | WHAT TO DO | SEE A / DOCTOR | Blood test slide; "MALARIA: DETECTED" card, Rx bottle |
-| 21 | Bed nets and repellent stop the very first step. | WHAT TO DO | STOP / THE BITE | Bed net drops over a sleeping figure; mosquito bounces off |
-| 22 | Have you or someone you know had malaria? Tell me in the comments. | END | HAVE YOU / HAD IT? | Comment bubble |
+| 14 | And one type, called vivax, can leave sleeping parasites in the liver. They can wake up weeks or even years later. | THE LIVER | IT CAN / SLEEP | Liver plate with a tiny sleeping parasite and an alarm clock; calendar pages flying |
+| 15 | We know mosquitoes spread it because of a discovery in India. | INDIA | DISCOVERED / IN INDIA | Paper map of India, pin on Secunderabad |
+| 16 | In 1897, in Secunderabad, Ronald Ross found the parasite inside a mosquito. It won him a Nobel Prize. | 1897 | SECUNDERABAD / 1897 | Old microscope, sepia notebook page, mosquito specimen; a medal drops onto the notebook |
+| 17 | Malaria doesn't spread from person to person. It needs the mosquito. | MYTHS | NOT PERSON / TO PERSON | Two paper people with a tick between them; mosquito circled |
+| 18 | And it can be treated. With a fever in a malaria area, see a doctor. A simple blood test can find it. | WHAT TO DO | SEE A / DOCTOR | Blood test slide; "MALARIA: DETECTED" card, Rx bottle |
+| 19 | Bed nets and repellent stop the very first step. | WHAT TO DO | STOP / THE BITE | Bed net drops over a sleeping figure; mosquito bounces off |
+| 20 | Have you or someone you know had malaria? Tell me in the comments. | END | HAVE YOU / HAD IT? | Comment bubble |
 
 Facts and sources:
 - 2024: about 282 million cases and 610,000 deaths; African Region about 95% of deaths; children under 5 about 75%
