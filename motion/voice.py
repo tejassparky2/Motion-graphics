@@ -60,12 +60,19 @@ TRIM_PAD = 0.02  # seconds of room kept around each trimmed line
 MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference narrator's breaths are ~0.32 s)
 
 
-def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, turbo_ref=None):
+def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, turbo_ref=None, rate=None,
+              tempo_min=None):
     """Per-video narrator settings (environment variables still win, so you can audition voices).
     `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris).
     `turbo=True` voices the video with Chatterbox Turbo (and its tags); `turbo_ref="am_puck+1.5"` gives the narrator
-    the timbre of that Kokoro voice (pitch-shifted by the semitones after +/-) instead of Turbo's stock voice."""
-    global VOICE, SPEED, MAX_PAUSE, ENGINE, CLONE_MODEL, NARRATOR_REF
+    the timbre of that Kokoro voice (pitch-shifted by the semitones after +/-) instead of Turbo's stock voice.
+    `rate` (syllables per second) and `tempo_min` set a calmer pace for clone/Turbo takes (the doctor channel's
+    explainers are read slower than the story videos)."""
+    global VOICE, SPEED, MAX_PAUSE, ENGINE, CLONE_MODEL, NARRATOR_REF, CLONE_RATE, TEMPO_MIN
+    if rate and "CLONE_RATE" not in os.environ:
+        CLONE_RATE = rate
+    if tempo_min:
+        TEMPO_MIN = tempo_min
     if turbo and "NARRATOR_ENGINE" not in os.environ:
         engine = "clone"
         if "CLONE_MODEL" not in os.environ:

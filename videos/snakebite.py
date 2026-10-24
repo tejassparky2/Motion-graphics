@@ -5,7 +5,7 @@ subtitles. Script, shot list and sources: research_notes/explainer_1-3.md.
 from motion import paper as P
 from videos import snakebite_shots as S
 
-NARRATOR = dict(turbo=True)
+NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)   # calmer than the story videos (5.5)
 STYLE = "clean"
 MUSIC = "pad"
 TAIL = 1.2
@@ -20,7 +20,7 @@ SCRIPT = [
     dict(id="s5", scene="s5", text="So how does a horse fix a snakebite? First, let's see what venom does."),
     dict(id="s6", scene="s6", text="Your body runs on messages."),
     dict(id="s7", scene="s7", text="Your nerves tell your muscles when to move, and when to breathe."),
-    dict(id="s8", scene="s8", text="Cobra and krait venom jams that signal."),
+    dict(id="s8", scene="s8", text="Cobra and [kryte|krait] venom jams that signal."),
     dict(id="s9", scene="s9", text="The eyelids droop first. Then the breathing muscles can stop."),
     dict(id="s10", scene="s10", text="Viper venom does something else. It stops your blood from clotting."),
     dict(id="s11", scene="s11", text="Now, the horse."),
@@ -31,13 +31,16 @@ SCRIPT = [
     dict(id="s16", scene="s16", text="That's antivenom. Borrowed bodyguards that grab the venom before it does more "
                                      "damage."),
     dict(id="s17", scene="s17", text="But many people don't die from the snake. They die from the delay."),
-    dict(id="s18", scene="s18", text="A krait often bites at night, while people sleep on the floor."),
+    dict(id="s18", scene="s18", text="A [kryte|krait] often bites at night, while people sleep on the floor."),
     dict(id="s19", scene="s19", text="The bite can be almost painless, so people go back to sleep."),
     dict(id="s20", scene="s20", text="Others lose hours on cutting, sucking, tight ropes or herbs."),
     dict(id="s21", scene="s21", text="None of these remove the venom."),
-    dict(id="s22", scene="s22", text="Doctors say: stay calm, keep the limb still, and get to a hospital fast."),
+    dict(id="s22", scene="s22", text="Doctors say: stay calm, keep the bitten arm or leg still, and get to a "
+                                     "hospital fast."),
     dict(id="s23", scene="s23", text="Did you know your life could depend on a horse? Tell me in the comments."),
 ]
+for _b in SCRIPT[1:]:
+    _b.setdefault("gap", 0.42)      # a calm breath between lines, like the reference explainers
 
 METADATA = dict(
     title="The Cure for a Snakebite Is Made Inside a Horse 🐍🐴",
