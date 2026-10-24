@@ -592,7 +592,7 @@ def nervous_system(cr, x, y, s, t, sparks=(), dim=0.0, col=None):
 def S1(cr, t, tl, bid):
     A = tl.at
     t_med = A(bid, "medicine")
-    t_horse = A(bid, "horse")
+    t_horse = A(bid, "made")
     # phase 1: the cobra bursts out of a hole in the page
     if t < t_med + 0.4:
         a = 1 - seg(t, t_med, t_med + 0.4)
@@ -621,7 +621,7 @@ def S2(cr, t, tl, bid):
     factory(cr, 520, 600, 1.15)
     red_x(cr, t, A(bid, "lab"), 190, 540, 85)
     red_x(cr, t, A(bid, "factory"), 520, 560, 95)
-    th = A(bid, "horse", nth=1)
+    th = A(bid, "factory", end=True) + 0.15
     if t >= th - 0.15:
         u = slide(t, th - 0.15, 0.35)
         horse(cr, lerp(-300, 330, u), 1060, 0.95)
@@ -671,7 +671,15 @@ def S4(cr, t, tl, bid):
 
 def S5(cr, t, tl, bid):
     A = tl.at
-    t0 = A(bid, "venom")
+    tf = A(bid, "first")
+    if t < tf + 0.3:
+        def q(c):
+            horse(c, 330, 1000, 1.0)
+            text(c, "?", 560, 640, 220, RED, alpha=appear(t, tl.by_id[bid].start + 0.3))
+        P.faded(cr, 1 - seg(t, tf, tf + 0.3), q)
+        if t < tf:
+            return
+    t0 = tf + 0.5
     def slide_(c):
         u = seg(t, t0 + 0.25, t0 + 1.4)
         r = np.random.default_rng(2)
@@ -682,7 +690,8 @@ def S5(cr, t, tl, bid):
             w = seg(t, t0 + 0.25, t0 + 0.7)
             c.arc(0, 0, 230 * w, 0, 6.3)
             stroke(c, VENOM, 6, 1 - w)
-    P.microscope(cr, 360, 760, 255, slide_, tint=hexc("#f0e6c2"))
+    with place(cr, 360, 760, appear(t, tf)):
+        P.microscope(cr, 0, 0, 255, slide_, tint=hexc("#f0e6c2"))
     # the drop falls
     if t0 - 0.4 <= t < t0 + 0.3:
         u = seg(t, t0 - 0.4, t0 + 0.25)
@@ -738,6 +747,11 @@ def S8(cr, t, tl, bid):
         stroke(cr, hexc("#7a2320"), 3, 0.6)
     text(cr, "NERVE", 470, 470, 24, BONE, P.FONT_MONO, spacing=2)
     text(cr, "MUSCLE", 360, 950, 24, BONE, P.FONT_MONO, align="center", spacing=2)
+    a = appear(t, A(bid, "krait"))
+    if a > 0:
+        with place(cr, 190, 520, a, -0.05):
+            P.card(cr, -130, -36, 260, 64, hexc("#efe6d2"), torn=True, seed=11)
+            text(cr, "COBRA · KRAIT", 0, 14, 34, INK, align="center")
     # signals: they get through until the venom arrives
     period = 0.9
     for k in range(6):
@@ -831,16 +845,16 @@ def S10(cr, t, tl, bid):
 def S11(cr, t, tl, bid):
     b = tl.by_id[bid]
     u = slide(t, b.start, 0.5)
-    horse(cr, lerp(-260, 330, u), 1000, 1.25)
+    horse(cr, lerp(-260, 300, u), 1000, 1.2)
 
 
 def S12(cr, t, tl, bid):
     A = tl.at
     b = tl.by_id[bid]
-    t0 = A(bid, "four")
+    t0 = b.start + 0.25
     pos = [(200, 560, -0.05), (520, 560, 0.04), (200, 880, 0.04), (520, 880, -0.04)]
     for k, (x, y, rot) in enumerate(pos):
-        tk = t0 - 0.2 + k * 0.32
+        tk = t0 + k * 0.45
         a = appear(t, tk)
         if a > 0:
             cue("pop", t, tk)
@@ -938,7 +952,7 @@ def filter_funnel(cr, x, y, s=1.0, drip=0.0):
 def S15(cr, t, tl, bid):
     A = tl.at
     tb, tp, ta = A(bid, "blood"), A(bid, "purify"), A(bid, "antibodies")
-    a = appear(t, tb - 0.2)
+    a = appear(t, tl.by_id[bid].start + 0.1)
     if a > 0:
         blood_bag(cr, 150, 640, a, 1 - 0.4 * seg(t, tp, tp + 1.2))
     arrow(cr, 245, 640, 290, 640, seg(t, tp - 0.3, tp))
@@ -1117,7 +1131,7 @@ def S20(cr, t, tl, bid, all_x=False):
     words = ["cutting", "sucking", "ropes", "herbs"]
     pos = [(170, 640, -0.06), (420, 660, 0.05), (170, 960, 0.04), (420, 980, -0.05)]
     for k, (x, y, rot) in enumerate(pos):
-        tk = tl.by_id[bid].start if all_x else A(bid, words[k])
+        tk = tl.by_id[bid].start if all_x else (A(bid, words[k]) if k else tl.by_id[bid].start + 0.3)
         a = appear(t, tk - 0.25) if not all_x else 1
         if a > 0:
             with place(cr, x + 50, y, a):
@@ -1156,7 +1170,8 @@ SHOTS = {
     "s2": Shot(S2, "HOOK", 2, "khaki", "NOT A LAB.", "A HORSE.", "horse"),
     "s3": Shot(S3, "INDIA", 3, "cream", "EVERY YEAR", "58,000", "fifty-eight"),
     "s4": Shot(S4, "THE WORLD", 4, "khaki", "CLOSE TO", "HALF", "half"),
-    "s5": Shot(S5, "THE VENOM", 1, "teal", "FIRST,", "THE VENOM", "venom"),
+    "s5": Shot(S5, "THE VENOM", 1, "teal", "HOW DOES A HORSE", "FIX IT?", "fix",
+               extra=dict(phases=[("first", "FIRST,", "THE VENOM", "venom")])),
     "s6": Shot(S6, "THE VENOM", 2, "dark", "YOUR BODY", "RUNS ON MESSAGES", "messages"),
     "s7": Shot(S7, "THE VENOM", 3, "dark", "MOVE.", "BREATHE.", "breathe"),
     "s8": Shot(S8, "THE VENOM", 4, "dark", "IT JAMS", "THE SIGNAL", "jams"),

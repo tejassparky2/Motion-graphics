@@ -696,8 +696,13 @@ def _shot(cr, t, tl, shots, name, start, end, beat_id):
     cr.restore()
     header(cr, sh.tone, sh.label, sh.fig)
     b = tl.by_id[beat_id]
-    t_big = tl.at(beat_id, sh.big_at) if sh.big_at else b.start + 0.35
-    headline(cr, t, sh.tone, sh.small, sh.big, start, t_big)
+    small, big, big_at, t0 = sh.small, sh.big, sh.big_at, start
+    for word, sm, bg, bat in sh.extra.get("phases", ()):   # a line can change headline part-way through
+        tw = tl.at(beat_id, word)
+        if t >= tw - 0.05:
+            small, big, big_at, t0 = sm, bg, bat, tw - 0.05
+    t_big = tl.at(beat_id, big_at) if big_at else b.start + 0.35
+    headline(cr, t, sh.tone, small, big, t0, t_big)
 
 
 def frame(cr, t, tl, shots):
