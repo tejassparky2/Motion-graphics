@@ -84,7 +84,7 @@ def draw(cr, t, tl):
     headline(cr, t, B["s2"].start + 0.2, B["s3"].end + 0.2, "anthropic.com/engineering", "Redesigning source control for agents",
              [("Oct 13, 2026", GREY), ("main repo: off git", ORANGE)])
     bignum(cr, t, B["s6"].start + 1.4, B["s6"].end + 0.2, "merged changes per day", 2500, "May 2026", col=GREY)
-    bignum(cr, t, B["s7"].start, B["s8"].end + 0.2, "merged changes per day", 30000, "September 2026", sub="over", col=ORANGE)
+    bignum(cr, t, B["s7"].start, B["s8"].end + 0.2, "merged changes per day", "30,000+", "September 2026", col=ORANGE, count=False)
     bignum(cr, t, B["s9"].start + 0.3, B["s9"].end + 0.2, "CI", 25000000, "code checkouts a day", col=YEL)
     bignum(cr, t, B["s11"].start + 0.3, B["s11"].end + 0.2, "the normal git way", "600 PB", "of traffic a day", col=RED)
     bignum(cr, t, B["s13"].start + 0.4, B["s13"].end + 0.2, "Scion", "200x", "less CPU and memory", sub="than the old git mirrors", col=GREEN)
