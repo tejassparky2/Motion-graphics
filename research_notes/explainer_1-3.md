@@ -101,7 +101,8 @@ Facts and sources:
 - Resistance genes spread between bacteria (including different species) on plasmids: American Society for
   Microbiology, https://asm.org/articles/2023/january/plasmids-and-the-spread-of-antibiotic-resistance-g.
 - "Only when prescribed; never share or use leftover antibiotics": WHO antimicrobial resistance fact sheet.
-- Before render: confirm the CDC "viruses" page and the WHO wording directly (search results only).
+- Checked: CDC (antibiotics don't help viruses such as colds and flu; don't take someone else's antibiotics; don't
+  keep leftovers) and WHO AMR fact sheet (misuse and overuse drive resistance).
 
 ---
 
@@ -145,7 +146,7 @@ Facts and sources:
   (https://www.cdc.gov/dpdx/malaria/index.html).
 - Synchronised bursting gives periodic fever (every second day for vivax/ovale; less regular in falciparum):
   standard parasitology; worded as "in some types".
-- "Thousands" from one liver-stage parasite: conservative (liver schizonts release thousands to tens of thousands
-  of merozoites); confirm a citation (e.g. CDC Yellow Book / a review) before render.
+- "Thousands" from one liver-stage parasite: Prudêncio, Rodriguez & Mota, "The silent path to thousands of
+  merozoites: the Plasmodium liver stage", Nature Reviews Microbiology 2006.
 - Ronald Ross, 20 Aug 1897, Secunderabad, parasite in an Anopheles mosquito; Nobel Prize 1902: LSHTM
   (https://www.lstmed.ac.uk/node/1777), nobelprize.org.

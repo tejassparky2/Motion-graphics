@@ -11,6 +11,19 @@ English". Decisions (24 Oct): this **replaces** the talking-organs format; voice
 tags**; length **75-90 s**; art drawn by us in the vintage-paper style + public-domain Gray's Anatomy (1918) plates;
 topics our choice. Study of the references: `research_notes/explainer_study.md`. First three scripts (snakebite
 antivenom, superbugs, malaria) with sources: `research_notes/explainer_1-3.md`; script approval before rendering.
+How the explainers are built:
+- Look: `motion/paper.py` (paper with creases, FIG header, two-line headline that fills in as it's said, flip
+  counter, stamps, stopwatch, vial, microscope, polaroids, India/world maps from Natural Earth, India point-of-view
+  boundary). A video lists `SHOTS = {scene: Shot(draw, label, fig, tone, small, big, big_at)}` and its draw() calls
+  `P.frame()`. No subtitles (the headline is the only text tied to the voice, like the references). The channel
+  logo sits small at the top-left above the header (`P.brand`).
+- Voice: `NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)` (calmer than the story videos' 5.5 syllables/s),
+  `gap=0.42` between lines, `MUSIC = "pad"`. Words the voice gets wrong are respelled for speech only:
+  `[kryte|krait]`. Turbo needs `/home/user/.venv-clone` (chatterbox-tts 0.1.7 + `setuptools<70` for perth);
+  the pipeline venv needs `av<16` for faster-whisper.
+- Videos: `videos/snakebite.py` (+ `snakebite_shots.py`), `videos/superbugs.py`, `videos/malaria.py`.
+- Check stills before rendering, then `tools/render_check.sh <video>` (render + Whisper small + Whisper medium).
+
 Everything below describes the old format (videos 1-26), kept for reference.
 
 ## The old format (videos 1-26)
