@@ -250,3 +250,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-24** (with a reference rap lyric video, Video-75963.mp4) Can you make rap music videos like this not for this channel just a question
 - **2026-10-24** Can't you compose the song as gemini?
 - **2026-10-24** Works but this is not for this channel
+- **2026-10-24** (with a reference reel, Video-1423.mp4, Hindi HIV explainer) I want this type of videos in doc channel but in hindi study all videos of this page :https://www.instagram.com/meanwhilemayank ... If instagram blocks try workaround with opensouce or any way avaible [interrupted, then resent with "in English"]

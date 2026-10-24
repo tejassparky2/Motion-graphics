@@ -102,6 +102,7 @@ Every owner message, word for word, is in **docs/owner_messages_log.md**.
 
 ## 5. Other channels and chats (keep them apart)
 - **Body Facts** (doctor channel): chat session_01SqhLvv9BAUwbaLsavHEv2W, branch `ccr-56282fe5-evehq4-doctor`.
+  New chat in this account (24 Oct 2026): session_01JxTaQcbebRyNYhRFBsreT8 (English explainers, meanwhilemayank style).
 - **Global news & tech**: branch `ccr-56282fe5-evehq4-news`.
 - **3D business voice-over/editing** (owner's cloned voice): chat session_015ciz34JsfciV5Yzyk9A6zE, branch
   `ccr-56282fe5-evehq4-3d`.

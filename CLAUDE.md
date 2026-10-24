@@ -155,6 +155,8 @@
   From 14 Oct the new chat (which can use ELEVENLABS_API_KEY) runs both channels; see NEXT_SESSION.md. The full history since
   Sep 29 is in PROJECT_HISTORY.md, and every owner message word for word is in docs/owner_messages_log.md.
 - The doctor channel ("Body Facts") is a separate channel with its own chat and branch (`ccr-56282fe5-evehq4-doctor`). Don't make doctor videos on this branch.
+  Since the account move its chat in this account is session_01JxTaQcbebRyNYhRFBsreT8 (owner, 24 Oct 2026: English
+  medical explainers in the style of the Instagram page meanwhilemayank).
 - **Low-poly 3D channel** (Claude/Codex dev-comedy skits; owner, 17 Oct 2026): a separate channel that **moves to its
   own chat** (owner, 17 Oct: "low poly goes to different chat"). Code and notes: `channels/lowpoly/` (README.md has
   the references, look, music and camera rules; episode 1 is out/lowpoly/ep01_code_review.mp4). Don't make low-poly
