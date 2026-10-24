@@ -117,7 +117,7 @@ def merozoite(cr, x, y, r=7, a=1.0):
     fill(cr, hexc("#e9d6f5"), a)
 
 
-def big_cell(cr, x, y, r, swell=0.0, n=0, t=0.0, burst=0.0, col=None):
+def big_cell(cr, x, y, r, swell=0.0, n=0, t=0.0, burst=0.0, col=None, spread=2.5, drop=0.0):
     """A liver cell (or red cell) filling with `n` parasites; `burst` 0..1 splits it open."""
     col = col or hexc("#c98a6a")
     R = r * (1 + 0.25 * swell)
@@ -138,8 +138,9 @@ def big_cell(cr, x, y, r, swell=0.0, n=0, t=0.0, burst=0.0, col=None):
                 cr.line_to(x + R * 0.6 * math.cos(ang + 0.2), y + R * 0.6 * math.sin(ang + 0.2))
                 stroke(cr, hexc("#3a2018"), 3, a)
     for i, (ang, d) in enumerate(pts[:n]):
-        dd = d * R * 0.8 * (1 + 2.5 * ease_out(burst))
-        merozoite(cr, x + dd * math.cos(ang + t * 0.1), y + dd * math.sin(ang + t * 0.1), 6 if n > 30 else 8)
+        dd = d * R * 0.8 * (1 + spread * ease_out(burst))
+        merozoite(cr, x + dd * math.cos(ang + t * 0.1), y + dd * math.sin(ang + t * 0.1) + drop * ease_out(burst),
+                  6 if n > 30 else 8)
 
 
 def calendar(cr, x, y, day, s=1.0, flip=0.0):
@@ -269,7 +270,7 @@ def M2(cr, t, tl, bid):
     b = tl.by_id[bid]
     k = int(seg(t, b.start, b.end) * 6.99)
     days = [1, 2, 3, 4, 5, 6, 7]
-    calendar(cr, 200, 560, days[k], 0.9, flip=(seg(t, b.start, b.end) * 7) % 1 * 0.6)
+    calendar(cr, 200, 560, days[k], 0.9)
     health_card(cr, 220, 720, t, [A(bid, "fine") - 0.3 + 0.25 * j for j in range(3)])
 
 
@@ -322,7 +323,7 @@ def M6(cr, t, tl, bid):
     def slide_(c):
         for k in range(5):
             sporozoite(c, -140 + k * 70, -60 + 50 * math.sin(k * 1.7 + t), 2.0, 0.4 * math.sin(k + t * 0.8))
-    P.microscope(cr, 360, 760, 260, slide_, tint=hexc("#eef0dc"))
+    P.microscope(cr, 360, 810, 230, slide_, tint=hexc("#eef0dc"))
     a = appear(t, A(bid, "parasite"))
     if a > 0:
         with place(cr, 470, 1060, a, -0.05):
@@ -331,10 +332,10 @@ def M6(cr, t, tl, bid):
     for k, w in enumerate(("virus", "bacterium")):
         a2 = appear(t, A(bid, w))
         if a2 > 0 and t < A(bid, "parasite"):
-            with place(cr, 200 + 320 * k, 500, a2):
+            with place(cr, 200 + 320 * k, 470, a2):
                 P.card(cr, -110, -36, 220, 64, hexc("#efe6d2"), torn=True, seed=k)
                 text(cr, w.upper(), 0, 14, 34, INK, align="center")
-            red_x(cr, t, A(bid, w) + 0.3, 200 + 320 * k, 500, 50, 9)
+            red_x(cr, t, A(bid, w) + 0.3, 200 + 320 * k, 470, 50, 9)
 
 
 def M7(cr, t, tl, bid):
@@ -422,7 +423,7 @@ def M10(cr, t, tl, bid):
 def M11(cr, t, tl, bid):
     A = tl.at
     tb, tf = A(bid, "burst"), A(bid, "flood")
-    big_cell(cr, 360, 640, 180, swell=0.6, n=60, t=t, burst=seg(t, tb, tb + 0.6))
+    big_cell(cr, 360, 640, 180, swell=0.6, n=60, t=t, burst=seg(t, tb, tb + 1.2), spread=0.5, drop=360)
     if t > tb:
         cue("hit", t, tb)
     a = seg(t, tf - 0.4, tf + 0.6)
@@ -501,8 +502,8 @@ def M16(cr, t, tl, bid):
     tn = A(bid, "nobel")
     a = appear(t, tn - 0.2)
     if a > 0:
-        medal(cr, 520, lerp(700, 960, ease_out(seg(t, tn - 0.2, tn + 0.3))), 0.9)
-        text(cr, "1902", 520, 1120, 26, INK, P.FONT_MONO, align="center", spacing=2, alpha=a)
+        medal(cr, 520, lerp(700, 960, ease_out(seg(t, tn - 0.2, tn + 0.3))), 0.9, year="1902")
+        text(cr, "NOBEL PRIZE", 520, 1120, 26, INK, P.FONT_MONO, align="center", spacing=2, alpha=a)
 
 
 def M17(cr, t, tl, bid):

@@ -332,7 +332,8 @@ def stamp(cr, t, start, s, x, y, rot=-0.12, col=None, size=64, box=True):
         r = np.random.default_rng(hash(s) & 0xFFFF)
         cr.set_operator(cairo.OPERATOR_DEST_OUT)
         for _ in range(70):
-            cr.arc(r.uniform(-w / 2 - 20, w / 2 + 20), r.uniform(-size * 0.6, size * 0.6), r.uniform(1, 3.5), 0, 6.3)
+            cr.arc(r.uniform(-w / 2 - 20, w / 2 + 20), r.uniform(-size * 0.6, size * 0.6),
+                   r.uniform(1, 3.5) * min(1.0, size / 64), 0, 6.3)
             cr.set_source_rgba(0, 0, 0, 0.75)
             cr.fill()
         cr.pop_group_to_source()

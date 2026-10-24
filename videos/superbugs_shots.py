@@ -277,7 +277,7 @@ def pill_strip(cr, x, y, s=1.0, used=4):
         with_shadow(cr, d, 5, 8, 0.3)
 
 
-def medal(cr, x, y, s=1.0):
+def medal(cr, x, y, s=1.0, year="1945"):
     with place(cr, x, y, s):
         def d(c):
             poly(c, [(-40, -170), (-6, -170), (-6, -60), (-40, -80)])
@@ -290,7 +290,7 @@ def medal(cr, x, y, s=1.0):
             c.fill()
             c.arc(0, 0, 64, 0, 6.3)
             stroke(c, hexc("#9c7a22"), 3)
-            text(c, "1945", 0, 14, 40, hexc("#6a5010"), align="center")
+            text(c, year, 0, 14, 40, hexc("#6a5010"), align="center")
         with_shadow(cr, d, 5, 8, 0.3)
 
 
@@ -311,11 +311,13 @@ def year_card(cr, x, y, year, s=1.0):
 # ================================================================ the population (b7 - b11)
 _R = np.random.default_rng(21)
 POP = []
-while len(POP) < 46:
+for _ in range(4000):          # random packing of rod-shaped bacteria inside the microscope circle
     ang, d = _R.uniform(0, 6.3), _R.uniform(0, 1) ** 0.6 * 215
     x, y = d * math.cos(ang), d * math.sin(ang)
-    if all(math.hypot(x - a, y - b) > 52 for a, b, _ in POP):
+    if all(math.hypot(x - a, y - b) > 50 for a, b, _ in POP):
         POP.append((x, y, _R.uniform(0, 6.3)))
+    if len(POP) == 40:
+        break
 MUTANTS = {5, 17, 31}
 
 
@@ -393,9 +395,9 @@ def B5(cr, t, tl, bid):
     flip_counter(cr, t, -10, "1,140,000", 360, 560, 80, 0.01, unit="DIRECTLY")
     a = appear(t, t0 - 0.3)
     if a > 0:
-        with place(cr, 360, 860, a):
-            flip_counter(cr, t, t0 - 0.3, "4,710,000", 0, 0, 92, 1.0, unit="A PART IN · 2021")
-    arrow(cr, 360, 650, 360, 760, seg(t, t0 - 0.6, t0 - 0.3))
+        with place(cr, 360, 900, a):
+            flip_counter(cr, t, t0 - 0.3, "4,710,000", 0, 0, 92, 1.0, unit="LINKED DEATHS · 2021")
+    arrow(cr, 360, 700, 360, 790, seg(t, t0 - 0.6, t0 - 0.3))
 
 
 def B6(cr, t, tl, bid):
@@ -467,7 +469,7 @@ def B13(cr, t, tl, bid):
     A = tl.at
     tk = A(bid, "kinds")
     bacterium(cr, 200, 700, 2.0, 0.1, MUTANT, shield=1.0, t=t)
-    coccus(cr, 520, 760, 44, shield=seg(t, tk + 0.6, tk + 0.9))
+    coccus(cr, 520, 760, 56, shield=seg(t, tk + 0.6, tk + 0.9))
     u = ease_out(seg(t, tk - 0.6, tk + 0.6))
     plasmid(cr, lerp(220, 520, u), lerp(700, 760, u) - 100 * math.sin(math.pi * u), 30, 1, t * 2)
     text(cr, "ROD-SHAPED", 200, 840, 22, INK, P.FONT_MONO, align="center", spacing=2)
@@ -501,13 +503,13 @@ def B15(cr, t, tl, bid):
         text(c, "NOBEL LECTURE · 1945", 110, 480, 20, INK, P.FONT_MONO, spacing=2, alpha=0.8)
         lines = ["Too little of the drug", "can make the microbes", "resistant."]
         for k, s in enumerate(lines):
-            text(c, s, 110, 580 + k * 70, 50, INK, P.FONT_MONO, alpha=seg(t, tt - 0.6 + 0.4 * k, tt - 0.2 + 0.4 * k))
+            text(c, s, 110, 580 + k * 70, 34, INK, P.FONT_MONO, alpha=seg(t, tt - 0.6 + 0.4 * k, tt - 0.2 + 0.4 * k))
         text(c, "(his warning, in short)", 110, 800, 18, INK, P.FONT_MONO, alpha=0.6)
     with_shadow(cr, card_, 6, 10, 0.3)
     if t > A(bid, "resist"):
         c0 = A(bid, "resist")
         cr.move_to(110, 590 + 2 * 70 + 10)
-        cr.line_to(lerp(110, 400, seg(t, c0, c0 + 0.3)), 590 + 2 * 70 + 10)
+        cr.line_to(lerp(110, 330, seg(t, c0, c0 + 0.3)), 590 + 2 * 70 + 10)
         stroke(cr, RED, 6)
     medal(cr, 560, 1000, 0.8)
 
@@ -585,7 +587,7 @@ def B21(cr, t, tl, bid):
     u = seg(t, A(bid, "between"), tn)
     year = int(round(lerp(2025, 2050, u)))
     year_card(cr, 360, 560, str(year))
-    flip_counter(cr, t, A(bid, "thirty-nine") - 0.3, "39,000,000", 360, 900, 80, 1.3, unit="DEATHS · 2025-2050 · FORECAST")
+    flip_counter(cr, t, A(bid, "thirty-nine") - 0.3, "39,000,000", 360, 900, 80, 1.3, unit="DEATHS · 2025-2050 · FORECAST", tone="dark")
 
 
 def B22(cr, t, tl, bid):
@@ -595,7 +597,7 @@ def B22(cr, t, tl, bid):
     a = appear(t, A(bid, "honest") - 0.2)
     if a > 0:
         with place(cr, 360, 560, a):
-            P.comment_bubble(cr, -280, -80, 560, 150, "BE HONEST")
+            P.comment_bubble(cr, -280, -80, 560, 150, "FOR A COLD? BE HONEST")
 
 
 SHOTS = {
