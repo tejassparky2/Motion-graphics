@@ -6,7 +6,7 @@ lyrics; never use the owner's cloned voice. Songs and renders stay out of the re
 
 ## Making a video
 1. Whisper word timings for the whole song (faster-whisper medium; pass the audio as a numpy array, the installed
-   PyAV rejects file paths): see `words.py`-style snippet in the session notes, output WORDS.json.
+   PyAV rejects file paths): `python channels/rap/words.py SONG.wav WORDS.json LYRICS.txt`.
 2. Measure the beat grid (BPM, first-beat PHASE) and write a song module like `still_breathing.py`
    (cut start/length in beats, lyric lines with marks, shots per line).
 3. `python channels/rap/lyricvid.py still_breathing SONG.wav WORDS.json out/rap/NAME.mp4 [--preview 8]`
