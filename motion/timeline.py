@@ -6,6 +6,9 @@ starts or when a particular word is spoken, and animate to that.
 
 Script markup: `[spoken words|shown]` says one thing and shows another in the captions, e.g.
 `[a hundred rupees|₹100]`. Punctuation right after the bracket is kept.
+A sound or mood tag on its own, e.g. `[chuckle]` or `[sniff]` (Chatterbox Turbo; see voice.TURBO_TAGS), is voiced
+with the next word (or the last word, at the end of a line), never shown, and dropped by the other voice engines.
+Glued to a word (`know.[chuckle]`) it is voiced right after that word instead.
 """
 import re
 import sys
@@ -13,13 +16,15 @@ from dataclasses import dataclass, field
 
 from . import voice
 
-TOKEN = re.compile(r"\[([^|\]]+)\|([^\]]+)\]([^\s\[]*)|(\S+)")
+TOKEN = re.compile(r"\[([^|\]]+)\|([^\]]+)\]([^\s\[]*)|\[([a-z ]+)\]|(\S+)")
 
 
 @dataclass
 class Unit:
     spoken: list          # spoken words
     shown: str            # caption text
+    pre: str = ""         # voice tags said just before / after this unit (never shown)
+    post: str = ""
     start: float = 0.0
     end: float = 0.0
 
@@ -34,6 +39,8 @@ class Beat:
     turn_pause: float = 0.32  # when a line starts as narration and a character takes over at `speaker_from`
     gap: float = 0.18     # silence before this beat
     pace: float = 1.0     # speed multiplier for this line (<1 = slower, for emphasis)
+    hold: float = 0.0     # a silent beat (text ""): this many seconds of picture with no voice (memes)
+    tone: str = None      # ElevenLabs audio tag for this line's takes ("excited", "whispers"); never shown
     units: list = field(default_factory=list)
     start: float = 0.0
     end: float = 0.0
@@ -43,17 +50,38 @@ class Beat:
     def spoken_text(self):
         return " ".join(w for u in self.units for w in u.spoken)
 
+    def say(self, a0, a1):
+        """Spoken words a0..a1 with their voice tags, as the voice engine is given them."""
+        tagged = []
+        for u in self.units:
+            for i, w in enumerate(u.spoken):
+                tagged.append(" ".join(x for x in ((u.pre if i == 0 else ""), w,
+                                                   (u.post if i == len(u.spoken) - 1 else "")) if x))
+        return " ".join(tagged[a0:a1])
+
 
 def parse(text):
-    units = []
+    units, tags = [], []
     for m in TOKEN.finditer(text):
+        if m.group(4):
+            if f"[{m.group(4)}]" not in voice.TURBO_TAGS:
+                raise ValueError(f"unknown voice tag [{m.group(4)}] in: {text}")
+            tags.append(f"[{m.group(4)}]")
+            continue
         if m.group(1):
             spoken = m.group(1).split()
             suffix = m.group(3) or ""
             spoken[-1] += suffix
             units.append(Unit(spoken, m.group(2) + suffix))
         else:
-            units.append(Unit([m.group(4)], m.group(4)))
+            word, post = m.group(5), ""
+            glued = re.fullmatch(r"(.+?)((?:\[[a-z ]+\])+)", word)    # "know.[chuckle]": a reaction right after a word
+            if glued and all(f"[{g}]" in voice.TURBO_TAGS for g in re.findall(r"\[([a-z ]+)\]", glued.group(2))):
+                word, post = glued.group(1), " ".join(re.findall(r"\[[a-z ]+\]", glued.group(2)))
+            units.append(Unit([word], word, post=post))
+        units[-1].pre, tags = " ".join(tags), []
+    if tags and units:
+        units[-1].post = " ".join(tags)
     return units
 
 
@@ -98,7 +126,11 @@ class Timeline:
         for i, spec in enumerate(script):
             b = Beat(**spec)
             b.units = parse(b.text)
-            b.audio, wt = self._speak(b)
+            if not b.units:          # silent beat: picture only
+                import numpy as np
+                b.audio, wt = np.zeros(int(b.hold * voice.SR)), []
+            else:
+                b.audio, wt = self._speak(b)
             b.gap = max(b.gap, BEAT_GAP)
             if i:
                 t += b.gap
@@ -151,6 +183,18 @@ class Timeline:
         return list(zip(cuts, cuts[1:])), pauses
 
     @staticmethod
+    def _turn(b):
+        """Index of the first word the character speaks (0 if the whole line is theirs)."""
+        if not b.speaker_from:
+            return 0
+        k, n = _norm(b.speaker_from), 0
+        for u in b.units:
+            if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
+                return n
+            n += len(u.spoken)
+        return 0
+
+    @staticmethod
     def _speak(b):
         """Audio and per-word times for a beat, read the way a person would: every sentence is its own take, joined
         with a full-stop pause, so sentences never blur into each other. Where a line switches from narrator to
@@ -158,12 +202,13 @@ class Timeline:
         import numpy as np
         words = b.spoken_text.split()
         spans, pauses = Timeline._takes(b)
+        turn = Timeline._turn(b)
         audio, times, off = [], [], 0.0
         for c, (a0, a1) in enumerate(spans):
-            text = " ".join(words[a0:a1])
-            who = Timeline._who(b, a0)
-            clip = voice.synth(text, b.pace, who)
-            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who)]
+            text = b.say(a0, a1)
+            who = b.speaker if (b.speaker and a0 >= turn) else None   # the character's own voice, if it has one
+            clip = voice.synth(text, b.pace, who, b.tone)
+            times += [(s0 + off, e0 + off) for s0, e0 in voice.word_times(text, clip, b.pace, who, b.tone)]
             audio.append(clip)
             off += len(clip) / voice.SR
             if c < len(pauses):
@@ -172,30 +217,33 @@ class Timeline:
         return np.concatenate(audio), times
 
     @staticmethod
-    def _who(b, first_word):
-        """Who speaks the take starting at `first_word`: the beat's speaker from `speaker_from` on (or the whole
-        line if there's no `speaker_from`), otherwise the narrator (None)."""
-        if not b.speaker:
-            return None
-        if not b.speaker_from:
-            return b.speaker
-        k, n = _norm(b.speaker_from), 0
-        for u in b.units:
-            if k in _norm(u.shown) or k in _norm(" ".join(u.spoken)):
-                return b.speaker if first_word >= n else None
-            n += len(u.spoken)
-        return None
+    def sentences(script):
+        """Every take the script needs, so a slow voice engine can generate them all in one batch.
+        -> [(text with voice tags, pace, character or None)]"""
+        out = []
+        for spec in script:
+            b = Beat(**spec)
+            b.units = parse(b.text)
+            if b.spoken_text:
+                turn = Timeline._turn(b)
+                out += [(b.say(a0, a1), b.pace, b.speaker if (b.speaker and a0 >= turn) else None)
+                        for a0, a1 in Timeline._takes(b)[0]]
+        return out
 
     @staticmethod
-    def sentences(script):
-        """Every take the script needs, so a slow voice engine can generate them all in one batch."""
+    def voiced_takes(script):
+        """Every take with who speaks it and its tone: [(text, pace, who, tone)] (for the ElevenLabs check)."""
         out = []
         for spec in script:
             b = Beat(**spec)
             b.units = parse(b.text)
             words = b.spoken_text.split()
-            out += [(" ".join(words[a0:a1]), b.pace) for a0, a1 in Timeline._takes(b)[0]
-                    if Timeline._who(b, a0) not in voice.CAST_VOICES]   # character voices aren't the clone
+            if not words:
+                continue
+            turn = Timeline._turn(b)
+            for a0, a1 in Timeline._takes(b)[0]:
+                who = b.speaker if (b.speaker and a0 >= turn) else None
+                out.append((b.say(a0, a1), b.pace, who, b.tone))
         return out
 
     # ---- queries used by scenes
@@ -237,6 +285,7 @@ class Timeline:
         words = sum(len(u.spoken) for b in self.beats for u in b.units)
         speech = sum(b.end - b.start for b in self.beats)
         gaps = [b.start - a.end for a, b in zip(self.beats, self.beats[1:])]
+        speech -= sum(b.hold for b in self.beats if not b.units)
         print(f"narration: {words} words, {speech:.1f}s of speech in {self.total:.1f}s "
-              f"({100 * speech / self.total:.0f}% coverage), {60 * words / speech:.0f} wpm while speaking, "
-              f"max gap between lines {max(gaps):.2f}s", file=sys.stderr)
+              f"({100 * speech / self.total:.0f}% coverage), {60 * words / max(speech, 0.01):.0f} wpm while speaking, "
+              f"max gap between lines {max(gaps, default=0):.2f}s", file=sys.stderr)

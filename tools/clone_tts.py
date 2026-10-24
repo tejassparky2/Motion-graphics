@@ -3,6 +3,8 @@ virtualenv (torch); motion/voice.py calls it once per render with every sentence
 
   /home/user/.venv-clone/bin/python tools/clone_tts.py jobs.json
   jobs.json: [["text", "out.wav"], ...]   ->   24 kHz mono wavs, start/end silence trimmed gently
+  With CLONE_MODEL=turbo a job can add a third item, a reference wav (a character's synthetic Kokoro voice) whose
+  timbre Turbo takes; without it Turbo uses its own stock voice. Turbo voices tags like [chuckle] in the text.
 
 Chatterbox's Perth watermark is left in place.
 """
@@ -32,10 +34,30 @@ def trim(w, sr):
 
 def main():
     jobs = json.load(open(sys.argv[1]))
-    model = ChatterboxTTS.from_pretrained(device="cpu")
-    model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
-    for k, (text, out) in enumerate(jobs, 1):
-        w = model.generate(text, exaggeration=EXAGGERATION, cfg_weight=CFG)[0].numpy()
+    turbo = os.environ.get("CLONE_MODEL") == "turbo"     # Chatterbox Turbo's stock voice, no prompt (not a clone)
+    if turbo:
+        from chatterbox.tts_turbo import ChatterboxTurboTTS
+        model = ChatterboxTurboTTS.from_pretrained(device="cpu")
+    else:
+        model = ChatterboxTTS.from_pretrained(device="cpu")
+        model.prepare_conditionals(PROMPT, exaggeration=EXAGGERATION)
+    stock = model.conds if turbo else None
+    if not turbo and os.environ.get("ALLOW_OWNER_CLONE") != "1":
+        # owner, 15 Oct 2026: "I don't want videos in my cloned voice" / "Don't use my cloned voice"
+        sys.exit("clone_tts: the owner's cloned voice is switched off (owner, 15 Oct 2026). Use CLONE_MODEL=turbo, "
+                 "or set ALLOW_OWNER_CLONE=1 only if the owner asks for it again.")
+    if not turbo and any(len(j) > 2 for j in jobs):
+        sys.exit("clone_tts: jobs carry Turbo reference voices but CLONE_MODEL is not 'turbo'; refusing to voice them "
+                 "in the owner's cloned voice")
+    for k, (text, out, *ref) in enumerate(jobs, 1):
+        if turbo:
+            if ref:
+                model.prepare_conditionals(ref[0])
+            else:
+                model.conds = stock
+            w = model.generate(text)[0].numpy()
+        else:
+            w = model.generate(text, exaggeration=EXAGGERATION, cfg_weight=CFG)[0].numpy()
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sf.write(out + ".tmp.wav", trim(w, model.sr), model.sr)
         os.replace(out + ".tmp.wav", out)

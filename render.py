@@ -59,8 +59,9 @@ def load(name):
         print(f"narration: {media}", file=sys.stderr)
     else:
         takes = Timeline.sentences(mod.SCRIPT)
-        narrator.clone_prefetch([t for t, _ in takes])   # own-voice clone: generate all sentences at once
+        narrator.clone_prefetch([(t, w) for t, _, w in takes])   # clone/Turbo: generate all sentences at once
         narrator.clone_check(takes)      # ...and re-make any take Whisper medium mishears
+        narrator.el_check(Timeline.voiced_takes(mod.SCRIPT))   # same check for ElevenLabs takes
     return mod
 
 
@@ -115,7 +116,11 @@ def write_metadata(path):
             f.write(f"**Pinned comment**\n```\n{m['pinned_comment']}\n```\n\n")
         words = sum(len(u.spoken) for b in tl.beats for u in b.units)
         voiced = (f"narrated by the channel owner (`{os.path.basename(VIDEO['narration'])}`)" if VIDEO.get("narration")
+                  else "Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned)"
+                  if narrator.ENGINE == "clone" and narrator.CLONE_MODEL == "turbo"
                   else "the channel owner's own cloned voice" if narrator.ENGINE == "clone"
+                  else f"ElevenLabs voice `{next((k for k, v in narrator.ELEVEN.items() if v == narrator.VOICE), narrator.VOICE)}` ({narrator.EL_MODEL})"
+                  if narrator.ENGINE == "elevenlabs"
                   else f"voice `{narrator.VOICE}` at speed {narrator.SPEED}")
         f.write(f"**Video facts:** {tl.total:.1f} s, {words} words of narration, {voiced}. Made for kids: **No**.\n")
     print(f"wrote {path}", file=sys.stderr)
@@ -129,34 +134,78 @@ def draw(surface, frame):
     t = frame / FPS
     engine.set_frame(frame)
     cr = cairo.Context(surface)
-    VIDEO["mod"].draw(cr, t, timeline())
+    mod = VIDEO["mod"]
+    mod.draw(cr, t, timeline())
+    series = getattr(mod, "SERIES", None)
+    if series:                                   # series identity in the first 2 s and on the final line (research F3/E4)
+        from motion.polish import series_tag
+        tl = timeline()
+        last = tl.beats[-1]
+        series_tag(cr, t, series, 0.0, 2.2)
+        series_tag(cr, t, getattr(mod, "END_TAG", None) or series, last.start, tl.total)
     surface.flush()
 
 
+def _encode_frames(first, last, path, report=False):
+    """Draw frames [first, last) and encode them to `path`; returns the sound cues registered while drawing."""
+    engine.EVENTS.clear()
+    cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
+           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
+           "-threads", "1", path]
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    for i in range(first, last):
+        draw(surface, i)
+        proc.stdin.write(bytes(surface.get_data()))
+        if report and (i - first) % FPS == 0:
+            print(f"\rrendering {(i - first) / FPS:5.1f}s / {(last - first) / FPS:.1f}s (one of the parallel parts)",
+                  end="", file=sys.stderr, flush=True)
+    proc.stdin.close()
+    if proc.wait() != 0:
+        raise RuntimeError("ffmpeg failed")
+    return list(engine.EVENTS)
+
+
+def _encode_part(args):
+    return _encode_frames(*args)
+
+
 def render_video(out, audio=True, voice=True):
+    """Frames are drawn in parallel (one process per CPU core; every frame depends only on its time), each process
+    encodes its own part, and the parts are joined without re-encoding."""
+    import multiprocessing as mp
     os.makedirs(os.path.dirname(out), exist_ok=True)
     n = int(round(total_duration() * FPS))
     silent = out if not audio else os.path.join(ROOT, "build", f"{VIDEO['name']}_silent.mp4")
     os.makedirs(os.path.dirname(silent), exist_ok=True)
-    cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
-           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
-           *([] if audio else CLEAN), "-movflags", "+faststart", silent]
-    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-    for i in range(n):
-        draw(surface, i)
-        proc.stdin.write(bytes(surface.get_data()))
-        if i % FPS == 0:
-            print(f"\rrendering {i / FPS:5.1f}s / {n / FPS:.1f}s", end="", file=sys.stderr, flush=True)
-    proc.stdin.close()
-    if proc.wait() != 0:
-        sys.exit("ffmpeg failed")
+    workers = max(1, min(int(os.environ.get("RENDER_WORKERS", os.cpu_count() or 1)), 8))
+    bounds = [round(n * k / workers) for k in range(workers + 1)]
+    parts = [os.path.join(ROOT, "build", f"{VIDEO['name']}_part{k}.mp4") for k in range(workers)]
+    jobs = [(bounds[k], bounds[k + 1], parts[k], k == 0) for k in range(workers)]
+    if workers == 1:
+        events = [_encode_part(jobs[0])]
+    else:
+        with mp.get_context("fork").Pool(workers) as pool:
+            events = pool.map(_encode_part, jobs)
     print(file=sys.stderr)
+    engine.EVENTS[:] = [e for ev in events for e in ev]   # parts are in time order, so this is the sequential order
+    listing = os.path.join(ROOT, "build", f"{VIDEO['name']}_parts.txt")
+    with open(listing, "w") as f:
+        f.writelines(f"file '{p}'\n" for p in parts)
+    subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", listing,
+                           "-c", "copy", *([] if audio else CLEAN), "-movflags", "+faststart", silent])
+    for p in parts + [listing]:
+        os.remove(p)
     if audio:
         from motion.audio import build_soundtrack
+        twist = getattr(VIDEO["mod"], "TWIST", None)   # the bed drops out under the twist line (research A5)
+        if twist:
+            b = timeline().by_id[twist]
+            engine.EVENTS.append((max(0.0, b.start - 0.12), "hush", b.end - b.start + 0.12))
+            engine.EVENTS.append((max(0.0, b.start - 0.5), "tick", 0.0))
         wav = os.path.join(ROOT, "build", f"{VIDEO['name']}_soundtrack.wav")
         lufs = build_soundtrack(engine.EVENTS, n / FPS, wav, timeline().clips() if voice else None,
-                                seed=VIDEO["name"])
+                                seed=VIDEO["name"], bed=getattr(VIDEO["mod"], "MUSIC", "plucks"))
         print(f"soundtrack: {lufs:.1f} LUFS integrated", file=sys.stderr)
         subprocess.check_call([ffmpeg_bin(), "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy",
                                "-c:a", "aac", "-b:a", "160k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
