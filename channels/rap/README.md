@@ -15,6 +15,8 @@ lyrics; never use the owner's cloned voice. Songs and renders stay out of the re
 ## What each reference is for (owner, 24 Oct 2026)
 - **Reference 1 = visuals AND lyrics**: one big word per beat, key words red, dark teal/navy flat-anime close-ups
   cut on the beat, grain, chromatic edges; emotional "struggling but keep going" rap.
+- **Reference 4** (Video-10770) is the same song as ref 2 with a different video; the owner sent it as the
+  bar for lyric quality ("I need good lyrics from you as this song").
 - **References 2 and 3 = lyrics and voice ONLY, never visuals** ("2nd and 3rd for wonderful lyrics and voice").
   (Still Breathing v1 borrowed red line-art frames and dips to black from them before this was said; the owner is
   watching it first, so it stays as is until they decide.)
@@ -31,7 +33,9 @@ lyrics; never use the owner's cloned voice. Songs and renders stay out of the re
 - Music-app prompt words for this: "soft, intimate, half-sung melodic vocal, close-mic, breathy, slow 60-70 BPM
   half-time, sparse piano / soft guitar, lots of space, gentle reverb". Never name a real artist.
 
-## Lyric lessons from refs 2 and 3 (patterns only, never their lines)
+## Lyric lessons from refs 2-4 (patterns only, never their lines)
+- **One idea made into a person, never named** (ref 2/4: evil as a polite man in a suit). The listener solves it.
+- **Economy**: 20 seconds tell a whole idea; short lines, room to breathe. Cut every line that isn't a picture.
 - **Confess, don't announce.** The strongest lines are plain talk to one person: "I'm not X, I'm just Y" turns
   (denial, then the real feeling) hit harder than slogans.
 - **Specific, small images.** A combed hair, a suit and tie, a name you still say: concrete details carry the emotion.
