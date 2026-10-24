@@ -194,3 +194,13 @@ owner sent ("Even current tech news like this works"). Agent Morphy: 22k followe
   captions that build up word by word (kit.build_caption), UI panels as evidence.
 - Post news episodes fast: the news is the hook, so they go to the front of the calendar.
 Batch 9 (eps 32-35, scripts/batch9_morphy_eps32-35.md) is the first set in this form; every fact checked at the source.
+
+## Owner, 24 Oct 2026: AI news explainers ("latest news videos like this but focus on ai technology software")
+Reference: a talking US flag answers "Hey USA, what's new with you?" and explains New York's measles emergency in
+steps (what happened, "Wait, what?", simple background, history, why, numbers year by year, official action, "What
+does that even do?", what changes, a closing thought); big Anton captions 2-3 words at a time; a picture change every
+~1.5 s. Owner chose: this channel, 4 videos, auto-approved.
+Our form: Dev asks "Hey Claude/Codex, what's new with you?"; the AI explains ONE real AI/software story; Dev asks
+what a viewer would; kit.headline / kit.bignum cards carry the facts (source and date on the card); th.captions
+(Anton, the spoken word in red). Every fact opened at its primary source the same day; the description says what's
+real. Batch 10: scripts/batch10_ai_news_eps36-39.md.
