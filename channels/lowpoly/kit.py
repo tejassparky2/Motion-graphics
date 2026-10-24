@@ -260,3 +260,61 @@ def build_caption(cr, t, tl, y=330, size=30):
                 x += adv + space
         cr.restore()
         return
+
+
+def headline(cr, t, start, end, source, title, rows=(), clock=""):
+    """A news-explainer cutaway (owner's reference, 24 Oct 2026): the source and date on top, the headline in big
+    type, then up to four short fact rows, each (text, colour), revealed one by one."""
+    from motion.engine import W
+
+    def paint(cr, x, y, w, h, t, k):
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        size, lines, cur = 40, [], ""
+        cr.set_font_size(size)
+        for word in title.split():
+            trial = (cur + " " + word).strip()
+            if cur and cr.text_extents(trial).x_advance > w - 60:
+                lines.append(cur)
+                cur = word
+            else:
+                cur = trial
+        lines.append(cur)
+        for i, line in enumerate(lines):
+            cr.move_to(x + 30, y + 70 + i * size * 1.25)
+            cr.set_source_rgba(1, 1, 1, k)
+            cr.show_text(line)
+        y0 = y + 70 + len(lines) * size * 1.25 + 30
+        for i, (text, col) in enumerate(rows):
+            if t < start + 0.5 + 0.45 * i:
+                break
+            mono(cr, text, x + 30, y0 + 52 * i, 27, col, k)
+    screen_insert(cr, t, start, end, source, clock, paint)
+
+
+def bignum(cr, t, start, end, source, value, label, sub="", col=(1.0, 0.36, 0.36), count=True):
+    """A news-explainer number card: a big number that counts up to `value` (int, or a string shown as is), a label
+    under it and an optional small source line."""
+    def paint(cr, x, y, w, h, t, k):
+        if isinstance(value, (int, float)) and count:
+            u = min(1.0, max(0.0, (t - start) / 0.6))
+            v = value * (1 - (1 - u) ** 3)
+            txt = f"{int(round(v)):,}"
+        else:
+            txt = str(value)
+        cr.save()
+        cr.translate(x + w / 2, y + h * 0.42)
+        bold_text(cr, txt, 0, 0, 120 if len(txt) < 8 else 90, col, outline=None, shadow=0)
+        cr.restore()
+        cr.select_font_face("DejaVu Sans", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(34)
+        ext = cr.text_extents(label)
+        cr.move_to(x + w / 2 - ext.x_advance / 2, y + h * 0.62)
+        cr.set_source_rgba(1, 1, 1, k)
+        cr.show_text(label)
+        if sub:
+            cr.set_font_size(22)
+            ext = cr.text_extents(sub)
+            cr.move_to(x + w / 2 - ext.x_advance / 2, y + h * 0.62 + 50)
+            cr.set_source_rgba(0.62, 0.66, 0.74, k)
+            cr.show_text(sub)
+    screen_insert(cr, t, start, end, source, "", paint)
