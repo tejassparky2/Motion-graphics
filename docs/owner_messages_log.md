@@ -259,3 +259,5 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-25** The god and the rock one did good
 - **2026-10-25** All 5 approved (the 5 big-question ideas: kitten/problem of evil, who made evil, prayer, Pascal, heaven forever)
 - **2026-10-25** Approved, make all 5 (Big Questions batch 2 scripts)
+- **2026-10-25** (with a reference video, Video-44868, pufferfish interview comedy) Can you make videos like this don't make just answer
+- **2026-10-25** https://github.com/ckorhonen/claude-skills/blob/main/skills/skill-finder/SKILL.md Install
