@@ -23,7 +23,7 @@ Alt titles: Why Snakebite Medicine Comes From Horses / India's Deadliest Animal 
 | 7 | Your nerves tell your muscles when to move, and when to breathe. | THE VENOM | MOVE. / BREATHE. | Signal sparks run down a nerve to the arm, then to the diaphragm |
 | 8 | Cobra and krait venom jams that signal. | THE VENOM | IT JAMS / THE SIGNAL | Red venom blobs block the spark at the nerve-muscle junction; spark fizzles |
 | 9 | The eyelids droop first. Then the breathing muscles can stop. | THE VENOM | EYELIDS DROOP / THEN BREATHING | Paper face, eyelids drooping; lungs slow, stopwatch appears |
-| 10 | Viper venom does something else. It stops your blood from clotting. | THE VENOM | BLOOD / WON'T CLOT | Russell's viper card; blood drop that won't form a clot (red cells scatter) |
+| 10 | Viper venom does something else. It stops your blood from making clots. | THE VENOM | BLOOD / WON'T CLOT | Russell's viper card; blood drop that won't form a clot (red cells scatter) |
 | 11 | Now, the horse. | THE HORSE | NOW, / THE HORSE | Horse cut-out on khaki paper |
 | 12 | Scientists collect venom from the four snakes behind most deaths in India. | THE HORSE | THE / BIG FOUR | Four snake cards pinned up: cobra, krait, Russell's viper, saw-scaled viper |
 | 13 | They give a horse tiny doses. Too small to hurt it. | THE HORSE | TINY / DOSES | Syringe; a dose gauge with the needle in a green "SAFE" zone |
