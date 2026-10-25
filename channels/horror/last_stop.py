@@ -100,7 +100,8 @@ def draw(cr, t, tl):
     hud.frame(cr, t, FRAMES)
     hud.finish(cr, t, flash_at=[A("b8", "faces", end=True)])
     stops = 6 if t < B["b5"].start else 5     # the resource: stops left to yours
-    hud.meter(cr, t, f"STOPS LEFT: {stops}", stops / 6 if t < B["b15"].start else 0.0, warn=0.2, icon="bar")
+    lost = t >= B["b15"].start                 # stopped in the forest: not a stop on the route
+    hud.meter(cr, t, "STOPS LEFT: ?" if lost else f"STOPS LEFT: {stops}", 0.0 if lost else stops / 6, warn=0.2, icon="bar")
     bumps = [(B["b5"].start + 0.3, 4), (A("b6", "creaks."), 5), (A("b6", "another."), 6), (A("b14", "breathes"), 7)]
     n, bumped = 3, None
     for at, v in bumps:
@@ -109,9 +110,8 @@ def draw(cr, t, tl):
             cue("click", t, at)
     hud.tag(cr, t, "LAST STOP", "NIGHT 1")
     tracker = t >= A("b10", "Out")
-    hud.chips(cr, t, [(f"PASSENGERS {n}", bumped, n > 3), ("ROUTE 9" if not tracker else "ROUTE 9: OUT OF SERVICE",
-                                                            A("b10", "Out") if tracker else None, tracker)])
-    hud.tag_line(cr, t, "11:58 PM" if t < B["b15"].start else "12:13 AM", x=hud.W - 26 - 250 + 4, y=134)
+    hud.chips(cr, t, [(f"PASSENGERS {n}", bumped, n > 3), ("12:13 AM" if lost else "11:58 PM", None, False),
+                      ("ROUTE 9: DEPOT" if tracker else "ROUTE 9", A("b10", "Out") if tracker else None, tracker)])
     hud.rule(cr, t, A("b1", "Whatever"), "RULE: DON'T LOOK AT THE BACK SEATS")
     hud.hook(cr, t, [("ONE RULE:", False), ("DON'T LOOK AT", False), ("THE BACK SEATS", True)],
              end=B["b2"].start, y=360, size=84)
