@@ -29,7 +29,7 @@ voice.SPEAKERS.update({"sis": dict(voice="af_nicole", speed=1.0, turbo_ref="af_n
 SIS = dict(skin="brown", hair="bun", hair_col=hexc("#1e130d"), shirt=hexc("#3fae8a"), tie=None,
            pants=hexc("#2f3550"), build="kid")
 BRO = dict(skin="brown", shirt=hexc("#ff9a3c"), tie=None, pants=hexc("#3b5b9a"))
-PRAY = ((-58, -64), (-58, -64))                                   # both hands together under the chin
+PRAY = ((-64, -18), (-64, -18))                                   # both hands together at the chest
 
 SCRIPT = [
     dict(id="p1", scene="pray", text="Exam morning. A girl folds her hands and prays to pass."),
@@ -39,7 +39,7 @@ SCRIPT = [
     dict(id="p5", scene="talk", text="Yes.", speaker="sis"),
     dict(id="p6", scene="talk", text="Then why pray? You can't change a perfect plan.", speaker="bro", gap=0.4),
     dict(id="p7", scene="doors", text="If prayer changes God's plan, the plan wasn't perfect. If it can't, why pray?"),
-    dict(id="p8", scene="aquinas", text="Thomas Aquinas answered this seven hundred years ago."),
+    dict(id="p8", scene="aquinas", text="Seven hundred years ago, Thomas Aquinas answered this."),
     dict(id="p9", scene="aquinas", text="We don't pray to change God's plan. Our prayers are part of the plan."),
     dict(id="p10", scene="callback", text="So God's plan includes you studying too?", speaker="bro"),
     dict(id="p11", scene="callback", text="She groans. [laugh]"),
@@ -55,7 +55,7 @@ METADATA = dict(
 
 If prayer changes God's plan, the plan wasn't perfect. If it can't, why pray?
 
-Thomas Aquinas answered this about 750 years ago: we don't pray to change God's plan; our prayers are part of the plan. (Paraphrased from Summa Theologiae II-II, q. 83, a. 2: "we pray not that we may change the Divine disposition, but that we may impetrate that which God has disposed to be fulfilled by our prayers.")
+Thomas Aquinas answered this over 700 years ago: we don't pray to change God's plan; our prayers are part of the plan. (Paraphrased from Summa Theologiae II-II, q. 83, a. 2: "we pray not that we may change the Divine disposition, but that we may impetrate that which God has disposed to be fulfilled by our prayers.")
 
 So God's plan includes her studying too. 😄
 

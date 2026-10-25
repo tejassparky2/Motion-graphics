@@ -17,6 +17,7 @@ from motion.pkit import BLUE, GOLD, GREEN, PURPLE, RED, buttons, card, sparkles,
 from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, captions, ellipse, enter, lin, paint,
                            rad, rrect, shade, sign, smooth, soft_disc, stamp, stroke_line, vignette)
 from motion.timeline import clear_dialogue
+from motion.toons import head
 from videos.bq_kit import heart_shape, moon, night_sky, talker
 
 NARRATOR = dict(turbo=True)
@@ -84,9 +85,9 @@ def skyline(cr):
 
 
 def parapet(cr):
-    rrect(cr, -20, 930, W + 40, 360, 6)
-    paint(cr, lin(0, 930, 0, H, [(0, hexc("#5a5a78")), (1, hexc("#33334a"))]), OUTLINE, 6)
-    rrect(cr, -20, 916, W + 40, 34, 6)
+    rrect(cr, -20, 1014, W + 40, 300, 6)
+    paint(cr, lin(0, 1014, 0, H, [(0, hexc("#5a5a78")), (1, hexc("#33334a"))]), OUTLINE, 6)
+    rrect(cr, -20, 1000, W + 40, 34, 6)
     paint(cr, hexc("#6e6e8e"), OUTLINE, 5)
 
 
@@ -105,11 +106,11 @@ def roof(cr, t):
     skyline(cr)
 
 
-def boy(cr, t, tl, x=260, y=1120, s=0.9, **kw):
+def boy(cr, t, tl, x=245, y=1250, s=1.45, **kw):
     talker(cr, t, tl, "boy", "kid", x, y, s, rest="smile", **dict(BOY, **kw))
 
 
-def sis(cr, t, tl, x=470, y=1120, s=0.95, **kw):
+def sis(cr, t, tl, x=490, y=1250, s=1.5, **kw):
     talker(cr, t, tl, "sis", "student1", x, y, s, rest="smile", **dict(SIS, **kw))
 
 
@@ -189,13 +190,13 @@ def scene_roof(cr, t, tl):
     roof(cr, t)
     shooting_star(cr, t, 0.3)
     cr.save()
-    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("h3"), (1.15, 360, 760))], dur=0.8))
+    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("h3"), (1.08, 360, 700))], dur=0.8))
     kids_on_roof(cr, t, tl, dict(eyes="open", look=(0.2, -0.8), arms=("down", "down")),
                  dict(eyes="half", look=(0.0, -0.8), arms=("down", "down")))
     cr.restore()
-    years_counter(cr, t, A("h3", "billion"), 360, 380, rate=0.0 if t < A("h4") else 9e8)
+    years_counter(cr, t, A("h3", "billion"), 360, 290, rate=0.0 if t < A("h4") else 9e8)
     if t >= A("h4", "never"):
-        tag(cr, t, A("h4", "never"), 360, 520, "IT NEVER ENDS", col=PURPLE, size=44)
+        tag(cr, t, A("h4", "never"), 360, 430, "IT NEVER ENDS", col=PURPLE, size=44)
     vignette(cr, 0.4)
 
 
@@ -203,7 +204,7 @@ def scene_song(cr, t, tl):
     A = tl.at
     roof(cr, t)
     cr.save()
-    enter(cr, camera(t, [(tl.scene_at(t)[1], (1.45, 300, 760))], dur=0.6))
+    enter(cr, camera(t, [(tl.scene_at(t)[1], (1.2, 290, 690))], dur=0.6))
     kids_on_roof(cr, t, tl, dict(eyes="wide" if t >= A("h5", "billion") else "half", mouth="o" if t >= A("h5",
                  "billion") else "flat", look=(0.0, -0.4), arms=("down", "down")),
                  dict(eyes="half", mouth="smile", look=(-0.6, -0.4), arms=("down", "down")))
@@ -217,10 +218,17 @@ def scene_song(cr, t, tl):
 def scene_williams(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1e1a38"), hexc("#3a2f60"), seed=81)
-    card(cr, t, tl.scene_at(t)[1], 360, 380, 480, 230, "BERNARD WILLIAMS · 1973", ["FOREVER =", "BORING"], col=PURPLE,
+    card(cr, t, tl.scene_at(t)[1], 360, 300, 480, 230, "BERNARD WILLIAMS · 1973", ["FOREVER =", "BORING"], col=PURPLE,
          title_size=32, line_size=56)
     if t >= A("h6", "Live"):
-        tag(cr, t, A("h6", "Live"), 360, 640, "EVEN PARADISE?", col=GOLD, size=48)
+        tag(cr, t, A("h6", "Live"), 360, 470, "EVEN PARADISE?", col=GOLD, size=48)
+    yawn = 0.5 + 0.5 * math.sin((t - tl.scene_at(t)[1]) * 1.8)          # a bored face, yawning on a loop
+    head(cr, t, 360, 700, 120, "kid", eyes="half" if yawn < 0.7 else "closed", mouth="o" if yawn > 0.5 else "flat",
+         **dict(BOY, tie=None))
+    for k in range(3):
+        zt = ((t * 0.6 + k / 3) % 1.0)
+        bold_text(cr, "z", 470 + 40 * zt + 14 * k, 620 - 160 * zt, 30 + 26 * zt, alpha(WHITE, 1 - zt), outline=None,
+                  shadow=0)
     vignette(cr, 0.45)
 
 
@@ -246,8 +254,8 @@ def scene_joys(cr, t, tl):
         st = A("h7", key)
         if t < st:
             continue
-        x, y = 360, 420 + k * 170
-        sc = appear(t, st, 0.35)
+        x, y = 360, 400 + k * 190
+        sc = 1.6 * appear(t, st, 0.35)
         cr.save()
         cr.translate(x - 120, y)
         cr.scale(sc, sc)
@@ -257,7 +265,7 @@ def scene_joys(cr, t, tl):
         else:
             heart_shape(cr, x - 120, y, 0.9, hexc("#ff7a9a"))
         cr.restore()
-        bold_text(cr, label, x + 90, y + 14, 48, OUTLINE, outline=None, shadow=0)
+        bold_text(cr, label, x + 100, y + 18, 60, OUTLINE, outline=None, shadow=0)
     vignette(cr, 0.3)
 
 
@@ -265,7 +273,7 @@ def scene_shuffle(cr, t, tl):
     A = tl.at
     roof(cr, t)
     cr.save()
-    enter(cr, camera(t, [(tl.scene_at(t)[1], (1.15, 360, 760))]))
+    enter(cr, camera(t, [(tl.scene_at(t)[1], (1.08, 360, 700))]))
     kids_on_roof(cr, t, tl, dict(eyes="half", look=(0.5, 0.0), arms=("think", "down")),
                  dict(eyes="happy", look=(-0.5, 0.0), arms=("down", "point") if t >= A("h9") else ("down", "down")))
     cr.restore()
@@ -279,7 +287,7 @@ def scene_end(cr, t, tl):
     A = tl.at
     roof(cr, t)
     cr.save()
-    enter(cr, camera(t, [(A("h10"), (1.05, 360, 720))]))
+    enter(cr, camera(t, [(A("h10"), (1.03, 360, 680))]))
     kids_on_roof(cr, t, None, dict(eyes="half", mouth="smile", look=(0.2, -0.8)),
                  dict(eyes="happy", mouth="smile", look=(-0.2, -0.8)))
     cr.restore()

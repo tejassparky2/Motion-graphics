@@ -32,10 +32,10 @@ SCRIPT = [
     dict(id="w1", scene="board", text="The maths teacher draws a bet on the board. Believe in God, or don't."),
     dict(id="w2", scene="board", text="Believe and you're right, you win heaven. Believe and you're wrong, you lose "
                                       "almost nothing.", speaker="sir"),
-    dict(id="w3", scene="board", text="Don't believe and you're wrong, you lose everything. So believing is the smart "
-                                      "bet.", speaker="sir"),
-    dict(id="w4", scene="pascal", text="This is Pascal's Wager, from [sixteen seventy.|1670.] The whole class nods."),
-    dict(id="w5", scene="except", text="Except the last bencher."),
+    dict(id="w3", scene="board", text="But if you don't believe, and God is real, you lose everything. So believing "
+                                      "is the smart bet.", speaker="sir"),
+    dict(id="w4", scene="pascal", text="This is Pascal's Wager, from [sixteen seventy.|1670.] The whole class agrees."),
+    dict(id="w5", scene="except", text="Everyone but the last bencher."),
     dict(id="w6", scene="which", text="Sir, which God?", speaker="kid", gap=0.4),
     dict(id="w7", scene="boxes", text="There are thousands of religions. Many say believing in the wrong one won't "
                                       "save you."),
@@ -50,9 +50,9 @@ clear_dialogue(SCRIPT, ids={"w6"}, pace=0.96, turn_gap=0.34)
 METADATA = dict(
     title="A Bet You Can't Lose? 1 Question Broke It 🎲",
     alt_titles=["Believing Is a Free Bet... Or Is It? 🎲", "Pascal's Wager in 40 Seconds 🎲"],
-    description="""The maths teacher draws a bet on the board: believe in God, or don't. Believe and you're right, you win heaven. Believe and you're wrong, you lose almost nothing. Don't believe and you're wrong, you lose everything. So believing is the smart bet. 🎲
+    description="""The maths teacher draws a bet on the board: believe in God, or don't. Believe and you're right, you win heaven. Believe and you're wrong, you lose almost nothing. But if you don't believe, and God is real, you lose everything. So believing is the smart bet. 🎲
 
-This is Pascal's Wager (Pensées, 1670). The whole class nods. Except the Last Bencher: "Sir, which God?"
+This is Pascal's Wager (Pensées, 1670). The whole class agrees. Everyone but the Last Bencher: "Sir, which God?"
 
 There are thousands of religions, and many say believing in the wrong one won't save you. So the bet isn't two boxes, it's thousands, and you can only pick one. Denis Diderot made this same point in 1746 (Pensées philosophiques, §59).
 
@@ -127,8 +127,8 @@ def scene_pascal(cr, t, tl):
     cr.restore()
     card(cr, t, tl.scene_at(t)[1], 360, 220, 420, 170, "PASCAL'S WAGER", ["1670"], col=BLUE, title_size=40,
          line_size=50)
-    if t >= A("w4", "nods"):
-        tag(cr, t, A("w4", "nods"), 360, 360, "EVERYONE AGREES", col=GREEN, size=42)
+    if t >= A("w4", "agrees"):
+        tag(cr, t, A("w4", "agrees"), 360, 360, "EVERYONE AGREES", col=GREEN, size=42)
     vignette(cr, 0.4)
 
 
