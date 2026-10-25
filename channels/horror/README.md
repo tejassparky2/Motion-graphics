@@ -23,5 +23,20 @@ Branch `ccr-56282fe5-evehq4-horror`. Not Interestingly Strange: never put these 
 - three.js engine: channels/is3d/ (scene_is3d.html, directions/*.js, make_is3d.py, render.mjs). Sample: out/robot_butler.mp4.
 - Phone UI: motion/thriller.py phone(). Voices: Chatterbox Turbo (/home/user/.venv-clone).
 
+## Build
+    /home/user/.venv-main/bin/python channels/horror/make_horror.py floor13      # voices, 3D frames, HUD, sound -> out/horror/
+    /home/user/.venv-main/bin/python channels/horror/check.py floor13            # Whisper medium on every line + tag check
+    RANGE=a:b SCENE=... TIMING=... node channels/horror/render.mjs FRAMES 30     # re-render only frames a..b-1
+Episodes: floor13.py, last_stop.py, tower9.py (scripts + HUD + sound cues); sets/lift.js, bus.js, tower.js (3D);
+hud.py (meter, chips, phone chat, rule strip, blueprint cards, YOUR CALL); sound.py (synthesized horror effects).
+
 ## Status
-- 25 Oct 2026: channel opened; waiting on the owner for the name, narrator voice, part-2 timing and premise pick.
+- 25 Oct 2026: channel opened. Owner: "All a b c make them now" -> Floor 13 (Part 1), Last Stop and Tower 9 (Night 1)
+  made with the Turbo stock narrator (scripts: out/horror/scripts_part1.md). Name / narrator / part-2 timing still open.
+- Ideas taken from the owner's references 3-7 (never their stories): inventory chips, full-screen phone chat, time cards,
+  a line for each side before the vote, YOUR CALL card, big readable faces, two-colour lighting, blueprint cards,
+  one hard number per rule, state carried into Part 2, the vote result shown at the start of Part 2.
+- Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
+  bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
+  incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face
+  (@pixiv/three-vrm; a CC0 or freely licensed VRM model still to find).

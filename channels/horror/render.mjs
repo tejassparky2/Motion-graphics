@@ -41,11 +41,14 @@ await page.goto(`http://127.0.0.1:${server.address().port}/${SCENE}`);
 await page.waitForFunction(() => window.READY === true, null, {timeout: 180000});
 
 const dur = await page.evaluate(() => window.DURATION);
-const list = times ? times.split(",").map(Number) : Array.from({length: Math.round(dur * fps)}, (_, i) => i / fps);
+// RANGE=a:b re-renders only frames a..b-1 (same f%05d names), for fixing a few shots without a full render
+const [r0, r1] = (process.env.RANGE || "").split(":").map(Number);
+const idx = times ? null : Array.from({length: Math.round(dur * fps)}, (_, i) => i).filter(i => !process.env.RANGE || (i >= r0 && i < r1));
+const list = times ? times.split(",").map(Number) : idx.map(i => i / fps);
 const t0 = Date.now();
 for (let i = 0; i < list.length; i++) {
   const data = await page.evaluate(t => { window.renderAt(t); return document.querySelector("canvas").toDataURL("image/png"); }, list[i]);
-  const name = times ? `t${list[i].toFixed(2)}.png` : `f${String(i).padStart(5, "0")}.png`;
+  const name = times ? `t${list[i].toFixed(2)}.png` : `f${String(idx[i]).padStart(5, "0")}.png`;
   fs.writeFileSync(path.join(out, name), Buffer.from(data.split(",")[1], "base64"));
   if (i % 30 === 0) process.stderr.write(`frame ${i}/${list.length} (${((Date.now() - t0) / 1000).toFixed(0)} s)\n`);
 }

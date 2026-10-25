@@ -131,7 +131,7 @@ export async function build(c) {
   const SHOTS = {
     you_close: c.track(you, {dist: .62, side: .12, fov: 38}),
     doors:     {pos: [.4, 1.66, -.6], look: [-.05, 1.2, 2.6], fov: 50, push: .25},
-    panel:     {pos: [.3, 1.6, .1], look: [.84, 1.5, .5], fov: 48, push: .06},
+    panel:     {pos: [.3, 1.5, .1], look: [.84, 1.22, .5], fov: 46, push: .06},     // the buttons; the sign itself is the paper card
     you_over:  {pos: [.55, 1.72, .62], look: [-.2, 1.6, -.28], fov: 48, push: .1},
     hall_dark: {pos: [-.1, 1.76, .12], look: [0, 1.4, 4.5], fov: 38, push: .45},
     phone:     {pos: [.26, 1.95, .46], look: [-.15, 1.56, -.12], fov: 46, push: .06},
@@ -198,5 +198,7 @@ export async function build(c) {
     mirror.visible = cur.scene === "mirror";
   }
   c.dropShake = 0;
-  return {SHOTS, update, shake: t => c.dropShake * .9};
+  // her lines cut to your face halfway (no long stretches of black hallway)
+  const CUTS = {f7: [[0, "hall_dark"], [.55, "you_close"]], f8: [[0, "hall_dark"], [.5, "you_close"]]};
+  return {SHOTS, CUTS, update, shake: t => c.dropShake * .9};
 }
