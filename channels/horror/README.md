@@ -61,6 +61,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   reads as an "-s" ("crackled" -> "crackles"), so the rain starts after the hook line and static goes before the word
   or in a pause; a thunder roll needs ~1.8 s before a quiet line ("Please" -> "Wait"); lowpass 1800 on the hatch voice
   made "cold" into "cool" (now 2800). Whisper results move with the mix, so fix the cause, not single runs.
+- Owner on the 2D Tower 9 (25 Oct): "Tower 9 is better now". Keep what it has: warm practical light (bulb, lantern,
+  LCD) against the cold storm, objects that tell the story close up (radio, logbook writing itself, clock, fuel gauge,
+  hatch), the outfit detail paid off in the lightning, and the mix fixes above.
 - Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face
