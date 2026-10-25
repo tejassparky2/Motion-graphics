@@ -382,6 +382,9 @@ GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "
          "fall": 0.8, "laugh": 0.0}
 
 
+EXTRA_SFX = {}   # name -> f(dur): effects a channel adds (channels/horror/sound.py)
+
+
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
     bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; a "hush" cue silences bed and effects for its
@@ -404,7 +407,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
             hush[max(0, i0):max(0, i1)] = 0
             hush[max(0, i1):max(0, i1 + f)] = np.linspace(0, 1, len(hush[max(0, i1):max(0, i1 + f)]))
             continue
-        th = thriller_sfx(name, dur)
+        th = EXTRA_SFX[name](dur) if name in EXTRA_SFX else thriller_sfx(name, dur)
         s = (th if th is not None else sfx(name, dur)) * GAINS.get(name, 1.0)
         i = int(at * SR)
         if 0 <= i < n:

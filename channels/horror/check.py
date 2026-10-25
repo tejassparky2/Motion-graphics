@@ -1,0 +1,52 @@
+"""After a render: hear every line of the finished video with Whisper medium and list any line whose words don't
+match the script (merged or misheard words get reworded and re-rendered), then check the files carry no encoder or
+metadata tags.
+
+    /home/user/.venv-main/bin/python channels/horror/check.py EPISODE
+"""
+import difflib
+import json
+import os
+import re
+import subprocess
+import sys
+
+import numpy as np
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, ROOT)
+import imageio_ffmpeg   # noqa: E402
+from faster_whisper import WhisperModel   # noqa: E402
+
+ep = sys.argv[1]
+video = os.path.join(ROOT, "out", "horror", f"{ep}.mp4")
+timing = json.load(open(os.path.join(ROOT, "build", "horror", f"timing_{ep}.json")))
+src = open(os.path.join(ROOT, "channels", "horror", f"{ep}.py")).read()
+texts = dict(re.findall(r'dict\(id="(\w+)", scene="\w+", text="((?:[^"]|"\s*\n\s*")*)"', src))
+NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six"}
+SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs"}
+
+
+def norm(s):
+    s = re.sub(r'"\s*\n\s*"', "", s)
+    s = re.sub(r"\[([^|\]]*)\|[^\]]*\]", r"\1", s)
+    s = re.sub(r"\[[a-z ]+\]", " ", s).lower().replace("-", " ")
+    return [SAME.get(NUM.get(w, w), NUM.get(w, w)) for w in re.findall(r"[a-z0-9']+", s)]
+
+
+pcm = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-v", "error", "-i", video, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],
+                     capture_output=True, check=True).stdout
+audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768
+model = WhisperModel("medium.en", device="cpu", compute_type="int8")
+bad = 0
+for b in timing["beats"]:
+    a = audio[max(0, int((b["start"] - .1) * 16000)): int((b["end"] + .15) * 16000)]
+    heard = " ".join(s.text for s in model.transcribe(a, language="en", beam_size=5)[0])
+    ref, hyp = norm(texts.get(b["id"], "")), norm(heard)
+    r = difflib.SequenceMatcher(None, ref, hyp).ratio()
+    flag = "OK " if r >= .9 else "BAD"
+    bad += r < .9
+    print(f"{flag} {b['id']:5s} {r:4.0%}  {heard.strip()}")
+print(f"\n{len(timing['beats']) - bad}/{len(timing['beats'])} lines heard as written (Whisper medium)")
+data = open(video, "rb").read() + open(video[:-4] + "_preview.mp4", "rb").read()
+print("tags:", {s: data.count(s.encode()) for s in ["x264", "Lavf", "Lavc", "encoder", "c2pa", "jumb"]})

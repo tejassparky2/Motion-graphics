@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Horror 3D</title>
+<style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+<script type="module">
+// Interactive horror Shorts in 3D (owner, 25 Oct 2026). The shared core: renderer with bloom (eyes, bulbs and
+// screens glow), the face kit with fear expressions, adult figures, and the shot system. Each location is a module in
+// sets/<set>.js that builds its geometry and animates lights, characters and the camera per line. timing.json
+// (make_horror.py) gives each line's start/end, word times and a mouth envelope per character.
+import * as THREE from "three";
+import {EffectComposer} from "three/addons/postprocessing/EffectComposer.js";
+import {RenderPass} from "three/addons/postprocessing/RenderPass.js";
+import {UnrealBloomPass} from "three/addons/postprocessing/UnrealBloomPass.js";
+import {OutputPass} from "three/addons/postprocessing/OutputPass.js";
+import {RoundedBoxGeometry} from "three/addons/geometries/RoundedBoxGeometry.js";
+import {Reflector} from "three/addons/objects/Reflector.js";
+
+const Q = new URLSearchParams(location.search);
+const T = await (await fetch("/timing.json")).json();
+const SET = await import(`./sets/${Q.get("set") || "lift"}.js`);
+const W = 720, H = 1280;
+const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(window.devicePixelRatio || 1);
+renderer.setSize(W, H);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+const camera = new THREE.PerspectiveCamera(40, W / H, 0.02, 200);
+camera.layers.enable(1);              // layer 1: things the mirror must not show
+const camFill = new THREE.PointLight(0xffffff, 0, 3, 1.4);   // a soft fill that travels with the camera (faces stay readable)
+camFill.position.set(.25, .2, 0); camera.add(camFill); scene.add(camera);
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), .5, .45, .9);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
+// ---------- helpers ----------
+let seed = 11;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const mat = (c, o = {}) => new THREE.MeshStandardMaterial({color: c, roughness: .8, metalness: 0, ...o});
+const basic = c => new THREE.MeshBasicMaterial({color: c});
+const glowMat = (c, k = 1) => new THREE.MeshBasicMaterial({color: new THREE.Color(c).multiplyScalar(k), toneMapped: false});
+function mesh(geo, m, cast = true) { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = true; return x; }
+const box = (w, h, d, r = .15) => new RoundedBoxGeometry(w, h, d, 2, Math.min(w, h, d) * r);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const ease = u => u <= 0 ? 0 : u >= 1 ? 1 : u * u * (3 - 2 * u);
+const seg = (t, a, b) => ease((t - a) / (b - a));
+const lin = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, u) => a + (b - a) * u;
+const noise = (t, s = 0) => Math.sin(t * 1.7 + s) * .5 + Math.sin(t * 3.1 + s * 2.3) * .3 + Math.sin(t * 7.3 + s * 1.1) * .2;
+function canvasTex(w, h, paint) {
+  const c = document.createElement("canvas"); c.width = w; c.height = h; paint(c.getContext("2d"), w, h);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+const add = (o, x, y, z, parent = scene) => { o.position.set(x, y, z); parent.add(o); return o; };
+function onLayer(obj, layer) { obj.traverse(o => o.layers.set(layer)); }
+
+// ---------- face kit: eyes with irises, lids, brows, a mouth that opens with the voice ----------
+function buildFace(parent, o) {
+  const f = {o, eyes: [], pupils: [], brows: [], lids: []};
+  const g = new THREE.Group(); g.position.set(0, o.y, o.z); parent.add(g); f.group = g;
+  const sclera = o.glow ? glowMat(o.glow, 1.6) : mat(0xd6d0c4, {roughness: .55});
+  for (const s of [-1, 1]) {
+    const e = new THREE.Group(); e.position.set(s * o.sp, 0, 0); g.add(e); f.eyes.push(e);
+    const sc = new THREE.Mesh(new THREE.SphereGeometry(o.er, 16, 12), sclera); sc.scale.z = .5; e.add(sc);
+    const pu = new THREE.Group(); e.add(pu); f.pupils.push(pu);
+    if (!o.glow) {
+      const iris = new THREE.Mesh(new THREE.CircleGeometry(o.er * .5, 18), mat(o.iris ?? 0x4a3020, {roughness: .3})); iris.position.z = o.er * .5; pu.add(iris);
+      const pupil = new THREE.Mesh(new THREE.CircleGeometry(o.er * .26, 14), basic(0x050505)); pupil.position.z = o.er * .505; pu.add(pupil); f.pupil0 = f.pupil0 || []; f.pupil0.push(pupil);
+      const hi = new THREE.Mesh(new THREE.CircleGeometry(o.er * .1, 8), mat(0xffffff, {emissive: 0x404040})); hi.position.set(o.er * .15, o.er * .17, o.er * .51); pu.add(hi);
+    }
+    // upper lid: a skin-coloured shell that slides down over the eye
+    const lid = mesh(new THREE.SphereGeometry(o.er * 1.08, 16, 10, 0, Math.PI * 2, 0, Math.PI / 2), o.skinMat, false);
+    lid.scale.z = .62; lid.rotation.x = -Math.PI / 2 + .3; e.add(lid); f.lids.push(lid);
+    const br = mesh(box(o.er * 2.3, o.er * .42, o.er * .4, .45), o.browMat || basic(0x1b1420), false);
+    br.position.set(s * o.sp, o.er * 1.55, o.er * .35); g.add(br); f.brows.push(br);
+  }
+  const lipM = o.lipMat || mat(0x9a5550);
+  f.lip = mesh(new THREE.TorusGeometry(o.mw, o.mw * .22, 8, 20, Math.PI), lipM, false); f.lip.position.set(0, -o.my, o.er * .2); g.add(f.lip);
+  f.hole = new THREE.Mesh(new THREE.SphereGeometry(o.mw, 16, 12), basic(0x1a0606)); f.hole.position.set(0, -o.my, 0); f.hole.scale.z = .3; g.add(f.hole);
+  const teeth = new THREE.Mesh(new THREE.BoxGeometry(o.mw * 1.3, o.mw * .3, o.mw * .2), basic(0xe8e2d0)); teeth.position.set(0, o.mw * .55, o.mw * .1); f.hole.add(teeth);
+  return f;
+}
+const EMO = {
+  neutral:  {brow: 0, ang: 0, lid: .15, smile: .1, wide: 1, look: [0, 0], pupil: 1},
+  worried:  {brow: .3, ang: .45, lid: .05, smile: -.35, wide: 1.05, look: [0, 0], pupil: .9},
+  scared:   {brow: .55, ang: .6, lid: 0, smile: -.5, wide: 1.22, look: [0, 0], pupil: .7, open: .25},
+  terror:   {brow: .75, ang: .7, lid: 0, smile: -.7, wide: 1.32, look: [0, 0], pupil: .55, open: .6},
+  sleep:    {brow: -.05, ang: .05, lid: 1, smile: 0, wide: 1, look: [0, 0], pupil: 1},
+  stern:    {brow: -.2, ang: -.45, lid: .3, smile: -.25, wide: 1, look: [0, 0], pupil: 1},
+  creepy:   {brow: -.1, ang: -.3, lid: .38, smile: .95, wide: 1.12, look: [0, 0], pupil: .5},
+  pleading: {brow: .4, ang: .7, lid: .1, smile: -.2, wide: 1.08, look: [0, 0], pupil: 1.1},
+  urgent:   {brow: .35, ang: .3, lid: 0, smile: -.3, wide: 1.15, look: [0, 0], pupil: .9},
+};
+function mixEmo(a, b, u) { const r = {}; for (const k of ["brow", "ang", "lid", "smile", "wide", "pupil", "open"]) r[k] = lerp(a[k] ?? (k === "wide" || k === "pupil" ? 1 : 0), b[k] ?? (k === "wide" || k === "pupil" ? 1 : 0), u);
+  r.look = [lerp(a.look[0], b.look[0], u), lerp(a.look[1], b.look[1], u)]; return r; }
+function poseFace(f, p, t, ph = 0) {
+  const o = f.o;
+  const bl = (u => u < .12 ? Math.sin(u / .12 * Math.PI) : 0)((t + ph) % (p.wide > 1.15 ? 4.6 : 3.4));   // scared eyes blink less
+  const lid = clamp(Math.max(p.lid, bl));
+  const w = p.wide || 1;
+  f.eyes.forEach(e => e.scale.set(w, w, w));
+  f.lids.forEach(l => { l.rotation.x = -Math.PI / 2 + .3 + (Math.PI * .62) * lid; });
+  f.pupils.forEach(pu => { pu.position.set(p.look[0] * o.er * .35, p.look[1] * o.er * .3, 0); pu.scale.set(1 / w, 1 / w, 1); });
+  (f.pupil0 || []).forEach(pp => pp.scale.setScalar(p.pupil ?? 1));
+  f.brows.forEach((b, i) => { const s = i ? 1 : -1; b.position.y = o.er * 1.55 + p.brow * o.er * 1.6 - lid * o.er * .35; b.rotation.z = -s * p.ang; });
+  const open = clamp(Math.max(p.open || 0, p.talk || 0));
+  f.hole.visible = open > .06;
+  f.hole.scale.set(.7 + .2 * open - .25 * Math.min(0, p.smile), .15 + .95 * open, .3);
+  f.hole.position.y = -o.my - o.mw * .25 * open;
+  const sm = p.smile;
+  f.lip.visible = !f.hole.visible || sm > .6;
+  f.lip.rotation.z = sm >= 0 ? Math.PI : 0;
+  f.lip.scale.set(1 + .35 * Math.max(0, sm), Math.max(.2, Math.abs(sm)), 1);
+  f.lip.position.y = -o.my + (sm >= 0 ? o.mw * .5 : -o.mw * .35) * Math.abs(sm);
+}
+
+// ---------- adult figures: root at the feet, facing +z; joints for hips, knees, shoulders, elbows, neck ----------
+function limb(parent, x, y, len1, len2, r, m1, m2, endGeo, endMat) {
+  const a = new THREE.Group(); a.position.set(x, y, 0); parent.add(a);
+  const u = mesh(new THREE.CapsuleGeometry(r, len1 - r * 1.2, 4, 12), m1); u.position.y = -len1 / 2; a.add(u);
+  const j = new THREE.Group(); j.position.y = -len1; a.add(j);
+  const l = mesh(new THREE.CapsuleGeometry(r * .88, len2 - r * 1.2, 4, 12), m2 || m1); l.position.y = -len2 / 2; j.add(l);
+  const e = mesh(endGeo, endMat); e.position.y = -len2 - .01; j.add(e);
+  return {a, j, end: e};
+}
+function person(o) {
+  const s = o.h || 1;                                  // overall scale (1 = 1.7 m)
+  const skin = mat(o.skin ?? 0xc68a5e, {roughness: .6});
+  const top = mat(o.top ?? 0x3a4250, {roughness: .85}), legs = mat(o.legs ?? 0x22252c, {roughness: .9});
+  const shoeM = mat(o.shoe ?? 0x181818, {roughness: .6}), hairM = mat(o.hair ?? 0x1c1410, {roughness: 1});
+  const root = new THREE.Group(), body = new THREE.Group(); root.add(body); body.scale.setScalar(s);
+  const hips = new THREE.Group(); hips.position.y = .92; body.add(hips);
+  const pelvis = mesh(new THREE.CapsuleGeometry(.13, .06, 4, 12), legs); pelvis.rotation.z = Math.PI / 2; pelvis.scale.set(1, 1, .75); hips.add(pelvis);
+  const shoe = new THREE.BoxGeometry(.1, .07, .24);
+  const legL = limb(hips, -.085, 0, .45, .44, .068, legs, legs, shoe, shoeM), legR = limb(hips, .085, 0, .45, .44, .068, legs, legs, shoe, shoeM);
+  for (const L of [legL, legR]) { L.end.position.set(0, -.465, .05); if (o.backwardFeet) { L.end.rotation.y = Math.PI; L.end.position.z = -.05; } }
+  if (o.skirt) { const sk = mesh(new THREE.CylinderGeometry(.16, .25, .85, 20, 1, true), legs); sk.material.side = THREE.DoubleSide; sk.position.y = -.38; hips.add(sk); legL.a.children[0].visible = legR.a.children[0].visible = false; }
+  const chest = new THREE.Group(); chest.position.y = .08; hips.add(chest);
+  const torso = mesh(new THREE.CapsuleGeometry(.165, .3, 6, 16), top); torso.position.y = .25; torso.scale.set(1, 1, .7); chest.add(torso);
+  if (o.hood) { const hd = mesh(new THREE.SphereGeometry(.15, 16, 10, 0, Math.PI * 2, Math.PI * .55, Math.PI * .45), top); hd.position.set(0, .64, -.07); hd.scale.set(1, .5, .7); chest.add(hd); }
+  if (o.shawl) { const sh = mesh(new THREE.ConeGeometry(.3, .45, 20, 1, true), mat(o.shawl, {side: THREE.DoubleSide, roughness: .95})); sh.position.set(0, .4, 0); sh.scale.z = .75; chest.add(sh); }
+  if (o.collar) { const c = mesh(new THREE.TorusGeometry(.1, .03, 8, 18), mat(o.collar)); c.rotation.x = Math.PI / 2; c.position.y = .5; chest.add(c); }
+  const neck = new THREE.Group(); neck.position.y = .53; chest.add(neck);
+  neck.add(add(mesh(new THREE.CylinderGeometry(.045, .05, .1, 12), skin), 0, .03, 0, neck));
+  const head = new THREE.Group(); head.position.y = .21; head.scale.setScalar(o.headScale ?? 1.3); neck.add(head);   // big heads read at phone size
+  const hr = .118;
+  const skull = mesh(new THREE.SphereGeometry(hr, 28, 22), skin); skull.scale.set(.92, 1.08, 1); head.add(skull);
+  const jaw = mesh(new THREE.SphereGeometry(hr * .7, 20, 14), skin); jaw.position.set(0, -.04, .025); jaw.scale.set(.95, .72, .9); head.add(jaw);
+  for (const sx of [-1, 1]) { const ear = mesh(new THREE.SphereGeometry(.026, 10, 8), skin); ear.position.set(sx * .108, -.005, 0); ear.scale.set(.5, 1, .8); head.add(ear); }
+  const nose = mesh(new THREE.ConeGeometry(.018, .05, 10), skin); nose.rotation.x = Math.PI / 2 + .3; nose.position.set(0, -.012, .123); head.add(nose);
+  const hairStyle = o.style || "short";
+  if (hairStyle !== "bald") {
+    const cap = mesh(new THREE.SphereGeometry(hr * 1.06, 24, 16, 0, Math.PI * 2, 0, Math.PI * (hairStyle === "long" ? .62 : .48)), hairM);
+    cap.scale.set(.95, 1.08, 1.04); cap.rotation.x = -.35; cap.position.set(0, .012, -.012); head.add(cap);
+  }
+  if (hairStyle === "bun") { const bun = mesh(new THREE.SphereGeometry(.05, 14, 10), hairM); bun.position.set(0, .07, -.11); head.add(bun); }
+  if (hairStyle === "long") { const back = mesh(new THREE.CapsuleGeometry(.1, .22, 4, 12), hairM); back.position.set(0, -.12, -.06); back.scale.z = .5; head.add(back); }
+  if (o.beanie) { const b = mesh(new THREE.SphereGeometry(hr * 1.1, 22, 14, 0, Math.PI * 2, 0, Math.PI * .45), mat(o.beanie, {roughness: .95})); b.position.y = .02; b.rotation.x = -.15; head.add(b);
+    const rim = mesh(new THREE.TorusGeometry(hr * 1.02, .016, 8, 26), mat(o.beanie, {roughness: .95})); rim.rotation.x = Math.PI / 2 - .15; rim.position.set(0, .03, .01); head.add(rim); }
+  if (o.cap) { const c = mesh(new THREE.CylinderGeometry(hr * 1.02, hr * 1.06, .06, 22), mat(o.cap)); c.position.y = .085; head.add(c);
+    const v = mesh(new THREE.CylinderGeometry(.09, .09, .012, 20, 1, false, -Math.PI / 2, Math.PI), mat(o.cap)); v.position.set(0, .06, .07); head.add(v); }
+  if (o.beard) { const bd = mesh(new THREE.SphereGeometry(hr * .72, 18, 12, 0, Math.PI * 2, Math.PI * .45, Math.PI * .55), mat(o.beard, {roughness: 1})); bd.position.set(0, -.04, .025); head.add(bd); }
+  if (o.glasses) for (const sx of [-1, 1]) { const rim = new THREE.Mesh(new THREE.TorusGeometry(.024, .004, 6, 16), basic(0x222222)); rim.position.set(sx * .038, .018, .118); head.add(rim); }
+  const face = buildFace(head, {y: .02, z: .1, sp: .04, er: .021, mw: .022, my: .056, iris: o.iris, skinMat: skin, glow: o.glowEyes,
+                                browMat: basic(o.brow ?? 0x1c1410), lipMat: mat(o.lip ?? 0x8a4a44)});
+  const hand = new THREE.SphereGeometry(.042, 12, 10);
+  const armL = limb(chest, -.2, .44, .29, .27, .045, top, top, hand, skin), armR = limb(chest, .2, .44, .29, .27, .045, top, top, hand, skin);
+  return {root, body, hips, chest, neck, head, face, armL, armR, legL, legR, skin, s};
+}
+// pose: {arms: [[shX, shZ, elX] left, [..] right], legs: [[hipX, kneeX] left, [..] right], chest: [x, y, z], neck: [x, y, z]}
+function pose(p, P) {
+  const [al, ar] = P.arms || [[.1, .1, -.2], [.1, .1, -.2]];
+  p.armL.a.rotation.set(al[0], al[3] || 0, -al[1]); p.armL.j.rotation.set(al[2], 0, 0);
+  p.armR.a.rotation.set(ar[0], -(ar[3] || 0), ar[1]); p.armR.j.rotation.set(ar[2], 0, 0);
+  const [ll, lr] = P.legs || [[0, 0], [0, 0]];
+  p.legL.a.rotation.set(ll[0], 0, ll[2] || 0); p.legL.j.rotation.set(ll[1], 0, 0);
+  p.legR.a.rotation.set(lr[0], 0, -(lr[2] || 0)); p.legR.j.rotation.set(lr[1], 0, 0);
+  const c = P.chest || [0, 0, 0], n = P.neck || [0, 0, 0];
+  p.chest.rotation.set(c[0], c[1], c[2]); p.neck.rotation.set(n[0], n[1], n[2]);
+  p.hips.position.y = .92 + (P.drop || 0);
+}
+function mixPose(A, B, u) {
+  const m = (a, b) => a.map((x, i) => Array.isArray(x) ? m(x, b[i]) : lerp(x, b[i] ?? x, u));
+  const d = k => (A[k] ?? B[k]);
+  const out = {};
+  for (const k of ["arms", "legs"]) if (A[k] || B[k]) out[k] = m(A[k] || B[k], B[k] || A[k]);
+  for (const k of ["chest", "neck"]) out[k] = m(A[k] || [0, 0, 0], B[k] || [0, 0, 0]);
+  out.drop = lerp(A.drop || 0, B.drop || 0, u);
+  return out;
+}
+const POSES = {
+  stand: {arms: [[.08, .12, -.15], [.08, .12, -.15]], legs: [[0, 0], [0, 0]]},
+  phone: {arms: [[.08, .12, -.15], [-.55, .25, -1.75, .35]], legs: [[0, 0], [0, 0]], neck: [.28, 0, 0]},
+  phone2: {arms: [[-.5, .2, -1.6, .25], [-.55, .25, -1.75, .35]], legs: [[0, 0], [0, 0]], neck: [.3, 0, 0]},
+  sit: {arms: [[-.35, .15, -.9], [-.35, .15, -.9]], legs: [[-1.5, 1.5], [-1.5, 1.5]], drop: -.45},
+  sitPhone: {arms: [[-.35, .15, -.9], [-.7, .25, -1.7, .3]], legs: [[-1.5, 1.5], [-1.5, 1.5]], drop: -.45, neck: [.3, 0, 0]},
+  sitTense: {arms: [[-.5, .25, -1.2], [-.5, .25, -1.2]], legs: [[-1.5, 1.6], [-1.5, 1.6]], drop: -.45, chest: [.1, 0, 0]},
+  sitSleep: {arms: [[-.25, .1, -.8], [-.25, .1, -.8]], legs: [[-1.5, 1.5], [-1.5, 1.5]], drop: -.45, neck: [.35, 0, .35]},
+  cower: {arms: [[-1.1, .5, -1.9], [-1.1, .5, -1.9]], legs: [[-.25, .45], [-.25, .45]], drop: -.06, chest: [.25, 0, 0], neck: [-.1, 0, 0]},
+  back: {arms: [[.35, .4, -.6], [.35, .4, -.6]], legs: [[0, 0], [.1, .1]], chest: [-.12, 0, 0]},
+  reach: {arms: [[.08, .12, -.15], [-1.35, .05, -.2]], legs: [[0, 0], [0, 0]], chest: [.1, 0, 0]},
+  reachBoth: {arms: [[-1.3, .05, -.25], [-1.3, .05, -.25]], legs: [[0, 0], [0, 0]], chest: [.15, 0, 0]},
+  lean: {arms: [[-.3, .15, -.9], [-.3, .15, -.9]], legs: [[0, 0], [0, 0]], chest: [.3, 0, 0], neck: [.1, 0, 0]},
+  cane: {arms: [[.08, .12, -.15], [-.35, .12, -.4]], legs: [[0, 0], [0, 0]], chest: [.12, 0, 0]},
+  kneel: {arms: [[-.6, .2, -.9], [-.6, .2, -.9]], legs: [[-1.4, 2.3], [-.3, 2.4]], drop: -.48, chest: [.35, 0, 0], neck: [.2, 0, 0]},
+  radio: {arms: [[.08, .12, -.15], [-1.2, .5, -2.1, .5]], legs: [[0, 0], [0, 0]], neck: [.05, 0, 0]},
+  sitRadio: {arms: [[-.35, .15, -.9], [-1.0, .45, -2.0, .4]], legs: [[-1.5, 1.5], [-1.5, 1.5]], drop: -.45},
+  drive: {arms: [[-.9, .1, -.5], [-.9, .1, -.5]], legs: [[-1.5, 1.5], [-1.5, 1.5]], drop: -.45},
+};
+
+// ---------- timing ----------
+const beats = T.beats;
+window.DURATION = T.total;
+function beatAt(t) { let cur = beats[0], prev = beats[0]; for (const b of beats) { if (b.start - .12 <= t) { prev = cur; cur = b; } } return [cur, prev]; }
+const B = Object.fromEntries(beats.map(b => [b.id, b]));
+function envAt(who, t) { const e = T.env[who]; if (!e) return 0; const i = Math.round(t * T.fps); return e[Math.min(e.length - 1, Math.max(0, i))] || 0; }
+const word = (id, i) => B[id].words[Math.min(i, B[id].words.length - 1)][0];   // when the i-th word of a line starts
+
+const ctx = {THREE, scene, camera, camFill, renderer, bloom, Reflector, rnd, mat, basic, glowMat, mesh, box, clamp, ease, seg, lin, lerp, noise,
+             canvasTex, add, onLayer, buildFace, poseFace, EMO, mixEmo, person, pose, POSES, mixPose, beats, B, beatAt, envAt, word, T};
+// a shot that follows a character's face: `dist` in front of the head (along where the body faces), `side` to its
+// right, `up` above eye level, looking at the head (lifted by `lookUp`)
+ctx.track = (fig, o = {}) => () => {
+  const h = fig.head.getWorldPosition(new THREE.Vector3());
+  const q = fig.root.getWorldQuaternion(new THREE.Quaternion());
+  const f = new THREE.Vector3(0, 0, 1).applyQuaternion(q).setY(0).normalize(), r = new THREE.Vector3(-f.z, 0, f.x);
+  const P = h.clone().addScaledVector(f, o.dist ?? .55).addScaledVector(r, o.side ?? .12); P.y += o.up ?? .03;
+  return {pos: P.toArray(), look: [h.x, h.y + (o.lookUp ?? 0), h.z], fov: o.fov ?? 40, push: o.push ?? .06, drift: o.drift};
+};
+const S = await SET.build(ctx);
+
+// shot = {pos, look, fov, push, drift}: hard cut per line, slow push-in, handheld drift; sets can override it
+function shotFor(t) {
+  const [cur] = beatAt(t);
+  const cuts = S.CUTS && S.CUTS[cur.id];
+  let name = cur.scene, s0 = cur.start - .15, s1 = cur.end + .5;
+  if (cuts) { const len = Math.max(.3, cur.end - cur.start);
+    cuts.forEach(([f, n], i) => { const a = cur.start + f * len; if (i === 0 || t >= a) { name = n; s0 = i === 0 ? cur.start - .15 : a; s1 = i + 1 < cuts.length ? cur.start + cuts[i + 1][0] * len : cur.end + .5; } }); }
+  return {name, s0, s1, shot: S.SHOTS[name]};
+}
+window.renderAt = function (t) {
+  const sh = shotFor(t);
+  const [cur, prev] = beatAt(t);
+  S.update(t, cur, prev, sh);
+  let shot = sh.shot; if (typeof shot === "function") { scene.updateMatrixWorld(true); shot = shot(t, sh); }
+  const k = seg(t, sh.s0, sh.s1);
+  const P = new THREE.Vector3(...shot.pos), L = new THREE.Vector3(...shot.look);
+  if (shot.to) P.lerp(new THREE.Vector3(...shot.to), k);
+  const dir = L.clone().sub(P).normalize();
+  P.addScaledVector(dir, (shot.push ?? .12) * k);
+  const d = shot.drift ?? 1;
+  P.x += noise(t * .6, 1) * .012 * d; P.y += noise(t * .5, 4) * .009 * d;
+  L.x += noise(t * .4, 7) * .006 * d;
+  if (S.shake) { const a = S.shake(t); P.x += a * noise(t * 30, 2) * .03; P.y += a * noise(t * 33, 5) * .03; }
+  camera.fov = shot.fov || 40; camera.updateProjectionMatrix();
+  camera.position.copy(P); camera.lookAt(L);
+  if (shot.roll) camera.rotateZ(shot.roll);
+  composer.render();
+};
+window.renderAt(0);
+window.READY = true;
+</script>
+</body>
+</html>

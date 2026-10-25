@@ -210,6 +210,11 @@ def _turbo_char(who):
     return spec.get("turbo_ref") if spec else None
 
 
+def _turbo_fx(who):
+    """An ffmpeg audio filter for a Turbo character's finished takes (e.g. a voice heard over a radio)."""
+    return (SPEAKERS.get(who) or {}).get("fx", "") if (who and _turbo_char(who)) else ""
+
+
 TURBO_REF_TEXT = ("Well, well. Look what we have here! Don't worry, I always keep my promises. Mostly. "
                   "Please, I'm begging you. Just this once. You'll see, it's going to be fine.")
 
@@ -245,6 +250,8 @@ def _key(text, pace=1.0, who=None, tone=None):
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     if ENGINE == "clone":
         ref = f"{_turbo_char(who)}|" if _turbo_char(who) else ""
+        fx = _turbo_fx(who)
+        ref += f"{fx}|" if fx else ""
         return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{ref}{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
 
@@ -436,7 +443,8 @@ def _clone_process(text, pace, who=None):
         stretch = (f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
                    f"formant=preserved:pitchq=quality,") if abs(tempo - 1) > 0.005 else ""
         subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text, who),
-                        "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
+                        "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95")
+                        + (f",{_turbo_fx(who)}" if _turbo_fx(who) else ""), "-ar", str(SR), "-ac", "1", out], check=True)
     return out, rate * tempo
 
 
@@ -496,7 +504,7 @@ _NUMWORDS = set("zero one two three four five six seven eight nine ten eleven tw
 _checker = None
 
 
-SAME_SOUND = {"principle": "principal", "principles": "principals"}   # Whisper's spelling, not a mishearing
+SAME_SOUND = {"principle": "principal", "principles": "principals", "grey": "gray", "meter": "metre", "meters": "metres"}   # Whisper's spelling, not a mishearing
 _TAG_WORDS = {"chuckle", "laugh", "sigh", "gasp", "sniff", "groan", "cough", "shush", "jekyll", "chuckl"}
 _SOUNDS_HEARD = set("heh hehe hehehe ha hah haha hahaha hm hmm mm mhm uh um ugh huh ahem shh sh ah aah oh ooh phew sniff".split())
 
