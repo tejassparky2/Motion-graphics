@@ -23,7 +23,7 @@ SCRIPT = [dict(d) for d in ep3d.SCRIPT]
 for _d in SCRIPT:
     if _d["id"] == "f18":
         _d["gap"] = 1.0          # the drop happens in this silence; the line then names it (the snap on a word hid it)
-METADATA = ep3d.METADATA
+METADATA = hud2d.meta_2d(ep3d.METADATA)
 KEY = ep3d.KEY
 STEEL, STEEL_D = hexa("#8a939c"), hexa("#4c535b")
 RED_RIM = (1, 0.2, 0.12, 0.9)

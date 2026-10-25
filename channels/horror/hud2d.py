@@ -36,6 +36,14 @@ def _text(cr, s, x, y, size, col, font=ROUND, align="left", outline=None, ow=0.0
     cr.fill()
 
 
+def meta_2d(meta):
+    """The 3D episode's upload sheet, reworded for the 2D cut (it must not say "3D animation")."""
+    out = dict(meta)
+    out["description"] = meta["description"].replace("3D animation", "2D animation")
+    out["tags"] = [("2d animation" if tg == "3d animation" else tg) for tg in meta["tags"]]
+    return out
+
+
 # ------------------------------------------------------------------ depth of field
 def blurred(cr, draw_bg, sigma=7.0, scale=0.5):
     """Draw a background layer (with the current transform) blurred, at reduced resolution for speed."""
@@ -278,7 +286,8 @@ def bubble(cr, t, start, end, text, x, y, tail, w=430, size=34, creepy=False):
 # ------------------------------------------------------------------ the phone, held in two hands
 def phone_pov(cr, t, start, clock, date, notes, glow_a=1.0, skin=None, sleeve=None):
     """The phone filling the frame, held in both hands (point of view), lock screen with notifications.
-    notes = [(time, app, title, text)]; each slides in with a buzz."""
+    notes = [(time, app, title, text)]; each slides in with a buzz (add a 5th item, False, for a silent one: a
+    buzz under a spoken word can be misheard)."""
     sk = skin or tk.SKIN
     sl = sleeve or tk.HOOD
     lift = (1 - clamp01((t - start) / 0.35)) ** 2 * 500
@@ -303,11 +312,12 @@ def phone_pov(cr, t, start, clock, date, notes, glow_a=1.0, skin=None, sleeve=No
     _text(cr, clock, W / 2, y0 + 190, 104, (1, 1, 1, 0.95), ROUND, "center")
     _text(cr, date, W / 2, y0 + 236, 26, (1, 1, 1, 0.8), ROUND, "center")
     yy = y0 + 290
-    for at, app, title, text in notes:
+    for at, app, title, text, *buzz in notes:
         if t < at:
             break
         k = clamp01((t - at) / 0.25)
-        cue("buzz", t, at)
+        if not buzz or buzz[0]:
+            cue("buzz", t, at)
         cr.save()
         cr.translate((1 - k) * 60, 0)
         lines, cur = [], ""
@@ -319,7 +329,7 @@ def phone_pov(cr, t, start, clock, date, notes, glow_a=1.0, skin=None, sleeve=No
             else:
                 cur = nxt
         lines.append(cur)
-        bh = 74 + 34 * len(lines)
+        bh = 86 + 34 * len(lines)
         tk.tk_rrect(cr, x0 + 28, yy, w - 56, bh, 22)
         cr.set_source_rgba(0.97, 0.97, 0.98, 0.96 * k)
         cr.fill()

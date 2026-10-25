@@ -19,14 +19,14 @@ Then your neighbour's voice calls from the dark... while she's texting you from 
 Floor 13, Part 1. An interactive horror story: YOU decide what happens next.
 💬 Step out, or stay in a falling elevator? The most comments decide Part 2. 👇
 
-(Fiction. 3D animation.)
+(Fiction. 2D animation.)
 
 #HorrorStory #InteractiveStory #Shorts
 ```
 
 **Tags** (paste into YouTube Studio > Tags)
 ```
-horror story, interactive story, you decide, choose your ending, floor 13, elevator horror, scary story, 3d animation, creepy, part 1
+horror story, interactive story, you decide, choose your ending, floor 13, elevator horror, scary story, 2d animation, creepy, part 1
 ```
 
 **Pinned comment**

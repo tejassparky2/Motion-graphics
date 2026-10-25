@@ -582,3 +582,391 @@ def tk_rrect(cr, x, y, w, h, r):
     cr.arc(x + r, y + h - r, r, math.pi / 2, math.pi)
     cr.arc(x + r, y + r, r, math.pi, 1.5 * math.pi)
     cr.close_path()
+
+
+# ------------------------------------------------------------------ Last Stop: the old man
+OM_SKIN, OM_SKIN_D = hexa("#d6a487"), hexa("#a5735a")
+OM_COAT, OM_COAT_D, OM_COAT_L = hexa("#3e4a3c"), hexa("#262f25"), hexa("#56654f")
+OM_SCARF, OM_SCARF_D = hexa("#b8862f"), hexa("#7f5a1c")
+OM_CAP, OM_CAP_D = hexa("#6e6052"), hexa("#463c33")
+OM_HAIR, OM_HAIR_D = hexa("#e6e2dc"), hexa("#aaa49b")
+OM_PANTS = hexa("#3a3940")
+
+
+def oldman_cap(cr, light=(-16, -12), rim=None, rim_from=(9, 0)):
+    """His tweed flat cap (also worn by one of the faces in the window: the rewatch detail)."""
+    toon(cr, lambda c: curve(c, [(-110, -58), (-106, -112), (-62, -150), (0, -160), (64, -150), (112, -110), (114, -60),
+                                 (60, -70), (0, -72), (-60, -70)]), OM_CAP, OM_CAP_D, light, rim, rim_from)
+    cr.set_source_rgba(0.95, 0.88, 0.75, 0.12)                # tweed flecks
+    cr.set_line_width(2)
+    for k in range(26):
+        x, y = -90 + (k * 37) % 180, -140 + (k * 23) % 70
+        cr.move_to(x, y)
+        cr.line_to(x + 7, y + 3)
+        cr.stroke()
+    toon(cr, lambda c: curve(c, [(-100, -66), (0, -84), (100, -66), (88, -40), (0, -50), (-88, -40)]), OM_CAP_D,
+         mix(OM_CAP_D, INK, 0.4), (0, -6), rim, rim_from, lw=4)
+
+
+def oldman_head(cr, t, eyes=0.0, look=(0.0, 0.0), mouth=0.0, light=(-16, -12), rim=None, rim_from=(9, 0), skin=None,
+                blink=True):
+    """His head centred at (0, 0), about the lead's size: flat cap, white tufts, bushy brows, big nose, stubble.
+    eyes: 0 = shut (asleep), 1 = open. mouth: 0 = shut, 1 = open (whispering)."""
+    sk = skin or OM_SKIN
+    sk_d = OM_SKIN_D if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
+    for sx in (-1, 1):                                                    # big ears
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 92, -34), (sx * 126, -48), (sx * 132, 8), (sx * 110, 38)]),
+             sk, sk_d, light, rim, rim_from, lw=4)
+    head = lambda c: curve(c, [(-96, -40), (-92, -96), (-50, -130), (0, -138), (50, -130), (92, -96), (96, -40),
+                               (94, 20), (80, 64), (46, 100), (0, 112), (-46, 100), (-80, 64), (-94, 20)])
+    toon(cr, head, sk, sk_d, light, rim, rim_from)
+    cr.save()
+    cr.new_path()
+    head(cr)
+    cr.clip()
+    g = cairo.LinearGradient(0, -70, 0, 0)                              # the cap's brim shadows the eyes
+    g.add_color_stop_rgba(0, 0.15, 0.07, 0.05, 0.55)
+    g.add_color_stop_rgba(1, 0.15, 0.07, 0.05, 0)
+    cr.set_source(g)
+    cr.paint()
+    cr.set_source_rgba(0.35, 0.32, 0.3, 0.55)                           # grey stubble on the jaw
+    for k in range(70):
+        a = (k * 0.618 * 2 * math.pi) % (2 * math.pi)
+        rr = 0.55 + 0.45 * ((k * 0.382) % 1)
+        px, py = 86 * rr * math.cos(a), 30 + 74 * rr * abs(math.sin(a))
+        if py > 62 and abs(px) < 80 and not (abs(px) < 30 and 66 < py < 90):
+            cr.arc(px, py, 1.6, 0, 2 * math.pi)
+            cr.fill()
+    cr.restore()
+    for sx in (-1, 1):                                                    # white tufts under the cap
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 88, -78), (sx * 108, -50), (sx * 104, -4), (sx * 92, -20),
+                                             (sx * 84, -50)]), OM_HAIR, OM_HAIR_D, light, rim, rim_from, lw=3)
+    # eyes: heavy lids, bags under them; shut = two downward arcs
+    open_ = eyes
+    if blink and eyes > 0.5:
+        ph = (t + 1.3) % 3.8
+        open_ *= 1 - 0.95 * (math.sin(ph / 0.16 * math.pi) if ph < 0.16 else 0.0)
+    for sx in (-1, 1):
+        ex, ey = sx * 38, -10
+        cr.save()
+        cr.translate(ex, ey)
+        if open_ > 0.08:
+            rx, ry = 22, 13 * open_
+            eye = lambda c: (c.save(), c.scale(1, max(0.05, ry / rx)), c.arc(0, 0, rx, 0, 2 * math.pi), c.restore())
+            cr.new_path()
+            eye(cr)
+            cr.set_source_rgba(0.93, 0.9, 0.84, 1)
+            cr.fill_preserve()
+            cr.save()
+            cr.clip()
+            px, py = look[0] * 8, look[1] * 5
+            cr.set_source_rgba(*hexa("#4d5a52"))
+            cr.arc(px, py, 9, 0, 2 * math.pi)
+            cr.fill()
+            cr.set_source_rgba(0.03, 0.03, 0.03, 1)
+            cr.arc(px, py, 4.5, 0, 2 * math.pi)
+            cr.fill()
+            cr.set_source_rgba(1, 1, 1, 0.9)
+            cr.arc(px + 3, py - 3, 2.4, 0, 2 * math.pi)
+            cr.fill()
+            cr.set_source_rgba(0.3, 0.15, 0.1, 0.4)                     # heavy upper lid
+            cr.rectangle(-rx, -ry, 2 * rx, ry * 0.6)
+            cr.fill()
+            cr.restore()
+            cr.new_path()
+            eye(cr)
+            cr.set_source_rgba(*INK)
+            cr.set_line_width(3.5)
+            cr.stroke()
+        else:
+            cr.new_path()
+            cr.move_to(-20, -2)
+            cr.curve_to(-8, 7, 8, 7, 20, -2)
+            cr.set_source_rgba(*INK)
+            cr.set_line_width(4)
+            cr.stroke()
+        cr.set_source_rgba(*INK[:3], 0.45)                               # bags and crow's feet
+        cr.set_line_width(2.5)
+        cr.new_path()
+        cr.move_to(-16, 18)
+        cr.curve_to(-6, 24, 8, 24, 18, 16)
+        cr.stroke()
+        for k in range(3):
+            cr.move_to(sx * 28, -6 + k * 8)
+            cr.line_to(sx * 40, -10 + k * 11)
+            cr.stroke()
+        cr.restore()
+    for sx in (-1, 1):                                                    # bushy white brows
+        cr.save()
+        cr.translate(sx * 40, -30)
+        cr.scale(sx, 1)
+        toon(cr, lambda c: curve(c, [(-30, 4), (-20, -10), (6, -14), (32, -6), (36, 6), (14, 2), (-10, 6)]),
+             OM_HAIR, OM_HAIR_D, (0, -4), None, lw=3)
+        cr.restore()
+    toon(cr, lambda c: curve(c, [(-6, -10), (-12, 26), (-26, 44), (-14, 58), (0, 52), (14, 58), (26, 44), (12, 26),
+                                 (6, -10)]), sk, sk_d, light, rim, rim_from, lw=3.5)     # a big nose
+    cr.set_source_rgba(*INK[:3], 0.7)
+    for sx in (-1, 1):
+        cr.save()
+        cr.translate(sx * 9, 52)
+        cr.scale(1, 0.5)
+        cr.arc(0, 0, 4.5, 0, 2 * math.pi)
+        cr.restore()
+        cr.fill()
+    cr.set_source_rgba(*INK[:3], 0.4)                                   # the folds beside the mouth
+    cr.set_line_width(2.5)
+    for sx in (-1, 1):
+        cr.move_to(sx * 30, 50)
+        cr.curve_to(sx * 40, 62, sx * 42, 76, sx * 38, 90)
+        cr.stroke()
+    if mouth > 0.05:
+        cr.save()
+        cr.translate(0, 80)
+        cr.scale(1, 0.35 + 0.4 * mouth)
+        cr.arc(0, 0, 18, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(0.18, 0.05, 0.05, 1)
+        cr.fill_preserve()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3)
+        cr.stroke()
+    else:
+        cr.move_to(-26, 82)
+        cr.curve_to(-10, 76, 10, 76, 26, 82)
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(4)
+        cr.stroke()
+    oldman_cap(cr, light, rim, rim_from)
+
+
+def oldman_bust(cr, x, y, s, t, eyes=0.0, look=(0.0, 0.0), mouth=0.0, tilt=0.0, lean=0.0, light=(-16, -12), rim=None,
+                rim_from=(9, 0), skin=None):
+    """The old man from the chest up (x, y = the base of the neck): wool coat, mustard scarf."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    cr.rotate(lean)
+    up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.2))
+    toon(cr, lambda c: curve(c, [(-60, -10 + up), (-156, 30 + up), (-190, 120), (-200, 430), (200, 430), (190, 120),
+                                 (156, 30 + up), (60, -10 + up)]), OM_COAT, OM_COAT_D, light, rim, rim_from)
+    for sx in (-1, 1):                                                    # lapels
+        toon(cr, lambda c, sx=sx: poly(c, [(sx * 40, 20), (sx * 120, 40 + up), (sx * 70, 200), (sx * 14, 260)]),
+             OM_COAT_L, OM_COAT_D, light, rim, rim_from, lw=3.5)
+    for k in range(2):                                                    # buttons
+        toon(cr, lambda c, k=k: c.arc(-26, 300 + k * 70, 9, 0, 2 * math.pi), hexa("#2b2018"), None, (0, 0), None, lw=2.5)
+    toon(cr, lambda c: poly(c, [(-34, -82), (34, -82), (38, 0), (-38, 0)]), OM_SKIN, OM_SKIN_D, (10, 0), None, lw=4)
+    scarf = lambda c: curve(c, [(-104, 4 + up), (-70, -40 + up), (0, -50 + up), (70, -40 + up), (104, 4 + up),
+                                (70, 40 + up), (0, 28 + up), (-70, 40 + up)])
+    toon(cr, scarf, OM_SCARF, OM_SCARF_D, light, rim, rim_from)
+    toon(cr, lambda c: curve(c, [(30, 30 + up), (74, 34 + up), (82, 200), (40, 206)]), OM_SCARF, OM_SCARF_D, light,
+         rim, rim_from, lw=4)                                             # the tail of the scarf
+    cr.set_source_rgba(0.55, 0.12, 0.08, 0.7)                           # its stripes
+    cr.set_line_width(5)
+    for yy in (90, 130, 170):
+        cr.move_to(36 + yy * 0.05, yy)
+        cr.line_to(78 + yy * 0.02, yy - 4)
+        cr.stroke()
+    cr.translate(0, -175)
+    cr.rotate(tilt + 0.01 * noise(t * 0.5, 9))
+    oldman_head(cr, t, eyes, look, mouth, light, rim, rim_from, skin)
+    cr.restore()
+
+
+def oldman_full(cr, x, y, s, t, eyes=1.0, hand=0.0, look=(0.0, 0.0), light=(-16, -12), rim=None, rim_from=(9, 0),
+                skin=None):
+    """Standing, feet at (x, y), ~620 px tall at s = 1. hand: 0 = arm down, 1 = holding his hand out to you
+    (foreshortened: it grows as it comes toward the camera)."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    for sx in (-1, 1):
+        toon(cr, lambda c, sx=sx: c.rectangle(sx * 30 - 20, -190, 40, 182), OM_PANTS, mix(OM_PANTS, INK, 0.4), light,
+             rim, rim_from, lw=3.5)
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 30 - 26, -6), (sx * 30 - 20, -22), (sx * 30 + 22, -22),
+                                             (sx * 30 + 30, -4), (sx * 30 + 20, 6), (sx * 30 - 20, 6)]),
+             hexa("#2a1d15"), None, (0, 0), rim, rim_from, lw=3)
+    toon(cr, lambda c: curve(c, [(-70, -470), (70, -470), (104, -300), (118, -170), (-118, -170), (-104, -300)]),
+         OM_COAT, OM_COAT_D, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.5)
+    cr.set_line_width(3)
+    cr.move_to(4, -440)
+    cr.line_to(8, -172)
+    cr.stroke()
+    for k in range(3):
+        toon(cr, lambda c, k=k: c.arc(-8, -400 + k * 70, 6, 0, 2 * math.pi), hexa("#2b2018"), None, (0, 0), None, lw=2)
+    # right arm (screen right) hangs
+    toon(cr, lambda c: curve(c, [(62, -466), (98, -420), (112, -300), (104, -250), (84, -252), (82, -330), (60, -420)]),
+         OM_COAT, OM_COAT_D, light, rim, rim_from)
+    toon(cr, lambda c: c.arc(96, -236, 17, 0, 2 * math.pi), OM_SKIN, OM_SKIN_D, light, None, lw=3)
+    # left arm (screen left): hangs, or reaches out to you, palm up
+    ex, ey = -100 - 40 * hand, -360 + 10 * hand
+    wx, wy = -104 - 92 * hand, -256 - 84 * hand
+    for col, lw in ((INK, 54), (OM_COAT, 45)):
+        cr.new_path()
+        cr.move_to(-64, -452)
+        cr.curve_to(ex + 10, ey - 50, ex, ey, wx, wy)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.set_source_rgba(*col)
+        cr.set_line_width(lw)
+        cr.stroke()
+    cr.save()
+    cr.translate(wx, wy)
+    cr.rotate(0.25 * hand)
+    cr.scale(-(1 + 0.35 * hand), 1 + 0.35 * hand)                      # fingers point away from him, toward the door
+    if hand > 0.3:                                                       # an open hand, palm up, fingers toward you
+        toon(cr, lambda c: curve(c, [(-14, -10), (8, -16), (34, -14), (52, -6), (54, 6), (30, 10), (4, 14), (-14, 10)]),
+             OM_SKIN, OM_SKIN_D, light, rim, rim_from, lw=3.5)
+        toon(cr, lambda c: curve(c, [(0, -12), (10, -30), (20, -28), (16, -12)]), OM_SKIN, OM_SKIN_D, light, None, lw=3)
+        cr.set_source_rgba(*INK[:3], 0.7)
+        cr.set_line_width(2.2)
+        for k in range(3):
+            cr.move_to(30 + k * 6, -12 + k * 2)
+            cr.line_to(46 + k * 2, -4 + k * 4)
+            cr.stroke()
+    else:
+        toon(cr, lambda c: c.arc(0, 12, 17, 0, 2 * math.pi), OM_SKIN, OM_SKIN_D, light, None, lw=3)
+    cr.restore()
+    toon(cr, lambda c: curve(c, [(-84, -472), (0, -488), (84, -472), (70, -440), (0, -450), (-70, -440)]), OM_SCARF,
+         OM_SCARF_D, light, rim, rim_from, lw=4)
+    toon(cr, lambda c: curve(c, [(24, -460), (56, -458), (60, -330), (30, -326)]), OM_SCARF, OM_SCARF_D, light, rim,
+         rim_from, lw=3.5)
+    cr.translate(0, -560)
+    cr.scale(0.62, 0.62)
+    oldman_head(cr, t, eyes, look, 0.0, light, rim, rim_from, skin)
+    cr.restore()
+
+
+# ------------------------------------------------------------------ Last Stop: the driver (only ever seen in his mirror)
+DR_SKIN, DR_SKIN_D = hexa("#c7a088"), hexa("#8f6a56")
+DR_CAP = hexa("#1d2433")
+
+
+def driver_eyes(cr, t, w=420, h=150, look=(0.0, 0.0), glint=0.0):
+    """The band of the driver's face a rear-view mirror shows: cap brim, heavy brows, eyes looking straight at you.
+    Centred at (0, 0); w x h. glint: a pale shine in the irises (Night 1 ends with him less human)."""
+    cr.save()
+    g = cairo.LinearGradient(-w / 2, 0, w / 2, 0)
+    g.add_color_stop_rgba(0, *mix(DR_SKIN_D, INK, 0.3))
+    g.add_color_stop_rgba(0.35, *DR_SKIN)
+    g.add_color_stop_rgba(0.7, *DR_SKIN)
+    g.add_color_stop_rgba(1, *mix(DR_SKIN_D, INK, 0.5))
+    cr.rectangle(-w / 2, -h / 2, w, h)
+    cr.set_source(g)
+    cr.fill()
+    cr.set_source_rgba(*DR_CAP)                                          # the cap's brim and its shadow
+    cr.rectangle(-w / 2, -h / 2, w, h * 0.22)
+    cr.fill()
+    cr.set_source_rgba(0.85, 0.68, 0.25, 1)
+    cr.rectangle(-w / 2, -h / 2 + h * 0.2, w, 4)
+    cr.fill()
+    g = cairo.LinearGradient(0, -h / 2 + h * 0.22, 0, -h / 2 + h * 0.5)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.55)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.rectangle(-w / 2, -h / 2 + h * 0.22, w, h * 0.3)
+    cr.set_source(g)
+    cr.fill()
+    for sx in (-1, 1):
+        ex, ey = sx * w * 0.19, h * 0.12
+        cr.save()
+        cr.translate(ex, ey)
+        rx, ry = w * 0.075, w * 0.032
+        eye = lambda c: (c.save(), c.scale(1, ry / rx), c.arc(0, 0, rx, 0, 2 * math.pi), c.restore())
+        cr.new_path()
+        eye(cr)
+        cr.set_source_rgba(0.9, 0.86, 0.8, 1)
+        cr.fill_preserve()
+        cr.save()
+        cr.clip()
+        px, py = look[0] * rx * 0.3, look[1] * ry * 0.3
+        ir = ry * 1.05
+        cr.set_source_rgba(*mix(hexa("#3b2a20"), (0.95, 0.95, 0.85, 1), glint))
+        cr.arc(px, py, ir, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(0.02, 0.02, 0.02, 1)
+        cr.arc(px, py, ir * (0.5 - 0.25 * glint), 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(1, 1, 1, 0.9)
+        cr.arc(px + ir * 0.35, py - ir * 0.35, ir * 0.22, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(0.2, 0.1, 0.08, 0.45)
+        cr.rectangle(-rx, -ry, 2 * rx, ry * 0.7)
+        cr.fill()
+        cr.restore()
+        cr.new_path()
+        eye(cr)
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(4)
+        cr.stroke()
+        cr.restore()
+        if glint > 0:
+            glow(cr, ex, ey, rx * 1.4, (1, 0.97, 0.85), 0.35 * glint)
+        cr.save()                                                        # heavy brows, pulled down at the middle
+        cr.translate(ex, ey - h * 0.2)
+        cr.scale(sx, 1)
+        toon(cr, lambda c: poly(c, [(-w * 0.1, h * 0.05), (-w * 0.08, -h * 0.04), (w * 0.09, -h * 0.06),
+                                    (w * 0.1, h * 0.0)]), hexa("#2a1e18"), None, (0, 0), None, lw=2.5)
+        cr.restore()
+        cr.set_source_rgba(*INK[:3], 0.4)                               # bags
+        cr.set_line_width(2.5)
+        cr.move_to(ex - rx * 0.8, ey + ry * 1.7)
+        cr.curve_to(ex - rx * 0.3, ey + ry * 2.3, ex + rx * 0.3, ey + ry * 2.3, ex + rx * 0.8, ey + ry * 1.6)
+        cr.stroke()
+    cr.set_source_rgba(*INK[:3], 0.55)                                   # the bridge of the nose
+    cr.set_line_width(3)
+    cr.move_to(-w * 0.03, h * 0.2)
+    cr.curve_to(-w * 0.04, h * 0.35, -w * 0.02, h * 0.45, -w * 0.04, h * 0.5)
+    cr.stroke()
+    cr.restore()
+
+
+# ------------------------------------------------------------------ Last Stop: the passengers nobody saw get on
+def pale_face(cr, x, y, s, t, a=1.0, cap=False, tilt=0.0, seed=0):
+    """A passenger in the dark: shoulders, a pale blank face, hollow eyes with pin-point lights. cap=True gives it the
+    old man's flat cap and scarf (the detail for rewatchers)."""
+    if a <= 0:
+        return
+    cr.save()
+    cr.translate(x + 1.5 * math.sin(t * 1.3 + seed), y)
+    cr.scale(s, s)
+    cr.push_group()
+    cr.set_source_rgba(0.04, 0.05, 0.07, 1)
+    curve(cr, [(-60, -10), (-150, 30), (-180, 200), (180, 200), (150, 30), (60, -10)])
+    cr.fill()
+    if cap:
+        cr.set_source_rgba(*OM_SCARF[:3], 0.55)
+        curve(cr, [(-90, 4), (0, -30), (90, 4), (0, 26)])
+        cr.fill()
+    cr.rotate(tilt)
+    cr.translate(0, -140)
+    face = lambda c: curve(c, [(-78, -30), (-70, -90), (0, -118), (70, -90), (78, -30), (66, 50), (0, 96), (-66, 50)])
+    cr.new_path()
+    face(cr)
+    cr.set_source(rad(0, -20, 120, [(0, (0.86, 0.9, 0.95, 1)), (0.7, (0.62, 0.68, 0.76, 1)), (1, (0.3, 0.34, 0.42, 1))]))
+    cr.fill()
+    for sx in (-1, 1):                                                    # hollow eyes, a point of light in each
+        cr.save()
+        cr.translate(sx * 30, -16)
+        cr.scale(1, 1.25)
+        cr.arc(0, 0, 18, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(0.05, 0.04, 0.06, 0.95)
+        cr.fill()
+        cr.set_source_rgba(1, 0.97, 0.88, 1)
+        cr.arc(sx * 30, -14, 3.8, 0, 2 * math.pi)
+        cr.fill()
+    cr.save()
+    cr.translate(0, 46)
+    cr.scale(1, 0.6)
+    cr.arc(0, 0, 11, 0, 2 * math.pi)
+    cr.restore()
+    cr.set_source_rgba(0.08, 0.06, 0.08, 0.85)
+    cr.fill()
+    if cap:
+        cr.save()
+        cr.translate(0, 12)
+        cr.scale(0.74, 0.74)
+        oldman_cap(cr)
+        cr.restore()
+    cr.pop_group_to_source()
+    cr.paint_with_alpha(a)
+    cr.restore()

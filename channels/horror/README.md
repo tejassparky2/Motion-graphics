@@ -1,4 +1,4 @@
-# Interactive horror Shorts in 3D (separate channel)
+# Interactive horror Shorts (separate channel)
 
 Owner, 25 Oct 2026: "stories videos like this but with better animation, not for this channel" / "Yes open separate chat, 3D".
 Branch `ccr-56282fe5-evehq4-horror`. Not Interestingly Strange: never put these in that calendar.
@@ -30,6 +30,16 @@ Branch `ccr-56282fe5-evehq4-horror`. Not Interestingly Strange: never put these 
 Episodes: floor13.py, last_stop.py, tower9.py (scripts + HUD + sound cues); sets/lift.js, bus.js, tower.js (3D);
 hud.py (meter, chips, phone chat, rule strip, blueprint cards, YOUR CALL); sound.py (synthesized horror effects).
 
+2D (the look the owner chose, 25 Oct: "Not liking the animation" -> "Illustrated 2D, drawn in code" -> "Yeah 2d better"):
+    /home/user/.venv-main/bin/python channels/horror/make_2d.py last_stop_2d                  # -> out/horror/last_stop_2d.mp4
+    /home/user/.venv-main/bin/python channels/horror/make_2d.py last_stop_2d --stills 5,22.5  # check frames (build/horror/check2d)
+    /home/user/.venv-main/bin/python channels/horror/check.py last_stop_2d                    # Whisper medium + tags
+EPISODE_2d.py reuses EPISODE.py's SCRIPT, METADATA (hud2d.meta_2d: says "2D animation") and KEY, so the voice takes are
+shared; only the drawing, shot list and cue timing are new. toon2d.py = the cast drawn in cairo (the lead "you",
+Mrs. Gray, the old man, the driver's eyes, the pale passengers) with cel shading; hud2d.py = the overlays after the
+owner's 2D reference (stats bar, rounded captions with red key words, RULE tag, stamps, speech bubbles, phone held in
+both hands, background blur, A/B ending card). About 2-3 min per episode to render.
+
 ## Status
 - 25 Oct 2026: channel opened. Owner: "All a b c make them now" -> Floor 13 (Part 1), Last Stop and Tower 9 (Night 1)
   made with the Turbo stock narrator (scripts: out/horror/scripts_part1.md). Name / narrator / part-2 timing still open.
@@ -41,6 +51,11 @@ hud.py (meter, chips, phone chat, rule strip, blueprint cards, YOUR CALL); sound
   word hides it (cue effects after the word or in a silence), rain/generator beds must sit low, Turbo says "riding" like
   "writing". Research report: reports/3D horror Shorts animation and hooks.md. Technique source worth reusing (MIT):
   github.com/lemomo-ai/lemo-opuscar (DIRECTOR.md, TECHNIQUE.md, styles/backrooms: VHS pass, handheld fear rig, OSD).
+- 25 Oct: the owner didn't like the 3D look and picked illustrated 2D. Floor 13 2D (80 s, 22/24 exact, the rest digits)
+  and Last Stop 2D (73 s, 20/21 exact, the other is "ten forty" heard as 1040) delivered. Lessons: the "creak/creaks"
+  flag was the take itself (the dry take said "creak"; re-made it), so check the dry take before blaming the mix; a
+  phone buzz under "out of service" made "out of Cervith" (notes can be silent); the breath on "breathes" made
+  "bruised", so the breath now plays in a 1.3 s silence after the line.
 - Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face
