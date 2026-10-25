@@ -36,9 +36,17 @@ def main():
     got.update(hv.takes([s for i, s in enumerate(lines) if i + 1 not in picks], prompt=a.prompt, voice=a.voice))
     out = os.path.join(ROOT, "out", "3d", "hindi", "dub")
     os.makedirs(out, exist_ok=True)
+    from faster_whisper import WhisperModel
+    model = WhisperModel("medium", device="cpu", compute_type="int8")
     for i, s in enumerate(lines):
         w, sr = soundfile.read(got[s])
-        w = hv.speech_only(w if w.ndim == 1 else w.mean(axis=1), sr)
+        w = w if w.ndim == 1 else w.mean(axis=1)
+        # the multilingual model sometimes keeps babbling (loudly) after the sentence: cut 0.2 s after the last word
+        # Whisper hears, then trim quiet edges
+        words = [x for seg in model.transcribe(got[s], language="hi", word_timestamps=True)[0] for x in seg.words]
+        if words:
+            w = w[: int(min(len(w) / sr, words[-1].end + 0.2) * sr)]
+        w = hv.speech_only(w, sr)
         raw = os.path.join(out, f"{a.name}_{i + 1:02d}.raw.wav")
         soundfile.write(raw, w, sr)
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", raw, "-af", hv.vo.POLISH + ",alimiter=limit=0.89",
