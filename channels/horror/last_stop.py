@@ -46,7 +46,7 @@ SCRIPT = [
     dict(id="b16", scene="driver_mirror", text="This isn't your stop. Sit down.", speaker="driver", gap=0.35),
     dict(id="b17", scene="oldman_out", text="The old man steps out into the dark. And holds out his hand."),
     dict(id="b17b", scene="oldman_out", text="Get off, and you're alone in a forest with a stranger."),
-    dict(id="b17c", scene="back_seats", text="Stay, and you're riding with whatever got on."),
+    dict(id="b17c", scene="back_seats", text="Stay, and you're stuck on board with whatever got on."),
     dict(id="b18", scene="choice", text="Whatever most of you choose happens on Night [two.|2.]"),
     dict(id="b19", scene="choice", text="So, do you get off with the old man in the forest? "
                                         "Or ride on with whatever's in the back seats?", gap=0.3),
@@ -98,7 +98,7 @@ def route(cr, k):
 def draw(cr, t, tl):
     A, B = tl.at, tl.by_id
     hud.frame(cr, t, FRAMES)
-    hud.finish(cr, t, flash_at=[A("b8", "three")])
+    hud.finish(cr, t, flash_at=[A("b8", "faces", end=True)])
     stops = 6 if t < B["b5"].start else 5     # the resource: stops left to yours
     hud.meter(cr, t, f"STOPS LEFT: {stops}", stops / 6 if t < B["b15"].start else 0.0, warn=0.2, icon="bar")
     bumps = [(B["b5"].start + 0.3, 4), (A("b6", "creaks."), 5), (A("b6", "another."), 6), (A("b14", "breathes"), 7)]
@@ -118,16 +118,16 @@ def draw(cr, t, tl):
     hud.phone_thread(cr, t, B["b9"].start, B["b11"].end, "CityBus Live", "Route 9 tracker",
                      [(B["b9"].start + 0.2, "in", "Route 9: OUT OF SERVICE.", None),
                       (A("b10", "depot") - 0.4, "in", "Vehicle in depot since 10:40 PM.", None)])
-    hud.big(cr, t, A("b8", "three"), B["b8"].end + 0.3, [("3 FACES", True)], y=330, size=100)
+    hud.big(cr, t, A("b8", "faces", end=True), B["b8"].end + 0.4, [("3 FACES", True)], y=330, size=100)
     hud.blueprint(cr, t, B["b3"].start, B["b4"].start + 0.4, "ROUTE 9", route)
     hud.your_call(cr, t, A("b19", "get"), "GET OFF", "RIDE ON", "COMMENT: GET OFF or RIDE ON")
     hud.captions(cr, t, tl, KEY)
     cue("engine_idle", t, 0.0, tl.total)
     cue("doors", t, B["b4"].start + 0.1)
-    cue("dip", t, B["b5"].start + 0.2)
-    cue("creak", t, A("b6", "creaks."), 0.7)
-    cue("creak", t, A("b6", "another."), 0.7)
-    cue("sting", t, A("b8", "three"))
+    cue("dip", t, A("b5", "dips.", end=True) + 0.05)        # after the words: on "the bus" it was heard as "the best"
+    cue("creak", t, A("b6", "creaks.", end=True) + 0.05, 0.7)   # after the word: on it "creaks" was heard as "crease"
+    cue("creak", t, A("b6", "another.", end=True) + 0.05, 0.7)
+    cue("sting", t, A("b8", "faces", end=True))            # after "three faces": on it, "three" was lost
     cue("breath", t, A("b14", "breathes"))
     cue("brakes", t, B["b15"].start)
     cue("doors", t, B["b17"].start)

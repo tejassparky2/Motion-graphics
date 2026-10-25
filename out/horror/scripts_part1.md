@@ -58,7 +58,7 @@ Each episode ends on a two-way choice; the most-commented option decides the nex
 | 16 | (Driver) This isn't your stop. Sit down. | The driver |
 | 17 | The old man steps out into the dark. And holds out his hand. | He stands outside the open door, hand out |
 | 18 | Get off, and you're alone in a forest with a stranger. | Him in the dark |
-| 19 | Stay, and you're riding with whatever got on. | The back seats: rows of shining eyes |
+| 19 | Stay, and you're stuck on board with whatever got on. | The back seats: rows of shining eyes |
 | 20 | Whatever most of you choose happens on Night 2. | |
 | 21 | So, do you get off with the old man in the forest? Or ride on with whatever's in the back seats? | YOUR CALL. GET OFF / RIDE ON |
 
