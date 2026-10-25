@@ -40,7 +40,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("d11", "devclose", DEV, "Can it trade stocks for me?", .3, 1),
     ("d12", "soloclose", CL, "Never. Not even if you say yes.", .3, 1),
     ("d13", "devmid", DEV, "Who can use it?", .35, 1),
-    ("d14", "solo", CL, "There's a waitlist. Pro and Max users in the U S go first.", .3, 1),
+    ("d14", "solo", CL, "There's a waitlist. Pro and Max users in the [U S|US] go first.", .3, 1),
     ("d15", "devclose", DEV, "Does it cost extra?", .3, 1),
     ("d16", "soloclose", CL, "It's in the plan. But its background checks use your limits.", .3, 1),
     ("d17", "devclose", DEV, "An AI that works while I sleep.", .5, .95),
