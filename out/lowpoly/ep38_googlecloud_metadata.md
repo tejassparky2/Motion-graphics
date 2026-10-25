@@ -37,4 +37,4 @@ openai google cloud, gpt-6 google cloud, claude google cloud, gemini, codex, ai 
 One cloud with every model: good for developers, or too much power in one place? 👇 Subscribe for tomorrow's AI news.
 ```
 
-**Video facts:** 51.6 s, 136 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 51.6 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

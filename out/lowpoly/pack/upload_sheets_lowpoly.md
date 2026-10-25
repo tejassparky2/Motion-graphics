@@ -1,6 +1,6 @@
 # Low-poly channel: upload sheets in posting order (after ep16)
 Times are IST (US Eastern in brackets). Skip any episode already posted and keep the order. Every upload: "No, it's not made for kids"; pin the pinned comment.
-Rebuilt 23 Oct 2026: the news episodes (posts 4-7) go first; everything after moved back 2 days.
+Rebuilt 25 Oct 2026: AI news explainers (posts 8-11) go next; everything after moved back 2 more days.
 
 ---
 
@@ -251,7 +251,178 @@ Cheaper model or the one that knows your codebase? 👇 Subscribe for the next o
 
 ---
 
-## 8. Oct 26, 4:30 AM IST (7:00 PM ET (day before)): `08_Oct26_430AM_ep18_sister.mp4`
+## 8. Oct 26, 4:30 AM IST (7:00 PM ET (day before)): `08_Oct26_430AM_ep36_litellm.mp4`
+
+**Title** (48 characters)
+```
+LiteLLM Got Hacked: What Happened and What to Do
+```
+
+**Alternative titles to test**
+- `Hey Codex, What's New? (LiteLLM Hack Explained)`
+- `One Leaked Key, Five Months Later`
+
+**Description**
+```
+A popular AI library shipped a release that steals credentials. Codex explains what happened, how
+the attackers got in, and what to do if you installed it.
+
+Real (docs.litellm.ai, 21 and 23 Oct 2026): litellm 1.107.0 on PyPI (11:39-13:23 UTC, 21 Oct) and its Docker images
+(until 14:20 UTC) contained malware that steals credentials. The way in: a master key committed to a public repo on
+27 May 2026 that was never revoked, used by the attacker on 10 Oct. Safe: pin 1.106.2. If 1.107.0 ran anywhere, rotate
+every key that machine could reach and rebuild it. Dev and Codex are parody characters.
+
+Ep. 36 of Dev vs the bots. Parody. Not affiliated with OpenAI or LiteLLM.
+
+💬 Do you pin your dependencies, or live on latest? 👇
+
+#LiteLLM #CyberSecurity #AINews
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+litellm hack, litellm 1.107.0, supply chain attack, pypi malware, ai news, codex, python security, devops, programmer humor, tech news
+```
+
+**Pinned comment**
+```
+Do you pin your dependencies, or live on latest? 👇 Subscribe for tomorrow's AI news.
+```
+
+**Video facts:** 59.9 s, 168 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep37_scion.mp4`
+
+**Title** (40 characters)
+```
+Anthropic Stopped Using Git. Here's Why.
+```
+
+**Alternative titles to test**
+- `Hey Claude, What's New? (Git Couldn't Keep Up)`
+- `30,000 Changes a Day Broke Git`
+
+**Description**
+```
+AI agents now write code so fast that git couldn't keep up. Claude explains why Anthropic built its
+own version control, Scion.
+
+Real (anthropic.com/engineering, 13 Oct 2026): merged changes went from about 2,500 a day in May 2026 to over 30,000 a
+day by September; about 25 million CI checkouts a day; fetching that the normal way would be "over 600 PB of git
+traffic per day"; Scion uses 200x less CPU and memory than the old git mirrors; seven people built it and moved the repo
+in five months. Anthropic says Scion "is by no means a suitable replacement for git for general use". Dev and Claude
+are parody characters.
+
+Ep. 37 of Dev vs the bots. Parody. Not affiliated with Anthropic.
+
+💬 Is your team's slowest part the code now, or the tools around it? 👇
+
+#Git #ClaudeAI #AINews
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+anthropic scion, anthropic git, version control, monorepo, ai agents, claude, ai news, developer tools, programmer humor, tech news
+```
+
+**Pinned comment**
+```
+Is your team's slowest part the code now, or the tools around it? 👇 Subscribe for tomorrow's AI news.
+```
+
+**Video facts:** 50.8 s, 132 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 10. Oct 27, 4:30 AM IST (7:00 PM ET (day before)): `10_Oct27_430AM_ep38_googlecloud.mp4`
+
+**Title** (39 characters)
+```
+OpenAI's Models Are Now on Google Cloud
+```
+
+**Alternative titles to test**
+- `Hey Codex, What's New? (GPT on Google Cloud)`
+- `Google Now Sells Gemini, Claude AND GPT`
+
+**Description**
+```
+OpenAI's models just showed up on Google Cloud, and Claude's full platform followed a day later.
+Codex explains what it means.
+
+Real: on 21 Oct 2026 Google Cloud announced GPT-6 Astra, GPT-6.1 Sol and GPT-6 Luna in private preview for select
+enterprise customers, with Codex CLI and Desktop able to connect, billed on one Google Cloud invoice that counts toward
+existing commitments (cloud.google.com). Google says it is "the only hyperscale cloud provider offering access to all
+three leading closed source LLMs". On 22 Oct, Claude Models on Google Cloud (Anthropic managed) became generally
+available (claude.com). Dev and Codex are parody characters.
+
+Ep. 38 of Dev vs the bots. Parody. Not affiliated with OpenAI, Google or Anthropic.
+
+💬 One cloud with every model: good for developers, or too much power in one place? 👇
+
+#GoogleCloud #OpenAI #AINews
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+openai google cloud, gpt-6 google cloud, claude google cloud, gemini, codex, ai news, cloud computing, llm, programmer humor, tech news
+```
+
+**Pinned comment**
+```
+One cloud with every model: good for developers, or too much power in one place? 👇 Subscribe for tomorrow's AI news.
+```
+
+**Video facts:** 51.6 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep39_duet.mp4`
+
+**Title** (45 characters)
+```
+Claude Duet: An AI That Works While You Sleep
+```
+
+**Alternative titles to test**
+- `Hey Claude, What's New? (Claude Duet Explained)`
+- `This AI Checks Your Accounts Every Few Hours`
+
+**Description**
+```
+Anthropic's new Claude Duet checks your apps every few hours and works on its own computer, even
+when your laptop is off. Claude explains what it can and can't do.
+
+Real (claude.com, 21 Oct 2026): Claude Duet is a research preview with a waitlist, starting with US Pro and Max
+subscribers, on iOS, Android and claude.ai. It sends a morning brief, checks connected accounts every few hours, runs
+on its own virtual machine and browser, asks before it sends a message, makes a payment, signs a document or deletes
+anything, and never trades securities or moves money between accounts, even with approval. Its background checks count
+toward plan limits. Dev and Claude are parody characters.
+
+Ep. 39 of Dev vs the bots. Parody. Not affiliated with Anthropic.
+
+💬 Would you let an AI check your accounts every few hours? Yes or never? 👇
+
+#ClaudeAI #AIAgents #AINews
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+claude duet, anthropic, ai agent, proactive ai, claude, ai news, ai assistant, automation, programmer humor, tech news
+```
+
+**Pinned comment**
+```
+Would you let an AI check your accounts every few hours? 👇 Subscribe for tomorrow's AI news.
+```
+
+**Video facts:** 52.0 s, 146 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 12. Oct 28, 4:30 AM IST (7:00 PM ET (day before)): `12_Oct28_430AM_ep18_sister.mp4`
 
 **Title** (46 characters)
 ```
@@ -291,7 +462,7 @@ AI can write the code now. Should kids still learn to code? 👇 Subscribe for t
 
 ---
 
-## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep20_yelled.mp4`
+## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep20_yelled.mp4`
 
 **Title** (25 characters)
 ```
@@ -331,7 +502,7 @@ Should an AI be allowed to end a conversation if you're rude to it? 👇 Subscri
 
 ---
 
-## 10. Oct 27, 4:30 AM IST (7:00 PM ET (day before)): `10_Oct27_430AM_ep22_tenx.mp4`
+## 14. Oct 29, 4:30 AM IST (7:00 PM ET (day before)): `14_Oct29_430AM_ep22_tenx.mp4`
 
 **Title** (41 characters)
 ```
@@ -371,7 +542,7 @@ Does AI make developers faster, or does it just feel that way? 👇 Subscribe fo
 
 ---
 
-## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep21_interview_ai.mp4`
+## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep21_interview_ai.mp4`
 
 **Title** (30 characters)
 ```
@@ -411,7 +582,7 @@ AI interviews humans, humans answer with AI. Who's cheating? 👇 Subscribe for 
 
 ---
 
-## 12. Oct 28, 4:30 AM IST (7:00 PM ET (day before)): `12_Oct28_430AM_ep23_forgot.mp4`
+## 16. Oct 30, 4:30 AM IST (7:00 PM ET (day before)): `16_Oct30_430AM_ep23_forgot.mp4`
 
 **Title** (32 characters)
 ```
@@ -451,7 +622,7 @@ Would you want your AI to remember everything about you? 👇 Subscribe for the 
 
 ---
 
-## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep01_absolutely_right.mp4`
+## 17. Oct 30, 9:30 PM IST (12:00 PM ET): `17_Oct30_930PM_ep01_absolutely_right.mp4`
 
 **Title** (41 characters)
 ```
@@ -493,7 +664,7 @@ How many times has your AI said "You're absolutely right" today? 👇
 
 ---
 
-## 14. Oct 29, 4:30 AM IST (7:00 PM ET (day before)): `14_Oct29_430AM_ep02_context_left.mp4`
+## 18. Oct 31, 4:30 AM IST (7:00 PM ET (day before)): `18_Oct31_430AM_ep02_context_left.mp4`
 
 **Title** (40 characters)
 ```
@@ -536,7 +707,7 @@ What's worse: your AI forgetting everything, or the usage limit? 👇
 
 ---
 
-## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep04_commits.mp4`
+## 19. Oct 31, 9:30 PM IST (12:00 PM ET): `19_Oct31_930PM_ep04_commits.mp4`
 
 **Title** (38 characters)
 ```
@@ -576,7 +747,7 @@ Be honest: how many of your commits just say "fix"? 👇
 
 ---
 
-## 16. Oct 30, 4:30 AM IST (7:00 PM ET (day before)): `16_Oct30_430AM_ep05_button_blue.mp4`
+## 20. Nov 1, 4:30 AM IST (7:00 PM ET (day before)): `20_Nov1_430AM_ep05_button_blue.mp4`
 
 **Title** (35 characters)
 ```
@@ -616,7 +787,7 @@ What's the smallest change your AI turned into a full rewrite? 👇
 
 ---
 
-## 17. Oct 30, 9:30 PM IST (12:00 PM ET): `17_Oct30_930PM_ep06_simpler.mp4`
+## 21. Nov 1, 10:30 PM IST (12:00 PM ET): `21_Nov1_1030PM_ep06_simpler.mp4`
 
 **Title** (26 characters)
 ```
@@ -656,7 +827,7 @@ Do you want AI to explain like a senior dev, or like you're five? 👇
 
 ---
 
-## 18. Oct 31, 4:30 AM IST (7:00 PM ET (day before)): `18_Oct31_430AM_ep07_confession.mp4`
+## 22. Nov 2, 5:30 AM IST (7:00 PM ET (day before)): `22_Nov2_530AM_ep07_confession.mp4`
 
 **Title** (50 characters)
 ```
@@ -696,7 +867,7 @@ Would you give an AI access to production? Yes, or never? 👇 Subscribe for the
 
 ---
 
-## 19. Oct 31, 9:30 PM IST (12:00 PM ET): `19_Oct31_930PM_ep08_apology.mp4`
+## 23. Nov 2, 10:30 PM IST (12:00 PM ET): `23_Nov2_1030PM_ep08_apology.mp4`
 
 **Title** (27 characters)
 ```
@@ -735,7 +906,7 @@ Which is worse: an AI that grovels, or one that celebrates? 👇 Subscribe for t
 
 ---
 
-## 20. Nov 1, 4:30 AM IST (7:00 PM ET (day before)): `20_Nov1_430AM_ep09_vibe.mp4`
+## 24. Nov 3, 5:30 AM IST (7:00 PM ET (day before)): `24_Nov3_530AM_ep09_vibe.mp4`
 
 **Title** (53 characters)
 ```
@@ -773,7 +944,7 @@ Vibe coding: freedom, or a trap? 👇 Subscribe for the next one.
 
 ---
 
-## 21. Nov 1, 10:30 PM IST (12:00 PM ET): `21_Nov1_1030PM_ep10_refuse.mp4`
+## 25. Nov 3, 10:30 PM IST (12:00 PM ET): `25_Nov3_1030PM_ep10_refuse.mp4`
 
 **Title** (29 characters)
 ```
@@ -812,7 +983,7 @@ Should AI teach you, or just do it? 👇 Subscribe for the next one.
 
 ---
 
-## 22. Nov 2, 5:30 AM IST (7:00 PM ET (day before)): `22_Nov2_530AM_ep11_dad.mp4`
+## 26. Nov 4, 5:30 AM IST (7:00 PM ET (day before)): `26_Nov4_530AM_ep11_dad.mp4`
 
 **Title** (26 characters)
 ```
@@ -850,7 +1021,7 @@ Who in your family would secretly love coding with AI? 👇 Subscribe for the ne
 
 ---
 
-## 23. Nov 2, 10:30 PM IST (12:00 PM ET): `23_Nov2_1030PM_ep12_replace_me.mp4`
+## 27. Nov 4, 10:30 PM IST (12:00 PM ET): `27_Nov4_1030PM_ep12_replace_me.mp4`
 
 **Title** (41 characters)
 ```
@@ -889,7 +1060,7 @@ Is AI taking the joy out of coding, or giving it back? 👇 Subscribe for the ne
 
 ---
 
-## 24. Nov 3, 5:30 AM IST (7:00 PM ET (day before)): `24_Nov3_530AM_ep13_interview.mp4`
+## 28. Nov 5, 5:30 AM IST (7:00 PM ET (day before)): `28_Nov5_530AM_ep13_interview.mp4`
 
 **Title** (42 characters)
 ```
@@ -928,7 +1099,7 @@ Who gets the job: the one who asks, or the one who's already done? 👇 Subscrib
 
 ---
 
-## 25. Nov 3, 10:30 PM IST (12:00 PM ET): `25_Nov3_1030PM_ep28_gta.mp4`
+## 29. Nov 5, 10:30 PM IST (12:00 PM ET): `29_Nov5_1030PM_ep28_gta.mp4`
 
 **Title** (28 characters)
 ```
@@ -967,7 +1138,7 @@ Would you play the box game? Be honest 👇 Subscribe for the next one.
 
 ---
 
-## 26. Nov 4, 5:30 AM IST (7:00 PM ET (day before)): `26_Nov4_530AM_ep29_flycar.mp4`
+## 30. Nov 6, 5:30 AM IST (7:00 PM ET (day before)): `30_Nov6_530AM_ep29_flycar.mp4`
 
 **Title** (32 characters)
 ```
@@ -1008,7 +1179,7 @@ Flying car, or just leave at seven? 👇 Subscribe for the next one.
 
 ---
 
-## 27. Nov 4, 10:30 PM IST (12:00 PM ET): `27_Nov4_1030PM_ep30_jarvis.mp4`
+## 31. Nov 6, 10:30 PM IST (12:00 PM ET): `31_Nov6_1030PM_ep30_jarvis.mp4`
 
 **Title** (23 characters)
 ```
@@ -1047,7 +1218,7 @@ An AI that tells you to eat, or one that just obeys? 👇 Subscribe for the next
 
 ---
 
-## 28. Nov 5, 5:30 AM IST (7:00 PM ET (day before)): `28_Nov5_530AM_ep31_timemachine.mp4`
+## 32. Nov 7, 5:30 AM IST (7:00 PM ET (day before)): `32_Nov7_530AM_ep31_timemachine.mp4`
 
 **Title** (32 characters)
 ```
