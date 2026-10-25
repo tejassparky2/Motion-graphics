@@ -15,7 +15,7 @@ Exam morning. A girl folds her hands and prays to pass. Her little brother: "Doe
 
 If prayer changes God's plan, the plan wasn't perfect. If it can't, why pray?
 
-Thomas Aquinas answered this about 750 years ago: we don't pray to change God's plan; our prayers are part of the plan. (Paraphrased from Summa Theologiae II-II, q. 83, a. 2: "we pray not that we may change the Divine disposition, but that we may impetrate that which God has disposed to be fulfilled by our prayers.")
+Thomas Aquinas answered this over 700 years ago: we don't pray to change God's plan; our prayers are part of the plan. (Paraphrased from Summa Theologiae II-II, q. 83, a. 2: "we pray not that we may change the Divine disposition, but that we may impetrate that which God has disposed to be fulfilled by our prayers.")
 
 So God's plan includes her studying too. 😄
 
@@ -38,4 +38,4 @@ why pray if god knows, does prayer change god's plan, thomas aquinas prayer, pra
 Does prayer change WHAT HAPPENS, or change YOU? One reason, keep it respectful 🙏 👇
 ```
 
-**Video facts:** 32.8 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 33.0 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
