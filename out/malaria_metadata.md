@@ -19,7 +19,7 @@ One mosquito bite, and a parasite moves into your liver. 🦟
 🧬 The journey: parasites reach the liver and hide in its cells, multiply into thousands, burst out into the blood, then invade and burst red blood cells. That's when fever, chills and headache start, usually 10-15 days after the bite.
 😴 P. vivax can leave sleeping parasites in the liver that wake up weeks or even years later.
 🇮🇳 In 1897, in Secunderabad, Ronald Ross found the parasite inside a mosquito, and won the 1902 Nobel Prize.
-✅ Malaria doesn't spread from person to person. With a fever in a malaria area, see a doctor: a simple blood test can find it, and it can be treated. Bed nets and repellent stop the first step.
+✅ Malaria doesn't spread from person to person. If you get a fever in a malaria area, see a doctor: a simple blood test can find it, and it can be treated. Bed nets and repellent stop the first step.
 
 This video is general information, not medical advice.
 
@@ -43,4 +43,4 @@ malaria, how malaria works, malaria parasite, plasmodium, mosquito, anopheles, l
 Fun fact: the mosquito-malaria link was proven in Secunderabad, India, in 1897. 🇮🇳🦟 Did you know that?
 ```
 
-**Video facts:** 92.4 s, 257 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 92.3 s, 259 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
