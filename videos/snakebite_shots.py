@@ -830,7 +830,7 @@ def clot_slide(c, t, t_v):
 def S10(cr, t, tl, bid):
     A = tl.at
     tv = A(bid, "viper")
-    tc = A(bid, "clotting")
+    tc = A(bid, "clots")
     P.microscope(cr, 360, 820, 240, lambda c: clot_slide(c, t, tc - 0.4), tint=hexc("#f3d9cf"))
     sp = wavy(130, 470, 300, 22, 1.4, phase=t * 1.4)
     if t >= tv - 0.1:
@@ -1176,7 +1176,7 @@ SHOTS = {
     "s7": Shot(S7, "THE VENOM", 3, "dark", "MOVE.", "BREATHE.", "breathe"),
     "s8": Shot(S8, "THE VENOM", 4, "dark", "IT JAMS", "THE SIGNAL", "jams"),
     "s9": Shot(S9, "THE VENOM", 5, "mint", "EYELIDS DROOP", "THEN BREATHING", "breathing"),
-    "s10": Shot(S10, "THE VENOM", 6, "khaki", "BLOOD", "WON'T CLOT", "clotting"),
+    "s10": Shot(S10, "THE VENOM", 6, "khaki", "BLOOD", "WON'T CLOT", "clots"),
     "s11": Shot(S11, "THE HORSE", 1, "cream", "NOW,", "THE HORSE", "horse"),
     "s12": Shot(S12, "THE HORSE", 2, "khaki", "THE", "BIG FOUR", "four"),
     "s13": Shot(S13, "THE HORSE", 3, "cream", "TINY", "DOSES", "tiny"),
