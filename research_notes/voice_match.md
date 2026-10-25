@@ -19,3 +19,10 @@ Reference narrator: closest to male voices (the top 8 matches are all male), med
 
 Audition video for the owner: `out/doc_voice_audition.mp4` (voices A-E, same passage).
 To use the winner: `NARRATOR = dict(turbo=True, turbo_ref="hm_omega", rate=4.7, tempo_min=0.88)`.
+
+## Update, 25 Oct 2026: "This seems like pure AI voice, no human touch"
+Turbo (even with the closest timbre) sounded synthetic: its prosody is stiff, a Kokoro reference carries Kokoro's
+synthetic timbre, and the tempo stretch flattened it further. Orpheus TTS (stock voices trained on licensed speakers)
+was tested on the same passage: "leo" had the most pitch movement of any voice (4.0 semitones std vs 3.4 for D, 2.2
+for Turbo in one take), median pitch 165 Hz (the reels' narrator ~165 Hz), 100% Whisper medium clarity.
+Owner's pick: **O = Orpheus "leo"**, natural pace.

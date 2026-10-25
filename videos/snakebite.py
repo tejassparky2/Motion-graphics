@@ -1,17 +1,17 @@
 """Explainer 1: "The Cure for a Snakebite Is Made Inside a Horse" (new explainer format, owner-approved script,
-24 Oct 2026). One narrator (Chatterbox Turbo stock voice + tags), aged paper, FIG headers, two-line headlines, no
+24 Oct 2026). One narrator (Orpheus TTS stock voice 'leo'), aged paper, FIG headers, two-line headlines, no
 subtitles. Script, shot list and sources: research_notes/explainer_1-3.md.
 """
 from motion import paper as P
 from videos import snakebite_shots as S
 
-NARRATOR = dict(turbo=True, turbo_ref="am_echo", rate=4.7, tempo_min=0.88)   # owner's pick, voice D
+NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O" (25 Oct): Orpheus, natural pace
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2
 
 SCRIPT = [
-    dict(id="s1", scene="s1", text="[dramatic] If a cobra bites you tonight, the medicine that saves you was made "
+    dict(id="s1", scene="s1", text="If a cobra bites you tonight, the medicine that saves you was made "
                                    "inside a horse."),
     dict(id="s2", scene="s2", text="Not a lab. Not a factory. A horse."),
     dict(id="s3", scene="s3", text="A huge study found that snakebites killed about fifty-eight thousand Indians a "

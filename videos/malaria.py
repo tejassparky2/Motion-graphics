@@ -4,13 +4,13 @@
 from motion import paper as P
 from videos import malaria_shots as S
 
-NARRATOR = dict(turbo=True, turbo_ref="am_echo", rate=4.7, tempo_min=0.88)   # owner's pick, voice D
+NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O" (25 Oct): Orpheus, natural pace
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2
 
 SCRIPT = [
-    dict(id="m1", scene="m1", text="[dramatic] One mosquito bite. And something moves into your liver."),
+    dict(id="m1", scene="m1", text="One mosquito bite. And something moves into your liver."),
     dict(id="m2", scene="m2", text="For days, you feel completely fine."),
     dict(id="m3", scene="m3", text="Then it breaks out into your blood, again and again."),
     dict(id="m4", scene="m4", text="It's malaria. In [twenty twenty-four,|2024,] it made about two hundred and eighty "

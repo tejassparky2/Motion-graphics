@@ -9,8 +9,7 @@ videos are made, committed and pushed here only.
 The owner sent 9 Hindi reference reels (instagram.com/meanwhilemayank) and asked for "same type of reels but in
 English". Decisions (24 Oct): this **replaces** the talking-organs format; voice **Chatterbox Turbo stock female with
 tags**; length **75-90 s**; art drawn by us in the vintage-paper style + public-domain Gray's Anatomy (1918) plates;
-topics our choice. Voice changed on 25 Oct to Turbo with Kokoro `am_echo`'s timbre (male, the closest
-match to the reference narrator; `research_notes/voice_match.md`). Study of the references: `research_notes/explainer_study.md`. First three scripts (snakebite
+topics our choice. Voice since 25 Oct: Orpheus "leo" (male, human-sounding; `research_notes/voice_match.md`). Study of the references: `research_notes/explainer_study.md`. First three scripts (snakebite
 antivenom, superbugs, malaria) with sources: `research_notes/explainer_1-3.md`; script approval before rendering.
 How the explainers are built:
 - Look: `motion/paper.py` (paper with creases, FIG header, two-line headline that fills in as it's said, flip
@@ -18,7 +17,11 @@ How the explainers are built:
   boundary). A video lists `SHOTS = {scene: Shot(draw, label, fig, tone, small, big, big_at)}` and its draw() calls
   `P.frame()`. No subtitles (the headline is the only text tied to the voice, like the references). The channel
   logo sits small at the top-left above the header (`P.brand`).
-- Voice (owner's pick "D", 25 Oct): `NARRATOR = dict(turbo=True, turbo_ref="am_echo", rate=4.7, tempo_min=0.88)` (calmer than the story videos' 5.5 syllables/s),
+- Voice (owner's pick "O", 25 Oct, after "pure AI voice, no human touch"): Orpheus TTS stock voice "leo",
+  `NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)` (no time-stretching). Setup: `uv venv -p python3.12
+  /home/user/.venv-orpheus` + `orpheus-cpp llama-cpp-python soundfile` (CPU wheels from
+  https://abetlen.github.io/llama-cpp-python/whl/cpu); ~11x slower than real time on 4 cores. Turbo tags don't apply.
+  Earlier tries: Turbo female, then Turbo with am_echo's timbre ("D") (calmer than the story videos' 5.5 syllables/s),
   `gap=0.42` between lines, `MUSIC = "pad"`. Words the voice gets wrong are respelled for speech only:
   `[kryte|krait]`. Turbo needs `/home/user/.venv-clone` (chatterbox-tts 0.1.7 + `setuptools<70` for perth);
   the pipeline venv needs `av<16` for faster-whisper.

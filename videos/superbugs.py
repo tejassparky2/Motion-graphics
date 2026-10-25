@@ -4,13 +4,13 @@ Script, shot list and sources: research_notes/explainer_1-3.md.
 from motion import paper as P
 from videos import superbugs_shots as S
 
-NARRATOR = dict(turbo=True, turbo_ref="am_echo", rate=4.7, tempo_min=0.88)   # owner's pick, voice D
+NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O" (25 Oct): Orpheus, natural pace
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2
 
 SCRIPT = [
-    dict(id="b1", scene="b1", text="[dramatic] A tiny cut on your finger used to be able to kill you."),
+    dict(id="b1", scene="b1", text="A tiny cut on your finger used to be able to kill you."),
     dict(id="b2", scene="b2", text="Then in [nineteen twenty-eight,|1928,] a mould was found that kills bacteria."),
     dict(id="b3", scene="b3", text="Now the bacteria are fighting back."),
     dict(id="b4", scene="b4", text="In [twenty twenty-one,|2021,] drug-resistant bacteria directly killed more than a "

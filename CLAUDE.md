@@ -7,10 +7,11 @@ doctor work to `ccr-56282fe5-evehq4-doctor` only. The rules below apply to both 
 ## Voice (owner, 5 Oct 2026): Kokoro only, never the owner's cloned voice
 - "Kokoro voice is confirmed, don't use my voice." All narration and the doctor use Kokoro stock voices
   (`motion/voice.py` default ENGINE "kokoro"). The cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks.
-- Doctor channel (owner, 24 Oct 2026): the new explainer format replaces the doctor-and-organs format and is
-  narrated by Chatterbox Turbo with emotion tags (`configure(turbo=True)`, ported from the Interestingly
-  Strange branch's `motion/voice.py`). Voice (owner, 25 Oct 2026, "D"): Turbo with the timbre of Kokoro `am_echo`
-  (`turbo_ref="am_echo"`), the closest match to the reference reels' narrator (research_notes/voice_match.md). Older doctor videos used Kokoro `am_adam`; leave them as released.
+- Doctor channel (owner, 24 Oct 2026): the new explainer format replaces the doctor-and-organs format. Voice
+  (owner, 25 Oct 2026, "Go with o", after "this seems like pure AI voice, no human touch"): **Orpheus TTS stock voice
+  "leo"** at its natural pace (`NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)`, tools/orpheus_tts.py,
+  venv /home/user/.venv-orpheus). Not Turbo, not Kokoro-derived timbres (they sounded robotic). Older doctor videos
+  used Kokoro `am_adam`; leave them as released.
 
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the
