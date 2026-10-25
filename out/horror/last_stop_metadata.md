@@ -33,4 +33,4 @@ horror story, interactive story, you decide, choose your ending, night bus, bus 
 Get off 🌲 or ride on 🚌? Most comments decide Night 2. (Count the faces in the window 👀)
 ```
 
-**Video facts:** 71.7 s, 224 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 72.2 s, 226 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
