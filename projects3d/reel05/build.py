@@ -20,8 +20,7 @@ r4 = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(r4)
 
 
-def main():
-    sdir, mdir = sys.argv[1], sys.argv[2]
+def segments(sdir, mdir):
     take = lambda n: os.path.join(sdir, f"IMG_{n}.MOV")       # noqa: E731
     md = lambda key: T.v1.media(mdir, key)                     # noqa: E731
     still = lambda key: ImageOps.exif_transpose(Image.open(md(key))).convert("RGB")   # noqa: E731
@@ -57,7 +56,14 @@ def main():
         S(take(4162), 0.0, 3.20, "Thank you Yours 3D India for this wonderful gift."),
         S(take(4177), 0.0, 3.21, "Get the customized 3D figurine according to your need."),
     ]
-    T.build("reel05", segs, "HER 1ST BIRTHDAY GIFT")
+    return segs
+
+
+TITLE = "HER 1ST BIRTHDAY GIFT"
+
+
+def main():
+    T.build("reel05", segments(sys.argv[1], sys.argv[2]), TITLE)
 
 
 if __name__ == "__main__":

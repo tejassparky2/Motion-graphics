@@ -14,8 +14,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 import testimonial as T                 # noqa: E402
 
 
-def main():
-    mdir = sys.argv[1]
+def segments(mdir):
     take = lambda n: os.path.join(mdir, f"IMG_{n}.MOV")       # noqa: E731
     md = lambda key: T.v1.media(mdir, key)                     # noqa: E731
     rec1, rec2 = md("152901_WhatsApp"), md("153010_WhatsApp")
@@ -39,7 +38,14 @@ def main():
           tags=[("+91 91647 48401", 250, 1.6, T.GREEN)]),
         S(take(4210), 0.0, 3.65, "and get your customized 3D figurine today!"),
     ]
-    T.build("reel06", segs, "THE GIFT THAT MADE HIM EMOTIONAL", end_extra="COUPLE FIGURINES FROM ₹5,999")
+    return segs
+
+
+TITLE, END_EXTRA = "THE GIFT THAT MADE HIM EMOTIONAL", "COUPLE FIGURINES FROM ₹5,999"
+
+
+def main():
+    T.build("reel06", segments(sys.argv[1]), TITLE, end_extra=END_EXTRA)
 
 
 if __name__ == "__main__":

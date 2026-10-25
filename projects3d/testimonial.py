@@ -85,15 +85,20 @@ def natural(fr):
     return Image.fromarray(np.stack([_LUT[c][a[..., c]] for c in range(3)], -1).astype(np.uint8))
 
 
-def take_frames(path, n, start):
+def take_frames(path, n, start, speed=1.0):
     if is_hdr(path):
-        return (natural(f) for f in v1.video_frames(path, n, start=start, speed=1.0, post=HLG_TO_SDR))
-    return r2.clip(path, n, start, speed=1.0)
+        return (natural(f) for f in v1.video_frames(path, n, start=start, speed=speed, post=HLG_TO_SDR))
+    return r2.clip(path, n, start, speed=speed)
 
 
-def talk_frames(path, n, start, zoom):
+def clip_len(path):
+    return float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of",
+                                          "csv=p=0", path]))
+
+
+def talk_frames(path, n, start, zoom, speed=1.0):
     """Her take, with a fixed punch-in toward her face (upper part of the frame)."""
-    for fr in take_frames(path, n, start):
+    for fr in take_frames(path, n, start, speed):
         if zoom > 1.001:
             cw, ch = W / zoom, H / zoom
             cx, cy = W / 2, max(ch / 2, min(H / 2, 820))      # toward her face, never past the top edge
@@ -151,14 +156,31 @@ def end_card(frame, t, t0, extra=None):
         r3.pill(frame, extra, 1490, t - t0 - 2.7, GOLD_LIGHT, ImageFont.truetype(r2.RUPEE, 36))
 
 
-def build(name, segs, title, end_extra=None):
-    from faster_whisper import WhisperModel
-    model = WhisperModel("medium.en", device="cpu", compute_type="int8")
+def build(name, segs, title, end_extra=None, dub=None, label=None):
+    """dub: one audio file per segment (her Hindi dub, made with her consent); each segment then runs as long as its
+    dub line, cutaways and labels stretch with it, the take slows a little if it runs out, and the English caption
+    (her real words) shows as a whole sentence. label: a small note under the title for the first seconds."""
+    model = None
     # timeline
     plan, t = [], 0.0
     for i, s in enumerate(segs):
-        dur = s.end - s.start
-        plan.append((t, dur, s, words_for(s.clip, s.start, s.end, s.caption, model)))
+        if dub:
+            dl = soundfile.info(dub[i]).duration
+            dur = dl + 0.25
+            k = dur / (s.end - s.start)
+            ws = s.caption.split()
+            lens = np.cumsum([0] + [len(w) + 1 for w in ws])
+            tt = 0.05 + dl * lens / lens[-1]
+            words = [(w, tt[j], tt[j + 1]) for j, w in enumerate(ws)]
+            s = Seg(s.clip, s.start, s.end, s.caption, broll=[(a * k, b * k, f) for a, b, f in s.broll],
+                    tags=[(x, y, at * k, c) for x, y, at, c in s.tags], hold=s.hold, hold_frames=s.hold_frames)
+        else:
+            if model is None:
+                from faster_whisper import WhisperModel
+                model = WhisperModel("medium.en", device="cpu", compute_type="int8")
+            dur = s.end - s.start
+            words = words_for(s.clip, s.start, s.end, s.caption, model)
+        plan.append((t, dur, s, words))
         t += dur + s.hold
     t_end = t
     total = t_end + END_HOLD
@@ -170,9 +192,13 @@ def build(name, segs, title, end_extra=None):
     os.makedirs(tmp, exist_ok=True)
     for k, (t0, dur, s, _) in enumerate(plan):
         wav = os.path.join(tmp, f"{name}_{k}.wav")
-        subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-ss", f"{s.start:.3f}", "-t", f"{dur:.3f}", "-i", s.clip,
-                               "-vn", "-ac", "1", "-ar", str(SR), "-af", VOICE_FX, wav])
+        if dub:
+            subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-i", dub[k], "-ac", "1", "-ar", str(SR), wav])
+        else:
+            subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-ss", f"{s.start:.3f}", "-t", f"{dur:.3f}", "-i",
+                                   s.clip, "-vn", "-ac", "1", "-ar", str(SR), "-af", VOICE_FX, wav])
         a, _ = soundfile.read(wav)
+        t0 = t0 + (0.05 if dub else 0.0)
         f = int(0.012 * SR)
         a[:f] *= np.linspace(0, 1, f)
         a[-f:] *= np.linspace(1, 0, f)
@@ -194,7 +220,9 @@ def build(name, segs, title, end_extra=None):
         n_talk = int(round((t0 + dur) * FPS)) - int(round(t0 * FPS))
         n_hold = int(round((t0 + dur + s.hold) * FPS)) - int(round((t0 + dur) * FPS))
         zoom = 1.0 if k % 2 == 0 else 1.09
-        talk = talk_frames(s.clip, n_talk + (n_hold if s.hold_frames is None else 0), s.start, zoom)
+        need = (n_talk + (n_hold if s.hold_frames is None else 0)) / FPS
+        speed = max(0.6, min(1.0, (clip_len(s.clip) - s.start - 0.05) / need)) if dub else 1.0
+        talk = talk_frames(s.clip, n_talk + (n_hold if s.hold_frames is None else 0), s.start, zoom, speed)
         hold = s.hold_frames(n_hold) if s.hold_frames is not None else None
         brolls = [(int(round(a * FPS)), int(round(b * FPS)), fac) for a, b, fac in s.broll]
         active = None
@@ -219,13 +247,15 @@ def build(name, segs, title, end_extra=None):
             fr = v2.zoom_in_from(fr, local, amount=0.04, dur=0.25)
             if k == 0:
                 r2.tag(fr, title, 250, tt - 0.15)
+            if label and tt < 3.5:
+                r3.pill(fr, label, 335, tt - 0.4, (40, 38, 36), font(28), dark=False)
             for text, y, at, col in s.tags:
                 r3.pill(fr, text, y, local - at, col, ImageFont.truetype(r2.RUPEE, 40) if "₹" in text else font(44))
                 if abs(local - at) < 0.5 / FPS:
                     pops.append(tt)
             if j < n_talk + 4:
                 sw_ = r3.sentence_at(ws, local)
-                v2.karaoke(fr, sw_, local, CAP_Y, local - sw_[0][1])
+                v2.karaoke(fr, sw_, -1.0 if dub else local, CAP_Y, local - sw_[0][1])
             enc.stdin.write(fr.tobytes())
             f += 1
     # end card

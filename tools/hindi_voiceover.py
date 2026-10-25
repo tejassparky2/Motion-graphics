@@ -82,18 +82,20 @@ def speech_only(w, sr, rel=0.12, keep=0.12):
     return w
 
 
-def takes(texts, lang="hi", tries=3):
+def takes(texts, lang="hi", tries=3, prompt=None, voice="owner"):
+    """Takes in `voice` (cache tag) cloned from `prompt` (default: the owner's prompt), Whisper-checked."""
     from faster_whisper import WhisperModel
     d = os.path.join(ROOT, "build", "mtl")
     os.makedirs(d, exist_ok=True)
     clone_py = os.environ.get("CLONE_PYTHON", os.path.expanduser("~/.venv-clone/bin/python"))
     checker, chosen, score, todo = None, {}, {}, list(dict.fromkeys(texts))
     for n in range(tries):
-        jobs = [[t, os.path.join(d, f"{vo.voice._key(t)}.{lang}.try{n}.wav")] for t in todo]
+        tag = "" if voice == "owner" else f".{voice}"
+        jobs = [[t, os.path.join(d, f"{vo.voice._key(t)}{tag}.{lang}.try{n}.wav")] for t in todo]
         if any(not os.path.exists(o) for _, o in jobs):
             json.dump(jobs, open(os.path.join(d, "jobs.json"), "w"), ensure_ascii=False)
             subprocess.run([clone_py, os.path.join(ROOT, "tools", "mtl_clone_tts.py"), os.path.join(d, "jobs.json"),
-                            "--lang", lang], check=True)
+                            "--lang", lang] + (["--prompt", prompt] if prompt else []), check=True)
         checker = checker or WhisperModel("medium", device="cpu", compute_type="int8")
         bad = []
         for t, o in jobs:
