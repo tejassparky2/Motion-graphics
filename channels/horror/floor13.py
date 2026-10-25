@@ -17,7 +17,7 @@ SET = "lift"
 CHARS = ("gray",)
 MOUTH = {}
 TAIL = 0.5
-MUSIC = "thriller"
+MUSIC = "horror"
 
 voice.SPEAKERS.update({
     "gray": dict(voice="bf_emma", turbo_ref="bf_emma-1.5"),

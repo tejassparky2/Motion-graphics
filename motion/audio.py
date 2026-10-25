@@ -383,6 +383,7 @@ GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "
 
 
 EXTRA_SFX = {}   # name -> f(dur): effects a channel adds (channels/horror/sound.py)
+EXTRA_BEDS = {}  # name -> f(total, seed): music beds a channel adds
 
 
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
@@ -392,7 +393,8 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     import pyloudnorm
     n = int(total * SR)
     style = bed
-    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
+    bed = (EXTRA_BEDS[bed](total, seed) if bed in EXTRA_BEDS else drone(total, seed) if bed == "thriller"
+           else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()

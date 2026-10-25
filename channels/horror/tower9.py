@@ -17,7 +17,7 @@ SET = "tower"
 CHARS = ("radio", "hatch", "base")
 MOUTH = {}
 TAIL = 0.5
-MUSIC = "thriller"
+MUSIC = "horror"
 
 RADIO = "highpass=f=350,lowpass=f=3200,acompressor=threshold=0.1:ratio=6,volume=1.6"
 voice.SPEAKERS.update({

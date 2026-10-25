@@ -187,6 +187,30 @@ def ladder_step(dur):
     return ring + _thud(0.5, 110, 50, 0.05, 0.6)[:m] * 0.6
 
 
+def horror_bed(total, seed=None):
+    """The horror bed, different for every episode (YouTube's spam policy names "the exact same background music"
+    across many videos as a sign of mass production): a low drone in an episode-specific key whose two voices beat
+    at an episode-specific rate, a slow pulse, a cold high tone that comes and goes, and air; it tightens toward
+    the end. Key, beat rate, pulse tempo, high interval and air colour all come from the episode name."""
+    import zlib
+    r = np.random.default_rng(zlib.crc32(str(seed).encode()))
+    n = int(total * SR) + SR
+    t = np.arange(n) / SR
+    root = 41.2 * 2 ** (int(r.integers(0, 9)) / 12)            # E1 .. C2
+    beat = float(r.uniform(0.35, 1.2))
+    rise = 0.55 + 0.45 * np.clip(t / max(total, 1), 0, 1) ** 1.5
+    low = (np.sin(2 * np.pi * root * t) + np.sin(2 * np.pi * (root + beat) * t)
+           + 0.45 * np.sin(2 * np.pi * root * float(r.choice([1.5, 1.498, 1.414])) * t)) * 0.45
+    bpm = float(r.uniform(48, 64))                             # a slow pulse, like a heartbeat far away
+    ph = (t * bpm / 60) % 1
+    pulse = np.sin(2 * np.pi * root * 2 * t) * np.exp(-ph * 9) * 0.35
+    hi_f = root * 2 ** (float(r.choice([35, 36, 37, 41, 42])) / 12)
+    hi = np.sin(2 * np.pi * (hi_f + 4 * np.sin(2 * np.pi * 0.09 * t)) * t) * 0.05 * (0.5 + 0.5 * np.sin(2 * np.pi * float(r.uniform(0.04, 0.09)) * t))
+    air = _lowpass(_noise(n), int(r.integers(40, 90))) * 0.35 * (0.6 + 0.4 * np.sin(2 * np.pi * float(r.uniform(0.07, 0.15)) * t))
+    return ((low + pulse + air) * rise + hi)[: int(total * SR)] * 0.16
+
+
+audio.EXTRA_BEDS["horror"] = horror_bed
 audio.EXTRA_SFX.update(hum=hum, chime=chime, doors=doors, power_down=power_down, drip=drip, cable=cable, click=click,
                        engine_idle=engine_idle, dip=dip, breath=breath, brakes=brakes, rain=rain, generator=generator,
                        static=static, thunder=thunder, ladder_step=ladder_step)

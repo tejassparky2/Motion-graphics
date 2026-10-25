@@ -17,7 +17,7 @@ SET = "bus"
 CHARS = ("driver", "oldman")
 MOUTH = {}
 TAIL = 0.5
-MUSIC = "thriller"
+MUSIC = "horror"
 
 voice.SPEAKERS.update({
     "driver": dict(voice="am_onyx", turbo_ref="am_onyx-1.5"),
