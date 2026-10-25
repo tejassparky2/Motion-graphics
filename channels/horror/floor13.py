@@ -79,6 +79,7 @@ KEY = {"dark", "don't", "answer", "empty", "isn't", "fall", "falling", "drops", 
 def draw(cr, t, tl):
     A, B = tl.at, tl.by_id
     hud.frame(cr, t, FRAMES)
+    hud.blackout(cr, t, A("f17", "around.", end=True) + 0.05, A("f17", "isn't.") - 0.03)   # a beat of black before the reveal
     hud.finish(cr, t, flash_at=[A("f17", "isn't."), B["f18"].start + 0.1])
     if t >= A("f5", "Battery,"):            # the resource: the emergency light's battery, 12% down to 2%
         v = 0.12 - 0.10 * hud.seg(t, A("f5", "Battery,"), B["f20"].start + 0.3)

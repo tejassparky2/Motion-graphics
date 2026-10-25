@@ -12,7 +12,7 @@ RED = hexc("#ff2b2b")
 AMBER = hexc("#ffb02e")
 GREEN = hexc("#5ef08a")
 HOOK, UI = th.HOOK, th.UI
-MONO = "Liberation Mono:Bold"
+MONO = "Liberation Mono"
 YELLOW = hexc("#ffd23f")
 _n_frames = {}
 
@@ -61,7 +61,7 @@ def meter(cr, t, label, value, x=W - 26 - 250, y=30, warn=0.25, icon="battery", 
     if low and (t % 0.6) > 0.42:
         col = (*col[:3], 0.35)
     _plain(cr, label, x + 18 + jx, y + 30, 19, UI, col=(1, 1, 1, 0.75))
-    bx, by, bw, bh = x + 18 + jx, y + 40, 150, 22
+    bx, by, bw, bh = x + 18 + jx, y + 40, 128, 22
     if icon == "battery":
         rrect(cr, bx, by, bw, bh, 5)
         cr.set_source_rgba(1, 1, 1, 0.8)
