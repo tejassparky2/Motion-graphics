@@ -33,7 +33,7 @@ Alt titles: Why Snakebite Medicine Comes From Horses / India's Deadliest Animal 
 | 17 | But many people don't die from the snake. They die from the delay. | THE DELAY | NOT THE SNAKE / THE DELAY | Stopwatch, red sector growing |
 | 18 | A krait often bites at night, while people sleep on the floor. | THE DELAY | AT NIGHT / ON THE FLOOR | Paper room at night, moon in window, mat on floor, krait sliding past |
 | 19 | The bite can be almost painless, so people go back to sleep. | THE DELAY | ALMOST / PAINLESS | Tiny two-dot bite; "PAIN" meter barely moves |
-| 20 | Some people lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
+| 20 | Some people lose hours on cutting, sucking, herbs or tight ropes. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
 | 21 | None of these get the venom out. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
 | 22 | Doctors say to stay calm, keep the bitten arm or leg still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
 | 23 | Did you know your life could depend on a horse? Tell me in the comments. | END | A HORSE / SAVED YOU? | Horse with a tiny red cross badge; comment bubble |

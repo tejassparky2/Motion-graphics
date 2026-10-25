@@ -405,7 +405,11 @@ def explainer_bed(total, seed=None):
     plucks = plucks[: int(total * SR)]
     p = pad(total, seed)[: len(plucks)]
     rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
-    return p / rms(p) + 0.8 * plucks / rms(plucks)
+    bed = p / rms(p) + 0.8 * plucks / rms(plucks)
+    # carve out the speech-clarity band (~1.2-4.5 kHz) so the music never masks consonants (owner: "it's not clear")
+    from scipy.signal import butter, sosfilt
+    band = sosfilt(butter(2, [1200, 4500], btype="bandpass", fs=SR, output="sos"), bed)
+    return bed - 0.7 * band
 
 
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
@@ -452,7 +456,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
         # explainer bed: ~15 dB under the voice RMS, ducked only ~3 dB while speaking (the owner's reference reels keep the
         # music ~20 dB under the voice the whole way through)
-        bed *= (v_rms * 10 ** ({"pad": -15, "explainer": -17}.get(style, -10) / 20)) / rms(bed)
+        bed *= (v_rms * 10 ** ({"pad": -15, "explainer": -19}.get(style, -10) / 20)) / rms(bed)
         duck = 0.3 if style == "explainer" else 0.75
         mix = voice + bed * (1 - duck * speaking) + fx * (1 - 0.3 * speaking)
         if room is not None:                                      # ~32 dB under the voice, never ducked
