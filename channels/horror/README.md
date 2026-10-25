@@ -81,3 +81,7 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face
   (@pixiv/three-vrm; a CC0 or freely licensed VRM model still to find).
+- Vote: owner, 25 Oct 2026: "Most commented B" (taken as Tower 9: B = keep the hatch shut; owner to correct if it was
+  another episode). Night 2 script sent for approval: out/horror/scripts_night2_tower9.md (a new choice, window or
+  hatch, so it isn't the same situation with the same outcome; pays off Night 1's jacket detail). Don't render
+  until the owner approves.
