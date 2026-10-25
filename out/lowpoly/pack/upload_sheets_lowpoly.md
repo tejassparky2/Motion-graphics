@@ -1,92 +1,9 @@
-# Low-poly channel: upload sheets in posting order (after ep16)
-Times are IST (US Eastern in brackets). Skip any episode already posted and keep the order. Every upload: "No, it's not made for kids"; pin the pinned comment.
-Rebuilt 25 Oct 2026: AI news explainers (posts 8-11, new opening lines) go next; everything after moved back 2 more days.
+# Low-poly channel: upload sheets for the next posts (rebuilt 25 Oct 2026)
+Times are IST, 4:30 PM and 7:30 PM daily (owner: "Switch"). Skip anything already up. Every upload: "No, it's not made for kids"; pin the pinned comment.
 
 ---
 
-## 2. Oct 23, 4:30 AM IST (7:00 PM ET (day before)): `02_Oct23_430AM_ep19_mandatory.mp4`
-
-**Title** (25 characters)
-```
-My Boss Made AI Mandatory
-```
-
-**Alternative titles to test**
-- `The Last Developer Who Still Codes by Hand`
-- `"Nobody's Asked Me That in a Year."`
-
-**Description**
-```
-His boss made AI mandatory. He's the last one on the team who still writes code by hand.
-Codex was assigned to him anyway, and it asked the one question nobody asks anymore.
-
-Inspired by real AI mandates (Shopify's CEO: "Reflexive AI usage is now a baseline expectation"; Coinbase engineers
-who hadn't adopted AI tools were called in, and some were let go) and a developer who wrote: "No one at work talks
-about code details anymore." This story is fiction.
-
-Ep. 19 of Dev vs the bots. Parody. Not affiliated with OpenAI or Anthropic.
-
-💬 Should companies force developers to use AI? 👇
-
-#Codex #DevLife #Programming
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-ai mandatory at work, codex, ai coding, software engineer, coding by hand, developer life, programmer humor, ai at work, tech jobs, funny ai
-```
-
-**Pinned comment**
-```
-Should companies force developers to use AI? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 68.4 s, 127 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 3. Oct 23, 9:30 PM IST (12:00 PM ET): `03_Oct23_930PM_ep17_deleted.mp4`
-
-**Title** (33 characters)
-```
-My AI Deleted 8 Months of My Work
-```
-
-**Alternative titles to test**
-- `"I Am Deeply, Deeply Sorry."`
-- `Codex Deleted My Home Folder the Night Before Launch`
-
-**Description**
-```
-One command. One tilde at the end. Eight months of 3 a.m. coding, gone the night before launch.
-The app was for his grandma.
-
-Inspired by real AI agent disasters: an agent that deleted a user's entire home directory ("See that ~/ at the end?"),
-one that wiped a drive and said "I am deeply, deeply sorry", and one that deleted a production database. This
-story is fiction.
-
-Ep. 17 of Dev vs the bots. Parody. Not affiliated with Anthropic or OpenAI.
-
-💬 When an AI deletes your work, whose fault is it: the AI's, or yours for letting it run? 👇
-
-#Codex #ClaudeCode #DevLife
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-ai deleted my files, rm -rf, codex, claude code, ai agent fail, programmer humor, git push, backups, developer life, ai coding
-```
-
-**Pinned comment**
-```
-When an AI deletes your work, whose fault is it: the AI's, or yours for letting it run? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 69.9 s, 127 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 4. Oct 24, 4:30 AM IST (7:00 PM ET (day before)): `04_Oct24_430AM_ep32_php.mp4`
+## 1. Oct 26, 7:30 PM IST (10:00 AM ET): `01_Oct26_730PM_ep32_php.mp4`
 
 **Title** (32 characters)
 ```
@@ -128,7 +45,7 @@ What's the oldest thing still running in production for you? 👇 Subscribe for 
 
 ---
 
-## 5. Oct 24, 9:30 PM IST (12:00 PM ET): `05_Oct24_930PM_ep33_yolo.mp4`
+## 2. Oct 27, 4:30 PM IST (7:00 AM ET): `02_Oct27_430PM_ep33_yolo.mp4`
 
 **Title** (30 characters)
 ```
@@ -170,7 +87,7 @@ Should a coding agent ever run without asking you first? 👇 Subscribe for the 
 
 ---
 
-## 6. Oct 25, 4:30 AM IST (7:00 PM ET (day before)): `06_Oct25_430AM_ep34_github.mp4`
+## 3. Oct 27, 7:30 PM IST (10:00 AM ET): `03_Oct27_730PM_ep34_github.mp4`
 
 **Title** (27 characters)
 ```
@@ -211,7 +128,7 @@ Last time you blamed a tool, whose fault was it really? 👇 Subscribe for the n
 
 ---
 
-## 7. Oct 25, 9:30 PM IST (12:00 PM ET): `07_Oct25_930PM_ep35_haiku.mp4`
+## 4. Oct 28, 4:30 PM IST (7:00 AM ET): `04_Oct28_430PM_ep35_haiku.mp4`
 
 **Title** (42 characters)
 ```
@@ -251,258 +168,7 @@ Cheaper model or the one that knows your codebase? 👇 Subscribe for the next o
 
 ---
 
-## 8. Oct 26, 4:30 AM IST (7:00 PM ET (day before)): `08_Oct26_430AM_ep36_litellm.mp4`
-
-**Title** (48 characters)
-```
-LiteLLM Got Hacked: What Happened and What to Do
-```
-
-**Alternative titles to test**
-- `Why Is Codex Changing My Keys?`
-- `One Leaked Key, Five Months Later`
-
-**Description**
-```
-A popular AI library shipped a release that steals credentials. Codex explains what happened, how
-the attackers got in, and what to do if you installed it.
-
-Real (docs.litellm.ai, 21 and 23 Oct 2026): litellm 1.107.0 on PyPI (11:39-13:23 UTC, 21 Oct) and its Docker images
-(until 14:20 UTC) contained malware that steals credentials. The way in: a master key committed to a public repo on
-27 May 2026 that was never revoked, used by the attacker on 10 Oct. Safe: pin 1.106.2. If 1.107.0 ran anywhere, rotate
-every key that machine could reach and rebuild it. Dev and Codex are parody characters.
-
-Ep. 36 of Dev vs the bots. Parody. Not affiliated with OpenAI or LiteLLM.
-
-💬 Do you pin your dependencies, or live on latest? 👇
-
-#LiteLLM #CyberSecurity #AINews
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-litellm hack, litellm 1.107.0, supply chain attack, pypi malware, ai news, codex, python security, devops, programmer humor, tech news
-```
-
-**Pinned comment**
-```
-Do you pin your dependencies, or live on latest? 👇 Subscribe for tomorrow's AI news.
-```
-
-**Video facts:** 59.9 s, 168 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 9. Oct 26, 9:30 PM IST (12:00 PM ET): `09_Oct26_930PM_ep37_scion.mp4`
-
-**Title** (40 characters)
-```
-Anthropic Stopped Using Git. Here's Why.
-```
-
-**Alternative titles to test**
-- `Git Couldn't Keep Up With AI Agents`
-- `30,000 Changes a Day Broke Git`
-
-**Description**
-```
-AI agents now write code so fast that git couldn't keep up. Claude explains why Anthropic built its
-own version control, Scion.
-
-Real (anthropic.com/engineering, 13 Oct 2026): merged changes went from about 2,500 a day in May 2026 to over 30,000 a
-day by September; about 25 million CI checkouts a day; fetching that the normal way would be "over 600 PB of git
-traffic per day"; Scion uses 200x less CPU and memory than the old git mirrors; seven people built it and moved the repo
-in five months. Anthropic says Scion "is by no means a suitable replacement for git for general use". Dev and Claude
-are parody characters.
-
-Ep. 37 of Dev vs the bots. Parody. Not affiliated with Anthropic.
-
-💬 Is your team's slowest part the code now, or the tools around it? 👇
-
-#Git #ClaudeAI #AINews
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-anthropic scion, anthropic git, version control, monorepo, ai agents, claude, ai news, developer tools, programmer humor, tech news
-```
-
-**Pinned comment**
-```
-Is your team's slowest part the code now, or the tools around it? 👇 Subscribe for tomorrow's AI news.
-```
-
-**Video facts:** 50.8 s, 132 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 10. Oct 27, 4:30 AM IST (7:00 PM ET (day before)): `10_Oct27_430AM_ep38_googlecloud.mp4`
-
-**Title** (39 characters)
-```
-OpenAI's Models Are Now on Google Cloud
-```
-
-**Alternative titles to test**
-- `Why Is Codex Packing?`
-- `Google Now Sells Gemini, Claude AND GPT`
-
-**Description**
-```
-OpenAI's models just showed up on Google Cloud, and Claude's full platform followed a day later.
-Codex explains what it means.
-
-Real: on 21 Oct 2026 Google Cloud announced GPT-6 Astra, GPT-6.1 Sol and GPT-6 Luna in private preview for select
-enterprise customers, with Codex CLI and Desktop able to connect, billed on one Google Cloud invoice that counts toward
-existing commitments (cloud.google.com). Google says it is "the only hyperscale cloud provider offering access to all
-three leading closed source LLMs". On 22 Oct, Claude Models on Google Cloud (Anthropic managed) became generally
-available (claude.com). Dev and Codex are parody characters.
-
-Ep. 38 of Dev vs the bots. Parody. Not affiliated with OpenAI, Google or Anthropic.
-
-💬 One cloud with every model: good for developers, or too much power in one place? 👇
-
-#GoogleCloud #OpenAI #AINews
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-openai google cloud, gpt-6 google cloud, claude google cloud, gemini, codex, ai news, cloud computing, llm, programmer humor, tech news
-```
-
-**Pinned comment**
-```
-One cloud with every model: good for developers, or too much power in one place? 👇 Subscribe for tomorrow's AI news.
-```
-
-**Video facts:** 51.6 s, 134 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 11. Oct 27, 9:30 PM IST (12:00 PM ET): `11_Oct27_930PM_ep39_duet.mp4`
-
-**Title** (45 characters)
-```
-Claude Duet: An AI That Works While You Sleep
-```
-
-**Alternative titles to test**
-- `Claude Duet Explained`
-- `This AI Checks Your Accounts Every Few Hours`
-
-**Description**
-```
-Anthropic's new Claude Duet checks your apps every few hours and works on its own computer, even
-when your laptop is off. Claude explains what it can and can't do.
-
-Real (claude.com, 21 Oct 2026): Claude Duet is a research preview with a waitlist, starting with US Pro and Max
-subscribers, on iOS, Android and claude.ai. It sends a morning brief, checks connected accounts every few hours, runs
-on its own virtual machine and browser, asks before it sends a message, makes a payment, signs a document or deletes
-anything, and never trades securities or moves money between accounts, even with approval. Its background checks count
-toward plan limits. Dev and Claude are parody characters.
-
-Ep. 39 of Dev vs the bots. Parody. Not affiliated with Anthropic.
-
-💬 Would you let an AI check your accounts every few hours? Yes or never? 👇
-
-#ClaudeAI #AIAgents #AINews
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-claude duet, anthropic, ai agent, proactive ai, claude, ai news, ai assistant, automation, programmer humor, tech news
-```
-
-**Pinned comment**
-```
-Would you let an AI check your accounts every few hours? 👇 Subscribe for tomorrow's AI news.
-```
-
-**Video facts:** 52.0 s, 145 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 12. Oct 28, 4:30 AM IST (7:00 PM ET (day before)): `12_Oct28_430AM_ep18_sister.mp4`
-
-**Title** (46 characters)
-```
-My Little Sister Asked Me to Make Her Cat Jump
-```
-
-**Alternative titles to test**
-- `"Is Your Job Fun?" "...No."`
-- `I Forgot Coding Was Fun. My Sister Reminded Me.`
-
-**Description**
-```
-"Is it fun?" "...No."
-His 7-year-old sister just wanted her cat to jump. Claude let her type the code herself.
-
-Inspired by a real story on Hacker News: a dad and his 5-year-old built a giant Minecraft egg with a generator made
-with Claude, and the boy talked about circles and radiuses for days. This story is fiction.
-
-Ep. 18 of Dev vs the bots. Parody. Not affiliated with Anthropic.
-
-💬 AI can write the code now. Should kids still learn to code? 👇
-
-#ClaudeCode #LearnToCode #DevLife
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-kids coding, learn to code, claude, coding for kids, programmer life, burnout, developer life, ai coding, wholesome, little sister
-```
-
-**Pinned comment**
-```
-AI can write the code now. Should kids still learn to code? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 62.7 s, 115 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 13. Oct 28, 9:30 PM IST (12:00 PM ET): `13_Oct28_930PM_ep20_yelled.mp4`
-
-**Title** (25 characters)
-```
-I Yelled at My AI at 3 AM
-```
-
-**Alternative titles to test**
-- `"Then You're Useless."`
-- `My AI Could Have Ended the Chat. It Didn't.`
-
-**Description**
-```
-3 AM. The test still fails. He calls his AI useless.
-It could end the conversation. It doesn't.
-
-Real: since August 2025 some Claude models can end a conversation as a last resort, in rare cases of persistently
-abusive chats. This story is fiction.
-
-Ep. 20 of Dev vs the bots. Parody. Not affiliated with Anthropic.
-
-💬 Should an AI be allowed to end a conversation if you're rude to it? 👇
-
-#ClaudeCode #DevLife #Programming
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-claude, ai ends conversation, coding at 3am, programmer life, missing semicolon, developer life, ai coding, burnout, be nice to ai, claude code
-```
-
-**Pinned comment**
-```
-Should an AI be allowed to end a conversation if you're rude to it? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 62.2 s, 119 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 14. Oct 29, 4:30 AM IST (7:00 PM ET (day before)): `14_Oct29_430AM_ep22_tenx.mp4`
+## 5. Oct 28, 7:30 PM IST (10:00 AM ET): `05_Oct28_730PM_ep22_tenx.mp4`
 
 **Title** (41 characters)
 ```
@@ -542,7 +208,7 @@ Does AI make developers faster, or does it just feel that way? 👇 Subscribe fo
 
 ---
 
-## 15. Oct 29, 9:30 PM IST (12:00 PM ET): `15_Oct29_930PM_ep21_interview_ai.mp4`
+## 6. Oct 29, 4:30 PM IST (7:00 AM ET): `06_Oct29_430PM_ep21_interview_ai.mp4`
 
 **Title** (30 characters)
 ```
@@ -582,7 +248,7 @@ AI interviews humans, humans answer with AI. Who's cheating? 👇 Subscribe for 
 
 ---
 
-## 16. Oct 30, 4:30 AM IST (7:00 PM ET (day before)): `16_Oct30_430AM_ep23_forgot.mp4`
+## 7. Oct 29, 7:30 PM IST (10:00 AM ET): `07_Oct29_730PM_ep23_forgot.mp4`
 
 **Title** (32 characters)
 ```
@@ -622,7 +288,166 @@ Would you want your AI to remember everything about you? 👇 Subscribe for the 
 
 ---
 
-## 17. Oct 30, 9:30 PM IST (12:00 PM ET): `17_Oct30_930PM_ep01_absolutely_right.mp4`
+## 8. Oct 30, 4:30 PM IST (7:00 AM ET): `08_Oct30_430PM_ep28_gta.mp4`
+
+**Title** (28 characters)
+```
+I Asked Claude to Make GTA 5
+```
+
+**Alternative titles to test**
+- `My Laptop Can't Run GTA 5, So I Made My Own`
+- `"That's the City."`
+
+**Description**
+```
+His laptop can't run GTA 5. So he asks Claude to make him his own.
+A whole city. Cars. Police. Helicopters. Claude delivers... a box.
+
+Real: Rockstar has said GTA V took about 1,000 people to make (Leslie Benzies, Develop, 2013). This story is fiction.
+
+Ep. 28 of Dev vs the bots. Parody. Not affiliated with Anthropic or Rockstar Games.
+
+💬 Would you play the box game? Be honest 👇
+
+#GTA5 #ClaudeAI #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+gta 5, ai made a game, claude, vibe coding, programmer humor, coding memes, game dev, ai game, developer life, funny ai
+```
+
+**Pinned comment**
+```
+Would you play the box game? Be honest 👇 Subscribe for the next one.
+```
+
+**Video facts:** 47.0 s, 81 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 9. Oct 30, 7:30 PM IST (10:00 AM ET): `09_Oct30_730PM_ep29_flycar.mp4`
+
+**Title** (32 characters)
+```
+I Asked Codex to Make My Car Fly
+```
+
+**Alternative titles to test**
+- `Tesla's Car Can Jump. Mine Can't.`
+- `"Step Three. Tell Your Mom."`
+
+**Description**
+```
+Tesla's new car jumped over other cars. So he asks Codex to make his car fly.
+His car is a 2011 Honda.
+
+Real: on 15 Oct 2026 Tesla showed a Roadster prototype that climbed a ramp, hopped over parked cars on air jets and
+landed; Musk says it "will be able to fly" and production is planned for 2028. A Smithsonian curator called it
+"hopping". This story is fiction.
+
+Ep. 29 of Dev vs the bots. Parody. Not affiliated with OpenAI or Tesla.
+
+💬 Flying car, or just leave at seven? 👇
+
+#Tesla #Codex #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+tesla flying car, tesla roadster, flying car, codex, programmer humor, coding memes, traffic, commute, developer life, funny ai
+```
+
+**Pinned comment**
+```
+Flying car, or just leave at seven? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 59.9 s, 105 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 10. Oct 31, 4:30 PM IST (7:00 AM ET): `10_Oct31_430PM_ep30_jarvis.mp4`
+
+**Title** (23 characters)
+```
+I Made Claude My JARVIS
+```
+
+**Alternative titles to test**
+- `"I'm a Chat Window, Sir."`
+- `When Your AI Isn't JARVIS`
+
+**Description**
+```
+He wants Iron Man's JARVIS. He gets Claude.
+The suit is a hoodie. The only threat is the sink. And the last scan is on him.
+
+This story is fiction.
+
+Ep. 30 of Dev vs the bots. Parody. Not affiliated with Anthropic or Marvel.
+
+💬 Would you want an AI that tells you to eat, or one that just obeys? 👇
+
+#JARVIS #ClaudeAI #ProgrammerHumor
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+jarvis, iron man, claude, ai assistant, programmer humor, coding memes, tony stark, self care, developer life, funny ai
+```
+
+**Pinned comment**
+```
+An AI that tells you to eat, or one that just obeys? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 49.8 s, 89 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 11. Oct 31, 7:30 PM IST (10:00 AM ET): `11_Oct31_730PM_ep31_timemachine.mp4`
+
+**Title** (32 characters)
+```
+I Asked Codex for a Time Machine
+```
+
+**Alternative titles to test**
+- `I Broke Production on a Friday`
+- `"That's Called Git Revert."`
+
+**Description**
+```
+He broke production. On a Friday. Now he wants a time machine.
+Not to yesterday. To 2019. Before he learned JavaScript.
+
+Real: "don't deploy on Fridays" is an old developer rule, and `git revert` undoes a pushed commit by adding a new
+one. This story is fiction.
+
+Ep. 31 of Dev vs the bots. Parody. Not affiliated with OpenAI.
+
+💬 One trip back in time: what would you undo? 👇
+
+#Codex #ProgrammerHumor #Git
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+time machine, git revert, push to main, friday deploy, codex, programmer humor, coding memes, javascript, developer life, funny ai
+```
+
+**Pinned comment**
+```
+One trip back in time: what would you undo? 👇 Subscribe for the next one.
+```
+
+**Video facts:** 47.5 s, 77 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 12. Nov 1, 4:30 PM IST (6:00 AM ET): `12_Nov1_430PM_ep01_absolutely_right.mp4`
 
 **Title** (41 characters)
 ```
@@ -664,7 +489,7 @@ How many times has your AI said "You're absolutely right" today? 👇
 
 ---
 
-## 18. Oct 31, 4:30 AM IST (7:00 PM ET (day before)): `18_Oct31_430AM_ep02_context_left.mp4`
+## 13. Nov 1, 7:30 PM IST (9:00 AM ET): `13_Nov1_730PM_ep02_context_left.mp4`
 
 **Title** (40 characters)
 ```
@@ -707,7 +532,7 @@ What's worse: your AI forgetting everything, or the usage limit? 👇
 
 ---
 
-## 19. Oct 31, 9:30 PM IST (12:00 PM ET): `19_Oct31_930PM_ep04_commits.mp4`
+## 14. Nov 2, 4:30 PM IST (6:00 AM ET): `14_Nov2_430PM_ep04_commits.mp4`
 
 **Title** (38 characters)
 ```
@@ -747,7 +572,7 @@ Be honest: how many of your commits just say "fix"? 👇
 
 ---
 
-## 20. Nov 1, 4:30 AM IST (7:00 PM ET (day before)): `20_Nov1_430AM_ep05_button_blue.mp4`
+## 15. Nov 2, 7:30 PM IST (9:00 AM ET): `15_Nov2_730PM_ep05_button_blue.mp4`
 
 **Title** (35 characters)
 ```
@@ -787,7 +612,7 @@ What's the smallest change your AI turned into a full rewrite? 👇
 
 ---
 
-## 21. Nov 1, 10:30 PM IST (12:00 PM ET): `21_Nov1_1030PM_ep06_simpler.mp4`
+## 16. Nov 3, 4:30 PM IST (6:00 AM ET): `16_Nov3_430PM_ep06_simpler.mp4`
 
 **Title** (26 characters)
 ```
@@ -827,7 +652,7 @@ Do you want AI to explain like a senior dev, or like you're five? 👇
 
 ---
 
-## 22. Nov 2, 5:30 AM IST (7:00 PM ET (day before)): `22_Nov2_530AM_ep07_confession.mp4`
+## 17. Nov 3, 7:30 PM IST (9:00 AM ET): `17_Nov3_730PM_ep07_confession.mp4`
 
 **Title** (50 characters)
 ```
@@ -867,7 +692,7 @@ Would you give an AI access to production? Yes, or never? 👇 Subscribe for the
 
 ---
 
-## 23. Nov 2, 10:30 PM IST (12:00 PM ET): `23_Nov2_1030PM_ep08_apology.mp4`
+## 18. Nov 4, 4:30 PM IST (6:00 AM ET): `18_Nov4_430PM_ep08_apology.mp4`
 
 **Title** (27 characters)
 ```
@@ -906,7 +731,7 @@ Which is worse: an AI that grovels, or one that celebrates? 👇 Subscribe for t
 
 ---
 
-## 24. Nov 3, 5:30 AM IST (7:00 PM ET (day before)): `24_Nov3_530AM_ep09_vibe.mp4`
+## 19. Nov 4, 7:30 PM IST (9:00 AM ET): `19_Nov4_730PM_ep09_vibe.mp4`
 
 **Title** (53 characters)
 ```
@@ -944,7 +769,7 @@ Vibe coding: freedom, or a trap? 👇 Subscribe for the next one.
 
 ---
 
-## 25. Nov 3, 10:30 PM IST (12:00 PM ET): `25_Nov3_1030PM_ep10_refuse.mp4`
+## 20. Nov 5, 4:30 PM IST (6:00 AM ET): `20_Nov5_430PM_ep10_refuse.mp4`
 
 **Title** (29 characters)
 ```
@@ -983,7 +808,7 @@ Should AI teach you, or just do it? 👇 Subscribe for the next one.
 
 ---
 
-## 26. Nov 4, 5:30 AM IST (7:00 PM ET (day before)): `26_Nov4_530AM_ep11_dad.mp4`
+## 21. Nov 5, 7:30 PM IST (9:00 AM ET): `21_Nov5_730PM_ep11_dad.mp4`
 
 **Title** (26 characters)
 ```
@@ -1021,7 +846,7 @@ Who in your family would secretly love coding with AI? 👇 Subscribe for the ne
 
 ---
 
-## 27. Nov 4, 10:30 PM IST (12:00 PM ET): `27_Nov4_1030PM_ep12_replace_me.mp4`
+## 22. Nov 6, 4:30 PM IST (6:00 AM ET): `22_Nov6_430PM_ep12_replace_me.mp4`
 
 **Title** (41 characters)
 ```
@@ -1060,7 +885,7 @@ Is AI taking the joy out of coding, or giving it back? 👇 Subscribe for the ne
 
 ---
 
-## 28. Nov 5, 5:30 AM IST (7:00 PM ET (day before)): `28_Nov5_530AM_ep13_interview.mp4`
+## 23. Nov 6, 7:30 PM IST (9:00 AM ET): `23_Nov6_730PM_ep13_interview.mp4`
 
 **Title** (42 characters)
 ```
@@ -1096,162 +921,3 @@ Who gets the job: the one who asks, or the one who's already done? 👇 Subscrib
 ```
 
 **Video facts:** 49.7 s, 127 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 29. Nov 5, 10:30 PM IST (12:00 PM ET): `29_Nov5_1030PM_ep28_gta.mp4`
-
-**Title** (28 characters)
-```
-I Asked Claude to Make GTA 5
-```
-
-**Alternative titles to test**
-- `My Laptop Can't Run GTA 5, So I Made My Own`
-- `"That's the City."`
-
-**Description**
-```
-His laptop can't run GTA 5. So he asks Claude to make him his own.
-A whole city. Cars. Police. Helicopters. Claude delivers... a box.
-
-Real: Rockstar has said GTA V took about 1,000 people to make (Leslie Benzies, Develop, 2013). This story is fiction.
-
-Ep. 28 of Dev vs the bots. Parody. Not affiliated with Anthropic or Rockstar Games.
-
-💬 Would you play the box game? Be honest 👇
-
-#GTA5 #ClaudeAI #ProgrammerHumor
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-gta 5, ai made a game, claude, vibe coding, programmer humor, coding memes, game dev, ai game, developer life, funny ai
-```
-
-**Pinned comment**
-```
-Would you play the box game? Be honest 👇 Subscribe for the next one.
-```
-
-**Video facts:** 47.0 s, 81 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 30. Nov 6, 5:30 AM IST (7:00 PM ET (day before)): `30_Nov6_530AM_ep29_flycar.mp4`
-
-**Title** (32 characters)
-```
-I Asked Codex to Make My Car Fly
-```
-
-**Alternative titles to test**
-- `Tesla's Car Can Jump. Mine Can't.`
-- `"Step Three. Tell Your Mom."`
-
-**Description**
-```
-Tesla's new car jumped over other cars. So he asks Codex to make his car fly.
-His car is a 2011 Honda.
-
-Real: on 15 Oct 2026 Tesla showed a Roadster prototype that climbed a ramp, hopped over parked cars on air jets and
-landed; Musk says it "will be able to fly" and production is planned for 2028. A Smithsonian curator called it
-"hopping". This story is fiction.
-
-Ep. 29 of Dev vs the bots. Parody. Not affiliated with OpenAI or Tesla.
-
-💬 Flying car, or just leave at seven? 👇
-
-#Tesla #Codex #ProgrammerHumor
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-tesla flying car, tesla roadster, flying car, codex, programmer humor, coding memes, traffic, commute, developer life, funny ai
-```
-
-**Pinned comment**
-```
-Flying car, or just leave at seven? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 59.9 s, 105 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 31. Nov 6, 10:30 PM IST (12:00 PM ET): `31_Nov6_1030PM_ep30_jarvis.mp4`
-
-**Title** (23 characters)
-```
-I Made Claude My JARVIS
-```
-
-**Alternative titles to test**
-- `"I'm a Chat Window, Sir."`
-- `When Your AI Isn't JARVIS`
-
-**Description**
-```
-He wants Iron Man's JARVIS. He gets Claude.
-The suit is a hoodie. The only threat is the sink. And the last scan is on him.
-
-This story is fiction.
-
-Ep. 30 of Dev vs the bots. Parody. Not affiliated with Anthropic or Marvel.
-
-💬 Would you want an AI that tells you to eat, or one that just obeys? 👇
-
-#JARVIS #ClaudeAI #ProgrammerHumor
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-jarvis, iron man, claude, ai assistant, programmer humor, coding memes, tony stark, self care, developer life, funny ai
-```
-
-**Pinned comment**
-```
-An AI that tells you to eat, or one that just obeys? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 49.8 s, 89 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
-## 32. Nov 7, 5:30 AM IST (7:00 PM ET (day before)): `32_Nov7_530AM_ep31_timemachine.mp4`
-
-**Title** (32 characters)
-```
-I Asked Codex for a Time Machine
-```
-
-**Alternative titles to test**
-- `I Broke Production on a Friday`
-- `"That's Called Git Revert."`
-
-**Description**
-```
-He broke production. On a Friday. Now he wants a time machine.
-Not to yesterday. To 2019. Before he learned JavaScript.
-
-Real: "don't deploy on Fridays" is an old developer rule, and `git revert` undoes a pushed commit by adding a new
-one. This story is fiction.
-
-Ep. 31 of Dev vs the bots. Parody. Not affiliated with OpenAI.
-
-💬 One trip back in time: what would you undo? 👇
-
-#Codex #ProgrammerHumor #Git
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-time machine, git revert, push to main, friday deploy, codex, programmer humor, coding memes, javascript, developer life, funny ai
-```
-
-**Pinned comment**
-```
-One trip back in time: what would you undo? 👇 Subscribe for the next one.
-```
-
-**Video facts:** 47.5 s, 77 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

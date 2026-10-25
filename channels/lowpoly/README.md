@@ -206,3 +206,6 @@ what a viewer would; kit.headline / kit.bignum cards carry the facts (source and
 real. Batch 10: scripts/batch10_ai_news_eps36-39.md.
 
 **Owner, 25 Oct 2026: "Don't copy him as first line hey what's new with you".** Never reuse a reference's catchphrase or opening line (or its exact jokes); take the structure, write our own words. Eps 36-39 re-opened with original lines.
+
+## Posting times (owner, 25 Oct 2026: "Switch")
+**4:30 PM and 7:30 PM IST every day** (7:00 AM / 10:00 AM US Eastern until 1 Nov, then 6:00 AM / 9:00 AM). Replaces the 9:30 PM / 4:30 AM IST US slots. channels/lowpoly/calendar.md was rebuilt from the owner's YouTube Studio screenshot: news episodes first while fresh, then the newest skits, then the backlog. Sets of 4 are named by these slots.
