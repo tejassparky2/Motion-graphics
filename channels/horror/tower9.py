@@ -41,7 +41,7 @@ SCRIPT = [
     dict(id="t10", scene="radio_close", text="Please. Open the hatch. They're right behind me.", speaker="radio",
          gap=0.35),
     dict(id="t11", scene="ladder", text="Then, footsteps on the ladder. Slow. Getting closer.", gap=0.35),
-    dict(id="t12", scene="hatch", text="Three knocks on the hatch. Right under your feet."),
+    dict(id="t12", scene="hatch", text="Three knocks on the hatch. Right under your feet.", gap=1.4),   # the knocks land in this silence
     dict(id="t13", scene="radio_close", text="The radio crackles again. A different voice."),
     dict(id="t14", scene="radio_close", text="Tower [nine,|9,] this is base. Don't open anything. Help is two hours out.",
          speaker="base", gap=0.35),
@@ -106,8 +106,10 @@ def tower(cr, k):
 def draw(cr, t, tl):
     A, B = tl.at, tl.by_id
     hud.frame(cr, t, FRAMES)
-    flashes = [B["t9"].start + 0.4, A("t12", "knocks"), B["t16"].start + 0.2]
+    flashes = [B["t9"].start + 0.4, B["t12"].start - 1.25, B["t16"].start + 0.2]   # same times as sets/tower.js
     hud.finish(cr, t, flash_at=flashes)
+    # thunder follows its lightning, between lines (on "Then" it hid the word); the knocks need no thunder
+    thunder = [B["t9"].end + 0.05, B["t16"].end + 0.05]
     fuel = 0.34 - 0.24 * hud.seg(t, A("t7", "fuel"), B["t19"].end)     # the resource: generator fuel
     hud.meter(cr, t, "GENERATOR FUEL", fuel, warn=0.2, icon="bar")
     torches = [(A("t8", "torches"), 2), (A("t9", "Five."), 5), (A("t9", "nine."), 9), (A("t9", "many"), 23)]
@@ -139,10 +141,10 @@ def draw(cr, t, tl):
     cue("static", t, B["t10"].start - 0.2, 0.3)
     cue("static", t, B["t13"].start, 0.6)
     cue("static", t, B["t14"].start - 0.2, 0.3)
-    for at in flashes:
+    for at in thunder:
         cue("thunder", t, at)
     for k in range(4):
         cue("ladder_step", t, B["t11"].start + 0.2 + k * 0.75)
-    cue("knock", t, A("t12", "knocks"))
+    cue("knock", t, B["t12"].start - 1.25)   # in the silence before the line (on the words, "knocks" was heard as "knots")
     cue("heartbeat", t, B["t15"].start, B["t17c"].end - B["t15"].start)
     cue("riser", t, B["t18"].start, B["t19"].start - B["t18"].start)

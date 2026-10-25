@@ -134,6 +134,7 @@ export async function build(c) {
   function last(t) { let d = null; for (const b of c.beats) { if (b.start - .12 > t) break; if (get(b.id)) d = get(b.id); } return d || ["worried", "sitRadio", "desk"]; }
 
   const under = new THREE.PointLight(0x5a6a90, 1.2, 6, 1.4); add(under, 1.2, -1.2, 1.6);   // cold light under the cabin (the ladder shot)
+  const knockAt = B.t12.start - 1.25;                 // the knocks come in the silence before "Three knocks on the hatch."
   const SHOTS = {
     radio_close: {pos: [.3, 1.25, -.7], look: [-.35, .9, -1.55], fov: 46, push: .12},
     you_close:   c.track(you, {dist: .6, side: .1, fov: 40}),
@@ -141,13 +142,14 @@ export async function build(c) {
     cabin:       {pos: [1.45, 1.85, 1.5], look: [-.3, 1.1, -1.0], fov: 56, push: .25},
     generator:   {pos: [.95, 1.55, .2], look: [1.78, 1.45, -.25], fov: 44, push: .12},
     trees:       {pos: [-3.4, 2.6, 2.8], look: [-1.5, -30, 1.5], fov: 62, push: .6},
-    ladder:      {pos: [1.05, -.35, 1.95], look: [1.0, -6, 1.38], fov: 52, push: .25},
+    ladder:      t => t < knockAt - .1 ? {pos: [1.05, -.35, 1.95], look: [1.0, -6, 1.38], fov: 52, push: .25}
+                                       : {pos: [1.5, 1.45, 1.62], look: [.95, 0, .95], fov: 48, push: .15},   // cut to the hatch for the knocks
     hatch:       {pos: [1.5, 1.45, 1.62], look: [.95, 0, .95], fov: 48, push: .15},
     hatch_close: c.track(you, {dist: .7, side: -.15, up: -.1, fov: 42, lookUp: -.05}),
     choice:      {pos: [1.0, 1.9, -1.2], look: [-.45, 1.0, .2], fov: 56, push: .25},
   };
-  const flashes = [B.t9.start + .4, word("t12", 1), B.t16.start + .2, B.t1.start + 1.6, B.t5.start + .8, B.t15.start + .6];
-  const knocks = [0, .32, .64].map(k => word("t12", 1) + k);
+  const flashes = [B.t9.start + .4, knockAt, B.t16.start + .2, B.t1.start + 1.6, B.t5.start + .8, B.t15.start + .6];
+  const knocks = [0, .32, .64].map(k => knockAt + k);
   const fuelAt = t => .34 - .24 * lin(t, word("t7", 3), B.t19.end);
 
   function update(t, cur, prev) {
@@ -178,7 +180,7 @@ export async function build(c) {
     let kick = 0; for (const k of knocks) { const d = t - k; if (d >= 0 && d < .25) kick = Math.max(kick, Math.sin(d / .25 * Math.PI)); }
     if (cur.id === "t17" || cur.id === "t16") kick = .15 * Math.max(0, Math.sin(t * 7)) * (noise(t, 3) > .3 ? 1 : 0);
     hatch.position.y = .025 * kick; hatch.rotation.z = .02 * kick;
-    const under = t > word("t12", 0) ? 1 : 0;
+    const under = t > knockAt ? 1 : 0;
     leak.material.color.setHex(0xff8a2a).multiplyScalar(under * (.25 + .25 * noise(t * 6, 2))); hatchGlow.intensity = under * (.8 + .4 * noise(t * 7, 1));
     // the climber comes up the ladder during t11; under the hatch from t12
     const ck = seg(t, B.t11.start, B.t11.end + .3);
