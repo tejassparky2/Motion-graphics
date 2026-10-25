@@ -41,4 +41,4 @@ snakebite, antivenom, how antivenom is made, antivenom horse, snake bite india, 
 Antivenom is made from horses that are given tiny, safe doses of venom. 🐴 Did you know that? And what's the scariest snake where you live?
 ```
 
-**Video facts:** 88.9 s, 258 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 89.3 s, 259 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
