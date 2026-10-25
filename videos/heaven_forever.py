@@ -249,6 +249,16 @@ def scene_joys(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#ffd8e0"), hexc("#fff0d8"), seed=82)
     sign(cr, t, tl.scene_at(t)[1], 360, 200, "SOME JOYS NEVER WEAR OUT", col=GREEN, size=42)
+    if t < A("h7", "Food"):                                        # the bored face cheers up until the list starts
+        s0 = tl.scene_at(t)[1]
+        k = appear(t, s0, 0.35) * (1 - min(1.0, max(0.0, (t - A("h7", "Food") + 0.3) / 0.3)))
+        if k > 0.01:
+            cr.save()
+            cr.translate(360, 600)
+            cr.scale(k, k)
+            head(cr, t, 0, 0, 130, "kid", eyes="happy", mouth="grin", **dict(BOY, tie=None))
+            cr.restore()
+            sparkles(cr, t, s0 + 0.2, 360, 600, n=7, seed=84, col=GOLD, spread=170)
     for k, (key, label, fn) in enumerate((("Food", "FOOD", icon_plate), ("Sleep", "SLEEP", icon_pillow),
                                           ("hug", "A HUG", None))):
         st = A("h7", key)
