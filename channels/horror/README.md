@@ -64,12 +64,15 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - Owner on the 2D Tower 9 (25 Oct): "Tower 9 is better now". Keep what it has: warm practical light (bulb, lantern,
   LCD) against the cold storm, objects that tell the story close up (radio, logbook writing itself, clock, fuel gauge,
   hatch), the outfit detail paid off in the lightning, and the mix fixes above.
-- Channel name: **Midnight with Manya** (owner, 25 Oct 2026, after rejecting "Mae" as too common: "Midnight with
-  manya"). @MidnightWithManya was free that day and the name had no web results. Manya is a fictional storyteller
-  (toon2d.manya_bust), never presented as a real person; the description says the voices are synthetic. Channel art:
-  `python channels/horror/brand.py` -> out/horror/channel/ (avatar.png, banner.png); setup steps, description and
-  keywords: out/horror/channel/setup.md. The owner creates the Gmail and channel (phone verification); never ask for
-  their password.
+- Channel name: "Midnight with <host>", the host's name still to pick (owner, 25 Oct 2026: rejected "Mae" as too
+  common, then "Manya" as sounding Indian: "give me western name like this unique"). Offered, all free as
+  @MidnightWith<Name> with no web hits: Elowen, Tamsin, Ottilie, Isolde, Sidonie, Odessa (Odessa reads as the city
+  in the war news). The host is a fictional storyteller (toon2d.host_bust), never presented as a real person; the
+  description says the voices are synthetic. Her look: the FIRST drawing (owner: "previous was better" than a
+  detailed redraw with lashes, earrings and a shawl), so keep that simpler style. Channel art:
+  `python channels/horror/brand.py NAME` -> out/horror/channel/ (avatar.png, banner.png); setup steps, description
+  and keywords: out/horror/channel/setup.md. The owner creates the Gmail and channel (phone verification); never ask
+  for their password.
 - Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face

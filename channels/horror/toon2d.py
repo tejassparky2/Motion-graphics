@@ -977,295 +977,186 @@ def pale_face(cr, x, y, s, t, a=1.0, cap=False, tilt=0.0, seed=0):
     cr.restore()
 
 
-# ------------------------------------------------------------------ Manya, the channel's storyteller (a fictional character)
-MANYA_SKIN, MANYA_SKIN_D = hexa("#e0a882"), hexa("#c08262")
-MANYA_HAIR, MANYA_HAIR_D, MANYA_HAIR_L = hexa("#2b1716"), hexa("#160b0b"), hexa("#6a4038")
-MANYA_TOP, MANYA_TOP_D = hexa("#45244f"), hexa("#2a1531")
-MANYA_SHAWL, MANYA_SHAWL_D = hexa("#1d5560"), hexa("#113740")
-MANYA_GOLD = hexa("#e2b04f")
-MANYA_LIP, MANYA_LIP_D = hexa("#c0525f"), hexa("#93384a")
-MANYA_IRIS = hexa("#a8702f")
+# ------------------------------------------------------------------ the host: the channel's storyteller (a fictional character)
+# The owner preferred this first drawing over a more detailed redraw (25 Oct 2026: "previous was better").
+HOST_SKIN, HOST_SKIN_D = hexa("#d79c76"), hexa("#a86c50")
+HOST_HAIR, HOST_HAIR_D = hexa("#2a1a1f"), hexa("#140b0f")
+HOST_KNIT, HOST_KNIT_D = hexa("#4a2a52"), hexa("#2c1631")
+HOST_LIP = hexa("#a3434d")
 
 
-def _manya_eye(cr, sx, look, open_=1.0):
-    """One almond eye (sx = -1 her right / screen left, +1 screen right), drawn at the origin."""
-    ix, ox = -sx * 26, sx * 28                               # inner and outer corners
-    top = lambda c: (c.move_to(ix, 2), c.curve_to(ix + sx * 10, -16 * open_, ox - sx * 22, -24 * open_, ox, -6 * open_))
-    almond = lambda c: (top(c), c.curve_to(ox - sx * 14, 12, ix + sx * 14, 16, ix, 2), c.close_path())
-    cr.save()
-    cr.set_source_rgba(0.42, 0.22, 0.38, 0.28)               # a little plum shadow on the lid
-    cr.new_path()
-    cr.move_to(ix, -4)
-    cr.curve_to(ix + sx * 10, -30, ox - sx * 18, -38, ox + sx * 4, -12)
-    cr.curve_to(ox - sx * 22, -24, ix + sx * 10, -16, ix, 2)
-    cr.fill()
-    cr.new_path()
-    almond(cr)
-    cr.set_source_rgba(0.98, 0.96, 0.94, 1)
-    cr.fill_preserve()
-    cr.clip()
-    px, py = look[0] * 8 + sx * 1, look[1] * 5 - 2
-    cr.set_source(rad(px, py, 16, [(0, (0.86, 0.6, 0.28, 1)), (0.55, MANYA_IRIS), (0.85, (0.35, 0.2, 0.1, 1)),
-                                   (1, (0.18, 0.1, 0.06, 1))]))
-    cr.arc(px, py, 16, 0, 2 * math.pi)
-    cr.fill()
-    cr.set_source_rgba(0.06, 0.03, 0.03, 1)
-    cr.arc(px, py, 7, 0, 2 * math.pi)
-    cr.fill()
-    cr.set_source_rgba(0.35, 0.18, 0.15, 0.45)               # the lid's shadow on the eyeball
-    cr.rectangle(-40, -30, 80, 14)
-    cr.fill()
-    cr.set_source_rgba(1, 1, 1, 0.95)                        # two catchlights
-    cr.arc(px + 5, py - 6, 4.2, 0, 2 * math.pi)
-    cr.fill()
-    cr.arc(px - 5, py + 5, 2, 0, 2 * math.pi)
-    cr.fill()
-    cr.restore()
-    cr.set_source_rgba(*INK)                                 # upper lash line with a soft wing and lashes
-    cr.set_line_cap(cairo.LINE_CAP_ROUND)
-    cr.set_line_join(cairo.LINE_JOIN_ROUND)
-    cr.set_line_width(5.5)
-    cr.new_path()
-    top(cr)
-    cr.line_to(ox + sx * 10, -16 * open_)
-    cr.stroke()
-    cr.set_line_width(2.6)
-    for dx, dy, cx_, cy_, ex, ey in ((ox - sx * 3, -8, ox + sx * 4, -14, ox + sx * 7, -21),
-                                     (ox - sx * 11, -13, ox - sx * 7, -20, ox - sx * 6, -26)):
-        cr.move_to(dx, dy * open_)                            # two soft curled lashes at the outer corner
-        cr.curve_to(cx_, cy_ * open_, cx_, cy_ * open_, ex, ey * open_)
-        cr.stroke()
-    cr.set_line_width(2)                                     # the lower lash line, light
-    cr.set_source_rgba(*INK[:3], 0.6)
-    cr.new_path()
-    cr.move_to(ox - sx * 4, 0)
-    cr.curve_to(ox - sx * 14, 12, ix + sx * 18, 14, ix + sx * 6, 6)
-    cr.stroke()
-    cr.set_source_rgba(*MANYA_SKIN_D[:3], 0.8)               # the crease above the lid
-    cr.set_line_width(2.2)
-    cr.new_path()
-    cr.move_to(ix + sx * 4, -18)
-    cr.curve_to(ix + sx * 16, -32, ox - sx * 14, -38, ox + sx * 2, -24)
-    cr.stroke()
-
-
-def manya_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.7, wink=0.0, light=(-7, -5), rim=(0.82, 0.78, 1.0, 0.4),
-               rim_from=(4, -3), skin=None):
-    """Manya from the chest up (x, y = the base of the neck): glossy dark waves with a side part, almond eyes, a warm
-    knowing smile, gold drop earring, a plum boat-neck top with a teal shawl edged in gold, a crescent-moon pendant.
-    A fictional storyteller, drawn for the channel; never presented as a real person."""
-    sk = skin or MANYA_SKIN
-    sk_d = mix(sk, MANYA_SKIN_D, 0.75)
+def host_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16), rim=(0.6, 0.75, 1.0, 0.75),
+             rim_from=(-10, -8), skin=None):
+    """The host from the chest up (x, y = the base of the neck): long dark waves, a knowing half smile, a plum knit and a
+    silver crescent-moon pendant. Default light: warm from below (her lantern) with cold moonlight rim from behind."""
+    sk = skin or HOST_SKIN
+    sk_d = HOST_SKIN_D if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
-    up = -2.5 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.22))
-    hy = -190                                                  # the head's centre
-    # long hair behind everything
-    toon(cr, lambda c: curve(c, [(-50, hy - 146), (-96, hy - 110), (-120, hy - 30), (-126, hy + 80), (-144, hy + 190),
-                                 (-176, hy + 280), (-152, hy + 360), (-110, hy + 330), (-96, hy + 240), (-80, hy + 140),
-                                 (80, hy + 140), (96, hy + 240), (110, hy + 330), (152, hy + 360), (176, hy + 280),
-                                 (144, hy + 190), (126, hy + 80), (120, hy - 30), (96, hy - 110), (50, hy - 146),
-                                 (0, hy - 154)]), MANYA_HAIR, MANYA_HAIR_D, light, rim, rim_from)
-    # shoulders and neck (skin), then the boat-neck top, then the shawl over her left shoulder
-    toon(cr, lambda c: curve(c, [(-28, -86), (-30, -10), (-100, 14), (-160, 46), (-150, 80), (150, 80), (160, 46),
-                                 (100, 14), (30, -10), (28, -86)]), sk, sk_d, light, rim, rim_from, lw=4)
-    cr.save()                                                  # the shadow the chin casts on the neck
-    cr.new_path()
-    curve(cr, [(-28, -86), (-30, -10), (-100, 14), (-160, 46), (-150, 80), (150, 80), (160, 46), (100, 14), (30, -10),
-               (28, -86)])
-    cr.clip()
-    cr.set_source_rgba(*MANYA_SKIN_D[:3], 0.55)
-    curve(cr, [(-34, -92), (34, -92), (28, -70), (0, -62), (-28, -70)])
-    cr.fill()
-    cr.set_source_rgba(*MANYA_SKIN_D[:3], 0.6)                 # collarbones
-    cr.set_line_width(3)
-    for sx in (-1, 1):
-        cr.move_to(sx * 22, 22)
-        cr.curve_to(sx * 50, 16, sx * 80, 22, sx * 112, 30)
+    up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.25))
+    # long hair behind the shoulders
+    toon(cr, lambda c: curve(c, [(-118, -250), (-150, -120), (-170, 60), (-196, 230), (-120, 250), (-70, 120),
+                                 (70, 120), (120, 250), (196, 230), (170, 60), (150, -120), (118, -250), (0, -330)]),
+         HOST_HAIR, HOST_HAIR_D, light, rim, rim_from)
+    # the knit top
+    toon(cr, lambda c: curve(c, [(-56, -10 + up), (-148, 30 + up), (-180, 120), (-192, 430), (192, 430), (180, 120),
+                                 (148, 30 + up), (56, -10 + up)]), HOST_KNIT, HOST_KNIT_D, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.35)                     # ribbing
+    cr.set_line_width(2.5)
+    for k in range(-5, 6):
+        cr.move_to(k * 28, 20)
+        cr.line_to(k * 34, 420)
         cr.stroke()
-    cr.restore()
-    toon(cr, lambda c: curve(c, [(-160, 48 + up), (-70, 58), (0, 62), (70, 58), (160, 48 + up), (186, 110), (196, 200),
-                                 (200, 430), (-200, 430), (-196, 200), (-186, 110)]), MANYA_TOP, MANYA_TOP_D, light,
-         rim, rim_from)
-    cr.set_source_rgba(*MANYA_GOLD[:3], 0.8)                  # a thin gold trim on the neckline
-    cr.set_line_width(3)
-    cr.new_path()
-    curve(cr, [(-150, 56), (-70, 66), (0, 70), (70, 66), (150, 56)], closed=False)
-    cr.stroke()
-    shawl = lambda c: curve(c, [(70, 52), (130, 36 + up), (178, 60), (200, 160), (206, 430), (96, 430), (70, 300),
-                                (84, 170), (74, 90)])
-    toon(cr, shawl, MANYA_SHAWL, MANYA_SHAWL_D, light, rim, rim_from)
-    cr.save()                                                  # its gold border, and a few embroidered dots
-    cr.new_path()
-    shawl(cr)
-    cr.clip()
-    cr.set_source_rgba(*MANYA_GOLD)
-    cr.set_line_width(9)
-    cr.new_path()
-    curve(cr, [(70, 52), (74, 90), (84, 170), (70, 300), (96, 430)], closed=False)
-    cr.stroke()
-    for k in range(9):
-        cr.arc(118 + 18 * math.sin(k), 110 + k * 36, 3.2, 0, 2 * math.pi)
-        cr.fill()
-    cr.restore()
-    cr.set_source_rgba(0.88, 0.86, 0.92, 1)                   # the chain and the crescent moon
-    cr.set_line_width(2.2)
-    cr.new_path()
-    cr.move_to(-26, -8)
-    cr.curve_to(-30, 70, 30, 70, 26, -8)
+    toon(cr, lambda c: poly(c, [(-32, -84), (32, -84), (36, 2), (-36, 2)]), sk, sk_d, (0, 10), None, lw=4)
+    toon(cr, lambda c: curve(c, [(-80, 0 + up), (-50, -26 + up), (0, -32 + up), (50, -26 + up), (80, 0 + up),
+                                 (52, 22 + up), (0, 16 + up), (-52, 22 + up)]), mix(HOST_KNIT, (1, 1, 1, 1), 0.08),
+         HOST_KNIT_D, light, rim, rim_from, lw=4)              # turtleneck roll
+    cr.set_source_rgba(0.82, 0.84, 0.9, 1)                  # the chain and the crescent moon
+    cr.set_line_width(2.5)
+    cr.move_to(-40, 14 + up)
+    cr.curve_to(-30, 80, 30, 80, 40, 14 + up)
     cr.stroke()
     cr.save()
-    cr.translate(0, 70)
+    cr.translate(0, 92)
     cr.new_path()
-    cr.arc(0, 0, 13, 0, 2 * math.pi)
-    cr.new_sub_path()
-    cr.arc(6, -4, 11, 0, 2 * math.pi)
+    cr.arc(0, 0, 18, 0, 2 * math.pi)
+    cr.arc_negative(7, -5, 15, 2 * math.pi, 0)
     cr.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
-    cr.set_source_rgba(0.95, 0.96, 1, 1)
-    cr.fill()
+    cr.set_source_rgba(0.92, 0.94, 1, 1)
+    cr.fill_preserve()
     cr.set_fill_rule(cairo.FILL_RULE_WINDING)
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(2.5)
+    cr.stroke()
     cr.restore()
-    glow(cr, 0, 70, 34, (0.85, 0.88, 1), 0.4)
-    # the head
+    glow(cr, 0, 92, 40, (0.8, 0.85, 1), 0.35)
+    # head
     cr.save()
-    cr.translate(0, hy)
-    cr.rotate(-0.05 + 0.01 * noise(t * 0.5, 2))
-    ear = lambda c: curve(c, [(80, -30), (98, -40), (104, -10), (94, 16), (82, 10)])     # her left ear, hair tucked behind
-    toon(cr, ear, sk, sk_d, light, rim, rim_from, lw=3.5)
-    face = lambda c: curve(c, [(0, -124), (50, -116), (82, -84), (88, -30), (82, 22), (64, 62), (32, 90), (0, 105),
-                               (-32, 90), (-64, 62), (-82, 22), (-88, -30), (-82, -84), (-50, -116)])
-    toon(cr, face, sk, sk_d, (light[0] * 0.6, light[1] * 0.6), rim, rim_from)
+    cr.translate(0, -175)
+    cr.rotate(-0.06 + 0.012 * noise(t * 0.5, 2))
+    head = lambda c: curve(c, [(-92, -20), (-90, -86), (-50, -128), (0, -136), (50, -128), (90, -86), (92, -20),
+                               (80, 40), (50, 84), (0, 104), (-50, 84), (-80, 40)])
+    toon(cr, head, sk, sk_d, light, rim, rim_from)
     cr.save()
     cr.new_path()
-    face(cr)
+    head(cr)
     cr.clip()
-    cr.set_source(rad(0, 30, 120, [(0, (1, 0.85, 0.7, 0.18)), (1, (1, 0.85, 0.7, 0))]))    # soft glow on the face
+    cr.set_source(rad(0, 60, 130, [(0, (1, 0.6, 0.35, 0.18)), (1, (1, 0.6, 0.35, 0))]))   # lantern warmth on the chin
     cr.paint()
-    for sx in (-1, 1):                                         # blush
-        cr.set_source(rad(sx * 50, 30, 30, [(0, (0.95, 0.45, 0.45, 0.32)), (1, (0.95, 0.45, 0.45, 0))]))
+    for sx in (-1, 1):                                       # a touch of blush
+        cr.set_source(rad(sx * 52, 36, 26, [(0, (0.85, 0.35, 0.35, 0.25)), (1, (0.85, 0.35, 0.35, 0))]))
         cr.paint()
     cr.restore()
+    # eyes: big, lashed, a knowing half-lid; the left one can wink
     for sx in (-1, 1):
+        ex, ey = sx * 40, -14
+        lid = 0.78 if sx < 0 else 0.78 * (1 - wink)
         cr.save()
-        cr.translate(sx * 38, -12)
-        if sx > 0 and wink > 0.5:
+        cr.translate(ex, ey)
+        rx, ry = 27, 22
+        if lid > 0.1:
+            eye = lambda c: (c.save(), c.scale(1, ry / rx), c.arc(0, 0, rx, 0, 2 * math.pi), c.restore())
+            cr.new_path()
+            eye(cr)
+            cr.set_source_rgba(0.97, 0.95, 0.92, 1)
+            cr.fill_preserve()
+            cr.save()
+            cr.clip()
+            px, py = look[0] * 9, look[1] * 6 + 2
+            cr.set_source_rgba(*hexa("#8a5a2b"))              # amber irises (they catch the lantern)
+            cr.arc(px, py, 14, 0, 2 * math.pi)
+            cr.fill()
+            cr.set_source_rgba(*hexa("#c98c3e"))
+            cr.arc(px, py + 4, 8, 0, math.pi)
+            cr.fill()
+            cr.set_source_rgba(0.05, 0.03, 0.03, 1)
+            cr.arc(px, py, 6.5, 0, 2 * math.pi)
+            cr.fill()
+            cr.set_source_rgba(1, 1, 1, 0.95)
+            cr.arc(px + 5, py - 5, 3.6, 0, 2 * math.pi)
+            cr.fill()
+            ly = -ry + ry * 2 * (1 - lid)                      # the lid's edge: a gentle curve, a knowing look
+            lid_curve = lambda c: (c.move_to(-rx - 2, ly + 2), c.curve_to(-rx * 0.4, ly - 5, rx * 0.4, ly - 6, rx + 2, ly))
+            cr.new_path()
+            cr.move_to(-rx - 4, -ry - 4)
+            cr.line_to(rx + 4, -ry - 4)
+            cr.line_to(rx + 2, ly)
+            cr.curve_to(rx * 0.4, ly - 6, -rx * 0.4, ly - 5, -rx - 2, ly + 2)
+            cr.close_path()
+            cr.set_source_rgba(*mix(HOST_SKIN_D, (0.35, 0.2, 0.3, 1), 0.3))
+            cr.fill()
+            cr.restore()
             cr.set_source_rgba(*INK)
-            cr.set_line_width(5)
-            cr.move_to(-24, 0)
-            cr.curve_to(-8, 10, 10, 10, 26, -4)
+            cr.set_line_width(5.5)
+            cr.set_line_cap(cairo.LINE_CAP_ROUND)
+            cr.save()
+            cr.scale(sx, 1)                                     # draw for the right eye, mirror for the left
+            cr.new_path()
+            lid_curve(cr)
+            cr.line_to(rx + 12, ly - 9)                          # the flick at the outer corner
+            cr.stroke()
+            cr.restore()
+            cr.set_line_width(2.5)
+            cr.save()
+            cr.scale(1, ry / rx)
+            cr.new_path()
+            cr.arc(0, 0, rx, 0.15 * math.pi, 0.85 * math.pi)
+            cr.restore()
             cr.stroke()
         else:
-            _manya_eye(cr, sx, look)
+            cr.set_source_rgba(*INK)
+            cr.set_line_width(5)
+            cr.move_to(-rx, 2)
+            cr.curve_to(-10, -8, 10, -8, rx, 2)
+            cr.stroke()
         cr.restore()
-        cr.save()                                              # tapered, arched brows
-        cr.translate(sx * 40, -54)
+        cr.save()                                            # thin arched brows, the right one raised
+        cr.translate(sx * 42, -50 - (10 if sx > 0 else 0))
         cr.scale(sx, 1)
-        cr.new_path()
-        cr.move_to(-26, 8)
-        cr.curve_to(-10, -6, 12, -12, 32, -2)
-        cr.curve_to(14, -6, -8, -1, -26, 12)
-        cr.close_path()
-        cr.set_source_rgba(*MANYA_HAIR)
-        cr.fill()
+        cr.set_source_rgba(*HOST_HAIR)
+        cr.set_line_width(6)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.move_to(-24, 6)
+        cr.curve_to(-8, -8, 12, -10, 30, 0)
+        cr.stroke()
         cr.restore()
-    cr.set_source_rgba(*MANYA_SKIN_D[:3], 0.8)                 # a small, soft nose
-    cr.set_line_width(2.6)
-    cr.new_path()
-    cr.move_to(9, 14)
-    cr.curve_to(11, 22, 11, 27, 6, 31)
-    cr.stroke()
-    cr.new_path()
-    cr.move_to(-8, 34)
-    cr.curve_to(-4, 38, 4, 38, 9, 33)
-    cr.set_source_rgba(*INK[:3], 0.6)
-    cr.set_line_width(2.4)
-    cr.stroke()
-    cr.set_source_rgba(1, 1, 1, 0.22)
-    cr.arc(2, 26, 2.2, 0, 2 * math.pi)
+    cr.set_source_rgba(*INK)                                 # a beauty mark under her left eye
+    cr.arc(-62, 14, 3.2, 0, 2 * math.pi)
     cr.fill()
-    cr.save()                                                  # full lips, a warm knowing smile
+    cr.set_source_rgba(*INK[:3], 0.8)                        # small nose
+    cr.set_line_width(3.2)
+    cr.move_to(4, 6)
+    cr.curve_to(8, 22, 12, 30, 2, 36)
+    cr.stroke()
+    cr.save()                                                # the half smile: one corner up
     cr.translate(0, 64)
-    lift = 4 * smile
     cr.new_path()
-    cr.move_to(-24, 0 - lift * 0.5)
-    cr.curve_to(-16, -7, -8, -10, -3, -6)
-    cr.curve_to(-1, -8, 1, -8, 3, -6)
-    cr.curve_to(8, -10, 16, -7, 25, -lift)
-    cr.curve_to(10, 2, -10, 2, -24, -lift * 0.5)
+    cr.move_to(-26, 0)
+    cr.curve_to(-10, 6 + 4 * smile, 12, 6 + 2 * smile, 28, -8 * smile)
+    cr.curve_to(12, 14 + 6 * smile, -10, 16 + 4 * smile, -26, 0)
     cr.close_path()
-    cr.set_source_rgba(*MANYA_LIP_D)
-    cr.fill()
-    cr.new_path()
-    cr.move_to(-24, -lift * 0.5)
-    cr.curve_to(-12, 18, 12, 18, 25, -lift)
-    cr.curve_to(10, 3, -10, 3, -24, -lift * 0.5)
-    cr.close_path()
-    cr.set_source_rgba(*MANYA_LIP)
-    cr.fill()
-    cr.set_source_rgba(1, 1, 1, 0.4)
-    cr.save()
-    cr.translate(4, 9)
-    cr.scale(1, 0.4)
-    cr.arc(0, 0, 7, 0, 2 * math.pi)
-    cr.restore()
-    cr.fill()
-    cr.set_source_rgba(*INK[:3], 0.85)
-    cr.set_line_width(2.4)
-    cr.new_path()
-    cr.move_to(-24, -lift * 0.5)
-    cr.curve_to(-10, 3, 10, 3, 25, -lift)
+    cr.set_source_rgba(*HOST_LIP)
+    cr.fill_preserve()
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(3)
+    cr.stroke()
+    cr.move_to(-26, 0)
+    cr.curve_to(-10, 6 + 4 * smile, 12, 6 + 2 * smile, 28, -8 * smile)
+    cr.set_line_width(3.5)
     cr.stroke()
     cr.restore()
-    cr.set_source_rgba(*MANYA_GOLD)                            # a gold drop earring on the tucked side
-    cr.arc(92, 18, 4.5, 0, 2 * math.pi)
-    cr.fill()
-    cr.set_line_width(2)
-    cr.move_to(92, 20)
-    cr.line_to(93, 30)
-    cr.stroke()
-    toon(cr, lambda c: curve(c, [(93, 30), (103, 44), (93, 56), (83, 44)]), MANYA_GOLD, mix(MANYA_GOLD, INK, 0.35),
-         (-2, -2), None, lw=2)
-    glow(cr, 93, 44, 18, (1, 0.85, 0.5), 0.35)
-    # hair on top: the crown, a side part, a curtain of hair across her forehead to the left, a lock over the shoulder
-    crown = lambda c: curve(c, [(-90, -50), (-98, -104), (-62, -144), (0, -158), (62, -146), (98, -108), (96, -52),
-                                (88, -36), (80, -70), (56, -96), (28, -106)])
-    curtain = lambda c: curve(c, [(26, -152), (-24, -146), (-74, -112), (-96, -60), (-100, 4), (-92, 60), (-84, 20),
-                                  (-76, -30), (-52, -68), (-12, -90), (30, -100)])
-    toon(cr, crown, MANYA_HAIR, MANYA_HAIR_D, light, rim, rim_from)
-    toon(cr, curtain, MANYA_HAIR, MANYA_HAIR_D, light, rim, rim_from)
-    toon(cr, lambda c: curve(c, [(-90, 20), (-100, 110), (-92, 190), (-108, 270), (-98, 340), (-78, 380), (-70, 330),
-                                 (-80, 262), (-66, 190), (-72, 110), (-74, 40)]), MANYA_HAIR, MANYA_HAIR_D, light, rim,
-         rim_from)
-    cr.save()                                                  # strands and the glossy band, kept on the hair
-    cr.new_path()
-    crown(cr)
-    curtain(cr)
-    cr.clip()
-    cr.set_source_rgba(*MANYA_HAIR_D[:3], 0.9)
-    cr.set_line_width(2.2)
+    # front hair: a side part, waves framing the face, one loose strand
+    toon(cr, lambda c: curve(c, [(-104, 30), (-112, -60), (-90, -122), (-40, -150), (20, -150), (78, -126), (108, -80),
+                                 (112, -10), (100, 60), (88, -20), (78, -78), (40, -104), (-6, -112), (-40, -96),
+                                 (-74, -40), (-88, 20)]), HOST_HAIR, HOST_HAIR_D, light, rim, rim_from)
+    toon(cr, lambda c: curve(c, [(40, -148), (-20, -142), (-72, -114), (-98, -66), (-96, -24), (-80, -60), (-50, -84),
+                                 (-6, -96), (36, -108), (62, -120)]), HOST_HAIR, HOST_HAIR_D, light, rim, rim_from)  # side fringe
+    cr.set_source_rgba(1, 1, 1, 0.16)                        # shine
+    cr.set_line_width(3)
     for k in range(4):
-        cr.move_to(16 - k * 16, -140 + k * 4)
-        cr.curve_to(-24 - k * 14, -122 + k * 8, -56 - k * 8, -96 + k * 10, -78 - k * 4, -40 + k * 16)
-        cr.stroke()
-    cr.set_source_rgba(*MANYA_HAIR_L[:3], 0.9)
-    cr.set_line_width(5)
-    for a0, a1, r in ((-2.55, -2.05, 124), (-1.85, -1.35, 132), (-1.15, -0.75, 124)):
-        cr.new_path()
-        cr.arc(0, -10, r, a0, a1)
-        cr.stroke()
-    cr.set_source_rgba(1, 0.9, 0.85, 0.25)
-    cr.set_line_width(2)
-    for a0, a1, r in ((-2.5, -2.15, 118), (-1.8, -1.45, 126)):
-        cr.new_path()
-        cr.arc(0, -10, r, a0, a1)
-        cr.stroke()
-    cr.restore()
-    cr.set_source_rgba(*MANYA_HAIR_D[:3], 0.9)
-    cr.set_line_width(2.2)
-    for k in range(3):
-        cr.move_to(-88 + k * 6, 60 + k * 20)
-        cr.curve_to(-96 + k * 4, 150, -86 + k * 4, 220, -96 + k * 4, 300)
+        cr.move_to(-60 + k * 30, -136 + 3 * k)
+        cr.curve_to(-50 + k * 30, -124, -44 + k * 30, -112, -46 + k * 30, -100)
         cr.stroke()
     cr.restore()
     cr.restore()

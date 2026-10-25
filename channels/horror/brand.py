@@ -1,7 +1,8 @@
-"""Channel art for the horror channel ("Midnight with Manya", the owner's pick, 25 Oct 2026): the profile picture and the banner,
-drawn in the same 2D style as the episodes. Manya is a fictional storyteller (toon2d.manya_bust).
+"""Channel art for the horror channel ("Midnight with <host>"): the profile picture and the banner, drawn in the same
+2D style as the episodes. The host is a fictional storyteller (toon2d.host_bust); her name is the argument, so a new
+name only needs a re-render.
 
-    /home/user/.venv-main/bin/python channels/horror/brand.py   -> out/horror/channel/avatar.png, banner.png
+    /home/user/.venv-main/bin/python channels/horror/brand.py NAME   -> out/horror/channel/avatar.png, banner.png
 """
 import math
 import os
@@ -17,7 +18,8 @@ from channels.horror import hud2d   # noqa: E402
 from channels.horror import toon2d as tk   # noqa: E402
 from channels.horror.toon2d import INK, glow, hexa, poly   # noqa: E402
 
-NAME = "MIDNIGHT WITH MANYA"
+HOST = (sys.argv[1] if len(sys.argv) > 1 else "").upper()
+NAME = f"MIDNIGHT WITH {HOST}"
 OUT = os.path.join(ROOT, "out", "horror", "channel")
 AMBER = hexa("#ffb347")
 
@@ -54,7 +56,7 @@ def avatar(path, size=800):
     sky(cr, size, size, seed=3)
     moon(cr, 590, 230, 120)
     glow(cr, 400, 900, 520, (1, 0.6, 0.3), 0.45)             # her lantern, below the frame
-    tk.manya_bust(cr, 400, 640, 1.55, 0.0)
+    tk.host_bust(cr, 400, 640, 1.55, 0.0)
     g = cairo.RadialGradient(400, 400, 300, 400, 400, 420)     # keep the edge of the circle dark
     g.add_color_stop_rgba(0, 0, 0, 0, 0)
     g.add_color_stop_rgba(1, 0, 0, 0, 0.45)
@@ -153,7 +155,7 @@ def banner(path, w=2560, h=1440):
     skyline(cr, w, h, ground)
     bus(cr, 175, 975, 0.46)
     sx0, sy0, sx1, sy1 = 507, 508, 2053, 931                 # the safe area
-    tk.manya_bust(cr, 760, sy1 - 430 * 0.52 + 60, 0.52, 0.0)
+    tk.host_bust(cr, 760, sy1 - 430 * 0.52 + 60, 0.52, 0.0)
     g = cairo.LinearGradient(0, sy1 - 30, 0, sy1 + 40)       # she sits behind the dark of the ground
     g.add_color_stop_rgba(0, *hexa("#07080f", 0))
     g.add_color_stop_rgba(1, *hexa("#07080f"))
@@ -166,7 +168,7 @@ def banner(path, w=2560, h=1440):
     hud2d._text(cr, "MIDNIGHT WITH ", tx, 690, size, (1, 1, 1, 1), hud2d.ROUND, outline=INK, ow=10, shadow=0.5)
     mx = tx + text_width(cr, "MIDNIGHT WITH ", size, hud2d.ROUND)
     glow(cr, mx + 120, 650, 240, AMBER, 0.18)
-    hud2d._text(cr, "MANYA", mx, 690, size, AMBER, hud2d.ROUND, outline=INK, ow=10, shadow=0.5)
+    hud2d._text(cr, HOST, mx, 690, size, AMBER, hud2d.ROUND, outline=INK, ow=10, shadow=0.5)
     sub = "Horror stories where YOU choose what happens next"
     ss = min(46.0, 46 * (sx1 - tx - 20) / text_width(cr, sub, 46, hud2d.ROUND))
     hud2d._text(cr, sub, tx + 4, 772, ss, (1, 1, 1, 0.92), hud2d.ROUND, shadow=0.5)
@@ -185,5 +187,6 @@ def banner(path, w=2560, h=1440):
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     avatar(os.path.join(OUT, "avatar.png"))
-    banner(os.path.join(OUT, "banner.png"))
+    if HOST:
+        banner(os.path.join(OUT, "banner.png"))
     print("wrote", OUT)
