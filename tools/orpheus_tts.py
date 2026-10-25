@@ -40,6 +40,28 @@ def _token_gen(self, text, options=None):
 
 
 OrpheusCpp._token_gen = _token_gen
+
+
+def _tts_whole(self, text, options=None):
+    """All of a line's audio tokens decoded in one SNAC pass. orpheus-cpp's streaming decoder slides a 4-frame window
+    and keeps only one frame of each, so a line's first two frames (~0.17 s) were never output: first words got
+    clipped ("Experts estimate" heard as "Estimate", "Others lose" as "Blue's"; found 25 Oct 2026)."""
+    tokens = []
+    for tt in self._token_gen(text, options):
+        tid = self._token_to_id(tt, len(tokens))
+        if tid is not None and tid > 0:
+            tokens.append(tid)
+    frames = [tokens[i:i + 7] for i in range(0, len(tokens) // 7 * 7, 7)]
+    frames = [f for f in frames if all(0 <= x <= 4096 for x in f)]
+    c0 = np.array([[f[0] for f in frames]], dtype=np.int64)
+    c1 = np.array([[x for f in frames for x in (f[1], f[4])]], dtype=np.int64)
+    c2 = np.array([[x for f in frames for x in (f[2], f[3], f[5], f[6])]], dtype=np.int64)
+    names = [x.name for x in self._snac_session.get_inputs()]
+    audio = self._snac_session.run(None, dict(zip(names, [c0, c1, c2])))[0]
+    return 24_000, audio.reshape(-1).astype(np.float32)
+
+
+OrpheusCpp.tts = _tts_whole
 # the default Q4_K_M model is muddy on some words ("Malaria" heard as "Valeria"); ORPHEUS_REPO picks another quant
 OrpheusCpp.lang_to_model = dict(OrpheusCpp.lang_to_model, en=os.environ.get("ORPHEUS_REPO", OrpheusCpp.lang_to_model["en"]))
 
@@ -58,8 +80,7 @@ def main():
     model = OrpheusCpp(verbose=False, lang="en", n_threads=os.cpu_count() or 4)
     for k, (text, out, *_) in enumerate(jobs, 1):
         sr, s = model.tts(text, options={"voice_id": voice})
-        a = np.asarray(s).squeeze()
-        a = a.astype(np.float32) / 32768 if a.dtype == np.int16 else a.astype(np.float32)
+        a = np.asarray(s).squeeze().astype(np.float32)
         os.makedirs(os.path.dirname(out), exist_ok=True)
         sf.write(out + ".tmp.wav", trim(a, sr), sr)
         os.replace(out + ".tmp.wav", out)

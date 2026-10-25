@@ -33,7 +33,7 @@ SCRIPT = [
     dict(id="b18", scene="b18", text="Every dose you didn't need is free training for the bacteria."),
     dict(id="b19", scene="b19", text="So take antibiotics only when a doctor prescribes them, exactly as prescribed."),
     dict(id="b20", scene="b20", text="Never share them, and never use leftovers."),
-    dict(id="b21", scene="b21", text="Experts estimate superbugs could directly kill thirty-nine million people "
+    dict(id="b21", scene="b21", text="Researchers predict superbugs could directly kill thirty-nine million people "
                                      "between now and [twenty fifty.|2050.]"),
     dict(id="b22", scene="b22", text="Have you ever taken antibiotics for a cold? Be honest in the comments."),
 ]

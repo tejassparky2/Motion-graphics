@@ -34,7 +34,7 @@ SCRIPT = [
     dict(id="s18", scene="s18", text="A [kright|krait] often bites at night, while people sleep on the floor."),
     dict(id="s19", scene="s19", text="The bite can be almost painless, so people go back to sleep."),
     dict(id="s20", scene="s20", text="Others lose hours on cutting, sucking, tight ropes or herbs."),
-    dict(id="s21", scene="s21", text="None of these remove the venom."),
+    dict(id="s21", scene="s21", text="None of these get the venom out."),
     dict(id="s22", scene="s22", text="Doctors say to stay calm, keep the bitten arm or leg still, and get "
                                      "to a hospital fast."),
     dict(id="s23", scene="s23", text="Did you know your life could depend on a horse? Tell me in the comments."),

@@ -217,6 +217,11 @@ def _char(who):
 NARRATOR_REF = None
 
 
+def _decode_tag():
+    """Orpheus takes made before 25 Oct 2026 lost their first ~0.17 s (orpheus-cpp's streaming decoder); new cache keys."""
+    return "|whole" if CLONE_MODEL.startswith("orpheus-") else ""
+
+
 def _turbo_char(who):
     """The character's (or, for who=None, the narrator's) Turbo reference voice, if it speaks through Turbo."""
     if not (ENGINE == "clone" and CLONE_MODEL == "turbo"):
@@ -262,7 +267,7 @@ def _key(text, pace=1.0, who=None, tone=None):
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     if ENGINE == "clone":
         ref = f"{_turbo_char(who)}|" if _turbo_char(who) else ""
-        return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{ref}{text}".encode()).hexdigest()[:16]
+        return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}{_decode_tag()}|{CLONE_RATE}|{pace:.3f}|{ref}{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
 
 
@@ -470,7 +475,7 @@ def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
 
 def _clone_raw(text, who=None):
     ref = _turbo_char(who)
-    key = f"{CLONE_MODEL}|{CLONE_VERSION}|{text}" + (f"|{ref}" if ref else "")
+    key = f"{CLONE_MODEL}|{CLONE_VERSION}{_decode_tag()}|{text}" + (f"|{ref}" if ref else "")
     return os.path.join(ROOT, "build", "clone_tts", hashlib.sha1(key.encode()).hexdigest()[:16] + ".wav")
 
 

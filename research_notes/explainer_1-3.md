@@ -34,7 +34,7 @@ Alt titles: Why Snakebite Medicine Comes From Horses / India's Deadliest Animal 
 | 18 | A krait often bites at night, while people sleep on the floor. | THE DELAY | AT NIGHT / ON THE FLOOR | Paper room at night, moon in window, mat on floor, krait sliding past |
 | 19 | The bite can be almost painless, so people go back to sleep. | THE DELAY | ALMOST / PAINLESS | Tiny two-dot bite; "PAIN" meter barely moves |
 | 20 | Others lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
-| 21 | None of these remove the venom. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
+| 21 | None of these get the venom out. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
 | 22 | Doctors say to stay calm, keep the bitten arm or leg still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
 | 23 | Did you know your life could depend on a horse? Tell me in the comments. | END | A HORSE / SAVED YOU? | Horse with a tiny red cross badge; comment bubble |
 
@@ -86,7 +86,7 @@ Alt titles: Why Antibiotics Are Stopping Working / The Superbug Problem in 80 Se
 | 18 | Every dose you didn't need is free training for the bacteria. | MYTHS | FREE / TRAINING | Bacteria lifting tiny dumbbells |
 | 19 | So take antibiotics only when a doctor prescribes them, exactly as prescribed. | WHAT TO DO | ONLY WHEN / PRESCRIBED | Prescription card with a tick |
 | 20 | Never share them, and never use leftovers. | WHAT TO DO | NO SHARING / NO LEFTOVERS | Half-used strip with a red X; two hands passing pills crossed out |
-| 21 | Experts estimate superbugs could directly kill thirty-nine million people between now and 2050. | 2050 | BY 2050 / 39 MILLION | Calendar flips 2025 -> 2050; counter 39,000,000 |
+| 21 | Researchers predict superbugs could directly kill thirty-nine million people between now and 2050. | 2050 | BY 2050 / 39 MILLION | Calendar flips 2025 -> 2050; counter 39,000,000 |
 | 22 | Have you ever taken antibiotics for a cold? Be honest in the comments. | END | BE / HONEST | Comment bubble |
 
 Facts and sources:
