@@ -419,7 +419,7 @@ def gen_panel(cr, t, fuel=0.12, on=1.0):
     cr.paint()
 
 
-def tower_ext(cr, t, flash=0.0, measure=0.0):
+def tower_ext(cr, t, flash=0.0, measure=0.0, lit=1.0):
     """Tower 9 from the ground, far off: a steel lattice 30 m tall, its lit cabin, the forest, the storm."""
     g = cairo.LinearGradient(0, 0, 0, H)
     g.add_color_stop_rgba(0, *mix((0.03, 0.04, 0.09, 1), (0.55, 0.65, 0.85, 1), flash))
@@ -463,16 +463,18 @@ def tower_ext(cr, t, flash=0.0, measure=0.0):
          lw=4)
     toon(cr, lambda c: poly(c, [(cx - 115, top - 108), (cx, top - 175), (cx + 115, top - 108)]), hexa("#2b2f33"), None,
          (0, 0), None, lw=4)
-    for k in range(3):                                       # lit windows
-        cr.set_source_rgba(1, 0.78, 0.42, 1)
+    for k in range(3):                                       # lit windows (dark on Night 2: lit = 0)
+        cr.set_source_rgba(*mix((0.03, 0.03, 0.04, 1), (1, 0.78, 0.42, 1), lit))
         cr.rectangle(cx - 78 + k * 54, top - 92, 44, 52)
         cr.fill()
-        glow(cr, cx - 56 + k * 54, top - 66, 60, WARM, 0.35)
-    cr.set_source_rgba(0.12, 0.08, 0.06, 1)                 # you, a small shape in the middle window
-    cr.arc(cx, top - 70, 8, 0, 2 * math.pi)
-    cr.fill()
-    cr.rectangle(cx - 10, top - 62, 20, 22)
-    cr.fill()
+        if lit > 0:
+            glow(cr, cx - 56 + k * 54, top - 66, 60, WARM, 0.35 * lit)
+    if lit > 0:
+        cr.set_source_rgba(0.12, 0.08, 0.06, 1)             # you, a small shape in the middle window
+        cr.arc(cx, top - 70, 8, 0, 2 * math.pi)
+        cr.fill()
+        cr.rectangle(cx - 10, top - 62, 20, 22)
+        cr.fill()
     for layer, (y, col, step) in enumerate(((1020, (0.03, 0.05, 0.05), 46), (1100, (0.015, 0.03, 0.03), 60),
                                             (1190, (0.005, 0.01, 0.01), 80))):
         rim = flash * (0.5 - 0.15 * layer)

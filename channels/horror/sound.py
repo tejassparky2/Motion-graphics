@@ -187,6 +187,19 @@ def ladder_step(dur):
     return ring + _thud(0.5, 110, 50, 0.05, 0.6)[:m] * 0.6
 
 
+def glass_tap(dur):
+    """Three knuckle taps on a window: a bright click with a short glassy ring, 0.38 s apart."""
+    out = np.zeros(int(1.0 * SR))
+    m = int(0.12 * SR)
+    t = np.arange(m) / SR
+    for k in range(3):
+        click = _band(_noise(m), 30, 200) * np.exp(-t * 300) * 1.2
+        ring = (np.sin(2 * np.pi * 2350 * t) + 0.5 * np.sin(2 * np.pi * 3720 * t)) * np.exp(-t * 45) * 0.25
+        i = int(k * 0.38 * SR)
+        out[i:i + m] += click + ring + _thud(0.12, 300, 180, 0.01, 0.3)[:m] * 0.4
+    return out * 0.8
+
+
 def horror_bed(total, seed=None):
     """The horror bed, different for every episode (YouTube's spam policy names "the exact same background music"
     across many videos as a sign of mass production): a low drone in an episode-specific key whose two voices beat
@@ -213,7 +226,7 @@ def horror_bed(total, seed=None):
 audio.EXTRA_BEDS["horror"] = horror_bed
 audio.EXTRA_SFX.update(hum=hum, chime=chime, doors=doors, power_down=power_down, drip=drip, cable=cable, click=click,
                        engine_idle=engine_idle, dip=dip, breath=breath, brakes=brakes, rain=rain, generator=generator,
-                       static=static, thunder=thunder, ladder_step=ladder_step)
+                       static=static, thunder=thunder, ladder_step=ladder_step, glass_tap=glass_tap)
 # beds sit low under the narration (in Tower 9 the rain masked "voice" as "point")
 audio.GAINS.update(hum=0.4, chime=0.6, rain=0.3, engine_idle=0.45, generator=0.3, static=0.5, thunder=0.7, sting=0.8,
                    heartbeat=0.7, riser=0.6, click=0.6, drip=0.5)

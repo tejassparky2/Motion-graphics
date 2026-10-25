@@ -21,9 +21,11 @@ from faster_whisper import WhisperModel   # noqa: E402
 ep = sys.argv[1]
 video = os.path.join(ROOT, "out", "horror", f"{ep}.mp4")
 timing = json.load(open(os.path.join(ROOT, "build", "horror", f"timing_{ep}.json")))
-src = open(os.path.join(ROOT, "channels", "horror", f"{ep.removesuffix('_2d')}.py")).read()   # 2D cuts reuse the script
+twin = os.path.join(ROOT, "channels", "horror", f"{ep.removesuffix('_2d')}.py")       # 2D cuts reuse the 3D script
+src = open(twin if os.path.exists(twin) else os.path.join(ROOT, "channels", "horror", f"{ep}.py")).read()
 texts = dict(re.findall(r'dict\(id="(\w+)", scene="\w+", text="((?:[^"]|"\s*\n\s*")*)"', src))
-NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six"}
+NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six", "4": "four",
+       "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs"}
 
 
@@ -31,7 +33,7 @@ def norm(s):
     s = re.sub(r'"\s*\n\s*"', "", s)
     s = re.sub(r"\[([^|\]]*)\|[^\]]*\]", r"\1", s)
     s = re.sub(r"\[[a-z ]+\]", " ", s).lower().replace("-", " ")
-    return [SAME.get(NUM.get(w, w), NUM.get(w, w)) for w in re.findall(r"[a-z0-9']+", s)]
+    return [x for w in re.findall(r"[a-z0-9']+", s) for x in SAME.get(NUM.get(w, w), NUM.get(w, w)).split()]
 
 
 pcm = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-v", "error", "-i", video, "-ac", "1", "-ar", "16000", "-f", "s16le", "-"],

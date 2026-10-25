@@ -114,6 +114,7 @@ FACES = {   # eye opening, iris size, brow raise, brow worry (inner ends up), mo
     "uneasy":  dict(eye=1.05, iris=0.95, raise_=0.25, worry=0.55, mouth="flat", open=0.0),
     "alarmed": dict(eye=1.3, iris=0.72, raise_=0.6, worry=0.75, mouth="o", open=0.45),
     "terror":  dict(eye=1.45, iris=0.6, raise_=0.85, worry=1.0, mouth="grim", open=0.7),
+    "smile":   dict(eye=1.0, iris=0.55, raise_=0.1, worry=-0.4, mouth="smile", open=0.0),   # Tower 9 Night 2: the copy
 }
 
 
@@ -254,7 +255,17 @@ def you_bust(cr, x, y, s, f, t, look=(0.0, 0.0), turn=0.0, tilt=0.0, breath=1.0,
     # mouth
     my, mx = 66, tx * 0.8
     cr.set_line_cap(cairo.LINE_CAP_ROUND)
-    if f["mouth"] == "flat" or f["open"] < 0.12:
+    if f["mouth"] == "smile":                                  # a wide closed smile that doesn't reach the eyes
+        cr.move_to(mx - 36, my - 6)
+        cr.curve_to(mx - 14, my + 16, mx + 14, my + 16, mx + 36, my - 6)
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(5)
+        cr.stroke()
+        for sx in (-1, 1):
+            cr.move_to(mx + sx * 36, my - 6)
+            cr.line_to(mx + sx * 42, my - 12)
+            cr.stroke()
+    elif f["mouth"] == "flat" or f["open"] < 0.12:
         cr.move_to(mx - 22, my + 2)
         cr.curve_to(mx - 8, my - 2 + 6 * f["worry"], mx + 8, my - 2 + 6 * f["worry"], mx + 22, my + 4)
         cr.set_source_rgba(*INK)
@@ -560,6 +571,27 @@ def hand_point(cr, x, y, s, t, tremble=0.0, skin=None, sleeve=None):
     for k in range(3):
         cr.move_to(-30 + k * 14, 60)
         cr.curve_to(-34 + k * 14, 80, -28 + k * 14, 96, -24 + k * 14, 104)
+        cr.stroke()
+    cr.restore()
+
+
+def finger_to_lips(cr, x, y, s, skin=None, sleeve=None):
+    """A hand raised to the mouth, index finger up across the lips: shh. (x, y) = the lips; s = the bust's scale."""
+    sk = skin or SKIN
+    sl, sl_d = sleeve or (HOOD, HOOD_D)
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    toon(cr, lambda c: curve(c, [(-40, 330), (-34, 140), (40, 130), (60, 330)]), sl, sl_d, (-10, -8), None)
+    toon(cr, lambda c: curve(c, [(-34, 150), (-38, 80), (-20, 52), (24, 50), (40, 80), (36, 150)]), sk,
+         mix(sk, (0, 0, 0, 1), 0.3), (-8, -6), None, lw=4)       # the fist
+    toon(cr, lambda c: curve(c, [(-10, 60), (-12, -26), (0, -36), (12, -26), (10, 60)]), sk,
+         mix(sk, (0, 0, 0, 1), 0.3), (-6, -4), None, lw=4)       # the index finger, up across the lips
+    cr.set_source_rgba(*INK[:3], 0.6)
+    cr.set_line_width(2.5)
+    for k in range(3):
+        cr.move_to(-26 + k * 16, 70)
+        cr.curve_to(-28 + k * 16, 90, -24 + k * 16, 104, -20 + k * 16, 112)
         cr.stroke()
     cr.restore()
 

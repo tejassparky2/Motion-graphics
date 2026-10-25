@@ -85,3 +85,7 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   another episode). Night 2 script sent for approval: out/horror/scripts_night2_tower9.md (a new choice, window or
   hatch, so it isn't the same situation with the same outcome; pays off Night 1's jacket detail). Don't render
   until the owner approves.
+- 25 Oct: owner approved the Night 2 script ("Approved, make it"). Tower 9 Night 2 delivered (66 s,
+  out/horror/tower9_n2_2d.mp4, channels/horror/tower9_n2_2d.py): Whisper medium 17/17 exact after one reword
+  ("By your phone's light" was heard as "phone flight" -> "In the light of your phone"). New kit: toon2d "smile" face
+  and finger_to_lips, sound glass_tap; check.py handles episodes without a 3D twin.

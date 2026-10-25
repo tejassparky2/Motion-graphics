@@ -15,7 +15,7 @@ Night 1). The thing at the window never speaks; it writes.
 | 7 | It smiles, and puts a finger to its lips. | It smiles, finger to lips. |
 | 8 | Under your feet, your own voice whispers. | Frost spreading from the hatch. |
 | 9 | (Hatch, whispering) Don't let it in. It's been wearing your face all night. | Speech bubble from the hatch. |
-| 10 | By your phone's light, the logbook shows a third rule. On a page you never turned. | The logbook, the page turning by phone light. |
+| 10 | In the light of your phone, the logbook shows a third rule. On a page you never turned. (reworded after rendering: "By your phone's light" was heard as "phone flight") | The logbook, the page turning by phone light. |
 | 11 | If two of them come, let one in before four forty-four. Or they both come in. | Rule 3 writes itself on the page. RULE tag on top. |
 | 12 | The clock says four forty. | The wall clock: 4:40. |
 | 13 | On the window, a finger writes in the fog. It's under you. Let me in. | The words appear in the fogged glass, letter by letter. |
