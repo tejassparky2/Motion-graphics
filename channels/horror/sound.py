@@ -214,5 +214,6 @@ audio.EXTRA_BEDS["horror"] = horror_bed
 audio.EXTRA_SFX.update(hum=hum, chime=chime, doors=doors, power_down=power_down, drip=drip, cable=cable, click=click,
                        engine_idle=engine_idle, dip=dip, breath=breath, brakes=brakes, rain=rain, generator=generator,
                        static=static, thunder=thunder, ladder_step=ladder_step)
-audio.GAINS.update(hum=0.4, chime=0.6, rain=0.3, engine_idle=0.45, generator=0.3,   # beds low: rain masked "voice" as "point" static=0.5, thunder=0.7, sting=0.8,
+# beds sit low under the narration (in Tower 9 the rain masked "voice" as "point")
+audio.GAINS.update(hum=0.4, chime=0.6, rain=0.3, engine_idle=0.45, generator=0.3, static=0.5, thunder=0.7, sting=0.8,
                    heartbeat=0.7, riser=0.6, click=0.6, drip=0.5)
