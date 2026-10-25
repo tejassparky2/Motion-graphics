@@ -29,8 +29,8 @@ SCRIPT = [
     dict(id="m14", scene="m14", text="And one type, called vivax, can leave sleeping parasites in the liver. They can "
                                      "wake up weeks or even years later."),
     dict(id="m15", scene="m15", text="We know mosquitoes spread it because of a discovery in India."),
-    dict(id="m16", scene="m16", text="In [eighteen ninety-seven,|1897,] in Secunderabad, Ronald Ross found the "
-                                     "parasite inside a mosquito. It won him a Nobel Prize."),
+    dict(id="m16", scene="m16", text="In [eighteen ninety-seven,|1897,] in Secunderabad, a doctor named Ronald Ross "
+                                     "found the parasite inside a mosquito. It won him a Nobel Prize."),
     dict(id="m17", scene="m17", text="Malaria doesn't spread from person to person. It needs the mosquito."),
     dict(id="m18", scene="m18", text="And it can be treated. If you get a fever in a malaria area, see a doctor. A "
                                      "simple blood test can find it."),

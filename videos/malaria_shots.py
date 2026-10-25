@@ -499,6 +499,11 @@ def M16(cr, t, tl, bid):
     A = tl.at
     old_microscope(cr, 200, 1000, 1.1)
     notebook(cr, 330, 450, t, A(bid, "found"))
+    a = appear(t, A(bid, "ronald"))
+    if a > 0:
+        with place(cr, 250, 840, a, -0.05):
+            P.card(cr, -150, -36, 300, 64, hexc("#efe6d2"), torn=True, seed=12)
+            text(cr, "DR RONALD ROSS", 0, 14, 36, INK, align="center")
     tn = A(bid, "nobel")
     a = appear(t, tn - 0.2)
     if a > 0:

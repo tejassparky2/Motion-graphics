@@ -128,7 +128,7 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 | 13 | That's when you get sick, usually ten to fifteen days after the bite. Fever, chills, headache. | THE BLOOD | DAY 10-15 / FEVER | Calendar DAY 12; thermometer rising; blanket |
 | 14 | And one type, called vivax, can leave sleeping parasites in the liver. They can wake up weeks or even years later. | THE LIVER | IT CAN / SLEEP | Liver plate with a tiny sleeping parasite and an alarm clock; calendar pages flying |
 | 15 | We know mosquitoes spread it because of a discovery in India. | INDIA | DISCOVERED / IN INDIA | Paper map of India, pin on Secunderabad |
-| 16 | In 1897, in Secunderabad, Ronald Ross found the parasite inside a mosquito. It won him a Nobel Prize. | 1897 | SECUNDERABAD / 1897 | Old microscope, sepia notebook page, mosquito specimen; a medal drops onto the notebook |
+| 16 | In 1897, in Secunderabad, a doctor named Ronald Ross found the parasite inside a mosquito. It won him a Nobel Prize. | 1897 | SECUNDERABAD / 1897 | Old microscope, sepia notebook page, mosquito specimen; a medal drops onto the notebook |
 | 17 | Malaria doesn't spread from person to person. It needs the mosquito. | MYTHS | NOT PERSON / TO PERSON | Two paper people with a tick between them; mosquito circled |
 | 18 | And it can be treated. If you get a fever in a malaria area, see a doctor. A simple blood test can find it. | WHAT TO DO | SEE A / DOCTOR | Blood test slide; "MALARIA: DETECTED" card, Rx bottle |
 | 19 | Bed nets and repellent stop the very first step. | WHAT TO DO | STOP / THE BITE | Bed net drops over a sleeping figure; mosquito bounces off |
