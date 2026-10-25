@@ -68,7 +68,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   common, then "Manya" as sounding Indian: "give me western name like this unique"). Offered, all free as
   @MidnightWith<Name> with no web hits: Elowen, Tamsin, Ottilie, Isolde, Sidonie, Odessa (Odessa reads as the city
   in the war news). The owner then asked "Midnight with Nancy?": @MidnightWithNancy free and the phrase unused on
-  25 Oct; art and setup sheet made with it (brand.py Nancy). The host is a fictional storyteller (toon2d.host_bust), never presented as a real person; the
+  25 Oct; art and setup sheet made with it (brand.py Nancy). Owner: "Ok going with Midnight with Nancy make Nancy
+  hair like Japanese" -> a hime cut (straight blue-black hair, blunt bangs at the brow line, jaw-length side locks,
+  long straight hair, a shine ring), on the first drawing's face and outfit. The host is a fictional storyteller (toon2d.host_bust), never presented as a real person; the
   description says the voices are synthetic. Her look: the FIRST drawing (owner: "previous was better" than a
   detailed redraw with lashes, earrings and a shawl), so keep that simpler style. Channel art:
   `python channels/horror/brand.py NAME` -> out/horror/channel/ (avatar.png, banner.png); setup steps, description

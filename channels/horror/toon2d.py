@@ -980,25 +980,29 @@ def pale_face(cr, x, y, s, t, a=1.0, cap=False, tilt=0.0, seed=0):
 # ------------------------------------------------------------------ the host: the channel's storyteller (a fictional character)
 # The owner preferred this first drawing over a more detailed redraw (25 Oct 2026: "previous was better").
 HOST_SKIN, HOST_SKIN_D = hexa("#d79c76"), hexa("#a86c50")
-HOST_HAIR, HOST_HAIR_D = hexa("#2a1a1f"), hexa("#140b0f")
+HOST_HAIR, HOST_HAIR_D = hexa("#17131d"), hexa("#0a080e")       # blue-black
 HOST_KNIT, HOST_KNIT_D = hexa("#4a2a52"), hexa("#2c1631")
 HOST_LIP = hexa("#a3434d")
 
 
 def host_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16), rim=(0.6, 0.75, 1.0, 0.75),
              rim_from=(-10, -8), skin=None):
-    """The host from the chest up (x, y = the base of the neck): long dark waves, a knowing half smile, a plum knit and a
-    silver crescent-moon pendant. Default light: warm from below (her lantern) with cold moonlight rim from behind."""
+    """The host from the chest up (x, y = the base of the neck): a Japanese hime cut (straight blue-black hair, blunt
+    bangs just above the eyes, chin-length side locks, long straight hair; owner, 25 Oct 2026: "make Nancy hair like
+    Japanese"), a knowing half smile, a plum knit and a silver crescent-moon pendant. Default light: warm from below
+    (her lantern) with cold moonlight rim from behind."""
     sk = skin or HOST_SKIN
     sk_d = HOST_SKIN_D if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
+    h_rim = (*rim[:3], rim[3] * 0.5) if rim else None          # moonlight on black hair: thinner and softer
+    h_from = (rim_from[0] * 0.5, rim_from[1] * 0.5)
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
     up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.25))
-    # long hair behind the shoulders
-    toon(cr, lambda c: curve(c, [(-118, -250), (-150, -120), (-170, 60), (-196, 230), (-120, 250), (-70, 120),
-                                 (70, 120), (120, 250), (196, 230), (170, 60), (150, -120), (118, -250), (0, -330)]),
-         HOST_HAIR, HOST_HAIR_D, light, rim, rim_from)
+    # long straight hair behind the shoulders, cut blunt
+    back = [(-156, 250), (-150, 40)] + [(118 * math.cos(a), -200 + 140 * math.sin(a))
+                                        for a in [math.pi + k * math.pi / 16 for k in range(17)]] + [(150, 40), (156, 250)]
+    toon(cr, lambda c: poly(c, back), HOST_HAIR, HOST_HAIR_D, light, h_rim, h_from)
     # the knit top
     toon(cr, lambda c: curve(c, [(-56, -10 + up), (-148, 30 + up), (-180, 120), (-192, 430), (192, 430), (180, 120),
                                  (148, 30 + up), (56, -10 + up)]), HOST_KNIT, HOST_KNIT_D, light, rim, rim_from)
@@ -1035,6 +1039,16 @@ def host_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16
     cr.save()
     cr.translate(0, -175)
     cr.rotate(-0.06 + 0.012 * noise(t * 0.5, 2))
+    for sx in (-1, 1):                                       # the long straight locks falling in front of the shoulders
+        lock = [(sx * 90, 40), (sx * 110, 30), (sx * 138, 326)] + \
+               [(sx * (138 - 46 * k / 4), 326 - 6 * (k % 2)) for k in range(1, 4)] + [(sx * 92, 326), (sx * 86, 100)]
+        toon(cr, lambda c, lock=lock: poly(c, lock), HOST_HAIR, HOST_HAIR_D, light, h_rim, h_from)
+        cr.set_source_rgba(1, 1, 1, 0.08)
+        cr.set_line_width(2)
+        for k in range(3):
+            cr.move_to(sx * (100 + k * 10), 60)
+            cr.line_to(sx * (102 + k * 12), 320)
+            cr.stroke()
     head = lambda c: curve(c, [(-92, -20), (-90, -86), (-50, -128), (0, -136), (50, -128), (90, -86), (92, -20),
                                (80, 40), (50, 84), (0, 104), (-50, 84), (-80, 40)])
     toon(cr, head, sk, sk_d, light, rim, rim_from)
@@ -1146,17 +1160,36 @@ def host_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16
     cr.set_line_width(3.5)
     cr.stroke()
     cr.restore()
-    # front hair: a side part, waves framing the face, one loose strand
-    toon(cr, lambda c: curve(c, [(-104, 30), (-112, -60), (-90, -122), (-40, -150), (20, -150), (78, -126), (108, -80),
-                                 (112, -10), (100, 60), (88, -20), (78, -78), (40, -104), (-6, -112), (-40, -96),
-                                 (-74, -40), (-88, 20)]), HOST_HAIR, HOST_HAIR_D, light, rim, rim_from)
-    toon(cr, lambda c: curve(c, [(40, -148), (-20, -142), (-72, -114), (-98, -66), (-96, -24), (-80, -60), (-50, -84),
-                                 (-6, -96), (36, -108), (62, -120)]), HOST_HAIR, HOST_HAIR_D, light, rim, rim_from)  # side fringe
-    cr.set_source_rgba(1, 1, 1, 0.16)                        # shine
-    cr.set_line_width(3)
-    for k in range(4):
-        cr.move_to(-60 + k * 30, -136 + 3 * k)
-        cr.curve_to(-50 + k * 30, -124, -44 + k * 30, -112, -46 + k * 30, -100)
+    # the hime cut: straight side locks cut at the jaw, tucked under a crown with blunt bangs at the brow line
+    for sx in (-1, 1):
+        side = [(sx * 82, -70), (sx * 112, -74), (sx * 114, 74), (sx * 98, 70), (sx * 82, 74), (sx * 80, 10)]
+        toon(cr, lambda c, side=side: poly(c, side), HOST_HAIR, HOST_HAIR_D, light, h_rim, h_from)
+        cr.set_source_rgba(1, 1, 1, 0.07)
+        cr.set_line_width(2)
+        for k in range(2):
+            cr.move_to(sx * (90 + k * 10), -40)
+            cr.line_to(sx * (90 + k * 10), 70)
+            cr.stroke()
+    crown = [(112 * math.cos(a), -52 + 108 * math.sin(a)) for a in [math.pi + k * math.pi / 20 for k in range(21)]]
+    crown += [(112 - k * 224 / 16, -48 + (5 if k % 2 else 0)) for k in range(17)]     # the cut edge, strand tips
+    toon(cr, lambda c: poly(c, crown), HOST_HAIR, HOST_HAIR_D, light, h_rim, h_from)
+    cr.set_source_rgba(1, 1, 1, 0.07)                        # strands down the bangs
+    cr.set_line_width(2)
+    for k in range(9):
+        x0 = -84 + k * 21
+        cr.move_to(x0 * 0.6, -150)
+        cr.line_to(x0, -50)
         cr.stroke()
+    for k in range(9):                                       # the shine ring across the crown
+        a = math.pi * (1.2 + 0.6 * k / 8)
+        cx_, cy_ = 100 * math.cos(a), -52 + 94 * math.sin(a)
+        cr.save()
+        cr.translate(cx_, cy_)
+        cr.rotate(a + math.pi / 2)
+        cr.scale(1, 0.32)
+        cr.arc(0, 0, 13 - 3 * abs(k - 4) / 4, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(0.72, 0.78, 0.95, 0.55)
+        cr.fill()
     cr.restore()
     cr.restore()
