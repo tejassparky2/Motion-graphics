@@ -130,7 +130,7 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 | 15 | We know mosquitoes spread it because of a discovery in India. | INDIA | DISCOVERED / IN INDIA | Paper map of India, pin on Secunderabad |
 | 16 | In 1897, in Secunderabad, Ronald Ross found the parasite inside a mosquito. It won him a Nobel Prize. | 1897 | SECUNDERABAD / 1897 | Old microscope, sepia notebook page, mosquito specimen; a medal drops onto the notebook |
 | 17 | Malaria doesn't spread from person to person. It needs the mosquito. | MYTHS | NOT PERSON / TO PERSON | Two paper people with a tick between them; mosquito circled |
-| 18 | And it can be treated. With a fever in a malaria area, see a doctor. A simple blood test can find it. | WHAT TO DO | SEE A / DOCTOR | Blood test slide; "MALARIA: DETECTED" card, Rx bottle |
+| 18 | And it can be treated. If you get a fever in a malaria area, see a doctor. A simple blood test can find it. | WHAT TO DO | SEE A / DOCTOR | Blood test slide; "MALARIA: DETECTED" card, Rx bottle |
 | 19 | Bed nets and repellent stop the very first step. | WHAT TO DO | STOP / THE BITE | Bed net drops over a sleeping figure; mosquito bounces off |
 | 20 | Have you or someone you know had malaria? Tell me in the comments. | END | HAVE YOU / HAD IT? | Comment bubble |
 

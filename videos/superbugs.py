@@ -6,7 +6,7 @@ from videos import superbugs_shots as S
 
 NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)
 STYLE = "clean"
-MUSIC = "pad"
+MUSIC = "explainer"
 TAIL = 1.2
 
 SCRIPT = [

@@ -7,7 +7,7 @@ from videos import snakebite_shots as S
 
 NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)   # calmer than the story videos (5.5)
 STYLE = "clean"
-MUSIC = "pad"
+MUSIC = "explainer"
 TAIL = 1.2
 
 SCRIPT = [

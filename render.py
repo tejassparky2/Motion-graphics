@@ -170,14 +170,30 @@ def _encode_part(args):
     return _encode_frames(*args)
 
 
-def render_video(out, audio=True, voice=True):
+def _sound_cues(n):
+    """The sound cues a render registers, without encoding: frames drawn at quarter size, in one process."""
+    engine.EVENTS.clear()
+    small = cairo.ImageSurface(cairo.FORMAT_ARGB32, W // 4, H // 4)
+    for i in range(n):
+        engine.set_frame(i)
+        cr = cairo.Context(small)
+        cr.scale(0.25, 0.25)
+        VIDEO["mod"].draw(cr, i / FPS, timeline())
+    return list(engine.EVENTS)
+
+
+def render_video(out, audio=True, voice=True, remix=False):
     """Frames are drawn in parallel (one process per CPU core; every frame depends only on its time), each process
-    encodes its own part, and the parts are joined without re-encoding."""
+    encodes its own part, and the parts are joined without re-encoding. `remix=True` keeps the last render's
+    picture (build/<name>_silent.mp4) and only rebuilds the soundtrack (music or mix changes)."""
     import multiprocessing as mp
     os.makedirs(os.path.dirname(out), exist_ok=True)
     n = int(round(total_duration() * FPS))
     silent = out if not audio else os.path.join(ROOT, "build", f"{VIDEO['name']}_silent.mp4")
     os.makedirs(os.path.dirname(silent), exist_ok=True)
+    if remix and audio and os.path.exists(silent):
+        engine.EVENTS[:] = _sound_cues(n)
+        return _finish(out, silent, n, audio, voice)
     workers = max(1, min(int(os.environ.get("RENDER_WORKERS", os.cpu_count() or 1)), 8))
     bounds = [round(n * k / workers) for k in range(workers + 1)]
     parts = [os.path.join(ROOT, "build", f"{VIDEO['name']}_part{k}.mp4") for k in range(workers)]
@@ -196,6 +212,10 @@ def render_video(out, audio=True, voice=True):
                            "-c", "copy", *([] if audio else CLEAN), "-movflags", "+faststart", silent])
     for p in parts + [listing]:
         os.remove(p)
+    return _finish(out, silent, n, audio, voice)
+
+
+def _finish(out, silent, n, audio, voice):
     if audio:
         from motion.audio import build_soundtrack
         twist = getattr(VIDEO["mod"], "TWIST", None)   # the bed drops out under the twist line (research A5)
@@ -263,6 +283,7 @@ if __name__ == "__main__":
     ap.add_argument("--sheet", type=float)
     ap.add_argument("--no-audio", action="store_true")
     ap.add_argument("--no-voice", action="store_true")
+    ap.add_argument("--remix", action="store_true", help="keep the last render's picture, rebuild the soundtrack")
     a = ap.parse_args()
     load(a.video)
     if a.still is not None:
@@ -270,4 +291,5 @@ if __name__ == "__main__":
     elif a.sheet:
         render_sheet(a.sheet, a.out or os.path.join(ROOT, "build", f"{a.video}_sheet.png"))
     else:
-        render_video(a.out or os.path.join(ROOT, "out", f"{a.video}.mp4"), audio=not a.no_audio, voice=not a.no_voice)
+        render_video(a.out or os.path.join(ROOT, "out", f"{a.video}.mp4"), audio=not a.no_audio, voice=not a.no_voice,
+                     remix=a.remix)

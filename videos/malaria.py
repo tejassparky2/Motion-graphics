@@ -6,7 +6,7 @@ from videos import malaria_shots as S
 
 NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)
 STYLE = "clean"
-MUSIC = "pad"
+MUSIC = "explainer"
 TAIL = 1.2
 
 SCRIPT = [
@@ -32,8 +32,8 @@ SCRIPT = [
     dict(id="m16", scene="m16", text="In [eighteen ninety-seven,|1897,] in Secunderabad, Ronald Ross found the "
                                      "parasite inside a mosquito. It won him a Nobel Prize."),
     dict(id="m17", scene="m17", text="Malaria doesn't spread from person to person. It needs the mosquito."),
-    dict(id="m18", scene="m18", text="And it can be treated. With a fever in a malaria area, see a doctor. A simple "
-                                     "blood test can find it."),
+    dict(id="m18", scene="m18", text="And it can be treated. If you get a fever in a malaria area, see a doctor. A "
+                                     "simple blood test can find it."),
     dict(id="m19", scene="m19", text="Bed nets and repellent stop the very first step."),
     dict(id="m20", scene="m20", text="Have you or someone you know had malaria? Tell me in the comments."),
 ]
@@ -51,7 +51,7 @@ METADATA = dict(
 🧬 The journey: parasites reach the liver and hide in its cells, multiply into thousands, burst out into the blood, then invade and burst red blood cells. That's when fever, chills and headache start, usually 10-15 days after the bite.
 😴 P. vivax can leave sleeping parasites in the liver that wake up weeks or even years later.
 🇮🇳 In 1897, in Secunderabad, Ronald Ross found the parasite inside a mosquito, and won the 1902 Nobel Prize.
-✅ Malaria doesn't spread from person to person. With a fever in a malaria area, see a doctor: a simple blood test can find it, and it can be treated. Bed nets and repellent stop the first step.
+✅ Malaria doesn't spread from person to person. If you get a fever in a malaria area, see a doctor: a simple blood test can find it, and it can be treated. Bed nets and repellent stop the first step.
 
 This video is general information, not medical advice.
 

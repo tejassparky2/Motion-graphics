@@ -382,6 +382,32 @@ GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "
          "fall": 0.8, "laugh": 0.0}
 
 
+def explainer_bed(total, seed=None):
+    """The doctor channel's explainer bed (owner, 25 Oct 2026: "why no bg music?"): the soft pad plus a gentle
+    plucked arpeggio at a slow tempo, bright enough to be heard on a phone speaker. Key and chords come from `seed`."""
+    st = _style(seed)
+    beat = 60 / 88
+    n = int(total * SR) + SR
+    plucks = np.zeros(n)
+    cache = {}
+    t, bar = 0.0, 0
+    while t < total:
+        ch = _voicing(*st["prog"][bar % 4], st["key"])
+        for k, idx in enumerate(st["pattern"]):          # eight soft eighth notes per bar
+            m = ch[idx] + 12 if k else ch[0] + 12
+            if m not in cache:
+                cache[m] = pluck(440.0 * 2 ** ((m - 69) / 12), 1.6, 0.997)
+            i = int((t + k * beat / 2) * SR)
+            seg_ = cache[m] * (0.8 if k == 0 else 0.45)
+            plucks[i:i + len(seg_)] += seg_[: max(0, n - i)]
+        t += 4 * beat
+        bar += 1
+    plucks = plucks[: int(total * SR)]
+    p = pad(total, seed)[: len(plucks)]
+    rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
+    return p / rms(p) + 0.8 * plucks / rms(plucks)
+
+
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
     bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; a "hush" cue silences bed and effects for its
@@ -389,7 +415,8 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     import pyloudnorm
     n = int(total * SR)
     style = bed
-    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
+    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad"
+           else explainer_bed(total, seed) if bed == "explainer" else music(total, seed))[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()
@@ -423,8 +450,11 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
-        bed *= (v_rms * 10 ** ((-15 if style == "pad" else -10) / 20)) / rms(bed)   # the pad sits softer
-        mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
+        # explainer bed: ~15 dB under the voice RMS, ducked only ~3 dB while speaking (the owner's reference reels keep the
+        # music ~20 dB under the voice the whole way through)
+        bed *= (v_rms * 10 ** ({"pad": -15, "explainer": -15}.get(style, -10) / 20)) / rms(bed)
+        duck = 0.3 if style == "explainer" else 0.75
+        mix = voice + bed * (1 - duck * speaking) + fx * (1 - 0.3 * speaking)
         if room is not None:                                      # ~32 dB under the voice, never ducked
             mix += room * (v_rms * 10 ** (-32 / 20)) / rms(room)
     else:
