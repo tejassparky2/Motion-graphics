@@ -29,7 +29,7 @@ SCRIPT = [
                                      "the microbes to resist."),
     dict(id="b16", scene="b16", text="Here's what most people get wrong. Your body doesn't become resistant. The "
                                      "bacteria do."),
-    dict(id="b17", scene="b17", text="And antibiotics do nothing against a cold or the flu. Those are viruses."),
+    dict(id="b17", scene="b17", text="And antibiotics do nothing for colds or flu. Those are viruses."),
     dict(id="b18", scene="b18", text="Every dose you didn't need is free training for the bacteria."),
     dict(id="b19", scene="b19", text="So take antibiotics only when a doctor prescribes them, exactly as prescribed."),
     dict(id="b20", scene="b20", text="Never share them, and never use leftovers."),

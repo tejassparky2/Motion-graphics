@@ -747,11 +747,11 @@ def S8(cr, t, tl, bid):
         stroke(cr, hexc("#7a2320"), 3, 0.6)
     text(cr, "NERVE", 470, 470, 24, BONE, P.FONT_MONO, spacing=2)
     text(cr, "MUSCLE", 360, 950, 24, BONE, P.FONT_MONO, align="center", spacing=2)
-    a = appear(t, A(bid, "krait"))
+    a = appear(t, A(bid, "cobra"))
     if a > 0:
         with place(cr, 190, 520, a, -0.05):
             P.card(cr, -130, -36, 260, 64, hexc("#efe6d2"), torn=True, seed=11)
-            text(cr, "COBRA · KRAIT", 0, 14, 34, INK, align="center")
+            text(cr, "COBRA VENOM", 0, 14, 34, INK, align="center")
     # signals: they get through until the venom arrives
     period = 0.9
     for k in range(6):

@@ -21,21 +21,21 @@ Alt titles: Why Snakebite Medicine Comes From Horses / India's Deadliest Animal 
 | 5 | So how does a horse fix a snakebite? First, let's see what venom does. | THE VENOM | FIRST, / THE VENOM | Venom drop falls into a microscope circle |
 | 6 | Your body runs on messages. | THE VENOM | YOUR BODY / RUNS ON MESSAGES | Gray's body outline (white on dark board) with nerves lighting up |
 | 7 | Your nerves tell your muscles when to move, and when to breathe. | THE VENOM | MOVE. / BREATHE. | Signal sparks run down a nerve to the arm, then to the diaphragm |
-| 8 | Cobra and krait venom jams that signal. | THE VENOM | IT JAMS / THE SIGNAL | Red venom blobs block the spark at the nerve-muscle junction; spark fizzles |
+| 8 | The venom of a cobra jams that signal. | THE VENOM | IT JAMS / THE SIGNAL | Red venom blobs block the spark at the nerve-muscle junction; spark fizzles |
 | 9 | The eyelids droop first. Then the breathing muscles can stop. | THE VENOM | EYELIDS DROOP / THEN BREATHING | Paper face, eyelids drooping; lungs slow, stopwatch appears |
 | 10 | Viper venom does something else. It stops your blood from making clots. | THE VENOM | BLOOD / WON'T CLOT | Russell's viper card; blood drop that won't form a clot (red cells scatter) |
 | 11 | Now, the horse. | THE HORSE | NOW, / THE HORSE | Horse cut-out on khaki paper |
 | 12 | Scientists collect venom from the four snakes behind most deaths in India. | THE HORSE | THE / BIG FOUR | Four snake cards pinned up: cobra, krait, Russell's viper, saw-scaled viper |
 | 13 | They give a horse tiny doses. Too small to hurt it. | THE HORSE | TINY / DOSES | Syringe; a dose gauge with the needle in a green "SAFE" zone |
 | 14 | The horse's immune army learns the enemy, and builds antibodies. | THE HORSE | ITS ARMY / LEARNS | Microscope circle: Y-shaped antibodies appear and grab venom blobs |
-| 15 | Doctors take some of its blood, and purify those antibodies. | THE HORSE | PURIFIED / ANTIBODIES | Blood bag -> filter -> clear vial labelled ANTIVENOM |
+| 15 | Then they take some of its blood, and purify those antibodies. | THE HORSE | PURIFIED / ANTIBODIES | Blood bag -> filter -> clear vial labelled ANTIVENOM |
 | 16 | That's antivenom. Borrowed bodyguards that grab the venom before it does more damage. | THE CURE | BORROWED / BODYGUARDS | Antibodies swarm venom in the blood; venom neutralised (greyed out) |
 | 17 | But many people don't die from the snake. They die from the delay. | THE DELAY | NOT THE SNAKE / THE DELAY | Stopwatch, red sector growing |
 | 18 | A krait often bites at night, while people sleep on the floor. | THE DELAY | AT NIGHT / ON THE FLOOR | Paper room at night, moon in window, mat on floor, krait sliding past |
 | 19 | The bite can be almost painless, so people go back to sleep. | THE DELAY | ALMOST / PAINLESS | Tiny two-dot bite; "PAIN" meter barely moves |
 | 20 | Others lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
 | 21 | None of these remove the venom. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
-| 22 | Doctors say: stay calm, keep the limb still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
+| 22 | Doctors say to stay calm, keep the bitten arm or leg still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
 | 23 | Did you know your life could depend on a horse? Tell me in the comments. | END | A HORSE / SAVED YOU? | Horse with a tiny red cross badge; comment bubble |
 
 Facts and sources:
@@ -82,7 +82,7 @@ Alt titles: Why Antibiotics Are Stopping Working / The Superbug Problem in 80 Se
 | 14 | The man who found penicillin saw this coming. | 1945 | HE / WARNED US | Paper portrait silhouette, Nobel medal |
 | 15 | In 1945, he warned that taking too little would teach the microbes to resist. | 1945 | TOO LITTLE / TEACHES THEM | Typed quote card, red underline |
 | 16 | Here's what most people get wrong. Your body doesn't become resistant. The bacteria do. | MYTHS | NOT YOU. / THE BACTERIA. | Paper body with a red X; bacterium with a tick |
-| 17 | And antibiotics do nothing against a cold or the flu. Those are viruses. | MYTHS | COLD? FLU? / VIRUSES. | Tissue box and thermometer; capsule bounces off a virus |
+| 17 | And antibiotics do nothing for colds or flu. Those are viruses. | MYTHS | COLD? FLU? / VIRUSES. | Tissue box and thermometer; capsule bounces off a virus |
 | 18 | Every dose you didn't need is free training for the bacteria. | MYTHS | FREE / TRAINING | Bacteria lifting tiny dumbbells |
 | 19 | So take antibiotics only when a doctor prescribes them, exactly as prescribed. | WHAT TO DO | ONLY WHEN / PRESCRIBED | Prescription card with a tick |
 | 20 | Never share them, and never use leftovers. | WHAT TO DO | NO SHARING / NO LEFTOVERS | Half-used strip with a red X; two hands passing pills crossed out |
@@ -119,7 +119,7 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 | 4 | It's malaria. In 2024, it made about two hundred and eighty million people sick. | THE WORLD | 2024 / 282 MILLION | Globe, flip counter 282,000,000 |
 | 5 | And it killed about six hundred thousand. Most of them young children in Africa. | THE WORLD | 610,000 / MOSTLY CHILDREN | Counter 610,000; Africa highlighted |
 | 6 | And it isn't a virus or a bacterium. It's a parasite. So let's follow its journey. | THE PARASITE | IT'S A / PARASITE | Microscope circle: crescent-shaped parasite, label "PLASMODIUM" |
-| 7 | Only female mosquitoes drink blood. They need it to make eggs. | THE BITE | ONLY / FEMALES | Female mosquito card with egg raft; male crossed out |
+| 7 | Only female mosquitoes drink blood. They need that blood to make their eggs. | THE BITE | ONLY / FEMALES | Female mosquito card with egg raft; male crossed out |
 | 8 | When an infected one bites, tiny parasites slip into your blood. | THE BITE | INTO / YOUR BLOOD | Close-up: proboscis, tiny parasites streaming in |
 | 9 | Within hours, they reach your liver and hide inside its cells. | THE LIVER | THEY / HIDE | Paper body map: dotted route arm -> liver; liver cells with parasites inside |
 | 10 | There, quietly, each one multiplies into thousands. | THE LIVER | ONE BECOMES / THOUSANDS | Liver cell swelling, counter rolling up |

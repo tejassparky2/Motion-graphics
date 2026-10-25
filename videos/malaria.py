@@ -18,7 +18,7 @@ SCRIPT = [
     dict(id="m5", scene="m5", text="And it killed about six hundred thousand. Most of them young children in Africa."),
     dict(id="m6", scene="m6", text="And it isn't a virus or a bacterium. It's a parasite. So let's follow its "
                                    "journey."),
-    dict(id="m7", scene="m7", text="Only female mosquitoes drink blood. They need it to make eggs."),
+    dict(id="m7", scene="m7", text="Only female mosquitoes drink blood. They need that blood to make their eggs."),
     dict(id="m8", scene="m8", text="When an infected one bites, tiny parasites slip into your blood."),
     dict(id="m9", scene="m9", text="Within hours, they reach your liver and hide inside its cells."),
     dict(id="m10", scene="m10", text="There, quietly, each one multiplies into thousands."),
