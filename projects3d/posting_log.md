@@ -10,3 +10,5 @@ reels still waiting when they ask for pending uploads.
 | reel05 (Sowmya: "My little princess turned one") | English (@yours3dindia) | Waiting. Not on the same day as reel04 (same figurine) |
 | reel06 (Sowmya: "The gift that made him emotional") | English (@yours3dindia) | Waiting |
 | reel04_hi (Hinglish voice, English captions) | Hindi page | Waiting. Needs the Hindi page's handle in the upload sheet |
+| reel05_hi (Sowmya's Hindi dub, her cloned voice) | Hindi page | Waiting (sent 25 Oct 2026) |
+| reel06_hi (Sowmya's Hindi dub, her cloned voice) | Hindi page | Waiting (sent 25 Oct 2026) |
