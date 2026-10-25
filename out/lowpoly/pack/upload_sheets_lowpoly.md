@@ -1,6 +1,6 @@
 # Low-poly channel: upload sheets in posting order (after ep16)
 Times are IST (US Eastern in brackets). Skip any episode already posted and keep the order. Every upload: "No, it's not made for kids"; pin the pinned comment.
-Rebuilt 25 Oct 2026: AI news explainers (posts 8-11) go next; everything after moved back 2 more days.
+Rebuilt 25 Oct 2026: AI news explainers (posts 8-11, new opening lines) go next; everything after moved back 2 more days.
 
 ---
 
@@ -259,7 +259,7 @@ LiteLLM Got Hacked: What Happened and What to Do
 ```
 
 **Alternative titles to test**
-- `Hey Codex, What's New? (LiteLLM Hack Explained)`
+- `Why Is Codex Changing My Keys?`
 - `One Leaked Key, Five Months Later`
 
 **Description**
@@ -301,7 +301,7 @@ Anthropic Stopped Using Git. Here's Why.
 ```
 
 **Alternative titles to test**
-- `Hey Claude, What's New? (Git Couldn't Keep Up)`
+- `Git Couldn't Keep Up With AI Agents`
 - `30,000 Changes a Day Broke Git`
 
 **Description**
@@ -344,7 +344,7 @@ OpenAI's Models Are Now on Google Cloud
 ```
 
 **Alternative titles to test**
-- `Hey Codex, What's New? (GPT on Google Cloud)`
+- `Why Is Codex Packing?`
 - `Google Now Sells Gemini, Claude AND GPT`
 
 **Description**
@@ -375,7 +375,7 @@ openai google cloud, gpt-6 google cloud, claude google cloud, gemini, codex, ai 
 One cloud with every model: good for developers, or too much power in one place? 👇 Subscribe for tomorrow's AI news.
 ```
 
-**Video facts:** 51.6 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 51.6 s, 134 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
 
 ---
 
@@ -387,7 +387,7 @@ Claude Duet: An AI That Works While You Sleep
 ```
 
 **Alternative titles to test**
-- `Hey Claude, What's New? (Claude Duet Explained)`
+- `Claude Duet Explained`
 - `This AI Checks Your Accounts Every Few Hours`
 
 **Description**
@@ -418,7 +418,7 @@ claude duet, anthropic, ai agent, proactive ai, claude, ai news, ai assistant, a
 Would you let an AI check your accounts every few hours? 👇 Subscribe for tomorrow's AI news.
 ```
 
-**Video facts:** 52.0 s, 146 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 52.0 s, 145 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
 
 ---
 

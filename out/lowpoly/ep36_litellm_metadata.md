@@ -6,7 +6,7 @@ LiteLLM Got Hacked: What Happened and What to Do
 ```
 
 **Alternative titles to test**
-- `Hey Codex, What's New? (LiteLLM Hack Explained)`
+- `Why Is Codex Changing My Keys?`
 - `One Leaked Key, Five Months Later`
 
 **Description**
