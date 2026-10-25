@@ -27,6 +27,8 @@ voice.SPEAKERS.update({"girl": dict(voice="af_sky", speed=1.0, turbo_ref="af_sky
                        "dad": dict(voice="am_adam", speed=0.97, turbo_ref="am_adam")})
 GIRL = dict(skin="tan", hair="pony", hair_col=hexc("#2b1a12"), shirt=hexc("#9fd0f0"), tie=None,
             pants=hexc("#e86a8a"), skirt=True, build="kid")
+HUG_DAD = ((-150, 10), "down")                                  # Dad's arm around her shoulders
+HUG_GIRL = ((-70, 40), (-40, 70))                               # her arms wrapped around him
 
 SCRIPT = [
     dict(id="d1", scene="grave", text="A girl buries her kitten in the garden. Then she asks her dad three questions."),
@@ -175,12 +177,12 @@ def scene_scroll(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#f4e6c8"), hexc("#e8d0a0"), seed=41)
     scroll(cr, 360, 620, 1.0)
-    bold_text(cr, "CAN? WANTS? WHY?", 360, 630, 44, hexc("#6a4426"), outline=None, shadow=0)
+    old = t >= A("d7", "thousand")
+    bold_text(cr, "2,000+ YEARS" if old else "CAN? WANTS?", 360, 610, 40, hexc("#6a4426"), outline=None, shadow=0)
+    bold_text(cr, "OLD" if old else "WHY?", 360, 670, 40, hexc("#6a4426"), outline=None, shadow=0)
     tag(cr, t, tl.scene_at(t)[1], 360, 240, "THE OLDEST PUZZLE", col=GOLD, size=50)
     if t >= A("d7", "Epicurus"):
-        sign(cr, t, A("d7", "Epicurus"), 360, 360, "OFTEN CREDITED TO EPICURUS", col=hexc("#a8713e"), size=36)
-    if t >= A("d7", "thousand"):
-        tag(cr, t, A("d7", "thousand"), 360, 880, "2,000+ YEARS AGO", col=PURPLE, size=40)
+        sign(cr, t, A("d7", "Epicurus"), 360, 350, "OFTEN CREDITED TO EPICURUS", col=hexc("#a8713e"), size=36)
     vignette(cr, 0.35)
 
 
@@ -221,7 +223,7 @@ def scene_free(cr, t, tl):
     studio(cr, t, hexc("#1f3a4a"), hexc("#3f5a6e"), seed=43)
     fork(cr, t, 360, 560, 0.95 * min(1.0, 0.6 + 2 * (t - tl.scene_at(t)[1])))
     if t >= A("d9", "harm"):
-        tag(cr, t, A("d9", "harm"), 360, 860, "REAL CHOICE = REAL HARM", col=PURPLE, size=40)
+        tag(cr, t, A("d9", "harm"), 360, 250, "REAL CHOICE = REAL HARM", col=PURPLE, size=40)
     vignette(cr, 0.4)
 
 
@@ -232,9 +234,9 @@ def scene_comeback(cr, t, tl):
     enter(cr, camera(t, [(A("d10") - 0.3, (1.9, 250, 640))], dur=0.5))
     girl(cr, t, tl, 250, 1000, 0.85, eyes="sad", brows="sad", arms=("front", "front"), look=(0.3, -0.2))
     cr.restore()
-    fork(cr, t, 470, 300, 0.55, tear=seg(t, A("d10", "sick"), A("d10", "sick", end=True) + 0.3))
+    fork(cr, t, 360, 360, 0.55, tear=seg(t, A("d10", "sick"), A("d10", "sick", end=True) + 0.3))
     if t >= A("d10", "nobody"):
-        tag(cr, t, A("d10", "nobody"), 360, 560, "NOBODY CHOSE THIS", col=RED, size=44)
+        tag(cr, t, A("d10", "nobody"), 360, 150, "NOBODY CHOSE THIS", col=RED, size=44)
     vignette(cr, 0.4)
 
 
@@ -243,12 +245,12 @@ def scene_hug(cr, t, tl):
     garden(cr, t, dusk=0.5)
     cr.save()
     enter(cr, camera(t, [(A("d11"), (1.2, 380, 780)), (A("d11", "hugs"), (1.35, 380, 760))], dur=0.8))
-    grave(cr, t, 380, 1020, 0.85)
     hugging = t >= A("d11", "hugs")
-    girl(cr, t, None, 330 if hugging else 250, 1000, 0.85, eyes="closed" if hugging else "sad", mouth="sad",
-         arms=("hold", "hold") if hugging else ("down", "down"))
     dad(cr, t, None, 430 if hugging else 540, 1000, 0.95, eyes="closed" if hugging else "sad", mouth="flat",
-        arms=((-60, 60), (-60, 60)) if hugging else ("down", "down"))
+        arms=HUG_DAD if hugging else ("down", "down"))
+    girl(cr, t, None, 350 if hugging else 250, 1000, 0.85, eyes="closed" if hugging else "sad", mouth="sad",
+         arms=HUG_GIRL if hugging else ("down", "down"))
+    grave(cr, t, 190, 1090, 0.8)
     cr.restore()
     if hugging:
         heart_shape(cr, 380, 470 - 20 * seg(t, A("d11", "hugs"), A("d11", "hugs") + 1.2), 0.7, hexc("#ff7a9a"))
@@ -262,9 +264,9 @@ def scene_end(cr, t, tl):
     garden(cr, t, dusk=0.7)
     cr.save()
     enter(cr, camera(t, [(A("d12"), (1.1, 380, 800))]))
-    grave(cr, t, 380, 1020, 0.85)
-    girl(cr, t, None, 330, 1000, 0.85, eyes="sad", mouth="flat", arms=("hold", "hold"))
-    dad(cr, t, None, 430, 1000, 0.95, eyes="half", mouth="flat", arms=((-60, 60), (-60, 60)))
+    dad(cr, t, None, 430, 1000, 0.95, eyes="half", mouth="flat", arms=HUG_DAD)
+    girl(cr, t, None, 350, 1000, 0.85, eyes="sad", mouth="flat", arms=HUG_GIRL)
+    grave(cr, t, 190, 1090, 0.8)
     cr.restore()
     sign(cr, t, A("d12", "proof"), 360, 200, "PROOF, OR PRICE?", col=GOLD, size=56)
     buttons(cr, t, A("d12", "proof"), [("PROOF", RED), ("PRICE", GREEN)], y=330, size=52)
