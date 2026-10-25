@@ -977,19 +977,19 @@ def pale_face(cr, x, y, s, t, a=1.0, cap=False, tilt=0.0, seed=0):
     cr.restore()
 
 
-# ------------------------------------------------------------------ Mae, the channel's storyteller (a fictional character)
-MAE_SKIN, MAE_SKIN_D = hexa("#d79c76"), hexa("#a86c50")
-MAE_HAIR, MAE_HAIR_D = hexa("#2a1a1f"), hexa("#140b0f")
-MAE_KNIT, MAE_KNIT_D = hexa("#4a2a52"), hexa("#2c1631")
-MAE_LIP = hexa("#a3434d")
+# ------------------------------------------------------------------ Manya, the channel's storyteller (a fictional character)
+MANYA_SKIN, MANYA_SKIN_D = hexa("#d79c76"), hexa("#a86c50")
+MANYA_HAIR, MANYA_HAIR_D = hexa("#2a1a1f"), hexa("#140b0f")
+MANYA_KNIT, MANYA_KNIT_D = hexa("#4a2a52"), hexa("#2c1631")
+MANYA_LIP = hexa("#a3434d")
 
 
-def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16), rim=(0.6, 0.75, 1.0, 0.75),
+def manya_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16), rim=(0.6, 0.75, 1.0, 0.75),
              rim_from=(-10, -8), skin=None):
-    """Mae from the chest up (x, y = the base of the neck): long dark waves, a knowing half smile, a plum knit and a
+    """Manya from the chest up (x, y = the base of the neck): long dark waves, a knowing half smile, a plum knit and a
     silver crescent-moon pendant. Default light: warm from below (her lantern) with cold moonlight rim from behind."""
-    sk = skin or MAE_SKIN
-    sk_d = MAE_SKIN_D if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
+    sk = skin or MANYA_SKIN
+    sk_d = MANYA_SKIN_D if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
@@ -997,10 +997,10 @@ def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16)
     # long hair behind the shoulders
     toon(cr, lambda c: curve(c, [(-118, -250), (-150, -120), (-170, 60), (-196, 230), (-120, 250), (-70, 120),
                                  (70, 120), (120, 250), (196, 230), (170, 60), (150, -120), (118, -250), (0, -330)]),
-         MAE_HAIR, MAE_HAIR_D, light, rim, rim_from)
+         MANYA_HAIR, MANYA_HAIR_D, light, rim, rim_from)
     # the knit top
     toon(cr, lambda c: curve(c, [(-56, -10 + up), (-148, 30 + up), (-180, 120), (-192, 430), (192, 430), (180, 120),
-                                 (148, 30 + up), (56, -10 + up)]), MAE_KNIT, MAE_KNIT_D, light, rim, rim_from)
+                                 (148, 30 + up), (56, -10 + up)]), MANYA_KNIT, MANYA_KNIT_D, light, rim, rim_from)
     cr.set_source_rgba(*INK[:3], 0.35)                     # ribbing
     cr.set_line_width(2.5)
     for k in range(-5, 6):
@@ -1009,8 +1009,8 @@ def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16)
         cr.stroke()
     toon(cr, lambda c: poly(c, [(-32, -84), (32, -84), (36, 2), (-36, 2)]), sk, sk_d, (0, 10), None, lw=4)
     toon(cr, lambda c: curve(c, [(-80, 0 + up), (-50, -26 + up), (0, -32 + up), (50, -26 + up), (80, 0 + up),
-                                 (52, 22 + up), (0, 16 + up), (-52, 22 + up)]), mix(MAE_KNIT, (1, 1, 1, 1), 0.08),
-         MAE_KNIT_D, light, rim, rim_from, lw=4)              # turtleneck roll
+                                 (52, 22 + up), (0, 16 + up), (-52, 22 + up)]), mix(MANYA_KNIT, (1, 1, 1, 1), 0.08),
+         MANYA_KNIT_D, light, rim, rim_from, lw=4)              # turtleneck roll
     cr.set_source_rgba(0.82, 0.84, 0.9, 1)                  # the chain and the crescent moon
     cr.set_line_width(2.5)
     cr.move_to(-40, 14 + up)
@@ -1083,7 +1083,7 @@ def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16)
             cr.line_to(rx + 2, ly)
             cr.curve_to(rx * 0.4, ly - 6, -rx * 0.4, ly - 5, -rx - 2, ly + 2)
             cr.close_path()
-            cr.set_source_rgba(*mix(MAE_SKIN_D, (0.35, 0.2, 0.3, 1), 0.3))
+            cr.set_source_rgba(*mix(MANYA_SKIN_D, (0.35, 0.2, 0.3, 1), 0.3))
             cr.fill()
             cr.restore()
             cr.set_source_rgba(*INK)
@@ -1113,7 +1113,7 @@ def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16)
         cr.save()                                            # thin arched brows, the right one raised
         cr.translate(sx * 42, -50 - (10 if sx > 0 else 0))
         cr.scale(sx, 1)
-        cr.set_source_rgba(*MAE_HAIR)
+        cr.set_source_rgba(*MANYA_HAIR)
         cr.set_line_width(6)
         cr.set_line_cap(cairo.LINE_CAP_ROUND)
         cr.move_to(-24, 6)
@@ -1135,7 +1135,7 @@ def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16)
     cr.curve_to(-10, 6 + 4 * smile, 12, 6 + 2 * smile, 28, -8 * smile)
     cr.curve_to(12, 14 + 6 * smile, -10, 16 + 4 * smile, -26, 0)
     cr.close_path()
-    cr.set_source_rgba(*MAE_LIP)
+    cr.set_source_rgba(*MANYA_LIP)
     cr.fill_preserve()
     cr.set_source_rgba(*INK)
     cr.set_line_width(3)
@@ -1148,9 +1148,9 @@ def mae_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16)
     # front hair: a side part, waves framing the face, one loose strand
     toon(cr, lambda c: curve(c, [(-104, 30), (-112, -60), (-90, -122), (-40, -150), (20, -150), (78, -126), (108, -80),
                                  (112, -10), (100, 60), (88, -20), (78, -78), (40, -104), (-6, -112), (-40, -96),
-                                 (-74, -40), (-88, 20)]), MAE_HAIR, MAE_HAIR_D, light, rim, rim_from)
+                                 (-74, -40), (-88, 20)]), MANYA_HAIR, MANYA_HAIR_D, light, rim, rim_from)
     toon(cr, lambda c: curve(c, [(40, -148), (-20, -142), (-72, -114), (-98, -66), (-96, -24), (-80, -60), (-50, -84),
-                                 (-6, -96), (36, -108), (62, -120)]), MAE_HAIR, MAE_HAIR_D, light, rim, rim_from)  # side fringe
+                                 (-6, -96), (36, -108), (62, -120)]), MANYA_HAIR, MANYA_HAIR_D, light, rim, rim_from)  # side fringe
     cr.set_source_rgba(1, 1, 1, 0.16)                        # shine
     cr.set_line_width(3)
     for k in range(4):
