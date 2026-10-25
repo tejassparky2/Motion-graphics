@@ -221,7 +221,22 @@ def fork(cr, t, x, y, s=1.0, tear=0.0):
 def scene_free(cr, t, tl):
     A = tl.at
     studio(cr, t, hexc("#1f3a4a"), hexc("#3f5a6e"), seed=43)
-    fork(cr, t, 360, 560, 0.95 * min(1.0, 0.6 + 2 * (t - tl.scene_at(t)[1])))
+    s0 = tl.scene_at(t)[1]
+    sc = 0.95 * min(1.0, 0.6 + 2 * (t - s0))
+    fork(cr, t, 360, 560, sc)
+    if t - s0 > 0.4:                                               # a little walker picks a path: GOOD, then HARM
+        u = ((t - s0 - 0.4) / 1.6) % 2.0
+        side = -1 if u < 1.0 else 1
+        k = u % 1.0
+        if k < 0.45:
+            px, py = 0, 170 - 120 * (k / 0.45)
+        else:
+            q = min(1.0, (k - 0.45) / 0.45)
+            px, py = side * 120 * q, 50 - 140 * q
+        x, y = 360 + px * sc, 560 + py * sc
+        soft_disc(cr, x, y, 34, (1, 1, 1, 0.35))
+        cr.arc(x, y, 16, 0, 2 * math.pi)
+        paint(cr, GOLD, OUTLINE, 4)
     if t >= A("d9", "harm"):
         tag(cr, t, A("d9", "harm"), 360, 250, "REAL CHOICE = REAL HARM", col=PURPLE, size=40)
     vignette(cr, 0.4)
