@@ -86,7 +86,7 @@ def draw(cr, t, tl):
     headline(cr, t, B["g6"].start + 0.3, B["g6"].end + 0.2, "models", "Coming to Google Cloud",
              [("GPT-6 Astra", WHITE), ("GPT-6.1 Sol", WHITE), ("GPT-6 Luna", WHITE), ("select enterprise customers first", GREY)])
     headline(cr, t, B["g10"].start + 0.3, B["g10"].end + 0.2, "claude.com  ·  Oct 22", "Claude on Google Cloud (Anthropic managed) is generally available",
-             [("Fable 5.1 · Opus 5.5 · Sonnet 5.5 · Haiku 5.5", ORANGE)])
+             [("Fable 5.1 · Opus 5.5", ORANGE), ("Sonnet 5.5 · Haiku 5.5", ORANGE)])
     bignum(cr, t, B["g12"].start + 0.3, B["g12"].end + 0.2, "Google's claim", "3", "big model families, one cloud",
            sub="Gemini · Claude · GPT", col=BLUE, count=False)
     headline(cr, t, B["g14"].start + 0.3, B["g14"].end + 0.2, "for companies", "One Google Cloud invoice",

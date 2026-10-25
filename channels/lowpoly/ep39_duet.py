@@ -88,6 +88,6 @@ def draw(cr, t, tl):
              [("sends · pays · signs · deletes", YEL), ("never: trades stocks or moves money", RED)])
     bignum(cr, t, B["d14"].start + 0.3, B["d14"].end + 0.2, "access", "Waitlist", "US Pro and Max first", col=ORANGE, count=False)
     headline(cr, t, B["d16"].start + 0.3, B["d16"].end + 0.2, "cost", "Included in Pro and Max",
-             [("background checks count toward your limits", YEL)])
+             [("background checks use your limits", YEL)])
     cue("ding", t, B["d2"].start + 0.2)
     th.captions(cr, t, tl, y=400, size=60)
