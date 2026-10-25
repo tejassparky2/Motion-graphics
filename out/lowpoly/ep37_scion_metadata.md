@@ -37,4 +37,4 @@ anthropic scion, anthropic git, version control, monorepo, ai agents, claude, ai
 Is your team's slowest part the code now, or the tools around it? 👇 Subscribe for tomorrow's AI news.
 ```
 
-**Video facts:** 50.4 s, 130 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 50.8 s, 132 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
