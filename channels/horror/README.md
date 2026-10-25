@@ -36,6 +36,11 @@ hud.py (meter, chips, phone chat, rule strip, blueprint cards, YOUR CALL); sound
 - Ideas taken from the owner's references 3-7 (never their stories): inventory chips, full-screen phone chat, time cards,
   a line for each side before the vote, YOUR CALL card, big readable faces, two-colour lighting, blueprint cards,
   one hard number per rule, state carried into Part 2, the vote result shown at the start of Part 2.
+- 25 Oct: all three delivered (out/horror/): floor13 (80 s, 23/24 lines exact), last_stop (72 s, 19/21), tower9
+  (70 s, 20/21); the remaining flags are spelling only (2%, creak/creaks, 1040, one/won). Lessons: a sound effect on a
+  word hides it (cue effects after the word or in a silence), rain/generator beds must sit low, Turbo says "riding" like
+  "writing". Research report: reports/3D horror Shorts animation and hooks.md. Technique source worth reusing (MIT):
+  github.com/lemomo-ai/lemo-opuscar (DIRECTOR.md, TECHNIQUE.md, styles/backrooms: VHS pass, handheld fear rig, OSD).
 - Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face
