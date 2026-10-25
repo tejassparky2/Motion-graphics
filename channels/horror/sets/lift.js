@@ -128,6 +128,8 @@ export async function build(c) {
   const get = (id, who) => (DIR[id] && DIR[id][who]) || null;
   function last(who, t) { let d = null; for (const b of c.beats) { if (b.start - .12 > t) break; if (get(b.id, who)) d = get(b.id, who); } return d; }
 
+  const tDie = word("f5", 2) + .25;   // "The lights die."
+  const tTurn = B.f17.start, tDrop = B.f18.start + .1;
   const SHOTS = {
     you_close: c.track(you, {dist: .62, side: .12, fov: 38}),
     doors:     {pos: [.4, 1.66, -.6], look: [-.05, 1.2, 2.6], fov: 50, push: .25},
@@ -136,14 +138,13 @@ export async function build(c) {
     hall_dark: {pos: [-.1, 1.76, .12], look: [0, 1.4, 4.5], fov: 38, push: .45},
     phone:     {pos: [.26, 1.95, .46], look: [-.15, 1.56, -.12], fov: 46, push: .06},
     mirror:    {pos: [.32, 1.88, .72], look: [-.14, 1.72, -1.5], fov: 34, push: .12},
-    reveal:    {pos: [.5, 1.62, -.66], look: [0, 1.5, 1.1], fov: 48, push: .2},
+    reveal:    t => t < tDrop ? {pos: [.5, 1.62, -.66], look: [0, 1.5, 1.1], fov: 48, push: .2}      // after the drop she stands
+                              : {pos: [.45, 1.45, -.66], look: [0, 1.95, 1.1], fov: 52, push: .15},  // 0.5 m higher: look up at her
     drop:      {pos: [.5, 1.4, -.66], look: [0, 1.75, 1.1], fov: 50, push: 0},
     reveal_close: {pos: [.15, 1.3, -.25], look: [0, 2.0, 1.0], fov: 42, push: .12},
     cable:     {pos: [.75, 3.7, .95], look: [0, 2.45, 0], fov: 55, push: .15},
     choice:    {pos: [.6, 1.85, -.68], look: [-.05, 1.4, 1.0], fov: 54, push: .15},
   };
-  const tDie = word("f5", 2) + .25;   // "The lights die."
-  const tTurn = B.f17.start, tDrop = B.f18.start + .1;
 
   function update(t, cur, prev) {
     // ----- lights: fluorescent with a nervous flicker, then dead; the red emergency lamp takes over

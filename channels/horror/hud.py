@@ -298,7 +298,7 @@ def captions(cr, t, tl, key=(), y=915, size=66, max_w=620):
         if not (start - 0.02 <= t < stop):
             continue
         words = [u.shown.rstrip(",;:").upper() for u in ch]
-        space = text_width(cr, " ", size, HOOK)
+        space = text_width(cr, " ", size, HOOK) * 1.9          # room for the spoken word's pop
         widths = [text_width(cr, w, size, HOOK) for w in words]
         total = sum(widths) + space * (len(words) - 1)
         sz = size * min(1, max_w / total)
@@ -314,7 +314,7 @@ def captions(cr, t, tl, key=(), y=915, size=66, max_w=620):
             cr.save()
             cr.translate(x + wd * sz / size / 2, 0)
             if on:
-                cr.scale(1.08, 1.08)
+                cr.scale(1.05, 1.05)
             th._text(cr, w, -wd * sz / size / 2, 0, sz, col, HOOK, align="left", ow=sz * 0.14)
             cr.restore()
             x += (wd + space) * sz / size

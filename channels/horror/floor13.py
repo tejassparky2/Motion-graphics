@@ -127,7 +127,7 @@ def draw(cr, t, tl):
     cue("hum", t, 0.0, B["f5"].start)
     cue("chime", t, A("f1", "stopped"))
     cue("doors", t, B["f2"].start + 0.1)
-    cue("power_down", t, A("f5", "die."))
+    cue("power_down", t, A("f5", "die.", end=True) + 0.05)   # after the word: on top of it "die" was heard as "sky"
     cue("drip", t, B["f6"].start - 0.3)
     cue("sting", t, A("f17", "isn't."))
     cue("cable", t, B["f18"].start)
