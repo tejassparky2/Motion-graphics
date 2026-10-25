@@ -6,9 +6,9 @@ Owner's standing preferences for every video made here (keep them unless the own
   clone the owner's voice; leave Chatterbox's watermark in place.
 - **Customer voice dubs (owner, 25 Oct 2026):** Sowmya (the customer in reels 05-06) can't speak Hindi and agreed to
   her voice being cloned to dub her testimonials into Hinglish for the Hindi page. Clone only from her own takes, only
-  for her own testimonials, keep her meaning (captions show her real English words), leave Chatterbox's watermark in,
-  open the reel with a small "Hindi dub · AI voice" note and turn on Instagram's AI label. Her voice reference and
-  the dubs stay out of git. Nobody else is cloned without the same clear consent.
+  for her own testimonials, keep her meaning (captions show her real English words), leave Chatterbox's watermark in.
+  She is the owner's business partner; no on-screen dub note (owner's call). Her voice reference and the dubs stay out
+  of git. Nobody else is cloned without the same clear consent.
 - **Reel voice style (owner, 12 Oct 2026: "use the speed and pause from the Your Cute Mini reference"):** one line per
   paragraph in the script, each line one flowing take, ~5.3 syllables/s, ~0.9 s pause after each line, polished:
   `tools/voiceover.py SCRIPT NAME --engine turbo --flow --gap 0.9 --polish` (owner picked Chatterbox Turbo at its
