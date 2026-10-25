@@ -191,7 +191,7 @@ def build(name, segs, title, end_extra=None, dub=None, label=None):
     tmp = os.path.join(ROOT, "build", "testimonial")
     os.makedirs(tmp, exist_ok=True)
     for k, (t0, dur, s, _) in enumerate(plan):
-        wav = os.path.join(tmp, f"{name}_{k}.wav")
+        wav = os.path.join(tmp, f"{name.replace(os.sep, '_')}_{k}.wav")
         if dub:
             subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-i", dub[k], "-ac", "1", "-ar", str(SR), wav])
         else:
