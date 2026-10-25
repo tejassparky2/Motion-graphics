@@ -23,7 +23,7 @@ How the explainers are built:
   https://abetlen.github.io/llama-cpp-python/whl/cpu); ~11x slower than real time on 4 cores. Turbo tags don't apply.
   Earlier tries: Turbo female, then Turbo with am_echo's timbre ("D") (calmer than the story videos' 5.5 syllables/s),
   `gap=0.42` between lines, `MUSIC = "pad"`. Words the voice gets wrong are respelled for speech only:
-  `[kryte|krait]`. Turbo needs `/home/user/.venv-clone` (chatterbox-tts 0.1.7 + `setuptools<70` for perth);
+  `[kright|krait]`. Turbo needs `/home/user/.venv-clone` (chatterbox-tts 0.1.7 + `setuptools<70` for perth);
   the pipeline venv needs `av<16` for faster-whisper.
 - Videos: `videos/snakebite.py` (+ `snakebite_shots.py`), `videos/superbugs.py`, `videos/malaria.py`.
 - Check stills before rendering, then `tools/render_check.sh <video>` (render + Whisper small + Whisper medium).

@@ -571,8 +571,9 @@ def clone_check(takes, tries=3, slack=0.15):
     takes = list(dict.fromkeys(tuple(x) + (None,) * (3 - len(x)) for x in takes))
     if CLONE_MODEL == "turbo":   # Turbo's pace varies with emotion; clarity and tag sounds stay strict, pace less so
         slack = max(slack, 0.3)
-    if CLONE_MODEL.startswith("orpheus-"):   # Orpheus keeps its own natural pace (no stretching): check clarity only
-        slack = 9.0
+    if CLONE_MODEL.startswith("orpheus-"):   # Orpheus keeps its own natural pace (no stretching): check clarity only,
+        slack = 9.0                          # and it sometimes changes words, so it gets more tries to say them exactly
+        tries = max(tries, 6)
     tries = tries + 2 if any(_has_sound(t) for t, _, _ in takes) else tries
     todo = [(t, p, w) for t, p, w in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w) + ".ok")]
     if not todo:

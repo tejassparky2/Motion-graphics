@@ -25,6 +25,22 @@ class _Llama8k(_Llama):          # orpheus-cpp asks for the model's full context
 llama_cpp.Llama = _Llama8k
 from orpheus_cpp import OrpheusCpp  # noqa: E402
 
+# Orpheus's defaults (temperature 0.8, no repetition penalty) let it improvise words ("Doctors take" -> "The doctor
+# takes", 25 Oct 2026). Lower temperature + a repetition penalty (the Orpheus authors recommend >= 1.1) keep it on
+# the script; Whisper medium still checks every take.
+TEMPERATURE, TOP_P, REPEAT_PENALTY = 0.45, 0.9, 1.1
+
+
+def _token_gen(self, text, options=None):
+    options = options or {}
+    prompt = f"<|audio|>{options.get('voice_id', 'leo')}: {text}<|eot_id|><custom_token_4>"
+    for token in self._llm(prompt, max_tokens=2048, stream=True, temperature=TEMPERATURE, top_p=TOP_P, top_k=40,
+                           min_p=0.05, repeat_penalty=REPEAT_PENALTY):
+        yield token["choices"][0]["text"]
+
+
+OrpheusCpp._token_gen = _token_gen
+
 
 def trim(w, sr):
     env = np.convolve(np.abs(w), np.ones(int(sr * 0.01)) / (sr * 0.01), mode="same")
