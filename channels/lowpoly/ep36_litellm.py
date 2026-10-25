@@ -51,7 +51,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("n20", "cxclose", CX, "That's why you revoke them.", .4, 1),
 ]
 HOLDS = {}
-GAP_FIX = {}
+GAP_FIX = {"n2": 0.407}
 SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
