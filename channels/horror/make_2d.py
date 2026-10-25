@@ -24,6 +24,10 @@ sys.modules[f"videos.{EPISODE}"] = mod
 spec.loader.exec_module(mod)
 render.load(EPISODE)
 tl = render.timeline()
+import json   # noqa: E402  (beat times for check.py)
+os.makedirs(os.path.join(ROOT, "build", "horror"), exist_ok=True)
+with open(os.path.join(ROOT, "build", "horror", f"timing_{EPISODE}.json"), "w") as f:
+    json.dump(dict(total=tl.total, beats=[dict(id=b.id, start=b.start, end=b.end) for b in tl.beats]), f)
 if "--stills" in sys.argv:
     out = os.path.join(ROOT, "build", "horror", "check2d")
     shutil.rmtree(out, ignore_errors=True)

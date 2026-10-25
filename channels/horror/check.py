@@ -21,7 +21,7 @@ from faster_whisper import WhisperModel   # noqa: E402
 ep = sys.argv[1]
 video = os.path.join(ROOT, "out", "horror", f"{ep}.mp4")
 timing = json.load(open(os.path.join(ROOT, "build", "horror", f"timing_{ep}.json")))
-src = open(os.path.join(ROOT, "channels", "horror", f"{ep}.py")).read()
+src = open(os.path.join(ROOT, "channels", "horror", f"{ep.removesuffix('_2d')}.py")).read()   # 2D cuts reuse the script
 texts = dict(re.findall(r'dict\(id="(\w+)", scene="\w+", text="((?:[^"]|"\s*\n\s*")*)"', src))
 NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs"}

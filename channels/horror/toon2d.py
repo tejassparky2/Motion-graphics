@@ -371,3 +371,214 @@ def led_digit(cr, ch, x, y, h, col, a=1.0):
         cr.line_to(x1, y1)
         cr.stroke()
     cr.restore()
+
+
+# ------------------------------------------------------------------ Mrs. Gray (the thing that says it is her)
+G_SKIN, G_SKIN_D = hexa("#d9b8a0"), hexa("#a88370")
+G_HAIR, G_HAIR_D = hexa("#c9c6c2"), hexa("#8e8a86")
+G_GOWN, G_GOWN_D = hexa("#4b3652"), hexa("#2c1f31")
+G_SHAWL, G_SHAWL_D = hexa("#8a7f8c"), hexa("#5a525c")
+SLIPPER = hexa("#b06a72")
+
+
+def gray_head(cr, t, smile=0.0, glow_eyes=0.0, light=(-14, -10), rim=None, rim_from=(9, 0), skin=None, look=(0, 0),
+              mouth_open=0.0):
+    """Her head, centred at (0, 0), radius ~62. smile: 0 = a kind old lady, 1 = the grin that is too wide."""
+    sk = skin or G_SKIN
+    sk_d = G_SKIN_D if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
+    toon(cr, lambda c: curve(c, [(-56, -70), (0, -96), (56, -70), (78, -20), (66, 40), (26, 66), (-26, 66),
+                                 (-66, 40), (-78, -20)]), G_HAIR, G_HAIR_D, light, rim, rim_from)       # hair behind
+    toon(cr, lambda c: (c.arc(0, -98, 30, 0, 2 * math.pi)), G_HAIR, G_HAIR_D, light, rim, rim_from)     # the bun
+    head = lambda c: curve(c, [(-58, -36), (-50, -70), (0, -84), (50, -70), (58, -36), (56, 20), (36, 58), (0, 70),
+                               (-36, 58), (-56, 20)])
+    toon(cr, head, sk, sk_d, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.35)                       # wrinkles
+    cr.set_line_width(2)
+    for sx in (-1, 1):
+        cr.move_to(sx * 50, 4)
+        cr.curve_to(sx * 44, 18, sx * 46, 30, sx * 40, 40)
+        cr.stroke()
+        cr.move_to(sx * 18, -50)
+        cr.line_to(sx * 36, -52)
+        cr.stroke()
+    toon(cr, lambda c: curve(c, [(-58, -40), (-46, -76), (0, -88), (46, -76), (58, -40), (36, -58), (0, -62),
+                                 (-36, -58)]), G_HAIR, G_HAIR_D, light, rim, rim_from, lw=3.5)       # hairline
+    for sx in (-1, 1):                                        # eyes behind round glasses
+        ex = sx * 24 + look[0] * 3
+        if glow_eyes > 0.05:
+            glow(cr, ex, -12, 28, (1, 0.96, 0.82), 0.55 * glow_eyes)
+            cr.set_source_rgba(1, 0.98, 0.88, glow_eyes)
+            cr.arc(ex, -12, 6.5, 0, 2 * math.pi)
+            cr.fill()
+        else:
+            cr.set_source_rgba(*INK)
+            cr.arc(ex, -12 + look[1] * 2, 4.5, 0, 2 * math.pi)
+            cr.fill()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3.5)
+        cr.arc(sx * 24, -12, 17, 0, 2 * math.pi)
+        cr.stroke()
+        cr.set_source_rgba(1, 1, 1, 0.25)
+        cr.arc(sx * 24 - 5, -18, 6, 0, 2 * math.pi)
+        cr.fill()
+    cr.move_to(-7, -12)
+    cr.curve_to(-3, -16, 3, -16, 7, -12)
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(3)
+    cr.stroke()
+    cr.move_to(2, 2)                                          # nose
+    cr.curve_to(8, 14, 6, 20, -2, 20)
+    cr.set_line_width(3)
+    cr.stroke()
+    w = 14 + 34 * smile                                        # the smile widens until it reaches the cheeks
+    lift = 6 + 10 * smile
+    h = 4 + (14 + 10 * mouth_open) * smile
+    cr.save()
+    cr.translate(0, 38)
+    cr.new_path()
+    cr.move_to(-w, -lift)
+    cr.curve_to(-w * 0.5, h, w * 0.5, h, w, -lift)
+    if smile > 0.3:
+        cr.curve_to(w * 0.5, h * 0.25, -w * 0.5, h * 0.25, -w, -lift)
+        cr.close_path()
+        cr.set_source_rgba(0.12, 0.03, 0.04, 1)
+        cr.fill_preserve()
+        cr.save()
+        cr.clip()
+        n = int(6 + 10 * smile)
+        for k in range(n):                                    # too many teeth, top and bottom
+            xx = -w + k * 2 * w / n
+            for y0_, hh in ((-lift, lift + h * 0.42), (h * 0.55, h)):
+                cr.rectangle(xx + 1, y0_, 2 * w / n - 2, hh)
+        cr.set_source_rgba(0.93, 0.9, 0.78, 1)
+        cr.fill()
+        cr.restore()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3)
+        cr.stroke()
+    else:
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3)
+        cr.stroke()
+    cr.restore()
+
+
+def gray_full(cr, x, y, s, t, smile=0.0, glow_eyes=0.0, reach=0.0, lean=0.0, light=(-14, -10), rim=None,
+              rim_from=(9, 0), backwards=True, dark=0.0):
+    """Mrs. Gray standing, feet at (x, y), ~600 px tall at s = 1, with her cane. Her slippers face backwards (the
+    hidden detail): the toes point back, so the long side of each slipper runs up behind the ankle. dark: 0..1
+    sinks her into the dark (only the eyes stay bright)."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    sway = 3 * math.sin(t * 0.9)
+    for sx in (-1, 1):                                        # slippers (backwards) and ankles
+        cr.save()
+        cr.translate(sx * 30, 0)
+        toon(cr, lambda c: curve(c, [(-16, 0), (-20, -30), (-10, -62), (10, -62), (20, -30), (16, 0)]) if backwards
+             else curve(c, [(-18, -20), (-24, 10), (0, 24), (24, 10), (18, -20)]), SLIPPER, mix(SLIPPER, INK, 0.4),
+             light, rim, rim_from, lw=3.5)
+        toon(cr, lambda c: c.rectangle(-9, -84, 18, 74), G_SKIN, G_SKIN_D, light, None, lw=3)
+        if backwards:                                        # the heel cup faces us
+            cr.set_source_rgba(*mix(SLIPPER, INK, 0.55))
+            cr.arc(0, -6, 12, math.pi, 2 * math.pi)
+            cr.fill()
+        cr.restore()
+    cr.translate(sway, 0)
+    cr.rotate(lean)
+    toon(cr, lambda c: curve(c, [(-70, -300), (70, -300), (118, -80), (100, -70), (-100, -70), (-118, -80)]),
+         G_GOWN, G_GOWN_D, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.4)                        # folds
+    cr.set_line_width(2.5)
+    for fx in (-50, -12, 30, 70):
+        cr.move_to(fx * 0.6, -290)
+        cr.curve_to(fx * 0.8, -220, fx, -150, fx * 1.1, -76)
+        cr.stroke()
+    toon(cr, lambda c: curve(c, [(-62, -470), (62, -470), (92, -400), (84, -296), (-84, -296), (-92, -400)]),
+         G_GOWN, G_GOWN_D, light, rim, rim_from)
+    # the arm with the cane (her left = screen right)
+    toon(cr, lambda c: curve(c, [(70, -455), (100, -400), (108, -320), (90, -316), (76, -390), (58, -440)]),
+         G_GOWN, G_GOWN_D, light, rim, rim_from)
+    cr.set_source_rgba(*hexa("#4a2e1c"))
+    cr.set_line_width(9)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    cr.move_to(112, -318)
+    cr.line_to(124 + 0 * reach, 0)
+    cr.stroke()
+    cr.move_to(92, -330)
+    cr.curve_to(96, -352, 124, -352, 120, -318)
+    cr.stroke()
+    toon(cr, lambda c: c.arc(102, -318, 14, 0, 2 * math.pi), G_SKIN, G_SKIN_D, light, None, lw=3)
+    # the other arm hangs, or reaches toward you (foreshortened: the hand grows as it comes closer)
+    hx, hy = -96 + 60 * reach, -330 - 60 * reach
+    hr = 15 + 22 * reach
+    toon(cr, lambda c: curve(c, [(-66, -455), (-96, -410), (hx - hr * 0.6, hy - hr), (hx + hr * 0.8, hy - hr * 0.4),
+                                 (-74, -400), (-56, -440)]), G_GOWN, G_GOWN_D, light, rim, rim_from)
+    toon(cr, lambda c: curve(c, [(hx - hr, hy), (hx - hr * 0.6, hy - hr * 0.9), (hx + hr * 0.5, hy - hr),
+                                 (hx + hr, hy - hr * 0.2), (hx + hr * 0.4, hy + hr * 1.2), (hx - hr * 0.8, hy + hr)]),
+         G_SKIN, G_SKIN_D, light, rim, rim_from, lw=3.5)
+    if reach > 0.3:                                           # long fingers
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3)
+        for k in range(4):
+            fx = hx - hr * 0.6 + k * hr * 0.42
+            cr.move_to(fx, hy + hr * 0.9)
+            cr.line_to(fx + 4, hy + hr * 1.9)
+            cr.stroke()
+    # the shawl over her shoulders
+    toon(cr, lambda c: curve(c, [(-84, -470), (0, -486), (84, -470), (98, -420), (30, -360), (0, -340), (-30, -360),
+                                 (-98, -420)]), G_SHAWL, G_SHAWL_D, light, rim, rim_from)
+    toon(cr, lambda c: c.rectangle(-16, -500, 32, 34), G_SKIN, G_SKIN_D, light, None, lw=3)
+    cr.save()
+    cr.translate(0, -560)
+    cr.rotate(0.18 * smile * math.sin(t * 0.7) + 0.08 * smile)     # the head tilts as the smile widens
+    gray_head(cr, t, smile, glow_eyes, light, rim, rim_from)
+    cr.restore()
+    if dark > 0:
+        cr.restore()
+        return
+    cr.restore()
+
+
+# ------------------------------------------------------------------ hands and the phone
+def hand_point(cr, x, y, s, t, tremble=0.0, skin=None):
+    """Your hand reaching up from the bottom of the frame, index finger out."""
+    sk = skin or SKIN
+    cr.save()
+    cr.translate(x + tremble * 2.5 * math.sin(t * 37), y + tremble * 2 * math.sin(t * 29))
+    cr.scale(s, s)
+    toon(cr, lambda c: curve(c, [(-60, 400), (-50, 120), (40, 110), (70, 400)]), HOOD, HOOD_D, (-14, -10), None)
+    toon(cr, lambda c: curve(c, [(-46, 130), (-40, 60), (-18, 30), (8, -60), (20, -66), (26, -50), (22, 30), (40, 40),
+                                 (54, 70), (46, 130)]), sk, SKIN_D, (-12, -8), None)
+    cr.set_source_rgba(*INK[:3], 0.6)
+    cr.set_line_width(2.5)
+    for k in range(3):
+        cr.move_to(-30 + k * 14, 60)
+        cr.curve_to(-34 + k * 14, 80, -28 + k * 14, 96, -24 + k * 14, 104)
+        cr.stroke()
+    cr.restore()
+
+
+def phone_in_hands(cr, x, y, s, t, glow_a=1.0):
+    """Two hands holding a glowing phone at chest height."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    glow(cr, 0, -40, 260, (0.55, 0.75, 1), 0.35 * glow_a)
+    toon(cr, lambda c: tk_rrect(c, -46, -84, 92, 168, 14), hexa("#16181c"), None, (0, 0), None, lw=4)
+    cr.set_source_rgba(0.75, 0.88, 1, 0.95 * glow_a)
+    tk_rrect(cr, -38, -74, 76, 148, 9)
+    cr.fill()
+    for sx in (-1, 1):
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 40, 70), (sx * 66, 20), (sx * 70, -30), (sx * 52, -40),
+                                             (sx * 40, 0), (sx * 30, 40)]), SKIN, SKIN_D, (-10, -8), None, lw=3.5)
+    cr.restore()
+
+
+def tk_rrect(cr, x, y, w, h, r):
+    cr.new_sub_path()
+    cr.arc(x + w - r, y + r, r, -math.pi / 2, 0)
+    cr.arc(x + w - r, y + h - r, r, 0, math.pi / 2)
+    cr.arc(x + r, y + h - r, r, math.pi / 2, math.pi)
+    cr.arc(x + r, y + r, r, math.pi, 1.5 * math.pi)
+    cr.close_path()
