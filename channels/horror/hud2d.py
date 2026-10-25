@@ -171,7 +171,8 @@ def rule_tag(cr, t, start, end, text, x=W / 2, y=250, rot=-0.06):
     cr.translate(x, y)
     cr.rotate(rot)
     cr.scale(s, s)
-    w = text_width(cr, text, 40, ROUND) + 50
+    size = min(40.0, 40 * (W - 110) / text_width(cr, text, 40, ROUND))      # long rules shrink to fit the frame
+    w = text_width(cr, text, size, ROUND) + 50
     cr.push_group()
     rrect(cr, -w / 2, -38, w, 76, 8)
     cr.set_source_rgba(*YELLOW)
@@ -179,7 +180,7 @@ def rule_tag(cr, t, start, end, text, x=W / 2, y=250, rot=-0.06):
     cr.set_source_rgba(*INK)
     cr.set_line_width(5)
     cr.stroke()
-    _text(cr, text, 0, 14, 40, INK, ROUND, "center")
+    _text(cr, text, 0, size * 0.35, size, INK, ROUND, "center")
     cr.pop_group_to_source()
     cr.paint_with_alpha(a)
     cr.restore()
@@ -203,10 +204,11 @@ def stamp(cr, t, start, end, lines, x=W / 2, y=360, rot=-0.12, col=RED):
     cr.set_source_rgba(*col[:3], 0.95)
     cr.set_line_width(8)
     cr.stroke()
-    yy = -h / 2 + 15 + sizes[0]
+    yy = -h / 2 + 15
     for l, sz in zip(lines, sizes):
+        yy += sz
         _text(cr, l, 0, yy, sz, (*col[:3], 0.95), ROUND, "center")
-        yy += sz * 1.2
+        yy += sz * 0.2
     cr.pop_group_to_source()
     cr.paint_with_alpha(a)
     cr.restore()

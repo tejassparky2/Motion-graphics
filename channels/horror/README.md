@@ -56,6 +56,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   flag was the take itself (the dry take said "creak"; re-made it), so check the dry take before blaming the mix; a
   phone buzz under "out of service" made "out of Cervith" (notes can be silent); the breath on "breathes" made
   "bruised", so the breath now plays in a 1.3 s silence after the line.
+- 25 Oct: Tower 9 2D (72 s, 20/21 exact; the other is "one" heard as its homophone "won") delivered; you wear an orange
+  ranger jacket, and in the lightning one torch-holder below wears it too. Lessons: a noise right after a word ending
+  reads as an "-s" ("crackled" -> "crackles"), so the rain starts after the hook line and static goes before the word
+  or in a pause; a thunder roll needs ~1.8 s before a quiet line ("Please" -> "Wait"); lowpass 1800 on the hatch voice
+  made "cold" into "cool" (now 2800). Whisper results move with the mix, so fix the cause, not single runs.
 - Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face

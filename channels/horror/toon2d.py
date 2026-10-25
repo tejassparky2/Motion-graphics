@@ -107,6 +107,7 @@ SKIN, SKIN_D = hexa("#c98d62"), hexa("#9c6644")
 HAIR, HAIR_D = hexa("#2b1c17"), hexa("#160e0b")
 HOOD, HOOD_D, HOOD_L = hexa("#35565e"), hexa("#203840"), hexa("#4d7680")
 LIP = hexa("#7a3a34")
+RANGER = (hexa("#d8742a"), hexa("#9a4a16"), hexa("#ef9a4c"))     # Tower 9: your orange ranger rain jacket
 
 FACES = {   # eye opening, iris size, brow raise, brow worry (inner ends up), mouth, mouth open
     "calm":    dict(eye=1.0, iris=1.0, raise_=0.1, worry=0.3, mouth="flat", open=0.0),
@@ -124,9 +125,11 @@ def face_mix(a, b, k):
 
 
 def you_bust(cr, x, y, s, f, t, look=(0.0, 0.0), turn=0.0, tilt=0.0, breath=1.0, light=(-18, -14), rim=None,
-             rim_from=(10, 0), sweat=0.0, tremble=0.0, skin=None, blink=True):
+             rim_from=(10, 0), sweat=0.0, tremble=0.0, skin=None, blink=True, coat=None):
     """The lead from the chest up, facing the camera. (x, y) = the base of the neck; s = scale; f = face dict
-    (face_mix); look = where the eyes point (-1..1); turn = head turned left/right (-1..1)."""
+    (face_mix); look = where the eyes point (-1..1); turn = head turned left/right (-1..1); coat = (base, shade,
+    light) colours for the hooded top (default: the teal hoodie; Tower 9: RANGER, the orange rain jacket)."""
+    HOOD, HOOD_D, HOOD_L = coat or (globals()["HOOD"], globals()["HOOD_D"], globals()["HOOD_L"])
     sk = skin or SKIN
     sk_d = mix(sk, SKIN_D, 1.0) if skin is None else mix(sk, (0, 0, 0, 1), 0.3)
     jx = tremble * 2.2 * math.sin(t * 41)
@@ -330,8 +333,9 @@ def you_bust(cr, x, y, s, f, t, look=(0.0, 0.0), turn=0.0, tilt=0.0, breath=1.0,
     cr.restore()
 
 
-def you_back(cr, x, y, s, t, light=(8, -6), rim=None, rim_from=(-9, 0)):
+def you_back(cr, x, y, s, t, light=(8, -6), rim=None, rim_from=(-9, 0), coat=None):
     """The lead from behind (over-the-shoulder shots): hair, ears, hood and shoulders."""
+    HOOD, HOOD_D, HOOD_L = coat or (globals()["HOOD"], globals()["HOOD_D"], globals()["HOOD_L"])
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
@@ -541,13 +545,14 @@ def gray_full(cr, x, y, s, t, smile=0.0, glow_eyes=0.0, reach=0.0, lean=0.0, lig
 
 
 # ------------------------------------------------------------------ hands and the phone
-def hand_point(cr, x, y, s, t, tremble=0.0, skin=None):
-    """Your hand reaching up from the bottom of the frame, index finger out."""
+def hand_point(cr, x, y, s, t, tremble=0.0, skin=None, sleeve=None):
+    """Your hand reaching up from the bottom of the frame, index finger out. sleeve = (base, shade) colours."""
     sk = skin or SKIN
+    sl, sl_d = sleeve or (HOOD, HOOD_D)
     cr.save()
     cr.translate(x + tremble * 2.5 * math.sin(t * 37), y + tremble * 2 * math.sin(t * 29))
     cr.scale(s, s)
-    toon(cr, lambda c: curve(c, [(-60, 400), (-50, 120), (40, 110), (70, 400)]), HOOD, HOOD_D, (-14, -10), None)
+    toon(cr, lambda c: curve(c, [(-60, 400), (-50, 120), (40, 110), (70, 400)]), sl, sl_d, (-14, -10), None)
     toon(cr, lambda c: curve(c, [(-46, 130), (-40, 60), (-18, 30), (8, -60), (20, -66), (26, -50), (22, 30), (40, 40),
                                  (54, 70), (46, 130)]), sk, SKIN_D, (-12, -8), None)
     cr.set_source_rgba(*INK[:3], 0.6)
