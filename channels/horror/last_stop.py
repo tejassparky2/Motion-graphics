@@ -111,7 +111,7 @@ def draw(cr, t, tl):
     tracker = t >= A("b10", "Out")
     hud.chips(cr, t, [(f"PASSENGERS {n}", bumped, n > 3), ("ROUTE 9" if not tracker else "ROUTE 9: OUT OF SERVICE",
                                                             A("b10", "Out") if tracker else None, tracker)])
-    hud.tag_line(cr, t, "11:58 PM" if t < B["b15"].start else "12:13 AM", x=W - 26 - 250 + 4, y=134)
+    hud.tag_line(cr, t, "11:58 PM" if t < B["b15"].start else "12:13 AM", x=hud.W - 26 - 250 + 4, y=134)
     hud.rule(cr, t, A("b1", "Whatever"), "RULE: DON'T LOOK AT THE BACK SEATS")
     hud.hook(cr, t, [("ONE RULE:", False), ("DON'T LOOK AT", False), ("THE BACK SEATS", True)],
              end=B["b2"].start, y=360, size=84)
