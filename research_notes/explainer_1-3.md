@@ -22,18 +22,18 @@ Alt titles: Why Snakebite Medicine Comes From Horses / India's Deadliest Animal 
 | 6 | Your body runs on messages. | THE VENOM | YOUR BODY / RUNS ON MESSAGES | Gray's body outline (white on dark board) with nerves lighting up |
 | 7 | Your nerves tell your muscles when to move, and when to breathe. | THE VENOM | MOVE. / BREATHE. | Signal sparks run down a nerve to the arm, then to the diaphragm |
 | 8 | The venom of a cobra jams that signal. | THE VENOM | IT JAMS / THE SIGNAL | Red venom blobs block the spark at the nerve-muscle junction; spark fizzles |
-| 9 | The eyelids droop first. Then the breathing muscles can stop. | THE VENOM | EYELIDS DROOP / THEN BREATHING | Paper face, eyelids drooping; lungs slow, stopwatch appears |
-| 10 | Viper venom does something else. It stops your blood from making clots. | THE VENOM | BLOOD / WON'T CLOT | Russell's viper card; blood drop that won't form a clot (red cells scatter) |
+| 9 | The eyelids droop first. After that, the breathing muscles can stop. | THE VENOM | EYELIDS DROOP / THEN BREATHING | Paper face, eyelids drooping; lungs slow, stopwatch appears |
+| 10 | The venom of a viper does something else. It stops your blood from making clots. | THE VENOM | BLOOD / WON'T CLOT | Russell's viper card; blood drop that won't form a clot (red cells scatter) |
 | 11 | Now, the horse. | THE HORSE | NOW, / THE HORSE | Horse cut-out on khaki paper |
 | 12 | Scientists collect venom from the four snakes behind most deaths in India. | THE HORSE | THE / BIG FOUR | Four snake cards pinned up: cobra, krait, Russell's viper, saw-scaled viper |
 | 13 | They give a horse tiny doses. Too small to hurt it. | THE HORSE | TINY / DOSES | Syringe; a dose gauge with the needle in a green "SAFE" zone |
 | 14 | The horse's immune army learns the enemy, and builds antibodies. | THE HORSE | ITS ARMY / LEARNS | Microscope circle: Y-shaped antibodies appear and grab venom blobs |
 | 15 | Then they take some of its blood, and purify those antibodies. | THE HORSE | PURIFIED / ANTIBODIES | Blood bag -> filter -> clear vial labelled ANTIVENOM |
-| 16 | That's antivenom. Borrowed bodyguards that grab the venom before it does more damage. | THE CURE | BORROWED / BODYGUARDS | Antibodies swarm venom in the blood; venom neutralised (greyed out) |
+| 16 | That medicine is called antivenom. Borrowed bodyguards that grab the venom before it does more damage. | THE CURE | BORROWED / BODYGUARDS | Antibodies swarm venom in the blood; venom neutralised (greyed out) |
 | 17 | But many people don't die from the snake. They die from the delay. | THE DELAY | NOT THE SNAKE / THE DELAY | Stopwatch, red sector growing |
 | 18 | A krait often bites at night, while people sleep on the floor. | THE DELAY | AT NIGHT / ON THE FLOOR | Paper room at night, moon in window, mat on floor, krait sliding past |
 | 19 | The bite can be almost painless, so people go back to sleep. | THE DELAY | ALMOST / PAINLESS | Tiny two-dot bite; "PAIN" meter barely moves |
-| 20 | Others lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
+| 20 | Some people lose hours on cutting, sucking, tight ropes or herbs. | MYTHS | HOURS / WASTED | Four Polaroids on a string: knife, mouth, rope, leaves; each gets a red X |
 | 21 | None of these get the venom out. | MYTHS | NONE / WORK | Stamp: "DOESN'T WORK" |
 | 22 | Doctors say to stay calm, keep the bitten arm or leg still, and get to a hospital fast. | WHAT TO DO | STAY CALM / GET TO HOSPITAL | Checklist card ticks: Calm / Still / Hospital |
 | 23 | Did you know your life could depend on a horse? Tell me in the comments. | END | A HORSE / SAVED YOU? | Horse with a tiny red cross badge; comment bubble |

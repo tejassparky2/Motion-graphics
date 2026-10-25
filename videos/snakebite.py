@@ -21,19 +21,21 @@ SCRIPT = [
     dict(id="s6", scene="s6", text="Your body runs on messages."),
     dict(id="s7", scene="s7", text="Your nerves tell your muscles when to move, and when to breathe."),
     dict(id="s8", scene="s8", text="The venom of a cobra jams that signal."),
-    dict(id="s9", scene="s9", text="The eyelids droop first. Then the breathing muscles can stop."),
-    dict(id="s10", scene="s10", text="Viper venom does something else. It stops your blood from making clots."),
+    dict(id="s9", scene="s9", text="The eyelids droop first. After that, the breathing muscles can stop."),
+    dict(id="s10", scene="s10", text="The venom of a viper does something else. It stops your blood from making "
+                                     "clots."),
     dict(id="s11", scene="s11", text="Now, the horse."),
     dict(id="s12", scene="s12", text="Scientists collect venom from the four snakes behind most deaths in India."),
     dict(id="s13", scene="s13", text="They give a horse tiny doses. Too small to hurt it."),
     dict(id="s14", scene="s14", text="The horse's immune army learns the enemy, and builds antibodies."),
     dict(id="s15", scene="s15", text="Then they take some of its blood, and purify those antibodies."),
-    dict(id="s16", scene="s16", text="That's antivenom. Borrowed bodyguards that grab the venom before it does more "
+    dict(id="s16", scene="s16", text="That medicine is called [anti venom.|antivenom.] Borrowed bodyguards that grab the "
+                                     "venom before it does more "
                                      "damage."),
     dict(id="s17", scene="s17", text="But many people don't die from the snake. They die from the delay."),
     dict(id="s18", scene="s18", text="A [kright|krait] often bites at night, while people sleep on the floor."),
     dict(id="s19", scene="s19", text="The bite can be almost painless, so people go back to sleep."),
-    dict(id="s20", scene="s20", text="Others lose hours on cutting, sucking, tight ropes or herbs."),
+    dict(id="s20", scene="s20", text="Some people lose hours on cutting, sucking, tight ropes or herbs."),
     dict(id="s21", scene="s21", text="None of these get the venom out."),
     dict(id="s22", scene="s22", text="Doctors say to stay calm, keep the bitten arm or leg still, and get "
                                      "to a hospital fast."),
