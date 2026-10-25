@@ -96,7 +96,7 @@ th.captions in Anton (white, the spoken word red).
 | 6 | Codex | GPT-6 Astra, GPT-6.1 Sol, and GPT-6 Luna. In private preview, for some big companies. | models card |
 | 7 | Dev | And you? | |
 | 8 | Codex | Codex can connect to it from day one. | |
-| 9 | Dev | What about Claude? | |
+| 9 | Dev | And Claude? (was "What about Claude?", heard "but about") | |
 | 10 | Codex | One day later, Claude's full platform went live there too. | headline |
 | 11 | Dev | So Google sells its rivals? | |
 | 12 | Codex | Google says it's the only big cloud with all three. Gemini, Claude, and GPT. | 3 logos-free card |

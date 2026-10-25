@@ -36,7 +36,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("g6", "cxclose", CX, "[G P T six|GPT-6] Astra, [G P T six point one|GPT-6.1] Sol, and [G P T six|GPT-6] Luna. In private preview, for some big companies.", .3, 1),
     ("g7", "devclose", DEV, "And you?", .3, 1),
     ("g8", "cxclose", CX, "Codex can connect to it from day one.", .3, 1),
-    ("g9", "devclose", DEV, "What about Claude?", .3, 1),
+    ("g9", "devclose", DEV, "And Claude?", .3, 1),
     ("g10", "cx", CX, "One day later, Claude's full platform went live there too.", .3, 1),
     ("g11", "devmid", DEV, "So Google sells its rivals?", .35, 1),
     ("g12", "cxclose", CX, "Google says it's the only big cloud with all three. Gemini, Claude, and [G P T.|GPT.]", .3, 1),
