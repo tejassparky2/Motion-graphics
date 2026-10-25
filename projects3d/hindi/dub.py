@@ -32,7 +32,9 @@ def best_prefix(script, heard):
         if r > best + 1e-6:
             best, k_best = r, k
     # Whisper wrote the line mostly in Latin letters (Hinglish): no reliable match, keep every heard word
-    return k_best if best >= 0.45 else len(heard)
+    if best < 0.45 or len(heard) - k_best <= 1:      # one extra heard word is a merge/split, not babble (babble runs on)
+        return len(heard)
+    return k_best
 
 
 def main():
@@ -56,12 +58,12 @@ def main():
         w, sr = soundfile.read(got[s])
         w = w if w.ndim == 1 else w.mean(axis=1)
         # the multilingual model sometimes keeps babbling (loudly, even word-like) after the sentence: keep only the
-        # heard words that best match the script line and cut 0.2 s after them, then trim quiet edges
+        # heard words that best match the script line and cut 0.3 s after them, then trim quiet edges
         words = [x for seg in model.transcribe(got[s], language="hi", word_timestamps=True)[0] for x in seg.words]
         if words:
             k = best_prefix(s, [x.word for x in words])
-            w = w[: int(min(len(w) / sr, words[k - 1].end + 0.2) * sr)]
-        w = hv.speech_only(w, sr)
+            w = w[: int(min(len(w) / sr, words[k - 1].end + 0.3) * sr)]
+        w = hv.speech_only(w, sr, rel=0.04, keep=0.15)      # gentle: keep soft endings ("भेजिए")
         raw = os.path.join(out, f"{a.name}_{i + 1:02d}.raw.wav")
         soundfile.write(raw, w, sr)
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", raw, "-af", hv.vo.POLISH + ",alimiter=limit=0.89",
