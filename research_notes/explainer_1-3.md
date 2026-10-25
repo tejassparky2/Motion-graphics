@@ -121,7 +121,7 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 | 6 | And it isn't a virus or a bacterium. It's a parasite. So let's follow its journey. | THE PARASITE | IT'S A / PARASITE | Microscope circle: crescent-shaped parasite, label "PLASMODIUM" |
 | 7 | Only female mosquitoes drink blood. They need that blood to make their eggs. | THE BITE | ONLY / FEMALES | Female mosquito card with egg raft; male crossed out |
 | 8 | When an infected one bites, tiny parasites slip into your blood. | THE BITE | INTO / YOUR BLOOD | Close-up: proboscis, tiny parasites streaming in |
-| 9 | Within hours, they reach your liver and hide inside its cells. | THE LIVER | THEY / HIDE | Paper body map: dotted route arm -> liver; liver cells with parasites inside |
+| 9 | Within hours, they reach your liver and hide inside liver cells. | THE LIVER | THEY / HIDE | Paper body map: dotted route arm -> liver; liver cells with parasites inside |
 | 10 | There, quietly, each one multiplies into thousands. | THE LIVER | ONE BECOMES / THOUSANDS | Liver cell swelling, counter rolling up |
 | 11 | Then the liver cells burst, and the parasites flood your blood. | THE BLOOD | THEN / THEY BURST | Liver cell pops; flood into a red blood vessel |
 | 12 | Each one breaks into a red blood cell, multiplies again, and bursts it open. | THE BLOOD | INVADE / AND BURST | Red cell fills with parasites and splits |

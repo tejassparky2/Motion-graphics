@@ -4,7 +4,7 @@
 from motion import paper as P
 from videos import malaria_shots as S
 
-NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O" (25 Oct): Orpheus, natural pace
+NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O+" (25 Oct)
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2
@@ -20,7 +20,7 @@ SCRIPT = [
                                    "journey."),
     dict(id="m7", scene="m7", text="Only female mosquitoes drink blood. They need that blood to make their eggs."),
     dict(id="m8", scene="m8", text="When an infected one bites, tiny parasites slip into your blood."),
-    dict(id="m9", scene="m9", text="Within hours, they reach your liver and hide inside its cells."),
+    dict(id="m9", scene="m9", text="Within hours, they reach your liver, and hide inside liver cells."),
     dict(id="m10", scene="m10", text="There, quietly, each one multiplies into thousands."),
     dict(id="m11", scene="m11", text="Then the liver cells burst, and the parasites flood your blood."),
     dict(id="m12", scene="m12", text="Each one breaks into a red blood cell, multiplies again, and bursts it open."),

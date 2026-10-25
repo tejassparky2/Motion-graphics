@@ -9,7 +9,8 @@ doctor work to `ccr-56282fe5-evehq4-doctor` only. The rules below apply to both 
   (`motion/voice.py` default ENGINE "kokoro"). The cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks.
 - Doctor channel (owner, 24 Oct 2026): the new explainer format replaces the doctor-and-organs format. Voice
   (owner, 25 Oct 2026, "Go with o", after "this seems like pure AI voice, no human touch"): **Orpheus TTS stock voice
-  "leo"** at its natural pace (`NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)`, tools/orpheus_tts.py,
+  "leo", Q8 model + clarity EQ ("O+", owner: "Yeah this is clear")** at its natural pace
+  (`NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)`, tools/orpheus_tts.py,
   venv /home/user/.venv-orpheus). Not Turbo, not Kokoro-derived timbres (they sounded robotic). Older doctor videos
   used Kokoro `am_adam`; leave them as released.
 

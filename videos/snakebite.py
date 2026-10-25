@@ -5,7 +5,7 @@ subtitles. Script, shot list and sources: research_notes/explainer_1-3.md.
 from motion import paper as P
 from videos import snakebite_shots as S
 
-NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O" (25 Oct): Orpheus, natural pace
+NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O+" (25 Oct)
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2

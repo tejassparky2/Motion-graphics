@@ -33,6 +33,10 @@ from .engine import ROOT
 CLONE_PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt.wav")
 CLONE_PYTHON = os.environ.get("CLONE_PYTHON", "/home/user/.venv-clone/bin/python")
 ORPHEUS_PYTHON = os.environ.get("ORPHEUS_PYTHON", "/home/user/.venv-orpheus/bin/python")
+ORPHEUS_REPOS = {"q8": "PkmX/orpheus-3b-0.1-ft-Q8_0-GGUF", "q6": "TheVisitorX/orpheus-3b-0.1-ft-Q6_K-GGUF"}
+# Orpheus is breathy: a presence lift and gentle compression make it clearer on a phone (owner approved "O+")
+ORPHEUS_TONE = ("highpass=f=80,equalizer=f=220:t=q:w=1:g=-2,equalizer=f=3000:t=q:w=1:g=4,equalizer=f=6000:t=q:w=1:g=2,"
+                "acompressor=threshold=-20dB:ratio=3:attack=5:release=60:makeup=2,alimiter=limit=0.95")
 ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
 if ENGINE == "clone":
     # Owner approved the sample and asked for "slightly faster". The clone reads short sentences slowly, so takes
@@ -62,7 +66,7 @@ MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference nar
 
 
 def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, turbo_ref=None, rate=None,
-              tempo_min=None, tempo_max=None, orpheus=None):
+              tempo_min=None, tempo_max=None, orpheus=None, orpheus_quant="q4"):
     """Per-video narrator settings (environment variables still win, so you can audition voices).
     `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris).
     `turbo=True` voices the video with Chatterbox Turbo (and its tags); `turbo_ref="am_puck+1.5"` gives the narrator
@@ -77,8 +81,8 @@ def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, 
     if tempo_max:
         TEMPO_MAX = tempo_max
     if orpheus and "NARRATOR_ENGINE" not in os.environ:   # `orpheus="leo"`: Orpheus TTS stock voice (tools/orpheus_tts.py)
-        engine = "clone"
-        CLONE_MODEL = f"orpheus-{orpheus}"
+        engine = "clone"                                 # `orpheus_quant="q8"`: the bigger, clearer model (owner: "O+")
+        CLONE_MODEL = f"orpheus-{orpheus}" + ("" if orpheus_quant == "q4" else f"-{orpheus_quant}")
     if turbo and "NARRATOR_ENGINE" not in os.environ:
         engine = "clone"
         if "CLONE_MODEL" not in os.environ:
@@ -449,7 +453,8 @@ def _clone_process(text, pace, who=None):
         stretch = (f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
                    f"formant=preserved:pitchq=quality,") if abs(tempo - 1) > 0.005 else ""
         subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text, who),
-                        "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
+                        "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else ORPHEUS_TONE if CLONE_MODEL.startswith("orpheus-")
+                                                 else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
     return out, rate * tempo
 
 
@@ -500,8 +505,11 @@ def clone_prefetch(texts):
     # the model choice must reach the subprocess: a video that picks Turbo in its NARRATOR settings (not the shell
     # environment) was otherwise voiced by the owner-clone model, tags read out as words (found 15 Oct 2026)
     if CLONE_MODEL.startswith("orpheus-"):
-        subprocess.run([ORPHEUS_PYTHON, os.path.join(ROOT, "tools", "orpheus_tts.py"), path], check=True,
-                       env=dict(os.environ, ORPHEUS_VOICE=CLONE_MODEL.split("-", 1)[1]))
+        _, voice, *quant = CLONE_MODEL.split("-")
+        env = dict(os.environ, ORPHEUS_VOICE=voice)
+        if quant:
+            env["ORPHEUS_REPO"] = ORPHEUS_REPOS[quant[0]]
+        subprocess.run([ORPHEUS_PYTHON, os.path.join(ROOT, "tools", "orpheus_tts.py"), path], check=True, env=env)
         return
     subprocess.run([CLONE_PYTHON, os.path.join(ROOT, "tools", "clone_tts.py"), path], check=True,
                    env=dict(os.environ, CLONE_MODEL=CLONE_MODEL))

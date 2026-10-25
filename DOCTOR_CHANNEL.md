@@ -18,7 +18,9 @@ How the explainers are built:
   `P.frame()`. No subtitles (the headline is the only text tied to the voice, like the references). The channel
   logo sits small at the top-left above the header (`P.brand`).
 - Voice (owner's pick "O", 25 Oct, after "pure AI voice, no human touch"): Orpheus TTS stock voice "leo",
-  `NARRATOR = dict(orpheus="leo", tempo_min=1.0, tempo_max=1.0)` (no time-stretching). Setup: `uv venv -p python3.12
+  `NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)` (no time-stretching): the Q8
+  model (the default Q4 was muddy: "Malaria" heard as "Valeria") + `ORPHEUS_TONE` clarity EQ = "O+", approved
+  ("Yeah this is clear"). Orpheus can change words, so it runs at temperature 0.45 with 6 Whisper-checked tries. Setup: `uv venv -p python3.12
   /home/user/.venv-orpheus` + `orpheus-cpp llama-cpp-python soundfile` (CPU wheels from
   https://abetlen.github.io/llama-cpp-python/whl/cpu); ~11x slower than real time on 4 cores. Turbo tags don't apply.
   Earlier tries: Turbo female, then Turbo with am_echo's timbre ("D") (calmer than the story videos' 5.5 syllables/s),
