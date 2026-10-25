@@ -32,6 +32,7 @@ from .engine import ROOT
 # cloned-voice videos (35% stayed to watch) and switched back (5 Oct 2026).
 CLONE_PROMPT = os.path.join(ROOT, "assets", "voice", "owner_prompt.wav")
 CLONE_PYTHON = os.environ.get("CLONE_PYTHON", "/home/user/.venv-clone/bin/python")
+ORPHEUS_PYTHON = os.environ.get("ORPHEUS_PYTHON", "/home/user/.venv-orpheus/bin/python")
 ENGINE = os.environ.get("NARRATOR_ENGINE", "kokoro")
 if ENGINE == "clone":
     # Owner approved the sample and asked for "slightly faster". The clone reads short sentences slowly, so takes
@@ -61,18 +62,23 @@ MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference nar
 
 
 def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, turbo_ref=None, rate=None,
-              tempo_min=None):
+              tempo_min=None, tempo_max=None, orpheus=None):
     """Per-video narrator settings (environment variables still win, so you can audition voices).
     `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris).
     `turbo=True` voices the video with Chatterbox Turbo (and its tags); `turbo_ref="am_puck+1.5"` gives the narrator
     the timbre of that Kokoro voice (pitch-shifted by the semitones after +/-) instead of Turbo's stock voice.
     `rate` (syllables per second) and `tempo_min` set a calmer pace for clone/Turbo takes (the doctor channel's
     explainers are read slower than the story videos)."""
-    global VOICE, SPEED, MAX_PAUSE, ENGINE, CLONE_MODEL, NARRATOR_REF, CLONE_RATE, TEMPO_MIN
+    global VOICE, SPEED, MAX_PAUSE, ENGINE, CLONE_MODEL, NARRATOR_REF, CLONE_RATE, TEMPO_MIN, TEMPO_MAX
     if rate and "CLONE_RATE" not in os.environ:
         CLONE_RATE = rate
     if tempo_min:
         TEMPO_MIN = tempo_min
+    if tempo_max:
+        TEMPO_MAX = tempo_max
+    if orpheus and "NARRATOR_ENGINE" not in os.environ:   # `orpheus="leo"`: Orpheus TTS stock voice (tools/orpheus_tts.py)
+        engine = "clone"
+        CLONE_MODEL = f"orpheus-{orpheus}"
     if turbo and "NARRATOR_ENGINE" not in os.environ:
         engine = "clone"
         if "CLONE_MODEL" not in os.environ:
@@ -493,6 +499,10 @@ def clone_prefetch(texts):
     print(f"clone voice: generating {len(jobs)} sentences", file=sys.stderr, flush=True)
     # the model choice must reach the subprocess: a video that picks Turbo in its NARRATOR settings (not the shell
     # environment) was otherwise voiced by the owner-clone model, tags read out as words (found 15 Oct 2026)
+    if CLONE_MODEL.startswith("orpheus-"):
+        subprocess.run([ORPHEUS_PYTHON, os.path.join(ROOT, "tools", "orpheus_tts.py"), path], check=True,
+                       env=dict(os.environ, ORPHEUS_VOICE=CLONE_MODEL.split("-", 1)[1]))
+        return
     subprocess.run([CLONE_PYTHON, os.path.join(ROOT, "tools", "clone_tts.py"), path], check=True,
                    env=dict(os.environ, CLONE_MODEL=CLONE_MODEL))
 
@@ -561,6 +571,8 @@ def clone_check(takes, tries=3, slack=0.15):
     takes = list(dict.fromkeys(tuple(x) + (None,) * (3 - len(x)) for x in takes))
     if CLONE_MODEL == "turbo":   # Turbo's pace varies with emotion; clarity and tag sounds stay strict, pace less so
         slack = max(slack, 0.3)
+    if CLONE_MODEL.startswith("orpheus-"):   # Orpheus keeps its own natural pace (no stretching): check clarity only
+        slack = 9.0
     tries = tries + 2 if any(_has_sound(t) for t, _, _ in takes) else tries
     todo = [(t, p, w) for t, p, w in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w) + ".ok")]
     if not todo:
