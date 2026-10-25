@@ -34,4 +34,4 @@ horror story, interactive story, you decide, choose your ending, fire tower, for
 Open the hatch 🚪 or keep it shut 🔒? Most comments decide Night 2. (Look closely at the lightning ⚡)
 ```
 
-**Video facts:** 69.3 s, 203 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 70.3 s, 203 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
