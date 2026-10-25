@@ -64,6 +64,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - Owner on the 2D Tower 9 (25 Oct): "Tower 9 is better now". Keep what it has: warm practical light (bulb, lantern,
   LCD) against the cold storm, objects that tell the story close up (radio, logbook writing itself, clock, fuel gauge,
   hatch), the outfit detail paid off in the lightning, and the mix fixes above.
+- Channel name (owner asked for "unique channel name with human touch"): suggested **Midnight with Mae** (@MidnightWithMae
+  was free on 25 Oct); Mae is a fictional storyteller (toon2d.mae_bust), never presented as a real person, and the
+  description says the voices are synthetic. Channel art: `python channels/horror/brand.py` -> out/horror/channel/
+  (avatar.png, banner.png); setup steps, description and keywords: out/horror/channel/setup.md. The owner creates the
+  Gmail and channel (phone verification); never ask for their password.
 - Next (owner, 25 Oct: "Yes do the Quaternius and vrm avatar model test after these"): a 15 s test with Quaternius CC0
   bodies + animations (build/assets3d/uaf: Universal Animation Library 1 and 2, standard, from opengameart.org; 89 clips
   incl. Driving, Idle_Torch, Sitting, Crouch, Hit_Head, Idle_TalkingPhone, ClimbUp, Zombie_Walk) and a VRM face
