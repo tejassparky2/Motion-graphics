@@ -8,6 +8,7 @@ Indian way). Each line is made up to 3 times and heard back with Whisper medium 
 Chatterbox's Perth watermark is left in place. The prompt and the dub stay out of git (out/3d/ is ignored).
 """
 import argparse
+import difflib
 import json
 import os
 import subprocess
@@ -19,6 +20,19 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 sys.path.insert(0, os.path.join(ROOT, "tools"))
 import hindi_voiceover as hv     # noqa: E402
+
+
+def best_prefix(script, heard):
+    """How many heard words make up the script line: the prefix most like the script (ties: the shorter one)."""
+    target = "".join(hv._words(script))
+    n = len(hv._words(script))
+    best, k_best = -1.0, len(heard)
+    for k in range(max(1, n - 3), min(len(heard), n + 3) + 1):
+        r = difflib.SequenceMatcher(None, target, "".join(hv._words(" ".join(heard[:k])))).ratio()
+        if r > best + 1e-6:
+            best, k_best = r, k
+    # Whisper wrote the line mostly in Latin letters (Hinglish): no reliable match, keep every heard word
+    return k_best if best >= 0.45 else len(heard)
 
 
 def main():
@@ -41,11 +55,12 @@ def main():
     for i, s in enumerate(lines):
         w, sr = soundfile.read(got[s])
         w = w if w.ndim == 1 else w.mean(axis=1)
-        # the multilingual model sometimes keeps babbling (loudly) after the sentence: cut 0.2 s after the last word
-        # Whisper hears, then trim quiet edges
+        # the multilingual model sometimes keeps babbling (loudly, even word-like) after the sentence: keep only the
+        # heard words that best match the script line and cut 0.2 s after them, then trim quiet edges
         words = [x for seg in model.transcribe(got[s], language="hi", word_timestamps=True)[0] for x in seg.words]
         if words:
-            w = w[: int(min(len(w) / sr, words[-1].end + 0.2) * sr)]
+            k = best_prefix(s, [x.word for x in words])
+            w = w[: int(min(len(w) / sr, words[k - 1].end + 0.2) * sr)]
         w = hv.speech_only(w, sr)
         raw = os.path.join(out, f"{a.name}_{i + 1:02d}.raw.wav")
         soundfile.write(raw, w, sr)
