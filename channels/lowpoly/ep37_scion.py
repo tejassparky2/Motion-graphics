@@ -36,7 +36,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("s7", "soloclose", CL, "By September, over [thirty thousand.|30,000.]", .25, 1),
     ("s8", "devclose", DEV, "[Thirty thousand|30,000] a day?", .3, 1),
     ("s9", "solo", CL, "And [twenty-five million|25 million] code checkouts a day, just for testing.", .3, 1),
-    ("s10", "devclose", DEV, "Too much for git?", .3, 1),
+    ("s10", "devclose", DEV, "Does git break?", .3, 1),
     ("s11", "soloclose", CL, "Done the normal way, that's over [six hundred|600] petabytes a day.", .3, 1),
     ("s12", "devmid", DEV, "So what did they build?", .35, 1),
     ("s13", "solo", CL, "Scion. Their own version control. Two hundred times lighter than the old git mirrors.", .3, 1),
