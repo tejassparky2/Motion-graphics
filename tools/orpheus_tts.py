@@ -40,6 +40,8 @@ def _token_gen(self, text, options=None):
 
 
 OrpheusCpp._token_gen = _token_gen
+# the default Q4_K_M model is muddy on some words ("Malaria" heard as "Valeria"); ORPHEUS_REPO picks another quant
+OrpheusCpp.lang_to_model = dict(OrpheusCpp.lang_to_model, en=os.environ.get("ORPHEUS_REPO", OrpheusCpp.lang_to_model["en"]))
 
 
 def trim(w, sr):
