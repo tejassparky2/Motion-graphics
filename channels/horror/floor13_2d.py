@@ -11,7 +11,7 @@ from motion import voice
 from motion.engine import W, H, cairo, clamp01, cue, seg
 
 from channels.horror import floor13 as ep3d
-from channels.horror import hud, sound  # noqa: F401  (sound registers the horror effects)
+from channels.horror import hud, hud2d, sound  # noqa: F401  (sound registers the horror effects)
 from channels.horror import toon2d as tk
 from channels.horror.toon2d import INK, glow, grade, hexa, mix, noise, poly, toon
 
@@ -447,8 +447,8 @@ def shots(tl):
         (B["f3"].start - 0.2, "panel"), (B["f4"].start - 0.2, "sign"),
         (B["f5"].start - 0.2, "lights_out"), (A("f5", "Battery,") - 0.15, "hall_red"),
         (B["f6"].start - 0.2, "hall_eyes"), (B["f7"].start - 0.2, "hall_gray_far"),
-        (A("f7", "Mrs.") - 0.1, "face_listen"), (B["f8"].start - 0.2, "hall_gray_mid"),
-        (A("f8", "Come") - 0.1, "face_listen"), (B["f9"].start - 0.2, "flashback"),
+        (B["f8"].start - 0.2, "hall_gray_mid"), (B["f9"].start - 0.2, "face_listen"),
+        (A("f9", "cane.", end=True) + 0.1, "flashback"),
         (B["f10"].start - 0.2, "phone"), (B["f12"].start - 0.2, "panel_gap"), (B["f13"].start - 0.2, "phone"),
         (B["f15"].start - 0.2, "hall_empty"), (B["f16"].start - 0.2, "mirror"), (B["f17"].start - 0.2, "turn"),
         (A("f17", "isn't.") - 0.03, "reveal"), (B["f18"].start - 0.95, "drop"), (B["f19"].start - 0.2, "gray_close"),
@@ -491,7 +491,7 @@ def draw(cr, t, tl):
     cr.save()
     if name == "face_hook":
         camera(cr, t, s0, s1, 1.0, 1.07)
-        elevator_wall(cr, t)
+        hud2d.blurred(cr, lambda c: elevator_wall(c, t))
         f = tk.face_mix("uneasy", "alarmed", seg(t, A("f1", "stopped") - 0.2, A("f1", "stopped") + 0.3))
         tk.you_bust(cr, 360, 930, 1.42, f, t, look=(0.15, -0.9), tilt=-0.05, rim=COLD_RIM, rim_from=(-10, -4),
                     sweat=seg(t, 2.5, 3.5))
@@ -515,7 +515,7 @@ def draw(cr, t, tl):
         sign_scene(cr, t)
     elif name == "lights_out":
         camera(cr, t, s0, s1, 1.02, 1.1)
-        elevator_wall(cr, t, lit=0 if t > t_die else 1)
+        hud2d.blurred(cr, lambda c: elevator_wall(c, t, lit=0 if t > t_die else 1))
         f = tk.face_mix("alarmed", "terror", seg(t, t_red, t_red + 0.5))
         tk.you_bust(cr, 360, 930, 1.42, f, t, look=(0.6 * math.sin(t * 2.2), -0.2), tilt=0.03,
                     rim=RED_RIM if red_on else COLD_RIM, rim_from=(10, -6), sweat=1.0, tremble=0.6 if red_on else 0.0,
@@ -539,7 +539,7 @@ def draw(cr, t, tl):
         grade(cr, (0.9, 0.3, 0.28), (0.5, 0.1, 0.12))
     elif name == "face_listen":
         camera(cr, t, s0, s1, 1.05, 1.12)
-        elevator_wall(cr, t, lit=0)
+        hud2d.blurred(cr, lambda c: elevator_wall(c, t, lit=0))
         tk.you_bust(cr, 360, 930, 1.42, tk.face_mix("terror", "terror", 0), t, look=(0.9, 0.1), turn=0.35, rim=RED_RIM,
                     rim_from=(10, -6), sweat=1, tremble=0.7, skin=red_skin)
         grade(cr, (0.95, 0.25, 0.2), (0.35, 0.05, 0.08))
@@ -547,13 +547,14 @@ def draw(cr, t, tl):
         flashback(cr, t, seg(t, s0, s0 + 0.4), seg(t, A("f9", "can't") - 0.1, A("f9", "stairs.", end=True)))
         grade(cr, (1, 0.93, 0.8), (0.8, 0.7, 0.6))
     elif name == "phone":
-        camera(cr, t, s0, s1, 1.0, 1.06)
-        elevator_wall(cr, t, lit=0)
-        blue = mix(tk.SKIN, (0.55, 0.7, 1.0, 1), 0.45)
-        tk.you_bust(cr, 360, 930, 1.42, tk.face_mix("alarmed", "alarmed", 0), t, look=(0, 1.0), tilt=0.12,
-                    rim=RED_RIM, rim_from=(10, -6), skin=blue, sweat=1)
-        grade(cr, (0.55, 0.62, 0.85), (0.2, 0.12, 0.22))       # the phone's cold light, the red only at the rim
-        tk.phone_in_hands(cr, 360, 1130, 1.3, t)
+        camera(cr, t, s0, s1, 1.0, 1.04, shake=0.6)
+        hud2d.blurred(cr, lambda c: (elevator_wall(c, t, lit=0), grade(c, (0.9, 0.3, 0.28), (0.3, 0.06, 0.08))), sigma=10)
+        first = t < B["f13"].start - 0.2
+        notes = ([(A("f10", "building") - 0.3, "MESSAGES", "Tower B Residents", "Elevator broken since 6 PM. Nobody use it.")]
+                 if first else
+                 [(B["f13"].start + 0.1, "MESSAGES", "Mrs. Gray (1402)", "Are you in the elevator??"),
+                  (A("f14", "Don't") - 0.3, "MESSAGES", "Mrs. Gray (1402)", "Don't come out. I'm at home on 14.")])
+        hud2d.phone_pov(cr, t, s0, "11:52", "Friday", notes, skin=mix(tk.SKIN, (0.55, 0.7, 1.0, 1), 0.3))
     elif name == "panel_gap":
         camera(cr, t, s0, s1, 1.0, 1.35, cx=465, cy=440)
         panel_scene(cr, t, gap_focus=seg(t, s0, s0 + 0.6))
@@ -564,7 +565,7 @@ def draw(cr, t, tl):
         grade(cr, (0.95, 0.3, 0.25), (0.45, 0.08, 0.1))
     elif name == "turn":
         camera(cr, t, s0, s1, 1.05, 1.1, shake=2.0)
-        elevator_wall(cr, t, lit=0)
+        hud2d.blurred(cr, lambda c: elevator_wall(c, t, lit=0))
         tk.you_bust(cr, 360, 930, 1.42, tk.face_mix("terror", "terror", 0), t, look=(1.0, 0), turn=-0.9 * seg(t, s0, s0 + 0.6),
                     rim=RED_RIM, rim_from=(10, -6), sweat=1, tremble=1.0, skin=red_skin)
         grade(cr, (0.95, 0.25, 0.2), (0.35, 0.05, 0.08))
@@ -590,7 +591,7 @@ def draw(cr, t, tl):
         grade(cr, (0.95, 0.3, 0.25), (0.45, 0.08, 0.1))
     elif name == "face_2pct":
         camera(cr, t, s0, s1, 1.08, 1.16)
-        elevator_wall(cr, t, lit=0)
+        hud2d.blurred(cr, lambda c: elevator_wall(c, t, lit=0))
         tk.you_bust(cr, 360, 930, 1.42, tk.face_mix("terror", "terror", 0), t, look=(0.2, -0.5), rim=RED_RIM,
                     rim_from=(10, -6), sweat=1, tremble=1.0, skin=mix(red_skin, (0, 0, 0, 1), 0.3))
         grade(cr, (0.75, 0.15, 0.12), (0.25, 0.03, 0.05))
@@ -608,30 +609,29 @@ def draw(cr, t, tl):
         cr.set_source_rgba(0, 0, 0, 1 if t < t_red - 0.25 else 0.6)
         cr.paint()
     hud.blackout(cr, t, A("f17", "around.", end=True) + 0.05, A("f17", "isn't.") - 0.03)
-    hud.finish(cr, t, flash_at=[A("f17", "isn't."), t_drop], vig=0.55, grain=0.07)
-    if t >= A("f5", "Battery,"):
-        v = 0.12 - 0.10 * seg(t, A("f5", "Battery,"), B["f20"].start + 0.3)
-        hud.meter(cr, t, "EMERGENCY LIGHT", v, warn=0.15, shake_below=0.05)
-    hud.tag(cr, t, "FLOOR 13", "PART 1")
-    chips = [("FLOOR 13", None, True),
-             ("SIGNAL 1 BAR" if t >= B["f10"].start else "SIGNAL X", B["f10"].start, t < B["f10"].start)]
-    if t >= A("f18", "drops"):
-        chips.append(("DROP -0.5M", A("f18", "drops"), True))
-    hud.chips(cr, t, chips)
-    hud.rule(cr, t, A("f4", "don't", nth=1), "RULE: DON'T STEP OUT. DON'T ANSWER.")
-    hud.hook(cr, t, [("FLOOR 13?", True), ("YOUR BUILDING", False), ("DOESN'T HAVE ONE", False)],
-             end=A("f1", "13.", end=True) + 0.25, y=230, size=82)
-    hud.phone_thread(cr, t, B["f10"].start, B["f12"].start - 0.25, "Tower B Residents", "84 members",
-                     [(A("f10", "building") - 0.3, "in", "Elevator broken since 6 PM. Nobody use it.", None)])
-    hud.phone_thread(cr, t, B["f13"].start, B["f14"].end + 0.4, "Mrs. Gray", "Flat 1402",
-                     [(B["f13"].start + 0.1, "in", "Are you in the elevator??", None),
-                      (A("f14", "Don't") - 0.3, "in", "Don't come out. I'm at home on 14.", None)])
-    hud.big(cr, t, A("f12", "13?"), B["f12"].end + 0.3, [("WHO PRESSED 13?", True)], y=300, size=78)
-    hud.big(cr, t, A("f18", "drops"), B["f18"].end + 0.2, [("-0.5 M", True)], y=330, size=110)
+    hud.finish(cr, t, flash_at=[A("f17", "isn't."), t_drop], vig=0.55, grain=0.06)
+    if t < A("f5", "Battery,"):
+        batt = ("BATTERY", "--", None)
+    else:
+        v = round(12 - 10 * seg(t, A("f5", "Battery,"), B["f20"].start + 0.3))
+        batt = ("BATTERY", f"{v}%", "bad" if v <= 4 else "warn", A("f5", "Battery,"))
+    sig = ("SIGNAL", "1 BAR", "warn", B["f10"].start) if t >= B["f10"].start else ("SIGNAL", "NONE", "bad")
+    floor = ("FLOOR", "13 -0.5M", "bad", t_drop) if t >= t_drop else ("FLOOR", "13 ?", "bad")
+    hud2d.stats(cr, t, [floor, batt, sig])
+    hud2d.hook(cr, t, [("FLOOR 13?", True), ("YOUR BUILDING", False), ("DOESN'T HAVE ONE", False)],
+               end=A("f1", "13.", end=True) + 0.25, y=270)
+    hud2d.rule_tag(cr, t, A("f4", "don't", nth=1), B["f4"].end + 0.6, "RULE: DON'T STEP OUT. DON'T ANSWER.", y=200)
+    hud2d.stamp(cr, t, A("f12", "13?"), B["f12"].end + 0.3, ["WHO PRESSED 13?"], y=250)
+    hud2d.stamp(cr, t, t_drop + 0.05, t_drop + 1.0, ["-0.5 M"], y=330)
+    hud2d.bubble(cr, t, B["f7"].start, B["f7"].end, "Sweetheart? It's me. Mrs. Gray, from your floor.", 360, 330,
+                 (372, 470), creepy=True)
+    hud2d.bubble(cr, t, B["f8"].start, B["f8"].end, "The elevator is broken. Come out, quickly. I'll take you to the stairs.",
+                 360, 330, (372, 520), creepy=True)
+    hud2d.bubble(cr, t, B["f19"].start, B["f19"].end, "Come out now. Or you'll fall.", 360, 1010, (380, 820), creepy=True)
     if name == "shaft":
         hud.blueprint(cr, t, B["f20c"].start + 0.3, B["f20c"].end + 0.3, "THE SHAFT", ep3d.shaft)
-    hud.your_call(cr, t, A("f22", "step"), "STEP OUT", "STAY", "COMMENT: STEP OUT or STAY")
-    hud.captions(cr, t, tl, KEY)
+    hud2d.ab_card(cr, t, A("f22", "step"), "STEP OUT", "STAY", kicker="FLOOR 13 · PART 1 · YOUR CHOICE")
+    hud2d.captions(cr, t, tl, KEY, skip=("f7", "f8", "f19"))
     cue("hum", t, 0.0, t_die)
     cue("chime", t, A("f1", "stopped", end=True) + 0.05)
     cue("doors", t, B["f2"].start + 0.05)
