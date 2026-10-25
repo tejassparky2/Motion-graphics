@@ -50,7 +50,7 @@ Each episode ends on a two-way choice; the most-commented option decides the nex
 | 7 | (Driver) Eyes front. Don't turn around. | The driver, lit green by the dashboard |
 | 8 | In the dark window, you see your own reflection. And three faces behind you. | The window reflection: shining eyes in the seats behind you |
 | 9-10 | Your phone buzzes. The live bus tracker. / Route 9. Out of service. In the depot since 10:40. | Full-screen tracker: OUT OF SERVICE |
-| 11 | So what are you riding? | Your face |
+| 11 | So what bus are you on? | Your face |
 | 12 | The old man opens his eyes. He leans in, and whispers. | He turns round in his seat to face you |
 | 13 | (Old man, whispering) The driver isn't taking us home. Get off at the next stop. With me. | Close on him |
 | 14 | Something breathes on the back of your neck. | Behind you: a cold breath; PASSENGERS 7 |

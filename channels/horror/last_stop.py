@@ -36,7 +36,7 @@ SCRIPT = [
     dict(id="b8", scene="window", text="In the dark window, you see your own reflection. And three faces behind you."),
     dict(id="b9", scene="phone", text="Your phone buzzes. The live bus tracker."),
     dict(id="b10", scene="phone", text="Route [nine.|9.] Out of service. In the depot since [ten forty.|10:40.]"),
-    dict(id="b11", scene="you_close", text="So what are you riding?"),
+    dict(id="b11", scene="you_close", text="So what bus are you on?"),
     dict(id="b12", scene="oldman", text="The old man opens his eyes. He leans in, and whispers."),
     dict(id="b13", scene="oldman_close", text="[whispering] The driver isn't taking us home. Get off at the next stop. "
                                               "With me.", speaker="oldman", gap=0.35),
