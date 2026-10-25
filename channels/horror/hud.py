@@ -325,6 +325,82 @@ def captions(cr, t, tl, key=(), y=915, size=66, max_w=620):
 _caps = {}
 
 
+INK = (0.12, 0.1, 0.12, 1)
+PAPER = (0.93, 0.9, 0.82)
+MARK = "Permanent Marker"
+
+
+def blueprint(cr, t, start, end, title, drawing, y=230, w=620, h=600):
+    """A hand-drawn plan of the place, on paper (an attention reset in the middle of the story: the elevator shaft,
+    the bus route, the tower). `drawing(cr, k)` draws in card coordinates (0..w, 0..h) with k = 0..1 progress, so
+    lines can draw themselves on."""
+    if t < start or t > end + 0.25:
+        return
+    a = clamp01((t - start) / 0.2) * (1 - clamp01((t - end) / 0.25))
+    k = clamp01((t - start) / max(0.4, (end - start) * 0.7))
+    cr.save()
+    cr.translate((W - w) / 2, y + 40 * (1 - a))
+    cr.push_group()
+    rrect(cr, 0, 0, w, h, 10)
+    cr.set_source_rgba(*PAPER, 0.97)
+    cr.fill()
+    cr.set_source_rgba(0.55, 0.62, 0.75, 0.18)          # faint grid
+    cr.set_line_width(1)
+    for gx in range(20, w, 30):
+        cr.move_to(gx, 64)
+        cr.line_to(gx, h - 10)
+    for gy in range(64, h, 30):
+        cr.move_to(10, gy)
+        cr.line_to(w - 10, gy)
+    cr.stroke()
+    _plain(cr, "BLUEPRINT", 24, 50, 40, MARK, "left", INK)
+    _plain(cr, title, w - 24, 48, 22, MONO, "right", (*RED[:3], 1))
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(3)
+    cr.move_to(20, 64)
+    cr.line_to(w - 20, 64)
+    cr.stroke()
+    drawing(cr, k)
+    cr.pop_group_to_source()
+    cr.paint_with_alpha(a)
+    cr.restore()
+
+
+def ink(cr, pts, col=INK, lw=4, k=1.0, dash=None):
+    """A marker line through `pts`, drawn on up to fraction k of its length."""
+    segs = list(zip(pts, pts[1:]))
+    total = sum(math.dist(p, q) for p, q in segs) or 1
+    left = total * k
+    cr.set_source_rgba(*col)
+    cr.set_line_width(lw)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    cr.set_line_join(cairo.LINE_JOIN_ROUND)
+    if dash:
+        cr.set_dash(dash)
+    cr.move_to(*pts[0])
+    for p, q in segs:
+        d = math.dist(p, q)
+        if left <= 0:
+            break
+        u = min(1, left / d)
+        cr.line_to(p[0] + (q[0] - p[0]) * u, p[1] + (q[1] - p[1]) * u)
+        left -= d
+    cr.stroke()
+    cr.set_dash([])
+
+
+def label(cr, s, x, y, size=24, col=INK, align="left", font=MARK):
+    _plain(cr, s, x, y, size, font, align, col)
+
+
+def arrow(cr, x0, y0, x1, y1, col=RED, lw=5, k=1.0):
+    ink(cr, [(x0, y0), (x1, y1)], col, lw, k)
+    if k >= 1:
+        ang = math.atan2(y1 - y0, x1 - x0)
+        for s in (-1, 1):
+            ink(cr, [(x1, y1), (x1 - 18 * math.cos(ang + s * 0.5), y1 - 18 * math.sin(ang + s * 0.5))], col, lw)
+
+
 def finish(cr, t, flash_at=(), vig=0.5, grain=0.06):
     """Grain, vignette and white lightning/shock flashes."""
     g = cairo.RadialGradient(W / 2, H * 0.45, H * 0.2, W / 2, H * 0.48, H * 0.8)

@@ -78,6 +78,31 @@ KEY = {"yours", "help", "alone", "never", "hatch", "torches", "circling", "many"
        "knocks", "feet", "anything", "cry", "cold", "dark", "whatever", "voice", "ladder"}
 
 
+def tower(cr, k):
+    """The blueprint of tower 9: the cabin 30 m up, the hatch and the ladder, the generator at the base."""
+    hud.ink(cr, [(230, 110), (420, 110), (420, 200), (230, 200), (230, 110)], hud.INK, 5, k)
+    hud.ink(cr, [(215, 110), (325, 75), (435, 110)], hud.INK, 4, k)
+    hud.label(cr, "YOU", 250, 165, 28, hud.RED)
+    hud.ink(cr, [(360, 200), (400, 200)], hud.RED, 7, k)
+    hud.label(cr, "HATCH", 440, 215, 24, hud.RED)
+    for x0, x1 in ((240, 200), (410, 450)):
+        hud.ink(cr, [(x0, 200), (x1, 540)], hud.INK, 4, k)
+    hud.ink(cr, [(240, 200), (450, 540)], hud.INK, 2, k)
+    hud.ink(cr, [(410, 200), (200, 540)], hud.INK, 2, k)
+    for y in range(215, 540, 22):                        # the ladder under the hatch
+        hud.ink(cr, [(372, y), (390, y)], hud.INK, 2, k)
+    hud.ink(cr, [(372, 200), (372, 540)], hud.INK, 2, k)
+    hud.ink(cr, [(390, 200), (390, 540)], hud.INK, 2, k)
+    hud.arrow(cr, 120, 330, 120, 205, k=k)
+    hud.arrow(cr, 120, 410, 120, 535, k=k)
+    hud.label(cr, "30 M", 80, 380, 34, hud.RED)
+    for i in range(9):
+        x = 40 + i * 68
+        hud.ink(cr, [(x - 22, 560), (x, 515), (x + 22, 560), (x - 22, 560)], (0.2, 0.35, 0.22, 1), 3, k)
+    hud.ink(cr, [(470, 520), (540, 520), (540, 556), (470, 556), (470, 520)], hud.INK, 3, k)
+    hud.label(cr, "GENERATOR", 430, 505, 22, hud.INK)
+
+
 def draw(cr, t, tl):
     A, B = tl.at, tl.by_id
     hud.frame(cr, t, FRAMES)
@@ -103,6 +128,7 @@ def draw(cr, t, tl):
                                                             ("radio after 3 AM.", True), ("2. Never open", False),
                                                             ("the hatch.", True)], y=300, size=42, paper=(0.9, 0.86, 0.72))
     hud.time_card(cr, t, B["t6"].start, B["t6"].end + 0.4, "3:14 AM", "THE RULES START AT 3:00")
+    hud.blueprint(cr, t, A("t3", "Alone."), B["t3"].end + 0.3, "TOWER 9", tower)
     hud.big(cr, t, A("t15", "Two"), B["t15"].end + 0.3, [("HELP: 2 HOURS", False), ("FUEL: 1 HOUR", True)], y=320, size=80)
     hud.your_call(cr, t, A("t19", "open"), "OPEN IT", "KEEP SHUT", "COMMENT: OPEN or KEEP SHUT")
     hud.captions(cr, t, tl, KEY)

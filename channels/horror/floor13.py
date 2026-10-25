@@ -76,6 +76,26 @@ KEY = {"dark", "don't", "answer", "empty", "isn't", "fall", "falling", "drops", 
        "whatever", "alone", "doesn't", "who", "stops", "jolts", "slipped"}
 
 
+def shaft(cr, k):
+    """The blueprint of the shaft: 14, a floor 13 that shouldn't exist, 12; the car half a metre below 13."""
+    for y, name, red in ((150, "14", False), (300, "13 ?", True), (470, "12", False)):
+        hud.ink(cr, [(150, y), (430, y)], hud.RED if red else hud.INK, 4, k, dash=[14, 10] if red else None)
+        hud.label(cr, name, 450, y + 10, 34, hud.RED if red else hud.INK)
+    hud.ink(cr, [(200, 80), (200, 580)], k=k)
+    hud.ink(cr, [(380, 80), (380, 580)], k=k)
+    car = 340
+    hud.ink(cr, [(220, car), (360, car), (360, car + 110), (220, car + 110), (220, car)], hud.INK, 5, k)
+    hud.label(cr, "YOU", 290, car + 66, 30, align="center")
+    for x, red in ((265, False), (290, True), (315, False)):
+        hud.ink(cr, [(x, 80), (x, car)], hud.RED if red else hud.INK, 3, k)
+    hud.label(cr, "SLIPPED", 300, 230, 22, hud.RED)
+    hud.arrow(cr, 120, 300, 120, car, k=k)
+    hud.label(cr, "-0.5 M", 40, 330, 26, hud.RED)
+    hud.label(cr, "HER", 450, 360, 26, hud.RED)
+    hud.arrow(cr, 445, 330, 395, 315, k=k)
+    hud.label(cr, "BATTERY 2%", 40, 560, 24, hud.RED, font=hud.MONO)
+
+
 def draw(cr, t, tl):
     A, B = tl.at, tl.by_id
     hud.frame(cr, t, FRAMES)
@@ -101,6 +121,7 @@ def draw(cr, t, tl):
                      [(B["f13"].start + 0.1, "in", "Are you in the elevator??", None),
                       (A("f14", "Don't") - 0.3, "in", "Don't come out. I'm at home on 14.", None)])
     hud.big(cr, t, A("f12", "13?"), B["f12"].end + 0.3, [("WHO PRESSED 13?", True)], y=330, size=78)
+    hud.blueprint(cr, t, B["f20c"].start, B["f20c"].end + 0.3, "THE SHAFT", shaft)
     hud.your_call(cr, t, A("f22", "step"), "STEP OUT", "STAY", "COMMENT: STEP OUT or STAY")
     hud.captions(cr, t, tl, KEY)
     cue("hum", t, 0.0, B["f5"].start)

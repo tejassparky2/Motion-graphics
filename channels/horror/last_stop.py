@@ -74,6 +74,27 @@ KEY = {"don't", "back", "nobody", "dips", "heavy", "creaks", "another", "faces",
        "breathes", "neck", "dark", "forest", "stranger", "whatever", "behind"}
 
 
+def route(cr, k):
+    """The blueprint of route 9: six stops, the forest in the middle, home at the end."""
+    stops = ["TOWN SQUARE", "MILL ROAD", "PINE GATE", "THE WOODS", "LAKE ROAD", "HOME"]
+    ys = [120 + i * 88 for i in range(6)]
+    hud.ink(cr, [(250, 100), (250, 570)], hud.INK, 6, k)
+    for i, (y, name) in enumerate(zip(ys, stops)):
+        if k < i / 6:
+            break
+        cr.arc(250, y, 13, 0, 6.3)
+        cr.set_source_rgba(*(hud.RED if name == "HOME" else hud.INK))
+        cr.fill()
+        hud.label(cr, name, 285, y + 9, 28, hud.RED if name == "HOME" else hud.INK)
+    for i in range(7):                                   # the forest between Pine Gate and Lake Road
+        x, y = 90 + 40 * (i % 3), 300 + 52 * (i // 3) + 18 * (i % 2)
+        hud.ink(cr, [(x - 16, y + 30), (x, y), (x + 16, y + 30), (x - 16, y + 30)], (0.2, 0.35, 0.22, 1), 3, k)
+    hud.label(cr, "FOREST", 60, 470, 24, (0.2, 0.35, 0.22, 1))
+    hud.arrow(cr, 150, 98, 225, 112, k=k)
+    hud.label(cr, "YOU", 70, 100, 30, hud.RED)
+    hud.label(cr, "6 STOPS", 430, 570, 30, hud.RED)
+
+
 def draw(cr, t, tl):
     A, B = tl.at, tl.by_id
     hud.frame(cr, t, FRAMES)
@@ -98,6 +119,7 @@ def draw(cr, t, tl):
                      [(B["b9"].start + 0.2, "in", "Route 9: OUT OF SERVICE.", None),
                       (A("b10", "depot") - 0.4, "in", "Vehicle in depot since 10:40 PM.", None)])
     hud.big(cr, t, A("b8", "three"), B["b8"].end + 0.3, [("3 FACES", True)], y=330, size=100)
+    hud.blueprint(cr, t, B["b3"].start, B["b4"].start + 0.4, "ROUTE 9", route)
     hud.your_call(cr, t, A("b19", "get"), "GET OFF", "RIDE ON", "COMMENT: GET OFF or RIDE ON")
     hud.captions(cr, t, tl, KEY)
     cue("engine_idle", t, 0.0, tl.total)
