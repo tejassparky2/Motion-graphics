@@ -107,10 +107,11 @@ export async function build(c) {
     const a0 = rnd() * Math.PI * 2, r = 4 + rnd() * 9, sp = (.08 + rnd() * .06) * (rnd() < .5 ? 1 : -1);
     const fig = person({skin: 0x8a8a84, top: i === 6 ? 0xd8641c : 0x0c0c0c, legs: 0x0c0c0c, hair: 0x050505, beanie: i === 6 ? 0x2a3a2a : undefined, glowEyes: 0xffe8c0});
     pose(fig, POSES.radio); fig.root.scale.setScalar(1.0); scene.add(fig.root);
-    const flame = new THREE.Mesh(new THREE.SphereGeometry(.12, 10, 8), glowMat(0xffa040, 3)); scene.add(flame);
+    const flame = new THREE.Mesh(new THREE.SphereGeometry(.4, 10, 8), glowMat(0xffa040, 4)); scene.add(flame);   // big enough to read from 30 m up
     torches.push({a0, r, sp, flame, fig, ph: rnd() * 6});
   }
-  const torchLights = [0, 1, 2].map(() => { const l = new THREE.PointLight(0xff8a30, 0, 12, 1.2); scene.add(l); return l; });
+  const torchLights = [0, 1, 2, 3, 4, 5].map(() => { const l = new THREE.PointLight(0xff8a30, 0, 18, 1.1); scene.add(l); return l; });
+  const moon = new THREE.DirectionalLight(0x5a70b0, .35); moon.position.set(30, 40, -20); scene.add(moon);   // the forest is never pure black
   // rain: falling streaks around the cabin
   const NR = 1600, rainGeo = new THREE.BufferGeometry(), rp = new Float32Array(NR * 6), r0 = [];
   for (let i = 0; i < NR; i++) { const a = rnd() * Math.PI * 2, r = 2.0 + rnd() * 12; r0.push([Math.cos(a) * r, rnd() * 40 - 30, Math.sin(a) * r]); }
@@ -136,9 +137,9 @@ export async function build(c) {
   const under = new THREE.PointLight(0x5a6a90, 1.2, 6, 1.4); add(under, 1.2, -1.2, 1.6);   // cold light under the cabin (the ladder shot)
   const knockAt = B.t12.start - 1.25;                 // the knocks come in the silence before "Three knocks on the hatch."
   const SHOTS = {
-    radio_close: {pos: [.3, 1.25, -.7], look: [-.35, .9, -1.55], fov: 46, push: .12},
+    radio_close: {pos: [-.85, 1.2, -1.02], look: [-.35, .88, -1.55], fov: 44, push: .12},     // from the side: you never block it
     you_close:   c.track(you, {dist: .6, side: .1, fov: 40}),
-    logbook:     {pos: [.38, 1.32, -1.0], look: [.36, .78, -1.42], fov: 40, push: .1},
+    logbook:     {pos: [.52, 1.3, -1.08], look: [.47, .78, -1.43], fov: 40, push: .08},    // the rules page, readable in 3D
     cabin:       {pos: [1.45, 1.85, 1.5], look: [-.3, 1.1, -1.0], fov: 56, push: .25},
     generator:   {pos: [.95, 1.55, .2], look: [1.78, 1.45, -.25], fov: 44, push: .12},
     trees:       {pos: [-3.4, 2.6, 2.8], look: [-1.5, -30, 1.5], fov: 62, push: .6},
@@ -172,7 +173,7 @@ export async function build(c) {
       tc.flame.scale.setScalar(1 + .15 * noise(t * 8, tc.ph));
       tc.fig.root.visible = i < lit || fl > .3; tc.fig.root.position.set(x + .35 * Math.cos(a + 1.6), -30, z + .35 * Math.sin(a + 1.6));
       tc.fig.root.rotation.y = Math.atan2(-x, -z); poseFace(tc.fig.face, {...EMO.neutral, look: [0, .6]}, t, i); });
-    torchLights.forEach((l, k) => { const tc = torches[k * 3]; l.intensity = k * 3 < lit ? 6 : 0; l.position.copy(tc.flame.position).y += .5; });
+    torchLights.forEach((l, k) => { const tc = torches[k * 3]; l.intensity = k * 3 < lit ? 30 : 0; l.position.copy(tc.flame.position).y += .8; });
     // rain
     for (let i = 0; i < NR; i++) { const [x, y0, z] = r0[i]; const y = ((y0 - t * 9) % 40 + 40) % 40 - 30; rp.set([x, y, z, x + .05, y + .5, z], i * 6); }
     rainGeo.attributes.position.needsUpdate = true;

@@ -126,9 +126,7 @@ def draw(cr, t, tl):
     hud.rule(cr, t, A("t5", "Never"), "RULE: NO RADIO AFTER 3 AM. NO HATCH.")
     hud.hook(cr, t, [("THE VOICE ON", False), ("THE RADIO", False), ("IS YOURS", True)], end=B["t2"].start, y=360,
              size=90)
-    hud.sign(cr, t, B["t4"].start + 0.2, B["t5"].end + 0.2, [("TOWER 9 LOG", False), ("1. Never answer the", False),
-                                                            ("radio after 3 AM.", True), ("2. Never open", False),
-                                                            ("the hatch.", True)], y=300, size=42, paper=(0.9, 0.86, 0.72))
+    # the logbook page is readable in the 3D shot itself (no paper card on top of it)
     hud.time_card(cr, t, B["t6"].start, B["t6"].end + 0.4, "3:14 AM", "THE RULES START AT 3:00")
     hud.blueprint(cr, t, A("t3", "Alone."), B["t3"].end + 0.3, "TOWER 9", tower)
     hud.big(cr, t, A("t15", "Two"), B["t15"].end + 0.3, [("HELP: 2 HOURS", False), ("FUEL: 1 HOUR", True)], y=320, size=80)
