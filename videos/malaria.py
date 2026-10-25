@@ -4,7 +4,7 @@
 from motion import paper as P
 from videos import malaria_shots as S
 
-NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)
+NARRATOR = dict(turbo=True, turbo_ref="am_echo", rate=4.7, tempo_min=0.88)   # owner's pick, voice D
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2

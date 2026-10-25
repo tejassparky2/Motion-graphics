@@ -5,7 +5,7 @@ subtitles. Script, shot list and sources: research_notes/explainer_1-3.md.
 from motion import paper as P
 from videos import snakebite_shots as S
 
-NARRATOR = dict(turbo=True, rate=4.7, tempo_min=0.88)   # calmer than the story videos (5.5)
+NARRATOR = dict(turbo=True, turbo_ref="am_echo", rate=4.7, tempo_min=0.88)   # owner's pick, voice D
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2
