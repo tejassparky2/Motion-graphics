@@ -87,46 +87,6 @@ Cheating 😈 or genius homework 🧠? Which side are you on? 👇
 
 ---
 
-## 54. Sun Oct 25, 7:30 PM IST: `54_Oct25_730PM_zeigarnik.mp4`
-
-**Title** (30 characters)
-```
-Your Brain Can't Let This Go 🧠
-```
-
-**Alternative titles to test**
-- `Why You Can't Stop Thinking About Cliffhangers 🧠`
-- `The Zeigarnik Effect in 40 Seconds`
-
-**Description**
-```
-There's a reason you can't stop thinking about an unfinished show. It's called the Zeigarnik effect. 🧠
-
-In the 1920s, psychologist Bluma Zeigarnik noticed that waiters in a busy Berlin café remembered every unpaid order perfectly... and forgot them as soon as the table paid. Her experiments found that people remember unfinished tasks better than finished ones.
-
-Your brain keeps a "tab" open for anything unfinished. That's why cliffhangers work. And that's exactly why this video ends...
-
-💬 What's the one cliffhanger you still think about? 👇
-
-🔔 Interestingly Strange: weird psychology, clever twists and mind-bending paradoxes, animated in under a minute.
-
-#Psychology #Brain #Shorts
-```
-
-**Tags** (paste into YouTube Studio > Tags)
-```
-zeigarnik effect, psychology facts, brain facts, cliffhanger, why cant i stop thinking, bluma zeigarnik, memory, mind blowing, psychology, interestingly strange
-```
-
-**Pinned comment**
-```
-What's the one cliffhanger you STILL think about? 📺 👇
-```
-
-**Video facts:** 32.3 s, 95 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
-
----
-
 ## 55. Mon Oct 26, 4:30 PM IST: `55_Oct26_430PM_napoleon_bunnies.mp4`
 
 **Title** (37 characters)
@@ -204,3 +164,45 @@ The honest guard never lied, but he pointed you to the wrong door. Still honest?
 ```
 
 **Video facts:** 51.7 s, 156 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+
+---
+
+## 57. Tue Oct 27, 4:30 PM IST: `57_Oct27_430PM_bucket_war.mp4`
+
+**Title** (40 characters)
+```
+Two Cities Went to War. Over a Bucket. 🪣
+```
+
+**Alternative titles to test**
+- `The Dumbest War in History? 🪣`
+- `30,000 Soldiers. 1 Bucket. 700 Years Later...`
+
+**Description**
+```
+In 1325, two cities in Italy went to war. Over a bucket. Not gold. Not land. A bucket. 🪣
+
+The legend says soldiers from Modena sneaked into Bologna and stole the bucket from the town well. Bologna sent about 30,000 soldiers. Modena had about 7,000... and won.
+
+Historians say the real reasons were politics. But the bucket is still in Modena, 700 years later, kept in a tower like a trophy. 😂
+
+(Battle of Zappolino, 1325. Army sizes are historians' estimates.)
+
+💬 What's the smallest thing someone ever fought you over? 👇
+
+🔔 Interestingly Strange: funny history, clever twists and mind-bending paradoxes, animated in under a minute.
+
+#FunnyHistory #History #Shorts
+```
+
+**Tags** (paste into YouTube Studio > Tags)
+```
+war of the bucket, battle of zappolino, funny history, weird history, italy history, dumbest war, history facts, medieval history, bucket war, interestingly strange
+```
+
+**Pinned comment**
+```
+My sibling once fought me over the TV remote for 3 days 📺 Yours? 👇
+```
+
+**Video facts:** 44.5 s, 118 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

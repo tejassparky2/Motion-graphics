@@ -75,7 +75,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 51 | Sat Oct 24 | 4:30 PM | cat_mayor | A Cat Was Mayor for 20 Years 🐱 *(hook test: did you know)* |
 | 52 | Sat Oct 24 | 7:30 PM | riddles_one_percent | 3 Riddles. Only 1% Get the Last One 🧠 *(hook test: numbered list)* |
 | 53 | Sun Oct 25 | 4:30 PM | cheat_sheet | This Teacher LET Her Class Cheat 📝 *(hook test: contradict a belief)* |
-| 54 | Sun Oct 25 | 7:30 PM | zeigarnik | Your Brain Can't Let This Go 🧠 *(hook test: abstract concept; loops)* |
+| 54 | Sun Oct 25 | 7:30 PM | ~~zeigarnik~~ | ~~Your Brain Can't Let This Go 🧠~~ *(SKIPPED, not posted: owner 25 Oct 2026 "Skip 54 not good"; abstract-concept hook test)* |
 | 55 | Mon Oct 26 | 4:30 PM | napoleon_bunnies | Napoleon Lost a Battle. To Bunnies. 🐰 *(funny history; Turbo + tags)* |
 | 56 | Mon Oct 26 | 7:30 PM | last_bencher_5 | One Guard Always Lies. You Get 1 Question. 🚪 *(Last Bencher 5; Turbo female narrator + tags, made 18 Oct)* |
 | 57 | Tue Oct 27 | 4:30 PM | bucket_war | Two Cities Went to War. Over a Bucket. 🪣 *(funny history; Turbo + tags)* |

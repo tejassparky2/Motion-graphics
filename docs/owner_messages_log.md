@@ -254,3 +254,5 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-25** (with a reference video, Video-65102 / Video-21421, "The Copy" horror story) Can you make stories videos like this but with better animation not for this channel
 - **2026-10-25** (with another reference, Video-56562, "Night 1") Here another video
 - **2026-10-25** Yes open separate chat, 3D
+- **2026-10-25** Next set after cat mayor
+- **2026-10-25** Skip 54 not good
