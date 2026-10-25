@@ -30,6 +30,13 @@ How the explainers are built:
 - Videos: `videos/snakebite.py` (+ `snakebite_shots.py`), `videos/superbugs.py`, `videos/malaria.py`.
 - Check stills before rendering, then `tools/render_check.sh <video>` (render + Whisper small + Whisper medium).
 
+Lessons (25 Oct 2026, owner: "Why you could not catch bug when running from hours"):
+- Before a new voice engine goes into a video, read its audio path (how tokens become samples) and test it on 20+
+  varied sentences, checking each one's FIRST word. orpheus-cpp's streaming decoder silently dropped the first
+  ~0.17 s of every take; it cost hours of retries because the errors were blamed on the model "changing words".
+- When Whisper flags the same kind of error in the same place again and again (first words, last words), treat it
+  as a bug and investigate before re-rendering; retries can't fix a deterministic fault.
+
 Everything below describes the old format (videos 1-26), kept for reference.
 
 ## The old format (videos 1-26)
