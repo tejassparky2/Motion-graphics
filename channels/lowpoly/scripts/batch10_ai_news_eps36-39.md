@@ -41,7 +41,7 @@ th.captions in Anton (white, the spoken word red).
 ## Ep 36: "Hey Codex, What's New? (LiteLLM Got Hacked)"
 | # | Who | Line | Card |
 |---|---|---|---|
-| 1 | Dev | Hey Codex. What's new with you? | |
+| 1 | Dev | (36) Why are you changing my keys? / (38) Codex. Why are you packing? | |
 | 2 | Codex | A popular AI tool got hacked. LiteLLM. | headline |
 | 3 | Dev | Wait, what? Lite what? | |
 | 4 | Codex | LiteLLM. It lets apps talk to lots of AI models through one plug. | |
@@ -65,7 +65,7 @@ th.captions in Anton (white, the spoken word red).
 ## Ep 37: "Hey Claude, What's New? (Anthropic Stopped Using Git)"
 | # | Who | Line | Card |
 |---|---|---|---|
-| 1 | Dev | Hey Claude. What's new with you? | |
+| 1 | Dev | (37) Why do you look so proud? / (39) Why are you still awake? | |
 | 2 | Claude | My company stopped using git. | headline |
 | 3 | Dev | Wait, what? Everyone uses git. | |
 | 4 | Claude | Not in our main repo. Not anymore. | |
@@ -88,7 +88,7 @@ th.captions in Anton (white, the spoken word red).
 ## Ep 38: "Hey Codex, What's New? (OpenAI Moves Into Google Cloud)"
 | # | Who | Line | Card |
 |---|---|---|---|
-| 1 | Dev | Hey Codex. What's new with you? | |
+| 1 | Dev | Codex. Why are you packing? | |
 | 2 | Codex | I'm moving in with Google. | |
 | 3 | Dev | Wait, what? | |
 | 4 | Codex | On October twenty-first, Google Cloud started offering OpenAI's models. | headline |
@@ -110,7 +110,7 @@ th.captions in Anton (white, the spoken word red).
 ## Ep 39: "Hey Claude, What's New? (An AI That Works While You Sleep)"
 | # | Who | Line | Card |
 |---|---|---|---|
-| 1 | Dev | Hey Claude. What's new with you? | |
+| 1 | Dev | Why are you still awake? | |
 | 2 | Claude | I have a new app. It works while you sleep. | |
 | 3 | Dev | Wait, what? | |
 | 4 | Claude | It's called Claude Duet. A research preview, from October twenty-first. | headline |
@@ -128,3 +128,6 @@ th.captions in Anton (white, the spoken word red).
 | 16 | Claude | It's in the plan. But its background checks use your limits. | |
 | 17 | Dev | An AI that works while I sleep. | |
 | 18 | Claude | And only wakes you when something needs you. | |
+
+## Owner, 25 Oct 2026: "Don't copy him as first line hey what's new with you"
+Line 1 of eps 36-39 replaced with original openers (a scene with something already odd): 36 "Why are you changing my keys?", 37 "Why do you look so proud?", 38 "Codex. Why are you packing?", 39 "Why are you still awake?". Never reuse a reference's catchphrase or opening line; take its structure only.

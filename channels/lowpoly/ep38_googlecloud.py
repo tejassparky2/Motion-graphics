@@ -1,4 +1,4 @@
-"""Low-poly channel, episode 38: AI news explainer, "Hey Codex, What's New? (OpenAI Moves Into Google Cloud)".
+"""Low-poly channel, episode 38: AI news explainer, "Why Is Codex Packing? (OpenAI Moves Into Google Cloud)".
 
 Script: channels/lowpoly/scripts/batch10_ai_news_eps36-39.md (auto-approved by the owner, 24 Oct 2026). Reference form.
 Real: cloud.google.com blog (21 Oct 2026: OpenAI models in private preview; Codex CLI/Desktop can connect); claude.com
@@ -28,7 +28,7 @@ skit_voice(voice)
 
 DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
-    ("g1", "devmid", DEV, "Hey Codex. What's new with you?", 0, 1),
+    ("g1", "devmid", DEV, "Codex. Why are you packing?", 0, 1),
     ("g2", "cxclose", CX, "I'm moving in with Google.", .3, 1),
     ("g3", "devclose", DEV, "Wait, what?", .3, 1),
     ("g4", "cx", CX, "On [October twenty-first,|Oct 21,] Google Cloud started offering [Open A I's|OpenAI's] models.", .3, 1),
@@ -48,12 +48,12 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("g18", "cxclose", CX, "Like a food court. For AI.", .4, 1),
 ]
 HOLDS = {}
-GAP_FIX = {"g10": 0.518}
+GAP_FIX = {"g10": 0.518, "g2": 0.27}
 SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="OpenAI's Models Are Now on Google Cloud",
-    alt_titles=["Hey Codex, What's New? (GPT on Google Cloud)", "Google Now Sells Gemini, Claude AND GPT"],
+    alt_titles=["Why Is Codex Packing?", "Google Now Sells Gemini, Claude AND GPT"],
     description="""OpenAI's models just showed up on Google Cloud, and Claude's full platform followed a day later.
 Codex explains what it means.
 

@@ -1,4 +1,4 @@
-"""Low-poly channel, episode 39: AI news explainer, "Hey Claude, What's New? (An AI That Works While You Sleep)".
+"""Low-poly channel, episode 39: AI news explainer, "Why Is Claude Still Awake? (An AI That Works While You Sleep)".
 
 Script: channels/lowpoly/scripts/batch10_ai_news_eps36-39.md (auto-approved by the owner, 24 Oct 2026). Reference form.
 Real: claude.com/resources/articles/claude-duet (21 Oct 2026, research preview). Parody characters; not affiliated with
@@ -27,7 +27,7 @@ skit_voice(voice)
 
 DEV, CL = None, "claude"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
-    ("d1", "devmid", DEV, "Hey Claude. What's new with you?", 0, 1),
+    ("d1", "devmid", DEV, "Why are you still awake?", 0, 1),
     ("d2", "soloclose", CL, "I have a new app. It works while you sleep.", .3, 1),
     ("d3", "devclose", DEV, "Wait, what?", .3, 1),
     ("d4", "solo", CL, "It's called Claude Duet. A research preview, from [October twenty-first.|Oct 21.]", .3, 1),
@@ -47,12 +47,12 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("d18", "soloclose", CL, "And only wakes you when something needs you.", .4, .95),
 ]
 HOLDS = {}
-GAP_FIX = {}
+GAP_FIX = {"d2": 0.631}
 SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="Claude Duet: An AI That Works While You Sleep",
-    alt_titles=["Hey Claude, What's New? (Claude Duet Explained)", "This AI Checks Your Accounts Every Few Hours"],
+    alt_titles=["Claude Duet Explained", "This AI Checks Your Accounts Every Few Hours"],
     description="""Anthropic's new Claude Duet checks your apps every few hours and works on its own computer, even
 when your laptop is off. Claude explains what it can and can't do.
 

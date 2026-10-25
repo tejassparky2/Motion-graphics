@@ -1,7 +1,7 @@
-"""Low-poly channel, episode 36: AI news explainer, "Hey Codex, What's New? (LiteLLM Got Hacked)".
+"""Low-poly channel, episode 36: AI news explainer, "Why Is Codex Changing My Keys? (LiteLLM Got Hacked)".
 
 Script: channels/lowpoly/scripts/batch10_ai_news_eps36-39.md (auto-approved by the owner, 24 Oct 2026). Form of the
-owner's reference ("Hey USA, what's new with you?"): Dev asks, the AI explains one real story step by step, Dev asks
+owner's reference (a news explainer; its own opener is not reused): Dev asks, the AI explains one real story step by step, Dev asks
 what a viewer would, headline and number cards, Anton captions 1-3 words at a time. Real: docs.litellm.ai, 21 Oct 2026
 incident post and 23 Oct attack-chain post. Parody characters; not affiliated with OpenAI or LiteLLM.
 
@@ -29,7 +29,7 @@ skit_voice(voice)
 DEV, CX = None, "codex"
 V7 = "[one point one oh seven point oh|1.107.0]"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
-    ("n1", "devmid", DEV, "Hey Codex. What's new with you?", 0, 1),
+    ("n1", "devmid", DEV, "Why are you changing my keys?", 0, 1),
     ("n2", "cxclose", CX, "A popular AI tool got hacked. [Lite L L M.|LiteLLM.]", .3, 1),
     ("n3", "devclose", DEV, "Wait, what? Lite what?", .3, 1),
     ("n4", "cx", CX, "[Lite L L M.|LiteLLM.] It lets apps talk to lots of AI models through one plug.", .3, 1),
@@ -56,7 +56,7 @@ SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="LiteLLM Got Hacked: What Happened and What to Do",
-    alt_titles=["Hey Codex, What's New? (LiteLLM Hack Explained)", "One Leaked Key, Five Months Later"],
+    alt_titles=["Why Is Codex Changing My Keys?", "One Leaked Key, Five Months Later"],
     description="""A popular AI library shipped a release that steals credentials. Codex explains what happened, how
 the attackers got in, and what to do if you installed it.
 

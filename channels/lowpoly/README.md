@@ -200,7 +200,9 @@ Reference: a talking US flag answers "Hey USA, what's new with you?" and explain
 steps (what happened, "Wait, what?", simple background, history, why, numbers year by year, official action, "What
 does that even do?", what changes, a closing thought); big Anton captions 2-3 words at a time; a picture change every
 ~1.5 s. Owner chose: this channel, 4 videos, auto-approved.
-Our form: Dev asks "Hey Claude/Codex, what's new with you?"; the AI explains ONE real AI/software story; Dev asks
+Our form: Dev opens on something odd the AI is doing ("Why are you packing?"), the AI's answer is the news; it explains ONE real AI/software story; Dev asks
 what a viewer would; kit.headline / kit.bignum cards carry the facts (source and date on the card); th.captions
 (Anton, the spoken word in red). Every fact opened at its primary source the same day; the description says what's
 real. Batch 10: scripts/batch10_ai_news_eps36-39.md.
+
+**Owner, 25 Oct 2026: "Don't copy him as first line hey what's new with you".** Never reuse a reference's catchphrase or opening line (or its exact jokes); take the structure, write our own words. Eps 36-39 re-opened with original lines.

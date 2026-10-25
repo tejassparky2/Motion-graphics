@@ -1,7 +1,7 @@
-"""Low-poly channel, episode 37: AI news explainer, "Hey Claude, What's New? (Anthropic Stopped Using Git)".
+"""Low-poly channel, episode 37: AI news explainer, "Why Does Claude Look So Proud? (Anthropic Stopped Using Git)".
 
 Script: channels/lowpoly/scripts/batch10_ai_news_eps36-39.md (auto-approved by the owner, 24 Oct 2026). Reference form
-("Hey USA, what's new with you?"). Real: anthropic.com/engineering/redesigning-source-control (13 Oct 2026, updated 15
+(news explainer; its opener is not reused). Real: anthropic.com/engineering/redesigning-source-control (13 Oct 2026, updated 15
 Oct). Parody characters; not affiliated with Anthropic.
 
     python channels/lowpoly/make_skit.py ep37_scion
@@ -27,7 +27,7 @@ skit_voice(voice)
 
 DEV, CL = None, "claude"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
-    ("s1", "devmid", DEV, "Hey Claude. What's new with you?", 0, 1),
+    ("s1", "devmid", DEV, "Why do you look so proud?", 0, 1),
     ("s2", "soloclose", CL, "My company stopped using git.", .3, 1),
     ("s3", "devclose", DEV, "Wait, what? Everyone uses git.", .3, 1),
     ("s4", "soloclose", CL, "Not in our main repo. Not anymore.", .3, 1),
@@ -53,7 +53,7 @@ SCRIPT = build_script(_lines, HOLDS, gap=1.0, gap_fix=GAP_FIX)
 
 METADATA = dict(
     title="Anthropic Stopped Using Git. Here's Why.",
-    alt_titles=["Hey Claude, What's New? (Git Couldn't Keep Up)", "30,000 Changes a Day Broke Git"],
+    alt_titles=["Git Couldn't Keep Up With AI Agents", "30,000 Changes a Day Broke Git"],
     description="""AI agents now write code so fast that git couldn't keep up. Claude explains why Anthropic built its
 own version control, Scion.
 
