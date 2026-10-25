@@ -6,7 +6,7 @@ Anthropic Stopped Using Git. Here's Why.
 ```
 
 **Alternative titles to test**
-- `Hey Claude, What's New? (Git Couldn't Keep Up)`
+- `Git Couldn't Keep Up With AI Agents`
 - `30,000 Changes a Day Broke Git`
 
 **Description**

@@ -6,7 +6,7 @@ Claude Duet: An AI That Works While You Sleep
 ```
 
 **Alternative titles to test**
-- `Hey Claude, What's New? (Claude Duet Explained)`
+- `Claude Duet Explained`
 - `This AI Checks Your Accounts Every Few Hours`
 
 **Description**
@@ -37,4 +37,4 @@ claude duet, anthropic, ai agent, proactive ai, claude, ai news, ai assistant, a
 Would you let an AI check your accounts every few hours? 👇 Subscribe for tomorrow's AI news.
 ```
 
-**Video facts:** 52.0 s, 146 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 52.0 s, 145 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
