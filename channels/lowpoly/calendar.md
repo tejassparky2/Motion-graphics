@@ -45,5 +45,7 @@ Updated 25 Oct 2026: batch 10 (eps 36-39, AI news explainers) goes next as posts
 | 31 | Fri Nov 6 | 10:30 PM | 12:00 PM ET | ep30_jarvis | I Made Claude My JARVIS |
 | 32 | Sat Nov 7 | 5:30 AM | 7:00 PM ET (day before) | ep31_timemachine | I Asked Codex for a Time Machine |
 
+**Actual schedule from YouTube Studio (owner's screenshot, 25 Oct 2026):** ep36 LiteLLM published 25 Oct ~9:55 AM IST; ep37 Scion scheduled 25 Oct 4:30 PM IST; ep38 Google Cloud 25 Oct 7:30 PM IST; ep39 Duet 26 Oct 4:30 PM IST. Early numbers then: ep20 "I Yelled at My AI at 3 AM" 808 views / 17 likes / 2 comments at 12 h; ep18 "My Little Sister..." 879 views / 20 likes at 1 day. The owner used 4:30 PM and 7:30 PM IST for these, not the 9:30 PM / 4:30 AM slots above.
+
 Eps 24-27 (comedy batch 7) are shelved, not posted (owner, 23 Oct 2026: "I didn't liked all 4 comedy reels").
 From Nov 1 US clocks fall back, so the same US slots are 10:30 PM and 5:30 AM IST.
