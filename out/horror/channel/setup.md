@@ -48,3 +48,24 @@ horror stories, interactive horror, you decide, choose your ending, scary storie
 - The upload form's "altered or synthetic content" question is for realistic footage that could be mistaken for
   real people or events. Clearly animated fiction like these doesn't need it, and the channel description already
   says the voices are synthetic.
+
+## Instagram (bio max 150 characters; name max 30)
+- Username: `@midnightwithnancy` (same as YouTube). Name field (Instagram search reads it): `Midnight with Nancy | Horror`
+- Bio, pick one:
+```
+Hi, I'm Nancy 🌙
+Animated horror stories where YOU choose what happens next.
+Comment A or B 👇 the top answer decides Part 2
+```
+```
+🌙 Horror stories. You pick the ending.
+🚪 A or B? Most comments decide Part 2
+🕯️ Animated. Suspense, not gore.
+Night 1 ⬇️
+```
+```
+Leave the light on 🕯️
+I tell the story. You choose: A or B.
+The most votes decide what happens next 🌙
+```
+- Link in bio: the YouTube channel (youtube.com/@MidnightWithNancy).
