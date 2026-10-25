@@ -12,7 +12,7 @@ TAIL = 1.2
 SCRIPT = [
     dict(id="m1", scene="m1", text="One mosquito bite. And something moves into your liver."),
     dict(id="m2", scene="m2", text="For days, you feel completely fine."),
-    dict(id="m3", scene="m3", text="Then it breaks out into your blood, again and again."),
+    dict(id="m3", scene="m3", text="Later, it breaks out into your blood, again and again."),
     dict(id="m4", scene="m4", text="It's malaria. In [twenty twenty-four,|2024,] it made about two hundred and eighty "
                                    "million people sick."),
     dict(id="m5", scene="m5", text="And it killed about six hundred thousand. Most of them young children in Africa."),

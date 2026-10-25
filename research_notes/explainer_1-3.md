@@ -115,7 +115,7 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 |---|---|---|---|---|
 | 1 | [dramatic] One mosquito bite. And something moves into your liver. | HOOK | ONE / BITE | Mosquito lands on a paper arm; Gray's liver plate glows red |
 | 2 | For days, you feel completely fine. | HOOK | YOU FEEL / FINE | Paper room, calendar flipping DAY 3, DAY 7; health card "NORMAL" stamps |
-| 3 | Then it breaks out into your blood, again and again. | HOOK | AGAIN / AND AGAIN | Red cells bursting in a microscope circle |
+| 3 | Later, it breaks out into your blood, again and again. | HOOK | AGAIN / AND AGAIN | Red cells bursting in a microscope circle |
 | 4 | It's malaria. In 2024, it made about two hundred and eighty million people sick. | THE WORLD | 2024 / 282 MILLION | Globe, flip counter 282,000,000 |
 | 5 | And it killed about six hundred thousand. Most of them young children in Africa. | THE WORLD | 610,000 / MOSTLY CHILDREN | Counter 610,000; Africa highlighted |
 | 6 | And it isn't a virus or a bacterium. It's a parasite. So let's follow its journey. | THE PARASITE | IT'S A / PARASITE | Microscope circle: crescent-shaped parasite, label "PLASMODIUM" |
