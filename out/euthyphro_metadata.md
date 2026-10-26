@@ -34,4 +34,4 @@ euthyphro dilemma, is it wrong because god says so, plato, morality and god, the
 Does right and wrong need God? YES or NO, give one reason (and keep it respectful) 👇
 ```
 
-**Video facts:** 40.3 s, 134 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 34.3 s, 114 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
