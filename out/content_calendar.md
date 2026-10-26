@@ -1,4 +1,10 @@
 # Interestingly Strange: 2-week content calendar
+## Posting order from 26 Oct 2026 (re-cut: character asks first; replaces calendar order for these rows)
+Owner: "Ship it". Post in this order, 4:30 PM and 7:30 PM IST: **76 heaven_forever, 67 free_will_god,
+69 trolley_problem, 72 grandma_dog, 74 who_made_evil, 73 perfect_life, 71 euthyphro, 80 prayer_plan, 58 newcomb_box,
+70 grandfather_paradox, 82 kitten_evil**. Held as tests (narrator-first openings), at most one every 2-3 days:
+57, 59, 61, 62, 63, 64, 65, 66, 68, 78. Packs: `python tools/make_order_pack.py out/packs/order LABEL name...`.
+
 
 **Slots (2 a day from Oct 6; was 3 a day until Oct 5):**
 
@@ -78,12 +84,6 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 54 | Sun Oct 25 | 7:30 PM | ~~zeigarnik~~ | ~~Your Brain Can't Let This Go 🧠~~ *(SKIPPED, not posted: owner 25 Oct 2026 "Skip 54 not good"; abstract-concept hook test)* |
 | 55 | Mon Oct 26 | 4:30 PM | napoleon_bunnies | Napoleon Lost a Battle. To Bunnies. 🐰 *(funny history; Turbo + tags)* |
 | 56 | Mon Oct 26 | 7:30 PM | last_bencher_5 | One Guard Always Lies. You Get 1 Question. 🚪 *(Last Bencher 5; Turbo female narrator + tags, made 18 Oct)* |
-
-## Posting order from 26 Oct 2026 (re-cut: character asks first; replaces calendar order for these rows)
-Owner: "Ship it". Post in this order, 4:30 PM and 7:30 PM IST: **76 heaven_forever, 67 free_will_god,
-69 trolley_problem, 72 grandma_dog, 74 who_made_evil, 73 perfect_life, 71 euthyphro, 80 prayer_plan, 58 newcomb_box,
-70 grandfather_paradox, 82 kitten_evil**. Held as tests (narrator-first openings), at most one every 2-3 days:
-57, 59, 61, 62, 63, 64, 65, 66, 68, 78. Packs: `python tools/make_order_pack.py out/packs/order LABEL name...`.
 
 | 57 | Tue Oct 27 | 4:30 PM | bucket_war | Two Cities Went to War. Over a Bucket. 🪣 *(funny history; Turbo + tags)* |
 | 58 | Tue Oct 27 | 7:30 PM | newcomb_box | This Machine Knows What You'll Pick. 2 Boxes. 📦 *(one-rule machine; Turbo female narrator + tags, made 18 Oct)* |
