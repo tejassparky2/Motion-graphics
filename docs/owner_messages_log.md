@@ -263,3 +263,6 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-25** https://github.com/ckorhonen/claude-skills/blob/main/skills/skill-finder/SKILL.md Install
 - **2026-10-25** Add it to other chats too (skill-finder)
 - **2026-10-26** (screenshot of YouTube Studio: last posted = One Guard Always Lies, row 56; 94 views in 2 h; Napoleon Bunnies 395 in 5 h; Teacher LET Her Class Cheat 1.3K in 1 day; 3 Riddles 1K in 1 day; Cat Mayor 525 in 2 days; Last-Row Students 1.4K in 3 days) Next set after this
+- **2026-10-26** Channel not doing good
+- **2026-10-26** [uploaded Studio export Content_2026-09-29_2026-10-26.zip]
+- **2026-10-26** Ship it (the re-cut plan: character asks first in 10 queued videos, new posting order)

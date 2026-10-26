@@ -68,6 +68,14 @@
   Monetization: 1,000 subs alone is not enough; the Shorts-view tiers are 3M/90 days (500-sub tier), 10M until
   31 Jan 2027, 20M after. The posting-time trial compares 7- and 28-day views too, not only the first 24 h.
 
+## Line 1 = a character asking the impossible question (export of 26 Oct 2026; owner: "Ship it")
+- Stayed-to-watch by opening, 59 Shorts: character asks from the first words ~72%; narrator sets a scene first ~62%;
+  talking to the viewer / topic / "Meet" / "Did you know" / numbered list ~47%. Average viewed is 85.7%, so the swipe
+  in the first seconds is the whole problem. Full numbers: out/analytics_2026-10-26.md.
+- Every new script opens on a character's spoken question or demand ("Sir, can God...", "Beta, is Bruno eating
+  properly?", "Press the button. Live the perfect life."); the narrator's setup comes second, in one short line.
+- No more hook tests that talk to the viewer. Business ads (Yours3D) never go on this channel.
+
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
   one second with something already wrong or tense ("A kid in the last row raises his hand…", "A teacher finds a pack
