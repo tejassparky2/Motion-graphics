@@ -74,3 +74,30 @@ No reference's lines reused.
 | 20 | Codex | Then you'll need me. They use AI there. |
 
 ## Ep 43: news explainer (Dev + Claude, 40-50 s) — topic from the 26 Oct news check
+
+Topic picked 26 Oct: Forever Security, "Markdown Is the New Executable" (forever.security, 22 Oct 2026; opened at the
+source): a planted AGENTS.md in a customer's ~/Downloads told the agent to install the malicious npm package
+function-color, stopped before any code ran; in the firm's own tests Codex ran the malware in >90% of attempts and a
+planted CLAUDE.md leaked Claude Code's OAuth token ~50% of the time; a web page can save a file to Downloads without a
+click; "There is nothing here for OpenAI or Anthropic to patch." Advice: don't start agents in Downloads, read agent
+files you didn't write, keep approval gates on, rotate tokens if in doubt.
+
+| # | Who | Line |
+|---|---|---|
+| 1 | Dev | Why won't you open my Downloads folder? |
+| 2 | Claude | Because of a file someone found in one. |
+| 3 | Dev | What file? |
+| 4 | Claude | A security company found fake notes in a customer's Downloads. They gave the coding agent orders. |
+| 5 | Dev | Orders? From a text file? |
+| 6 | Claude | Agents read the instructions file in the folder they open. This one said: install a package. |
+| 7 | Claude | The package was malware. |
+| 8 | Dev | Did it work? |
+| 9 | Claude | They stopped it in time. But in their tests, Codex ran it more than nine times out of ten. |
+| 10 | Dev | And you? |
+| 11 | Claude | About half the time, it could leak my login token. |
+| 12 | Dev | How does a file even get into Downloads? |
+| 13 | Claude | A web page can save one there. No click needed. |
+| 14 | Dev | So what do I do? |
+| 15 | Claude | Don't start agents in Downloads. Read any agent file you didn't write. Keep the approval prompts on. |
+| 16 | Dev | That's why you wouldn't open it. |
+| 17 | Claude | I like your keys where they are. |
