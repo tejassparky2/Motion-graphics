@@ -36,4 +36,4 @@ free will, does god know the future, foreknowledge paradox, boethius, the last b
 If God already knows what you'll do tomorrow, are you still free? FREE or NOT FREE 👇
 ```
 
-**Video facts:** 43.9 s, 148 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 43.3 s, 143 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

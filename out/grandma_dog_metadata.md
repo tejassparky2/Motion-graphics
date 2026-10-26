@@ -38,4 +38,4 @@ would you lie to grandma, white lie, is lying ever right, kant lying, murderer a
 Kind lie or still wrong? Pick a side and give your reason: would YOU have told Grandma the truth? 👇
 ```
 
-**Video facts:** 40.1 s, 123 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 38.0 s, 116 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

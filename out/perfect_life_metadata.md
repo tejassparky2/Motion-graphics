@@ -40,4 +40,4 @@ experience machine, would you press the button, perfect life machine, robert noz
 PRESS or WALK AWAY? And if you were already inside... would you unplug? 👇
 ```
 
-**Video facts:** 42.6 s, 135 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 41.7 s, 132 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

@@ -36,4 +36,4 @@ trolley problem, would you push the man, footbridge dilemma, moral dilemma, phil
 Would you push him? PUSH or DON'T PUSH... and if not, why pull the lever? 👇
 ```
 
-**Video facts:** 36.0 s, 120 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 32.0 s, 106 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

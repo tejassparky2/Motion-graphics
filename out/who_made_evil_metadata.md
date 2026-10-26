@@ -38,4 +38,4 @@ did god make evil, who created evil, augustine evil, absence of good, einstein p
 GOODNESS MISSING or CLEVER DODGE? One reason, keep it respectful 🙏 👇
 ```
 
-**Video facts:** 34.1 s, 107 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 32.7 s, 103 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

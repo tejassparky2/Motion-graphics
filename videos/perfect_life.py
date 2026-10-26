@@ -204,7 +204,7 @@ def scene_booth(cr, t, tl):
     cr.save()
     enter(cr, camera(t, [(A("b2"), (1.6, 520, 760)), (A("b2", "Forever"), (1.9, 520, 800))], dur=0.6))
     booth(cr, t, 520, 1000, 0.95, glow=1.0)
-    man(cr, t, None, 330, 1010, 0.9, eyes="wide", mouth="o", arms=("hold", "hold"), hold=box, look=(0.7, -0.2))
+    man(cr, t, None, 400, 1010, 0.9, eyes="wide", mouth="o", arms=("hold", "hold"), hold=box, look=(0.7, -0.2))
     cr.restore()
     if tl.speaking("booth", t):                                    # the booth's voice as a waveform
         for k in range(14):
