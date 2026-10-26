@@ -31,8 +31,8 @@ HUG_DAD = ((-150, 10), "down")                                  # Dad's arm arou
 HUG_GIRL = ((-70, 40), (-40, 70))                               # her arms wrapped around him
 
 SCRIPT = [
-    dict(id="d1", scene="grave", text="A girl buries her kitten in the garden. Then she asks her dad three questions."),
     dict(id="d2", scene="ask", text="Could God have saved her?", speaker="girl"),
+    dict(id="d1", scene="grave", text="A girl has just buried her kitten. She asks her dad."),   # re-cut 26 Oct
     dict(id="d3", scene="ask", text="Yes. God can do anything.", speaker="dad"),
     dict(id="d4", scene="ask", text="Did God want her to live?", speaker="girl"),
     dict(id="d5", scene="ask", text="Of course. God is good.", speaker="dad"),
@@ -145,8 +145,8 @@ def scene_grave(cr, t, tl):
     dad(cr, t, None, 560, 1000, 0.95, eyes="sad", mouth="flat", arms=("down", "down"), look=(-0.5, 0.3))
     girl(cr, t, None, 200, 1000, 0.85, eyes="sad", mouth="sad", arms=("front", "front"), look=(0.4, 0.4))
     cr.restore()
-    if t >= A("d1", "three"):
-        tag(cr, t, A("d1", "three"), 360, 380, "3 QUESTIONS", col=PURPLE, size=44)
+    if t >= A("d1", "dad"):
+        tag(cr, t, A("d1", "dad"), 360, 380, "3 QUESTIONS", col=PURPLE, size=44)
     vignette(cr, 0.35)
 
 

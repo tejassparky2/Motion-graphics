@@ -30,8 +30,8 @@ MAN = dict(skin="tan", hair="short", hair_col=hexc("#1e130d"), shirt=hexc("#cfe2
 NEON = hexc("#5af0ff")
 
 SCRIPT = [
-    dict(id="b1", scene="street", text="A man just lost his job. On his way home, a strange booth lights up."),
     dict(id="b2", scene="booth", text="Press the button. Live the perfect life. Forever.", speaker="booth"),
+    dict(id="b1", scene="street", text="A man just lost his job. And this booth just lit up."),   # re-cut 26 Oct
     dict(id="b3", scene="dream", text="A dream job. A full house. His mother, healthy again. [sigh]"),
     dict(id="b4", scene="catch", text="The catch? None of it is real. Once inside, you forget it's a machine."),
     dict(id="b5", scene="nozick", text="The philosopher Robert Nozick asked this in [nineteen seventy four.|1974.]"),
@@ -186,7 +186,7 @@ def pod(cr, t, x, y, s=1.0, wake=0.0):
 def scene_street(cr, t, tl):
     A = tl.at
     street(cr, t)
-    on = seg(t, A("b1", "strange") - 0.1, A("b1", "up", end=True))
+    on = 1.0
     booth(cr, t, 520, 1000, 0.95, glow=max(0.25, on))
     walk = t * 7 if t < A("b1", "booth") else None
     mx = 210 + 20 * min(t, A("b1", "booth"))
@@ -195,8 +195,6 @@ def scene_street(cr, t, tl):
         look=(0.6, -0.1))
     if t >= A("b1", "job"):
         tag(cr, t, A("b1", "job"), 200, 540, "FIRED TODAY", col=RED, size=40)
-    if t >= A("b1", "strange"):
-        cue("whoosh", t, A("b1", "strange"), 0.4)
     vignette(cr, 0.45)
 
 
@@ -206,6 +204,7 @@ def scene_booth(cr, t, tl):
     cr.save()
     enter(cr, camera(t, [(A("b2"), (1.6, 520, 760)), (A("b2", "Forever"), (1.9, 520, 800))], dur=0.6))
     booth(cr, t, 520, 1000, 0.95, glow=1.0)
+    man(cr, t, None, 330, 1010, 0.9, eyes="wide", mouth="o", arms=("hold", "hold"), hold=box, look=(0.7, -0.2))
     cr.restore()
     if tl.speaking("booth", t):                                    # the booth's voice as a waveform
         for k in range(14):
@@ -340,5 +339,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("A PERFECT LIFE.", False), ("ONE CATCH.", True)], end=tl.at("b3"), y=150, size=90)
+    th.hook(cr, t, [("A PERFECT LIFE.", False), ("ONE CATCH.", True)], end=min(tl.at("b3"), tl.at("b2", "Forever") - 0.2), y=150, size=90)
     captions(cr, t, tl)

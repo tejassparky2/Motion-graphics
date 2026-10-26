@@ -32,8 +32,8 @@ BRO = dict(skin="brown", shirt=hexc("#ff9a3c"), tie=None, pants=hexc("#3b5b9a"))
 PRAY = ((-64, -18), (-64, -18))                                   # both hands together at the chest
 
 SCRIPT = [
-    dict(id="p1", scene="pray", text="Exam morning. A girl folds her hands and prays to pass."),
     dict(id="p2", scene="talk", text="Wait. Doesn't God already know if you'll pass?", speaker="bro"),
+    dict(id="p1", scene="pray", text="Exam morning. His sister is praying to pass."),   # re-cut 26 Oct: question first
     dict(id="p3", scene="talk", text="Of course. He knows everything.", speaker="sis"),
     dict(id="p4", scene="talk", text="And his plan is perfect?", speaker="bro"),
     dict(id="p5", scene="talk", text="Yes.", speaker="sis"),
@@ -145,7 +145,7 @@ def scene_pray(cr, t, tl):
     A = tl.at
     room(cr, t)
     cr.save()
-    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("p1", "folds"), (1.15, 320, 680))], dur=0.8))
+    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("p1", "praying"), (1.15, 320, 680))], dur=0.8))
     sis(cr, t, None, 280, 1010, 0.95, eyes="closed", mouth="flat", arms=PRAY)
     desk(cr, 300, 960)
     bro(cr, t, None, 680, 1000, 0.75, eyes="open", mouth="smug", arms=("hold", "down"), hold=bowl,

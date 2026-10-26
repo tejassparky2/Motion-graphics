@@ -33,8 +33,8 @@ SAREE = hexc("#a8324a")
 FUR, FUR_D = hexc("#e2a866"), hexc("#b87a3c")
 
 SCRIPT = [
-    dict(id="a1", scene="ask", text="Grandma is sick in bed. She asks her grandson just one question."),
     dict(id="a2", scene="ask", text="Beta, is Bruno eating properly?", speaker="grandma"),
+    dict(id="a1", scene="ask", text="Grandma is sick in bed."),                   # re-cut 26 Oct: question first
     dict(id="a3", scene="gone", text="Bruno ran away three days ago. Nobody told her. [sigh]"),
     dict(id="a4", scene="scale", text="The truth could break her heart. A lie would let her rest."),
     dict(id="a5", scene="kant", text="Immanuel Kant said: never lie. Not even to a murderer at your door."),

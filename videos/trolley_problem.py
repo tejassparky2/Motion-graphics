@@ -26,10 +26,8 @@ voice.SPEAKERS.update({"teacher": dict(voice="af_bella", speed=1.0, turbo_ref="a
 CHALK = (0.97, 0.97, 0.94, 0.95)
 
 SCRIPT = [
-    dict(id="t1", scene="board", text="The teacher draws a runaway train on the board. Five people stand on the track "
-                                      "ahead."),
-    dict(id="t2", scene="lever", text="You can pull a lever. The train turns, and hits one person instead. Do you pull "
-                                      "it?", speaker="teacher"),
+    dict(id="t2", scene="lever", text="Five people on the track. Pull a lever, and the train hits one person instead. "
+                                      "Do you pull it?", speaker="teacher"),       # re-cut 26 Oct: question first
     dict(id="t3", scene="hands", text="Almost every hand goes up. One life, to rescue five. Easy."),
     dict(id="t4", scene="bridge", text="New version. No lever. You're on a bridge, next to a big man. Push him, and the "
                                        "train stops. Five saved.", speaker="teacher"),
@@ -140,7 +138,7 @@ def scene_lever(cr, t, tl):
     for k in range(5):
         stick(cr, 470 + k * 34, 462, 0.85)
     stick(cr, 560, 372, 0.85, col=(1, 0.85, 0.4, 1))
-    pulled = t >= A("t2", "turns,")
+    pulled = t >= A("t2", "hits")
     cr.save()                                                      # the lever
     cr.translate(330, 520)
     cr.rotate(0.6 if pulled else -0.6)
@@ -256,5 +254,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("5 PEOPLE.", False), ("1 LEVER.", True)], end=tl.at("t2"), y=170, size=110)
+    th.hook(cr, t, [("5 PEOPLE.", False), ("1 LEVER.", True)], end=tl.at("t3"), y=170, size=110)
     captions(cr, t, tl)

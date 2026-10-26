@@ -24,8 +24,8 @@ voice.SPEAKERS.update({"machine": dict(voice="am_onyx", speed=0.95, pitch=-1.5, 
                        "kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo_ref="am_puck+3")})
 
 SCRIPT = [
-    dict(id="n1", scene="fair", text="A kid walks past a machine at the fair. And the machine says his name. [gasp]"),
     dict(id="n2", scene="hello", text="Hello. I already know what you will choose.", speaker="machine"),
+    dict(id="n1", scene="fair", text="A kid at the fair. And the machine just said his name. [gasp]"),   # re-cut 26 Oct
     dict(id="n3", scene="boxes", text="Two boxes. A glass one, with a thousand dollars inside. And a closed one."),
     dict(id="n4", scene="boxes", text="Take only the closed box. Or take both.", speaker="machine"),
     dict(id="n5", scene="predict", text="Last night, I predicted your choice. If you take only the closed box, it has a "
@@ -173,10 +173,10 @@ def scene_fair(cr, t, tl):
     A = tl.at
     _fair_bg(cr, t)
     cr.save()
-    enter(cr, camera(t, [(0.0, (1.0, 360, 640)), (A("n1", "says"), (1.25, 430, 640))], dur=0.6))
+    enter(cr, camera(t, [(0.0, (1.0, 360, 640)), (A("n1", "said"), (1.25, 430, 640))], dur=0.6))
     named = t >= A("n1", "name.")
     machine(cr, t, 490, 960, 0.85, screen_text="HELLO, SAM" if named else None)
-    stop = A("n1", "says")
+    stop = A("n1", "said")
     kx = lerp(70, 230, ease_out(seg(t, 0.0, stop)))
     person(cr, t, kx, 1000, 0.75, "kid", eyes="wide" if named else "open", mouth="o" if named else "smile",
            arms=("down", "down"), walk=t * 9 if t < stop else None, look=(0.5, -0.3) if named else (0.3, 0))
@@ -193,7 +193,7 @@ def scene_hello(cr, t, tl):
     enter(cr, camera(t, [(A("n2") - 0.3, (1.5, 360, 560))]))
     machine(cr, t, 360, 960, 0.9, talk=tl.speaking("machine", t))
     cr.restore()
-    sign(cr, t, A("n2", "already"), 360, 170, "I ALREADY KNOW", col=PURPLE, size=64)
+    sign(cr, t, A("n2", "already"), 360, 430, "I ALREADY KNOW", col=PURPLE, size=64)
     vignette(cr, 0.5)
 
 
@@ -353,5 +353,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("IT ALREADY", False), ("KNOWS", True)], end=tl.at("n2"), y=170, size=110)
+    th.hook(cr, t, [("IT ALREADY", False), ("KNOWS", True)], end=tl.at("n3"), y=170, size=110)
     captions(cr, t, tl)

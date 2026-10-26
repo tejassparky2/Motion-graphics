@@ -28,9 +28,8 @@ voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo
 NIGHT = (0.02, 0.03, 0.08)
 
 SCRIPT = [
-    dict(id="e1", scene="board", text="The teacher writes on the board: God made everything. The last bencher raises "
-                                      "his hand."),
     dict(id="e2", scene="ask", text="Evil exists, right? So God made evil too?", speaker="kid"),
+    dict(id="e1", scene="board", text="The teacher had just written on the board: God made everything."),   # re-cut 26 Oct
     dict(id="e3", scene="doors", text="If she says yes, God made evil. If she says no, God didn't make everything."),
     dict(id="e4", scene="switch", text="The teacher walks to the light switch. Click."),
     dict(id="e5", scene="dark", text="Is darkness a thing? Or is it just light missing?", speaker="teacher"),
@@ -92,19 +91,11 @@ def darkness(cr, cx, cy, r=420, a=0.9):
 # ---------------------------------------------------------------- scenes
 def scene_board(cr, t, tl):
     A = tl.at
-    if t < A("e1", "raises"):
-        room(cr, t, board=True)
-        chalk(cr, t, 0.0, 100, 390, "GOD MADE", 60, dur=0.4)
-        chalk(cr, t, A("e1", "everything"), 100, 480, "EVERYTHING", 60, dur=0.5)
-        teacher(cr, t, tl, 560, 1120, 1.0, eyes="open", arms=("point", "down"), look=(-0.6, -0.4), rest="smile")
-    else:
-        room(cr, t)
-        cr.save()
-        enter(cr, camera(t, [(A("e1", "raises") - 0.1, (1.0, 360, 640)), (A("e1", "hand"), (1.5, 520, 520))],
-                         dur=0.6))
-        classroom(cr, t, tl, kid_pose=dict(arms=("up", "down"), eyes="open", mouth="smile", brows="raise"),
-                  look_at=(560, 500))
-        cr.restore()
+    room(cr, t, board=True)
+    chalk(cr, t, A("e1", "God"), 100, 390, "GOD MADE", 60, dur=0.4)
+    chalk(cr, t, A("e1", "everything"), 100, 480, "EVERYTHING", 60, dur=0.5)
+    teacher(cr, t, tl, 560, 1120, 1.0, eyes="wide", mouth="o", brows="up", arms=("point", "down"),
+            look=(-0.6, -0.4))
     vignette(cr, 0.45)
 
 
@@ -116,8 +107,6 @@ def scene_ask(cr, t, tl):
     classroom(cr, t, tl, kid_pose=dict(arms=("up", "down"), eyes="open", mouth=mouth_of(tl, "kid", t, "smug"),
                                        brows="raise"), look_at=(560, 500))
     cr.restore()
-    card(cr, t, A("e2", "Evil"), 360, 290, 560, 120, "EVIL EXISTS", [], col=PURPLE, title_size=40,
-         end=A("e2", "So") - 0.05)
     card(cr, t, A("e2", "So"), 360, 290, 560, 120, "SO GOD MADE EVIL?", [], col=RED, title_size=40)
     vignette(cr, 0.45)
 
@@ -230,5 +219,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("DID GOD", False), ("MAKE EVIL?", True)], end=tl.at("e2"), y=190, size=96)
+    th.hook(cr, t, [("DID GOD", False), ("MAKE EVIL?", True)], end=tl.at("e2", "So") - 0.2, y=190, size=96)
     captions(cr, t, tl)

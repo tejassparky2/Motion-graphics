@@ -27,8 +27,6 @@ voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo
                        "teacher": dict(voice="af_bella", speed=1.0, turbo_ref="af_bella")})
 
 SCRIPT = [
-    dict(id="e1", scene="board", text="Moral science class. The teacher says lying is wrong, because God says so. Then "
-                                      "the last bencher raises his hand."),
     dict(id="e2", scene="ask", text="Ma'am, is lying wrong because God says so? Or does God say so, because it's "
                                     "wrong?", speaker="kid"),
     dict(id="e3", scene="freeze", text="The teacher opens her mouth. And closes it.", gap=0.45),
@@ -113,8 +111,6 @@ def scene_ask(cr, t, tl):
     classroom(cr, t, tl, kid_pose=dict(arms=("up", "down"), eyes="open", mouth=mouth_of(tl, "kid", t, "smug"),
                                        brows="raise"))
     cr.restore()
-    card(cr, t, A("e2", "wrong"), 360, 300, 600, 120, "WRONG BECAUSE GOD SAYS SO?", [], col=PURPLE, title_size=34,
-         end=A("e2", "Or") - 0.05)
     card(cr, t, A("e2", "Or"), 360, 300, 600, 120, "GOD SAYS SO BECAUSE IT'S WRONG?", [], col=BLUE, title_size=32)
     vignette(cr, 0.45)
 
@@ -232,5 +228,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("WRONG BECAUSE", False), ("GOD SAYS SO?", True)], end=tl.at("e2"), y=170, size=100)
+    th.hook(cr, t, [("WRONG BECAUSE", False), ("GOD SAYS SO?", True)], end=tl.at("e2", "Or") - 0.2, y=170, size=100)
     captions(cr, t, tl)

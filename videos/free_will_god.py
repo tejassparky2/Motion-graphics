@@ -28,9 +28,9 @@ voice.SPEAKERS.update({"kid": dict(voice="am_puck", speed=1.04, pitch=2.5, turbo
                        "sir": dict(voice="am_michael", speed=1.0, turbo_ref="am_michael")})
 
 SCRIPT = [
-    dict(id="f1", scene="excuse", text="The last bencher hasn't done his homework. And he has the perfect excuse."),
     dict(id="f2", scene="ask", text="Sir, God knows everything, right? So yesterday, God already knew I wouldn't do "
-                                    "it.", speaker="kid"),
+                                    "my homework.", speaker="kid"),
+    dict(id="f1", scene="excuse", text="The last bencher has the perfect excuse."),   # re-cut 26 Oct: question first
     dict(id="f3", scene="ask", text="If God knew, I couldn't do anything else. So it's not my fault. [chuckle]",
          speaker="kid", gap=0.45),
     dict(id="f4", scene="silent", text="The class goes silent. Even sir stops writing."),
@@ -261,5 +261,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("GOD ALREADY", False), ("KNEW", True)], end=tl.at("f2"), y=170, size=110)
+    th.hook(cr, t, [("GOD ALREADY", False), ("KNEW", True)], end=tl.at("f1"), y=170, size=110)
     captions(cr, t, tl)

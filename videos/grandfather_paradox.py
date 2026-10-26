@@ -28,9 +28,9 @@ GIRL = dict(skin="brown", hair="curly", hair_col=hexc("#1e130d"), shirt=hexc("#7
 CYAN = hexc("#6ee6ff")
 
 SCRIPT = [
-    dict(id="g1", scene="garage", text="A girl finishes her time machine. And her first plan is terrible."),
     dict(id="g2", scene="plan", text="I'll go back, and stop my parents from meeting. Just to see what happens. "
                                      "[chuckle]", speaker="girl"),
+    dict(id="g1", scene="garage", text="A girl just finished her time machine. Her first plan is terrible."),   # re-cut
     dict(id="g3", scene="fade", text="Think about it. If they never meet, she's never born."),
     dict(id="g4", scene="vanish", text="If she's never born, she never builds the machine. So nobody stops them."),
     dict(id="g5", scene="loop", text="So they meet. She's born. She goes back. And stops them again.", gap=0.45),
@@ -149,7 +149,7 @@ def scene_plan(cr, t, tl):
     enter(cr, camera(t, [(A("g2") - 0.3, (1.25, 240, 640))]))
     girl(cr, t, tl, 200, 1000, 0.9, eyes="half", brows="raise", arms=("point", "hips"))
     cr.restore()
-    card(cr, t, A("g2", "stop"), 360, 260, 560, 130, "MISSION", ["STOP MY PARENTS MEETING"], col=RED, title_size=34,
+    card(cr, t, A("g2", "stop"), 360, 430, 560, 130, "MISSION", ["STOP MY PARENTS MEETING"], col=RED, title_size=34,
          line_size=34)
     vignette(cr, 0.45)
 
@@ -264,5 +264,5 @@ def draw(cr, t, tl):
     whip(cr, t, start)
     SCENES[name](cr, t, tl)
     cr.restore()
-    th.hook(cr, t, [("STOP MY PARENTS", False), ("MEETING?", True)], end=tl.at("g2"), y=170, size=96)
+    th.hook(cr, t, [("STOP MY PARENTS", False), ("MEETING?", True)], end=tl.at("g3"), y=170, size=96)
     captions(cr, t, tl)
