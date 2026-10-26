@@ -94,3 +94,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   seconds of dark, Maya gone, Leo and Ivy both lying); Part 1 script sent for approval:
   out/horror/scripts_snowbound_part1.md. Western names (the owner preferred a Western host name). Don't render until
   approved. Each daily part needs that day's vote; writing both branches ahead keeps the schedule.
+- 26 Oct: owner asked for research on hooks (so viewers don't swipe), mid-video suspense and endings people can't help
+  commenting on ("no hallucinations"). Report: reports/Horror Shorts hooks retention comments.md (9,100 words, 85
+  sources, every claim labelled Measured / Official / Craft / Creator / Vendor; ends in a 70 s checklist H1-H8, M1-M12,
+  T1-T5, V1-V8, A1-A6). Apply the checklist to every new script. Limits: first-hand Reddit was unreachable from this
+  environment (search index excludes reddit.com, fetches refused; the owner's "workaround" permission was not usable
+  because the proxy route is blocked as bot-check circumvention), so Reddit evidence is second-hand only; the
+  "Zeigarnik effect" failed a 2025 meta-analysis, don't cite it. Snowbound Part 1 rewritten as v2 against the checklist
+  (out/horror/scripts_snowbound_part1.md) and sent for approval.
