@@ -89,3 +89,8 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   out/horror/tower9_n2_2d.mp4, channels/horror/tower9_n2_2d.py): Whisper medium 17/17 exact after one reword
   ("By your phone's light" was heard as "phone flight" -> "In the light of your phone"). New kit: toon2d "smile" face
   and finger_to_lips, sound glass_tap; check.py handles episodes without a 3D twin.
+- Schedule (owner, 26 Oct 2026): Tower 9 goes out daily at 4:30, a second, different mystery/suspense story daily at
+  7:30 (taken as PM IST, like the main channel). Second story: "Snowbound" (five friends snowed in at a cabin, ten
+  seconds of dark, Maya gone, Leo and Ivy both lying); Part 1 script sent for approval:
+  out/horror/scripts_snowbound_part1.md. Western names (the owner preferred a Western host name). Don't render until
+  approved. Each daily part needs that day's vote; writing both branches ahead keeps the schedule.
