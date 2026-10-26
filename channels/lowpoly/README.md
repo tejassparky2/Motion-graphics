@@ -209,3 +209,10 @@ real. Batch 10: scripts/batch10_ai_news_eps36-39.md.
 
 ## Posting times (owner, 25 Oct 2026: "Switch")
 **4:30 PM and 7:30 PM IST every day** (7:00 AM / 10:00 AM US Eastern until 1 Nov, then 6:00 AM / 9:00 AM). Replaces the 9:30 PM / 4:30 AM IST US slots. channels/lowpoly/calendar.md was rebuilt from the owner's YouTube Studio screenshot: news episodes first while fresh, then the newest skits, then the backlog. Sets of 4 are named by these slots.
+
+## First analytics (owner's Studio export, 26 Oct 2026; channels/lowpoly/analytics/2026-10-26_report.md)
+17.2k views, 22 subscribers in ~8 days; 59% viewed, 57% stayed to watch on average. Short comedy (<=40 s) keeps 72%
+viewed (best: "Explain It Like I'm Five", 30 s, 2.1k views); 60 s+ emotional skits keep 53% but win more subscribers
+and likes per view. Lowest stayed-to-watch: videos opening on a concept ("Forgets the Whole Project", "OpenAI on Google
+Cloud"); news that touches a developer personally (LiteLLM keys) did well. Mix on purpose; news 40-50 s; open on a
+picturable problem.
