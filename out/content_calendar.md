@@ -84,7 +84,6 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 54 | Sun Oct 25 | 7:30 PM | ~~zeigarnik~~ | ~~Your Brain Can't Let This Go 🧠~~ *(SKIPPED, not posted: owner 25 Oct 2026 "Skip 54 not good"; abstract-concept hook test)* |
 | 55 | Mon Oct 26 | 4:30 PM | napoleon_bunnies | Napoleon Lost a Battle. To Bunnies. 🐰 *(funny history; Turbo + tags)* |
 | 56 | Mon Oct 26 | 7:30 PM | last_bencher_5 | One Guard Always Lies. You Get 1 Question. 🚪 *(Last Bencher 5; Turbo female narrator + tags, made 18 Oct)* |
-
 | 57 | Tue Oct 27 | 4:30 PM | bucket_war | Two Cities Went to War. Over a Bucket. 🪣 *(funny history; Turbo + tags)* |
 | 58 | Tue Oct 27 | 7:30 PM | newcomb_box | This Machine Knows What You'll Pick. 2 Boxes. 📦 *(one-rule machine; Turbo female narrator + tags, made 18 Oct)* |
 | 59 | Wed Oct 28 | 4:30 PM | dancing_plague | She Couldn't Stop Dancing. For Days. 💃 *(funny history; Turbo + tags)* |
