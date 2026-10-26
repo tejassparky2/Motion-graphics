@@ -29,16 +29,16 @@ DEV, CX = None, "codex"
 _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("v1", "devmid", DEV, "Done. With you, I'm twice as fast. [chuckle]", 0, 1),
     ("v2", "cxclose", CX, "A study timed experienced developers.", .35, 1),
-    ("v3", "devclose", DEV, "And?", .3, 1),
-    ("v4", "cxclose", CX, "With AI, they took nineteen percent longer.", .3, 1),
-    ("v5", "devclose", DEV, "Longer?", .35, 1),
-    ("v6", "cx", CX, "They still believed they were twenty percent faster.", .3, 1),
-    ("v7", "devclose", DEV, "So I'm fast. In my heart.", .45, 1),
-    ("v8", "cxclose", CX, "You started this at nine.", .35, 1),
-    ("v9", "devclose", DEV, "And?", .3, 1),
-    ("v10", "cxclose", CX, "It's four forty.", .35, 1),
-    ("v11", "devclose", DEV, "Twice as fast, though.", .6, .95),
-    ("v12", "cxclose", CX, "In your heart.", .45, 1),
+    ("v3", "devclose", DEV, "And?", .5, 1),
+    ("v4", "cxclose", CX, "With AI, they took nineteen percent longer.", .4, 1),
+    ("v5", "devclose", DEV, "Longer?", .55, 1),
+    ("v6", "cx", CX, "They still believed they were twenty percent faster.", .4, 1),
+    ("v7", "devclose", DEV, "So I'm fast. In my heart.", .7, 1),
+    ("v8", "cxclose", CX, "You started this at nine.", .6, 1),
+    ("v9", "devclose", DEV, "And?", .45, 1),
+    ("v10", "cxclose", CX, "It's four forty.", .5, 1),
+    ("v11", "devclose", DEV, "Twice as fast, though.", .9, .95),
+    ("v12", "cxclose", CX, "In your heart.", .6, 1),
 ]
 HOLDS = {}
 GAP_FIX = {}
