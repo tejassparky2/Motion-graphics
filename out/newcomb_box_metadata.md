@@ -36,4 +36,4 @@ newcomb's problem, newcomb paradox, one box or two, philosophy paradox, decision
 One box 📦 or both 📦📦? Pick a side and give your reason 👇
 ```
 
-**Video facts:** 51.2 s, 168 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 50.9 s, 165 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

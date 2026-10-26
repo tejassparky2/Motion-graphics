@@ -38,4 +38,4 @@ why pray if god knows, does prayer change god's plan, thomas aquinas prayer, pra
 Does prayer change WHAT HAPPENS, or change YOU? One reason, keep it respectful 🙏 👇
 ```
 
-**Video facts:** 33.0 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 32.2 s, 95 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

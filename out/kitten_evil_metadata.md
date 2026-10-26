@@ -36,4 +36,4 @@ problem of evil, why does god allow suffering, epicurus paradox, free will, god 
 PROOF or PRICE? Give one reason, and keep it respectful 🙏 👇
 ```
 
-**Video facts:** 38.9 s, 132 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 37.8 s, 128 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

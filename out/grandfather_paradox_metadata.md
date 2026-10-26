@@ -34,4 +34,4 @@ grandfather paradox, time travel paradox, time machine, parallel universe, many 
 A past you can't change ⏳ or a second world 🌍? Pick one and say why 👇
 ```
 
-**Video facts:** 40.8 s, 123 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 40.7 s, 123 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
