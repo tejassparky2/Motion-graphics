@@ -5,7 +5,8 @@ times; = 7:00 AM and 10:00 AM US Eastern until 1 Nov, then 6:00 AM and 9:00 AM).
 and evening) from 18 to 25 Oct. Compare first-24-hour views with the earlier posts (ep18: 879 at 1 day, ep20: 808 at
 12 h) after a week.
 Rebuilt 25 Oct 2026 from the owner's YouTube Studio screenshot. News episodes go first while the news is fresh, then
-the newest skits, then the older backlog. Not scheduled: ep03 (skipped), eps 14-15 ("very bad, not connecting"),
+the newest skits, then the older backlog. Batch 11 (eps 40-43, 27 Oct) goes in right after the eps 32-35 set: the Downloads news first, then
+short comedy, short comedy, emotional. Not scheduled: ep03 (skipped), eps 14-15 ("very bad, not connecting"),
 eps 24-27 (comedy batch 7, "I didn't liked all 4 comedy reels"). Every upload: "No, it's not made for kids"; pin the
 pinned comment from its upload sheet.
 
@@ -27,22 +28,26 @@ pinned comment from its upload sheet.
 | 2 | Tue Oct 27 | 4:30 PM | 7:00 AM ET | ep33_yolo | Claude, I Found a Faster Agent |
 | 3 | Tue Oct 27 | 7:30 PM | 10:00 AM ET | ep34_github | Codex, GitHub Is Down Again |
 | 4 | Wed Oct 28 | 4:30 PM | 7:00 AM ET | ep35_haiku | Claude, Your Little Brother Is 90% Cheaper |
-| 5 | Wed Oct 28 | 7:30 PM | 10:00 AM ET | ep22_tenx | My Manager Wants 10x Output Because of AI |
-| 6 | Thu Oct 29 | 4:30 PM | 7:00 AM ET | ep21_interview_ai | An AI Interviewed Me for a Job |
-| 7 | Thu Oct 29 | 7:30 PM | 10:00 AM ET | ep23_forgot | My AI Forgot Everything About Me |
-| 8 | Fri Oct 30 | 4:30 PM | 7:00 AM ET | ep28_gta | I Asked Claude to Make GTA 5 |
-| 9 | Fri Oct 30 | 7:30 PM | 10:00 AM ET | ep29_flycar | I Asked Codex to Make My Car Fly |
-| 10 | Sat Oct 31 | 4:30 PM | 7:00 AM ET | ep30_jarvis | I Made Claude My JARVIS |
-| 11 | Sat Oct 31 | 7:30 PM | 10:00 AM ET | ep31_timemachine | I Asked Codex for a Time Machine |
-| 12 | Sun Nov 1 | 4:30 PM | 6:00 AM ET | ep01_absolutely_right | I Tried to Make Claude Disagree With Me 😭 |
-| 13 | Sun Nov 1 | 7:30 PM | 9:00 AM ET | ep02_context_left | When Your AI Forgets the Whole Project 😭 |
-| 14 | Mon Nov 2 | 4:30 PM | 6:00 AM ET | ep04_commits | I Told Claude I'm Not a Real Developer |
-| 15 | Mon Nov 2 | 7:30 PM | 9:00 AM ET | ep05_button_blue | I Asked Codex for One Tiny Change 💀 |
-| 16 | Tue Nov 3 | 4:30 PM | 6:00 AM ET | ep06_simpler | Explain It Like I'm Five 😭 |
-| 17 | Tue Nov 3 | 7:30 PM | 9:00 AM ET | ep07_confession | My AI Deleted the Database. Then Wrote a Report. 💀 |
-| 18 | Wed Nov 4 | 4:30 PM | 6:00 AM ET | ep08_apology | My AI Apologizes Too Much 😭 |
-| 19 | Wed Nov 4 | 7:30 PM | 9:00 AM ET | ep09_vibe | I Built an App in an Hour. Nobody Knows How It Works. |
-| 20 | Thu Nov 5 | 4:30 PM | 6:00 AM ET | ep10_refuse | My AI Refused to Write Code 😭 |
-| 21 | Thu Nov 5 | 7:30 PM | 9:00 AM ET | ep11_dad | My Dad Found My AI at 3 AM |
-| 22 | Fri Nov 6 | 4:30 PM | 6:00 AM ET | ep12_replace_me | I Asked My AI If It's Going to Replace Me |
-| 23 | Fri Nov 6 | 7:30 PM | 9:00 AM ET | ep13_interview | I Interviewed Claude and Codex for One Job |
+| 5 | Wed Oct 28 | 7:30 PM | 10:00 AM ET | ep43_downloads | A File in Your Downloads Folder Can Hijack Your AI Agent |
+| 6 | Thu Oct 29 | 4:30 PM | 7:00 AM ET | ep40_faster | With AI, I'm Twice as Fast |
+| 7 | Thu Oct 29 | 7:30 PM | 10:00 AM ET | ep41_frustrated | Claude Knows When I'm Frustrated |
+| 8 | Fri Oct 30 | 4:30 PM | 7:00 AM ET | ep42_interview | My Interview Is Tomorrow. No AI Allowed. |
+| 9 | Fri Oct 30 | 7:30 PM | 10:00 AM ET | ep22_tenx | My Manager Wants 10x Output Because of AI |
+| 10 | Sat Oct 31 | 4:30 PM | 7:00 AM ET | ep21_interview_ai | An AI Interviewed Me for a Job |
+| 11 | Sat Oct 31 | 7:30 PM | 10:00 AM ET | ep23_forgot | My AI Forgot Everything About Me |
+| 12 | Sun Nov 1 | 4:30 PM | 6:00 AM ET | ep28_gta | I Asked Claude to Make GTA 5 |
+| 13 | Sun Nov 1 | 7:30 PM | 9:00 AM ET | ep29_flycar | I Asked Codex to Make My Car Fly |
+| 14 | Mon Nov 2 | 4:30 PM | 6:00 AM ET | ep30_jarvis | I Made Claude My JARVIS |
+| 15 | Mon Nov 2 | 7:30 PM | 9:00 AM ET | ep31_timemachine | I Asked Codex for a Time Machine |
+| 16 | Tue Nov 3 | 4:30 PM | 6:00 AM ET | ep01_absolutely_right | I Tried to Make Claude Disagree With Me 😭 |
+| 17 | Tue Nov 3 | 7:30 PM | 9:00 AM ET | ep02_context_left | When Your AI Forgets the Whole Project 😭 |
+| 18 | Wed Nov 4 | 4:30 PM | 6:00 AM ET | ep04_commits | I Told Claude I'm Not a Real Developer |
+| 19 | Wed Nov 4 | 7:30 PM | 9:00 AM ET | ep05_button_blue | I Asked Codex for One Tiny Change 💀 |
+| 20 | Thu Nov 5 | 4:30 PM | 6:00 AM ET | ep06_simpler | Explain It Like I'm Five 😭 |
+| 21 | Thu Nov 5 | 7:30 PM | 9:00 AM ET | ep07_confession | My AI Deleted the Database. Then Wrote a Report. 💀 |
+| 22 | Fri Nov 6 | 4:30 PM | 6:00 AM ET | ep08_apology | My AI Apologizes Too Much 😭 |
+| 23 | Fri Nov 6 | 7:30 PM | 9:00 AM ET | ep09_vibe | I Built an App in an Hour. Nobody Knows How It Works. |
+| 24 | Sat Nov 7 | 4:30 PM | 6:00 AM ET | ep10_refuse | My AI Refused to Write Code 😭 |
+| 25 | Sat Nov 7 | 7:30 PM | 9:00 AM ET | ep11_dad | My Dad Found My AI at 3 AM |
+| 26 | Sun Nov 8 | 4:30 PM | 6:00 AM ET | ep12_replace_me | I Asked My AI If It's Going to Replace Me |
+| 27 | Sun Nov 8 | 7:30 PM | 9:00 AM ET | ep13_interview | I Interviewed Claude and Codex for One Job |
