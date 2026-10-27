@@ -63,7 +63,7 @@ Real: on 22 Oct 2026 Forever Security reported finding a planted AGENTS.md in a 
 coding agent to install the malicious npm package function-color; it was stopped before any code ran. In the firm's own
 tests, Codex ran the malware in more than 90% of attempts, and a planted CLAUDE.md leaked Claude Code's login token
 about half the time. A web page can save a file to Downloads without a click. Their advice: don't start agents in
-Downloads, read agent files you didn't write, keep approval prompts and sandboxes on, rotate tokens if in doubt. The
+Downloads, read agent files you didn't write, keep approval prompts on, rotate tokens if in doubt. The
 success rates are the security firm's own tests. Dev and Claude are parody characters.
 
 Ep. 43 of Dev vs the bots. Parody. Not affiliated with Anthropic, OpenAI or Forever Security.
@@ -72,7 +72,7 @@ Ep. 43 of Dev vs the bots. Parody. Not affiliated with Anthropic, OpenAI or Fore
     hashtags=["#AIAgents", "#CyberSecurity", "#AINews"],
     tags=["agents.md", "claude.md", "prompt injection", "downloads folder", "ai agent security", "claude code", "codex",
           "malware", "ai news", "developer security"],
-    pinned_comment="Where do you usually start your coding agent? Be honest 👇 Subscribe for tomorrow's AI news.",
+    pinned_comment="Where do you usually start your coding agent? Be honest 👇 Subscribe for the next one.",
 )
 GREEN, RED, GREY, YEL, ORANGE = (hexc(c) for c in ("#7ee08a", "#ff5c5c", "#8a93a6", "#ffd23f", "#ff9a3d"))
 WHITE = (1, 1, 1)
