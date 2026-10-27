@@ -25,7 +25,8 @@ CHARS = {
     "riku": dict(tags=f"1boy, ash blonde hair, swept bangs, narrowed eyes, smirk, {GAKURAN}, open collar"),
     "kota": dict(tags=f"1boy, black hair, mushroom haircut, straight bangs, round glasses, nervous, {GAKURAN}"),
     "go": dict(tags=f"1boy, tall, broad shoulders, very short black hair, crew cut, thick eyebrows, serious, {GAKURAN}"),
-    "aoi": dict(tags=f"1girl, bob cut, dark blue hair, hairpin, dark blue eyes, calm, expressionless, {SAILOR}"),
+    "aoi": dict(tags=f"1girl, bob cut, dark blue hair, hairpin, dark blue eyes, calm, expressionless, {SAILOR}",
+                seed=11, face=(230, 108, 422, 300), eyes=(238, 135, 402, 224), mouth=(298, 228, 346, 260)),
     "mio": dict(tags=f"1girl, wavy hair, light brown hair, earrings, brown eyes, half-closed eyes, smug, {SAILOR}"),
 }
 BGS = {
