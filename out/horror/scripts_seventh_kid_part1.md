@@ -40,7 +40,7 @@ the ghost in the bed sheet you cut this morning.
 | 18 | Two lights left. | The street: porch lights clicking off, two left. Stamp: 2 LIGHTS LEFT. |
 | 19 | Whoever you let go of stays out here in the dark. | From behind, darker. Heartbeat. |
 | 20 | Let go of the left, and you trust what you know about Sam. | A red ring round your left hand. |
-| 21 | Let go of the right, and you trust the note. | A red ring round your right hand. |
+| 21 | Let go of the right, and you trust the note on the door. | A red ring round your right hand. |
 | 22 | So which hand do you let go? Left, or right? | Card: WHICH HAND DO YOU LET GO? L = SAID RILEY, R = SAID SILLY. COMMENT LEFT OR RIGHT, held 2 s. |
 
 **Clues on screen, never spoken** (for the comments to argue about):

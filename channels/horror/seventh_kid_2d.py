@@ -49,7 +49,7 @@ SCRIPT = [
     dict(id="k18", scene="street", text="Two lights left.", gap=0.9),
     dict(id="k19", scene="hands", text="Whoever you let go of stays out here in the dark."),
     dict(id="k20", scene="hands", text="Let go of the left, and you trust what you know about Sam."),
-    dict(id="k21", scene="hands", text="Let go of the right, and you trust the note."),
+    dict(id="k21", scene="hands", text="Let go of the right, and you trust the note on the door."),
     dict(id="k22", scene="hands", text="So which hand do you let go? Left, or right?", gap=0.3),
 ]
 

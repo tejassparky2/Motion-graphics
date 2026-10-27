@@ -28,7 +28,7 @@ NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen"
        "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty", "41": "forty one",
        "10": "ten", "210": "two ten", "1": "one", "5": "five", "7": "seven", "900": "nine"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring",
-        "wylie": "wiley", "wanna": "want to"}
+        "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes"}
 
 
 def norm(s):
@@ -44,7 +44,7 @@ audio = np.frombuffer(pcm, np.int16).astype(np.float32) / 32768
 model = WhisperModel("medium.en", device="cpu", compute_type="int8")
 bad = 0
 for b in timing["beats"]:
-    a = audio[max(0, int((b["start"] - .1) * 16000)): int((b["end"] + .15) * 16000)]
+    a = audio[max(0, int((b["start"] - .3) * 16000)): int((b["end"] + .15) * 16000)]
     heard = " ".join(s.text for s in model.transcribe(a, language="en", beam_size=5)[0])
     ref, hyp = norm(texts.get(b["id"], "")), norm(heard)
     r = difflib.SequenceMatcher(None, ref, hyp).ratio()
