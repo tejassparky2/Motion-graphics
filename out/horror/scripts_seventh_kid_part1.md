@@ -59,7 +59,8 @@ every clue honest.
 costume, and "You're silly" is exactly what you'd say if you couldn't say the name. Left or right? 👇 (Look at the R's
 on the note 👀)
 
-**When to post:** Part 1 as soon as you can this week (Halloween is Saturday 31 Oct), in the 7:30 slot while Time Lock
-waits. Part 2 on Halloween itself.
+**When to post** (owner, 27 Oct: Halloween first): Part 1 on 28 Oct at 7:30 PM, then a part a day (Part 2 on the
+29th, Part 3 on the 30th), with the finale on Halloween, Saturday 31 Oct. Time Lock waits until 1 Nov. Part 2 is
+written in both versions: out/horror/scripts_seventh_kid_part2.md.
 
 **Sources:** none needed (original fiction).

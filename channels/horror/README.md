@@ -150,3 +150,8 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - 27 Oct: owner "I said it Halloween week so its first": the 7:30 PM slot this week is The Seventh Kid (Part 1 28 Oct,
   then a part a day, finale on Halloween, Sat 31 Oct); Time Lock Part 1 (ready) waits and starts 1 Nov. Tower 9 stays
   at 4:30 PM.
+- 27 Oct: The Seventh Kid Part 2 written in both versions for approval (out/horror/scripts_seventh_kid_part2.md): the
+  truth is fixed (right ghost = Sam holding his breath, left = the thing, rule 2 was its lie). L: you pull off Sam's
+  sheet, then count six kids into the van, the sixth in a sheet holding the little witch's hand (chase or stay). R:
+  Sam calls "Wiley!" from the dark, its fingers won't let go, rule 4 on the note's back: never look under its sheet
+  (pull it off or leave it on).
