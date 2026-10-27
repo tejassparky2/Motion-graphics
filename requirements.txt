@@ -7,3 +7,4 @@ scipy
 piper-tts
 faster-whisper
 pyloudnorm
+opencv-python-headless
