@@ -219,7 +219,14 @@ def char(mod, name):
         txt2img(s.CHAR_PROMPT.format(**c), 512, 768, c["seed"], neg=char_neg(s, c))
     img.save(os.path.join(d, "src512.png"))
     big = upscale(img)
-    cutout(big).save(os.path.join(d, "base.png"))
+    cut = cutout(big)
+    if c.get("clean_light_below"):                    # drop pale stray shapes (smoke, clouds) below a line
+        a = np.array(cut)
+        y0 = c["clean_light_below"] * 2
+        lum = a[y0:, :, :3].mean(axis=2)
+        a[y0:, :, 3][lum > 175] = 0
+        cut = Image.fromarray(a, "RGBA")
+    cut.save(os.path.join(d, "base.png"))
     log(f"char {name}: {time.time() - t:.0f}s")
 
 
