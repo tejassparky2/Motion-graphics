@@ -15,7 +15,7 @@ Scope: whether, and how, a CPU-only Linux box (4 cores, ~15 GB RAM, ~8 GB free d
 ## 1. Which anime checkpoints (SD 1.5 vs SDXL), how big, and which licences are safe for monetized YouTube?
 
 ### Takeaway
-On this box only SD 1.5-class anime checkpoints (~2.1 GB fp16) fit comfortably; SDXL anime models (6.9-7.1 GB single file) nearly fill the 8.2 GB free disk and need ~7 GB RAM in bf16, so they are a stretch. Licence-wise the safe picks are **Animagine XL 4.0 / 3.1 (CreativeML Open RAIL++-M, commercial use explicitly permitted)** on SDXL and **Counterfeit-V3.0, MeinaMix, AnyLoRA, Anything V3/V5 (CreativeML OpenRAIL-M + Civitai "sell generated images" allowed)** on SD 1.5; **avoid NoobAI-XL (explicit ban on monetizing "model-generated products"), Cetus-Mix / AbyssOrangeMix3 / ToonYou (selling images not allowed on Civitai), DMD2-based anything (CC BY-NC-SA)**. Most SD 1.5 anime merges carry presumed NovelAI-leak lineage, which is an unresolved provenance risk, not a licence term.
+On this box only SD 1.5-class anime checkpoints (~2.1 GB fp16, ~1.5-1.7 GB as GGUF q4_0/q8_0) fit the ~2-3 GB of free disk; SDXL anime models (6.8-7.1 GB single file) do not fit on disk and need ~7 GB RAM in bf16 (they belong on the owner's laptop, section 7, if anywhere). Licence-wise the safe picks are **Animagine XL 4.0 / 3.1 (CreativeML Open RAIL++-M, commercial use explicitly permitted)** on SDXL and **Counterfeit-V3.0, MeinaMix, AnyLoRA, Anything V3/V5 (CreativeML OpenRAIL-M + Civitai "sell generated images" allowed)** on SD 1.5; **avoid NoobAI-XL (explicit ban on monetizing "model-generated products"), Cetus-Mix / AbyssOrangeMix3 / ToonYou (selling images not allowed on Civitai), DMD2-based anything (CC BY-NC-SA)**. Most SD 1.5 anime merges carry presumed NovelAI-leak lineage, which is an unresolved provenance risk, not a licence term.
 
 ### Cited Findings
 
@@ -101,7 +101,7 @@ For an SD 1.5 anime checkpoint on CPU, **LCM-LoRA (OpenRAIL++, 4 steps, guidance
 ## 3. CPU runtimes (PyTorch, OpenVINO/optimum-intel, ONNX Runtime, stable-diffusion.cpp, FastSD CPU): real seconds per image, RAM, quantization
 
 ### Takeaway
-All published CPU numbers come from bigger CPUs (12-128 cores); none from a 4-core box. They show (a) few-step SD-class models run in ~1-14 s per 512-768 px image on 12-16 core desktop/laptop CPUs, (b) OpenVINO and bf16-on-AMX each give 2-12x over naive PyTorch fp32, (c) full SDXL at 1024 px, 40 steps, is ~30 s even on 128 server cores. Scaling down to this 4-core AMX Xeon, a realistic **estimate** is ~10-30 s per 512x768 SD 1.5 + LCM frame and ~1.5-4 min per few-step SDXL 832x1216 frame (5-11 min at 28 normal steps). SD 1.5 needs ~2-3 GB RAM in sd.cpp; SDXL needs ~7 GB RAM in bf16 and its 6.9 GB checkpoint barely fits the free disk.
+Published CPU numbers come from bigger CPUs (12-128 cores) and show OpenVINO and bf16-on-AMX each giving 2-12x over naive PyTorch fp32. **A local timing benchmark on this exact 4-core AMX Xeon (PyTorch 2.6 CPU, diffusers 0.29, random weights so no download) measured: SD 1.5 UNet at 512x768 = 6.2 s/step in fp32 vs 2.3-2.7 s/step in pure bf16 (2.3-2.7x faster; AMX confirmed in oneDNN), 4.8 s/step with CFG (batch 2); SD VAE decode 4.8 s (bf16 + channels_last) vs 17.3 s (fp32); TAESD decode 0.8 s; SDXL UNet at 832x1216 = 9.2 s/step bf16 and SDXL VAE decode 24 s.** So on this box: **SD 1.5 anime + LCM-LoRA, 4 steps, 512x768 ≈ 10-14 s per image** (bf16, channels_last; TAESD vs full VAE); 25-step CFG SD 1.5 ≈ 2 min; few-step SDXL ≈ 1.5 min; full 28-step CFG SDXL ≈ 8-9 min. SD 1.5 needs ~2-4 GB RAM; SDXL bf16 used ~5.3 GB RSS for the UNet alone, and its 6.8-7.1 GB checkpoint does not fit the 2-3 GB of free disk.
 
 ### Cited Findings
 
@@ -124,6 +124,27 @@ All published CPU numbers come from bigger CPUs (12-128 cores); none from a 4-co
 
 **SDXL on Xeon with OpenVINO**
 - 2x Xeon Platinum 8592+ (2 x 64 cores, AMX), SDXL 1.0, 1024x1024, 40 steps: native HF ~6 min/image vs **OpenVINO ~30 s/image (12x)**, average of 30 images. Published 30 Jul 2025. — [Lenovo Press LP2261](https://lenovopress.lenovo.com/lp2261-accelerating-text-to-image-diffusion-models-openvino-intel-amx)
+
+**LOCAL MEASUREMENT on this machine (27 Oct 2026, 21:38-22:02 UTC; first-hand, no URL)**
+- Method: `diffusers` 0.29.0 `UNet2DConditionModel` / `AutoencoderKL` / `AutoencoderTiny` / `ControlNetModel` built from the standard SD 1.5 and SDXL configs with **random weights** (compute cost does not depend on weight values, so no checkpoint was downloaded), `torch 2.6.0+cpu` from `/home/user/.venv-clone`, `torch.set_num_threads(4)`, `torch.inference_mode()`, one warm-up then 2-3 timed reps (median shown). `ONEDNN_VERBOSE` confirmed oneDNN reports "Intel AMX with bfloat16 and 8-bit integer support" and runs bf16 convolutions with the `brg_conv_fwd:avx10_1_512_amx` kernel. Scripts: `/tmp/claude-0/-home-user-Motion-graphics/ce9fa840-85fb-5cb2-9994-edff6b8c5245/scratchpad/sdbench/sd_cpu_bench.py` and `sd_cpu_bench2.py`.
+- **Contention:** other agents' Blender and Real-ESRGAN jobs ran on the same 4 cores for much of the session; the first full run (21:38-21:46) was heavily contended and is discarded. The numbers below are from runs where `ps` showed no other process above ~5% CPU (except where noted).
+
+  | Component (SD 1.5 = 859.5M-param UNet; SDXL = 2,567.5M) | Size | Time |
+  |---|---|---|
+  | SD 1.5 UNet, fp32, 1 step | 512x768, batch 1 | **6.23 s** |
+  | SD 1.5 UNet, pure bf16 (`unet.to(torch.bfloat16)`), 1 step | 512x768, batch 1 | **2.69 s** |
+  | SD 1.5 UNet, pure bf16 + `channels_last`, 1 step | 512x768, batch 1 | **2.29 s** |
+  | SD 1.5 UNet, pure bf16, 1 step with CFG (batch 2) | 512x768 | **4.76 s** |
+  | SD 1.5 UNet, pure bf16, 1 step | 512x512, batch 1 | 1.85 s |
+  | SD 1.5 UNet + ControlNet, pure bf16, 1 step | 512x768, batch 1 | 3.74 s (≈ +39% over 2.69 s) |
+  | SD VAE decode fp32 / bf16 autocast / pure bf16 / pure bf16 + channels_last | 512x768 | 17.3 / 8.3 / 7.5 / **4.8 s** |
+  | SD VAE encode fp32 (img2img/inpaint input) | 512x768 | 8.0 s |
+  | TAESD decode fp32 / bf16 | 512x768 | 1.29 / **0.78 s** |
+  | SDXL UNet, pure bf16, 1 step (1 timed rep) | 832x1216, batch 1 | **9.19 s** (process RSS ≈ 34% of 15 GB ≈ 5.3 GB) |
+  | SDXL VAE decode, pure bf16 (no channels_last) | 832x1216 | 24.0 s |
+  | TAESDXL decode fp32 | 832x1216 | 4.09 s |
+
+- `torch.autocast("cpu", dtype=torch.bfloat16)` on the UNet could not be timed cleanly (both attempts overlapped other jobs: 13-18 s); converting the model to bf16 outright is what gave the 2.3-2.7x speed-up above.
 
 **AMX / bf16 evidence on Xeon (what this machine's `amx_bf16` buys)**
 - PyTorch-native "Diffusion Fast" on CPU with **BFloat16 + torch.compile + SDPA: up to 3.91x vs FP32 on SDXL** (4th-gen Xeon Platinum 8480+, single socket 56 cores, batch 1, PyTorch 2.5; Intel test 15 Oct 2024; run with `python run_benchmark.py --compile_unet --compile_vae --device=cpu`). No absolute latencies given. — [PyTorch blog: GenAI acceleration on Intel Xeon (updated 2025-05-05)](https://pytorch.org/blog/genai-acceleration-intel-xeon/); [huggingface/diffusion-fast](https://github.com/huggingface/diffusion-fast)
@@ -150,22 +171,24 @@ All published CPU numbers come from bigger CPUs (12-128 cores); none from a 4-co
 **TAESD (tiny VAE)**
 - Encoder/decoder ~1.2M params each vs 34M/49M for the SD VAE; "can decode Stable Diffusion's latents into full-size images at (nearly) zero cost"; but "tends to fudge fine details" and "trades a (modest) loss in quality for a (substantial) gain in speed"; MIT. — [TAESD README](https://github.com/madebyollin/taesd)
 
-### Inferences (estimates for THIS 4-core AMX Xeon; none measured)
-- **Scaling logic:** HF blog: ~5 s for 20 CFG steps on 32 SPR cores with bf16/AMX ≈ 0.25 s per (CFG) step; linear scaling to 4 cores ×8 → ~2 s per CFG step at 512x512, ~1 s per no-CFG (LCM) step. The i9-10980XE LCM figure (1.07 s/UNet step on 18 non-AMX cores) scaled ×4.5 and corrected ~2x for bf16 AMX gives a similar ~1-2.5 s/step. Real scaling is usually sub-linear (fewer cores get more memory bandwidth each), so these are pessimistic-to-middle values.
-- **VAE decode is a big fixed cost on CPU:** 2.21 s on 18 cores (OpenVINO LCM blog) and ~3.3 s on the i7-12700 (SD Turbo OpenVINO 5 s vs 1.7 s with TAESD) → roughly 5-10 s on 4 cores at 512 px. TAESD removes most of it but softens detail: use TAESD for drafts/previews and the full VAE (or an anime VAE) for final frames.
-- **Estimated per-frame times on this box:**
+### Inferences (per-image times for THIS 4-core AMX Xeon, built from the local component timings above)
+- **bf16 is mandatory here:** converting the UNet/VAE to bf16 (plus `channels_last`) is worth 2.7x on the UNet and 3.6x on the VAE versus fp32 on this CPU — consistent with the 2.2x (IPEX bf16) and up-to-3.91x (bf16 + torch.compile) Intel/PyTorch figures. torch.compile might add more (PyTorch blog) but was not tested here.
+- **VAE decode is a big fixed cost** (4.8 s at 512x768 even in bf16+channels_last; 24 s for SDXL at ~1 MP): use TAESD (0.8 s) for drafts/candidates and the full VAE only for the picked final frame. Img2img/inpainting also pay a VAE *encode* (~8 s fp32, presumably ~2-3 s in bf16+channels_last — not measured).
+- **Per-image times on this box** (sum of measured components; text encoder and scheduler overhead are small and not included):
 
-  | Setup | Resolution | Estimate per image | Basis |
+  | Setup | Resolution | Per image | How computed |
   |---|---|---|---|
-  | SD 1.5 anime + LCM-LoRA, 4 steps, CFG 1, OpenVINO or PyTorch bf16, TAESD | 512x512 | ~5-10 s | HF blog + OpenVINO LCM blog scaled |
-  | same, full VAE | 512x768 | ~13-30 s | note.com 155H measured 13.5 s; 4 cores ≈ 1-2x slower |
-  | SD 1.5 anime, 25 steps, CFG 7 (no acceleration) | 512x768 | ~1.5-3 min | ~2-3 s per CFG step x 25 + VAE |
-  | SDXL anime (Animagine) + LCM/Hyper LoRA, 8 steps, CFG 1 | 832x1216 | ~1.5-4 min | Lenovo 0.75 s/step on 128 cores, scaled |
-  | SDXL anime, 28 steps, CFG 5 (card defaults) | 832x1216 | ~5-11 min | Lenovo scaled ×32 (sub-linear → lower end) |
-  | Anima-Turbo 2B DiT, 8-12 steps | ~1 MP | unknown, likely minutes | no CPU data anywhere |
+  | SD 1.5 anime + LCM/Hyper/TCD LoRA, 4 steps, CFG 1, bf16 + channels_last, **TAESD** | 512x768 | **≈ 10 s** | 4 x 2.29 + 0.78 |
+  | same, **full VAE** | 512x768 | **≈ 14 s** | 4 x 2.29 + 4.76 |
+  | same + ControlNet (lineart/openpose) | 512x768 | ≈ 19-20 s | 4 x ~3.5 + 4.76 |
+  | SD 1.5 anime, 25 steps, CFG 7 (no acceleration) | 512x768 | ≈ 2 min | 25 x ~4.4 + 4.76 |
+  | Hyper-SD15 8-step CFG LoRA, CFG 5-8 (keeps negative prompts) | 512x768 | ≈ 40 s | 8 x ~4.4 + 4.76 |
+  | SDXL anime (Animagine 4.0) + LCM/Hyper SDXL LoRA, 8 steps, CFG 1 | 832x1216 | ≈ 1.3 min (TAESDXL) - 1.6 min (full VAE) | 8 x 9.19 + 4.1 / 24 |
+  | SDXL anime, 28 steps, CFG 5 (card defaults) | 832x1216 | ≈ 8-9 min | 28 x ~2 x 9.19 (CFG) + 24 (estimate; batch-2 SDXL not measured) |
+  | Anima-Turbo 2B DiT, 8-12 steps | ~1 MP | unknown | not measured |
 
-- For 60 shots with ~3 candidates each (180 images): SD 1.5 + LCM ≈ 40-90 min; few-step SDXL ≈ 5-12 h; full-step SDXL ≈ 15-33 h. **SD 1.5 + LCM is the only route that allows real iteration on this box.** A 512x768 still can then be upscaled (section 6) for a 1080x1920 Short.
-- **Memory/disk fit:** SD 1.5 (≈2-3 GB RAM in sd.cpp, ~4 GB in FastSD LCM-LoRA mode) fits easily. SDXL in bf16 needs ~7 GB for weights alone, which matches the ~7 GB currently "available" → OOM risk with no swap; fp32 SDXL (~14 GB) does not fit. On disk, one 6.94 GB SDXL checkpoint leaves ~1.3 GB of the 8.2 GB free, so OpenVINO IR conversion (a second full copy) or GGUF conversion (needs the source file plus the output) **does not fit** unless disk is freed or a pre-quantized GGUF is downloaded directly.
+- For 60 shots with ~3 candidates each (180 images): SD 1.5 + LCM ≈ 30-45 min of compute, plus one full-VAE re-decode per picked frame; few-step SDXL ≈ 4-5 h; full-step SDXL ≈ 27 h. **SD 1.5 + few-step LoRA in bf16 is the only route that allows real iteration on this box** (and only when no other heavy job is running: under contention the same UNet step took 13-20 s instead of 2.3-2.7 s). A 512x768 still can then be upscaled (section 6) for a 1080x1920 Short.
+- **Memory/disk fit:** SD 1.5 (≈2-3 GB RAM in sd.cpp; the bf16 PyTorch benchmark process peaked around 3.5-4 GB RSS while also holding fp32 copies) fits easily. SDXL in bf16 used ~5.3 GB RSS for the UNet alone; with text encoders and VAE expect ~7 GB → OOM risk when other jobs hold memory (no swap); fp32 SDXL (~14 GB) does not fit. On disk, a 6.8-7.1 GB SDXL checkpoint does not fit the ~2-3 GB that is realistically free (even at the session's best, 8.2 GB free, it would leave ~1.3 GB, with no room for an OpenVINO IR copy or a GGUF conversion).
 - **What fits in ~2-3 GB of free disk** (sizes from the HF/Civitai file listings cited above):
 
   | Item | Disk | Fits 2-3 GB? |
@@ -181,11 +204,13 @@ All published CPU numbers come from bigger CPUs (12-128 cores); none from a 4-co
   | Any SDXL anime checkpoint (6.78-7.11 GB), Anima (≈5.6 GB of files), SDXL-Turbo | 5.6-7.1 GB | **no** |
 
   The diffusers multi-folder layout of SD 1.5 repos is often fp32 (e.g., Anything V5 UNet 3.44 GB) and should be avoided here; use single-file fp16 checkpoints or GGUF.
-- **Runtime choice:** (1) PyTorch CPU + diffusers with `torch.autocast("cpu", dtype=torch.bfloat16)` uses AMX directly and gives full access to LoRA/IP-Adapter/ControlNet/inpainting APIs — most flexible. (2) OpenVINO via optimum-intel (`OVStableDiffusionPipeline`, static reshape to the target size) was the fastest in every Intel comparison (HF blog, Lenovo), but every model/LoRA combination must be exported first (disk cost). (3) stable-diffusion.cpp is the leanest on RAM/disk (q8_0 SD 1.5 ~1.7 GB on disk, ~1.6-2.1 GB RAM) and bundles LoRA, LCM, ControlNet, IP-Adapter, TAESD and ESRGAN in one binary, but publishes no CPU speeds and its bf16/AMX use is not documented. (4) FastSD CPU is a convenient wrapper (OpenVINO + LCM + ControlNet) but its fast paths are tied to specific pre-converted models; any Civitai SD 1.5 checkpoint can still be used in LCM-LoRA mode. (5) ONNX Runtime (already installed) had no current CPU SD benchmarks in this search.
+- **Runtime choice:** (1) PyTorch CPU + diffusers with the pipeline converted to bf16 (`pipe.to(torch.bfloat16)`, then `pipe.unet.to(memory_format=torch.channels_last)` / same for the VAE) uses AMX (verified above) and gives full access to LoRA/IP-Adapter/ControlNet/inpainting APIs — most flexible, and already installed (`/home/user/.venv-clone`, though it lacks `peft`, which recent diffusers need for `load_lora_weights`; use a separate venv rather than modifying the TTS one). Half-precision VAEs are a known risk (ComfyUI's own help text says `--fp16-vae` "might cause black images"); bf16 keeps fp32's exponent range so it should be safer than fp16, but check final frames and fall back to an fp32 VAE decode (17 s) for picked frames if artefacts appear — [ComfyUI cli_args.py](https://github.com/comfyanonymous/ComfyUI/blob/master/comfy/cli_args.py). (2) OpenVINO via optimum-intel (`OVStableDiffusionPipeline`, static reshape to the target size) was the fastest in every Intel comparison (HF blog, Lenovo), but every model/LoRA combination must be exported first (disk cost). (3) stable-diffusion.cpp is the leanest on RAM/disk (q8_0 SD 1.5 ~1.7 GB on disk, ~1.6-2.1 GB RAM) and bundles LoRA, LCM, ControlNet, IP-Adapter, TAESD and ESRGAN in one binary, but publishes no CPU speeds and its bf16/AMX use is not documented. (4) FastSD CPU is a convenient wrapper (OpenVINO + LCM + ControlNet) but its fast paths are tied to specific pre-converted models; any Civitai SD 1.5 checkpoint can still be used in LCM-LoRA mode. (5) ONNX Runtime (already installed) had no current CPU SD benchmarks in this search.
 - int8 (NNCF) on the UNet bought only 1.38x in Intel's own LCM test; on an AMX CPU bf16 is probably the better first step (no calibration, no quality risk).
 
 ### Gaps
-- **No published benchmark on any 4-core CPU** for SD 1.5/SDXL; all scaling above is estimated. A 5-minute local test (diffusers bf16 vs OpenVINO vs sd.cpp, SD 1.5 + LCM-LoRA, 512x768, 4 steps) would replace these estimates.
+- No published benchmark exists for any 4-core CPU; the local numbers above are component timings with random weights (identical compute to real checkpoints), not an end-to-end run with a real anime checkpoint + LoRA, and OpenVINO, sd.cpp and torch.compile were not timed here. An end-to-end check with a real SD 1.5 anime checkpoint (task #15) should confirm ~10-14 s per 512x768 LCM image and check bf16 VAE output quality.
+- SDXL batch-2 (CFG) and bf16+channels_last SDXL VAE were not measured (SDXL rows use 1 timed rep).
+- The torch 2.14 CUDA build in `/home/user/.venv-main` was not benchmarked; newer PyTorch may be faster on CPU.
 - No CPU timings found for stable-diffusion.cpp on SD 1.5/SDXL, for ONNX Runtime SD pipelines in 2025-2026, or for Anima on CPU.
 - Whether sd.cpp's CPU backend uses AMX-BF16 was not documented.
 - IPEX (used in the HF blog) status in 2026 was not checked; its bf16 path is reportedly upstreamed into PyTorch, but this was not verified here.
@@ -215,12 +240,12 @@ The CPU-affordable stack is: **fixed character "model sheet" made once → per-s
   1. Design each character once (owner-approved model sheet: front/3-quarter/side, fixed outfit and colour palette), generated or drawn at 512x768.
   2. Fix a character "token" prompt (hair colour/length, eye colour, outfit, accessories) and the same seed family; keep the negative prompt constant.
   3. Per shot: IP-Adapter Plus-Face (scale ~0.5-0.7) fed from the model-sheet face crop, plus LCM-LoRA 4-6 steps; precompute and cache the IP-Adapter embeddings per character so the 2.5 GB ViT-H encoder only runs once (it can then be deleted from RAM/disk if disk is tight).
-  4. Add ControlNet openpose or lineart_anime only for shots needing a specific pose/composition (+~50% time).
+  4. Add ControlNet openpose or lineart_anime only for shots needing a specific pose/composition (measured here: +39% per UNet step in bf16, 2.69 → 3.74 s at 512x768; literature says ~+50-60%).
   5. For expressions/mouth shapes: inpaint just the face/mouth region at low denoise (0.3-0.5) from the approved base frame instead of regenerating the frame — that is the cheapest and most stable way to get blink/mouth variants for 2D animation.
   6. For two-character shots: IP-Adapter masks per character (diffusers supports it) or composite characters generated separately over the background (more reliable).
 - **Seed + img2img at low denoise** (0.3-0.45) from the model sheet is the cheapest method of all and keeps outfit/colours, but locks the pose close to the reference; useful for small pose changes and alternates.
 - **Failure modes to plan for (general knowledge, not measured here):** outfit details (buttons, logos, asymmetric accessories) drift first; hair colour shifts under strong scene lighting prompts; IP-Adapter at high scale copies the reference pose/background ("stickiness"); few-step LoRAs reduce prompt adherence for small details. Because the pipeline animates stills (2D motion on finished frames) rather than generating video, frame-to-frame flicker is not an issue; shot-to-shot drift is.
-- **CPU LoRA training (estimate only):** a training step ≈ forward + backward ≈ ~3x a forward pass; with ~1-2 s per 512 px UNet forward on 4 AMX cores, that is ~3-6 s/step at batch 1, so a ~1,000-step character LoRA would be roughly 1-2 hours (assumed step count, not sourced). RAM is likely workable for SD 1.5 LoRA in bf16 with gradient checkpointing. Untested; trainers (kohya) are CUDA-oriented, so diffusers' LoRA training script on CPU via accelerate would be the more likely path. Worth trying only after IP-Adapter consistency proves insufficient.
+- **CPU LoRA training (estimate only):** a training step ≈ forward + backward ≈ ~3x a forward pass; with the measured 1.85 s per bf16 SD 1.5 UNet forward at 512x512 on these 4 AMX cores, that is ~5-6 s/step at batch 1 (latents cached), so a ~1,000-step character LoRA would be roughly 1.5-2 hours of exclusive CPU time (assumed step count, not sourced; the RTX 3060 Laptop guide in section 7 estimates 1-2 h for a comparable GPU run, so the CPU may not be far behind a 6 GB laptop GPU here). RAM is likely workable for SD 1.5 LoRA in bf16 with gradient checkpointing. Untested; trainers (kohya) are CUDA-oriented, so diffusers' LoRA training script on CPU via accelerate would be the more likely path. Worth trying only after IP-Adapter consistency proves insufficient.
 
 ### Gaps
 - No measured CPU timings for IP-Adapter, ControlNet or inpainting were found; overhead figures are GPU/serving numbers.
@@ -277,7 +302,8 @@ Real-ESRGAN (BSD-3-Clause) has two anime-specific models — `RealESRGAN_x4plus_
 - ONNX Runtime is already installed, so an ONNX export of anime_6B or animevideov3 is the zero-install way to benchmark here.
 
 ### Gaps
-- No CPU timing for any Real-ESRGAN anime model was found in READMEs, issues or blogs; needs a local measurement.
+- No CPU timing for any Real-ESRGAN anime model was found in READMEs, issues or blogs; needs a local measurement (another research agent was benchmarking Real-ESRGAN on this machine during this session — use its numbers).
+- Measured context from this session: an SD VAE decode alone took 4.8 s (bf16) at 512x768 on these 4 cores, so a 4x RRDB upscaler on the same frame is likely to cost seconds to tens of seconds; an estimate only.
 - Exact `.pth` file sizes for anime_6B / animevideov3 were not verified in this session.
 
 ---
@@ -287,7 +313,7 @@ Real-ESRGAN (BSD-3-Clause) has two anime-specific models — `RealESRGAN_x4plus_
 (Owner confirmed the card on 27 Oct 2026: RTX 3050 Laptop, 4 GB. RTX 3050 **Ti** Laptop (also 4 GB) data is included because it is the same class.)
 
 ### Takeaway
-The 4 GB RTX 3050 Laptop is roughly **5-20x faster than the 4-core CPU box** for SD 1.5: user-submitted benchmarks put it at a median **~2.6 it/s at 512x512 (≈7-8 s for a full 20-step CFG image incl. VAE)**, so SD 1.5 anime checkpoints + LCM/Hyper LoRAs, ControlNet (Low VRAM mode, documented up to 768x832 on 4 GB Ampere) and IP-Adapter are all practical on it. **SDXL anime models (Animagine XL 4.0 / Illustrious) only run with Forge/ComfyUI offloading and are slow** (A1111 users on this card logged 0.09-0.56 it/s; a tuned ComfyUI SDXL workflow on the same card took 55-60 s per 1024x720 image at 10+5 steps). **SD 1.5 LoRA training on 4 GB is undocumented and marginal; SDXL LoRA training on 4 GB is not realistic.** Best split: laptop = image generation (and GPU upscaling); cloud CPU box = voices, compositing, parallax/2D animation rendering, captions, Whisper checks, and slow CPU fallback drafts.
+The 4 GB RTX 3050 Laptop is roughly **3-9x faster than the 4-core CPU box** for SD 1.5 (≈9x for a 20-step CFG image: ~7.6 s vs ~68 s computed from the local CPU timings; ≈3x for a 4-step LCM image: ~3-5 s vs ~10-14 s): user-submitted benchmarks put it at a median **~2.6 it/s at 512x512 (≈7-8 s for a full 20-step CFG image incl. VAE)**, so SD 1.5 anime checkpoints + LCM/Hyper LoRAs, ControlNet (Low VRAM mode, documented up to 768x832 on 4 GB Ampere) and IP-Adapter are all practical on it. **SDXL anime models (Animagine XL 4.0 / Illustrious) only run with Forge/ComfyUI offloading and are slow** (A1111 users on this card logged 0.09-0.56 it/s; a tuned ComfyUI SDXL workflow on the same card took 55-60 s per 1024x720 image at 10+5 steps). **SD 1.5 LoRA training on 4 GB is undocumented and marginal; SDXL LoRA training on 4 GB is not realistic.** Best split: laptop = image generation (and GPU upscaling); cloud CPU box = voices, compositing, parallax/2D animation rendering, captions, Whisper checks, and slow CPU fallback drafts.
 
 ### Cited Findings
 
