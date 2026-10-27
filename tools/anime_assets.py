@@ -284,6 +284,11 @@ def parts(mod, name, which=None):
         rx0, ry0, rx1, ry1 = [(v - box[i % 2]) * k for i, v in enumerate(c[region])] if region != "face" else \
             (S * 0.08, S * 0.08, S * 0.92, S * 0.92)
         m = soft_ellipse(S, S, (rx0, ry0, rx1, ry1), S * 0.02 if region != "face" else S * 0.045)
+        ring = (m > 0.05) & (m < 0.6)                                 # match the patch's colour to its surroundings
+        if ring.any():
+            o = np.asarray(out, np.float32)
+            shift = np.asarray(base_face, np.float32)[ring].mean(0) - o[ring].mean(0)
+            out = Image.fromarray(np.clip(o + shift, 0, 255).astype(np.uint8))
         size = int(round(side * 2))                                   # the crop is shown at 2x: S -> 2*side
         up = out.resize((size, size), Image.LANCZOS)
         mk = cv2.resize(m, (size, size))
