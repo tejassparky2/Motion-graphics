@@ -24,6 +24,18 @@
         "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
         "--no-usage-statistics"
       ]
+    },
+    "reddit-public": {
+      "command": "/root/.local/bin/uvx",
+      "args": [
+        "--with",
+        "httpx",
+        "--with",
+        "aiohttp",
+        "--from",
+        "git+https://github.com/adhikasp/mcp-reddit.git",
+        "mcp-reddit"
+      ]
     }
   }
 }
