@@ -1,12 +1,13 @@
 """Core helpers: timing/easing, hand-drawn ("boiling") shapes, handwritten text.
 
-Everything is drawn with pycairo on a 720x1280 (9:16) canvas.
+Everything is drawn with pycairo on a 720x1280 (9:16) canvas, or 1280x720 (16:9) with CANVAS=landscape.
 """
 import math
 import os
 import random
 
-W, H = 720, 1280
+# CANVAS=landscape (set before this module is imported) gives a 1280x720 (16:9) canvas for long videos.
+W, H = (1280, 720) if os.environ.get("CANVAS") == "landscape" else (720, 1280)
 FPS = 30
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -19,10 +19,11 @@ import imageio_ffmpeg   # noqa: E402
 from faster_whisper import WhisperModel   # noqa: E402
 
 ep = sys.argv[1]
-video = os.path.join(ROOT, "out", "horror", f"{ep}.mp4")
-timing = json.load(open(os.path.join(ROOT, "build", "horror", f"timing_{ep}.json")))
-twin = os.path.join(ROOT, "channels", "horror", f"{ep.removesuffix('_2d')}.py")       # 2D cuts reuse the 3D script
-src = open(twin if os.path.exists(twin) else os.path.join(ROOT, "channels", "horror", f"{ep}.py")).read()
+home = next(d for d in ("horror", "stories") if os.path.exists(os.path.join(ROOT, "channels", d, f"{ep}.py")))
+video = os.path.join(ROOT, "out", home, f"{ep}.mp4")
+timing = json.load(open(os.path.join(ROOT, "build", home, f"timing_{ep}.json")))
+twin = os.path.join(ROOT, "channels", home, f"{ep.removesuffix('_2d')}.py")       # 2D cuts reuse the 3D script
+src = open(twin if os.path.exists(twin) else os.path.join(ROOT, "channels", home, f"{ep}.py")).read()
 texts = dict(re.findall(r'dict\(id="(\w+)", scene="\w+", text="((?:[^"]|"\s*\n\s*")*)"', src))
 NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six", "4": "four",
        "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty", "41": "forty one",
