@@ -157,7 +157,7 @@ def watch(cr, x, y, r, t, backwards=True):
 
 
 # ------------------------------------------------------------------ the hatch, open
-def hatch_open(cr, t, hand=0.0, face=0.0, frost=1.0, rise=0.0):
+def hatch_open(cr, t, hand=0.0, face=0.0, frost=1.0, rise=0.0, climber=0.0):
     """From above: the trapdoor thrown back, the shaft below full of cold light and the ladder going down; a hand in
     an orange sleeve grips the near edge (hand 0..1), then your own face rises into the light (face 0..1)."""
     n1.planks(cr, 0, 0, W, H, horizontal=False, seed=11, base=hexa("#6e4c31"), dark=hexa("#4a3120"), board=72)
@@ -193,6 +193,22 @@ def hatch_open(cr, t, hand=0.0, face=0.0, frost=1.0, rise=0.0):
         cr.move_to(360 - hw, yy)
         cr.line_to(360 + hw, yy)
         cr.stroke()
+    if climber > 0 and face <= 0:                               # far down the ladder, already climbing: a shape
+        sc = 0.18 + 0.2 * climber
+        cy = 600 + 120 * climber
+        cr.set_source_rgba(0.02, 0.03, 0.05, 0.95)
+        cr.save()
+        cr.translate(372, cy)
+        cr.scale(sc, sc)
+        cr.arc(0, -150, 95, 0, 2 * math.pi)
+        cr.fill()
+        tk.curve(cr, [(-60, -70), (-190, -20), (-210, 140), (210, 140), (190, -20), (60, -70)])
+        cr.fill()
+        cr.set_source_rgba(0.6, 0.75, 1, 0.5)
+        cr.set_line_width(10)
+        cr.arc(0, -150, 95, math.pi * 1.1, math.pi * 1.9)
+        cr.stroke()
+        cr.restore()
     if face > 0:                                                # your face, rising out of the light
         sc = 0.55 + 0.45 * face
         other_bust(cr, 400, 1010 - 330 * face + 40 * rise, sc * 1.05, t, tk.face_mix("uneasy", "terror", 0.6),
@@ -251,8 +267,8 @@ def floor_frost(cr, x, y, k):
     for j in range(40):
         a = j * 2.399
         r = (40 + 260 * ((j * 0.37) % 1)) * k
-        ex, ey = x + r * math.cos(a), y + r * math.sin(a) * 0.3
-        cr.move_to(x + 0.3 * r * math.cos(a), y + 0.3 * r * math.sin(a) * 0.3)
+        ex, ey = x + r * math.cos(a), y + r * math.sin(a) * 0.45
+        cr.move_to(x + 0.3 * r * math.cos(a), y + 0.3 * r * math.sin(a) * 0.45)
         cr.line_to(ex, ey)
         cr.stroke()
 
@@ -260,8 +276,8 @@ def floor_frost(cr, x, y, k):
 def other_room(cr, t, face, look=(0.0, 0.0), frost_k=0.0, tremble=1.0, wipe=False):
     """The other you in the dark cabin, lit by your phone."""
     hud2d.blurred(cr, lambda c: (n1.cabin(c, t, on=0.0), grade(c, (0.3, 0.34, 0.46), (0.12, 0.13, 0.2))), sigma=8)
-    floor_frost(cr, 360, 1220, frost_k)
     other_bust(cr, 360, 960, 1.42, t, face, look=look, tremble=tremble)
+    floor_frost(cr, 360, 1215, frost_k)
     glow(cr, 360, 1300, 520, PHONE, 0.3)
     n2.phone_dark(cr, 360, 1100, 1000, 0.7)
 
@@ -277,9 +293,9 @@ def you_room(cr, t, face, look=(0.0, 0.0)):
 def both(cr, t):
     """Face to face in the dark: you on the left, it on the right."""
     hud2d.blurred(cr, lambda c: (n1.cabin(c, t, on=0.0), grade(c, (0.3, 0.34, 0.46), (0.12, 0.13, 0.2))), sigma=8)
-    tk.you_bust(cr, 190, 1010, 1.0, tk.FACES["uneasy"], t, look=(0.8, 0), turn=0.6, coat=tk.RANGER, light=(0, 14),
+    tk.you_bust(cr, 190, 900, 1.0, tk.FACES["uneasy"], t, look=(0.8, 0), turn=0.6, coat=tk.RANGER, light=(0, 14),
                 rim=(0.8, 0.9, 1, 0.7), rim_from=(0, 10), skin=PHONE_SKIN)
-    other_bust(cr, 540, 1010, 1.0, t, tk.FACES["calm"], look=(-0.8, 0), turn=-0.6, tremble=0.6)
+    other_bust(cr, 540, 900, 1.0, t, tk.FACES["calm"], look=(-0.8, 0), turn=-0.6, tremble=0.6)
     glow(cr, 360, 1250, 520, PHONE, 0.3)
     n2.phone_dark(cr, 360, 1150, 1000, 0.6)
 
@@ -336,11 +352,11 @@ def rules_page(cr, t, hot):
         cr.save()
         cr.translate(360 + 0.9 * 110, 560 + 0.9 * (-90 + j * 130))
         cr.scale(1.0, 0.42)
-        cr.set_source_rgba(*hud2d.RED[:3], 0.95)
-        cr.set_line_width(8)
         cr.new_path()
         cr.arc(0, 0, 190, -math.pi / 2, -math.pi / 2 + 2 * math.pi * p)
         cr.restore()
+        cr.set_source_rgba(*hud2d.RED[:3], 0.95)
+        cr.set_line_width(8)
         cr.stroke()
 
 
@@ -372,12 +388,12 @@ def draw(cr, t, tl):
 
     cr.save()
     if name in ("open", "grip", "rise"):
-        z = {"open": (1.0, 1.08), "grip": (1.9, 2.05), "rise": (1.05, 1.15)}[name]
-        cy = {"open": 620, "grip": HY1, "rise": 640}[name]
-        cx = 340 if name == "grip" else 360
+        z = {"open": (1.14, 1.24), "grip": (1.9, 2.05), "rise": (1.05, 1.15)}[name]
+        cy = {"open": 600, "grip": 640, "rise": 640}[name]
+        cx = HX0 + 60 if name == "grip" else 360
         camera(cr, t, s0, s1, z[0], z[1], cx=cx, cy=cy)
         face = seg(t, A("n2", "Then"), B["n2"].end + 0.3) if name == "rise" else 0.0
-        hatch_open(cr, t, hand=seg(t, t_hand, t_hand + 0.35), face=face)
+        hatch_open(cr, t, hand=seg(t, t_hand, t_hand + 0.35), face=face, climber=seg(t, 0.0, t_hand))
         grade(cr, (0.62, 0.7, 0.88), (0.3, 0.32, 0.42))
         glow(cr, 360, 1250, 600, PHONE, 0.15)
     elif name in ("other", "other_answer", "other_w", "other_stay"):
@@ -457,7 +473,7 @@ def draw(cr, t, tl):
     cr.restore()
 
     if name == "other_answer":                                    # the page it quoted, in a ring
-        inset(cr, 560, 330, 120, lambda c: (c.translate(560, 330), c.scale(0.4, 0.4), c.translate(-360, -470),
+        inset(cr, 140, 330, 110, lambda c: (c.translate(140, 330), c.scale(0.4, 0.4), c.translate(-360, -470),
                                             page_one(c, t, seg(t, B["n9"].start, B["n9"].end))), "PAGE ONE")
     elif name == "bolt":
         inset(cr, 560, 1000, 115, lambda c: (c.translate(560, 1000), c.scale(0.45, 0.45), c.translate(-360, -560),
@@ -473,7 +489,7 @@ def draw(cr, t, tl):
     hud2d.hook(cr, t, [("YOU CHOSE", False), ("THE HATCH.", True)], end=B["n1"].end + 0.1, y=250, size=92)
     hud2d.bubble(cr, t, B["n4"].start, B["n4"].end, "Shut it! Before 4:44!", 360, 290, (360, 470))
     hud2d.stamp(cr, t, t_slam - 0.05, B["n5"].end + 0.3, ["RULE 3: DONE"], y=250, col=hud2d.GREEN)
-    hud2d.bubble(cr, t, B["n9"].start, B["n9"].end, "Day one. I hate heights.", 300, 560, (340, 700), w=380)
+    hud2d.bubble(cr, t, B["n9"].start, B["n9"].end, "Day one. I hate heights.", 450, 440, (390, 640), w=330)
     hud2d.stamp(cr, t, A("n12", "nothing.") - 0.05, B["n12"].end + 0.5, ["1 REFLECTION"], y=300)
     hud2d.bubble(cr, t, B["n13"].start, B["n13"].end, "Don't look at the glass. And at five, don't answer the "
                  "radio.", 360, 280, (360, 470), creepy=True)
