@@ -38,7 +38,8 @@ BGS = {
                          "cold fluorescent ceiling lights, night, gloomy", seed=7,
                     neg="window, windows, sunlight, sky, daylight, corridor, hallway, plants"),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
-    "floor": dict(tags="concrete floor, dust, cracks, cold light from above, from above, dark corners"),
+    "floor": dict(tags="dark grey concrete floor texture, top-down view, dust, hairline cracks, dim cold light, night",
+                  seed=9, neg="sunlight, shadows, window, red, lines, people, person, metal"),
 }
 
 
