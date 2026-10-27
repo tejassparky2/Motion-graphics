@@ -147,7 +147,27 @@ def seventh_kid(cr):
     chip(cr, "THE SEVENTH KID · PART 1")
 
 
-THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid}
+def tower9_n3(cr):
+    """The hatch thrown open from above, your own hand on the edge and your face rising in the cold light."""
+    from channels.horror import tower9_n3_2d as ep
+    t = 3.0
+    cr.save()
+    cr.translate(360, 820)
+    cr.scale(1.25, 1.25)
+    cr.translate(-360, -620)
+    ep.hatch_open(cr, t, hand=1.0, face=0.75)
+    cr.restore()
+    tk.grade(cr, (0.66, 0.74, 0.92), (0.32, 0.34, 0.45))
+    g = cairo.LinearGradient(0, 100, 0, 470)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.85)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("YOU OPENED IT.", (1, 1, 1, 1)), ("LOOK WHO", hud2d.RED), ("CLIMBED UP", hud2d.RED)], 230, 104)
+    chip(cr, "TOWER 9 · NIGHT 3")
+
+
+THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid, "tower9_n3": tower9_n3}
 
 if __name__ == "__main__":
     name = sys.argv[1]
