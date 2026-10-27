@@ -134,3 +134,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - 27 Oct: Tower 9 Night 2 vote: owner "All said hatch". Night 3 script for approval: out/horror/scripts_night3_tower9.md
   (you open the hatch and your own hand reaches up; the copy at the window vanishes at 4:44; test: page one of the
   logbook; flip: only one reflection; at five base calls; vote: answer the radio, or stay).
+- 27 Oct: owner approved Night 3 ("Approved, make it"). Delivered out/horror/tower9_n3_2d.mp4 (63.3 s incl. the 2 s card
+  hold; 174 words), Whisper medium 19/19, no encoder tags; thumbnail out/horror/thumbs/tower9_n3.png. Frame 0 adds a
+  dark shape already climbing far down the ladder. Fixed on the way: the slam sat on "slam the bolt" (heard "spin") ->
+  cued after "bolt."; a breath effect masked "Shut it! Before" -> removed; the bolt sound and the other-you's volume
+  boost clipped -> lowered. No viewer comments were sent, so none are shown (never invent them). Night 4 waits for
+  the vote: A answer the radio / B stay.
