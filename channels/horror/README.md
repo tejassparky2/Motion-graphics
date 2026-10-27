@@ -125,3 +125,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   name?"; the flip "Sam can't say R"; vote LEFT or RIGHT. New cast in toon2d (riley_bust/riley_back, sam_bust,
   ghost_kid, kid_full, kid_face, breath_fog); sounds crickets/porch_off/whoosh; hud2d.ab_card takes title/ask/letters;
   TAIL 2.0 (the card stays up 2 s, from the reference study).
+  Delivered out/horror/seventh_kid_2d.mp4 (66.5 s incl. the 2 s card hold; 194 words, 212 wpm while speaking), Whisper
+  medium 22/22, no encoder tags, peak -0.2 dB; thumbnail out/horror/thumbs/seventh_kid.png. Fixed on the way: "trust
+  the note" was swallowed (heard "trust in it" / "the left") -> "trust the note on the door"; "cut his eye holes" was
+  heard as "eyeballs" -> "cut the holes for his eyes"; the new porch-light snaps, whooshes and the sting peaked at
+  0 dBFS -> porch_off 0.3, whoosh 0.25, sting 0.5 for this episode. Part 2 waits for the LEFT/RIGHT vote.
+
