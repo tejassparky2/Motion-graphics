@@ -147,3 +147,6 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   (they read as anger before). The clue shot (her eyes on the manager's office, a shape behind its frosted glass)
   gets ~1 s via the pause after "presses down."; the far siren stays low under the last lines. Part 2 waits for the
   vote: A mask off / B run.
+- 27 Oct: owner "I said it Halloween week so its first": the 7:30 PM slot this week is The Seventh Kid (Part 1 28 Oct,
+  then a part a day, finale on Halloween, Sat 31 Oct); Time Lock Part 1 (ready) waits and starts 1 Nov. Tower 9 stays
+  at 4:30 PM.
