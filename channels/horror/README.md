@@ -110,3 +110,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - 27 Oct: owner approved Time Lock Part 1 ("Approved"). Delivered out/horror/timelock_2d.mp4 (65 s), Whisper medium
   19/19 (check.py now knows 41 / 2:10 / key ring forms); thumbnail out/horror/thumbs/timelock.png. Note: hud2d.blurred()
   assumes a 720 x 1280 device, so thumbnails (drawn at 1.5x) dim the background instead of blurring it.
+- 27 Oct: owner sent two reference Shorts from another new page (10-12k views each against our 1.5k): "study this".
+  Findings in reports/Horror reference study 27 Oct.md. Pace, brightness, HUD and captions match ours. The gap is the
+  premise (home, family, Halloween dated), rules that work as tells, a "which one is real" vote people can argue with
+  clues, a test beat, a late flip at ~75%, a new shot every 2-4 s with a face in it, and Part 2 opening on the vote
+  result with comment cards. Apply all of it to new scripts. Time Lock Part 1 v2 (thief, Lena; toon2d thief_bust /
+  lena_bust; timelock_p1_2d.py) rewritten to ~60 s with two clocks and a late flip, sent for approval.
+  timelock_p1_2d.py still holds the first v2 lines: update SCRIPT after approval.
+

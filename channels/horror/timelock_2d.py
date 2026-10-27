@@ -379,9 +379,9 @@ def scar_hand(cr, x, y, s, t, holding="key"):
     cr.restore()
 
 
-def alarm_desk(cr, t, gap=1.0, press=0.0):
-    """Under your desk, lit by the alarm's red light and the lamp above: your shoe, an inch (gap = 1) from the red
-    silent-alarm pedal; a yellow measure marks the inch."""
+def alarm_desk(cr, t, gap=1.0, press=0.0, flat=False):
+    """Under the desk, lit by the alarm's red light and the lamp above: a shoe, an inch (gap = 1) from the red
+    silent-alarm pedal; a yellow measure marks the inch. flat = a woman's black flat (Lena's) instead of an oxford."""
     g = cairo.LinearGradient(0, 0, 0, H)                     # the knee-space: the desk's back panel, then carpet
     g.add_color_stop_rgba(0, *hexa("#4a3424"))
     g.add_color_stop_rgba(0.55, *hexa("#33241a"))
@@ -418,8 +418,10 @@ def alarm_desk(cr, t, gap=1.0, press=0.0):
     cr.translate(toe, 930 - 14 * press)
     toon(cr, lambda c: poly(c, [(-470, -620), (-250, -640), (-170, -150), (-360, -120)]), VEST[0], VEST[1], (-6, -5),
          (0.8, 0.9, 1, 0.3), (6, 0), lw=5)                     # the trouser leg, from the knee down
-    shoe = lambda c: tk.curve(c, [(-360, -150), (-170, -170), (-60, -140), (0, -96), (8, -40), (-30, -6), (-380, -4),
-                                  (-392, -70)])
+    shoe = (lambda c: tk.curve(c, [(-340, -110), (-170, -118), (-60, -104), (0, -74), (8, -34), (-30, -6), (-360, -4),
+                                   (-370, -56)])) if flat else (
+        lambda c: tk.curve(c, [(-360, -150), (-170, -170), (-60, -140), (0, -96), (8, -40), (-30, -6), (-380, -4),
+                               (-392, -70)]))
     toon(cr, shoe, hexa("#1d1d21"), hexa("#0f0f12"), (0, -6), (1, 0.55, 0.5, 0.55), (-8, 0), lw=5)
     cr.set_source_rgba(0.55, 0.55, 0.6, 1)                    # the sole
     cr.rectangle(-386, -12, 384, 12)
@@ -429,12 +431,19 @@ def alarm_desk(cr, t, gap=1.0, press=0.0):
     cr.move_to(-180, -150)
     cr.curve_to(-110, -152, -50, -132, -14, -92)
     cr.stroke()
-    cr.set_source_rgba(0.6, 0.6, 0.65, 0.9)                   # laces
-    cr.set_line_width(3)
-    for k in range(4):
-        cr.move_to(-250 + k * 22, -160 + k * 2)
-        cr.line_to(-236 + k * 22, -138 + k * 2)
+    if flat:                                                  # a thin strap across the foot
+        cr.set_source_rgba(0.1, 0.1, 0.12, 1)
+        cr.set_line_width(8)
+        cr.move_to(-250, -118)
+        cr.line_to(-226, -20)
         cr.stroke()
+    else:
+        cr.set_source_rgba(0.6, 0.6, 0.65, 0.9)               # laces
+        cr.set_line_width(3)
+        for k in range(4):
+            cr.move_to(-250 + k * 22, -160 + k * 2)
+            cr.line_to(-236 + k * 22, -138 + k * 2)
+            cr.stroke()
     cr.restore()
     if gap > 0.15:                                             # the inch, measured
         ya = 1000
@@ -542,8 +551,9 @@ def box_grid(cr, t, x0, y0, w, h, hi=41, a=1.0, label=False, open_k=0.0):
                          hexa("#f4f1e8"), None, (0, 0), None, lw=2)
 
 
-def box_closeup(cr, t, glow_k=1.0):
-    """Box 41 up close: its holder card with your photo and the word HOLDER."""
+def box_closeup(cr, t, glow_k=1.0, holder=None, note=None, key_in=False):
+    """Box 41 up close: its holder card with a photo (holder draws it; default: you) and the word HOLDER; note = an
+    extra line on the card (e.g. RENTED 5 YEARS AGO); key_in = one key already in its lock, the other keyhole glowing."""
     cr.set_source_rgba(0.12, 0.13, 0.15, 1)
     cr.paint()
     box_grid(cr, t, -120, -80, 960, 1440, hi=41, a=1.0)
@@ -557,6 +567,10 @@ def box_closeup(cr, t, glow_k=1.0):
         cr.fill()
         cr.rectangle(kx - 5, 600, 10, 34)
         cr.fill()
+    if key_in:                                                 # his key in the left lock; the right one waits
+        toon(cr, lambda c: (c.arc(250, 560, 22, 0, 2 * math.pi), c.rectangle(242, 560, 16, 50)), BRASS,
+             mix(BRASS, INK, 0.35), (-2, -2), None, lw=3)
+        glow(cr, 470, 610, 90, (1, 0.85, 0.45), 0.45 + 0.25 * math.sin(t * 5))
     toon(cr, lambda c: tk.tk_rrect(c, 130, 680, 460, 160, 8), hexa("#f4f1e8"), hexa("#d9d3c2"), (-3, -3), None, lw=3)
     hud2d._text(cr, "HOLDER", 360, 716, 26, (0.3, 0.3, 0.35, 1), "Liberation Mono", "center")
     cr.save()                                                  # your ID photo on the card
@@ -564,16 +578,22 @@ def box_closeup(cr, t, glow_k=1.0):
     cr.clip()
     cr.set_source_rgba(0.75, 0.82, 0.88, 1)
     cr.paint()
-    tk.you_bust(cr, 205, 860, 0.36, tk.FACES["calm"], t, coat=VEST, blink=False)
+    if holder:
+        holder(cr)
+    else:
+        tk.you_bust(cr, 205, 860, 0.36, tk.FACES["calm"], t, coat=VEST, blink=False)
     cr.restore()
     cr.set_source_rgba(*INK)
     cr.set_line_width(3)
     cr.rectangle(150, 690, 110, 140)
     cr.stroke()
-    for k in range(3):
-        cr.set_source_rgba(0.4, 0.4, 0.45, 0.6)
-        cr.rectangle(290, 750 + k * 28, 260 - k * 60, 10)
-        cr.fill()
+    if note:
+        hud2d._text(cr, note, 420, 790, 30, (0.6, 0.12, 0.1, 1), "Liberation Mono", "center")
+    else:
+        for k in range(3):
+            cr.set_source_rgba(0.4, 0.4, 0.45, 0.6)
+            cr.rectangle(290, 750 + k * 28, 260 - k * 60, 10)
+            cr.fill()
     glow(cr, 360, 640, 420, (1, 0.85, 0.45), 0.25 * glow_k)
 
 

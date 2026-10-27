@@ -1,49 +1,77 @@
-# Time Lock, Part 1: script for approval (bank heist; no final render until the owner approves)
+# Time Lock, Part 1 (v2, the thief's side): script for approval
 
-Owner, 27 Oct 2026: "Make next story on bank heist. Continue". The 7:30 series (Snowbound v2 stays on file for later).
-Written against the checklist in reports/Horror Shorts hooks retention comments.md (rule ids in brackets).
+Owner, 27 Oct 2026: "For story 2 the mc is thief: how he manages to do, how he escapes, how he converts black to
+white, how he spends... and let mc for story 2 be different character not same as story 1." Then picked: remake
+Part 1 from the thief's side. The thief's look is sharp and stylish: slicked-back dark hair with a grey streak, short
+beard, sharp eyes, black turtleneck, long charcoal coat, a watch. The clerk version (v1) is replaced and not posted.
 
-You're the night-shift clerk at a bank. Four masked robbers walk in, and one of them says your name. A heist with no
-guns and no gore: the danger is the vault's time lock, the silent alarm by your foot, and who the masked man is.
-About 70 s, ~190 words. Narrator: the Turbo voice. Danny (the masked man) has his own voice, muffled by the mask.
-"You" = senses and actions only [H6].
+**YOU are the thief.** You faked your own death five years ago. Tonight you rob a bank, and the night clerk behind the
+glass is your little sister, Lena. She doesn't know it's you. No guns, and nobody is hurt.
+
+Written against reports/Horror reference study 27 Oct.md (why the 10-12k reference Shorts beat ours):
+- About 60 s and ~180 words.
+- Two clocks stated as rules early: the time lock (6 minutes) and the alarm (police in 4 minutes).
+- A test: the note with one word only you would know.
+- A late flip at ~75%: the narrator gives the answer ("She won't press it now"), then one fact takes it away.
+- A new shot every 2-4 s with a face in it; circular close-up insets.
+- The comment instruction is on the final card, held 2 s.
+
+Lena has her own voice.
 
 | # | Line (spoken) | On screen |
 |---|---|---|
-| 1 | Four masked robbers walk into your bank. And one of them says your name. | Frame 0, already moving: a masked face right up against your teller glass, eyes on you. Big text: **HE KNOWS YOUR NAME.** [H1, H2, H4] |
-| 2 | You're alone on the night shift, counting cash behind the glass. | Your hands on the counter, cash stacks. On the desk, a framed photo: you and your older brother as kids (plant 1). |
-| 3 | At two-ten, the vault's time lock opens. For six minutes. Then it seals until morning. | The round vault door, its time-lock dials. RULE tag: TIME LOCK: 6 MINUTES. Stats bar: VAULT 2:10. [H7, the clock] |
-| 4 | Under your desk is the silent alarm. Your foot is an inch away. | Under the desk: your shoe, the red pedal. Stats bar: ALARM 1 INCH. [the bomb under the table] |
-| 5 | They don't touch the cash. They want one deposit box. Number forty-one. | The crew walks past the cash trolleys. The wall of boxes; 41 lights up. [M3: not a robbery for money] |
-| 6 | The box is in your name. You've never rented a box in your life. | The box's label: your name. Stamp: BOX 41: YOURS? [M3: not a stranger's box] |
-| 7 | It takes two keys. He has one. The other is on your keyring. | His bare hand holds a key: a scar across the back of it (plant 2). Your keyring: a small brass key with a tag, "D" (plant 3). [M3: they can't force it] |
-| 8 | (Danny, muffled) Easy, kiddo. Nobody gets hurt tonight. | Speech bubble from the mask. |
-| 9 | Kiddo. Only one person ever called you that. | Your face. |
-| 10 | At two-ten, the vault clicks open. Six minutes. | Mid-point re-hook: the clunk, light spilling out, the countdown starts on the stats bar: 6:00. [M5] |
-| 11 | Inside box forty-one, there's no money. Just a photo of you, taken this morning. | The photo: you at the bus stop, a printed date: TODAY 7:42 AM. |
-| 12 | Your foot touches the alarm. | The shoe on the pedal. Stats bar: ALARM TOUCHING. |
-| 13 | (Danny) Don't. Please. Not after five years. | Speech bubble. |
-| 14 | He pulls off the mask. | 1.5 s near-silent beat [T2]: his hands at the mask. Music ducks. |
-| 15 | It's your brother, Danny. Lost at sea five years ago. | His face: you, older, stubble. Quick flash back to the scar and the "D" tag [T1]. |
-| 16 | Help him, and you're a thief. | Danny. |
-| 17 | Press the alarm, and you lose him again. | Your foot on the pedal. [V2, V3: equal length, both cost] |
-| 18 | Whatever most of you choose happens in Part two. | The countdown: 4:31 left before the vault seals with everyone inside (doing nothing is not an option). |
-| 19 | So, do you help your brother? Or press the alarm? | A/B card: A = HELP DANNY, B = PRESS THE ALARM. "Top answer decides Part 2." Cut 0.5 s after "alarm?" [V6] |
+| 1 | You walk into the bank in a mask. The night clerk is your sister. | Frame 0: over your masked shoulder, Lena behind the teller glass, staring at you. Big text: **THE CLERK IS YOUR SISTER.** Inset: her name badge, LENA. |
+| 2 | She thinks you drowned five years ago. | A newspaper clipping on her desk: LOCAL MAN LOST AT SEA. The photo is your face, unmasked, seen once. |
+| 3 | A year of planning. Three of your crew. No guns. | Your crew crossing the hall in masks. |
+| 4 | At two-ten, the vault's time lock opens. For six minutes. | The vault door and its time-lock dials. RULE #1: TIME LOCK · 6 MIN. |
+| 5 | You don't want the cash. You want box forty-one. | The cash stack, then the box wall with 41 glowing. |
+| 6 | It's in her name. You rented it the week you died. | Box 41's holder card: HER photo. RENTED: 5 YEARS AGO. |
+| 7 | And the second key is on her keyring. | Her keyring on the desk: a small brass key with a paper tag, "D" (clue: your initial). |
+| 8 | Under her desk, her foot is an inch from the silent alarm. Police in four minutes. | Her shoe, the red pedal, the yellow "1 INCH". RULE #2: ALARM · POLICE IN 4 MIN. |
+| 9 | (Lena) Who are you? | Her face, scared. Speech bubble. |
+| 10 | You can't answer. Your voice would give you away. | Your masked face close up: your eyes, a bead of sweat. |
+| 11 | At two-ten, the vault clicks open. | The clunk and the light. VAULT 6:00 starts counting. |
+| 12 | Box forty-one needs her key. | Your crew at box 41. Inset: the empty keyhole. |
+| 13 | You slide a note under the glass. One word. | Your gloved hand slides a deposit slip through the steel tray. |
+| 14 | Kiddo. Only you ever called her that. | The slip, big: **KIDDO**, in your handwriting. Inset: the two of you as kids. |
+| 15 | Her eyes fill. She knows. She won't press it now. | Her tears behind the glass. Her shoe lifts off the pedal. |
+| 16 | Then her foot presses down. | The flip: the shoe presses, a red light on her desk, stamp ALARM: PRESSED. Her eyes are on the manager's office, not on you (clue). |
+| 17 | Police in four minutes. | HUD: POLICE 4:00 and VAULT 4:31 both counting. |
+| 18 | Take off the mask, and the cameras see a dead man. | Your hand at the edge of the mask. Inset: the CCTV camera's red light. |
+| 19 | Run now, and box forty-one stays shut forever. | The glass doors, the getaway van's hazards outside. |
+| 20 | So, do you take off the mask? Or run? | A/B card: A = MASK OFF, B = RUN. "Comment A or B · most comments decide Part 2". Held 2 s. |
 
-**Clues on screen, never spoken:** (1) the scar on the robber's hand; (2) the "D" tag on the brass key; (3) the
-robber's eyes are your eyes. **Red herring for Part 2:** the manager's office light is on. Someone else is in the
-building.
+**Why it works:**
+- The audience knows what she doesn't, so every line is suspense rather than surprise. There are two clocks, and both
+  are stated before they matter.
+- The flip turns the warm moment (she knows it's you) into the question everyone will argue about: why did she press
+  it anyway?
+- The vote is honesty against escape, and both sides cost something.
 
-**Why the ending works (per the research):** the plot question (who knows your name?) is answered on screen, so only
-the judgement stays open [V1]; it's a family-loyalty versus honesty dilemma, the kind that draws the most argument
-[V5]; both answers cost something and the countdown rules out doing nothing [V3]. This is a different dilemma from
-Tower 9 (trust and self-preservation), so the two daily series don't repeat each other.
+**Clues on screen, never spoken:**
+- the "D" tag (your name, for later);
+- the clipping's date (5 years ago this week);
+- the clipping's photo has the same grey streak your hair has now;
+- when she presses the alarm she is looking at the manager's office, whose light has been on since frame 1 (someone is
+  watching her).
 
-**Safe for the platform:** no weapons, no violence ("Nobody gets hurt tonight"), no real bank, no how-to.
+**The series arc.** Each part ends on a vote that changes the path. It is shown the way heist films show it, never as
+a how-to.
+- Part 1, the heist: the plan, the time lock, the sister, the key. (This script.)
+- Part 2, the escape: police in four minutes, the vault sealing, the van; why she pressed it; what's in box 41.
+- Part 3, black to white: the money is marked and useless. The man who "cleans" it wants something in return, and he
+  isn't who he says he is. Story beats and consequences only, no real laundering method.
+- Part 4, the spending: what the money is really for (why you faked your death), and what it costs you.
 
-**Title:** The Bank Robber Knows Your Name 🏦 (names the tension, not the brother)
-**Alternatives:** "They Didn't Want the Money. They Wanted Box 41. 🏦" / "6 Minutes. One Box. And It's in Your Name. 🏦"
-**Pinned comment (argues one side, ends on a question):** Team alarm. He let you grieve for FIVE years and came back
-with a heist. Family or not, that's on him. Help him, or press it? 👇 (Look at his hand 👀)
-**Description:** one line of story + "Comment A or B. Most comments decide Part 2." (Fiction. 2D animation.)
+**Title:** You Rob a Bank. The Night Clerk Is Your Sister. 🏦
+
+**Alternatives:**
+- "She Thinks You Drowned. Tonight You Rob Her Bank. 🏦"
+- "She Knew It Was You. She Pressed the Alarm Anyway. 🏦"
+
+**Pinned comment** (argues one side and ends on a question): Take it off. She pressed it knowing it's you, so you owe
+her a face, not a mask. Mask off, or run? 👇 (Where is she looking when she presses it? 👀)
+
+**Description:** one line of story + "Comment A or B. Most comments decide Part 2." (Fiction. 2D animation. Nobody gets hurt.)
+
 **Sources:** none needed (original fiction).

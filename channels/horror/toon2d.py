@@ -1192,3 +1192,319 @@ def host_bust(cr, x, y, s, t, look=(0.0, 0.0), smile=0.6, wink=0.0, light=(0, 16
         cr.stroke()
     cr.restore()
     cr.restore()
+
+
+# ------------------------------------------------------------------ Time Lock: the thief (you) and Lena, your sister
+TH_SKIN, TH_SKIN_D = hexa("#dcae8e"), hexa("#b07f63")
+TH_HAIR, TH_HAIR_D, TH_GREY = hexa("#241f22"), hexa("#121012"), hexa("#a3a3ab")
+TH_COAT, TH_COAT_D, TH_COAT_L = hexa("#33363d"), hexa("#1f2126"), hexa("#4a4e57")
+TH_KNIT = hexa("#141418")
+TH_EXPR = {   # brow angle (+ = inner ends down, determined), lid (0 open .. 1 shut), mouth smirk, mouth open
+    "calm":   dict(brow=0.35, lid=0.38, smirk=0.5, open=0.0, raise_=0.0),
+    "tense":  dict(brow=0.6, lid=0.2, smirk=0.0, open=0.0, raise_=0.1),
+    "sorrow": dict(brow=-0.5, lid=0.3, smirk=-0.3, open=0.15, raise_=0.25),
+}
+
+
+def thief_head(cr, t, expr="calm", look=(0.0, 0.0), light=(-16, -12), rim=None, rim_from=(9, 0), hair=True,
+               blink=True):
+    """Your head as the thief, centred at (0, 0): a long face, a defined jaw, a short boxed beard, slicked-back hair
+    with a grey streak, sharp grey-green eyes. hair=False under a mask."""
+    e = TH_EXPR[expr] if isinstance(expr, str) else expr
+    for sx in (-1, 1):                                                       # ears
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 84, -34), (sx * 104, -42), (sx * 108, 4), (sx * 90, 24)]),
+             TH_SKIN, TH_SKIN_D, light, rim, rim_from, lw=4)
+    face = lambda c: curve(c, [(-86, -40), (-84, -100), (-52, -138), (0, -148), (52, -138), (84, -100), (86, -40),
+                               (84, 20), (72, 66), (42, 100), (0, 112), (-42, 100), (-72, 66), (-84, 20)])
+    toon(cr, face, TH_SKIN, TH_SKIN_D, light, rim, rim_from)
+    beard = lambda c: curve(c, [(-85, 10), (-80, 52), (-60, 88), (-30, 108), (0, 115), (30, 108), (60, 88), (80, 52),
+                                (85, 10), (74, 40), (50, 72), (26, 88), (0, 92), (-26, 88), (-50, 72), (-74, 40)])
+    toon(cr, beard, mix(TH_HAIR, TH_SKIN, 0.18), TH_HAIR_D, (0, -4), None, rim_from, lw=2.5)   # a short, trimmed beard
+    cr.set_source_rgba(*mix(TH_HAIR, TH_SKIN, 0.3)[:3], 0.85)                  # the chin patch under the lip
+    cr.new_path()
+    cr.move_to(-12, 74)
+    cr.curve_to(-6, 86, 6, 86, 12, 74)
+    cr.close_path()
+    cr.fill()
+    cr.save()
+    cr.new_path()
+    beard(cr)
+    cr.clip()
+    cr.set_source_rgba(1, 1, 1, 0.07)                                         # its texture
+    for k in range(40):
+        a = (k * 0.618 * 2 * math.pi) % (2 * math.pi)
+        rr = 60 + 30 * ((k * 0.37) % 1)
+        cr.arc(rr * math.cos(a), 60 + 50 * math.sin(a), 1.8, 0, 2 * math.pi)
+        cr.fill()
+    cr.restore()
+    toon(cr, lambda c: curve(c, [(-30, 44), (-12, 38), (0, 41), (12, 38), (30, 44), (16, 48), (0, 46), (-16, 48)]),
+         mix(TH_HAIR, TH_SKIN, 0.18), TH_HAIR_D, (0, -2), None, lw=2)          # a thin moustache
+    my = 60                                                                   # the mouth: thin, one corner up
+    cr.set_source_rgba(*mix(TH_SKIN_D, (0.6, 0.3, 0.3, 1), 0.5))              # the lower lip
+    cr.new_path()
+    cr.move_to(-18, my + 2)
+    cr.curve_to(-8, my + 10, 8, my + 10, 18, my + 1)
+    cr.close_path()
+    cr.fill()
+    cr.set_source_rgba(*mix(TH_SKIN_D, (0.45, 0.2, 0.2, 1), 0.5))
+    cr.new_path()
+    cr.move_to(-22, my)
+    cr.curve_to(-8, my + 3 + 6 * e["open"], 8, my + 3 + 6 * e["open"], 24, my - 6 * e["smirk"])
+    cr.set_line_width(4)
+    cr.set_source_rgba(*INK)
+    cr.stroke()
+    open_k = 1.0
+    if blink:
+        ph = (t + 0.4) % 4.1
+        open_k = 1 - 0.95 * (math.sin(ph / 0.14 * math.pi) if ph < 0.14 else 0.0)
+    for sx in (-1, 1):                                                        # sharp eyes under heavy lids
+        cr.save()
+        cr.translate(sx * 38, -14)
+        rx, ry = 25, 13 * open_k
+        eye = lambda c: (c.move_to(-rx, 2), c.curve_to(-rx * 0.4, -ry * 1.3, rx * 0.4, -ry * 1.3, rx, -2),
+                         c.curve_to(rx * 0.4, ry * 0.9, -rx * 0.4, ry * 0.9, -rx, 2), c.close_path())
+        cr.new_path()
+        eye(cr)
+        cr.set_source_rgba(0.95, 0.94, 0.9, 1)
+        cr.fill_preserve()
+        cr.save()
+        cr.clip()
+        px, py = look[0] * 8, look[1] * 4
+        cr.set_source_rgba(*hexa("#6f8279"))
+        cr.arc(px, py, 10, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(0.04, 0.04, 0.04, 1)
+        cr.arc(px, py, 4.8, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(1, 1, 1, 0.95)
+        cr.arc(px + 3.5, py - 3.5, 2.6, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(*TH_SKIN_D)                                       # the heavy upper lid
+        cr.rectangle(-rx - 2, -ry * 1.4, 2 * rx + 4, ry * 2.4 * e["lid"])
+        cr.fill()
+        cr.restore()
+        cr.new_path()
+        cr.move_to(-rx, 2)
+        cr.curve_to(-rx * 0.4, -ry * 1.3 + ry * 2.2 * e["lid"] * 0.6, rx * 0.4, -ry * 1.3 + ry * 2.2 * e["lid"] * 0.6,
+                    rx + 4, -4)
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(5)
+        cr.stroke()
+        cr.restore()
+        cr.save()                                                             # straight, thick brows
+        cr.translate(sx * 40, -44 - 10 * e["raise_"])
+        cr.scale(sx, 1)
+        cr.rotate(-0.25 * e["brow"])                                          # brow > 0: inner ends down
+        toon(cr, lambda c: poly(c, [(-30, -2), (28, -10), (32, 0), (-30, 8)]), TH_HAIR, None, (0, 0), None, lw=2)
+        cr.restore()
+    cr.set_source_rgba(*INK[:3], 0.75)                                        # a long straight nose
+    cr.set_line_width(3.2)
+    cr.new_path()
+    cr.move_to(4, -18)
+    cr.curve_to(8, 4, 12, 20, 6, 30)
+    cr.line_to(-6, 30)
+    cr.stroke()
+    if hair:                                                                  # slicked back, a grey streak
+        hair_s = lambda c: curve(c, [(-90, -52), (-96, -110), (-70, -160), (-10, -178), (52, -170), (92, -128),
+                                     (96, -60), (86, -74), (78, -110), (50, -128), (12, -122), (0, -112), (-14, -122),
+                                     (-50, -128), (-74, -108), (-84, -76)])
+        toon(cr, hair_s, TH_HAIR, TH_HAIR_D, light, rim, rim_from)
+        cr.save()
+        cr.new_path()
+        hair_s(cr)
+        cr.clip()
+        cr.set_source_rgba(*TH_GREY)
+        cr.new_path()
+        cr.move_to(-46, -126)
+        cr.curve_to(-40, -150, -26, -168, 0, -180)
+        cr.line_to(20, -176)
+        cr.curve_to(-6, -164, -20, -146, -22, -122)
+        cr.close_path()
+        cr.fill()
+        cr.set_source_rgba(1, 1, 1, 0.12)                                     # combed-back lines
+        cr.set_line_width(2.5)
+        for k in range(6):
+            x0 = -60 + k * 24
+            cr.move_to(x0, -122)
+            cr.curve_to(x0 + 4, -150, x0 + 14, -166, x0 + 30, -176)
+            cr.stroke()
+        cr.restore()
+
+
+def thief_bust(cr, x, y, s, t, expr="calm", look=(0.0, 0.0), mask=0.0, light=(-16, -12), rim=None, rim_from=(9, 0),
+               tilt=0.0):
+    """You, the thief, from the chest up (x, y = the base of the neck): black turtleneck, long charcoal coat with wide
+    lapels. mask = 1 wears a black knit mask (drawn by the episode)."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.24))
+    toon(cr, lambda c: curve(c, [(-70, -8 + up), (-172, 22 + up), (-204, 120), (-210, 430), (210, 430), (204, 120),
+                                 (172, 22 + up), (70, -8 + up)]), TH_COAT, TH_COAT_D, light, rim, rim_from)
+    toon(cr, lambda c: poly(c, [(-62, 0), (62, 0), (36, 300), (-36, 300)]), TH_KNIT, None, (0, 0), None, lw=3)
+    for sx in (-1, 1):                                                        # wide lapels
+        toon(cr, lambda c, sx=sx: poly(c, [(sx * 64, 0), (sx * 150, 30 + up), (sx * 120, 110), (sx * 140, 130),
+                                            (sx * 60, 330), (sx * 36, 300)]), TH_COAT_L, TH_COAT_D, light, rim,
+             rim_from, lw=3.5)
+    toon(cr, lambda c: curve(c, [(-42, -76), (42, -76), (52, 4 + up), (0, 12 + up), (-52, 4 + up)]), TH_KNIT,
+         mix(TH_KNIT, (1, 1, 1, 1), 0.05), (0, -4), rim, rim_from, lw=4)     # the turtleneck, close to the neck
+    cr.set_source_rgba(1, 1, 1, 0.06)
+    cr.set_line_width(2)
+    for k in range(-4, 5):
+        cr.move_to(k * 9, -72)
+        cr.line_to(k * 10, 6)
+        cr.stroke()
+    cr.translate(0, -180)
+    cr.rotate(tilt + 0.01 * noise(t * 0.5, 5))
+    thief_head(cr, t, expr, look, light, rim, rim_from, hair=mask < 0.5)
+    cr.restore()
+
+
+LN_SKIN, LN_SKIN_D = hexa("#e6b997"), hexa("#c08d6c")
+LN_HAIR, LN_HAIR_D = hexa("#6b3a24"), hexa("#43220f")
+
+
+def lena_bust(cr, x, y, s, t, fear=0.5, tears=0.0, look=(0.0, 0.0), light=(-16, -12), rim=None, rim_from=(9, 0)):
+    """Lena, your little sister, the night clerk: chestnut ponytail, side fringe, freckles, white shirt, navy vest,
+    lanyard. fear 0..1 (eyes wide, brows up, mouth open); tears 0..1."""
+    vest, vest_d = hexa("#263a5c"), hexa("#16243b")
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * (0.3 + 0.2 * fear)))
+    cr.save()                                                                 # the ponytail, behind
+    cr.translate(0, -180)
+    sway = 6 * math.sin(t * 1.3)
+    toon(cr, lambda c: curve(c, [(40, -130), (110, -110), (150 + sway, -20), (156 + sway, 90), (130 + sway, 160),
+                                 (112 + sway, 120), (118 + sway, 20), (90, -60), (50, -96)]), LN_HAIR, LN_HAIR_D,
+         light, rim, rim_from)
+    cr.restore()
+    toon(cr, lambda c: curve(c, [(-56, -8 + up), (-150, 26 + up), (-182, 120), (-192, 430), (192, 430), (182, 120),
+                                 (150, 26 + up), (56, -8 + up)]), vest, vest_d, light, rim, rim_from)
+    toon(cr, lambda c: poly(c, [(-50, -4), (50, -4), (24, 170), (-24, 170)]), hexa("#eef1f5"), hexa("#c3cad3"),
+         (0, -4), None, lw=3)
+    for sx in (-1, 1):                                                        # the shirt collar
+        toon(cr, lambda c, sx=sx: poly(c, [(sx * 6, 4), (sx * 62, -14), (sx * 70, 30), (sx * 22, 50)]),
+             hexa("#ffffff"), hexa("#d6dbe2"), (0, -3), None, lw=3)
+    cr.set_source_rgba(0.75, 0.12, 0.12, 1)                                   # lanyard
+    cr.set_line_width(6)
+    cr.move_to(-40, 20)
+    cr.line_to(-10, 210)
+    cr.move_to(40, 20)
+    cr.line_to(10, 210)
+    cr.stroke()
+    toon(cr, lambda c: tk_rrect(c, -38, 206, 76, 96, 8), hexa("#f2f2f2"), hexa("#cfcfcf"), (-3, -3), None, lw=3)
+    toon(cr, lambda c: poly(c, [(-30, -84), (30, -84), (34, 4), (-34, 4)]), LN_SKIN, LN_SKIN_D, (0, 10), None, lw=4)
+    cr.translate(0, -180)
+    cr.rotate(0.01 * noise(t * 0.5, 8))
+    face = lambda c: curve(c, [(-84, -36), (-82, -96), (-48, -132), (0, -142), (48, -132), (82, -96), (84, -36),
+                               (76, 24), (54, 72), (0, 102), (-54, 72), (-76, 24)])
+    toon(cr, face, LN_SKIN, LN_SKIN_D, light, rim, rim_from)
+    cr.save()
+    cr.new_path()
+    face(cr)
+    cr.clip()
+    for sx in (-1, 1):                                                        # cheeks, freckles
+        cr.set_source(rad(sx * 48, 30, 30, [(0, (0.95, 0.5, 0.45, 0.28)), (1, (0.95, 0.5, 0.45, 0))]))
+        cr.paint()
+    cr.set_source_rgba(0.62, 0.36, 0.24, 0.55)
+    for k in range(14):
+        fx = (-1 if k % 2 else 1) * (16 + (k * 7) % 34)
+        cr.arc(fx, 14 + (k * 5) % 16, 2, 0, 2 * math.pi)
+        cr.fill()
+    cr.restore()
+    ph = (t + 0.9) % 3.6
+    open_k = (1 - 0.95 * (math.sin(ph / 0.14 * math.pi) if ph < 0.14 else 0.0)) * (1 + 0.3 * fear)
+    for sx in (-1, 1):                                                        # big hazel eyes, lashes
+        cr.save()
+        cr.translate(sx * 36, -10)
+        rx, ry = 24, 18 * open_k
+        eye = lambda c: (c.save(), c.scale(1, max(0.05, ry / rx)), c.arc(0, 0, rx, 0, 2 * math.pi), c.restore())
+        cr.new_path()
+        eye(cr)
+        cr.set_source_rgba(0.98, 0.97, 0.95, 1)
+        cr.fill_preserve()
+        cr.save()
+        cr.clip()
+        px, py = look[0] * 8, look[1] * 6
+        ir = 13 * (1 - 0.25 * fear)
+        cr.set_source_rgba(*hexa("#6e7a3c"))
+        cr.arc(px, py, ir, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(0.05, 0.04, 0.03, 1)
+        cr.arc(px, py, ir * 0.5, 0, 2 * math.pi)
+        cr.fill()
+        cr.set_source_rgba(1, 1, 1, 0.95)
+        cr.arc(px + 4, py - 4, 3.2, 0, 2 * math.pi)
+        cr.fill()
+        cr.restore()
+        cr.new_path()
+        eye(cr)
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3.5)
+        cr.stroke()
+        cr.set_line_width(5)
+        cr.save()
+        cr.scale(1, max(0.05, ry / rx))
+        cr.new_path()
+        cr.arc(0, 0, rx, math.pi * 1.05, math.pi * 1.95)
+        cr.restore()
+        cr.stroke()
+        cr.move_to(sx * rx * 0.9, -ry * 0.6)                                 # a lash flick
+        cr.line_to(sx * (rx + 8), -ry * 0.9 - 4)
+        cr.stroke()
+        if tears > 0:                                                         # tears welling and falling
+            cr.set_source_rgba(0.75, 0.9, 1, 0.8 * tears)
+            cr.set_line_width(3)
+            cr.new_path()
+            cr.move_to(-rx * 0.8, ry * 0.7)
+            cr.curve_to(-rx * 0.3, ry * 1.1, rx * 0.3, ry * 1.1, rx * 0.8, ry * 0.7)
+            cr.stroke()
+            ty = ry + 10 + 40 * ((t * 0.5 + (sx > 0) * 0.5) % 1) * tears
+            cr.new_path()
+            cr.move_to(sx * 6, ty - 10)
+            cr.curve_to(sx * 6 + 7, ty, sx * 6 + 6, ty + 8, sx * 6, ty + 9)
+            cr.curve_to(sx * 6 - 6, ty + 8, sx * 6 - 7, ty, sx * 6, ty - 10)
+            cr.fill()
+        cr.restore()
+        cr.save()                                                             # brows rise with fear
+        cr.translate(sx * 38, -40 - 14 * fear)
+        cr.scale(sx, 1)
+        cr.rotate(-0.25 * fear)
+        cr.set_source_rgba(*LN_HAIR_D)
+        cr.set_line_width(6)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.new_path()
+        cr.move_to(-22, 4)
+        cr.curve_to(-8, -6, 10, -8, 26, -2)
+        cr.stroke()
+        cr.restore()
+    cr.set_source_rgba(*INK[:3], 0.7)                                        # a small nose
+    cr.set_line_width(3)
+    cr.new_path()
+    cr.move_to(4, 6)
+    cr.curve_to(8, 18, 10, 26, 2, 30)
+    cr.stroke()
+    mo = 0.15 + 0.55 * fear                                                   # the mouth: open with fear
+    cr.save()
+    cr.translate(0, 62)
+    cr.scale(1, max(0.2, mo))
+    cr.new_path()
+    cr.arc(0, 0, 14, 0, 2 * math.pi)
+    cr.restore()
+    cr.set_source_rgba(0.5, 0.15, 0.17, 1)
+    cr.fill_preserve()
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(3)
+    cr.stroke()
+    hair = lambda c: curve(c, [(-90, -20), (-94, -96), (-60, -146), (0, -160), (60, -148), (94, -100), (92, -30),
+                               (80, -70), (60, -96), (20, -100), (-30, -86), (-62, -60), (-80, -24)])
+    toon(cr, hair, LN_HAIR, LN_HAIR_D, light, rim, rim_from)                  # the side fringe, swept right
+    cr.set_source_rgba(1, 0.85, 0.7, 0.18)
+    cr.set_line_width(3)
+    for k in range(4):
+        cr.move_to(-50 + k * 26, -140 + 2 * k)
+        cr.curve_to(-30 + k * 26, -120, -10 + k * 26, -100, 10 + k * 26, -96)
+        cr.stroke()
+    toon(cr, lambda c: c.arc(64, -132, 16, 0, 2 * math.pi), hexa("#c0392b"), None, (0, 0), None, lw=3)   # hair tie
+    cr.restore()
