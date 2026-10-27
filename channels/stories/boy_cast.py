@@ -31,12 +31,12 @@ BGS = {
 
 def PARTS(c):
     """name: (prompt, img2img strength, region) for each face patch; "x+y" edits the x face."""
-    p = {"blink": ("closed eyes", 0.55, "eyes"), "half": ("parted lips, talking", 0.5, "mouth"),
-         "open": ("open mouth, talking", 0.55, "mouth"), "fear": ("scared, wide eyes, frown, sweat", 0.5, "face"),
-         "fear+blink": ("closed eyes, scared", 0.55, "eyes"), "fear+open": ("open mouth, scared", 0.55, "mouth")}
+    p = {"blink": ("closed eyes", 0.8, "eyes"), "half": ("parted lips, talking", 0.7, "mouth"),
+         "open": ("open mouth, talking", 0.78, "mouth"), "fear": ("scared, wide eyes, frown, sweat", 0.5, "face"),
+         "fear+blink": ("closed eyes, scared", 0.8, "eyes"), "fear+open": ("open mouth, scared", 0.78, "mouth")}
     for e in c.get("extra", ()):
         p[e] = {"smile": ("smile, happy", 0.5, "face"), "laugh": ("laughing, closed eyes, smile", 0.5, "face"),
                 "grief": ("sad, tears, frown", 0.5, "face")}[e]
-        p[e + "+open"] = ("open mouth, talking", 0.55, "mouth")
-        p[e + "+blink"] = ("closed eyes", 0.55, "eyes")
+        p[e + "+open"] = ("open mouth, talking", 0.78, "mouth")
+        p[e + "+blink"] = ("closed eyes", 0.8, "eyes")
     return p

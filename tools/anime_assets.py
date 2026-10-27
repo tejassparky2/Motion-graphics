@@ -241,8 +241,9 @@ def parts(mod, name, which=None):
     side = max(fx1 - fx0, fy1 - fy0)
     cx, cy = (fx0 + fx1) / 2, (fy0 + fy1) / 2
     box = [int(cx - side / 2), int(cy - side / 2), int(cx + side / 2), int(cy + side / 2)]
-    crop = src.crop(box).resize((512, 512), Image.LANCZOS)
-    k = 512 / side
+    S = int(os.environ.get("PART_SIZE", "384"))                     # edit size (the face is ~200 px in the source)
+    crop = src.crop(box).resize((S, S), Image.LANCZOS)
+    k = S / side
     meta_path = os.path.join(d, "parts.json")
     meta = json.load(open(meta_path)) if os.path.exists(meta_path) else {}
     jobs = s.PARTS(c)
@@ -258,9 +259,9 @@ def parts(mod, name, which=None):
         if region == "face":                                          # expression faces are edited further
             out.save(os.path.join(d, f"_face_{pname}.png"))
         rx0, ry0, rx1, ry1 = [(v - box[i % 2]) * k for i, v in enumerate(c[region])] if region != "face" else \
-            (40, 40, 472, 472)
-        m = soft_ellipse(512, 512, (rx0, ry0, rx1, ry1), 10 if region != "face" else 24)
-        size = int(round(side * 2))                                   # the crop is shown at 2x: 512 -> 2*side
+            (S * 0.08, S * 0.08, S * 0.92, S * 0.92)
+        m = soft_ellipse(S, S, (rx0, ry0, rx1, ry1), S * 0.02 if region != "face" else S * 0.045)
+        size = int(round(side * 2))                                   # the crop is shown at 2x: S -> 2*side
         up = out.resize((size, size), Image.LANCZOS)
         mk = cv2.resize(m, (size, size))
         ys, xs = np.nonzero(mk > 0.01)
