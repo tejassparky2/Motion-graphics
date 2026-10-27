@@ -41,6 +41,4 @@ previews in 1–2 minutes. Couple figurines from ₹5,999 (singles from ₹3,599
 - **Post time:** evenings in India (7–10 pm IST); good before anniversaries/Valentine's season too.
 - **Handle:** put the Hindi page's own handle wherever the sheet says @yours3dindia if the Hindi page should point
   to itself.
-- **AI label (your call):** Instagram asks for its "AI info" label on realistic AI-made audio; this reel's voice
-  is a cloned dub.
 - **Don't post the Hindi and English versions in the same hour.**

@@ -40,6 +40,4 @@ Want one for your little one? 🎂 Send one clear photo on WhatsApp (+91 91647 4
 - **Post time:** evenings in India (7–10 pm IST). Don't post on the same day as reel 04 (same figurine).
 - **Handle:** put the Hindi page's own handle wherever the sheet says @yours3dindia if the Hindi page should point
   to itself.
-- **AI label (your call):** Instagram asks for its "AI info" label on realistic AI-made audio; this reel's voice
-  is a cloned dub.
 - **Don't post the Hindi and English versions in the same hour.**
