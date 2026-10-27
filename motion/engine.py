@@ -8,7 +8,7 @@ import random
 
 # CANVAS=landscape (set before this module is imported) gives a 1280x720 (16:9) canvas for long videos.
 W, H = (1280, 720) if os.environ.get("CANVAS") == "landscape" else (720, 1280)
-FPS = 30
+FPS = int(os.environ.get("FPS", "30"))          # the story channels render at 24 (anime timing)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FONT_DIR = os.path.join(ROOT, "assets", "fonts")

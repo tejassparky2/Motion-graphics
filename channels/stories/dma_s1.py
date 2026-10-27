@@ -13,7 +13,8 @@ from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401  (sound registers the effects)
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_art as A, serial
+from channels.stories import dma_anime as A, serial
+from motion import satsuei
 
 NARRATOR = dict(turbo=True, turbo_ref="am_echo")       # Ren tells it
 TAIL = 2.0
@@ -148,6 +149,11 @@ def phone(cr, t, x, y, s):
 
 def eye_shot(cr, t, k):
     """Ren's eye, extreme close-up; in it, the reflection of the shape inside the meteor."""
+    if A.ready("ren"):
+        A.eye_closeup(cr, t, k)
+        A.the_eye(cr, t, W / 2 + W * 0.05, H * 0.47, W * 0.11, a=0.8 * clamp01(k * 1.5))
+        glow(cr, W / 2, H * 0.5, W, ORANGE, 0.35)
+        return
     cr.set_source_rgba(*A.mix(A.CAST["ren"]["skin"], ORANGE + (1,), 0.5))
     cr.paint()
     cr.save()
@@ -332,8 +338,13 @@ def draw(cr, t, tl):
                lean=0.12 * lean)
     cr.restore()
 
-    if name != "black":
-        hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.06)
+    if name != "black":                                         # satsuei: glow, light, aberration, grain
+        warm = name in ("cold_face", "cold_face2", "haruto_ren", "yui", "riku_kota", "go", "mio", "aoi_window",
+                        "window", "faces", "rewind", "notebook")
+        satsuei.apply(cr, t, glow=0.28 if warm else 0.22,
+                      light=((0.08, 0.12), (1.0, 0.82, 0.6), 0.2) if warm else ((0.5, 0.0), (0.7, 0.85, 1.0), 0.12),
+                      shade=((0.3, 0.2), (0.35, 0.3, 0.45), 0.35), ca=1.2, grain=0.03)
+        hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.0)
     A.flash(cr, t, t_flash, 0.35)
     A.flash(cr, t, t_boom, 0.25)
     # name cards (the first time each speaks or is seen)

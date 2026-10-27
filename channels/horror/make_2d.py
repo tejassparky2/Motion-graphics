@@ -19,6 +19,8 @@ EPISODE = next(a for a in sys.argv[1:] if not a.startswith("--") and "," not in 
 if EPISODE.endswith("_long"):                      # long videos are 16:9 (owner, 27 Oct 2026); set before the engine loads
     os.environ["CANVAS"] = "landscape"
 HOME = next(d for d in ("horror", "stories") if os.path.exists(os.path.join(ROOT, "channels", d, f"{EPISODE}.py")))
+if HOME == "stories":                              # anime timing: 24 fps, drawings held on 2s (reports/CPU anime ...)
+    os.environ.setdefault("FPS", "24")
 import render   # noqa: E402
 from motion import timeline   # noqa: E402
 
