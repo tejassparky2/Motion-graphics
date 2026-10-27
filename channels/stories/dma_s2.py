@@ -5,7 +5,7 @@ Momo reads the five rules exactly as the bible fixes them (20 players, 100 token
 The students reason from those rules only: Riku claims 100, Aoi points out a tie at the top eliminates everyone tied
 (rule 3), Kota points out all-zero executes everyone (rule 5), Mio sees that whoever bids will be watched. Ren sees that
 100 may not be the safest number. Nothing is resolved (the open rule questions are the owner's to answer); it ends on
-"How many tokens would YOU bid?"
+the hook into Part 3: Ren already knows his number, and Momo's "Tick tock".
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_s2   -> out/stories/dma_s2.mp4
 """
@@ -16,7 +16,7 @@ from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_art as A
+from channels.stories import dma_art as A, serial
 
 NARRATOR = dict(turbo=True, turbo_ref="am_echo")
 TAIL = 2.0
@@ -56,7 +56,8 @@ SCRIPT = [
     dict(id="g16", scene="clock", text="The countdown said [nine twelve.|9:12.]"),
     dict(id="g17", scene="ren", text="And I realised the safest number in this room might not be a hundred.",
          gap=0.6),
-    dict(id="g18", scene="momo_close", text="So! How many tokens would you bid?", speaker="momo", gap=0.4),
+    dict(id="g18", scene="ren", text="I already knew my number.", gap=0.5),
+    dict(id="g19", scene="momo_close", text="Tick tock, Class [three B!|3-B!]", speaker="momo", gap=0.3),
 ]
 
 METADATA = dict(
@@ -68,7 +69,7 @@ METADATA = dict(
 The highest UNIQUE bid wins. Tie at the top and you're eliminated. Spend nothing at all and everyone is executed.
 
 Dead Man's Algorithm, Part 2: The Glass Auction.
-💬 How many tokens would YOU bid? Comment a number from 0 to 100. 👇
+Ren already knows his number. Do you? Part 3 is next.
 
 (Original story. 2D animation.)""",
     hashtags=["#DeadMansAlgorithm", "#SurvivalGame", "#Shorts"],
@@ -190,7 +191,7 @@ def shots(tl):
         (B["g8"].start - 0.1, "go"), (B["g9"].start - 0.15, "riku"), (B["g10"].start - 0.15, "aoi"),
         (B["g11"].start - 0.15, "haruto"), (B["g12"].start - 0.15, "kota"), (B["g13"].start - 0.15, "mio"),
         (B["g14"].start - 0.15, "ren_math"), (B["g16"].start - 0.15, "clock"), (B["g17"].start - 0.15, "ren_eyes"),
-        (B["g18"].start - 0.1, "momo_close"), (tl.total + 1, "end")]
+        (B["g19"].start - 0.1, "momo_close"), (tl.total + 1, "end")]
 
 
 _shots = {}
@@ -266,7 +267,7 @@ def draw(cr, t, tl):
     shown = sum(t >= B[g].end for g in ("g3", "g4", "g5", "g6", "g7"))
     hot = 3 if B["g10"].start <= t <= B["g10"].end + 0.3 else 5 if B["g12"].start <= t <= B["g12"].end + 0.3 else \
         1 if B["g9"].start <= t <= B["g9"].end else None
-    if t < A_("g18", "how"):
+    if t < B["g19"].start:
         rules_strip(cr, t, shown, hot)
     alert = t >= A_("g8", "now!", end=True)
     A.status_bar(cr, t, "GAME 01 · THE GLASS AUCTION", fmt(left) if alert else "20 PLAYERS · 100 TOKENS",
@@ -277,10 +278,10 @@ def draw(cr, t, tl):
                       ("haruto", B["g11"].start, B["g11"].end), ("kota", B["g12"].start, B["g12"].end),
                       ("mio", B["g13"].start, B["g13"].end)):
         A.name_card(cr, t, a, b, who, y=1150)
-    if t < A_("g18", "how") and not any(B[g].start - 0.05 <= t <= B[g].end + 0.1 for g in ("g3", "g4", "g5", "g6",
+    if t < B["g19"].end + 0.1 and not any(B[g].start - 0.05 <= t <= B[g].end + 0.1 for g in ("g3", "g4", "g5", "g6",
                                                                                           "g7")):
         hud2d.captions(cr, t, tl, KEY, y=1010)
-    final_card(cr, t, A_("g18", "how"))
+    serial.next_card(cr, t, B["g19"].end + 0.1, "DEAD MAN'S ALGORITHM", "PART 3", "THE BIDS")
     cue("hum", t, 0.0, tl.total)
     cue("chime", t, B["g2"].start - 0.45)
     for g in ("g3", "g4", "g5", "g6", "g7"):
@@ -288,37 +289,3 @@ def draw(cr, t, tl):
     cue("sting", t, A_("g8", "now!", end=True) + 0.05)
     cue("heartbeat", t, B["g14"].start, B["g17"].end - B["g14"].start)
     cue("riser", t, B["g17"].start, B["g18"].start - B["g17"].start)
-
-
-def final_card(cr, t, start):
-    """HOW MANY WOULD YOU BID? 0 ... 100, the ask, and the countdown still running."""
-    if t < start:
-        return
-    k = clamp01((t - start) / 0.3)
-    cr.set_source_rgba(0.02, 0.03, 0.04, 0.82 * k)
-    cr.paint()
-    hud2d._text(cr, "HOW MANY TOKENS", W / 2, 300, 58, (1, 1, 1, k), hud2d.ROUND, "center", shadow=0.5)
-    hud2d._text(cr, "WOULD YOU BID?", W / 2, 370, 58, (*hud2d.RED[:3], k), hud2d.ROUND, "center", shadow=0.5)
-    p = clamp01((t - start - 0.3) / 0.3)
-    if p > 0:                                                  # the scale 0 ... 100
-        x0, x1, y = W * 0.12, W * 0.88, 560
-        cr.set_source_rgba(*CYAN[:3], p)
-        cr.set_line_width(6)
-        cr.move_to(x0, y)
-        cr.line_to(x1, y)
-        cr.stroke()
-        for v in (0, 25, 50, 75, 100):
-            x = x0 + (x1 - x0) * v / 100
-            cr.move_to(x, y - 16)
-            cr.line_to(x, y + 16)
-            cr.stroke()
-            hud2d._text(cr, str(v), x, y + 60, 34, (*CYAN[:3], p), "Liberation Mono", "center")
-        hud2d._text(cr, "?", x0 + (x1 - x0) * (0.5 + 0.4 * math.sin(t * 2.3)), y - 34, 48, (1, 0.85, 0.4, p),
-                    hud2d.ROUND, "center")
-    p = clamp01((t - start - 0.7) / 0.25)
-    if p > 0:
-        A.tk.tk_rrect(cr, W / 2 - 250, 760, 500, 84, 42)
-        cr.set_source_rgba(*hud2d.YELLOW[:3], p)
-        cr.fill()
-        hud2d._text(cr, "COMMENT YOUR BID", W / 2, 815, 40, (0.08, 0.06, 0.04, p), hud2d.ROUND, "center")
-        hud2d._text(cr, "THE RULES ARE ALL ON SCREEN", W / 2, 900, 26, (1, 1, 1, 0.85 * p), hud2d.ROUND, "center")

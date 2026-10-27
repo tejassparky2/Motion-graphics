@@ -2,18 +2,19 @@
 The approved reconstructed chapter (channels/stories/boy_who_inherited_ch1.md), told in three parts with its three
 titles: I. The Market Was Lying, II. The Last Thing Neil Bought, III. The Last Position. The law is the owner's: the
 nearest and the weakest body. Nothing else is added: Arthur's family and enemies are named only as canon has them
-(a family Neil never met, enemies he didn't know he had); the funeral is plot point 7.
+(a family Neil never met, enemies he didn't know he had). It ends on the hook into Chapter 2, his own funeral (plot
+point 7): "And soon, they would bury Neil."
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py boy_long   -> out/stories/boy_long.mp4 (1280x720)
 """
 import math
 
 from motion import audio, voice
-from motion.engine import W, H, clamp01, cue, seg
+from motion.engine import W, H, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import boy_art as B
+from channels.stories import boy_art as B, serial
 from channels.stories import boy_s1 as S1
 
 NARRATOR = dict(turbo=True, turbo_ref="bm_george")
@@ -119,8 +120,7 @@ SCRIPT = [
     dict(id="l59", scene="arthur", text="He was someone else.", gap=0.6),
     dict(id="l60", scene="arthur", text="An [eighty-two-year-old|82-year-old] billionaire, in a body that was failing. "
                                         "With a family he had never met, and enemies he didn't know he had."),
-    dict(id="l61", scene="arthur", text="And soon, they would bury Neil.", gap=0.6),
-    dict(id="l62", scene="arthur", text="Would you go to your own funeral?", gap=0.3),
+    dict(id="l61", scene="arthur", text="And soon, they would bury Neil.", gap=0.3),
 ]
 
 METADATA = dict(
@@ -136,7 +136,7 @@ I. The Market Was Lying
 II. The Last Thing Neil Bought
 III. The Last Position
 
-💬 Would you go to your own funeral?
+And soon, they would bury Neil. Chapter 2 is next.
 
 An original story. Fiction. 2D animation. Not financial advice.""",
     hashtags=["#Thriller", "#Story", "#Animation"],
@@ -147,7 +147,7 @@ An original story. Fiction. 2D animation. Not financial advice.""",
 
 KEY = S1.KEY | {"lying", "headline", "walls", "nothing", "refreshed", "unbearable", "receipt", "promise", "money",
                 "position", "moving", "shoved", "worth", "wrong", "vance", "neil", "terror", "hundred", "nearest",
-                "weakest", "someone", "billionaire", "family", "enemies", "bury", "funeral"}
+                "weakest", "someone", "billionaire", "family", "enemies", "bury"}
 BLUE = (0.55, 0.75, 1, 0.7)
 COLD = (0.75, 0.85, 1, 0.6)
 HEAD = (1, 0.97, 0.85, 0.9)
@@ -299,12 +299,12 @@ def draw(cr, t, tl):
         one(cr, t, tl, "maya", "grief", look=(0, 0.6), tears=1.0)
         cr.set_source_rgba(0, 0, 0, 0.35)
         cr.paint()
-    elif sid in ("l45", "l46", "l49", "l51", "l52", "l57", "l58", "l59", "l60", "l61", "l62"):
-        z1 = 1.14 if sid in ("l58", "l59", "l62") else 1.06
+    elif sid in ("l45", "l46", "l49", "l51", "l52", "l57", "l58", "l59", "l60", "l61"):
+        z1 = 1.14 if sid in ("l58", "l59", "l61") else 1.06
         camera(cr, t, s0, s1, 1.02, z1, cy=H * 0.55)
         hud2d.blurred(cr, lambda c: B.hospital(c, t, window_view=0.4 if sid >= "l57" else 0.0), sigma=9)
         fx = {"l45": "fear", "l46": "fear", "l49": "worry", "l51": "fear", "l52": "shock", "l57": "focus",
-              "l58": "worry", "l59": "shock", "l60": "worry", "l61": "grief", "l62": "grief"}[sid]
+              "l58": "worry", "l59": "shock", "l60": "worry", "l61": "grief"}[sid]
         B.bust(cr, W * 0.5, H * 0.95, 1.0, t, "arthur", fx, look=(0, -0.1), cannula=True, rim=COLD,
                rim_from=(10, -6), tremble=0.6, talk=1.0 if tl.speaking("old", t) else 0.0)
         if sid == "l45":
@@ -351,40 +351,13 @@ def draw(cr, t, tl):
                 col=hud2d.YELLOW)
     hud2d.stamp(cr, t, A_("l55", "hundred") - 0.1, Bb["l55"].end + 0.5, ["~100 METRES"], y=H * 0.7)
     title_like = sid in ("title", "partI", "partII", "partIII", "l56")
-    if t < Bb["l62"].start and not title_like:
+    if t < Bb["l61"].end + 0.1 and not title_like:
         hud2d.captions(cr, t, tl, KEY, y=H * 0.93, size=40, max_w=W * 0.7)
-    end_card(cr, t, Bb["l62"].start)
+    serial.next_card(cr, t, Bb["l61"].end + 0.1, "THE BOY WHO INHERITED ANOTHER BODY", "CHAPTER 2")
     cue("click", t, Bb["l12"].start - 0.15)
     cue("heartbeat", t, Bb["l34"].start, Bb["l38"].end - Bb["l34"].start)
     cue("brakes", t, Bb["l36"].end + 0.05)
     cue("sting", t, Bb["l40"].end + 0.25)
     cue("hum", t, Bb["l45"].start - 0.5, Bb["l50"].end - Bb["l45"].start)
     cue("heartbeat", t, Bb["l53"].start, Bb["l56"].end - Bb["l53"].start)
-    cue("riser", t, Bb["l61"].start, Bb["l62"].start - Bb["l61"].start)
-
-
-def end_card(cr, t, start):
-    """WOULD YOU GO TO YOUR OWN FUNERAL? YES / NO; then the series title. Held over the tail."""
-    if t < start:
-        return
-    k = clamp01((t - start) / 0.3)
-    cr.set_source_rgba(0.02, 0.02, 0.04, 0.8 * k)
-    cr.paint()
-    hud2d._text(cr, "WOULD YOU GO TO YOUR OWN FUNERAL?", W / 2, H * 0.32, 54, (1, 1, 1, k), hud2d.ROUND, "center",
-                shadow=0.5)
-    for n, (lab, col) in enumerate((("YES", hud2d.GREEN), ("NO", hud2d.RED))):
-        p = clamp01((t - start - 0.25 - 0.15 * n) / 0.25)
-        if p <= 0:
-            continue
-        x = W / 2 + (-160 if n == 0 else 160)
-        B.tk.tk_rrect(cr, x - 120, H * 0.45, 240, 110, 22)
-        cr.set_source_rgba(0.06, 0.06, 0.08, p)
-        cr.fill_preserve()
-        cr.set_source_rgba(*col[:3], p)
-        cr.set_line_width(6)
-        cr.stroke()
-        hud2d._text(cr, lab, x, H * 0.45 + 74, 56, (1, 1, 1, p), hud2d.ROUND, "center")
-    p = clamp01((t - start - 0.7) / 0.3)
-    if p > 0:
-        hud2d._text(cr, "THE BOY WHO INHERITED ANOTHER BODY · CHAPTER 2 NEXT", W / 2, H * 0.84, 24,
-                    (1, 1, 1, 0.8 * p), hud2d.ROUND, "center")
+    cue("riser", t, Bb["l60"].start, Bb["l61"].start - Bb["l60"].start)

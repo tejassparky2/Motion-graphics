@@ -11,8 +11,9 @@ backstory or a reveal the bible doesn't have.
 - **Name cards.** Anime freeze-frames: each character's name and one word the first time they appear. That way
   viewers can name them in the comments.
 - **One unexplained thing.** The eye in the meteor, kept a mystery.
-- **The ending.** Momo turns to the camera and asks the viewer the last question, "Who do you think breaks first?". The
-  comments will be full of names, which suits a psychological survival story.
+- **The ending** (changed 27 Oct 2026, owner: "it will just go as story part 1 2 3 so on leave every part with s strong
+  hook"): no question to the viewer. Momo announces twenty games, the first an auction for the exit key, and Ren ends it:
+  "Twenty of us. One key." Card: PART 2 · THE GLASS AUCTION.
 - **Length.** About 60 s, ~165 words.
 
 **Look:** 2D anime style. Japanese school uniforms (gakuran and sailor), Class 3-B sign, noon sun, then a cold grey
@@ -45,7 +46,9 @@ concrete chamber.
 | 18 | (Ren) Event zero. Impact. Status of Earth: unknown. | Screen: **EVENT 00: IMPACT — STATUS OF EARTH: UNKNOWN** | |
 | 19 | (Momo) Good afternoon, Class 3-B! I'm Momo, your administrator! | A bell jingles. A small white round-eared mascot with a bow tie and a bell hops onto the screen. Name card: **MOMO · administrator**. | jingle |
 | 20 | (Momo) Welcome to Dead Man's Algorithm! | The title slams on behind it: **DEAD MAN'S ALGORITHM**. | sting |
-| 21 | (Momo, turning to the camera) And you, watching. Who do you think breaks first? | Momo leans toward the viewer. The 8 name cards line up on screen as the answer options. Held 2 s with "COMMENT A NAME 👇 · PART 2: THE GLASS AUCTION". | bell |
+| 21 | (Momo) Twenty students. Twenty games! | Momo close, happy. | bell |
+| 22 | (Momo) Game one is an auction. And the prize is the exit key! | Momo turns sly on "prize". | |
+| 23 | Twenty of us. One key. | The screen: GAME 01 · THE GLASS AUCTION · PRIZE: EXIT KEY, the class from behind. Then the card PART 2 · THE GLASS AUCTION, held 2 s. | |
 
 **Title:** A Meteor Hit Our School at 12:17. We Woke Up Underground. ☄️
 
@@ -53,8 +56,8 @@ concrete chamber.
 - "20 Students. 20 Survivors. For Now. ☄️"
 - "Dead Man's Algorithm, Part 1: 12:17 ☄️"
 
-**Pinned comment** (takes a side, ends on a question): My bet: Riku breaks first. People who need to control everyone
-crack when nobody's scared of them. Who's yours? 👇 (Pause on Kota's notebook 👀)
+**Pinned comment:** Twenty students. One exit key. Part 2: The Glass Auction, and all five rules. (Pause on Kota's
+notebook 👀)
 
 **Part 2** (next): Momo announces THE GLASS AUCTION. It reads the five rules exactly as written in the bible, then the
 10-minute countdown starts. Last line: "How many tokens would YOU bid?" Every viewer can almost work it out, so the

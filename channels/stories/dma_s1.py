@@ -3,18 +3,17 @@ script channels/stories/dma_s1_script.md, auto-approved by the owner on 27 Oct 2
 
 Chapter 1 beats 1-10 in canon order, told by Ren: a cold open at the impact, then one minute earlier (a clock ticks
 12:16:00 -> 12:17:00 on screen), the cast with name cards, the meteor and the eye, waking underground, the screen,
-EVENT 00, Momo. Ends with Momo asking the viewer who breaks first.
+EVENT 00, Momo. Ends on the hook into Part 2: twenty games, the first an auction for the exit key. "Twenty of us.
+One key."
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_s1   -> out/stories/dma_s1.mp4
 """
-import math
-
 from motion import audio, voice
 from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401  (sound registers the effects)
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_art as A
+from channels.stories import dma_art as A, serial
 
 NARRATOR = dict(turbo=True, turbo_ref="am_echo")       # Ren tells it
 TAIL = 2.0
@@ -54,7 +53,9 @@ SCRIPT = [
     dict(id="d19", scene="momo", text="Good afternoon, Class [three B!|3-B!] I'm Momo, your administrator!",
          speaker="momo", gap=0.6),
     dict(id="d20", scene="momo", text="Welcome to Dead Man's Algorithm!", speaker="momo"),
-    dict(id="d21", scene="momo", text="And you, watching. Who do you think breaks first?", speaker="momo", gap=0.4),
+    dict(id="d21", scene="momo", text="Twenty students. Twenty games!", speaker="momo"),
+    dict(id="d22", scene="momo", text="Game one is an auction. And the prize is the exit key!", speaker="momo", gap=0.6),
+    dict(id="d23", scene="end", text="Twenty of us. One key.", gap=0.3),
 ]
 
 METADATA = dict(
@@ -65,19 +66,19 @@ METADATA = dict(
 Cameras. No signal. A screen that says 20 SURVIVORS. And a cheerful little mascot called Momo.
 
 Dead Man's Algorithm, Part 1: 12:17. Part 2: The Glass Auction.
-💬 Who do you think breaks first? Comment a name. 👇
+Twenty of us. One key. Part 2 is next.
 
 (Original story. 2D animation.)""",
     hashtags=["#DeadMansAlgorithm", "#SurvivalGame", "#Shorts"],
     tags=["dead mans algorithm", "survival game", "psychological thriller", "anime story", "death game", "meteor",
           "class 3-b", "mystery", "2d animation", "part 1"],
-    pinned_comment="My bet: Riku breaks first. People who need to control everyone crack when nobody's scared of "
-                   "them. Who's yours? 👇 (Pause on Kota's notebook 👀)",
+    pinned_comment="Twenty students. One exit key. Part 2: The Glass Auction, and all five rules. (Pause on Kota's "
+                   "notebook 👀)",
 )
 
 KEY = {"meteor", "underground", "twenty", "inside", "lunch", "world", "escape", "loser", "enough", "involved", "wind",
        "cloud", "straight", "looked", "concrete", "gone", "signal", "cameras", "watching", "screen", "survivors",
-       "expects", "unknown", "momo", "administrator", "algorithm", "breaks"}
+       "expects", "unknown", "momo", "administrator", "algorithm", "games", "auction", "key"}
 ORANGE = (1.0, 0.62, 0.3)
 
 
@@ -171,7 +172,8 @@ def shots(tl):
         (B["d12"].end + 0.25, "black"), (B["d13"].start - 0.2, "floor"), (A_("d13", "Our") - 0.1, "ren_wake"),
         (B["d14"].start - 0.15, "phone"), (B["d15"].start - 0.15, "cameras"), (B["d16"].start - 0.15, "screen1"),
         (B["d17"].start - 0.15, "aoi_dark"), (B["d18"].start - 0.15, "screen2"), (B["d19"].start - 0.2, "momo"),
-        (B["d20"].start - 0.1, "title"), (B["d21"].start - 0.1, "momo_close"), (tl.total + 1, "end")]
+        (B["d20"].start - 0.1, "title"), (B["d21"].start - 0.1, "momo_close"),
+        (B["d23"].start - 0.1, "screen3"), (tl.total + 1, "end")]
 
 
 _shots = {}
@@ -294,10 +296,11 @@ def draw(cr, t, tl):
         for cx, cy, sx in ((W * 0.18, H * 0.2, 1), (W * 0.82, H * 0.2, -1)):
             A.camera_unit(cr, t, cx, cy, sx, 1.4, turn=turn)
         A.student_bust(cr, W / 2, by + 60, 0.95, t, "aoi", "worry", look=(0, -0.7), talk=talk("aoi"))
-    elif name in ("screen1", "screen2"):
+    elif name in ("screen1", "screen2", "screen3"):
         camera(cr, t, s0, s1, 1.0, 1.08, cy=420)
-        lines = (["CLASS 3-B", "20 STUDENTS", "20 SURVIVORS"] if name == "screen1"
-                 else ["EVENT 00: IMPACT", "STATUS OF EARTH:", "UNKNOWN"])
+        lines = {"screen1": ["CLASS 3-B", "20 STUDENTS", "20 SURVIVORS"],
+                 "screen2": ["EVENT 00: IMPACT", "STATUS OF EARTH:", "UNKNOWN"],
+                 "screen3": ["GAME 01", "THE GLASS AUCTION", "PRIZE: EXIT KEY"]}[name]
         A.chamber(cr, t, screen=A.screen_text(lines, col=(0.55, 1, 0.85, 1) if name == "screen1"
                                               else (1, 0.45, 0.35, 1)))
         for j, who in enumerate(("kota", "riku", "ren", "yui", "go")):        # their backs, looking up
@@ -325,7 +328,7 @@ def draw(cr, t, tl):
         cr.set_source_rgba(0, 0, 0, 0.35)
         cr.paint()
         lean = seg(t, s0, s0 + 0.8)
-        A.momo(cr, W / 2, 1180, 3.6 + 0.6 * lean, t, mood="sly" if t > A_("d21", "breaks") else "happy",
+        A.momo(cr, W / 2, 1180, 3.6 + 0.6 * lean, t, mood="sly" if t > A_("d22", "prize") else "happy",
                lean=0.12 * lean)
     cr.restore()
 
@@ -347,9 +350,9 @@ def draw(cr, t, tl):
                  alert=t >= t_flash)
     hud2d.hook(cr, t, [("12:17.", False), ("THE SKY FELL ON US.", True)], end=B["d2"].end + 0.1, y=230, size=80)
     hud2d.stamp(cr, t, B["d3"].start - 0.2, B["d3"].end + 0.2, ["1 MINUTE EARLIER"], y=320, col=hud2d.YELLOW)
-    if t < A_("d21", "who"):
+    if t < B["d23"].end + 0.1:
         hud2d.captions(cr, t, tl, KEY, y=1010)
-    final_card(cr, t, A_("d21", "breaks"))
+    serial.next_card(cr, t, B["d23"].end + 0.1, "DEAD MAN'S ALGORITHM", "PART 2", "THE GLASS AUCTION")
     cue("thunder", t, 0.0, 3.0)                                  # the rumble, from frame 0
     cue("riser", t, B["d10"].start, t_flash - B["d10"].start)
     cue("sting", t, t_boom)                                      # the impact, in the silence after line 12
@@ -366,37 +369,3 @@ def momo_card(cr, t, start, end):
         return
     A.NAMES.setdefault("momo", ("MOMO", "administrator"))
     A.name_card(cr, t, start, end, "momo", y=1150, side=-1)
-
-
-def final_card(cr, t, start):
-    """WHO BREAKS FIRST? The eight names, then the ask and the next part. Held over the tail."""
-    if t < start:
-        return
-    k = clamp01((t - start) / 0.3)
-    cr.set_source_rgba(0.02, 0.02, 0.04, 0.8 * k)
-    cr.paint()
-    hud2d._text(cr, "WHO BREAKS FIRST?", W / 2, 250, 60, (1, 1, 1, k), hud2d.ROUND, "center", shadow=0.5)
-    order = ["ren", "haruto", "yui", "riku", "kota", "go", "aoi", "mio"]
-    for j, who in enumerate(order):
-        p = clamp01((t - start - 0.15 - 0.06 * j) / 0.2)
-        if p <= 0:
-            continue
-        x = W / 2 + (-170 if j % 2 == 0 else 170)
-        y = 380 + (j // 2) * 120
-        nm = A.NAMES[who][0]
-        cr.save()
-        A.tk.tk_rrect(cr, x - 165, y - 40, 330, 80, 14)
-        cr.set_source_rgba(0.08, 0.08, 0.1, p)
-        cr.fill_preserve()
-        cr.set_source_rgba(*hud2d.RED[:3], p)
-        cr.set_line_width(3)
-        cr.stroke()
-        hud2d._text(cr, nm, x, y + 10, 26, (1, 1, 1, p), hud2d.ROUND, "center")
-        cr.restore()
-    p = clamp01((t - start - 0.7) / 0.25)
-    if p > 0:
-        A.tk.tk_rrect(cr, W / 2 - 240, 890, 480, 84, 42)
-        cr.set_source_rgba(*hud2d.YELLOW[:3], p)
-        cr.fill()
-        hud2d._text(cr, "COMMENT A NAME BELOW", W / 2, 945, 38, (0.08, 0.06, 0.04, p), hud2d.ROUND, "center")
-        hud2d._text(cr, "PART 2: THE GLASS AUCTION", W / 2, 1030, 30, (1, 1, 1, 0.9 * p), hud2d.ROUND, "center")

@@ -4,19 +4,17 @@ channels/stories/dead_mans_algorithm_bible.md. Auto-approved by the owner, 27 Oc
 All twelve Chapter 1 beats in order: lunch at 12:16 (Ren, Haruto, Yui), Riku bullying Kota and Go stepping in, Aoi and
 Mio, the meteor, the impact and the eye, waking underground (twenty students, the teacher missing), the cameras, the
 screen (20 SURVIVORS), EVENT 00, Momo, the Glass Auction with its five rules read word for word, and the class facing
-the countdown. Nothing beyond the bible is made canon: the teacher has no name, the twelve other students stay
-unnamed, the auction is not resolved.
+the countdown, ending on the hook into Chapter 2 (Ren already knows his number). Nothing beyond the bible is made
+canon: the teacher has no name, the twelve other students stay unnamed, the auction is not resolved.
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_long   -> out/stories/dma_long.mp4 (1280x720)
 """
-import math
-
 from motion import audio, voice
 from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_art as A
+from channels.stories import dma_art as A, serial
 from channels.stories import dma_s1 as S1      # notebook, phone, the eye close-up
 from channels.stories import dma_s2 as S2      # the room, rule cards, countdown format
 
@@ -123,7 +121,8 @@ SCRIPT = [
     dict(id="c66", scene="ren", text="I looked at Yui. At Haruto. At the countdown."),
     dict(id="c67", scene="ren", text="And I realised the safest number in this room might not be a hundred.",
          gap=0.6),
-    dict(id="c68", scene="momo", text="So! How many tokens would you bid?", speaker="momo", gap=0.4),
+    dict(id="c68", scene="ren", text="I already knew my number.", gap=0.5),
+    dict(id="c69", scene="momo", text="Tick tock, Class [three B!|3-B!]", speaker="momo", gap=0.3),
 ]
 METADATA = dict(
     title="A Meteor Hit Our School at 12:17. Then the Game Began. | Dead Man's Algorithm, Chapter 1",
@@ -139,14 +138,14 @@ THE GLASS AUCTION
 • Rule 4: If the highest bid is tied, the next-highest unique bid wins.
 • Rule 5: If everyone leaves all tokens unspent when time expires, everyone is executed.
 
-💬 How many tokens would YOU bid? Comment your number.
+Ren already knows his number. Chapter 2 is next.
 
 Dead Man's Algorithm is an original story. 2D animation.""",
     hashtags=["#DeadMansAlgorithm", "#SurvivalGame", "#Anime"],
     tags=["dead mans algorithm", "survival game", "death game", "psychological thriller", "game theory",
           "anime story", "original story", "meteor", "class 3-b", "chapter 1", "2d animation"],
     pinned_comment="Chapter 1 of Dead Man's Algorithm. I'd bid 1: everyone scared of ties goes high. What's your "
-                   "number, and who breaks first?",
+                   "number?",
 )
 
 KEY = S1.KEY | S2.KEY | {"teacher", "eye", "count", "twenty", "sealed", "families", "rude", "together"}
@@ -182,7 +181,7 @@ SHOT = {
     "c58": ("talk", [("riku", "smirk")]), "c59": ("talk", [("riku", "worry"), ("aoi", "focus")]),
     "c60": ("talk", [("haruto", "grin")]), "c61": ("talk", [("kota", "fear")]), "c62": ("talk", [("mio", "calm")]),
     "c63": ("talk", [("go", "focus"), ("yui", "worry")]), "c64": ("ren",), "c65": ("ren",),
-    "c66": ("look",), "c67": ("ren",), "c68": ("momo_close",),
+    "c66": ("look",), "c67": ("ren",), "c68": ("ren",), "c69": ("momo_close",),
 }
 NAMED = {"c5": "haruto", "c6": "ren", "c8": "yui", "c10": "riku", "c12": "kota", "c14": "go", "c17": "mio",
          "c19": "aoi"}
@@ -357,7 +356,7 @@ def draw(cr, t, tl):
         cr.set_source_rgba(0, 0, 0, 0.35)
         cr.paint()
         A.momo(cr, W / 2, H * 0.98, 2.4 + 0.3 * seg(t, s0, s0 + 0.8), t,
-               mood="wink" if sid == "c68" else "sly", lean=0.08 * seg(t, s0, s0 + 0.8))
+               mood="wink" if sid == "c69" else "sly", lean=0.08 * seg(t, s0, s0 + 0.8))
     elif kind == "rule":
         camera(cr, t, s0, s1, 1.0, 1.04)
         hud2d.blurred(cr, lambda c: S2.room(c, t, 600, ["GAME 01", "THE GLASS AUCTION"]), sigma=8)
@@ -405,9 +404,9 @@ def draw(cr, t, tl):
     hud2d.hook(cr, t, [("12:17.", False), ("THE SKY FELL ON US.", True)], end=B["c3"].end + 0.1, y=H * 0.3, size=70)
     hud2d.stamp(cr, t, B["c4"].start - 0.1, A_("c4", "One") + 0.6, ["1 MINUTE EARLIER"], x=W * 0.5, y=H * 0.3,
                 col=hud2d.YELLOW)
-    if t < A_("c68", "How") and kind not in ("rule", "title"):
+    if t < B["c69"].end + 0.1 and kind not in ("rule", "title"):
         hud2d.captions(cr, t, tl, KEY, y=H * 0.93, size=40, max_w=W * 0.7)
-    end_card(cr, t, A_("c68", "How"))
+    serial.next_card(cr, t, B["c69"].end + 0.1, "DEAD MAN'S ALGORITHM", "CHAPTER 2", "THE BIDS")
     cue("thunder", t, 0.0, 3.5)
     cue("riser", t, B["c23"].start, t_flash - B["c23"].start)
     cue("sting", t, t_boom)
@@ -431,36 +430,3 @@ class _CountdownTL:
 
     def at(self, bid, key=None, end=False, nth=1):
         return self.tl.at("c57", "now!", end=True)
-
-
-def end_card(cr, t, start):
-    """HOW MANY TOKENS WOULD YOU BID? with the scale, held over the tail; then the chapter title."""
-    if t < start:
-        return
-    k = clamp01((t - start) / 0.3)
-    cr.set_source_rgba(0.02, 0.03, 0.04, 0.82 * k)
-    cr.paint()
-    hud2d._text(cr, "HOW MANY TOKENS WOULD YOU BID?", W / 2, H * 0.3, 54, (1, 1, 1, k), hud2d.ROUND, "center",
-                shadow=0.5)
-    p = clamp01((t - start - 0.3) / 0.3)
-    if p > 0:
-        x0, x1, y = W * 0.2, W * 0.8, H * 0.5
-        cr.set_source_rgba(*CYAN[:3], p)
-        cr.set_line_width(6)
-        cr.move_to(x0, y)
-        cr.line_to(x1, y)
-        cr.stroke()
-        for v in (0, 25, 50, 75, 100):
-            x = x0 + (x1 - x0) * v / 100
-            cr.move_to(x, y - 14)
-            cr.line_to(x, y + 14)
-            cr.stroke()
-            hud2d._text(cr, str(v), x, y + 52, 30, (*CYAN[:3], p), "Liberation Mono", "center")
-    p = clamp01((t - start - 0.7) / 0.3)
-    if p > 0:
-        A.tk.tk_rrect(cr, W / 2 - 250, H * 0.72, 500, 70, 35)
-        cr.set_source_rgba(*hud2d.YELLOW[:3], p)
-        cr.fill()
-        hud2d._text(cr, "COMMENT YOUR BID", W / 2, H * 0.72 + 47, 36, (0.08, 0.06, 0.04, p), hud2d.ROUND, "center")
-        hud2d._text(cr, "DEAD MAN'S ALGORITHM · CHAPTER 2 NEXT", W / 2, H * 0.9, 24, (1, 1, 1, 0.8 * p), hud2d.ROUND,
-                    "center")

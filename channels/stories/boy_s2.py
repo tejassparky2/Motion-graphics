@@ -4,18 +4,19 @@ the owner fixed: he can only reincarnate into the nearest and weakest body.
 
 The push (canon: he dies protecting Maya), his last position, the quiet; he wakes heavy and old, the spotted hand with
 a gold ring, the nurse ("Mr. Vance"), the wristband (VANCE, ARTHUR. AGE 82), Maya kneeling at the crossing about a
-hundred metres below; the law; the funeral (plot point 7). Ends on "Would you go to your own funeral?"
+hundred metres below; the law; Arthur's fortune, family and enemies (plot point 6), now Neil's. Ends on the hook into
+Part 3: "And soon, they would bury Neil." (plot point 7, his own funeral)
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py boy_s2   -> out/stories/boy_s2.mp4
 """
 import math
 
 from motion import audio, voice
-from motion.engine import W, H, clamp01, cue, seg
+from motion.engine import W, H, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import boy_art as B
+from channels.stories import boy_art as B, serial
 
 NARRATOR = dict(turbo=True, turbo_ref="bm_george")
 TAIL = 2.0
@@ -46,8 +47,9 @@ SCRIPT = [
     dict(id="e13", scene="law", text="The law gave him no choice. The nearest body. And the weakest.", gap=0.6),
     dict(id="e14", scene="arthur", text="Neil wasn't dead. He was an [eighty-two-year-old|82-year-old] billionaire, "
                                         "in a body that was failing."),
-    dict(id="e15", scene="arthur", text="And soon, they would bury Neil.", gap=0.5),
-    dict(id="e16", scene="arthur", text="Would you go to your own funeral?", gap=0.3),
+    dict(id="e15", scene="arthur", text="Arthur Vance had a fortune. A family. And enemies.", gap=0.4),
+    dict(id="e16", scene="arthur", text="Now they were all Neil's.", gap=0.6),
+    dict(id="e17", scene="arthur", text="And soon, they would bury Neil.", gap=0.3),
 ]
 
 METADATA = dict(
@@ -59,18 +61,18 @@ METADATA = dict(
 About a hundred metres away, Maya was kneeling at the crossing.
 
 The Boy Who Inherited Another Body, Part 2.
-💬 Would you go to your own funeral? Yes or no. 👇
+Arthur Vance had a fortune, a family and enemies. Now they were all Neil's. And soon, they would bury Neil.
 
 (Original story. Fiction. 2D animation.)""",
     hashtags=["#Thriller", "#Story", "#Shorts"],
     tags=["the boy who inherited another body", "reincarnation", "body swap", "billionaire", "thriller",
           "psychological thriller", "story", "plot twist", "2d animation", "part 2"],
-    pinned_comment="Yes. You'd have to see Maya. Even if she looks straight through an old man she's never met. "
-                   "Would you go? 👇",
+    pinned_comment="Part 3 is next. Would you go to your own funeral, if Maya would be there and couldn't know it "
+                   "was you?",
 )
 
 KEY = {"half", "moved", "pushed", "safe", "last", "crossing", "quiet", "wrong", "heavy", "old", "ring", "vance",
-       "eighty-two", "maya", "hundred", "nearest", "weakest", "billionaire", "failing", "bury", "funeral"}
+       "eighty-two", "maya", "hundred", "nearest", "weakest", "billionaire", "failing", "fortune", "family", "enemies", "bury"}
 
 
 def camera(cr, t, s0, s1, z0=1.0, z1=1.06, cx=W / 2, cy=H / 2, shake=1.0):
@@ -91,7 +93,7 @@ def shots(tl):
         (A_("e6", "And") - 0.1, "arthur_wake"), (Bb["e7"].start - 0.1, "monitor"), (Bb["e8"].start - 0.1, "hand"),
         (Bb["e9"].start - 0.15, "nurse"), (Bb["e10"].start - 0.1, "band"), (Bb["e11"].start - 0.15, "window"),
         (Bb["e12"].start - 0.1, "window_close"), (Bb["e13"].start - 0.15, "law"), (Bb["e14"].start - 0.15, "arthur"),
-        (Bb["e15"].start - 0.1, "arthur_close"), (Bb["e16"].start - 0.1, "question"), (tl.total + 1, "end")]
+        (Bb["e16"].start - 0.1, "arthur_close"), (Bb["e17"].start - 0.1, "question"), (tl.total + 1, "end")]
 
 
 _shots = {}
@@ -201,37 +203,11 @@ def draw(cr, t, tl):
     hud2d.hook(cr, t, [("HALF A SECOND.", False), ("HE DIDN'T THINK.", True)], end=Bb["e1"].end + 0.05, y=230,
                size=70)
     hud2d.stamp(cr, t, A_("e12", "hundred") - 0.1, Bb["e12"].end + 0.4, ["~100 METRES"], y=760)
-    if t < Bb["e16"].start and name not in ("law",):
+    if t < Bb["e17"].end + 0.1 and name not in ("law",):
         hud2d.captions(cr, t, tl, KEY, y=1010)
-    final_card(cr, t, Bb["e16"].start)
+    serial.next_card(cr, t, Bb["e17"].end + 0.1, "THE BOY WHO INHERITED ANOTHER BODY", "PART 3")
     cue("brakes", t, 0.0)
     cue("sting", t, Bb["e3"].end + 0.2)                       # the impact, in the silence after "crossing"
     cue("hum", t, Bb["e6"].start - 0.5, Bb["e9"].end - Bb["e6"].start)
     cue("heartbeat", t, Bb["e10"].start, Bb["e13"].end - Bb["e10"].start)
-    cue("riser", t, Bb["e15"].start, Bb["e16"].start - Bb["e15"].start)
-
-
-def final_card(cr, t, start):
-    """WOULD YOU GO TO YOUR OWN FUNERAL? YES / NO, held over the tail."""
-    if t < start:
-        return
-    k = clamp01((t - start) / 0.3)
-    cr.set_source_rgba(0.02, 0.02, 0.04, 0.78 * k)
-    cr.paint()
-    hud2d._text(cr, "WOULD YOU GO TO", W / 2, 300, 58, (1, 1, 1, k), hud2d.ROUND, "center", shadow=0.5)
-    hud2d._text(cr, "YOUR OWN FUNERAL?", W / 2, 370, 58, (*hud2d.RED[:3], k), hud2d.ROUND, "center", shadow=0.5)
-    for n, (lab, col) in enumerate((("YES", hud2d.GREEN), ("NO", hud2d.RED))):
-        p = clamp01((t - start - 0.25 - 0.15 * n) / 0.25)
-        if p <= 0:
-            continue
-        x = W / 2 + (-150 if n == 0 else 150)
-        B.tk.tk_rrect(cr, x - 120, 470, 240, 120, 22)
-        cr.set_source_rgba(0.06, 0.06, 0.08, p)
-        cr.fill_preserve()
-        cr.set_source_rgba(*col[:3], p)
-        cr.set_line_width(6)
-        cr.stroke()
-        hud2d._text(cr, lab, x, 548, 58, (1, 1, 1, p), hud2d.ROUND, "center")
-    p = clamp01((t - start - 0.6) / 0.25)
-    if p > 0:
-        hud2d._text(cr, "COMMENT YES OR NO", W / 2, 690, 34, (*hud2d.YELLOW[:3], p), hud2d.ROUND, "center")
+    cue("riser", t, Bb["e16"].start, Bb["e17"].start - Bb["e16"].start)

@@ -3,19 +3,19 @@
 (channels/stories/boy_who_inherited_ch1.md, parts I and II and the start of III). Auto-approved, 27 Oct 2026.
 
 Hook: seventeen, five million, dead the next day. The trade (the fake buy walls, selling into the spike), the canon
-number, the text to Maya, the café, the receipt, the crossing, the car. Ends on the half second: push her, or pull
-her back? (Short 2 shows what he did.)
+number, the text to Maya, the café, the receipt, the crossing, the car. Ends on the hook into Part 2: half a second,
+"just enough time for one last trade" (Short 2 shows what he did).
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py boy_s1   -> out/stories/boy_s1.mp4
 """
 import math
 
 from motion import audio, voice
-from motion.engine import W, H, clamp01, cue, seg
+from motion.engine import W, H, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import boy_art as B
+from channels.stories import boy_art as B, serial
 
 NARRATOR = dict(turbo=True, turbo_ref="bm_george")
 TAIL = 2.0
@@ -54,7 +54,8 @@ SCRIPT = [
                                         "at him."),
     dict(id="b17", scene="street", text="And Neil noticed the one thing on the street that didn't fit.", gap=0.4),
     dict(id="b18", scene="car", text="A car that wasn't slowing down.", gap=0.6),
-    dict(id="b19", scene="car", text="Half a second. Do you push her? Or pull her back?", gap=0.3),
+    dict(id="b19", scene="car", text="Neil had half a second.", gap=0.4),
+    dict(id="b20", scene="car", text="Just enough time for one last trade.", gap=0.3),
 ]
 
 METADATA = dict(
@@ -63,19 +64,19 @@ METADATA = dict(
     description="""At seventeen, Neil turned a thousand dollars into $5,014,382.61. He told one person: Maya. The next day, at a crossing, a car didn't slow down. 💸
 
 The Boy Who Inherited Another Body, Part 1. Part 2: what happened in that half second, and where Neil woke up.
-💬 Half a second: do you push her, or pull her back? 👇
+Half a second. Just enough time for one last trade.
 
 (Original story. Fiction. 2D animation. Not financial advice.)""",
     hashtags=["#Thriller", "#Story", "#Shorts"],
     tags=["the boy who inherited another body", "thriller", "psychological thriller", "trader", "stock market",
           "story", "reincarnation", "plot twist", "2d animation", "part 1"],
-    pinned_comment="Push. Pulling her back means she's still in the road when it hits. Push or pull? 👇 "
+    pinned_comment="Part 2: The Last Position. What Neil did in that half second, and where he woke up. "
                    "(Look at what she's holding 👀)",
 )
 
 KEY = {"seventeen", "thousand", "million", "dead", "hold", "vanishing", "floor", "everything", "disappeared", "maya",
        "awake", "always", "how", "anything", "chocolate", "last", "bought", "green", "laughing", "fit", "slowing",
-       "push", "pull"}
+       "half", "trade"}
 
 
 def camera(cr, t, s0, s1, z0=1.0, z1=1.06, cx=W / 2, cy=H / 2, shake=1.0):
@@ -222,36 +223,11 @@ def draw(cr, t, tl):
     hud2d.stamp(cr, t, Bb["b2"].start, Bb["b2"].end + 0.3, ["THE NEXT DAY: DEAD"], y=330)
     hud2d.stamp(cr, t, A_("b15", "last") - 0.1, Bb["b15"].end + 0.3, ["THE LAST THING", "HE EVER BOUGHT"], y=300,
                 col=hud2d.YELLOW)
-    if t < A_("b19", "Do"):
+    if t < Bb["b20"].end + 0.1:
         hud2d.captions(cr, t, tl, KEY, y=1010)
-    final_card(cr, t, A_("b19", "Do"))
+    serial.next_card(cr, t, Bb["b20"].end + 0.1, "THE BOY WHO INHERITED ANOTHER BODY", "PART 2",
+                     "THE LAST POSITION")
     cue("click", t, Bb["b6"].start - 0.15)
     cue("heartbeat", t, Bb["b16"].start, Bb["b18"].end - Bb["b16"].start)
     cue("brakes", t, Bb["b18"].end + 0.05)
     cue("riser", t, Bb["b18"].start, Bb["b19"].start - Bb["b18"].start)
-
-
-def final_card(cr, t, start):
-    """HALF A SECOND. PUSH HER / PULL HER BACK, held over the tail."""
-    if t < start:
-        return
-    k = clamp01((t - start) / 0.3)
-    cr.set_source_rgba(0.02, 0.02, 0.04, 0.78 * k)
-    cr.paint()
-    hud2d._text(cr, "HALF A SECOND.", W / 2, 320, 64, (1, 1, 1, k), hud2d.ROUND, "center", shadow=0.5)
-    for n, (lab, col) in enumerate((("PUSH HER", hud2d.RED), ("PULL HER BACK", hud2d.GREEN))):
-        p = clamp01((t - start - 0.2 - 0.15 * n) / 0.25)
-        if p <= 0:
-            continue
-        y = 480 + n * 150
-        B.tk.tk_rrect(cr, W / 2 - 250, y - 55, 500, 110, 22)
-        cr.set_source_rgba(0.06, 0.06, 0.08, p)
-        cr.fill_preserve()
-        cr.set_source_rgba(*col[:3], p)
-        cr.set_line_width(6)
-        cr.stroke()
-        hud2d._text(cr, lab, W / 2, y + 16, 46, (1, 1, 1, p), hud2d.ROUND, "center")
-    p = clamp01((t - start - 0.6) / 0.25)
-    if p > 0:
-        hud2d._text(cr, "COMMENT PUSH OR PULL · PART 2 SHOWS WHAT HE DID", W / 2, 820, 24, (1, 1, 1, 0.85 * p),
-                    hud2d.ROUND, "center")
