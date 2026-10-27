@@ -5,9 +5,10 @@ Scope: whether, and how, a CPU-only Linux box (4 cores, ~15 GB RAM, ~8 GB free d
 **Local machine facts (checked on this machine on 2026-10-27 with `lscpu`, `/proc/cpuinfo`, `free -g`, `df -h`; no URL, these are first-hand):**
 - CPU: "Intel(R) Xeon(R) Processor @ 2.10GHz", family 6 model 207 (5th-gen Xeon / Emerald Rapids class), KVM guest, 4 vCPUs shown as 4 cores, 1 thread per core, 8 MiB L2, 260 MiB L3.
 - SIMD flags present: `avx2 avx512f avx512_vnni avx512_bf16 amx_bf16 avx_vnni f16c fma`. **AMX-BF16 is present**, which is what makes bf16 inference fast on Intel CPUs (see the runtime section).
-- RAM: 15 GB total, but only ~7 GB "available" at check time (8 GB in use by other processes). No swap.
-- Disk: 8.2 GB free on `/`.
-- Python packages: `torch`, `diffusers`, `openvino` are **not installed**; `onnxruntime 1.29.0` is installed. Nothing was benchmarked locally in this research (that is task #15).
+- RAM: 15 GB total; "available" varied from ~5 to ~10 GB during the session because other jobs (TTS, Blender, Real-ESRGAN benchmarks) were running. No swap.
+- Disk: free space on `/` varied between ~2.8 and ~8.2 GB during the session (6 GB of it is the HuggingFace cache with TTS/Whisper models); **plan for only ~2-3 GB free for image models.**
+- Python: system Python has no torch; `/home/user/.venv-clone` has torch 2.6.0+cpu + diffusers 0.29.0 + transformers 5.2.0 (used by the TTS tool, so don't upgrade it in place); `/home/user/.venv-main` has torch 2.14.1+cu130 (CUDA build, also runs on CPU) without diffusers; `onnxruntime 1.29.0` is installed system-wide; `openvino`, `peft` are not installed.
+- A local random-weight timing benchmark (no model download) was run for this report; results and contention notes are in section 3.
 
 ---
 
@@ -124,6 +125,17 @@ All published CPU numbers come from bigger CPUs (12-128 cores); none from a 4-co
 **SDXL on Xeon with OpenVINO**
 - 2x Xeon Platinum 8592+ (2 x 64 cores, AMX), SDXL 1.0, 1024x1024, 40 steps: native HF ~6 min/image vs **OpenVINO ~30 s/image (12x)**, average of 30 images. Published 30 Jul 2025. — [Lenovo Press LP2261](https://lenovopress.lenovo.com/lp2261-accelerating-text-to-image-diffusion-models-openvino-intel-amx)
 
+**AMX / bf16 evidence on Xeon (what this machine's `amx_bf16` buys)**
+- PyTorch-native "Diffusion Fast" on CPU with **BFloat16 + torch.compile + SDPA: up to 3.91x vs FP32 on SDXL** (4th-gen Xeon Platinum 8480+, single socket 56 cores, batch 1, PyTorch 2.5; Intel test 15 Oct 2024; run with `python run_benchmark.py --compile_unet --compile_vae --device=cpu`). No absolute latencies given. — [PyTorch blog: GenAI acceleration on Intel Xeon (updated 2025-05-05)](https://pytorch.org/blog/genai-acceleration-intel-xeon/); [huggingface/diffusion-fast](https://github.com/huggingface/diffusion-fast)
+- IPEX + bf16 autocast on Sapphire Rapids (AMX): 11.9 s → 5.4 s for a 20-step SD image (2.2x from bf16 alone); OpenVINO static-shape bf16 4.7 s. — [HF blog](https://huggingface.co/blog/stable-diffusion-inference-intel)
+- OpenVINO on AMX Xeons: SDXL 1024px 40 steps ~6 min (native HF) → ~30 s (12x). — [Lenovo Press LP2261](https://lenovopress.lenovo.com/lp2261-accelerating-text-to-image-diffusion-models-openvino-intel-amx)
+- CPU textual-inversion fine-tuning with bf16 on AMX Xeons (4 servers x 2 x 8480+): 200 steps ≈ 5 min, 3,000 steps ≈ 1 h (approximate, author's figures). — [HF blog: Fine-tuning SD on Intel CPUs (Jul 2023)](https://huggingface.co/blog/stable-diffusion-finetuning-intel)
+- int8 is not a clear win for diffusion on CPU: OpenVINO+NNCF int8 LCM gave 1.38x vs PyTorch (i9-10980XE), and quantizing TE/VAE "can substantially degrade accuracy". — [OpenVINO blog](https://blog.openvino.ai/blog-posts/optimizing-latent-consistency-model-for-image-generation-with-openvino-tm-and-nncf)
+
+**User-submitted CPU-only results (vladmandic SD benchmark database; 512x512, 20 steps with CFG, it/s includes VAE; core counts not recorded)**
+- AMD Zen 5 desktop (family 26 model 68), SDXL-class model, **bf16**, torch 2.6 CPU: 0.79 it/s (≈25 s per 20-step 512px image). AMD Zen 5 laptop (family 26 model 112): SD 1.5 fp32 0.51 it/s (≈39 s/image); SDXL-class bf16 0.64 it/s. Unknown x86 Linux CPU: Pony V6 XL bf16 0.68 it/s; SD 1.5 (DreamShaper 8) fp32 0.31 it/s. — [benchmark-data.json, records 15829, 16231, 15993, 15518, 16284](https://vladmandic.github.io/sd-data/pages/benchmark-data.json)
+- OpenVINO on CPU: Ryzen 7 5800X3D (8 cores) SD 1.5 0.32-0.34 it/s, LCM-Dreamshaper 0.64-0.68 it/s; **Core i7-8665U (4-core laptop) SD 1.5 anime model 0.05 it/s** (≈400 s per 20-step image). — [benchmark-data.json, records 8479, 10323, 9349, 9350, 10554](https://vladmandic.github.io/sd-data/pages/benchmark-data.json)
+
 **stable-diffusion.cpp (leejet, MIT; GGML/GGUF)**
 - Supports SD1.x/2.x/SDXL/Turbo/distilled SD, SD3, FLUX, Anima and more; LoRA "same as stable-diffusion-webui", LCM/LCM-LoRA, ControlNet with SD 1.5, IP-Adapter (SD 1.5 and SDXL incl. Plus), PhotoMaker, ADetailer, TAESD, ESRGAN upscaling, VAE tiling, flash attention. No CPU timings published in README or performance guide. — [sd.cpp README](https://github.com/leejet/stable-diffusion.cpp); [performance.md](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/performance.md)
 - SD 1.x memory at 512x512 txt2img: f32 ~2.8 GB, f16 ~2.3 GB, q8_0 ~2.1 GB, q4_0 ~2.0 GB; **with flash attention** f32 ~2.4 GB, f16 ~1.9 GB, q8_0 ~1.6 GB, q4_0 ~1.5 GB. Quant types: f32, f16, q8_0, q5_0/q5_1, q4_0/q4_1; convert ahead with `sd-cli -M convert ... --type q8_0`. — [sd.cpp quantization_and_gguf.md](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/quantization_and_gguf.md). The 2023 README also listed disk sizes for SD 1.x: f32 2.7 GB, f16 2.0 GB, q8_0 1.7 GB, q4_0 1.5 GB. — [sd.cpp README, Oct 2023 revision](https://github.com/leejet/stable-diffusion.cpp/blob/afec5051cfba088c41c12bc006bbc32c9dc5f049/README.md)
@@ -154,6 +166,21 @@ All published CPU numbers come from bigger CPUs (12-128 cores); none from a 4-co
 
 - For 60 shots with ~3 candidates each (180 images): SD 1.5 + LCM ≈ 40-90 min; few-step SDXL ≈ 5-12 h; full-step SDXL ≈ 15-33 h. **SD 1.5 + LCM is the only route that allows real iteration on this box.** A 512x768 still can then be upscaled (section 6) for a 1080x1920 Short.
 - **Memory/disk fit:** SD 1.5 (≈2-3 GB RAM in sd.cpp, ~4 GB in FastSD LCM-LoRA mode) fits easily. SDXL in bf16 needs ~7 GB for weights alone, which matches the ~7 GB currently "available" → OOM risk with no swap; fp32 SDXL (~14 GB) does not fit. On disk, one 6.94 GB SDXL checkpoint leaves ~1.3 GB of the 8.2 GB free, so OpenVINO IR conversion (a second full copy) or GGUF conversion (needs the source file plus the output) **does not fit** unless disk is freed or a pre-quantized GGUF is downloaded directly.
+- **What fits in ~2-3 GB of free disk** (sizes from the HF/Civitai file listings cited above):
+
+  | Item | Disk | Fits 2-3 GB? |
+  |---|---|---|
+  | SD 1.5 anime checkpoint, fp16 pruned single file (Anything V3 2.08, MeinaMix v12 2.08, Counterfeit-V3.0 fix-fp16 2.13, AnyLoRA fp16-pruned 2.13 GB) | ~2.1 GB | yes, but leaves <1 GB for everything else |
+  | Same model as sd.cpp GGUF q8_0 / q4_0 | ~1.7 / ~1.5 GB | yes (convert on another machine, e.g. the laptop; converting here needs source + output ≈ 3.8 GB at once) |
+  | LCM-LoRA SD1.5 / TCD-SD15 / Hyper-SD15 LoRA | 0.13 / 0.13 / 0.27 GB | yes |
+  | TAESD | tiny (<50 MB; ~1.2M params per half) | yes |
+  | ControlNet lineart_anime SD1.5 fp16 | 0.72 GB | only with the q8_0/q4_0 model |
+  | IP-Adapter Plus / Plus-Face SD1.5 | 0.1 GB each | yes |
+  | IP-Adapter ViT-H image encoder | 2.53 GB (fp32) | **no** alongside a model — precompute the character embeddings elsewhere (laptop) and ship the small embedding file |
+  | OpenVINO IR export of SD 1.5 | ≈ a second copy of the model | only if the original is deleted after export |
+  | Any SDXL anime checkpoint (6.78-7.11 GB), Anima (≈5.6 GB of files), SDXL-Turbo | 5.6-7.1 GB | **no** |
+
+  The diffusers multi-folder layout of SD 1.5 repos is often fp32 (e.g., Anything V5 UNet 3.44 GB) and should be avoided here; use single-file fp16 checkpoints or GGUF.
 - **Runtime choice:** (1) PyTorch CPU + diffusers with `torch.autocast("cpu", dtype=torch.bfloat16)` uses AMX directly and gives full access to LoRA/IP-Adapter/ControlNet/inpainting APIs — most flexible. (2) OpenVINO via optimum-intel (`OVStableDiffusionPipeline`, static reshape to the target size) was the fastest in every Intel comparison (HF blog, Lenovo), but every model/LoRA combination must be exported first (disk cost). (3) stable-diffusion.cpp is the leanest on RAM/disk (q8_0 SD 1.5 ~1.7 GB on disk, ~1.6-2.1 GB RAM) and bundles LoRA, LCM, ControlNet, IP-Adapter, TAESD and ESRGAN in one binary, but publishes no CPU speeds and its bf16/AMX use is not documented. (4) FastSD CPU is a convenient wrapper (OpenVINO + LCM + ControlNet) but its fast paths are tied to specific pre-converted models; any Civitai SD 1.5 checkpoint can still be used in LCM-LoRA mode. (5) ONNX Runtime (already installed) had no current CPU SD benchmarks in this search.
 - int8 (NNCF) on the UNet bought only 1.38x in Intel's own LCM test; on an AMX CPU bf16 is probably the better first step (no calibration, no quality risk).
 
@@ -252,3 +279,55 @@ Real-ESRGAN (BSD-3-Clause) has two anime-specific models — `RealESRGAN_x4plus_
 ### Gaps
 - No CPU timing for any Real-ESRGAN anime model was found in READMEs, issues or blogs; needs a local measurement.
 - Exact `.pth` file sizes for anime_6B / animevideov3 were not verified in this session.
+
+---
+
+## 7. The owner's laptop: RTX 3050 Laptop GPU (4 GB VRAM) + Intel Core i7 11th gen — what it can do for anime stills, and how to split work with the CPU cloud box
+
+(Owner confirmed the card on 27 Oct 2026: RTX 3050 Laptop, 4 GB. RTX 3050 **Ti** Laptop (also 4 GB) data is included because it is the same class.)
+
+### Takeaway
+The 4 GB RTX 3050 Laptop is roughly **5-20x faster than the 4-core CPU box** for SD 1.5: user-submitted benchmarks put it at a median **~2.6 it/s at 512x512 (≈7-8 s for a full 20-step CFG image incl. VAE)**, so SD 1.5 anime checkpoints + LCM/Hyper LoRAs, ControlNet (Low VRAM mode, documented up to 768x832 on 4 GB Ampere) and IP-Adapter are all practical on it. **SDXL anime models (Animagine XL 4.0 / Illustrious) only run with Forge/ComfyUI offloading and are slow** (A1111 users on this card logged 0.09-0.56 it/s; a tuned ComfyUI SDXL workflow on the same card took 55-60 s per 1024x720 image at 10+5 steps). **SD 1.5 LoRA training on 4 GB is undocumented and marginal; SDXL LoRA training on 4 GB is not realistic.** Best split: laptop = image generation (and GPU upscaling); cloud CPU box = voices, compositing, parallax/2D animation rendering, captions, Whisper checks, and slow CPU fallback drafts.
+
+### Cited Findings
+
+**Measured speed on this exact GPU class (vladmandic SD benchmark database, user-submitted)**
+- Benchmark method: standard txt2img, default 512x512, 20 steps ("normal"), it/s = steps x batch / total wall time (so it includes text encoding and VAE decode); results listed for batch 1/2/4. — [benchmark.py](https://github.com/vladmandic/sd-extension-system-info/blob/main/benchmark.py); [benchmark page](https://vladmandic.github.io/sd-extension-system-info/pages/benchmark.html)
+- Analysis of the full dataset (downloaded 27 Oct 2026, 10.4 MB JSON; my own parsing): **RTX 3050 Laptop GPU: 78 records, median batch-1 2.63 it/s (IQR 1.81-3.25, max 5.62), all reporting 4 GB. RTX 3050 Ti Laptop GPU: 71 records, median 3.06 it/s (IQR 1.52-3.61), 4 GB.** For reference: RTX 3060 Laptop median 4.75 it/s (220 records, 6 GB), RTX 4050 Laptop median 4.76 it/s (44 records, 6 GB). — [benchmark-data.json](https://vladmandic.github.io/sd-data/pages/benchmark-data.json)
+- Example records on the RTX 3050 Laptop with an SD 1.5 **anime** checkpoint (`sd1.5\anything-v5.safetensors`, A1111, fp16, `--medvram`, 512x512): 3.36 it/s (31 May 2025) and 2.64 it/s (7 Apr 2025). — [benchmark-data.json, records 16015 and 15752](https://vladmandic.github.io/sd-data/pages/benchmark-data.json)
+- SDXL-family checkpoints on RTX 3050 Laptop 4 GB in A1111 (not Forge): Pony Diffusion V6 XL 0.09 it/s (no flags) / 0.12 it/s (`medvram`); SDXL base 0.11 it/s; WAI-NSFW-Illustrious v7.0 0.23 it/s (no flags); WAI-REALCN 0.56 it/s (`lowvram`) — i.e., ~36-220 s per 20-step image (resolution not recorded in that older record format; benchmark default is 512x512). — [benchmark-data.json, records 13063, 13068, 7390, 14995, 15001](https://vladmandic.github.io/sd-data/pages/benchmark-data.json)
+- A tuned ComfyUI SDXL workflow made for an **RTX 3050 Laptop 4 GB**: stock SDXL "was not able to generate in less than 3 minutes"; tuned (1024x720, 10 base + 5 refiner steps, flags `--normalvram --fp16-vae`): **55-60 s per image without LoRA, 85-115 s with a LoRA (75-80 s "LoRA fast"), 80-110 s with face fix**; uses the fp16-fix SDXL VAE. Civitai flags on this workflow: all commercial uses allowed. — [Civitai model 117996 (API)](https://civitai.com/api/v1/models/117996); [page](https://civitai.com/models/117996/sdxl-config-comfyui-fast-generation-4gb-vram-refiner)
+- RTX 3050 Laptop GPU spec: 4 GB GDDR6 on a 128-bit bus, boost ~1058-1740 MHz depending on TGP; a later refresh has 6 GB with lower bandwidth. — [Notebookcheck (via search snippet)](https://www.notebookcheck.net/NVIDIA-GeForce-RTX-3050-Laptop-GPU-Benchmarks-and-Specs.513790.0.html)
+
+**Low-VRAM software options**
+- **Forge** (Feb 2024 README): "Without any cmd flag, Forge can run SDXL with 4GB vram and SD1.5 with 2GB vram"; vs original WebUI for SDXL at 1024 px, 6 GB GPUs get "about 60~75% speed up" in it/s and ~3x larger max resolution before OOM; Forge removes `--medvram/--lowvram` flags and manages memory itself; `--cuda-stream` speeds SDXL on small-VRAM 30XX/40XX laptop cards "by about 15% to 25%" and `--pin-shared-memory` "at least 20%" but both are flagged risky (black images / crashes when shared GPU memory overflows). — [Forge README, 24 Feb 2024 revision](https://github.com/lllyasviel/stable-diffusion-webui-forge/blob/50229a05c165a14f89bc00899395a7c911f5d5ec/README.md). Current README: memory system status "Normal", last tested 26 Aug 2024; project marked "Under Construction"; "Lower 'GPU Weight' solves 99% problems". — [Forge README (current)](https://github.com/lllyasviel/stable-diffusion-webui-forge)
+- **ComfyUI**: "Can run even the biggest open source models on as low as 4GB vram + 8GB ram relatively quickly ... using our state of the art asynchronous weight streaming technology"; CLI flags `--lowvram`, `--novram` ("When lowvram isn't enough"), `--fp8_e4m3fn-unet` ("Store unet weights in fp8_e4m3fn"), `--fp8_e4m3fn-text-enc`, `--fp16-vae` ("might cause black images"), `--bf16-vae`, `--cpu-vae`, `--reserve-vram`, `--async-offload`; fp8 *compute* is a separate capability (`--supports-fp8-compute`). — [ComfyUI README](https://github.com/comfyanonymous/ComfyUI); [comfy/cli_args.py](https://github.com/comfyanonymous/ComfyUI/blob/master/comfy/cli_args.py)
+- **FP8 weight storage** (A1111 1.8.0, PR #14031): weights stored in fp8 and upcast to fp16/bf16 for compute; measured VRAM (RTX 4090, `--medvram`): **SDXL 1024x1024 5,923 MB → 3,249 MB; SD1.x 512x512 2,128 MB → 935 MB**; speed loss "smaller than 5%"; quality "barely" changes, but LoRA effect weakens (may need 1.5-3x LoRA weight); a commenter still needed `--medvram` for SDXL on 6 GB. — [A1111 PR #14031](https://github.com/AUTOMATIC1111/stable-diffusion-webui/pull/14031); [A1111 CHANGELOG 1.8.0](https://github.com/AUTOMATIC1111/stable-diffusion-webui/blob/master/CHANGELOG.md)
+- stable-diffusion.cpp also runs on CUDA/Vulkan with VAE tiling and `--offload-to-cpu` ("saving VRAM without reducing generation speed", per its docs). — [sd.cpp performance.md](https://github.com/leejet/stable-diffusion.cpp/blob/master/docs/performance.md)
+
+**ControlNet / IP-Adapter on 4 GB**
+- sd-webui-controlnet minimum requirement: "(Windows) (NVIDIA: Ampere) 4gb - with `--xformers` enabled, and `Low VRAM` mode ticked in the UI, goes up to 768x832". (RTX 3050 Laptop is Ampere.) — [sd-webui-controlnet README](https://github.com/Mikubill/sd-webui-controlnet)
+- Forge: with SDXL, the max ControlNet count before OOM increases ~2x and SDXL+ControlNet speeds up ~30-45% vs original WebUI. — [Forge README, Feb 2024](https://github.com/lllyasviel/stable-diffusion-webui-forge/blob/50229a05c165a14f89bc00899395a7c911f5d5ec/README.md)
+- IP-Adapter SD 1.5 Plus/Plus-Face adapters are ~0.1 GB each, but need the 2.53 GB (fp32) ViT-H image encoder; image embeddings can be precomputed once and reused without loading the encoder. — [h94/IP-Adapter files](https://huggingface.co/h94/IP-Adapter/tree/main); [diffusers IP-Adapter guide](https://huggingface.co/docs/diffusers/main/en/using-diffusers/ip_adapter)
+
+**LoRA training on small VRAM**
+- kohya sd-scripts (Japanese LoRA doc): LoRA training "seems to barely work even on 8GB VRAM" (8GB VRAMでもぎりぎり動作するようです); the general training doc says that with its memory-saving options SD1.x at 512x512 trains in under 8 GB. — [train_network_README-ja.md](https://github.com/kohya-ss/sd-scripts/blob/main/docs/train_network_README-ja.md); [train_README-ja.md](https://github.com/kohya-ss/sd-scripts/blob/main/docs/train_README-ja.md)
+- A Dec 2025 guide for an **RTX 3060 Laptop (6 GB)** trains SD 1.5 anime LoRAs (bases: Anything V5, Counterfeit-V3.0) in kohya_ss at 512, batch 1, AdaFactor or Lion, dim 32-64, fp16, gradient checkpointing, cached latents; **estimated** (not measured) "About 1-2 hours" for 100 images; "With only 6 GB of VRAM, SDXL is tough." — [lilting.ch guide](https://lilting.ch/en/articles/rtx3060-lora-training-guide)
+- Third-party guides list ~6 GB as the SD 1.5 LoRA minimum; no source confirmed SD 1.5 LoRA training on a 4 GB card. A Kohya update reportedly enabled FLUX LoRA training on 4 GB GPUs via block swap (second-hand). — [Clore.ai kohya guide (via search snippet)](https://docs.clore.ai/guides/training/kohya-training); [dev.to (Furkan Gözükara, via search snippet)](https://dev.to/furkangozukara/kohya-brought-massive-improvements-to-flux-lora-4-gb-gpus-and-dreambooth-fine-tuning-6-gb-pmb)
+- Textual inversion (a tiny embedding, an alternative to a LoRA) was trained on CPUs in ~5 min for 200 steps (5 images, 512x512, bf16) — but on 4 servers x 2 Xeon 8480+ (224 cores total with AMX). — [HF blog: Fine-tuning SD on Intel CPUs (Jul 2023)](https://huggingface.co/blog/stable-diffusion-finetuning-intel)
+
+### Inferences
+- **Per-image estimates on the RTX 3050 Laptop 4 GB** (from the median 2.6-3.1 it/s at 512x512 incl. overhead; 512x768 has 1.5x the pixels): SD 1.5 anime, 512x768, 25 steps CFG 7 ≈ 12-16 s; with LCM/Hyper-SD LoRA 4-6 steps CFG 1 ≈ 3-5 s; + ControlNet (Low VRAM) ≈ +50%; Hires-fix/upscale extra. 180 candidate frames per video ≈ 10-45 min. That is the comfortable path.
+- **SDXL anime (Animagine XL 4.0 / Illustrious) on 4 GB**: use Forge (no flags; lower "GPU Weight") or ComfyUI (`--lowvram` + `--fp8_e4m3fn-unet` + `--fp16-vae` with the fp16-fix VAE, tiled VAE decode). From the 3050-Laptop ComfyUI report (~55-60 s for 15 steps at 1024x720 incl. refiner swap) expect very roughly **~3-4 s/step at ~1 MP → ~1.5-2 min per 28-step Animagine image, ~30-45 s with an 8-step LCM/Hyper SDXL LoRA**, and much worse if it spills into Windows "shared GPU memory". Laptop system RAM matters for offloading (16 GB+ advisable). Do not use NoobAI/its merges (commercial prohibition, section 1).
+- **IP-Adapter on 4 GB**: practical for SD 1.5 if the 2.5 GB image encoder is run once per character and the embeddings are cached (diffusers) or the UI offloads it; Plus-Face + LCM-LoRA is the cheap combination.
+- **LoRA training**: SD 1.5 character LoRA on 4 GB might work with batch 1, dim 8-32, gradient checkpointing, cached latents, fp16, frozen text encoder, AdaFactor/8-bit optimizer — but no report confirms it, so treat it as an experiment; SDXL LoRA on 4 GB is not realistic. Fall-backs: (a) skip training and rely on IP-Adapter + model sheet + inpainting; (b) textual inversion embedding; (c) a one-off rented GPU hour (out of scope here).
+- **Work split (laptop ↔ cloud CPU box):**
+  1. Laptop: character model sheets, per-shot stills (SD 1.5 + LCM/Hyper + IP-Adapter/ControlNet), background plates, face/mouth inpaint variants, optional GPU upscaling (Real-ESRGAN ncnn-vulkan targets GPUs). Output: PNGs (~1-2 MB each, a few hundred MB per video) plus a JSON of prompts/seeds/settings for reproducibility and the licence log.
+  2. Cloud CPU box: voices (Turbo TTS already runs here), parallax/2D animation and compositing, captions, Whisper checks, final render, upload pack; CPU SD 1.5 + LCM only for small fixes/drafts when the laptop is off.
+  3. Transfer via a shared folder or git LFS/Drive (the cloud box has only ~5-7 GB free disk, so keep checkpoints on the laptop, not here).
+
+### Gaps
+- The vladmandic dataset does not record laptop TGP (35-80 W variants differ a lot), and old records lack resolution; the 3050 numbers mix A1111/SD.Next versions and flags. No Forge-specific RTX 3050 Laptop SDXL benchmark was found.
+- No measured SDXL fp8 speed/VRAM on an RTX 30-series 4 GB card was found (PR #14031 numbers are from an RTX 4090).
+- No report of SD 1.5 LoRA training succeeding on 4 GB VRAM was found.
+- The owner's exact i7-11th-gen model and laptop RAM are unknown (they affect offloading speed).
