@@ -178,7 +178,8 @@ def soft_ellipse(w, h, box, feather):
     """A 0..1 elliptical mask over box (x0, y0, x1, y1), feathered by `feather` px."""
     m = np.zeros((h, w), np.float32)
     x0, y0, x1, y1 = box
-    cv2.ellipse(m, ((x0 + x1) / 2, (y0 + y1) / 2), ((x1 - x0) / 2, (y1 - y0) / 2), 0, 0, 360, 1.0, -1)
+    cv2.ellipse(m, (int((x0 + x1) / 2), int((y0 + y1) / 2)), (int((x1 - x0) / 2), int((y1 - y0) / 2)), 0, 0, 360, 1.0,
+                -1)
     return cv2.GaussianBlur(m, (0, 0), feather) if feather else m
 
 
@@ -254,7 +255,7 @@ def parts(mod, name, which=None):
             parent = pname.split("+")[0]
             base_face = Image.open(os.path.join(d, f"_face_{parent}.png")).convert("RGB")
         out = img2img(base_face, s.FACE_PROMPT.format(**c) + ", " + prompt, strength, c["seed"] + 7)
-        if "+" not in pname:
+        if region == "face":                                          # expression faces are edited further
             out.save(os.path.join(d, f"_face_{pname}.png"))
         rx0, ry0, rx1, ry1 = [(v - box[i % 2]) * k for i, v in enumerate(c[region])] if region != "face" else \
             (40, 40, 472, 472)
