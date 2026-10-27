@@ -27,7 +27,7 @@ TAIL = 2.0                     # the vote card stays up ~2 s (reference study)
 MUSIC = "horror"
 TWIST = "p16"                  # the bed drops out under "Then her foot presses down."
 voice.SPEAKERS["lena"] = dict(voice="af_sky", turbo_ref="af_sky")
-audio.GAINS.update(sting=0.5, police=0.3)
+audio.GAINS.update(sting=0.5, police=0.18)
 
 SCRIPT = [
     dict(id="p1", scene="shoulder", text="You walk into the bank in a mask. The night clerk is your sister."),
@@ -47,7 +47,7 @@ SCRIPT = [
     dict(id="p14", scene="note", text="Kiddo. Only you ever called her that."),
     dict(id="p15", scene="lena", text="Her eyes fill. She knows. She won't press it now.", gap=0.5),
     dict(id="p16", scene="alarm", text="Then her foot presses down.", gap=0.6),
-    dict(id="p17", scene="you", text="Police in four minutes.", gap=0.6),
+    dict(id="p17", scene="you", text="Police in four minutes.", gap=1.3),    # her look at the office plays here
     dict(id="p18", scene="you", text="Take off the mask, and the cameras see a dead man."),
     dict(id="p19", scene="doors", text="Run now, and box [forty-one|41] stays shut forever."),
     dict(id="p20", scene="split", text="So, do you take off the mask? Or run?", gap=0.3),
@@ -384,9 +384,10 @@ def cctv(cr, t, x, y):
     """The ceiling camera over the counter, its red light on."""
     cr.set_source_rgba(*hexa("#2a2f33"))
     cr.paint()
-    toon(cr, lambda c: c.rectangle(x - 20, y - 200, 40, 120), hexa("#c9ccd0"), hexa("#8d9196"), (-4, -4), None, lw=4)
+    toon(cr, lambda c: c.rectangle(x - 10, y - 120, 20, 90), hexa("#c9ccd0"), hexa("#8d9196"), (-4, -4), None, lw=4)
     cr.save()
     cr.translate(x, y)
+    cr.scale(0.5, 0.5)
     cr.rotate(0.35)
     toon(cr, lambda c: tk.tk_rrect(c, -150, -60, 300, 120, 22), hexa("#e3e5e8"), hexa("#a4a8ad"), (-6, -5), None)
     toon(cr, lambda c: c.arc(-150, 0, 48, 0, 2 * math.pi), hexa("#16181b"), None, (0, 0), None, lw=5)
@@ -534,7 +535,7 @@ def draw(cr, t, tl):
         inset(cr, 580, 330, 110, lambda c: kids_photo(c, t, 580, 330), "YOU TWO", a=seg(t, A("p14", "only") - 0.2,
                                                                                         A("p14", "only") + 0.1))
     elif name == "mask":                                       # the camera over the counter
-        inset(cr, 580, 330, 110, lambda c: cctv(c, t, 600, 350), "CCTV", a=seg(t, A("p18", "cameras") - 0.2,
+        inset(cr, 580, 330, 110, lambda c: cctv(c, t, 590, 350), "CCTV", a=seg(t, A("p18", "cameras") - 0.2,
                                                                                 A("p18", "cameras") + 0.1))
 
     hud.finish(cr, t, flash_at=[], vig=0.55, grain=0.06)
