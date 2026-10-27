@@ -412,32 +412,32 @@ def lineup(cr, t, counted=0.0, fear=0.3):
     cr.restore()
     cr.set_source_rgba(0.02, 0.02, 0.05, 0.35)
     cr.paint()
-    toon(cr, lambda c: poly(c, [(150, 690), (570, 690), (760, H), (-40, H)]), hexa("#4b4a52"), hexa("#2c2b33"),
+    toon(cr, lambda c: poly(c, [(150, 640), (570, 640), (760, H), (-40, H)]), hexa("#4b4a52"), hexa("#2c2b33"),
          (0, -6), None)
     for side in (-1, 1):                                       # lawn
         cr.set_source_rgba(0.1, 0.16, 0.12, 1)
-        cr.move_to(360 + side * 210, 690)
+        cr.move_to(360 + side * 210, 640)
         cr.line_to(360 + side * 400, H)
         cr.line_to(360 + side * 400 + side * 400, H)
-        cr.line_to(360 + side * 400, 690)
+        cr.line_to(360 + side * 400, 640)
         cr.close_path()
         cr.fill()
     xs = [62, 160, 262, 360, 458, 560, 658]
     for k in sorted(range(7), key=lambda k: abs(k - 3), reverse=True):
-        x, gy = xs[k], 1030 + (24 if k % 2 else 0)
+        x, gy = xs[k], 860 + (20 if k % 2 else 0)
         c = LINEUP[k]
         if c == "ghost":
-            tk.ghost_kid(cr, x, gy, 0.5, t, look=(0, 0.2), fog=1.0 if k == 1 else 0.0, seed=k,
+            tk.ghost_kid(cr, x, gy, 0.56, t, look=(0, 0.2), fog=1.0 if k == 1 else 0.0, seed=k,
                          eyeshine=0.0, rim=(1, 0.8, 0.5, 0.4), rim_from=(8, -8))
         else:
-            tk.kid_full(cr, x, gy, 0.5, t, c, look=(0, 0.2), fear=fear, fog=1.0, seed=k, rim=(1, 0.8, 0.5, 0.4),
+            tk.kid_full(cr, x, gy, 0.56, t, c, look=(0, 0.2), fear=fear, fog=1.0, seed=k, rim=(1, 0.8, 0.5, 0.4),
                         rim_from=(8, -8))
     glow(cr, 560, 300, 380, PORCH, 0.25)
     for k in range(7):                                        # the count over their heads
         p = max(0.0, min(1.0, (counted - k) * 3))
         if p <= 0:
             continue
-        x, y = xs[k], 1030 + (24 if k % 2 else 0) - 300 - 20 * (1 - p)
+        x, y = xs[k], 860 + (20 if k % 2 else 0) - 330 - 20 * (1 - p)
         red = k == 6
         cr.save()
         cr.translate(x, y)
@@ -517,7 +517,7 @@ def kitchen(cr, t, k=1.0):
     cr.line_to(89, 310)
     cr.close_path()
     cr.fill()
-    tk.sam_bust(cr, 340, 1030, 1.55, t, smile=1.0, look=(0.3, -0.1))
+    tk.sam_bust(cr, 340, 880, 1.55, t, smile=1.0, look=(0.3, -0.1))
     cr.save()                                                  # your hand with the scissors, bottom right
     cr.translate(600, 1120)
     cr.rotate(-0.5)
@@ -556,7 +556,9 @@ def inset(cr, x, y, r, draw, label=None, a=1.0):
     cr.push_group()
     cr.arc(x, y, r, 0, 2 * math.pi)
     cr.clip()
+    cr.save()
     draw(cr)
+    cr.restore()
     cr.reset_clip()
     cr.arc(x, y, r, 0, 2 * math.pi)
     cr.set_source_rgba(*INK)
@@ -583,9 +585,9 @@ def hands(cr, t, lights, ring=None, mark=None, dark=0.0, turn_left=0.0, shine=0.
     street(cr, t, lights, kids_away=True)
     gl, gr = (110, 1170), (610, 1170)
     gs = 0.95
-    tk.ghost_kid(cr, gl[0], gl[1], gs, t, look=(0.25 + 0.4 * turn_left, -0.1), arm=(112, -360), fog=1.0, seed=0.0,
+    tk.ghost_kid(cr, gl[0], gl[1], gs, t, look=(0.25 + 0.4 * turn_left, -0.1), arm=(81, -281), fog=1.0, seed=0.0,
                  eyeshine=shine, rim=(1, 0.8, 0.5, 0.35), rim_from=(9, -6))
-    tk.ghost_kid(cr, gr[0], gr[1], gs, t, look=(-0.25, -0.1), arm=(-112, -360), fog=0.0, seed=2.0,
+    tk.ghost_kid(cr, gr[0], gr[1], gs, t, look=(-0.25, -0.1), arm=(-81, -281), fog=0.0, seed=2.0,
                  rim=(1, 0.8, 0.5, 0.35), rim_from=(9, -6))
     tk.riley_back(cr, 360, 500, 0.72, t, hands=1.0, rim=(1, 0.8, 0.5, 0.3), rim_from=(9, -4))
     if dark > 0:
@@ -599,7 +601,7 @@ def hands(cr, t, lights, ring=None, mark=None, dark=0.0, turn_left=0.0, shine=0.
             cr.stroke()
         if mark == side:
             hx = 360 + (-1 if side == "left" else 1) * 240 * 0.72
-            hy = 500 + 440 * 0.72
+            hy = 500 + 560 * 0.72
             cr.set_source_rgba(*hud2d.RED[:3], 0.9 + 0.1 * math.sin(t * 10))
             cr.set_line_width(8)
             cr.arc(hx, hy, 70, 0, 2 * math.pi)
@@ -614,10 +616,10 @@ def ghost_close(cr, t, side, lights, shine=0.0, look=(0.0, 0.0)):
                  eyeshine=shine, seed=0.0 if side == "left" else 2.0, rim=(1, 0.8, 0.5, 0.5), rim_from=(9, -8))
     w = text_width(cr, side.upper(), 30, hud2d.ROUND) + 40
     x = 40 if side == "left" else W - 40 - w
-    tk.tk_rrect(cr, x, 140, w, 56, 28)
+    tk.tk_rrect(cr, x, 215, w, 56, 28)
     cr.set_source_rgba(*GOLD[:3], 1)
     cr.fill()
-    hud2d._text(cr, side.upper(), x + w / 2, 179, 30, (0.08, 0.06, 0.04, 1), hud2d.ROUND, "center")
+    hud2d._text(cr, side.upper(), x + w / 2, 254, 30, (0.08, 0.06, 0.04, 1), hud2d.ROUND, "center")
 
 
 def you_face(cr, t, lights, fear=0.6):
@@ -765,7 +767,7 @@ def draw(cr, t, tl):
     chip(cr, t, "THE SEVENTH KID · PART 1", 0.0, B["k2"].start)
     hud2d.hook(cr, t, [("YOU BROUGHT 6.", False), ("YOU COUNT 7.", True)], end=B["k1"].end + 0.1, y=250, size=88)
     hud2d.stamp(cr, t, A("k2", "one.", end=True) - 0.1, B["k2"].end + 0.3, ["ONLY 1 GHOST"], y=330)
-    hud2d.stamp(cr, t, A("k4", "both"), B["k4"].end + 0.2, ["BOTH"], y=H / 2, rot=-0.08)
+    hud2d.stamp(cr, t, A("k4", "both"), B["k4"].end, ["BOTH"], y=H / 2, rot=-0.08)
     hud2d.rule_tag(cr, t, A("k9", "four"), B["k9"].end + 0.4, "LIGHTS OUT AT 9:00", y=230)
     hud2d.bubble(cr, t, A("k11", "what's"), B["k11"].end, "What's my name?", 360, 300, (360, 480))
     hud2d.bubble(cr, t, B["k12"].start, B["k12"].end, "You're Riley!", 360, 360, (360, 560))
@@ -776,7 +778,7 @@ def draw(cr, t, tl):
     hud2d.ab_card(cr, t, A("k22", "which"), "SAID RILEY", "SAID SILLY", kicker="THE SEVENTH KID · PART 1 · YOUR CHOICE",
                   decides="Part 2", title="WHICH HAND DO YOU LET GO?", ask="COMMENT LEFT OR RIGHT",
                   letters=("L", "R"))
-    hud2d.captions(cr, t, tl, KEY, skip=("k12", "k13", "k16"))
+    hud2d.captions(cr, t, tl, KEY, skip=("k6", "k7", "k8", "k12", "k13", "k16"))
     cue("crickets", t, 0.0, tl.total)
     cue("musicbox", t, 0.0, B["k5"].start)
     for j in range(7):                                         # a tick for each kid counted, under "count seven"

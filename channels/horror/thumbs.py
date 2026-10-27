@@ -129,10 +129,10 @@ def seventh_kid(cr):
     """From behind you on the dark street, a ghost holding each hand: WHICH ONE IS SAM? with L and R."""
     from channels.horror import seventh_kid_2d as ep
     t = 2.0
+    cr.set_source_rgba(0.04, 0.05, 0.12, 1)                  # sky above the moved-down scene
+    cr.paint()
     cr.save()
-    cr.translate(360, 760)
-    cr.scale(1.12, 1.12)
-    cr.translate(-360, -800)
+    cr.translate(0, 250)                                     # your head below the words
     ep.hands(cr, t, 6.0, shine=0.9)
     cr.restore()
     tk.grade(cr, (0.75, 0.8, 1.0), (0.36, 0.34, 0.5))
@@ -142,8 +142,8 @@ def seventh_kid(cr):
     cr.set_source(g)
     cr.paint()
     big_text(cr, [("WHICH ONE", (1, 1, 1, 1)), ("IS SAM?", hud2d.RED)], 260, 126)
-    badge(cr, 110, 560, "L", hud2d.RED)
-    badge(cr, 610, 560, "R", hud2d.GREEN)
+    badge(cr, 110, 820, "L", hud2d.RED)
+    badge(cr, 610, 820, "R", hud2d.GREEN)
     chip(cr, "THE SEVENTH KID · PART 1")
 
 

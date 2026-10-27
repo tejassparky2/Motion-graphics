@@ -26,8 +26,9 @@ src = open(twin if os.path.exists(twin) else os.path.join(ROOT, "channels", "hor
 texts = dict(re.findall(r'dict\(id="(\w+)", scene="\w+", text="((?:[^"]|"\s*\n\s*")*)"', src))
 NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six", "4": "four",
        "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty", "41": "forty one",
-       "10": "ten", "210": "two ten"}
-SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring"}
+       "10": "ten", "210": "two ten", "1": "one", "5": "five", "7": "seven", "900": "nine"}
+SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring",
+        "wylie": "wiley", "wanna": "want to"}
 
 
 def norm(s):

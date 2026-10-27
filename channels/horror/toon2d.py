@@ -1718,7 +1718,7 @@ def riley_bust(cr, x, y, s, t, fear=0.4, look=(0.0, 0.0), light=(-16, -12), rim=
 
 def riley_back(cr, x, y, s, t, hands=0.0, light=(8, -6), rim=None, rim_from=(-9, 0)):
     """Riley from behind (over-the-shoulder and the two-hands shot): beanie, copper hair, puffer, jeans. hands 0..1
-    brings both arms down and out, each hand holding a small hand at about (+-235, 470) from the neck."""
+    brings both arms down and out, each hand holding a small hand at (+-240, 560) from the neck."""
     jk, jk_d, jk_l = RY_JACKET
     cr.save()
     cr.translate(x, y)
@@ -1729,7 +1729,7 @@ def riley_back(cr, x, y, s, t, hands=0.0, light=(8, -6), rim=None, rim_from=(-9,
              hexa("#34496b"), hexa("#223249"), light, rim, rim_from)
     for sx in (-1, 1):                                                        # arms, out to the small hands
         ex, ey = sx * (190 + 30 * hands), 250
-        hx, hy = sx * (180 + 60 * hands), 470 - 30 * hands
+        hx, hy = sx * (180 + 60 * hands), 470 + 90 * hands
         toon(cr, lambda c, sx=sx, ex=ex, hx=hx, hy=hy: curve(c, [(sx * 150, 40), (sx * 205, 70), (ex + sx * 30, ey),
                                                                 (hx + sx * 26, hy - 10), (hx - sx * 26, hy - 20),
                                                                 (ex - sx * 30, ey - 10), (sx * 130, 110)]),
@@ -1870,14 +1870,18 @@ def _eyeholes(cr, x, y, s, crooked=True, shine=0.0, look=(0.0, 0.0)):
         cr.save()
         cr.translate(x + sx * 34 * s + look[0] * 6 * s, y + look[1] * 4 * s)
         if sx < 0 and crooked:
-            cr.rotate(-0.45)
-            cr.scale(1.25, 0.95)
+            cr.rotate(-0.5)
+            cr.scale(1.35, 1.0)
         cr.scale(s, s)
         cr.new_path()
-        cr.save()
-        cr.scale(1, 1.25)
-        cr.arc(0, 0, 18, 0, 2 * math.pi)
-        cr.restore()
+        if sx < 0 and crooked:                                                # a bad cut: lopsided, a nick at one side
+            poly(cr, [(-20, -18), (-4, -27), (14, -22), (22, -6), (30, -2), (20, 4), (16, 22), (0, 28), (-18, 20),
+                      (-24, 2)])
+        else:
+            cr.save()
+            cr.scale(1, 1.25)
+            cr.arc(0, 0, 18, 0, 2 * math.pi)
+            cr.restore()
         cr.set_source_rgba(0.03, 0.02, 0.04, 1)
         cr.fill_preserve()
         cr.set_source_rgba(*INK)
@@ -1947,9 +1951,13 @@ def ghost_kid(cr, x, y, s, t, look=(0.0, 0.0), arm=None, pail=True, eyeshine=0.0
     if arm is not None:                                                       # an arm under the sheet, reaching
         ax, ay = arm
         sx = 1 if ax > 0 else -1
-        toon(cr, lambda c: curve(c, [(sx * 60, -330), (sx * 100, -300), (ax + sx * 10, ay - 26), (ax + sx * 34, ay),
-                                     (ax + sx * 10, ay + 34), (ax - sx * 30, ay + 30), (sx * 60, -230)]), SHEET,
-             SHEET_D, light, rim, rim_from)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        for col, lw in ((INK, 62), (SHEET_D, 54), (SHEET, 44)):
+            cr.set_source_rgba(*col)
+            cr.set_line_width(lw)
+            cr.move_to(sx * 70, -320)
+            cr.curve_to(sx * 96, -290, ax - sx * 10, ay - 30, ax, ay)
+            cr.stroke()
     head = lambda c: curve(c, [(-100, -390), (-102, -470), (-66, -530), (0, -548), (66, -530), (102, -470), (100, -390),
                                (60, -360), (0, -352), (-60, -360)])
     toon(cr, head, SHEET, SHEET_D, light, rim, rim_from)
