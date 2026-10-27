@@ -36,7 +36,7 @@ _lines = [   # (id, shot, speaker, text, gap before, pace)
     ("v7", "devclose", DEV, "So I'm fast. In my heart.", .7, 1),
     ("v8", "cxclose", CX, "You started this at nine.", .6, 1),
     ("v9", "devclose", DEV, "And?", .45, 1),
-    ("v10", "cxclose", CX, "It's four forty.", .5, 1),
+    ("v10", "cxclose", CX, "It's almost five.", .5, 1),
     ("v11", "devclose", DEV, "Twice as fast, though.", .9, .95),
     ("v12", "cxclose", CX, "In your heart.", .6, 1),
 ]
@@ -74,6 +74,6 @@ def draw(cr, t, tl):
     toolcard(cr, t, B["v4"].start + 0.2, B["v6"].end + 0.3, "METR study  ·  2025",
              [("", "with AI: 19% longer", "", RED), ("", "felt: 20% faster", "", GREEN)], y=1085)
     toolcard(cr, t, B["v8"].start, B["v10"].end + 0.3, "task: \"quick fix\"",
-             [("", "started   9:00 AM", "", WHITE), ("", "now       4:40 PM", "", YEL)], y=1085)
+             [("", "started   9:00 AM", "", WHITE), ("", "now       4:52 PM", "", YEL)], y=1085)
     cue("ding", t, B["v4"].start + 0.2)
     build_caption(cr, t, tl)

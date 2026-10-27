@@ -29,7 +29,7 @@ No reference's lines reused.
 | 7 | Dev | So I'm fast. In my heart. |
 | 8 | Codex | You started this at nine. |
 | 9 | Dev | And? |
-| 10 | Codex | It's four forty. |
+| 10 | Codex | It's almost five. (was "It's four forty.", heard "$4.40") |
 | 11 | Dev | Twice as fast, though. |
 | 12 | Codex | In your heart. |
 
