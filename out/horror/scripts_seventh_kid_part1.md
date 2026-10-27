@@ -22,7 +22,7 @@ the ghost in the bed sheet you cut this morning.
 |---|---|---|
 | 1 | You're walking six kids trick-or-treating. At the last house, you count seven. | Frame 0: seven costumed kids on the path, the porch light behind; your hand counting, numbers pop 1-7 over their heads, the 7 in red. Big text: **YOU BROUGHT 6. YOU COUNT 7.** HUD: TIME 8:56 PM · KIDS 6 → 7 · PORCH LIGHTS 12. |
 | 2 | Two of them are ghosts. You only brought one. | The two ghosts side by side. Stamp: ONLY 1 GHOST. |
-| 3 | Your little brother, Sam. You cut his eye holes yourself. | Flashback, THIS MORNING: Sam grinning in the sheet, your hand with the scissors. |
+| 3 | Your little brother, Sam. You cut the holes for his eyes yourself. | Flashback, THIS MORNING: Sam grinning in the sheet, your hand with the scissors. |
 | 4 | One came out crooked. Both ghosts have it. | Split screen: both ghosts' faces, gold rings round the same crooked hole. Stamp: BOTH. |
 | 5 | There's a note on the door. In a child's handwriting. | Push in on the red door, the note taped to it. |
 | 6 | One. It always comes as the one you love most. | The note, big, in purple crayon. Rule 1 highlighted. Inset: both ghosts. |

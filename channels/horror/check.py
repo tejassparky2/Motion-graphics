@@ -28,7 +28,7 @@ NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen"
        "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty", "41": "forty one",
        "10": "ten", "210": "two ten", "1": "one", "5": "five", "7": "seven", "900": "nine"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring",
-        "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes"}
+        "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes", "too": "two"}
 
 
 def norm(s):

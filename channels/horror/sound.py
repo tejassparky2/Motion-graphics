@@ -260,4 +260,4 @@ audio.EXTRA_SFX.update(hum=hum, chime=chime, doors=doors, power_down=power_down,
 # beds sit low under the narration (in Tower 9 the rain masked "voice" as "point")
 audio.GAINS.update(hum=0.4, chime=0.6, rain=0.3, engine_idle=0.45, generator=0.3, static=0.5, thunder=0.7, sting=0.8,
                    heartbeat=0.7, riser=0.6, click=0.6, drip=0.5,
-                   crickets=0.5, porch_off=0.7, whoosh=0.5, musicbox=0.35)
+                   crickets=0.5, porch_off=0.3, whoosh=0.25, musicbox=0.35)

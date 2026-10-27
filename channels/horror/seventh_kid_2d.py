@@ -13,7 +13,7 @@ breath never fogs in the cold; the note's R's are written backwards.
 """
 import math
 
-from motion import voice
+from motion import audio, voice
 from motion.engine import W, H, cairo, cue, seg
 from motion.polish import text_width
 
@@ -25,13 +25,14 @@ NARRATOR = dict(turbo=True)
 TAIL = 2.0                     # the reference study: the vote card stays up ~2 s with the comment ask on it
 MUSIC = "horror"
 TWIST = "k15"                  # the bed drops out under "But Sam is five."
+audio.GAINS.update(sting=0.5)                 # the 7th-kid sting peaked at 0 dBFS in the first render
 voice.SPEAKERS["sam"] = dict(voice="am_puck", speed=1.04, pitch=3.5, turbo_ref="am_puck+4.5")
 
 SCRIPT = [
     dict(id="k1", scene="count", text="You're walking six kids trick-or-treating. At the last house, you count "
                                       "seven."),
     dict(id="k2", scene="ghosts", text="Two of them are ghosts. You only brought one."),
-    dict(id="k3", scene="kitchen", text="Your little brother, Sam. You cut his eye holes yourself."),
+    dict(id="k3", scene="kitchen", text="Your little brother, Sam. You cut the holes for his eyes yourself."),
     dict(id="k4", scene="holes", text="One came out crooked. Both ghosts have it."),
     dict(id="k5", scene="door", text="There's a note on the door. In a child's handwriting."),
     dict(id="k6", scene="note", text="One. It always comes as the one you love most."),
