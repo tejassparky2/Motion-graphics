@@ -4,15 +4,18 @@ and stylish" (toon2d.thief_bust). Script: out/horror/scripts_timelock_part1.md.
 
 YOU are the thief: you faked your death five years ago; tonight you rob a bank and the night clerk behind the glass is
 your little sister Lena, who thinks you drowned. Box 41 is in her name; its second key is on her keyring (the "D"
-tag); her foot is an inch from the silent alarm; the time lock gives six minutes. No guns, nobody hurt. The vote: take
-off the mask, or run.
+tag); her foot is an inch from the silent alarm (police in four minutes); the time lock gives six minutes. The note says
+one word, "Kiddo"; her eyes fill, she knows... then she presses the alarm anyway, eyes on the manager's office (the
+clue). No guns, nobody hurt. The vote: take off the mask, or run. Approved by the owner, 27 Oct 2026 ("Approved, make
+it"), after the rewrite against reports/Horror reference study 27 Oct.md (two clocks, a test, a late flip, ~60 s).
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py timelock_p1_2d   -> out/horror/timelock_p1_2d.mp4
 """
 import math
 
-from motion import voice
+from motion import audio, voice
 from motion.engine import W, H, cairo, cue, seg
+from motion.polish import text_width
 
 from channels.horror import hud, hud2d, sound  # noqa: F401  (sound registers the horror effects)
 from channels.horror import timelock_2d as v1  # the bank: lobby, glass, counter, vault, boxes, keys, alarm
@@ -20,41 +23,43 @@ from channels.horror import toon2d as tk
 from channels.horror.toon2d import INK, glow, grade, hexa, mix, noise, poly, toon
 
 NARRATOR = dict(turbo=True)
-TAIL = 0.5
+TAIL = 2.0                     # the vote card stays up ~2 s (reference study)
 MUSIC = "horror"
+TWIST = "p16"                  # the bed drops out under "Then her foot presses down."
 voice.SPEAKERS["lena"] = dict(voice="af_sky", turbo_ref="af_sky")
+audio.GAINS.update(sting=0.5, police=0.3)
 
 SCRIPT = [
     dict(id="p1", scene="shoulder", text="You walk into the bank in a mask. The night clerk is your sister."),
     dict(id="p2", scene="clipping", text="She thinks you drowned five years ago."),
     dict(id="p3", scene="lobby", text="A year of planning. Three of your crew. No guns."),
-    dict(id="p4", scene="vault", text="At [two-ten,|2:10,] the vault's time lock opens. For six minutes. Then it "
-                                      "seals until morning."),
-    dict(id="p5", scene="boxes", text="You don't want the cash. You want one deposit box. Number [forty-one.|41.]"),
+    dict(id="p4", scene="vault", text="At [two-ten,|2:10,] the vault's time lock opens. For six minutes."),
+    dict(id="p5", scene="boxes", text="You don't want the cash. You want box [forty-one.|41.]"),
     dict(id="p6", scene="box", text="It's in her name. You rented it the week you died."),
-    dict(id="p7", scene="keys", text="And the second key is on her keyring. You gave it to her for her birthday."),
-    dict(id="p8", scene="alarm", text="Under her desk, her foot is an inch from the silent alarm."),
+    dict(id="p7", scene="keys", text="And the second key is on her keyring."),
+    dict(id="p8", scene="alarm", text="Under her desk, her foot is an inch from the silent alarm. Police in four "
+                                      "minutes."),
     dict(id="p9", scene="lena", text="Who are you?", speaker="lena", gap=0.35),
     dict(id="p10", scene="you", text="You can't answer. Your voice would give you away.", gap=0.35),
-    dict(id="p11", scene="vault", text="At [two-ten,|2:10,] the vault clicks open. Six minutes."),
-    dict(id="p12", scene="box", text="Your crew is inside. Box [forty-one|41] needs her key."),
+    dict(id="p11", scene="vault", text="At [two-ten,|2:10,] the vault clicks open."),
+    dict(id="p12", scene="box", text="Box [forty-one|41] needs her key."),
     dict(id="p13", scene="note", text="You slide a note under the glass. One word."),
     dict(id="p14", scene="note", text="Kiddo. Only you ever called her that."),
-    dict(id="p15", scene="alarm", text="Her foot touches the alarm."),
-    dict(id="p16", scene="lena", text="Her eyes fill. She knows.", gap=1.2),          # the near-silent beat before it
-    dict(id="p17", scene="you", text="Take off the mask, and she knows you lied for five years."),
-    dict(id="p18", scene="doors", text="Run now, and box [forty-one|41] stays shut forever."),
-    dict(id="p19", scene="split", text="Whatever most of you choose happens in Part [two.|2.]"),
+    dict(id="p15", scene="lena", text="Her eyes fill. She knows. She won't press it now.", gap=0.5),
+    dict(id="p16", scene="alarm", text="Then her foot presses down.", gap=0.6),
+    dict(id="p17", scene="you", text="Police in four minutes.", gap=0.6),
+    dict(id="p18", scene="you", text="Take off the mask, and the cameras see a dead man."),
+    dict(id="p19", scene="doors", text="Run now, and box [forty-one|41] stays shut forever."),
     dict(id="p20", scene="split", text="So, do you take off the mask? Or run?", gap=0.3),
 ]
 
 METADATA = dict(
     title="You Rob a Bank. The Night Clerk Is Your Sister. 🏦",
     alt_titles=["She Thinks You Drowned. Tonight You Rob Her Bank. 🏦",
-                "6 Minutes, One Box, and Your Sister Behind the Glass 🏦"],
+                "She Knew It Was You. She Pressed the Alarm Anyway. 🏦"],
     description="""2 AM. You walk into the bank in a mask... and the night clerk is your little sister. She thinks you drowned five years ago. 🏦
 
-You don't want the cash. You want box 41. And its second key is on her keyring.
+You don't want the cash. You want box 41. Its second key is on her keyring, and her foot is an inch from the silent alarm.
 
 Time Lock, Part 1. An interactive heist story: YOU decide what happens next.
 💬 Take off the mask, or run? Comment A or B. Most comments decide Part 2. 👇
@@ -63,12 +68,12 @@ Time Lock, Part 1. An interactive heist story: YOU decide what happens next.
     hashtags=["#HeistStory", "#InteractiveStory", "#Shorts"],
     tags=["bank heist", "heist story", "interactive story", "you decide", "choose your ending", "thief story",
           "suspense", "2d animation", "plot twist", "part 1"],
-    pinned_comment="Take it off. Five years of lying is enough, she deserves the truth even if it costs you the box. "
-                   "Mask off, or run? 👇 (What's on the key tag? 👀)",
+    pinned_comment="Take it off. She pressed it knowing it's you, so you owe her a face, not a mask. Mask off, or run? "
+                   "👇 (Where is she looking when she presses it? 👀)",
 )
 
-KEY = {"mask", "sister", "drowned", "crew", "guns", "six", "seals", "cash", "one", "name", "died", "key", "birthday",
-       "inch", "silent", "alarm", "answer", "voice", "note", "kiddo", "touches", "knows", "lied", "run", "forever"}
+KEY = {"mask", "sister", "drowned", "crew", "guns", "six", "cash", "name", "died", "key", "keyring", "inch", "silent",
+       "alarm", "police", "answer", "voice", "note", "kiddo", "knows", "won't", "presses", "dead", "run", "forever"}
 GLOVE, GLOVE_D = hexa("#16161a"), hexa("#0a0a0c")
 COAT = (tk.TH_COAT, tk.TH_COAT_D)
 LENA_RIM = (1, 0.85, 0.6, 0.5)
@@ -104,12 +109,25 @@ def you_masked(cr, x, y, s, t, expr="tense", look=(0.0, 0.0), hand=0.0):
         cr.restore()
 
 
-def back_office(cr, t):
-    """Lena's side of the glass, behind her: the round vault door, a desk lamp, the dark office."""
+def back_office(cr, t, watcher=0.0):
+    """Lena's side of the glass, behind her: the round vault door, a desk lamp, and on the right the manager's
+    office door, its frosted window lit. watcher 0..1: a shape standing behind that glass (the clue, never spoken)."""
     v1.vault_door(cr, t, 0.0, dials=False)
     cr.set_source_rgba(0.02, 0.03, 0.04, 0.45)
     cr.paint()
     glow(cr, 600, 760, 260, (1, 0.85, 0.6), 0.25)
+    toon(cr, lambda c: c.rectangle(560, 380, 180, 560), hexa("#3a2c22"), hexa("#251b14"), (-4, -4), None, lw=5)
+    cr.set_source_rgba(1, 0.86, 0.58, 0.9)                     # the frosted window, lit from inside
+    cr.rectangle(590, 420, 120, 200)
+    cr.fill()
+    glow(cr, 650, 520, 200, (1, 0.8, 0.5), 0.35)
+    hud2d._text(cr, "MANAGER", 650, 410, 22, (0.9, 0.85, 0.75, 0.9), "Liberation Sans", "center")
+    if watcher > 0:                                            # a head and shoulders, dark on the frosted glass
+        cr.set_source_rgba(0.12, 0.08, 0.06, 0.75 * watcher)
+        cr.arc(655, 500, 34, 0, 2 * math.pi)
+        cr.fill()
+        tk.curve(cr, [(605, 620), (612, 560), (640, 540), (670, 540), (698, 560), (706, 620)])
+        cr.fill()
 
 
 def shoulder(cr, t, fear=0.4):
@@ -281,8 +299,8 @@ def entrance(cr, t):
     cr.fill()
 
 
-def lena_glass(cr, t, fear, tears=0.0, look=(-0.2, 0.0)):
-    hud2d.blurred(cr, lambda c: back_office(c, t), sigma=10)
+def lena_glass(cr, t, fear, tears=0.0, look=(-0.2, 0.0), watcher=0.0):
+    hud2d.blurred(cr, lambda c: back_office(c, t, watcher), sigma=4 if watcher else 10)
     tk.lena_bust(cr, 360, 1000, 1.42, t, fear=fear, tears=tears, look=look, rim=LENA_RIM, rim_from=(10, -4))
     v1.teller_glass(cr, t)
     v1.counter(cr, t, hands=False)
@@ -295,6 +313,92 @@ def you_glass(cr, t, expr="tense", hand=0.0):
     toon(cr, lambda c: c.rectangle(-20, 1080, W + 40, 220), hexa("#5b3e2a"), hexa("#3b271a"), (0, -8), None, lw=5)
 
 
+# ------------------------------------------------------------------ close-ups in rings
+GOLD = hexa("#f2c14e")
+
+
+def inset(cr, x, y, r, draw, label=None, a=1.0):
+    """A circular close-up with a gold ring (the reference study: a face or a detail on screen at every moment)."""
+    if a <= 0:
+        return
+    cr.save()
+    cr.push_group()
+    cr.arc(x, y, r, 0, 2 * math.pi)
+    cr.clip()
+    cr.save()
+    draw(cr)
+    cr.restore()
+    cr.reset_clip()
+    cr.arc(x, y, r, 0, 2 * math.pi)
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(12)
+    cr.stroke()
+    cr.arc(x, y, r, 0, 2 * math.pi)
+    cr.set_source_rgba(*GOLD[:3], 1)
+    cr.set_line_width(7)
+    cr.stroke()
+    if label:
+        w = text_width(cr, label, 24, hud2d.ROUND) + 28
+        tk.tk_rrect(cr, x - w / 2, y + r - 20, w, 40, 20)
+        cr.set_source_rgba(*GOLD[:3], 1)
+        cr.fill()
+        hud2d._text(cr, label, x, y + r + 9, 24, (0.08, 0.06, 0.04, 1), hud2d.ROUND, "center")
+    cr.pop_group_to_source()
+    cr.paint_with_alpha(a)
+    cr.restore()
+
+
+def name_badge(cr, x, y):
+    """Her name badge on the navy vest: HARBOUR & PINE / LENA."""
+    cr.set_source_rgba(*hexa("#263a5c"))
+    cr.paint()
+    toon(cr, lambda c: tk.tk_rrect(c, x - 150, y - 70, 300, 140, 14), hexa("#f2f2f2"), hexa("#cfcfcf"), (-4, -4), None,
+         lw=5)
+    cr.set_source_rgba(*v1.BRASS)
+    cr.rectangle(x - 150, y - 70, 300, 34)
+    cr.fill()
+    hud2d._text(cr, "HARBOUR & PINE", x, y - 45, 20, (0.1, 0.1, 0.1, 1), "Liberation Sans", "center")
+    hud2d._text(cr, "LENA", x, y + 48, 64, (0.1, 0.12, 0.25, 1), hud2d.ROUND, "center")
+
+
+def kids_photo(cr, t, x, y):
+    """The two of you as kids, an old warm photo: you (dark hair) with your arm round her (chestnut ponytail)."""
+    cr.set_source_rgba(0.85, 0.72, 0.5, 1)
+    cr.paint()
+    glow(cr, x, y - 60, 260, (1, 0.95, 0.7), 0.6)
+    cr.save()
+    cr.translate(x - 70, y + 20)
+    cr.scale(0.85, 0.85)
+    tk.kid_face(cr, t, tk.TH_SKIN, tk.TH_HAIR, "short", fear=0.0, look=(0.3, 0), smile=0.9, seed=0.6)
+    cr.restore()
+    cr.save()
+    cr.translate(x + 75, y + 40)
+    cr.scale(0.72, 0.72)
+    tk.kid_face(cr, t, tk.LN_SKIN, tk.LN_HAIR, "long", fear=0.0, look=(-0.3, 0), smile=1.0, gap_tooth=True, seed=1.7)
+    cr.restore()
+    cr.set_source_rgba(0.55, 0.35, 0.15, 0.25)                 # the sepia of an old print
+    cr.paint()
+
+
+def cctv(cr, t, x, y):
+    """The ceiling camera over the counter, its red light on."""
+    cr.set_source_rgba(*hexa("#2a2f33"))
+    cr.paint()
+    toon(cr, lambda c: c.rectangle(x - 20, y - 200, 40, 120), hexa("#c9ccd0"), hexa("#8d9196"), (-4, -4), None, lw=4)
+    cr.save()
+    cr.translate(x, y)
+    cr.rotate(0.35)
+    toon(cr, lambda c: tk.tk_rrect(c, -150, -60, 300, 120, 22), hexa("#e3e5e8"), hexa("#a4a8ad"), (-6, -5), None)
+    toon(cr, lambda c: c.arc(-150, 0, 48, 0, 2 * math.pi), hexa("#16181b"), None, (0, 0), None, lw=5)
+    glow(cr, -150, 0, 30, (0.4, 0.6, 1), 0.5)
+    on = 1.0 if (t % 1.0) < 0.6 else 0.3
+    glow(cr, 110, -30, 60, v1.ALARM_RED, 0.8 * on)
+    cr.set_source_rgba(1, 0.15, 0.1, on)
+    cr.arc(110, -30, 9, 0, 2 * math.pi)
+    cr.fill()
+    cr.restore()
+
+
 # ------------------------------------------------------------------ the film
 def shots(tl):
     A, B = tl.at, tl.by_id
@@ -303,9 +407,11 @@ def shots(tl):
         (B["p4"].start - 0.2, "vault"), (B["p5"].start - 0.2, "lobby_cash"), (A("p5", "You", nth=2) - 0.15, "boxes"),
         (B["p6"].start - 0.2, "box"), (B["p7"].start - 0.2, "keys"), (B["p8"].start - 0.2, "alarm"),
         (B["p9"].start - 0.2, "lena"), (B["p10"].start - 0.2, "you"), (B["p11"].start - 0.2, "vault_open"),
-        (B["p12"].start - 0.2, "box_key"), (B["p13"].start - 0.2, "note"), (B["p15"].start - 0.2, "alarm2"),
-        (B["p16"].start - 1.3, "tears"), (B["p17"].start - 0.2, "mask"), (B["p18"].start - 0.2, "doors"),
-        (B["p19"].start - 0.2, "split"), (tl.total + 1, "end")]
+        (B["p12"].start - 0.2, "box_empty"), (B["p13"].start - 0.2, "note"), (B["p15"].start - 0.2, "tears"),
+        (A("p15", "won't") - 0.15, "alarm_lift"), (B["p16"].start - 0.15, "alarm_press"),
+        (A("p16", "down.", end=True) + 0.1, "lena_look"), (B["p17"].start - 0.2, "you_red"),
+        (B["p18"].start - 0.2, "mask"), (B["p19"].start - 0.2, "doors"), (B["p20"].start - 0.2, "split"),
+        (tl.total + 1, "end")]
 
 
 _shots = {}
@@ -319,9 +425,10 @@ def draw(cr, t, tl):
     k = max(i for i, (at, _) in enumerate(sh) if at <= t or i == 0)
     s0, name, s1 = sh[k][0], sh[k][1], sh[k + 1][0]
     t_open = A("p11", "clicks") - 0.05
-    t_touch = A("p15", "touches") - 0.1
+    t_press = A("p16", "presses") + 0.1
     gn = ((0.82, 0.95, 0.95), (0.42, 0.5, 0.55))
     warm = ((1.0, 0.95, 0.88), (0.55, 0.5, 0.45))
+    alarm_on = t >= t_press
 
     cr.save()
     if name == "shoulder":
@@ -346,29 +453,40 @@ def draw(cr, t, tl):
         cr.paint()
         v1.box_grid(cr, t, 60, 40, 600, 800, hi=41)
         grade(cr, *gn)
-    elif name in ("box", "box_key"):
+    elif name in ("box", "box_empty"):
         camera(cr, t, s0, s1, 1.0, 1.1, cy=640)
 
         def holder(c):
             c.set_source_rgba(0.85, 0.82, 0.78, 1)
             c.paint()
             tk.lena_bust(c, 205, 870, 0.34, t, fear=0.0)
-        v1.box_closeup(cr, t, holder=holder, note="RENTED 2021", key_in=name == "box_key")
+        v1.box_closeup(cr, t, holder=holder, note="RENTED 2021")
         grade(cr, (0.95, 0.95, 0.95), (0.55, 0.55, 0.6))
     elif name == "keys":
         camera(cr, t, s0, s1, 1.0, 1.12, cy=620)
         keys_desk(cr, t)
         grade(cr, *warm)
-    elif name in ("alarm", "alarm2"):
-        camera(cr, t, s0, s1, 1.02, 1.12, cy=900, shake=1.0 + (name == "alarm2"))
-        gap = 1.0 if name == "alarm" else 1 - seg(t, t_touch, t_touch + 0.6)
-        v1.alarm_desk(cr, t, gap=gap, flat=True)
+    elif name in ("alarm", "alarm_lift", "alarm_press"):
+        camera(cr, t, s0, s1, 1.02, 1.12, cy=900, shake=1.0 + 2.0 * (name == "alarm_press"))
+        if name == "alarm":
+            gap, press = 1.0, 0.0
+        elif name == "alarm_lift":                              # she draws her foot back: the answer, for a moment
+            gap, press = 1.0 + 0.8 * seg(t, s0, s0 + 0.8), 0.0
+        else:                                                   # then it comes down on the pedal
+            gap = 1.8 * (1 - seg(t, t_press - 0.35, t_press))
+            press = seg(t, t_press - 0.05, t_press + 0.1)
+        v1.alarm_desk(cr, t, gap=gap, press=press, flat=True)
         grade(cr, (0.85, 0.85, 0.9), (0.45, 0.45, 0.5))
-    elif name == "lena":
+    elif name in ("lena", "tears", "lena_look"):
         camera(cr, t, s0, s1, 1.04, 1.12, cy=700)
-        lena_glass(cr, t, fear=1.0)
+        if name == "lena":
+            lena_glass(cr, t, fear=1.0)
+        elif name == "tears":
+            lena_glass(cr, t, fear=0.5, tears=seg(t, s0, s0 + 0.8), look=(0, 0))
+        else:                                                   # her eyes go to the manager's office, not to you
+            lena_glass(cr, t, fear=0.6, tears=1.0, look=(0.9, -0.3), watcher=seg(t, s0, s0 + 0.5))
         grade(cr, *gn)
-    elif name == "you":
+    elif name in ("you", "you_red"):
         camera(cr, t, s0, s1, 1.04, 1.14, cy=700)
         you_glass(cr, t, "tense")
         grade(cr, *gn)
@@ -376,10 +494,6 @@ def draw(cr, t, tl):
         camera(cr, t, s0, s1, 1.0, 1.06, cy=760)
         note_tray(cr, t, slide=seg(t, B["p13"].start, A("p13", "glass.", end=True)),
                   big=seg(t, B["p14"].start - 0.2, B["p14"].start + 0.3))
-        grade(cr, *gn)
-    elif name == "tears":
-        camera(cr, t, s0, s1, 1.06, 1.16, cy=680, shake=0.5)
-        lena_glass(cr, t, fear=0.5, tears=seg(t, s0, s0 + 0.8), look=(0, 0))
         grade(cr, *gn)
     elif name == "mask":
         camera(cr, t, s0, s1, 1.04, 1.12, cy=700)
@@ -408,25 +522,91 @@ def draw(cr, t, tl):
         cr.fill()
         grade(cr, *gn)
     cr.restore()
+    if alarm_on and name not in ("alarm_press",):              # the silent alarm's red light, pulsing everywhere
+        a = 0.12 * (0.5 + 0.5 * math.sin((t - t_press) * 6))
+        cr.set_source_rgba(1, 0.05, 0.03, a)
+        cr.paint()
+
+    if name == "shoulder":                                     # her name badge
+        inset(cr, 590, 1010, 105, lambda c: name_badge(c, 590, 1010), a=seg(t, A("p1", "clerk") - 0.2,
+                                                                                A("p1", "clerk") + 0.1))
+    elif name == "note" and t >= B["p14"].start:                # the two of you as kids
+        inset(cr, 580, 330, 110, lambda c: kids_photo(c, t, 580, 330), "YOU TWO", a=seg(t, A("p14", "only") - 0.2,
+                                                                                        A("p14", "only") + 0.1))
+    elif name == "mask":                                       # the camera over the counter
+        inset(cr, 580, 330, 110, lambda c: cctv(c, t, 600, 350), "CCTV", a=seg(t, A("p18", "cameras") - 0.2,
+                                                                                A("p18", "cameras") + 0.1))
+
     hud.finish(cr, t, flash_at=[], vig=0.55, grain=0.06)
     if t < t_open:
         vault = ("VAULT", "LOCKED", None) if t < B["p4"].start else ("VAULT", "OPENS 2:10", "warn", B["p4"].start)
     else:
-        left = max(0.0, 360 - (t - t_open) * (360 - 271) / max(1.0, tl.total - t_open))   # 6:00 down to ~4:31
+        left = max(0.0, 360 - (t - t_open))
         vault = ("VAULT SEALS", f"{int(left // 60)}:{int(left % 60):02d}", "bad", t_open)
     clock_v = ("TIME", "2:10 AM", None, t_open) if t >= t_open else ("TIME", "2:00 AM", None)
-    alarm = (("ALARM", "TOUCHING", "bad", t_touch) if t >= t_touch else
-             ("ALARM", "1 INCH", "warn", B["p8"].start) if t >= B["p8"].start else ("ALARM", "ARMED", None))
-    hud2d.stats(cr, t, [clock_v, vault, alarm])
+    if alarm_on:
+        left = max(0.0, 240 - (t - t_press))
+        third = ("POLICE IN", f"{int(left // 60)}:{int(left % 60):02d}", "bad", t_press)
+    else:
+        third = ("ALARM", "1 INCH", "warn", B["p8"].start) if t >= B["p8"].start else ("ALARM", "ARMED", None)
+    hud2d.stats(cr, t, [clock_v, vault, third])
+    rules_row(cr, t, tl, t_press)
+    chip(cr, t, "TIME LOCK · PART 1", 0.0, B["p2"].start)
     hud2d.hook(cr, t, [("THE CLERK IS", False), ("YOUR SISTER", True)], end=B["p1"].end + 0.15, y=270, size=96)
-    hud2d.rule_tag(cr, t, A("p4", "six"), B["p4"].end + 0.3, "TIME LOCK: 6 MINUTES", y=190)
+    hud2d.rule_tag(cr, t, A("p4", "six"), B["p4"].end + 0.4, "RULE 1: TIME LOCK · 6 MIN", y=230)
     hud2d.stamp(cr, t, A("p6", "name.", end=True) - 0.1, B["p6"].end + 0.3, ["HER NAME"], y=300)
+    hud2d.rule_tag(cr, t, A("p8", "Police"), B["p8"].end + 0.4, "RULE 2: ALARM = POLICE IN 4 MIN", y=230)
     hud2d.bubble(cr, t, B["p9"].start, B["p9"].end, "Who are you?", 360, 260, (380, 520))
+    hud2d.stamp(cr, t, t_press, B["p16"].end + 0.5, ["ALARM: PRESSED"], y=300)
     hud2d.ab_card(cr, t, A("p20", "take"), "MASK OFF", "RUN", kicker="TIME LOCK · PART 1 · YOUR CHOICE",
                   decides="Part 2")
     hud2d.captions(cr, t, tl, KEY, skip=("p9",))
     cue("hum", t, 0.0, tl.total)                                 # the bank's night air from the first frame
     cue("click", t, B["p11"].start - 0.3)                         # the time lock trips before the line
     cue("doors", t, B["p11"].end + 0.05)                          # the vault door, after the words
-    cue("heartbeat", t, B["p15"].start, B["p18"].end - B["p15"].start)
+    cue("heartbeat", t, B["p13"].start, B["p16"].start - B["p13"].start)
+    cue("sting", t, B["p16"].end + 0.05)                          # after "presses down.", in the silence
+    cue("police", t, B["p17"].end + 0.1, tl.total - B["p17"].end)
     cue("riser", t, B["p19"].start, B["p20"].start - B["p19"].start)
+
+
+def chip(cr, t, text, start, end):
+    """The series chip under the stats bar (first seconds)."""
+    if t < start or t > end + 0.2:
+        return
+    a = 1 - max(0.0, min(1.0, (t - end) / 0.2))
+    w = text_width(cr, text, 24, hud2d.ROUND) + 36
+    cr.save()
+    cr.push_group()
+    tk.tk_rrect(cr, W / 2 - w / 2, 120, w, 44, 22)
+    cr.set_source_rgba(0.04, 0.04, 0.06, 0.85)
+    cr.fill_preserve()
+    cr.set_source_rgba(*hud2d.YELLOW)
+    cr.set_line_width(2.5)
+    cr.stroke()
+    hud2d._text(cr, text, W / 2, 150, 24, hud2d.YELLOW, hud2d.ROUND, "center")
+    cr.pop_group_to_source()
+    cr.paint_with_alpha(a)
+    cr.restore()
+
+
+def rules_row(cr, t, tl, t_press):
+    """The two clocks as chips under the stats bar once stated; the one in play turns red."""
+    A, B = tl.at, tl.by_id
+    if t < B["p4"].end or t >= A("p20", "take"):
+        return
+    rules = [("#1 TIME LOCK: 6 MIN", B["p4"].end, B["p11"].start - 0.1 <= t <= B["p12"].end),
+             ("#2 ALARM: POLICE IN 4 MIN", B["p8"].end, t_press <= t <= B["p17"].end + 0.3)]
+    x = 22
+    for text, at, hot in rules:
+        if t < at:
+            break
+        w = text_width(cr, text, 20, hud2d.ROUND) + 26
+        tk.tk_rrect(cr, x, 116, w, 38, 19)
+        cr.set_source_rgba(*(hud2d.RED[:3] if hot else (0.04, 0.04, 0.06)), 0.9)
+        cr.fill_preserve()
+        cr.set_source_rgba(1, 1, 1, 0.5)
+        cr.set_line_width(2)
+        cr.stroke()
+        hud2d._text(cr, text, x + w / 2, 142, 20, (1, 1, 1, 1), hud2d.ROUND, "center")
+        x += w + 10

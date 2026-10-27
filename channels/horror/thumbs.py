@@ -167,7 +167,29 @@ def tower9_n3(cr):
     chip(cr, "TOWER 9 · NIGHT 3")
 
 
-THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid, "tower9_n3": tower9_n3}
+def timelock_p1(cr):
+    """The thief's side: over your masked shoulder, your sister behind the teller glass, scared; the alarm's red
+    glow below: THE CLERK IS YOUR SISTER."""
+    from channels.horror import timelock_p1_2d as ep
+    t = 3.0
+    cr.save()
+    cr.translate(360, 760)
+    cr.scale(1.08, 1.08)
+    cr.translate(-360, -720)
+    ep.shoulder(cr, t, fear=0.85)
+    cr.restore()
+    tk.grade(cr, (0.85, 0.98, 0.98), (0.45, 0.5, 0.55))
+    glow(cr, 360, 1320, 520, (0.95, 0.12, 0.09), 0.45)
+    g = cairo.LinearGradient(0, 120, 0, 470)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.8)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("THE CLERK IS", (1, 1, 1, 1)), ("YOUR SISTER", hud2d.RED)], 260, 118)
+    chip(cr, "TIME LOCK · PART 1")
+
+
+THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid, "tower9_n3": tower9_n3, "timelock_p1": timelock_p1}
 
 if __name__ == "__main__":
     name = sys.argv[1]

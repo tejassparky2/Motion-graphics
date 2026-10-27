@@ -1470,13 +1470,13 @@ def lena_bust(cr, x, y, s, t, fear=0.5, tears=0.0, look=(0.0, 0.0), light=(-16, 
         cr.save()                                                             # brows rise with fear
         cr.translate(sx * 38, -40 - 14 * fear)
         cr.scale(sx, 1)
-        cr.rotate(-0.25 * fear)
+        cr.rotate(0.28 * fear)                                                # fear lifts the inner ends
         cr.set_source_rgba(*LN_HAIR_D)
         cr.set_line_width(6)
         cr.set_line_cap(cairo.LINE_CAP_ROUND)
         cr.new_path()
-        cr.move_to(-22, 4)
-        cr.curve_to(-8, -6, 10, -8, 26, -2)
+        cr.move_to(-22, 0)
+        cr.curve_to(-8, -9, 10, -9, 26, 3)
         cr.stroke()
         cr.restore()
     cr.set_source_rgba(*INK[:3], 0.7)                                        # a small nose
