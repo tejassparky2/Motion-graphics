@@ -15,7 +15,8 @@ ROOT = AN.ROOT
 BG = "assets/anime/dma/bg/{}.png"
 # neck base (x, y) and head height, in base.png pixels (1024x1536), measured on the chosen paintings
 RIG = {"ren": dict(neck=(580, 662), head=560), "haruto": dict(neck=(480, 680), head=445),
-       "yui": dict(neck=(530, 640), head=570), "aoi": dict(neck=(700, 690), head=638)}
+       "yui": dict(neck=(530, 640), head=570), "aoi": dict(neck=(700, 690), head=638),
+       "mio": dict(neck=(530, 860), head=770)}
 EXPR = {"calm": "neutral", "focus": "neutral", "neutral": "neutral", "shock": "fear", "fear": "fear", "worry": "fear",
         "sad": "fear", "smile": "smile", "grin": "grin", "smirk": "smirk", "angry": "angry"}
 FALLBACK = {"smile": ("grin", "smirk"), "grin": ("smile", "smirk"), "smirk": ("grin", "smile"), "angry": ("fear",)}

@@ -27,11 +27,13 @@ CHARS = {
     "go": dict(tags=f"1boy, tall, broad shoulders, very short black hair, crew cut, thick eyebrows, serious, {GAKURAN}"),
     "aoi": dict(tags=f"1girl, bob cut, dark blue hair, hairpin, dark blue eyes, calm, expressionless, {SAILOR}",
                 seed=11, face=(230, 108, 422, 300), eyes=(238, 135, 402, 224), mouth=(298, 228, 346, 260)),
-    "mio": dict(tags=f"1girl, wavy hair, light brown hair, earrings, brown eyes, half-closed eyes, smug, {SAILOR}"),
+    "mio": dict(tags=f"1girl, wavy hair, light brown hair, earrings, brown eyes, half-closed eyes, smug, {SAILOR}",
+                seed=11, face=(150, 165, 370, 385), eyes=(150, 205, 352, 285), mouth=(230, 300, 292, 338),
+                extra=("smirk",)),
 }
 BGS = {
     "classroom": dict(tags="japanese high school classroom, rows of wooden desks, green chalkboard, large windows on the "
-                           "left, afternoon sunlight, light rays, wall clock"),
+                           "left, afternoon sunlight, light rays, wall clock", seed=4, flip=True),
     "chamber": dict(tags="huge underground concrete hall, wide empty room, bunker, no windows, dim cold fluorescent "
                          "light, a giant black screen on the far wall, security cameras on the ceiling, pipes, dust"),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),

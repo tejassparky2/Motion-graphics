@@ -306,7 +306,13 @@ def bg(mod, name, seeds=None):
     w, h = b.get("size", (512, 768))
     for seed in (seeds or [b["seed"]]):
         t = time.time()
-        img = txt2img(s.BG_PROMPT.format(**b), w, h, seed, steps=b.get("steps", 18), neg=b.get("neg", ""))
+        cpath = os.path.join(ROOT, "build", "anime", "cand", f"{s.SET}_bg_{name}_{seed}.png")
+        if not seeds and os.path.exists(cpath):                       # the chosen candidate: no need to paint again
+            img = Image.open(cpath).convert("RGB")
+        else:
+            img = txt2img(s.BG_PROMPT.format(**b), w, h, seed, steps=b.get("steps", 18), neg=b.get("neg", ""))
+        if not seeds and b.get("flip"):
+            img = img.transpose(Image.FLIP_LEFT_RIGHT)
         if seeds:
             dd = os.path.join(ROOT, "build", "anime", "cand")
             os.makedirs(dd, exist_ok=True)
