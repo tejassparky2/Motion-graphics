@@ -43,4 +43,4 @@ malaria, how malaria works, malaria parasite, plasmodium, mosquito, anopheles, l
 Fun fact: the mosquito-malaria link was proven in Secunderabad, India, in 1897. 🇮🇳🦟 Did you know that?
 ```
 
-**Video facts:** 97.6 s, 264 words of narration, Orpheus TTS stock voice `leo` (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 88.6 s, 265 words of narration, Chatterbox stock voice (synthetic; nobody real is cloned). Made for kids: **No**.

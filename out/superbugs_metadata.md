@@ -43,4 +43,4 @@ antibiotic resistance, superbugs, antimicrobial resistance, AMR, penicillin, ale
 Quick check: antibiotics kill bacteria, not viruses. So they don't help a cold or the flu. 🦠 Did you know that before this video?
 ```
 
-**Video facts:** 87.9 s, 236 words of narration, Orpheus TTS stock voice `leo` (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 82.8 s, 236 words of narration, Chatterbox stock voice (synthetic; nobody real is cloned). Made for kids: **No**.
