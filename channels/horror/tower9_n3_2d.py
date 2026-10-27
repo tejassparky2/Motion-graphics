@@ -28,7 +28,7 @@ MUSIC = "horror"
 TWIST = "n12"                  # the bed drops out under the reflection
 voice.SPEAKERS["other"] = dict(voice="am_michael", turbo_ref="am_michael", fx="volume=1.0")   # 1.3 clipped the shout
 voice.SPEAKERS["other_w"] = dict(voice="am_michael", turbo_ref="am_michael", fx="volume=2.0")
-audio.GAINS.update(rain=0.15, static=0.4, slam=0.45)
+audio.GAINS.update(rain=0.15, static=0.4, slam=0.45, lock=0.45)
 
 SCRIPT = [
     dict(id="n1", scene="open", text="Nearly all of you said hatch. So you open it, and your own hand reaches up."),
@@ -500,7 +500,6 @@ def draw(cr, t, tl):
     hud2d.captions(cr, t, tl, KEY, skip=("n4", "n9", "n13", "n15"))
     cue("rain", t, 0.0, tl.total)
     cue("lock", t, 0.05)                                          # the bolt drawn back, frame 0
-    cue("breath", t, B["n3"].end + 0.02)
     cue("slam", t, t_slam)
     cue("heartbeat", t, B["n11"].start, B["n17"].end - B["n11"].start)
     cue("static", t, B["n14"].end + 0.05, B["n15"].start - B["n14"].end - 0.1)
