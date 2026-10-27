@@ -107,3 +107,6 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   built (channels/horror/timelock_2d.py: masked Danny via ski_mask over you_bust, teller glass, vault door with time
   lock, 48-box wall, box 41 holder card, scarred hand and "D" key, alarm pedal with the inch measured, the photo);
   voices made; preview frames out/horror/timelock_part1_preview_frames.png. The final render waits for approval.
+- 27 Oct: owner approved Time Lock Part 1 ("Approved"). Delivered out/horror/timelock_2d.mp4 (65 s), Whisper medium
+  19/19 (check.py now knows 41 / 2:10 / key ring forms); thumbnail out/horror/thumbs/timelock.png. Note: hud2d.blurred()
+  assumes a 720 x 1280 device, so thumbnails (drawn at 1.5x) dim the background instead of blurring it.

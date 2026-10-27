@@ -83,7 +83,49 @@ def tower9_n2(cr):
     cr.restore()
 
 
-THUMBS = {"tower9_n2": tower9_n2}
+def chip(cr, text):
+    w = text_width(cr, text, 30, hud2d.ROUND) + 50
+    tk.tk_rrect(cr, 30, 40, w, 64, 32)
+    cr.set_source_rgba(0.04, 0.04, 0.06, 0.85)
+    cr.fill_preserve()
+    cr.set_source_rgba(*hud2d.YELLOW)
+    cr.set_line_width(3)
+    cr.stroke()
+    hud2d._text(cr, text, 30 + w / 2, 84, 30, hud2d.YELLOW, hud2d.ROUND, "center")
+
+
+def timelock(cr):
+    """The masked face at your teller glass, big; the alarm's red glow below: HE KNOWS YOUR NAME."""
+    from channels.horror import timelock_2d as ep
+    t = 3.0
+    cr.save()
+    cr.translate(360, 640)
+    cr.scale(1.18, 1.18)
+    cr.translate(-360, -700)
+    ep.lobby(cr, t)                                          # (blurred() assumes a 720 x 1280 device; dim it instead)
+    cr.set_source_rgba(0.02, 0.03, 0.04, 0.55)
+    cr.paint()
+    ep.danny(cr, 360, 980, 1.5, t, mask=1.0, look=(0, 0.1))
+    ep.teller_glass(cr, t, fog=0.7)
+    cr.restore()
+    tk.grade(cr, (0.85, 0.98, 0.98), (0.45, 0.5, 0.55))
+    glow(cr, 360, 1300, 520, ep.ALARM_RED, 0.5)
+    g = cairo.LinearGradient(0, 120, 0, 460)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.75)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("HE KNOWS", (1, 1, 1, 1)), ("YOUR NAME", hud2d.RED)], 250, 124)
+    chip(cr, "TIME LOCK · PART 1")
+    badge_text = "BOX 41"
+    cr.save()
+    cr.translate(560, 1000)
+    cr.rotate(-0.12)
+    hud2d.stamp(cr, 1.0, 0.0, 9.0, [badge_text], x=0, y=0, rot=0.0)
+    cr.restore()
+
+
+THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock}
 
 if __name__ == "__main__":
     name = sys.argv[1]
