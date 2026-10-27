@@ -34,8 +34,9 @@ CHARS = {
 BGS = {
     "classroom": dict(tags="japanese high school classroom, rows of wooden desks, green chalkboard, large windows on the "
                            "left, afternoon sunlight, light rays, wall clock", seed=4, flip=True),
-    "chamber": dict(tags="huge underground concrete hall, wide empty room, bunker, no windows, dim cold fluorescent "
-                         "light, a giant black screen on the far wall, security cameras on the ceiling, pipes, dust"),
+    "chamber": dict(tags="dark underground bunker room interior, large square concrete room, bare concrete walls, "
+                         "cold fluorescent ceiling lights, night, gloomy", seed=7,
+                    neg="window, windows, sunlight, sky, daylight, corridor, hallway, plants"),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
     "floor": dict(tags="concrete floor, dust, cracks, cold light from above, from above, dark corners"),
 }
