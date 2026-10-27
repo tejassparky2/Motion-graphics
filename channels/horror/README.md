@@ -102,3 +102,8 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   because the proxy route is blocked as bot-check circumvention), so Reddit evidence is second-hand only; the
   "Zeigarnik effect" failed a 2025 meta-analysis, don't cite it. Snowbound Part 1 rewritten as v2 against the checklist
   (out/horror/scripts_snowbound_part1.md) and sent for approval.
+- 27 Oct: owner "Make next story on bank heist. Continue" -> Time Lock, Part 1 (the 7:30 series; Snowbound v2 kept on
+  file). Script for approval: out/horror/scripts_timelock_part1.md, written against the research checklist. Episode
+  built (channels/horror/timelock_2d.py: masked Danny via ski_mask over you_bust, teller glass, vault door with time
+  lock, 48-box wall, box 41 holder card, scarred hand and "D" key, alarm pedal with the inch measured, the photo);
+  voices made; preview frames out/horror/timelock_part1_preview_frames.png. The final render waits for approval.
