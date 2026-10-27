@@ -1508,3 +1508,599 @@ def lena_bust(cr, x, y, s, t, fear=0.5, tears=0.0, look=(0.0, 0.0), light=(-16, 
         cr.stroke()
     toon(cr, lambda c: c.arc(64, -132, 16, 0, 2 * math.pi), hexa("#c0392b"), None, (0, 0), None, lw=3)   # hair tie
     cr.restore()
+
+
+# ------------------------------------------------------------------ The Seventh Kid (Halloween special, 27 Oct 2026)
+# Riley ("you": a teenager with copper hair under a mustard beanie, purple puffer), Sam (your little brother, 5, gap
+# tooth) and the trick-or-treaters: two identical bed-sheet ghosts, a witch, a skeleton, a pumpkin, a vampire, an
+# astronaut. Kid proportions: a big round head, a small body.
+RY_SKIN, RY_SKIN_D = hexa("#eab592"), hexa("#c48866")
+RY_HAIR, RY_HAIR_D = hexa("#b4552a"), hexa("#763216")
+RY_JACKET = (hexa("#5d4190"), hexa("#3a2862"), hexa("#7d60b4"))
+RY_BEANIE, RY_BEANIE_D = hexa("#e2a83c"), hexa("#a5721c")
+SAM_SKIN, SAM_SKIN_D = hexa("#f1c6a2"), hexa("#cf9c78")
+SAM_HAIR, SAM_HAIR_D = hexa("#6b4423"), hexa("#43290f")
+SHEET, SHEET_D = hexa("#efebe3"), hexa("#b4ada3")
+
+
+def _blink(t, seed=0.0):
+    ph = (t + seed) % 3.7
+    return 1 - 0.95 * math.sin(ph / 0.14 * math.pi) if ph < 0.14 else 1.0
+
+
+def _eye(cr, x, y, rx, open_k, look, iris, fear=0.0, lash=False, lw=3.5):
+    """One big cartoon eye at (x, y): white, iris, pupil, a highlight, a heavier upper lid."""
+    cr.save()
+    cr.translate(x, y)
+    ry = rx * 0.8 * open_k
+
+    def shape(c):
+        c.save()
+        c.scale(1, max(0.05, ry / rx))
+        c.arc(0, 0, rx, 0, 2 * math.pi)
+        c.restore()
+    cr.new_path()
+    shape(cr)
+    cr.set_source_rgba(0.98, 0.97, 0.95, 1)
+    cr.fill_preserve()
+    cr.save()
+    cr.clip()
+    px, py = look[0] * rx * 0.35, look[1] * rx * 0.3
+    ir = rx * 0.58 * (1 - 0.3 * fear)
+    cr.set_source_rgba(*iris)
+    cr.arc(px, py, ir, 0, 2 * math.pi)
+    cr.fill()
+    cr.set_source_rgba(0.04, 0.03, 0.03, 1)
+    cr.arc(px, py, ir * 0.52, 0, 2 * math.pi)
+    cr.fill()
+    cr.set_source_rgba(1, 1, 1, 0.95)
+    cr.arc(px + ir * 0.32, py - ir * 0.32, ir * 0.26, 0, 2 * math.pi)
+    cr.fill()
+    cr.restore()
+    cr.new_path()
+    shape(cr)
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(lw)
+    cr.stroke()
+    cr.save()
+    cr.scale(1, max(0.05, ry / rx))
+    cr.new_path()
+    cr.arc(0, 0, rx, math.pi * 1.06, math.pi * 1.94)
+    cr.restore()
+    cr.set_line_width(lw * 1.5)
+    cr.stroke()
+    if lash:
+        cr.move_to(rx * 0.92, -ry * 0.55)
+        cr.line_to(rx + 7, -ry * 0.9 - 4)
+        cr.stroke()
+    cr.restore()
+
+
+def _brow(cr, x, y, sx, fear, col, w=24, lw=6):
+    cr.save()
+    cr.translate(x, y - 14 * fear)
+    cr.scale(sx, 1)
+    cr.rotate(0.3 * fear)                                                     # fear lifts the inner ends
+    cr.set_source_rgba(*col)
+    cr.set_line_width(lw)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    cr.new_path()
+    cr.move_to(-w, 0)
+    cr.curve_to(-w * 0.35, -9, w * 0.4, -9, w * 1.05, 3)
+    cr.stroke()
+    cr.restore()
+
+
+def breath_fog(cr, x, y, t, k=1.0, seed=0.0, s=1.0):
+    """Breath in the cold: a soft puff that leaves the mouth and fades, every ~2.6 s."""
+    if k <= 0:
+        return
+    ph = ((t + seed) % 2.6) / 2.6
+    if ph > 0.6:
+        return
+    p = ph / 0.6
+    for j in range(3):
+        r = (14 + 30 * p + 8 * j) * s
+        a = 0.32 * k * (1 - p) * (1 - 0.25 * j)
+        cr.set_source(rad(x + (10 + 26 * p + 10 * j) * s, y - (6 + 22 * p + 6 * j) * s, r,
+                          [(0, (0.92, 0.95, 1, a)), (1, (0.92, 0.95, 1, 0))]))
+        cr.paint()
+
+
+def _beanie(cr, light, rim, rim_from):
+    """A mustard knit beanie with a ribbed cuff and a pom-pom, on a head centred at (0, 0)."""
+    toon(cr, lambda c: curve(c, [(-104, -66), (-98, -128), (-58, -168), (0, -180), (58, -168), (98, -128), (104, -66)]),
+         RY_BEANIE, RY_BEANIE_D, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.25)
+    cr.set_line_width(2.5)
+    for k in range(-4, 5):
+        cr.move_to(k * 22, -76)
+        cr.curve_to(k * 21, -110, k * 18, -140, k * 12, -170)
+        cr.stroke()
+    toon(cr, lambda c: curve(c, [(-112, -40), (-114, -82), (0, -96), (114, -82), (112, -40), (0, -52)]),
+         mix(RY_BEANIE, (1, 1, 1, 1), 0.12), RY_BEANIE_D, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.3)
+    for k in range(-10, 11):
+        cr.move_to(k * 10.5, -88 + abs(k) * 0.5)
+        cr.line_to(k * 10.5, -50 + abs(k) * 0.3)
+        cr.stroke()
+    toon(cr, lambda c: c.arc(6, -190, 26, 0, 2 * math.pi), mix(RY_BEANIE, (1, 1, 1, 1), 0.2), RY_BEANIE_D,
+         light, rim, rim_from, lw=3.5)
+
+
+def _puffer(cr, up, light, rim, rim_from, back=False):
+    jk, jk_d, jk_l = RY_JACKET
+    toon(cr, lambda c: curve(c, [(-58, -10 + up), (-160, 24 + up), (-196, 120), (-204, 430), (204, 430), (196, 120),
+                                 (160, 24 + up), (58, -10 + up)]), jk, jk_d, light, rim, rim_from)
+    cr.set_source_rgba(*INK[:3], 0.45)                                        # the quilted puffer bands
+    cr.set_line_width(3)
+    for yy in (110, 200, 290, 380):
+        cr.move_to(-200, yy)
+        cr.curve_to(-100, yy + 14, 100, yy + 14, 200, yy)
+        cr.stroke()
+    toon(cr, lambda c: curve(c, [(-92, 30 + up), (-84, -40 + up), (0, -58 + up), (84, -40 + up), (92, 30 + up),
+                                 (0, 14 + up)]), jk_l, jk_d, light, rim, rim_from)  # the high collar
+    if not back:
+        cr.set_source_rgba(0.85, 0.85, 0.9, 0.9)                             # the zip
+        cr.set_line_width(4)
+        cr.move_to(0, 14 + up)
+        cr.line_to(0, 430)
+        cr.stroke()
+        toon(cr, lambda c: tk_rrect(c, -7, 20 + up, 14, 26, 4), hexa("#d9d9e0"), hexa("#9a9aa6"), (0, -3), None, lw=2.5)
+
+
+def riley_bust(cr, x, y, s, t, fear=0.4, look=(0.0, 0.0), light=(-16, -12), rim=None, rim_from=(9, 0), fog=0.0):
+    """Riley ("you" in The Seventh Kid), chest up, facing us: copper hair to the shoulders under a mustard beanie,
+    freckles, brown eyes, purple puffer. (x, y) = base of the neck. fear 0..1; fog 0..1 breath in the cold air."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * (0.28 + 0.25 * fear)))
+    cr.save()                                                                 # hair behind, to the shoulders
+    cr.translate(0, -180)
+    toon(cr, lambda c: curve(c, [(-98, -70), (-114, 40), (-122, 150), (-96, 196), (-60, 170), (60, 170), (96, 196),
+                                 (122, 150), (114, 40), (98, -70), (0, -120)]), RY_HAIR, RY_HAIR_D, light, rim,
+         rim_from)
+    cr.restore()
+    _puffer(cr, up, light, rim, rim_from)
+    toon(cr, lambda c: poly(c, [(-30, -84), (30, -84), (32, 0), (-32, 0)]), RY_SKIN, RY_SKIN_D, (0, 10), None, lw=4)
+    _puffer_collar = RY_JACKET
+    toon(cr, lambda c: curve(c, [(-70, 26 + up), (-64, -30 + up), (0, -42 + up), (64, -30 + up), (70, 26 + up),
+                                 (0, 10 + up)]), _puffer_collar[2], _puffer_collar[1], light, rim, rim_from)
+    cr.translate(0, -180)
+    cr.rotate(0.01 * noise(t * 0.5, 5))
+    face = lambda c: curve(c, [(-86, -40), (-84, -98), (-50, -134), (0, -144), (50, -134), (84, -98), (86, -40),
+                               (78, 24), (54, 74), (0, 102), (-54, 74), (-78, 24)])
+    toon(cr, face, RY_SKIN, RY_SKIN_D, light, rim, rim_from)
+    cr.save()
+    cr.new_path()
+    face(cr)
+    cr.clip()
+    for sx in (-1, 1):                                                        # cold cheeks, freckles
+        cr.set_source(rad(sx * 50, 30, 32, [(0, (0.95, 0.42, 0.4, 0.34)), (1, (0.95, 0.42, 0.4, 0))]))
+        cr.paint()
+    cr.set_source_rgba(0.6, 0.32, 0.2, 0.6)
+    for k in range(16):
+        fx = (-1 if k % 2 else 1) * (14 + (k * 7) % 36)
+        cr.arc(fx, 12 + (k * 5) % 18, 2.1, 0, 2 * math.pi)
+        cr.fill()
+    cr.restore()
+    ok = _blink(t, 0.4) * (1 + 0.28 * fear)
+    for sx in (-1, 1):
+        _eye(cr, sx * 37, -8, 25, ok, look, hexa("#6b4527"), fear, lash=True)
+        _brow(cr, sx * 39, -42, sx, fear, RY_HAIR_D)
+    cr.set_source_rgba(*INK[:3], 0.7)
+    cr.set_line_width(3)
+    cr.new_path()
+    cr.move_to(3, 8)
+    cr.curve_to(8, 20, 9, 28, 1, 31)
+    cr.stroke()
+    mo = 0.12 + 0.6 * fear
+    cr.save()
+    cr.translate(0, 62)
+    cr.scale(1, max(0.18, mo))
+    cr.new_path()
+    cr.arc(0, 0, 15, 0, 2 * math.pi)
+    cr.restore()
+    cr.set_source_rgba(0.48, 0.14, 0.16, 1)
+    cr.fill_preserve()
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(3)
+    cr.stroke()
+    toon(cr, lambda c: curve(c, [(-92, -30), (-96, -92), (-40, -100), (20, -96), (70, -86), (96, -60), (90, -14),
+                                 (74, -54), (40, -64), (0, -58), (-44, -56), (-70, -40)]), RY_HAIR, RY_HAIR_D,
+         light, rim, rim_from)                                                # side-swept fringe under the beanie
+    _beanie(cr, light, rim, rim_from)
+    cr.restore()
+    if fog > 0:
+        breath_fog(cr, x + 6 * s, y - 112 * s, t, fog, 0.3, s)
+
+
+def riley_back(cr, x, y, s, t, hands=0.0, light=(8, -6), rim=None, rim_from=(-9, 0)):
+    """Riley from behind (over-the-shoulder and the two-hands shot): beanie, copper hair, puffer, jeans. hands 0..1
+    brings both arms down and out, each hand holding a small hand at about (+-235, 470) from the neck."""
+    jk, jk_d, jk_l = RY_JACKET
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    up = -3 * (0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.3))
+    for sx in (-1, 1):                                                        # jeans below the jacket
+        toon(cr, lambda c, sx=sx: poly(c, [(sx * 12, 420), (sx * 170, 420), (sx * 160, 900), (sx * 30, 900)]),
+             hexa("#34496b"), hexa("#223249"), light, rim, rim_from)
+    for sx in (-1, 1):                                                        # arms, out to the small hands
+        ex, ey = sx * (190 + 30 * hands), 250
+        hx, hy = sx * (180 + 60 * hands), 470 - 30 * hands
+        toon(cr, lambda c, sx=sx, ex=ex, hx=hx, hy=hy: curve(c, [(sx * 150, 40), (sx * 205, 70), (ex + sx * 30, ey),
+                                                                (hx + sx * 26, hy - 10), (hx - sx * 26, hy - 20),
+                                                                (ex - sx * 30, ey - 10), (sx * 130, 110)]),
+             jk, jk_d, light, rim, rim_from)
+        toon(cr, lambda c, hx=hx, hy=hy: c.arc(hx, hy + 8, 26, 0, 2 * math.pi), RY_SKIN, RY_SKIN_D, light, rim,
+             rim_from, lw=4)
+    _puffer(cr, up, light, rim, rim_from, back=True)
+    cr.translate(0, -175)
+    toon(cr, lambda c: curve(c, [(-104, -60), (-118, 60), (-126, 170), (-96, 212), (0, 196), (96, 212), (126, 170),
+                                 (118, 60), (104, -60), (0, -100)]), RY_HAIR, RY_HAIR_D, light, rim, rim_from)
+    cr.set_source_rgba(1, 0.8, 0.6, 0.14)
+    cr.set_line_width(3)
+    for k in range(5):
+        cr.move_to(-70 + k * 34, -40)
+        cr.curve_to(-74 + k * 36, 40, -80 + k * 38, 120, -84 + k * 40, 190)
+        cr.stroke()
+    _beanie(cr, light, rim, rim_from)
+    cr.restore()
+
+
+def kid_face(cr, t, skin, hair, style="short", fear=0.3, look=(0.0, 0.0), smile=0.0, gap_tooth=False, seed=0.0,
+             light=(-14, -10), rim=None, rim_from=(9, 0), hair_on=True, iris=None):
+    """A kid's big round face centred at (0, 0), radius ~92. style: "short" (messy), "long", "slick" (vampire)."""
+    sk_d = mix(skin, (0.2, 0.1, 0.08, 1), 0.28)
+    hd = mix(hair, (0, 0, 0, 1), 0.4)
+    if hair_on and style == "long":
+        toon(cr, lambda c: curve(c, [(-92, -30), (-104, 70), (-96, 130), (-50, 110), (50, 110), (96, 130), (104, 70),
+                                     (92, -30), (0, -96)]), hair, hd, light, rim, rim_from)
+    face = lambda c: curve(c, [(-92, -10), (-86, -66), (-50, -98), (0, -106), (50, -98), (86, -66), (92, -10),
+                               (84, 40), (52, 80), (0, 92), (-52, 80), (-84, 40)])
+    for sx in (-1, 1):
+        toon(cr, lambda c, sx=sx: c.arc(sx * 90, 4, 16, 0, 2 * math.pi), skin, sk_d, light, rim, rim_from, lw=3.5)
+    toon(cr, face, skin, sk_d, light, rim, rim_from)
+    cr.save()
+    cr.new_path()
+    face(cr)
+    cr.clip()
+    for sx in (-1, 1):
+        cr.set_source(rad(sx * 52, 34, 28, [(0, (0.95, 0.45, 0.42, 0.3)), (1, (0.95, 0.45, 0.42, 0))]))
+        cr.paint()
+    cr.restore()
+    ok = _blink(t, seed) * (1 + 0.3 * fear)
+    for sx in (-1, 1):
+        _eye(cr, sx * 34, 2, 22, ok, look, iris or hexa("#4a3426"), fear, lw=3.2)
+        _brow(cr, sx * 36, -30, sx, fear, hd, w=18, lw=5)
+    cr.set_source_rgba(*INK[:3], 0.6)
+    cr.set_line_width(2.6)
+    cr.new_path()
+    cr.arc(0, 30, 5, 0.2, math.pi - 0.2)
+    cr.stroke()
+    if smile > 0.3:                                                           # a wide grin (Sam: one tooth missing)
+        cr.new_path()
+        cr.move_to(-30, 50)
+        cr.curve_to(-18, 50 + 30 * smile, 18, 50 + 30 * smile, 30, 50)
+        cr.close_path()
+        cr.set_source_rgba(0.45, 0.12, 0.14, 1)
+        cr.fill_preserve()
+        cr.save()
+        cr.clip()
+        cr.set_source_rgba(1, 1, 1, 1)
+        cr.rectangle(-26, 48, 52, 9)
+        cr.fill()
+        if gap_tooth:
+            cr.set_source_rgba(0.45, 0.12, 0.14, 1)
+            cr.rectangle(-9, 48, 9, 10)
+            cr.fill()
+        cr.restore()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3)
+        cr.stroke()
+    else:
+        mo = 0.15 + 0.6 * fear
+        cr.save()
+        cr.translate(0, 56)
+        cr.scale(1, max(0.2, mo))
+        cr.new_path()
+        cr.arc(0, 0, 11, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(0.48, 0.14, 0.16, 1)
+        cr.fill_preserve()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(2.6)
+        cr.stroke()
+    if not hair_on:
+        return
+    if style == "slick":
+        toon(cr, lambda c: curve(c, [(-94, -6), (-96, -70), (-52, -112), (0, -120), (52, -112), (96, -70), (94, -6),
+                                     (80, -52), (30, -76), (0, -44), (-30, -76), (-80, -52)]), hair, hd, light, rim,
+             rim_from)
+    elif style == "long":
+        toon(cr, lambda c: curve(c, [(-94, 0), (-98, -70), (-52, -114), (0, -122), (52, -114), (98, -70), (94, 0),
+                                     (70, -56), (20, -62), (-30, -58), (-74, -44)]), hair, hd, light, rim, rim_from)
+    else:
+        toon(cr, lambda c: curve(c, [(-96, -4), (-100, -70), (-58, -116), (0, -126), (58, -116), (100, -70), (96, -4),
+                                     (82, -40), (66, -36), (52, -62), (30, -42), (12, -66), (-10, -44), (-30, -66),
+                                     (-50, -42), (-70, -60), (-84, -30)]), hair, hd, light, rim, rim_from)
+
+
+def sam_bust(cr, x, y, s, t, smile=1.0, look=(0.0, 0.0), light=(-14, -10), rim=None, rim_from=(9, 0), sheet=True):
+    """Sam, your little brother, 5: big round face, a gap-tooth grin, messy brown hair, the bed sheet you cut this
+    morning over his head like a hood, its two eye holes (one crooked) on top. (x, y) = base of the neck."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    if sheet:                                                                 # the sheet, draped down his back
+        toon(cr, lambda c: curve(c, [(-130, -260), (-170, -100), (-210, 120), (-220, 360), (220, 360), (210, 120),
+                                     (170, -100), (130, -260), (0, -330)]), SHEET, SHEET_D, light, rim, rim_from)
+    toon(cr, lambda c: curve(c, [(-40, -10), (-120, 20), (-150, 110), (-160, 360), (160, 360), (150, 110), (120, 20),
+                                 (40, -10)]), hexa("#2f6fae"), hexa("#1d4a78"), light, rim, rim_from)   # pyjama top
+    cr.set_source_rgba(1, 0.85, 0.3, 0.9)                                     # a rocket on it
+    cr.save()
+    cr.translate(40, 190)
+    cr.rotate(-0.5)
+    cr.new_path()
+    cr.move_to(0, -34)
+    cr.curve_to(16, -14, 14, 18, 10, 26)
+    cr.line_to(-10, 26)
+    cr.curve_to(-14, 18, -16, -14, 0, -34)
+    cr.fill()
+    cr.restore()
+    toon(cr, lambda c: poly(c, [(-24, -60), (24, -60), (26, 4), (-26, 4)]), SAM_SKIN, SAM_SKIN_D, (0, 8), None, lw=4)
+    cr.translate(0, -150)
+    cr.rotate(0.04 * math.sin(t * 2.1))
+    cr.scale(1.18, 1.18)
+    kid_face(cr, t, SAM_SKIN, SAM_HAIR, "short", fear=0.0, look=look, smile=smile, gap_tooth=True, seed=1.3,
+             light=light, rim=rim, rim_from=rim_from)
+    if sheet:                                                                 # the hood edge over the hair, the holes
+        toon(cr, lambda c: curve(c, [(-112, 30), (-118, -60), (-80, -132), (0, -158), (80, -132), (118, -60), (112, 30),
+                                     (100, -40), (60, -96), (0, -110), (-60, -96), (-100, -40)]), SHEET, SHEET_D,
+             light, rim, rim_from)
+        _eyeholes(cr, 0, -132, 0.62, crooked=True)
+    cr.restore()
+
+
+def _eyeholes(cr, x, y, s, crooked=True, shine=0.0, look=(0.0, 0.0)):
+    """The two holes you cut in the sheet: the one on the left (as we look) came out crooked and bigger."""
+    for sx in (-1, 1):
+        cr.save()
+        cr.translate(x + sx * 34 * s + look[0] * 6 * s, y + look[1] * 4 * s)
+        if sx < 0 and crooked:
+            cr.rotate(-0.45)
+            cr.scale(1.25, 0.95)
+        cr.scale(s, s)
+        cr.new_path()
+        cr.save()
+        cr.scale(1, 1.25)
+        cr.arc(0, 0, 18, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(0.03, 0.02, 0.04, 1)
+        cr.fill_preserve()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(3)
+        cr.stroke()
+        if shine > 0:                                                         # eyeshine: two gold points, like a cat's
+            glow(cr, 2, 2, 16, (1, 0.8, 0.3), 0.6 * shine)
+            cr.set_source_rgba(1, 0.86, 0.45, shine)
+            cr.arc(2, 2, 4.2, 0, 2 * math.pi)
+            cr.fill()
+        cr.restore()
+
+
+def ghost_kid(cr, x, y, s, t, look=(0.0, 0.0), arm=None, pail=True, eyeshine=0.0, fog=0.0, seed=0.0,
+              light=(-14, -10), rim=None, rim_from=(9, 0), lean=0.0):
+    """A kid under a white bed sheet: a round head, the sheet falling to a wavy hem, red sneakers under it, a plastic
+    pumpkin pail. (x, y) = the ground between its feet; ~560 px tall at s = 1. arm = (ax, ay): one sheet-covered
+    hand reaching to that point (relative, at scale 1), e.g. holding your hand. eyeshine / fog 0..1 (clues)."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    cr.rotate(lean)
+    sway = 4 * math.sin(t * 1.6 + seed)
+    for sx in (-1, 1):                                                        # red sneakers, white soles
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 18, -2), (sx * 20, -26), (sx * 52, -30), (sx * 70, -12),
+                                            (sx * 66, 2)]), hexa("#d23a32"), hexa("#8e1f1a"), light, rim, rim_from,
+             lw=3.5)
+        cr.set_source_rgba(0.95, 0.95, 0.95, 1)
+        cr.rectangle(min(sx * 18, sx * 68), -6, 50, 6)
+        cr.fill()
+    if pail:                                                                  # the pumpkin pail at its side
+        cr.save()
+        cr.translate(-118 + sway * 0.5, -150)
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(4)
+        cr.arc(0, -10, 34, math.pi * 1.1, math.pi * 1.9)
+        cr.stroke()
+        toon(cr, lambda c: curve(c, [(-42, 0), (-40, 40), (-20, 66), (20, 66), (40, 40), (42, 0)]), hexa("#f08a1c"),
+             hexa("#b85a0a"), light, rim, rim_from, lw=3.5)
+        cr.set_source_rgba(*INK)
+        for sx in (-1, 1):
+            cr.move_to(sx * 18 - 6, 18)
+            cr.line_to(sx * 18 + 6, 18)
+            cr.line_to(sx * 18, 8)
+            cr.close_path()
+            cr.fill()
+        cr.move_to(-16, 40)
+        cr.curve_to(-6, 50, 6, 50, 16, 40)
+        cr.stroke()
+        cr.set_source_rgba(0.95, 0.85, 0.3, 1)                                # candy
+        for k in range(4):
+            cr.rectangle(-26 + k * 13, -8 - (k % 2) * 6, 11, 10)
+        cr.fill()
+        cr.restore()
+    hem = [(-150 + sway, -20)]
+    for k in range(1, 9):                                                     # the wavy hem
+        hx = -150 + k * 37.5
+        hem.append((hx + sway, -20 + (12 if k % 2 else -4) * math.sin(t * 2 + k + seed)))
+    body = [(-96, -400), (-120, -280)] + hem + [(120, -280), (96, -400), (0, -440)]
+    toon(cr, lambda c: curve(c, body), SHEET, SHEET_D, light, rim, rim_from)
+    cr.set_source_rgba(*SHEET_D[:3], 0.8)                                     # folds
+    cr.set_line_width(3)
+    for fx in (-70, -20, 34, 86):
+        cr.move_to(fx * 0.6, -360)
+        cr.curve_to(fx * 0.8 + sway, -260, fx + sway, -160, fx * 1.05 + sway, -40)
+        cr.stroke()
+    if arm is not None:                                                       # an arm under the sheet, reaching
+        ax, ay = arm
+        sx = 1 if ax > 0 else -1
+        toon(cr, lambda c: curve(c, [(sx * 60, -330), (sx * 100, -300), (ax + sx * 10, ay - 26), (ax + sx * 34, ay),
+                                     (ax + sx * 10, ay + 34), (ax - sx * 30, ay + 30), (sx * 60, -230)]), SHEET,
+             SHEET_D, light, rim, rim_from)
+    head = lambda c: curve(c, [(-100, -390), (-102, -470), (-66, -530), (0, -548), (66, -530), (102, -470), (100, -390),
+                               (60, -360), (0, -352), (-60, -360)])
+    toon(cr, head, SHEET, SHEET_D, light, rim, rim_from)
+    _eyeholes(cr, 0, -462, 1.0, crooked=True, shine=eyeshine, look=look)
+    cr.restore()
+    if fog > 0:
+        breath_fog(cr, x + (look[0] * 6 + 4) * s, y - 410 * s, t, fog, seed, s * 0.8)
+
+
+def kid_full(cr, x, y, s, t, costume, look=(0.0, 0.0), fear=0.3, fog=0.0, seed=0.0, light=(-14, -10), rim=None,
+             rim_from=(9, 0)):
+    """A trick-or-treater, full height (~520 px at s = 1), (x, y) = the ground. costume: witch, skeleton, pumpkin,
+    vampire, astronaut."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    sw = 3 * math.sin(t * 1.5 + seed)
+    skins = {"witch": hexa("#8d5a3b"), "skeleton": hexa("#f0c3a0"), "pumpkin": hexa("#e8b48c"),
+             "vampire": hexa("#efe2d6"), "astronaut": hexa("#c98d62")}
+    skin = skins[costume]
+    shoe = hexa("#1d1d24")
+    for sx in (-1, 1):
+        toon(cr, lambda c, sx=sx: curve(c, [(sx * 14, -2), (sx * 16, -24), (sx * 48, -26), (sx * 62, -8), (sx * 58, 2)]),
+             shoe, None, light, rim, rim_from, lw=3)
+    if costume == "witch":
+        toon(cr, lambda c: curve(c, [(-50, -330), (-120, -10), (120, -10), (50, -330)]), hexa("#5a2d82"),
+             hexa("#3a1a56"), light, rim, rim_from)
+        cr.set_source_rgba(0.55, 0.85, 0.35, 1)
+        cr.rectangle(-110, -40, 220, 12)
+        cr.fill()
+    elif costume == "skeleton":
+        toon(cr, lambda c: curve(c, [(-58, -330), (-74, -10), (74, -10), (58, -330)]), hexa("#17171c"),
+             hexa("#0a0a0d"), light, rim, rim_from)
+        cr.set_source_rgba(0.93, 0.93, 0.9, 1)
+        cr.set_line_width(7)
+        cr.move_to(0, -320)
+        cr.line_to(0, -170)
+        cr.stroke()
+        for k in range(4):
+            cr.move_to(-40, -300 + k * 30)
+            cr.curve_to(-20, -310 + k * 30, 20, -310 + k * 30, 40, -300 + k * 30)
+            cr.stroke()
+        for sx in (-1, 1):
+            cr.move_to(sx * 26, -140)
+            cr.line_to(sx * 30, -20)
+            cr.stroke()
+    elif costume == "pumpkin":
+        toon(cr, lambda c: curve(c, [(-40, -100), (-44, -10), (44, -10), (40, -100)]), hexa("#1f2a1a"), None, light,
+             rim, rim_from)
+        toon(cr, lambda c: c.arc(0, -210, 130, 0, 2 * math.pi), hexa("#f0821a"), hexa("#b45608"), light, rim, rim_from)
+        cr.set_source_rgba(*INK[:3], 0.4)
+        cr.set_line_width(3)
+        for fx in (-70, 0, 70):
+            cr.move_to(fx * 0.8, -336)
+            cr.curve_to(fx * 1.4, -260, fx * 1.4, -160, fx * 0.8, -84)
+            cr.stroke()
+        cr.set_source_rgba(0.12, 0.06, 0.02, 1)
+        for sx in (-1, 1):
+            cr.move_to(sx * 50 - 18, -210)
+            cr.line_to(sx * 50 + 18, -210)
+            cr.line_to(sx * 50, -236)
+            cr.close_path()
+            cr.fill()
+        cr.move_to(-56, -170)
+        for k in range(8):
+            cr.line_to(-56 + k * 16, -170 + (10 if k % 2 else -4))
+        cr.curve_to(40, -130, -40, -130, -56, -170)
+        cr.fill()
+    elif costume == "vampire":
+        toon(cr, lambda c: curve(c, [(-60, -330), (-150, -10), (150, -10), (60, -330)]), hexa("#151218"),
+             hexa("#070608"), light, rim, rim_from)
+        toon(cr, lambda c: curve(c, [(-40, -320), (-70, -60), (70, -60), (40, -320)]), hexa("#9e1622"),
+             hexa("#5e0a12"), light, rim, rim_from)
+        toon(cr, lambda c: poly(c, [(-24, -326), (24, -326), (14, -200), (-14, -200)]), hexa("#f2f2f2"), None, light,
+             None, rim_from, lw=2.5)
+        for sx in (-1, 1):
+            toon(cr, lambda c, sx=sx: poly(c, [(sx * 30, -330), (sx * 120, -420), (sx * 96, -320)]), hexa("#151218"),
+                 None, light, rim, rim_from, lw=3)
+    elif costume == "astronaut":
+        toon(cr, lambda c: curve(c, [(-76, -330), (-86, -10), (86, -10), (76, -330)]), hexa("#e9ecef"),
+             hexa("#a9b0b8"), light, rim, rim_from)
+        toon(cr, lambda c: tk_rrect(c, -40, -280, 80, 60, 8), hexa("#c5ccd4"), hexa("#8e98a3"), light, None, rim_from,
+             lw=3)
+        for k, col in enumerate(((0.9, 0.2, 0.2, 1), (0.2, 0.6, 0.95, 1), (0.95, 0.85, 0.2, 1))):
+            cr.set_source_rgba(*col)
+            cr.arc(-22 + k * 22, -250, 7, 0, 2 * math.pi)
+            cr.fill()
+    cr.save()
+    cr.translate(sw * 0.4, -420)
+    cr.scale(0.82, 0.82)
+    if costume == "skeleton":                                                 # the skull mask, eyes behind it
+        toon(cr, lambda c: curve(c, [(-90, -20), (-84, -80), (-40, -112), (0, -118), (40, -112), (84, -80), (90, -20),
+                                     (60, 50), (40, 92), (-40, 92), (-60, 50)]), hexa("#f1efe8"), hexa("#b9b5ab"),
+             light, rim, rim_from)
+        for sx in (-1, 1):
+            cr.set_source_rgba(0.04, 0.04, 0.05, 1)
+            cr.save()
+            cr.translate(sx * 36, -10)
+            cr.scale(1, 1.1)
+            cr.arc(0, 0, 26, 0, 2 * math.pi)
+            cr.restore()
+            cr.fill()
+            _eye(cr, sx * 36 + look[0] * 3, -8, 11, _blink(t, seed), look, hexa("#3a5a8a"), fear, lw=2)
+        cr.set_source_rgba(0.04, 0.04, 0.05, 1)
+        cr.move_to(0, 18)
+        cr.line_to(-10, 38)
+        cr.line_to(10, 38)
+        cr.close_path()
+        cr.fill()
+        cr.set_line_width(3)
+        for k in range(-3, 4):
+            cr.move_to(k * 12, 58)
+            cr.line_to(k * 12, 78)
+        cr.stroke()
+    elif costume == "astronaut":
+        kid_face(cr, t, skin, hexa("#1d1410"), "short", fear, look, seed=seed, light=light, rim=rim,
+                 rim_from=rim_from)
+        cr.set_source_rgba(0.75, 0.88, 1, 0.22)                               # the helmet bubble
+        cr.arc(0, -6, 140, 0, 2 * math.pi)
+        cr.fill_preserve()
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(5)
+        cr.stroke()
+        cr.set_source_rgba(1, 1, 1, 0.5)
+        cr.set_line_width(8)
+        cr.arc(0, -6, 118, math.pi * 1.15, math.pi * 1.45)
+        cr.stroke()
+    elif costume == "witch":
+        kid_face(cr, t, skin, hexa("#1a1012"), "long", fear, look, seed=seed, light=light, rim=rim, rim_from=rim_from)
+        toon(cr, lambda c: curve(c, [(-150, -70), (-60, -96), (-30, -170), (30, -300), (40, -160), (60, -96),
+                                     (150, -70), (0, -50)]), hexa("#1c1426"), hexa("#0c0812"), light, rim, rim_from)
+        cr.set_source_rgba(0.55, 0.85, 0.35, 1)
+        cr.rectangle(-56, -112, 112, 14)
+        cr.fill()
+    elif costume == "vampire":
+        kid_face(cr, t, skin, hexa("#141018"), "slick", fear, look, seed=seed, light=light, rim=rim,
+                 rim_from=rim_from)
+        cr.set_source_rgba(1, 1, 1, 1)
+        for sx in (-1, 1):
+            cr.move_to(sx * 10 - 4, 52)
+            cr.line_to(sx * 10 + 4, 52)
+            cr.line_to(sx * 10, 66)
+            cr.close_path()
+            cr.fill()
+    else:
+        kid_face(cr, t, skin, hexa("#3b2414"), "short", fear, look, seed=seed, light=light, rim=rim,
+                 rim_from=rim_from)
+        if costume == "pumpkin":
+            toon(cr, lambda c: curve(c, [(-10, -100), (-14, -150), (10, -158), (14, -100)]), hexa("#3d7a2a"),
+                 hexa("#24501a"), light, rim, rim_from, lw=3)
+    cr.restore()
+    cr.restore()
+    if fog > 0:
+        breath_fog(cr, x + 6 * s, y - 380 * s, t, fog, seed, s * 0.7)

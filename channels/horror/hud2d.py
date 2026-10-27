@@ -354,7 +354,8 @@ def phone_pov(cr, t, start, clock, date, notes, glow_a=1.0, skin=None, sleeve=No
 
 
 # ------------------------------------------------------------------ the ending
-def ab_card(cr, t, start, a_text, b_text, a_col=RED, b_col=GREEN, kicker="YOUR CHOICE", decides="Part 2"):
+def ab_card(cr, t, start, a_text, b_text, a_col=RED, b_col=GREEN, kicker="YOUR CHOICE", decides="Part 2",
+            title="WHAT DO YOU DO?", ask="COMMENT A OR B", letters=("A", "B")):
     """WHAT DO YOU DO? with option cards A and B, then COMMENT A OR B / Top answer decides Part 2."""
     if t < start:
         return
@@ -362,8 +363,9 @@ def ab_card(cr, t, start, a_text, b_text, a_col=RED, b_col=GREEN, kicker="YOUR C
     cr.set_source_rgba(0.02, 0.02, 0.04, 0.82 * k)
     cr.paint()
     _text(cr, kicker, W / 2, 250, 20, (1, 1, 1, 0.55 * k), MONO, "center")
-    _text(cr, "WHAT DO YOU DO?", W / 2, 320, 60, (1, 1, 1, k), ROUND, "center", shadow=0.4)
-    for n, (letter, label, col) in enumerate((("A", a_text, a_col), ("B", b_text, b_col))):
+    tsz = min(60.0, 60 * (W - 60) / text_width(cr, title, 60, ROUND))
+    _text(cr, title, W / 2, 320, tsz, (1, 1, 1, k), ROUND, "center", shadow=0.4)
+    for n, (letter, label, col) in enumerate(((letters[0], a_text, a_col), (letters[1], b_text, b_col))):
         p = clamp01((t - start - 0.2 - 0.15 * n) / 0.25)
         if p <= 0:
             continue
@@ -391,9 +393,11 @@ def ab_card(cr, t, start, a_text, b_text, a_col=RED, b_col=GREEN, kicker="YOUR C
     if p > 0:
         cr.save()
         cr.translate(W / 2, 715)
-        rrect(cr, -210, -42, 420, 84, 42)
+        asz = min(40.0, 40 * 380 / text_width(cr, ask, 40, ROUND))
+        aw = max(420, text_width(cr, ask, asz, ROUND) + 60)
+        rrect(cr, -aw / 2, -42, aw, 84, 42)
         cr.set_source_rgba(*YELLOW[:3], p)
         cr.fill()
-        _text(cr, "COMMENT A OR B", 0, 14, 40, (0.08, 0.06, 0.04, p), ROUND, "center")
+        _text(cr, ask, 0, 14, asz, (0.08, 0.06, 0.04, p), ROUND, "center")
         cr.restore()
         _text(cr, f"Top answer decides {decides}", W / 2, 795, 26, (1, 1, 1, 0.85 * p), ROUND, "center")

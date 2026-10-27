@@ -118,3 +118,10 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   lena_bust; timelock_p1_2d.py) rewritten to ~60 s with two clocks and a late flip, sent for approval.
   timelock_p1_2d.py still holds the first v2 lines: update SCRIPT after approval.
 
+- 27 Oct: owner "Ok go for Halloween we continue thief later auto approved Halloween use studies research reference make
+  strong suspense tension video" -> The Seventh Kid, Part 1 (channels/horror/seventh_kid_2d.py, script
+  out/horror/scripts_seventh_kid_part1.md). You (Riley) walk six kids trick-or-treating and count seven; two ghosts in
+  the sheet you cut for your brother Sam; a note with three rules; the porch lights are the clock; the test "What's my
+  name?"; the flip "Sam can't say R"; vote LEFT or RIGHT. New cast in toon2d (riley_bust/riley_back, sam_bust,
+  ghost_kid, kid_full, kid_face, breath_fog); sounds crickets/porch_off/whoosh; hud2d.ab_card takes title/ask/letters;
+  TAIL 2.0 (the card stays up 2 s, from the reference study).

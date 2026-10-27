@@ -200,6 +200,35 @@ def glass_tap(dur):
     return out * 0.8
 
 
+def crickets(dur):
+    """A night street in late October: a few crickets chirping in uneven bursts, far off."""
+    n = int(max(1, dur) * SR)
+    t = np.arange(n) / SR
+    out = np.zeros(n)
+    rng = np.random.default_rng(31)
+    for f, rate, ph in ((4300, 2.1, 0.0), (4700, 1.6, 0.4), (3900, 2.7, 0.8)):
+        gate = (np.sin(2 * np.pi * rate * t + ph * 6) > 0.55).astype(float)
+        trill = 0.5 + 0.5 * np.sign(np.sin(2 * np.pi * 28 * t))
+        out += np.sin(2 * np.pi * f * t) * gate * trill * float(rng.uniform(0.5, 1.0))
+    return _fade(_lowpass(out, 2) * 0.05, 1.0, 1.0)
+
+
+def porch_off(dur):
+    """A porch light switching off: the switch's snap, then the bulb's faint tink as it cools."""
+    m = int(0.5 * SR)
+    t = np.arange(m) / SR
+    snap = _band(_noise(m), 1, 4) * np.exp(-t / 0.008) * 0.9
+    tink = np.sin(2 * np.pi * 2650 * t) * np.exp(-(t - 0.12).clip(0) / 0.05) * (t > 0.12) * 0.12
+    return snap + tink
+
+
+def whoosh(dur):
+    """Into a memory: a soft airy swell that rises and is cut."""
+    n = int(0.7 * SR)
+    p = np.linspace(0, 1, n)
+    return _band(_noise(n), 2, 40) * p ** 2 * 1.1
+
+
 def horror_bed(total, seed=None):
     """The horror bed, different for every episode (YouTube's spam policy names "the exact same background music"
     across many videos as a sign of mass production): a low drone in an episode-specific key whose two voices beat
@@ -226,7 +255,9 @@ def horror_bed(total, seed=None):
 audio.EXTRA_BEDS["horror"] = horror_bed
 audio.EXTRA_SFX.update(hum=hum, chime=chime, doors=doors, power_down=power_down, drip=drip, cable=cable, click=click,
                        engine_idle=engine_idle, dip=dip, breath=breath, brakes=brakes, rain=rain, generator=generator,
-                       static=static, thunder=thunder, ladder_step=ladder_step, glass_tap=glass_tap)
+                       static=static, thunder=thunder, ladder_step=ladder_step, glass_tap=glass_tap,
+                       crickets=crickets, porch_off=porch_off, whoosh=whoosh)
 # beds sit low under the narration (in Tower 9 the rain masked "voice" as "point")
 audio.GAINS.update(hum=0.4, chime=0.6, rain=0.3, engine_idle=0.45, generator=0.3, static=0.5, thunder=0.7, sting=0.8,
-                   heartbeat=0.7, riser=0.6, click=0.6, drip=0.5)
+                   heartbeat=0.7, riser=0.6, click=0.6, drip=0.5,
+                   crickets=0.5, porch_off=0.7, whoosh=0.5, musicbox=0.35)

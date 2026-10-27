@@ -125,7 +125,29 @@ def timelock(cr):
     cr.restore()
 
 
-THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock}
+def seventh_kid(cr):
+    """From behind you on the dark street, a ghost holding each hand: WHICH ONE IS SAM? with L and R."""
+    from channels.horror import seventh_kid_2d as ep
+    t = 2.0
+    cr.save()
+    cr.translate(360, 760)
+    cr.scale(1.12, 1.12)
+    cr.translate(-360, -800)
+    ep.hands(cr, t, 6.0, shine=0.9)
+    cr.restore()
+    tk.grade(cr, (0.75, 0.8, 1.0), (0.36, 0.34, 0.5))
+    g = cairo.LinearGradient(0, 120, 0, 520)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.8)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("WHICH ONE", (1, 1, 1, 1)), ("IS SAM?", hud2d.RED)], 260, 126)
+    badge(cr, 110, 560, "L", hud2d.RED)
+    badge(cr, 610, 560, "R", hud2d.GREEN)
+    chip(cr, "THE SEVENTH KID · PART 1")
+
+
+THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid}
 
 if __name__ == "__main__":
     name = sys.argv[1]
