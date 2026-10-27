@@ -86,7 +86,7 @@ def draw(cr, t, tl):
     vignette(cr, 0.64)
     th.grain(cr, t, 0.05)
     B = tl.by_id
-    screen_insert(cr, t, B["c10"].start + 0.2, B["c10"].end + 0.4, "graph", "11:58 PM", _graph)
+    screen_insert(cr, t, B["c10"].start + 0.2, B["c10"].end + 0.4, "graph", "3:47 PM", _graph)
     cue("ding", t, B["c2"].start)
     cue("ding", t, B["c12"].start)
     build_caption(cr, t, tl)
