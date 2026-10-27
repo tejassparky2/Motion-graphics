@@ -77,7 +77,7 @@ Alt titles: Why Antibiotics Are Stopping Working / The Superbug Problem in 80 Se
 | 9 | Now the antibiotic hits. | THE DRUG | THE DRUG / HITS | Capsule drops in; a wave sweeps across |
 | 10 | It kills almost all of them. But not the different ones. | THE DRUG | ALMOST / ALL | Bacteria pop; the three tinted ones remain |
 | 11 | Those survivors multiply, and now the whole infection carries their shield. | SURVIVORS | THE SURVIVORS / TAKE OVER | Survivors divide 1-2-4-8; circle refills with shielded bacteria |
-| 12 | Worse, bacteria can hand the shield to their neighbours, in tiny loops of DNA. | SURVIVORS | THEY / SHARE IT | A small DNA ring hops from one bacterium to another |
+| 12 | Worse, bacteria can pass the shield to other bacteria, using tiny loops of DNA. | SURVIVORS | THEY / SHARE IT | A small DNA ring hops from one bacterium to another |
 | 13 | Even to completely different kinds of bacteria. | SURVIVORS | EVEN TO / STRANGERS | Rod-shaped and round bacteria swap the ring |
 | 14 | The man who found penicillin saw this coming. | 1945 | HE / WARNED US | Paper portrait silhouette, Nobel medal |
 | 15 | In 1945, he warned that taking too little would teach the microbes to resist. | 1945 | TOO LITTLE / TEACHES THEM | Typed quote card, red underline |
@@ -116,7 +116,7 @@ Alt titles: What a Mosquito Really Puts Inside You / The Parasite That Sleeps in
 | 1 | [dramatic] One mosquito bite. And something moves into your liver. | HOOK | ONE / BITE | Mosquito lands on a paper arm; Gray's liver plate glows red |
 | 2 | For days, you feel completely fine. | HOOK | YOU FEEL / FINE | Paper room, calendar flipping DAY 3, DAY 7; health card "NORMAL" stamps |
 | 3 | Later, it breaks out into your blood, again and again. | HOOK | AGAIN / AND AGAIN | Red cells bursting in a microscope circle |
-| 4 | It's malaria. In 2024, it made about two hundred and eighty million people sick. | THE WORLD | 2024 / 282 MILLION | Globe, flip counter 282,000,000 |
+| 4 | This is malaria. In 2024, it made about two hundred and eighty million people sick. | THE WORLD | 2024 / 282 MILLION | Globe, flip counter 282,000,000 |
 | 5 | And it killed about six hundred thousand. Most of them young children in Africa. | THE WORLD | 610,000 / MOSTLY CHILDREN | Counter 610,000; Africa highlighted |
 | 6 | And it isn't a virus or a bacterium. It's a parasite. So let's follow its journey. | THE PARASITE | IT'S A / PARASITE | Microscope circle: crescent-shaped parasite, label "PLASMODIUM" |
 | 7 | Only female mosquitoes drink blood. They need that blood to make their eggs. | THE BITE | ONLY / FEMALES | Female mosquito card with egg raft; male crossed out |

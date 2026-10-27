@@ -452,7 +452,7 @@ def B12(cr, t, tl, bid):
     A = tl.at
     tl_ = A(bid, "loops")
     bacterium(cr, 200, 760, 2.4, 0.1, MUTANT, shield=1.0, t=t)
-    th = A(bid, "neighbours")
+    th = A(bid, "other")
     bacterium(cr, 530, 820, 2.4, -0.1, GERM, shield=seg(t, th + 1.6, th + 1.9), t=t + 3)
     u = ease_out(seg(t, th, th + 1.6))
     if t > tl_ - 0.6 or u > 0:
@@ -612,7 +612,7 @@ SHOTS = {
     "b9": Shot(B9, "THE DRUG", 1, "teal", "THE DRUG", "HITS", "hits"),
     "b10": Shot(B10, "THE DRUG", 2, "teal", "ALMOST", "ALL", "all"),
     "b11": Shot(B11, "SURVIVORS", 1, "teal", "THE SURVIVORS", "TAKE OVER", "whole"),
-    "b12": Shot(B12, "SURVIVORS", 2, "mint", "THEY", "SHARE IT", "hand"),
+    "b12": Shot(B12, "SURVIVORS", 2, "mint", "THEY", "SHARE IT", "pass"),
     "b13": Shot(B13, "SURVIVORS", 3, "mint", "EVEN TO", "STRANGERS", "different"),
     "b14": Shot(B14, "1945", 1, "khaki", "HE", "WARNED US", "coming"),
     "b15": Shot(B15, "1945", 2, "khaki", "TOO LITTLE", "TEACHES THEM", "teach"),

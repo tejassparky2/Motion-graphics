@@ -22,7 +22,7 @@ SCRIPT = [
     dict(id="b9", scene="b9", text="Now the antibiotic hits."),
     dict(id="b10", scene="b10", text="It kills almost all of them. But not the different ones."),
     dict(id="b11", scene="b11", text="Those survivors multiply, and now the whole infection carries their shield."),
-    dict(id="b12", scene="b12", text="Worse, bacteria can hand the shield to their neighbours, in tiny loops of DNA."),
+    dict(id="b12", scene="b12", text="Worse, bacteria can pass the shield to other bacteria, using tiny loops of DNA."),
     dict(id="b13", scene="b13", text="Even to completely different kinds of bacteria."),
     dict(id="b14", scene="b14", text="The man who found penicillin saw this coming."),
     dict(id="b15", scene="b15", text="In [nineteen forty-five,|1945,] he warned that taking too little would teach "
