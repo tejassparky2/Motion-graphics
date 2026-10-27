@@ -11,7 +11,8 @@ BG_PROMPT = "masterpiece, best quality, anime background, scenery, no humans, {t
 GAKURAN = "black gakuran, school uniform, high collar, buttons"
 SAILOR = "sailor uniform, navy serafuku, red neckerchief"
 CHARS = {
-    "ren": dict(tags=f"1boy, black hair, messy hair, hair between eyes, grey eyes, tired eyes, expressionless, {GAKURAN}"),
+    "ren": dict(tags=f"1boy, black hair, messy hair, hair between eyes, grey eyes, tired eyes, expressionless, {GAKURAN}",
+                seed=22, face=(190, 130, 360, 330), eyes=(200, 192, 350, 250), mouth=(250, 270, 314, 310)),
     "haruto": dict(tags=f"1boy, brown hair, spiky hair, brown eyes, smile, {GAKURAN}, open collar, white shirt"),
     "yui": dict(tags=f"1girl, long hair, dark brown hair, hairclip, brown eyes, gentle smile, {SAILOR}"),
     "riku": dict(tags=f"1boy, ash blonde hair, swept bangs, narrowed eyes, smirk, {GAKURAN}, open collar"),

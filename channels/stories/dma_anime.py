@@ -14,7 +14,7 @@ from channels.stories.dma_art import V, glow, noise, hexa, toon, tk, camera_unit
 ROOT = AN.ROOT
 BG = "assets/anime/dma/bg/{}.png"
 # neck base (x, y) and head height, in base.png pixels (1024x1536), measured on the chosen paintings
-RIG = {}
+RIG = {"ren": dict(neck=(580, 662), head=560)}
 EXPR = {"calm": "neutral", "focus": "neutral", "neutral": "neutral", "shock": "fear", "fear": "fear", "worry": "fear",
         "sad": "fear", "smile": "smile", "grin": "grin", "smirk": "smirk", "angry": "angry"}
 FALLBACK = {"smile": ("grin", "smirk"), "grin": ("smile", "smirk"), "smirk": ("grin", "smile"), "angry": ("fear",)}
