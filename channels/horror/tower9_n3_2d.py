@@ -26,15 +26,15 @@ NARRATOR = dict(turbo=True)
 TAIL = 2.0                     # the vote card stays up ~2 s (reference study, 27 Oct)
 MUSIC = "horror"
 TWIST = "n12"                  # the bed drops out under the reflection
-voice.SPEAKERS["other"] = dict(voice="am_michael", turbo_ref="am_michael", fx="volume=1.3")
+voice.SPEAKERS["other"] = dict(voice="am_michael", turbo_ref="am_michael", fx="volume=1.0")   # 1.3 clipped the shout
 voice.SPEAKERS["other_w"] = dict(voice="am_michael", turbo_ref="am_michael", fx="volume=2.0")
-audio.GAINS.update(rain=0.15, static=0.4)
+audio.GAINS.update(rain=0.15, static=0.4, slam=0.45)
 
 SCRIPT = [
     dict(id="n1", scene="open", text="Nearly all of you said hatch. So you open it, and your own hand reaches up."),
     dict(id="n2", scene="grip", text="Orange sleeve. Your watch. Then your face."),
     dict(id="n3", scene="other", text="It's you. Soaked. Shaking. Lips blue."),
-    dict(id="n4", scene="other", text="Shut it! Before [four forty-four!|4:44!]", speaker="other", gap=0.3),
+    dict(id="n4", scene="other", text="Shut it! Before [four forty-four.|4:44.]", speaker="other", gap=0.3),
     dict(id="n5", scene="bolt", text="You slam the bolt. [Four forty-four.|4:44.]", gap=0.3),
     dict(id="n6", scene="window", text="At the window, your face stops smiling. Then it's gone."),
     dict(id="n7", scene="trees", text="Down in the trees, every torch goes out."),
@@ -383,7 +383,7 @@ def draw(cr, t, tl):
     k = max(i for i, (at, _) in enumerate(sh) if at <= t or i == 0)
     s0, name, s1 = sh[k][0], sh[k][1], sh[k + 1][0]
     t_hand = A("n1", "hand") - 0.3
-    t_slam = A("n5", "slam") + 0.15
+    t_slam = A("n5", "bolt.", end=True) + 0.03             # after the words, never on them
     t_five = B["n14"].start
 
     cr.save()
