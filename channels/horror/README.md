@@ -131,3 +131,6 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   heard as "eyeballs" -> "cut the holes for his eyes"; the new porch-light snaps, whooshes and the sting peaked at
   0 dBFS -> porch_off 0.3, whoosh 0.25, sting 0.5 for this episode. Part 2 waits for the LEFT/RIGHT vote.
 
+- 27 Oct: Tower 9 Night 2 vote: owner "All said hatch". Night 3 script for approval: out/horror/scripts_night3_tower9.md
+  (you open the hatch and your own hand reaches up; the copy at the window vanishes at 4:44; test: page one of the
+  logbook; flip: only one reflection; at five base calls; vote: answer the radio, or stay).
