@@ -4,7 +4,7 @@
 from motion import paper as P
 from videos import malaria_shots as S
 
-NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)   # owner's pick "O+" (25 Oct)
+NARRATOR = dict(chatterbox=True, tempo_min=1.0, tempo_max=1.0)   # owner: "change to clear and best voice" (27 Oct)
 STYLE = "clean"
 MUSIC = "explainer"
 TAIL = 1.2

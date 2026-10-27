@@ -26,3 +26,18 @@ synthetic timbre, and the tempo stretch flattened it further. Orpheus TTS (stock
 was tested on the same passage: "leo" had the most pitch movement of any voice (4.0 semitones std vs 3.4 for D, 2.2
 for Turbo in one take), median pitch 165 Hz (the reels' narrator ~165 Hz), 100% Whisper medium clarity.
 Owner's pick: **O = Orpheus "leo"**, natural pace.
+
+## Update, 27 Oct 2026: "Change to clear and best voice"
+Same passage (with "Malaria", "Ronald Ross", "antivenom"), each voice mixed under the explainer music at the real
+level, scored by Whisper medium word confidence:
+
+| Voice | Clarity with music | Worst word | Pitch movement | Match to reels | Notes |
+|---|---|---|---|---|---|
+| Kokoro af_heart | 98.7% | 81% | 2.4 st | | female, robotic (rejected style) |
+| **Chatterbox stock, exaggeration 0.5** | **98.4%** | 79% | **5.3 st** | **0.671** | male, no errors, ~4.4x real time |
+| Chatterbox stock, exaggeration 0.4 | 98.7% | 84% | 3.3 st | 0.651 | flatter |
+| Orpheus zac (Q8) | 98.1% | 84% | 6.3 st | 0.577 | ~15x real time |
+| Orpheus dan (Q8) | 98.0% | 78% | 5.9 st | 0.597 | |
+| Orpheus leo (Q8, "O+") | 96.5% | 35% | 3.2 st | 0.602 | "antivenom" misheard; last |
+
+Pick: Chatterbox stock voice, exaggeration 0.5 / cfg 0.5.

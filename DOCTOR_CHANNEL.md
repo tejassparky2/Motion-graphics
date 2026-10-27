@@ -17,7 +17,8 @@ How the explainers are built:
   boundary). A video lists `SHOTS = {scene: Shot(draw, label, fig, tone, small, big, big_at)}` and its draw() calls
   `P.frame()`. No subtitles (the headline is the only text tied to the voice, like the references). The channel
   logo sits small at the top-left above the header (`P.brand`).
-- Voice (owner's pick "O", 25 Oct, after "pure AI voice, no human touch"): Orpheus TTS stock voice "leo",
+- Voice from 27 Oct (owner: "Change to clear and best voice"): Chatterbox full model, stock voice,
+  `NARRATOR = dict(chatterbox=True, tempo_min=1.0, tempo_max=1.0)`. Before that (25 Oct, "O"): Orpheus TTS stock voice "leo",
   `NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)` (no time-stretching): the Q8
   model (the default Q4 was muddy: "Malaria" heard as "Valeria") + `ORPHEUS_TONE` clarity EQ = "O+", approved
   ("Yeah this is clear"). Orpheus can change words, so it runs at temperature 0.45 with 6 Whisper-checked tries. Setup: `uv venv -p python3.12

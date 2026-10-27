@@ -66,7 +66,7 @@ MAX_PAUSE = 0.3  # pauses inside a line are shortened to this (the reference nar
 
 
 def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, turbo_ref=None, rate=None,
-              tempo_min=None, tempo_max=None, orpheus=None, orpheus_quant="q4"):
+              tempo_min=None, tempo_max=None, orpheus=None, orpheus_quant="q4", chatterbox=False):
     """Per-video narrator settings (environment variables still win, so you can audition voices).
     `engine="elevenlabs"` switches this video's narrator to ElevenLabs (default voice: Chris).
     `turbo=True` voices the video with Chatterbox Turbo (and its tags); `turbo_ref="am_puck+1.5"` gives the narrator
@@ -80,6 +80,9 @@ def configure(voice=None, speed=None, max_pause=None, engine=None, turbo=False, 
         TEMPO_MIN = tempo_min
     if tempo_max:
         TEMPO_MAX = tempo_max
+    if chatterbox and "NARRATOR_ENGINE" not in os.environ:   # Chatterbox full model, its built-in stock voice
+        engine = "clone"
+        CLONE_MODEL = "stock"
     if orpheus and "NARRATOR_ENGINE" not in os.environ:   # `orpheus="leo"`: Orpheus TTS stock voice (tools/orpheus_tts.py)
         engine = "clone"                                 # `orpheus_quant="q8"`: the bigger, clearer model (owner: "O+")
         CLONE_MODEL = f"orpheus-{orpheus}" + ("" if orpheus_quant == "q4" else f"-{orpheus_quant}")
@@ -584,6 +587,8 @@ def clone_check(takes, tries=3, slack=0.15):
     takes = list(dict.fromkeys(tuple(x) + (None,) * (3 - len(x)) for x in takes))
     if CLONE_MODEL == "turbo":   # Turbo's pace varies with emotion; clarity and tag sounds stay strict, pace less so
         slack = max(slack, 0.3)
+    if CLONE_MODEL == "stock":   # natural pace (no stretching): check clarity only
+        slack = 9.0
     if CLONE_MODEL.startswith("orpheus-"):   # Orpheus keeps its own natural pace (no stretching): check clarity only,
         slack = 9.0                          # and it sometimes changes words, so it gets more tries to say them exactly
         tries = max(tries, 6)

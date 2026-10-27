@@ -8,11 +8,12 @@ doctor work to `ccr-56282fe5-evehq4-doctor` only. The rules below apply to both 
 - "Kokoro voice is confirmed, don't use my voice." All narration and the doctor use Kokoro stock voices
   (`motion/voice.py` default ENGINE "kokoro"). The cloned voice (`NARRATOR_ENGINE=clone`) only if the owner asks.
 - Doctor channel (owner, 24 Oct 2026): the new explainer format replaces the doctor-and-organs format. Voice
-  (owner, 25 Oct 2026, "Go with o", after "this seems like pure AI voice, no human touch"): **Orpheus TTS stock voice
-  "leo", Q8 model + clarity EQ ("O+", owner: "Yeah this is clear")** at its natural pace
-  (`NARRATOR = dict(orpheus="leo", orpheus_quant="q8", tempo_min=1.0, tempo_max=1.0)`, tools/orpheus_tts.py,
-  venv /home/user/.venv-orpheus). Not Turbo, not Kokoro-derived timbres (they sounded robotic). Older doctor videos
-  used Kokoro `am_adam`; leave them as released.
+  (owner, 27 Oct 2026, "Change to clear and best voice"): **Chatterbox full model, built-in stock voice** (male,
+  synthetic, nobody cloned) at its natural pace: `NARRATOR = dict(chatterbox=True, tempo_min=1.0, tempo_max=1.0)`
+  (tools/clone_tts.py CLONE_MODEL=stock, exaggeration 0.5, cfg 0.5). Chosen by a clarity test under the music
+  (research_notes/voice_match.md). Rejected before it: Turbo (robotic), Orpheus leo (not clear). The best voice
+  overall would be ElevenLabs, but this environment has no ELEVENLABS_API_KEY. Older doctor videos used Kokoro
+  `am_adam`; leave them as released.
 
 ## Narration must sound like a person telling the story (every video, not only riddles)
 - **Never let sentences run together.** Every sentence ends with a full stop (or ? / !) in the script, and the

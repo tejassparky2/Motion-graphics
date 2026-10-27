@@ -32,8 +32,27 @@ def trim(w, sr):
     return w[max(0, loud[0] - int(0.09 * sr)): loud[-1] + int(0.06 * sr)]
 
 
+def stock_voice(jobs):
+    """CLONE_MODEL=stock: Chatterbox's full model with its own built-in stock voice (no prompt; nobody is cloned).
+    The doctor channel's explainer voice from 27 Oct 2026 (clearest and most expressive of the voices tested)."""
+    if any(len(j) > 2 for j in jobs):
+        sys.exit("clone_tts: the stock voice takes no reference voices")
+    model = ChatterboxTTS.from_pretrained(device="cpu")      # its default conditionals = the stock voice
+    for k, (text, out) in enumerate(jobs, 1):
+        w = model.generate(text, exaggeration=STOCK_EXAGGERATION, cfg_weight=STOCK_CFG)[0].numpy()
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        sf.write(out + ".tmp.wav", trim(w, model.sr), model.sr)
+        os.replace(out + ".tmp.wav", out)
+        print(f"clone voice {k}/{len(jobs)}: {text}", file=sys.stderr, flush=True)
+
+
+STOCK_EXAGGERATION, STOCK_CFG = 0.5, 0.5     # tested 27 Oct: 98.4% Whisper medium confidence under the music
+
+
 def main():
     jobs = json.load(open(sys.argv[1]))
+    if os.environ.get("CLONE_MODEL") == "stock":
+        return stock_voice(jobs)
     turbo = os.environ.get("CLONE_MODEL") == "turbo"     # Chatterbox Turbo's stock voice, no prompt (not a clone)
     if turbo:
         from chatterbox.tts_turbo import ChatterboxTurboTTS

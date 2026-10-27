@@ -118,6 +118,8 @@ def write_metadata(path):
         voiced = (f"narrated by the channel owner (`{os.path.basename(VIDEO['narration'])}`)" if VIDEO.get("narration")
                   else "Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned)"
                   if narrator.ENGINE == "clone" and narrator.CLONE_MODEL == "turbo"
+                  else "Chatterbox stock voice (synthetic; nobody real is cloned)"
+                  if narrator.ENGINE == "clone" and narrator.CLONE_MODEL == "stock"
                   else f"Orpheus TTS stock voice `{narrator.CLONE_MODEL.split('-')[1]}` (synthetic; nobody real is cloned)"
                   if narrator.ENGINE == "clone" and narrator.CLONE_MODEL.startswith("orpheus-")
                   else "the channel owner's own cloned voice" if narrator.ENGINE == "clone"
