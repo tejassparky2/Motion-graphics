@@ -2,29 +2,29 @@
 describes only Momo, who stays drawn in code). Seeds are the candidates the owner's look was picked from; face, eyes
 and mouth boxes are in the 512x768 source image."""
 SET = "dma"
-CHAR_PROMPT = ("masterpiece, best quality, anime screencap, {tags}, solo, upper body, facing viewer, looking at viewer, "
-               "straight-on, centered, standing, plain white background, simple background")
-CHAR_NEG = ("dutch angle, tilted, abstract background, liquid, splashes, paint, gold, particles, smoke, clouds, "
-            "gradient background, white jacket, white coat, grey jacket, lab coat, blazer, holding")
+CHAR_PROMPT = ("masterpiece, best quality, anime screencap, solo, plain white background, upper body, facing viewer, "
+               "looking at viewer, {tags}")
+# the whole negative prompt for characters (CLIP reads only 77 tokens: the important words come first)
+CHAR_NEG_FULL = ("worst quality, low quality, lowres, bad anatomy, abstract background, dutch angle, white jacket, "
+                 "white coat, holding, bowl, object, smoke, splashes, gold, text, watermark, nsfw")
 FACE_PROMPT = "masterpiece, best quality, anime screencap, close-up, face, {tags}"
 BG_PROMPT = "masterpiece, best quality, anime background, scenery, no humans, {tags}, detailed"
 
-GAKURAN = "black gakuran, black jacket, black school uniform, high collar, buttons"
+GAKURAN = "black gakuran, black school uniform"
 SAILOR = "sailor uniform, navy serafuku, red neckerchief"
 CHARS = {
     "ren": dict(tags=f"1boy, black hair, messy hair, hair between eyes, grey eyes, tired eyes, expressionless, {GAKURAN}",
-                seed=22, face=(190, 130, 360, 330), eyes=(200, 192, 350, 250), mouth=(250, 270, 314, 310),
+                seed=22, face=(150, 140, 350, 340), eyes=(155, 180, 340, 250), mouth=(203, 274, 262, 308),
                 clean_light_below=420),
     "haruto": dict(tags=f"1boy, brown hair, spiky hair, brown eyes, smile, {GAKURAN}, open collar, white shirt",
-                   seed=22, face=(130, 142, 330, 342), eyes=(140, 212, 315, 268), mouth=(200, 280, 262, 312),
+                   seed=22, face=(140, 155, 330, 345), eyes=(158, 210, 308, 260), mouth=(205, 283, 262, 312),
                    extra=("grin",)),
     "yui": dict(tags=f"1girl, long hair, dark brown hair, hairclip, brown eyes, gentle smile, {SAILOR}",
-                seed=22, face=(160, 95, 360, 295), eyes=(180, 158, 345, 212), mouth=(238, 240, 296, 274),
+                seed=22, face=(170, 105, 375, 310), eyes=(195, 160, 365, 222), mouth=(252, 246, 312, 280),
                 extra=("smile",)),
     "riku": dict(tags=f"1boy, ash blonde hair, swept bangs, narrowed eyes, smirk, {GAKURAN}, open collar"),
-    "kota": dict(tags=f"1boy, black hair, bowl cut, round glasses, nervous, {GAKURAN}"),
-    "go": dict(tags=f"1boy, very short hair, buzz cut, black hair, thick eyebrows, muscular, broad shoulders, serious, "
-                    f"{GAKURAN}"),
+    "kota": dict(tags=f"1boy, black hair, mushroom haircut, straight bangs, round glasses, nervous, {GAKURAN}"),
+    "go": dict(tags=f"1boy, tall, broad shoulders, very short black hair, crew cut, thick eyebrows, serious, {GAKURAN}"),
     "aoi": dict(tags=f"1girl, bob cut, dark blue hair, hairpin, dark blue eyes, calm, expressionless, {SAILOR}"),
     "mio": dict(tags=f"1girl, wavy hair, light brown hair, earrings, brown eyes, half-closed eyes, smug, {SAILOR}"),
 }

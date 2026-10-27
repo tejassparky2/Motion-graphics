@@ -52,6 +52,15 @@ def sd(kind="txt"):
         p.vae.to(memory_format=torch.channels_last)
         p.set_progress_bar_config(disable=True)
         return p
+    if kind == "lcm":                                                 # fast edits: LCM-LoRA, 6 steps, no CFG
+        from diffusers import LCMScheduler
+        from huggingface_hub import hf_hub_download
+        p = StableDiffusionImg2ImgPipeline(**sd("txt").components)
+        p.scheduler = LCMScheduler.from_config(p.scheduler.config)
+        p.load_lora_weights(hf_hub_download("latent-consistency/lcm-lora-sdv1-5", "pytorch_lora_weights.safetensors"))
+        p.fuse_lora()
+        p.set_progress_bar_config(disable=True)
+        return p
     p = StableDiffusionImg2ImgPipeline(**sd("txt").components)
     p.set_progress_bar_config(disable=True)
     return p
@@ -64,9 +73,12 @@ def txt2img(prompt, w, h, seed, steps=18, cfg=6.5, neg=""):
                          num_inference_steps=steps, guidance_scale=cfg, generator=g).images[0]
 
 
-def img2img(img, prompt, strength, seed, steps=20, cfg=6.5, neg=""):
+def img2img(img, prompt, strength, seed, steps=20, cfg=6.5, neg="", fast=False):
     g = torch.Generator().manual_seed(seed)
     with torch.inference_mode():
+        if fast:
+            return sd("lcm")(prompt, image=img, strength=strength, num_inference_steps=8, guidance_scale=1.0,
+                             generator=g).images[0]
         return sd("img")(prompt, image=img, strength=strength, negative_prompt=NEG + ", " + neg if neg else NEG,
                          num_inference_steps=steps, guidance_scale=cfg, generator=g).images[0]
 
@@ -193,6 +205,16 @@ def char_neg(s, c):
     return ", ".join(filter(None, (getattr(s, "CHAR_NEG", ""), c.get("neg", ""))))
 
 
+def char_img(s, c, seed):
+    if hasattr(s, "CHAR_NEG_FULL"):                                   # the spec gives the whole negative prompt
+        g = torch.Generator().manual_seed(seed)
+        with torch.inference_mode():
+            return sd("txt")(s.CHAR_PROMPT.format(**c), negative_prompt=", ".join(filter(None, (c.get("neg"),
+                             s.CHAR_NEG_FULL))), width=512, height=768, num_inference_steps=18, guidance_scale=6.5,
+                             generator=g).images[0]
+    return txt2img(s.CHAR_PROMPT.format(**c), 512, 768, seed, neg=char_neg(s, c))
+
+
 def out_dir(s, *parts):
     d = os.path.join(ROOT, "assets", "anime", s.SET, *parts)
     os.makedirs(d, exist_ok=True)
@@ -205,7 +227,7 @@ def cand(mod, name, seeds):
     os.makedirs(d, exist_ok=True)
     for seed in seeds:
         t = time.time()
-        img = txt2img(s.CHAR_PROMPT.format(**c), 512, 768, seed, neg=char_neg(s, c))
+        img = char_img(s, c, seed)
         img.save(os.path.join(d, f"{s.SET}_{name}_{seed}.png"))
         log(f"cand {name} {seed}: {time.time() - t:.0f}s")
 
@@ -217,7 +239,7 @@ def char(mod, name):
     t = time.time()
     cpath = os.path.join(ROOT, "build", "anime", "cand", f"{s.SET}_{name}_{c['seed']}.png")
     img = Image.open(cpath).convert("RGB") if os.path.exists(cpath) else \
-        txt2img(s.CHAR_PROMPT.format(**c), 512, 768, c["seed"], neg=char_neg(s, c))
+        char_img(s, c, c["seed"])
     img.save(os.path.join(d, "src512.png"))
     big = upscale(img)
     cut = cutout(big)
@@ -255,7 +277,8 @@ def parts(mod, name, which=None):
         if "+" in pname:                                              # e.g. "fear+blink": edit the fear face
             parent = pname.split("+")[0]
             base_face = Image.open(os.path.join(d, f"_face_{parent}.png")).convert("RGB")
-        out = img2img(base_face, s.FACE_PROMPT.format(**c) + ", " + prompt, strength, c["seed"] + 7)
+        fast = region != "face" and os.environ.get("PART_LCM", "1") == "1"   # eyes / mouth: LCM is enough
+        out = img2img(base_face, s.FACE_PROMPT.format(**c) + ", " + prompt, strength, c["seed"] + 7, fast=fast)
         if region == "face":                                          # expression faces are edited further
             out.save(os.path.join(d, f"_face_{pname}.png"))
         rx0, ry0, rx1, ry1 = [(v - box[i % 2]) * k for i, v in enumerate(c[region])] if region != "face" else \
