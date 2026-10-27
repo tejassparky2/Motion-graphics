@@ -2,13 +2,28 @@
   "mcpServers": {
     "reddit": {
       "command": "npx",
-      "args": ["-y", "reddit-mcp-server"],
+      "args": [
+        "-y",
+        "reddit-mcp-server"
+      ],
       "env": {
         "REDDIT_CLIENT_ID": "${REDDIT_CLIENT_ID}",
         "REDDIT_CLIENT_SECRET": "${REDDIT_CLIENT_SECRET}",
         "REDDIT_USER_AGENT": "yours3d-research/0.1 (by the Yours3D India owner)",
         "REDDIT_SAFE_MODE": "strict"
       }
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--headless",
+        "--isolated",
+        "--executablePath",
+        "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+        "--no-usage-statistics"
+      ]
     }
   }
 }
