@@ -32,4 +32,4 @@ horror story, interactive story, you decide, choose your ending, fire tower, for
 Burn it. The other you read it, and look where that got it: stuck in this tower with you, its watch running backwards. Read or burn? 👇 (Look at its sleeve 👀)
 ```
 
-**Video facts:** 51.7 s, 139 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 52.2 s, 139 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
