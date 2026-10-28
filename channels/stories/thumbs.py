@@ -279,6 +279,109 @@ def dma_manga06(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 6")
 
 
+def dma_manga_ch02_long(cr):
+    """16:9: Riku's grin (Chapter 2 page 9) on the right, Ren's resolve (page 5) below it, the title on the left:
+    CHAPTER 2 / THE BIDS."""
+    folder = "assets/manga/dma/ch02"
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 9, 1, folder, fit=0.62, yc=0.36, xc=0.68)
+    _manga_panel(cr, 5, 1, folder, fit=0.44, yc=0.8, xc=0.76)
+    g = cairo.LinearGradient(0, 0, W * 0.55, 0)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.92)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    for k, (txt, col, sz) in enumerate((("CHAPTER 2", (1, 1, 1, 1), 96), ("THE BIDS.", hud2d.RED, 110),
+                                        ("FULL CHAPTER", (1, 0.85, 0.4, 1), 40))):
+        hud2d._text(cr, txt, 50, 230 + k * 120, sz, col, hud2d.ROUND, "left", outline=(0, 0, 0, 1), ow=sz * 0.12,
+                    shadow=0.6)
+    hud2d._text(cr, "DEAD MAN'S ALGORITHM · THE MANGA", 50, 100, 30, (1, 0.85, 0.4, 1), hud2d.ROUND, "left",
+                outline=(0, 0, 0, 1), ow=4)
+
+
+def dma_manga_ch03_long(cr):
+    """16:9: Saki with the single token in her palm (Chapter 3 page 14) on the right, Riku's smile (page 11) below it,
+    the title on the left: CHAPTER 3 / THE CHARITY."""
+    folder = "assets/manga/dma/ch03"
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 14, 1, folder, fit=0.62, yc=0.36, xc=0.68)
+    _manga_panel(cr, 11, 3, folder, fit=0.44, yc=0.8, xc=0.76)
+    g = cairo.LinearGradient(0, 0, W * 0.55, 0)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.92)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    for k, (txt, col, sz) in enumerate((("CHAPTER 3", (1, 1, 1, 1), 96), ("THE CHARITY.", hud2d.RED, 96),
+                                        ("FULL CHAPTER", (1, 0.85, 0.4, 1), 40))):
+        hud2d._text(cr, txt, 50, 230 + k * 120, sz, col, hud2d.ROUND, "left", outline=(0, 0, 0, 1), ow=sz * 0.12,
+                    shadow=0.6)
+    hud2d._text(cr, "DEAD MAN'S ALGORITHM · THE MANGA", 50, 100, 30, (1, 0.85, 0.4, 1), hud2d.ROUND, "left",
+                outline=(0, 0, 0, 1), ow=4)
+
+
+def _cover(cr, folder, big, top, bottom, ch):
+    """A 9:16 manga cover: two panels stacked under the title (top = (page, panel, fit, yc), bottom likewise)."""
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    for page, panel, fit, yc in (top, bottom):
+        _manga_panel(cr, page, panel, folder, fit=fit, yc=yc)
+    _top_shade(cr, 520)
+    big_text(cr, big, 250, 112)
+    chip(cr, f"DEAD MAN'S ALGORITHM · THE MANGA · EP {ch}")
+
+
+def dma_manga07(cr):
+    _cover(cr, "assets/manga/dma/ch03", [("THE POOREST", (1, 1, 1, 1)), ("PLAYER DIES.", hud2d.RED)],
+           (3, 2, 1.0, 0.53), (5, 2, 1.0, 0.86), 7)
+
+
+def dma_manga08(cr):
+    _cover(cr, "assets/manga/dma/ch03", [("GIVE IT ALL", (1, 1, 1, 1)), ("TO MOMO?", hud2d.RED)],
+           (8, 3, 1.0, 0.53), (11, 3, 1.0, 0.86), 8)
+
+
+def dma_manga09(cr):
+    _cover(cr, "assets/manga/dma/ch03", [("ONE TOKEN.", (1, 1, 1, 1)), ("THREE SECONDS.", hud2d.RED)],
+           (14, 1, 1.0, 0.53), (15, 3, 1.0, 0.86), 9)
+
+
+def dma_manga10(cr):
+    _cover(cr, "assets/manga/dma/ch04", [("FIND YOUR NAME", (1, 1, 1, 1)), ("OR DIE.", hud2d.RED)],
+           (3, 1, 1.0, 0.53), (7, 4, 1.0, 0.86), 10)
+
+
+def dma_manga11(cr):
+    _cover(cr, "assets/manga/dma/ch04", [("ONE LOOP.", (1, 1, 1, 1)), ("NINETEEN OF US.", hud2d.RED)],
+           (12, 1, 1.0, 0.5), (12, 3, 1.0, 0.84), 11)
+
+
+def dma_manga12(cr):
+    _cover(cr, "assets/manga/dma/ch04", [("WHO CUTS", (1, 1, 1, 1)), ("THE LOOP?", hud2d.RED)],
+           (16, 2, 1.0, 0.53), (18, 4, 1.0, 0.86), 12)
+
+
+def dma_manga_ch04_long(cr):
+    """16:9: the locker ring from above (Chapter 4 page 12) on the right, Riku at the door (page 20) below it."""
+    folder = "assets/manga/dma/ch04"
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 12, 1, folder, fit=0.62, yc=0.36, xc=0.68)
+    _manga_panel(cr, 20, 3, folder, fit=0.44, yc=0.8, xc=0.76)
+    g = cairo.LinearGradient(0, 0, W * 0.55, 0)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.92)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    for k, (txt, col, sz) in enumerate((("CHAPTER 4", (1, 1, 1, 1), 96), ("FIND YOURSELF.", hud2d.RED, 84),
+                                        ("FULL CHAPTER", (1, 0.85, 0.4, 1), 40))):
+        hud2d._text(cr, txt, 50, 230 + k * 120, sz, col, hud2d.ROUND, "left", outline=(0, 0, 0, 1), ow=sz * 0.12,
+                    shadow=0.6)
+    hud2d._text(cr, "DEAD MAN'S ALGORITHM · THE MANGA", 50, 100, 30, (1, 0.85, 0.4, 1), hud2d.ROUND, "left",
+                outline=(0, 0, 0, 1), ow=4)
+
+
 def dma_manga_ch01_long(cr):
     """16:9: the meteor filling the sky (page 10) on the right, Momo waving in its spotlight (page 20) below it, the
     chapter title on the left: CHAPTER 1 / 12:17."""
@@ -303,7 +406,10 @@ THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": bo
           "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
           "dma_manga01": dma_manga01, "dma_manga02": dma_manga02,
           "dma_manga03": dma_manga03, "dma_manga04": dma_manga04, "dma_manga_ch01_long": dma_manga_ch01_long,
-          "dma_manga05": dma_manga05, "dma_manga06": dma_manga06}
+          "dma_manga05": dma_manga05, "dma_manga06": dma_manga06, "dma_manga_ch02_long": dma_manga_ch02_long,
+          "dma_manga_ch03_long": dma_manga_ch03_long, "dma_manga07": dma_manga07, "dma_manga08": dma_manga08,
+          "dma_manga09": dma_manga09, "dma_manga10": dma_manga10, "dma_manga11": dma_manga11,
+          "dma_manga12": dma_manga12, "dma_manga_ch04_long": dma_manga_ch04_long}
 
 if __name__ == "__main__":
     name = sys.argv[1]
