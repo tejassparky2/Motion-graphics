@@ -190,8 +190,41 @@ def dma_s6(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · PART 6")
 
 
+def _manga_panel(cr, page, panel, folder="assets/manga/dma/ch01", ax=0.5, ay=0.5, fit=None, yc=0.5):
+    """A manga panel (from the manga chat's page and manifest) filling the cover, or, with fit = a share of the
+    width, shown whole across the cover with its centre at yc."""
+    import json
+    from channels.stories import anime2d as AN
+    box = json.load(open(os.path.join(ROOT, folder, "manifest.json")))["pages"][str(page)]["panels"][panel - 1]["box"]
+    surf = AN.image(f"{folder}/page_{page:02d}.jpg")
+    x0, y0, x1, y1 = box
+    k = W * fit / (x1 - x0) if fit else max(W / (x1 - x0), H / (y1 - y0))
+    cr.save()
+    cr.translate(W / 2, H * yc)
+    cr.scale(k, k)
+    cr.translate(-(x0 + (x1 - x0) * ax), -(y0 + (y1 - y0) * ay))
+    cr.rectangle(x0, y0, x1 - x0, y1 - y0)                    # this panel only
+    cr.clip()
+    cr.set_source_surface(surf, 0, 0)
+    cr.get_source().set_filter(cairo.FILTER_GOOD)
+    cr.paint()
+    cr.restore()
+
+
+def dma_manga01(cr):
+    """Aoi's glasses with the streak of light in them (page 7): THE LAST NORMAL MINUTE."""
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 7, 4, fit=1.0, yc=0.5)                   # Aoi's glasses with the streak in them...
+    _manga_panel(cr, 6, 1, fit=1.0, yc=0.82)                  # ...while Riku slams the desk
+    _top_shade(cr, 520)
+    big_text(cr, [("THE LAST", (1, 1, 1, 1)), ("NORMAL MINUTE.", hud2d.RED)], 250, 112)
+    chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 1")
+
+
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
-          "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6}
+          "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
+          "dma_manga01": dma_manga01}
 
 if __name__ == "__main__":
     name = sys.argv[1]

@@ -61,7 +61,7 @@ BEATS = [
     S(19, 4, 4, "haruto", "Ohh? Personal delivery?", gap=0.35),
     S(20, 4, 5, "ren", "It's not like that.", gap=0.35),
     S(21, 4, 5, "haruto", "[I didn't say anything.|I didn't say anything~]", gap=0.25),
-    N(22, 5, 1, "On Ren's desk, a notebook. Page after page of numbers."),
+    N(22, 5, 1, "Ren had a notebook open. Page after page of numbers."),
     S(23, 5, 2, "yui", "Are these from your trading account?", gap=0.35),
     S(24, 5, 3, "ren", "[Just notes.|...Just notes.]", gap=0.35),
     N(25, 5, 4, "Yui knew he was hiding something. She didn't push.", gap=0.35),
@@ -70,8 +70,8 @@ BEATS = [
     S(28, 6, 2, "riku", "Survival plans? Seriously?", gap=0.35),
     S(29, 6, 3, "kota", "Give it back.", gap=0.35),
     S(30, 6, 4, "riku", "Or what?", gap=0.35),
-    N(31, 7, 1, "Shibata Gō stood up."),
-    S(32, 7, 1, "go", "Stop.", name="GŌ", gap=0.3),
+    N(31, 7, 1, "Shibata Go stood up."),                      # the caption font has no "ō"
+    S(32, 7, 1, "go", "Stop.", name="GO", gap=0.3),
     S(33, 7, 2, "riku", "[Huh? You want to go?|Huh?! You want to go?]", gap=0.3, impact=True),
     S(34, 7, 3, "mio", "Don't get involved.", gap=0.35),
     N(35, 7, 4, "But Fujimoto Aoi wasn't watching the fight. Something had flashed across her glasses.", gap=0.45),
@@ -108,8 +108,9 @@ def draw(cr, t, tl):
     R.draw(cr, t, tl)
     hud.finish(cr, t, flash_at=[], vig=0.35, grain=0.03)
     M.series_chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 1")
-    hud2d.hook(cr, t, [("12:17.", False), ("THE SKY FALLS.", True)], end=B["m2"].end + 0.1, y=230, size=86)
-    if t < B["m36"].end + 0.1:
+    hook_end = B["m2"].end + 0.1                               # under the page: the page's own title stays clear
+    hud2d.hook(cr, t, [("12:17.", False), ("THE SKY FALLS.", True)], end=hook_end, y=1095, size=78)
+    if hook_end + 0.25 < t < B["m36"].end + 0.1:
         M.name_chip(cr, t, R.speaker(t, tl))
         hud2d.captions(cr, t, tl, KEY, y=1135)
     serial.next_card(cr, t, B["m36"].end + 0.1, "DEAD MAN'S ALGORITHM · THE MANGA", "EPISODE 2", "THE SKY")
