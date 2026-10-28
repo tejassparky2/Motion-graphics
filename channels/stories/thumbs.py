@@ -244,10 +244,21 @@ def dma_manga03(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 3")
 
 
+def dma_manga04(cr):
+    """Momo starting the clock (page 25) over Ren's eyes reading the rules: 10 MINUTES. ONE KEY."""
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 25, 4, fit=1.0, yc=0.53)
+    _manga_panel(cr, 25, 3, fit=1.0, yc=0.88)
+    _top_shade(cr, 520)
+    big_text(cr, [("10 MINUTES.", (1, 1, 1, 1)), ("ONE KEY.", hud2d.RED)], 250, 112)
+    chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 4")
+
+
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
           "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
           "dma_manga01": dma_manga01, "dma_manga02": dma_manga02,
-          "dma_manga03": dma_manga03}
+          "dma_manga03": dma_manga03, "dma_manga04": dma_manga04}
 
 if __name__ == "__main__":
     name = sys.argv[1]

@@ -168,6 +168,10 @@ class Reader:
             prev = b["page"]
         return out
 
+    def _rect(self, b):
+        """The page rect a beat looks at: its panel, or a part of it when the beat gives a page-pixel `box`."""
+        return b["box"] if b.get("box") else self.book.rect(b["page"], b["panel"])
+
     def plan(self, tl):
         """Each beat with t0 (when the camera starts moving to it); a page turn starts as soon as the last line of
         the old page ends."""
@@ -192,7 +196,7 @@ class Reader:
         b = p[k]
         prev = p[k - 1] if k else None
         book = self.book
-        rect = book.rect(b["page"], b["panel"])
+        rect = self._rect(b)
         nxt = p[k + 1]["t0"] if k + 1 < len(p) else tl.total + 2
         hold = clamp01((t - b["start"]) / max(0.5, nxt - b["start"]))
         target = cam_for(rect, self.push * hold)
@@ -216,13 +220,13 @@ class Reader:
             cam = lerp_cam(full, target, z) if b["panel"] else target
             draw_page(cr, book, b["page"], cam, rect if b["panel"] else None, smooth(z), shake=shake)
             return
-        src = cam_for(book.rect(prev["page"], prev["panel"]), self.push)
+        src = cam_for(self._rect(prev), self.push)
         m = clamp01((t - b["t0"]) / EASE)
         cam = lerp_cam(src, target, m)
         if b["panel"]:
             spot, sk = rect, (1.0 if prev["panel"] else smooth(m))
         else:
-            spot = book.rect(prev["page"], prev["panel"]) if prev["panel"] else None
+            spot = self._rect(prev) if prev["panel"] else None
             sk = 1 - smooth(m)
         draw_page(cr, book, b["page"], cam, spot, sk, shake=shake)
 
