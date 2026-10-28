@@ -110,4 +110,7 @@ Do not rewrite established canon without explicit permission. Do not invent addi
 - Owner, 28 Oct 2026 (every game): "add this too every game as a clever loopholes with all can survive and mc figures it
   and try to make eryone survive but as game goes the greed emotions betrayal scared sacrifice better human won't let it
   happen only few game goes without dead". Every game hides a fair all-survive loophole that Ren finds; people break it
-  (greed, fear, betrayal, sacrifice), so only a few games end with no death. Game 2 v3 follows this.
+  (greed, fear, betrayal, sacrifice), so only a few games end with no death.
+- Owner, 28 Oct 2026: "The loophole must be very hard and clever but viewers should understand everything clearly".
+  The obvious answers fail on screen first; the real answer combines two rules or one exact word; one step per
+  sentence with a proof card. Parts 3-6 (v4) in dma_arc_games_1_2.md follow this.
