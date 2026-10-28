@@ -95,9 +95,9 @@ SCRIPT = [
     dict(id="l40", scene="car", text="Neil's last position was the middle of the crossing.", gap=0.9),
     dict(id="l41", scene="quiet", text="The impact didn't hurt. There was a sound, enormous and flat, and the sky "
                                        "turning over.", gap=0.6),
-    dict(id="l42", scene="quiet", text="Then a quiet, like the moment after the market closes, when you finally find "
-                                       "out what you're worth."),
-    dict(id="l43", scene="quiet", text="Neil!", speaker="maya", gap=0.5),
+    dict(id="l42", scene="quiet", text="Then silence. Like the moment after the market closes, when you finally "
+                                       "find out what you're worth."),
+    dict(id="l43", scene="quiet", text="Neil! No!", speaker="maya", gap=0.5),
     dict(id="l44", scene="quiet", text="Then he didn't hear anything.", gap=1.6),
     # waking
     dict(id="l45", scene="wake", text="Neil opened his eyes, and his body was wrong.", gap=1.0),

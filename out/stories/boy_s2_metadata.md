@@ -16,7 +16,7 @@ Neil had half a second. He shoved Maya out of the way. Then he opened his eyes i
 About a hundred metres away, Maya was kneeling at the crossing.
 
 The Boy Who Inherited Another Body, Part 2.
-Arthur Vance had a fortune, a family and enemies. Now they were all Neil's. And soon, they would bury Neil.
+Arthur Vance had money, a family and enemies. And now, all of it belonged to Neil. And soon, they would bury Neil.
 
 (Original story. Fiction. Anime-style animation.)
 
@@ -33,4 +33,4 @@ the boy who inherited another body, reincarnation, body swap, billionaire, thril
 Part 3 is next. Would you go to your own funeral, if Maya would be there and couldn't know it was you?
 ```
 
-**Video facts:** 66.0 s, 168 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 67.7 s, 174 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
