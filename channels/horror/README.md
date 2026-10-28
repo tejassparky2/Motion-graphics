@@ -184,3 +184,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - 28 Oct: Tower 9 Night 4 (tower9_n4_2d, 52 s, 17/17 Whisper medium) delivered with its thumbnail. One approved line
   changed: "Its watch says five" became "Its watch reads five" ("watch says" merged into one word); "Someone who
   answered" was re-voiced (heard as "Someone to answer"). Vote: READ IT / BURN IT decides Night 5.
+- 28 Oct: deep research delivered (reports/Psychological death game design.md: Alice in Borderland, Tomodachi Game,
+  The Genius, Liar Game, Kaiji, Squid Game, Death Note). Owner "Yes" to: rewrite "Wrong Number" as "Bench Three" and
+  send the game ideas to the manga chat. Bench Three Part 1 for approval: out/horror/scripts_bench_three_part1.md (two
+  numbers one digit apart, a photo dated three weeks ago, truth sheet and both Part 2 openings written first). Five
+  game proposals refitted to the manga chat's approved Game 3 ("Find Yourself": Gō dead, 18 left) sent to it as
+  proposals (THE SPARE dropped: same family as Find Yourself).
