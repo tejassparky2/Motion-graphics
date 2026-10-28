@@ -41,7 +41,7 @@ BEATS = [
     s(9, 10, 2, "ren", "Every card points somewhere. Follow them and you go round in a loop.", gap=0.4),
     s(10, 10, 3, "ren", "[And the card that leads back to your own locker is your name.|And the card that leads back to "
                         "your own locker... is your name.]", gap=0.4),
-    n(11, 10, 3, "Say you're B. Open B, and the card says D. D says A. A says C. C says E. And E holds B.", gap=0.4),
+    n(11, 10, 3, "Take B. B's card says D. Then A. Then C. Then E. And E holds B.", gap=0.4),
     s(12, 11, 1, "haruto", "So we just follow the arrows?"),
     s(13, 11, 2, "aoi", "If your loop is ten or shorter, you find it. If it's longer, everyone in that loop dies "
                         "together.", gap=0.4),
