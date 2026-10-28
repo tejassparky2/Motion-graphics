@@ -100,13 +100,19 @@ KEY = {"twenty", "sensei", "signal", "clock", "door", "damn", "moved", "aoi", "b
        "answer"}
 
 
-def draw(cr, t, tl):
+def cues(t, tl):
+    """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
-    R.draw(cr, t, tl)
-    frame(cr, t, tl, R, 3, [("20 SURVIVORS.", False), ("OF WHAT?", True)], "g40", "THE GLASS AUCTION", KEY)
     cue("heartbeat", t, B["g18"].start, B["g20"].start - B["g18"].start)
     cue("riser", t, B["g20"].start, B["g23"].start - B["g20"].start)
     cue("heartbeat", t, B["g30"].start, B["g32"].start - B["g30"].start)
     cue("hush", t, B["g35"].start - 0.2, B["g36"].start - B["g35"].start + 0.1)       # nobody moved
     cue("hush", t, B["g37"].start - 0.2, B["g38"].start - B["g37"].start + 0.1)       # silence
     cue("riser", t, B["g38"].start, B["g39"].start - B["g38"].start)
+
+
+def draw(cr, t, tl):
+    B = tl.by_id
+    R.draw(cr, t, tl)
+    frame(cr, t, tl, R, 3, [("20 SURVIVORS.", False), ("OF WHAT?", True)], "g40", "THE GLASS AUCTION", KEY)
+    cues(t, tl)

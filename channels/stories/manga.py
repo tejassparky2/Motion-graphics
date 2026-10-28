@@ -160,6 +160,8 @@ class Reader:
             d = dict(id=b["id"], scene=f"p{b['page']}", text=b["text"])
             if b.get("speaker"):
                 d["speaker"] = b["speaker"]
+            if b.get("hold"):                                 # a silent beat (a title card over the page)
+                d["hold"] = b["hold"]
             gap = b.get("gap", 0.25)
             if prev is not None and b["page"] != prev:
                 gap = max(gap, TURN + 0.45)

@@ -86,11 +86,17 @@ KEY = {"waste", "game", "glass", "auction", "twenty", "hundred", "tokens", "minu
        "begun"}
 
 
-def draw(cr, t, tl):
+def cues(t, tl):
+    """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
-    R.draw(cr, t, tl)
-    frame(cr, t, tl, R, 4, [("20 PLAYERS.", False), ("ONE KEY.", True)], "h21", "THE BIDS", KEY)
     cue("heartbeat", t, B["h10"].start, B["h13"].start - B["h10"].start)
     cue("hush", t, B["h16"].start - 0.2, B["h17"].end - B["h16"].start + 0.2)        # Momo's silence, Ren reading
     cue("riser", t, B["h17"].end, B["h19"].start - B["h17"].end)
     cue("heartbeat", t, B["h20"].start, B["h21"].end - B["h20"].start)
+
+
+def draw(cr, t, tl):
+    B = tl.by_id
+    R.draw(cr, t, tl)
+    frame(cr, t, tl, R, 4, [("20 PLAYERS.", False), ("ONE KEY.", True)], "h21", "THE BIDS", KEY)
+    cues(t, tl)

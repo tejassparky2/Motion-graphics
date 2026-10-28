@@ -81,10 +81,16 @@ KEY = {"ordinary", "meteor", "twelve", "seventeen", "nobody", "twenty", "asleep"
        "survival", "stop", "involved", "aoi", "glasses", "sixteen", "minute", "matter"}
 
 
+def cues(t, tl):
+    """This episode's sound cues (shared with the Chapter 1 long video)."""
+    B = tl.by_id
+    cue("heartbeat", t, B["m35"].start, B["m36"].end - B["m35"].start)
+    cue("riser", t, B["m36"].start, B["m36"].end - B["m36"].start)
+
+
 def draw(cr, t, tl):
     B = tl.by_id
     R.draw(cr, t, tl)
     frame(cr, t, tl, R, 1, [("12:17.", False), ("THE SKY FALLS.", True)], "m36", "THE SKY", KEY,
           hook_end=B["m2"].end + 0.1)                          # under the page: the page's own title stays clear
-    cue("heartbeat", t, B["m35"].start, B["m36"].end - B["m35"].start)
-    cue("riser", t, B["m36"].start, B["m36"].end - B["m36"].start)
+    cues(t, tl)
