@@ -51,7 +51,7 @@ SCRIPT = [
     dict(id="e14", scene="arthur", text="Neil wasn't dead. He was an [eighty-two-year-old|82-year-old] billionaire, "
                                         "in a body that was failing."),
     dict(id="e15", scene="arthur", text="Arthur Vance had money. He had a family. And he had enemies.", gap=0.4),
-    dict(id="e16", scene="arthur", text="And now, all of it belonged to Neil.", gap=0.6),
+    dict(id="e16", scene="arthur", text="And now, all of it was his.", gap=0.6),
     dict(id="e17", scene="arthur", text="And soon, they would bury Neil.", gap=0.3),
 ]
 
@@ -64,7 +64,7 @@ METADATA = dict(
 About a hundred metres away, Maya was kneeling at the crossing.
 
 The Boy Who Inherited Another Body, Part 2.
-Arthur Vance had money, a family and enemies. And now, all of it belonged to Neil. And soon, they would bury Neil.
+Arthur Vance had money, a family and enemies. And now, all of it was his. And soon, they would bury Neil.
 
 (Original story. Fiction. Anime-style animation.)""",
     hashtags=["#Thriller", "#Story", "#Shorts"],
@@ -75,7 +75,7 @@ Arthur Vance had money, a family and enemies. And now, all of it belonged to Nei
 )
 
 KEY = {"half", "moved", "shoved", "safe", "last", "crossing", "quiet", "wrong", "heavy", "old", "ring", "vance",
-       "eighty-two", "maya", "hundred", "nearest", "weakest", "billionaire", "failing", "money", "family", "enemies", "belonged", "bury"}
+       "eighty-two", "maya", "hundred", "nearest", "weakest", "billionaire", "failing", "money", "family", "enemies", "bury"}
 
 
 def camera(cr, t, s0, s1, z0=1.0, z1=1.06, cx=W / 2, cy=H / 2, shake=1.0):
