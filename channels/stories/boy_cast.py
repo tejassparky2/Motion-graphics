@@ -25,13 +25,16 @@ CHARS = {   # one look per character for every scene (consistency first)
 }
 BGS = {
     "room_night": dict(tags="teenager's bedroom at night, desk with three computer monitors showing stock charts, "
-                            "blue screen glow, dark room, city lights through the window"),
-    "cafe": dict(tags="small cafe by a train station, window seat, two cups of hot chocolate, warm afternoon light"),
+                            "blue screen glow, dark room, city lights through the window", seed=3),
+    "cafe": dict(tags="empty small cafe interior by a train station, wooden tables, big window, warm afternoon light",
+                 seed=5, neg="people, person, 1girl, 1boy, train interior, seats"),
     "street": dict(tags="city street crossing at dusk, zebra crossing, traffic lights, orange sky, wet asphalt, shops",
                    seed=4),
     "hospital": dict(tags="private hospital room at night, empty hospital bed, heart monitor, large window, city "
-                          "lights below, cold blue light"),
+                          "lights below, cold blue light", seed=3),
 }
+for _k in list(BGS):                                   # 16:9 plates for the long video, same prompts
+    BGS[_k + "_wide"] = dict(BGS[_k], size=(768, 512))
 
 
 def PARTS(c):

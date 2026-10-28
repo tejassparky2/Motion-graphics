@@ -44,6 +44,11 @@ BGS = {
     "chamber": dict(tags="dark underground bunker room interior, large square concrete room, bare concrete walls, "
                          "cold fluorescent ceiling lights, night, gloomy", seed=8, paint=(0.86, 0.98, 1.08),
                     neg="window, windows, sunlight, sky, daylight, corridor, hallway, plants"),
+    "classroom_wide": dict(tags="japanese high school classroom, rows of wooden desks, green chalkboard, large windows on "
+                                "the left, afternoon sunlight, light rays, wall clock", size=(768, 512), seed=3),
+    "chamber_wide": dict(tags="dark underground bunker room interior, large square concrete room, bare concrete walls, "
+                              "cold fluorescent ceiling lights, night, gloomy", size=(768, 512), seed=7,
+                         paint=(0.86, 0.98, 1.08), neg="window, windows, sunlight, sky, daylight, corridor, hallway"),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
     "floor": dict(tags="dark grey concrete floor texture, top-down view, dust, hairline cracks, dim cold light, night",
                   seed=9, paint=(0.62, 0.7, 0.82), neg="sunlight, shadows, window, red, lines, people, person, metal"),

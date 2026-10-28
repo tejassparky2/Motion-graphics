@@ -25,7 +25,11 @@ _P = {}
 
 
 def _bg(name):
-    return BG.format(name) if os.path.exists(os.path.join(ROOT, BG.format(name))) else None
+    """The painted plate for a set: the 16:9 one (name_wide) on a landscape canvas when it exists."""
+    for n in ((name + "_wide", name) if not V else (name,)):
+        if os.path.exists(os.path.join(ROOT, BG.format(n))):
+            return BG.format(n)
+    return None
 
 
 def puppet(who):
