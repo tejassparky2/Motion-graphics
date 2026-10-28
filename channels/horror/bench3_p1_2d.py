@@ -185,7 +185,7 @@ def bench_night(cr, t, s0, s1, ring=0.0, beam=None, env=0.0):
     if beam is not None:
         bx = 980 - 1500 * beam
         g = cairo.RadialGradient(bx, 900, 10, bx, 900, 520)
-        g.add_color_stop_rgba(0, 1, 0.97, 0.85, 0.75)
+        g.add_color_stop_rgba(0, 1, 0.97, 0.85, 0.55)
         g.add_color_stop_rgba(1, 1, 0.97, 0.85, 0)
         cr.set_source(g)
         cr.paint()
@@ -236,18 +236,19 @@ def envelope(cr, x, y, s, flip=1.0, shade=0.0, tape=0.0, rot=0.0, ink=1.0):
             cr.rectangle(-120, -130, 240 * tape, 44)
             cr.fill()
     elif ink > 0:
-        hud2d._text(cr, "Thank you for coming.", 0, 14, 44, (*PEN[:3], ink), "Kalam", "center")
+        hud2d._text(cr, "Thank you for coming.", 0, 12, 34, (*PEN[:3], ink), "Kalam", "center",
+                    outline=(*PEN[:3], ink), ow=1.6)
     if shade > 0:                                             # under the slats: the pen is there, unreadable
         g = cairo.LinearGradient(-180, 0, 180, 0)
-        g.add_color_stop_rgba(0, 0.02, 0.02, 0.04, 0.55 * shade)
-        g.add_color_stop_rgba(1, 0.02, 0.02, 0.04, 0.92 * shade)
+        g.add_color_stop_rgba(0, 0.02, 0.02, 0.04, 0.84 * shade)
+        g.add_color_stop_rgba(1, 0.02, 0.02, 0.04, 0.97 * shade)
         cr.set_source(g)
         tk.tk_rrect(cr, -180, -115, 360, 230, 8)
         cr.fill()
     cr.restore()
 
 
-def under_bench(cr, t, peel=0.0, flip=1.0):
+def under_bench(cr, t, peel=0.0, flip=1.0, back_shade=1.0):
     """Under the slats, by the lamp: your hands peel the envelope off the wood."""
     cr.set_source_rgba(0.03, 0.035, 0.05, 1)
     cr.paint()
@@ -256,7 +257,7 @@ def under_bench(cr, t, peel=0.0, flip=1.0):
              lw=4)
     glow(cr, 620, 260, 420, SODIUM, 0.35)
     y = 470 + 120 * peel
-    envelope(cr, W / 2, y, 1.1, flip=flip, shade=1.0 if flip < 0 else 0.35, tape=1 - peel, rot=-0.04 * peel)
+    envelope(cr, W / 2, y, 1.1, flip=flip, shade=back_shade if flip < 0 else 0.35, tape=1 - peel, rot=-0.04 * peel)
     hands(cr, W / 2, y + 60, 1.0, spread=205)
     grade(cr, (0.75, 0.75, 0.95), (0.35, 0.33, 0.45))
 
@@ -402,6 +403,25 @@ def inbox(cr, t, new_at):
         cr.fill()
 
 
+def notification(cr, y, num, at, lines):
+    """A message banner (frame 0): the unknown number, the exact time, the text."""
+    x, w = 60, W - 120
+    h = 74 + 36 * len(lines)
+    tk.tk_rrect(cr, x, y, w, h, 24)
+    cr.set_source_rgba(0.96, 0.96, 0.975, 0.97)
+    cr.fill_preserve()
+    cr.set_source_rgba(*INK[:3], 0.9)
+    cr.set_line_width(3)
+    cr.stroke()
+    tk.tk_rrect(cr, x + 20, y + 18, 30, 30, 8)
+    cr.set_source_rgba(*hud2d.GREEN[:3], 1)
+    cr.fill()
+    hud2d._text(cr, num, x + 64, y + 42, 26, (0.06, 0.06, 0.08, 1), hud2d.UI)
+    hud2d._text(cr, at, x + w - 22, y + 42, 22, (0.85, 0.12, 0.1, 1), hud2d.UI, "right")
+    for j, ln in enumerate(lines):
+        hud2d._text(cr, ln, x + 22, y + 84 + 36 * j, 30, (0.1, 0.1, 0.12, 1), hud2d.UI)
+
+
 # ------------------------------------------------------------------ the photo (three weeks ago)
 def photo(cr, x, y, w, h, t, stamp=True):
     """You on bench three at lunch, in daylight, three weeks ago. Half out of frame on the next bench: someone's
@@ -510,9 +530,10 @@ def draw(cr, t, tl):
         camera(cr, t, s0, s1, 1.0, 1.05, cy=520)
         phone(cr, t, NUM1, "Unknown number", first + [second])
     elif name == "bench":                                       # bench three, your coffee ring on the slats
-        camera(cr, t, s0, s1, 1.0, 1.25, cx=280, cy=900)
+        camera(cr, t, s0, s1, 1.0, 1.22, cx=270, cy=700)
+        cr.translate(0, -200)                                  # the ring sits above the captions
         bench_night(cr, t, s0, s1, ring=1.0)
-        tk.riley_back(cr, 140, 1240, 0.9, t, rim=(1, 0.8, 0.5, 0.5))
+        tk.riley_back(cr, 110, 1440, 0.72, t, rim=(1, 0.8, 0.5, 0.5))
     elif name == "under":
         camera(cr, t, s0, s1, 1.02, 1.1, cy=560, shake=0.6)
         k_turn = seg(t, plant[0], plant[0] + 0.3)
@@ -543,15 +564,15 @@ def draw(cr, t, tl):
         cr.paint()
         f = 1 - 2 * seg(t, A("b12", "over.") - 0.25, A("b12", "over.") + 0.25)
         envelope(cr, W / 2, 560, 1.4, flip=f, ink=seg(t, B["b13"].start, B["b13"].start + 0.3) if f < 0 else 0)
-        hands(cr, W / 2, 640, 1.1, spread=235)
+        hands(cr, W / 2, 780, 1.1, spread=262)
         if t >= B["b14"].start:                                 # the pen line underlines itself
             cr.set_source_rgba(*PEN[:3], 0.9)
             cr.set_line_width(5)
-            cr.move_to(W / 2 - 220, 600)
-            cr.line_to(W / 2 - 220 + 440 * seg(t, B["b14"].start, B["b14"].end), 600)
+            cr.move_to(W / 2 - 205, 604)
+            cr.line_to(W / 2 - 205 + 410 * seg(t, B["b14"].start, B["b14"].end), 604)
             cr.stroke()
     elif name == "flash":                                       # cut back: the same envelope, under the slats
-        under_bench(cr, t, peel=1.0, flip=-1.0)
+        under_bench(cr, t, peel=1.0, flip=-1.0, back_shade=0.4)       # now you can read what was there
         cr.set_source_rgba(0.9, 0.85, 0.7, 0.18)
         cr.paint()
         n3.chip(cr, t, "UNDER BENCH 3 · 9:20 PM", s0, s1 - 0.2)
@@ -598,10 +619,9 @@ def draw(cr, t, tl):
                         ("CASH", money, "warn" if t >= B["b6"].start else None, B["b6"].end)])
     n3.chip(cr, t, "BENCH THREE · PART 1", 0.0, 2.0)
     hud2d.hook(cr, t, [("$50,000", False), ("UNDER BENCH 3.", True)], end=B["b1"].end + 0.1, y=250, size=92)
-    if name == "face" and t < B["b1"].end:                      # the first text, on screen from frame 0
-        hud2d.bubble(cr, t, 0.0, B["b1"].end, f"{NUM1} · 9:00:00 PM: $50,000. Under the third bench in Hollow Park.",
-                     360, 470, (360, 1060), w=520, size=28)
-    hud2d.stamp(cr, t, B["b15"].start, B["b15"].end + 0.2, ["NEVER A WRONG NUMBER"], y=420)
+    if name == "face":                                          # the first text, on screen from frame 0
+        notification(cr, 395, NUM1, "9:00:00 PM", ["$50,000. Under the third", "bench in Hollow Park."])
+    hud2d.stamp(cr, t, B["b15"].start + 0.3, B["b15"].end + 0.2, ["NEVER", "A WRONG NUMBER"], y=420)
     hud2d.ab_card(cr, t, A("b19", "Put"), "PUT IT BACK", "KEEP IT", kicker="BENCH THREE · PART 1 · YOUR CHOICE",
                   decides="Part 2")
     hud2d.captions(cr, t, tl, KEY, skip=("b3", "b8", "b9", "b14"))

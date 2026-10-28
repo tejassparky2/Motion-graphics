@@ -386,7 +386,10 @@ def ab_card(cr, t, start, a_text, b_text, a_col=RED, b_col=GREEN, kicker="YOUR C
         cr.fill()
         _text(cr, letter, 0, -32, 50, (0.05, 0.05, 0.07, p), ROUND, "center")
         words = label.split()
-        for j, wd in enumerate(words[:2]):
+        if len(words) == 3:                                   # three short words, three lines (PUT / IT / BACK)
+            for j, wd in enumerate(words):
+                _text(cr, wd, 0, 28 + j * 34, 30, (1, 1, 1, p), ROUND, "center")
+        for j, wd in enumerate(words[:2] if len(words) != 3 else []):
             _text(cr, wd, 0, 40 + j * 40, 36 if len(words) > 1 else 40, (1, 1, 1, p), ROUND, "center")
         cr.restore()
     p = clamp01((t - start - 0.6) / 0.25)
