@@ -21,7 +21,7 @@ CHARS = {   # one look per character for every scene (consistency first)
     "arthur": dict(tags="1boy, old man, very old, wrinkled face, thin white hair, grey eyes, frail, hospital gown",
                    neg="young, muscular, beard", seed=11, face=(125, 160, 345, 380), eyes=(140, 195, 300, 268),
                    mouth=(190, 300, 262, 342), extra=("grief",),
-                   face_tags="1boy, old man, very old, wrinkled face, thin white hair, grey eyes"),
+                   face_tags="1boy, old man, very old, wrinkled face, thin white hair, grey eyes, clean-shaven"),
     "nurse": dict(tags="1girl, adult woman, nurse, teal scrubs, brown hair, hair bun, brown eyes, calm", seed=11,
                   face=(190, 150, 410, 370), eyes=(200, 190, 405, 270), mouth=(262, 300, 318, 336),
                   face_tags="1girl, adult woman, brown hair, hair bun, brown eyes"),
