@@ -250,6 +250,12 @@ def char(mod, name):
         a[y0:, :, 3][lum > 175] = 0
     for x0, y0, x1, y1 in c.get("clear", ()):         # stray props the model painted (512x768 coordinates)
         a[y0 * 2:y1 * 2, x0 * 2:x1 * 2, 3] = 0
+    for x0, y0, x1, y1 in c.get("clear_grey", ()):    # ... only grey, mid-dark pixels (a painted machine, a wall)
+        reg = a[y0 * 2:y1 * 2, x0 * 2:x1 * 2]
+        rgb = reg[..., :3].astype(np.float32)
+        sat = (rgb.max(axis=2) - rgb.min(axis=2)) / np.maximum(rgb.max(axis=2), 1)
+        lum = rgb.mean(axis=2)
+        reg[..., 3][((sat < 0.16) & (lum < 178)) | (lum < 70)] = 0
     for x0, y0, x1, y1 in c.get("clear_light", ()):   # ... only their pale parts, where they touch the body
         reg = a[y0 * 2:y1 * 2, x0 * 2:x1 * 2]
         reg[..., 3][reg[..., :3].mean(axis=2) > 110] = 0
