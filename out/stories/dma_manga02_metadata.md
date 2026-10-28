@@ -33,4 +33,4 @@ dead mans algorithm, manga, manga recap, manga dub, survival game, death game, p
 Rings of light, cracks, or an eye: what do you think Ren saw inside the meteor's glare? 👇
 ```
 
-**Video facts:** 67.7 s, 143 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 66.6 s, 142 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

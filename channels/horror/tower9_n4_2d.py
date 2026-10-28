@@ -393,7 +393,7 @@ def draw(cr, t, tl):
     hud2d.bubble(cr, t, B["k2"].start, B["k2"].end, "Tower 9. Answer me.", 360, 290, (330, 560))
     hud2d.bubble(cr, t, B["k7"].start, B["k7"].end, "Someone who answered.", 360, 280, (360, 470), creepy=True)
     hud2d.bubble(cr, t, B["k9"].start, B["k9"].end, "Day one. I hate heights.", 360, 290, (330, 560), creepy=True)
-    hud2d.stamp(cr, t, A("k8", "voice.") - 0.05, B["k9"].end + 0.3, ["YOUR VOICE"], y=250)
+    hud2d.stamp(cr, t, A("k8", "voice.") - 0.05, B["k9"].end + 0.3, ["YOUR VOICE"], y=640)   # under the bubble
     hud2d.bubble(cr, t, B["k11"].start, B["k11"].end, "Now you know why you don't answer.", 360, 280, (360, 470),
                  creepy=True)
     hud2d.bubble(cr, t, B["k14"].start, B["k14"].end, "Don't read it. I did.", 360, 280, (360, 470), creepy=True)
