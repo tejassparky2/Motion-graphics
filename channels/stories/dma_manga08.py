@@ -34,7 +34,7 @@ BEATS = [
     s(5, 8, 1, "ren", "Then I read rule two again. Anyone in this room."),
     s(6, 8, 2, "ren", "Not any player. Anyone.", gap=0.45),
     s(7, 8, 3, "ren", "And Momo was in this room.", gap=0.45),
-    s(8, 8, 4, "momo", "For Momo? How generous!", gap=0.4, sfx="chime"),
+    s(8, 8, 4, "momo", "[For Momo?! How generous!|For Momo? How generous!]", gap=0.4, sfx="chime"),   # was heard "for mama"
     s(9, 9, 1, "ren", "Momo isn't a player. Give Momo everything, and there are no players. And nobody dies."),
     s(10, 9, 2, "mio", "And walk into game three with nothing?", gap=0.4),
     s(11, 9, 3, "haruto", "Tokens or our lives? That's easy.", gap=0.4),
