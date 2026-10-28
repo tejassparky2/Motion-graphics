@@ -1,6 +1,8 @@
 # DEAD MAN'S ALGORITHM: Parts 3-6 (Game 1 resolved, Game 2 "The Charity") · v4
 
-**Status: script for the owner to approve before anything is rendered** (CLAUDE.md: script first).
+**Status: approved by the owner, 28 Oct 2026** ("Approved, go ahead and render parts 3 to 6"), including Saki as
+the ninth named student. The anime render was then dropped for manga videos; this script went to the manga
+creation chat (tejassparky2/Manga) to be drawn (owner, 28 Oct 2026: "And update our continue story to manga chat").
 
 The owner, 28 Oct 2026:
 - "Continue the Story keep the suspense thriller show how human emotions greed survival betrayal e everything make games
@@ -25,7 +27,8 @@ The owner, 28 Oct 2026:
 5. **Fair:** the clue is on screen before Ren explains it, and the betrayal's clue is planted before it happens
    (bible rules 1-3, 9).
 
-Everything below that is not in the bible is **my proposal** and becomes canon only when the owner approves it.
+Everything below that was not in the bible was proposed here and approved by the owner on 28 Oct 2026 (Q3 and Q6 of
+the auction stay open).
 
 ## Game 1: how it ends (Part 3, "The Bids")
 
@@ -47,11 +50,11 @@ a hundred. He said it in Part 2 so nobody would dare bid high, and thirty was en
 trusted a number." Ren: "He thought he beat my plan. My plan was built for a liar." No tie: **20/20 survive**. The exit
 key opens the exit, into Game 2. Tokens after Game 1: Ren 99, Riku 70 (fewest), the other 18 have 100.
 
-Answers this needs (proposed): every bid is spent (Q1: losers aren't otherwise punished); the exit key opens the door
+Answers this needs (approved): every bid is spent (Q1: losers aren't otherwise punished); the exit key opens the door
 for everyone, and it leads to Game 2 (Q2); you may bid 0 while others bid (Q4); bids are secret and final (Q5);
 tokens carry over (Q7). Q3 and Q6 stay open.
 
-## Game 2: THE CHARITY (rules fixed once approved)
+## Game 2: THE CHARITY (rules fixed, approved 28 Oct 2026)
 
 A white room. A screen that shows one number: **PLAYERS: 20**. Momo sits in the middle of the room, swinging its legs.
 Ten minutes.
@@ -190,9 +193,8 @@ us" is planted two parts before it kills her.
 
 ## Production
 
-- New painted character: Nishida Saki (my proposal for a ninth named student; the bible names only eight, so the
-  owner approves the name). Candidate seed 22 (bust like the rest of the cast) is the pick; seed 11 is the spare.
-- New painted set: the white room (portrait seed 3, 16:9 seed 3). Momo in the room, the PLAYERS counter, the tokens,
-  rule cards, the proof card, the ledger and the countdown are drawn in code, so every number on screen is exact.
-- A long 16:9 "Chapter 2" can join Parts 3-6 afterwards.
-- Every line is checked with Whisper medium after the render; names (Nishida Saki, Kanzaki Riku) get reworded if misheard.
+- Nishida Saki, seat 14, is the ninth named student (approved). The "On screen" column was written for the dropped
+  anime version; in the manga, the rule cards, PLAYERS counter, proof card and ledger can be screens, captions or
+  drawn inserts, as long as every number stays exact.
+- The manga videos voice every line on the lettered pages and check each one with Whisper medium; names (Nishida
+  Saki, Kanzaki Riku) get reworded if misheard.
