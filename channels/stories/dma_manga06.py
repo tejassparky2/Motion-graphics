@@ -32,9 +32,9 @@ BEATS = [
     s(2, 7, 2, "ren", "Then let them. Bid more than one, and you win the key. Unless two liars pick the same number.",
       gap=0.4),
     s(3, 7, 3, "ren", "Just never bid a hundred. Riku already called it.", gap=0.4),
-    s(4, 7, 4, "riku", "Fine. Ren bids one.", gap=0.4),
+    s(4, 7, 4, "riku", "[Fine. Ren, bids one.|Fine. Ren bids one.]", gap=0.4),   # "Ren bids" merged
     s(5, 8, 1, "ren", "Riku agreed too fast."),
-    n(6, 8, 2, "Then the timer hit zero.", gap=0.6, sfx="ding", impact=True),
+    n(6, 8, 2, "Then time ran out.", gap=0.6, sfx="ding", impact=True),   # "hit zero" was heard "hits zero"
     s(7, 8, 3, "momo", "[Time's up! Highest unique bid. Thirty! Kanzaki Riku!|Time's up! Highest unique bid: thirty! "
                        "Kanzaki Riku!]", gap=0.4),
     s(8, 9, 1, "ren", "Riku never meant a hundred. He said it so nobody would dare bid high."),
