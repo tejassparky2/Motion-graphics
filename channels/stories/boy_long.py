@@ -8,14 +8,17 @@ point 7): "And soon, they would bury Neil."
     /home/user/.venv-main/bin/python channels/horror/make_2d.py boy_long   -> out/stories/boy_long.mp4 (1280x720)
 """
 import math
+import os
 
-from motion import audio, voice
+from motion import audio, satsuei, voice
 from motion.engine import W, H, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import boy_art as B, serial
+from channels.stories import boy_anime, boy_art, serial
 from channels.stories import boy_s1 as S1
+
+B = boy_art if os.environ.get("ANIME") == "0" else boy_anime     # ANIME=0: the old vector look
 
 NARRATOR = dict(turbo=True, turbo_ref="bm_george")
 TAIL = 2.5
@@ -138,7 +141,7 @@ III. The Last Position
 
 And soon, they would bury Neil. Chapter 2 is next.
 
-An original story. Fiction. 2D animation. Not financial advice.""",
+An original story. Fiction. Anime-style animation. Not financial advice.""",
     hashtags=["#Thriller", "#Story", "#Animation"],
     tags=["the boy who inherited another body", "psychological thriller", "reincarnation", "body swap", "trader",
           "stock market", "billionaire", "original story", "chapter 1", "2d animation"],
@@ -342,7 +345,11 @@ def draw(cr, t, tl):
     cr.restore()
 
     if sid not in ("white", "l41", "l42", "l44", "black2", "l56", "title", "partI", "partII", "partIII"):
-        hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
+        if B is boy_anime:                                      # satsuei: glow, light, aberration, grain
+            satsuei.apply(cr, t, glow=0.25, shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.03)
+            hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.0)
+        else:
+            hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
     if sid == "l56":
         B.law_card(cr, t, seg(t, s0, s0 + 0.4), seg(t, s0 + 0.4, Bb["l56"].end))
     if sid == "l16":

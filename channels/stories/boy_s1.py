@@ -9,13 +9,16 @@ number, the text to Maya, the café, the receipt, the crossing, the car. Ends on
     /home/user/.venv-main/bin/python channels/horror/make_2d.py boy_s1   -> out/stories/boy_s1.mp4
 """
 import math
+import os
 
-from motion import audio, voice
+from motion import audio, satsuei, voice
 from motion.engine import W, H, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import boy_art as B, serial
+from channels.stories import boy_anime, boy_art, serial
+
+B = boy_art if os.environ.get("ANIME") == "0" else boy_anime     # ANIME=0: the old vector look
 
 NARRATOR = dict(turbo=True, turbo_ref="bm_george")
 TAIL = 2.0
@@ -66,7 +69,7 @@ METADATA = dict(
 The Boy Who Inherited Another Body, Part 1. Part 2: what happened in that half second, and where Neil woke up.
 Half a second. Just enough time for one last trade.
 
-(Original story. Fiction. 2D animation. Not financial advice.)""",
+(Original story. Fiction. Anime-style animation. Not financial advice.)""",
     hashtags=["#Thriller", "#Story", "#Shorts"],
     tags=["the boy who inherited another body", "thriller", "psychological thriller", "trader", "stock market",
           "story", "reincarnation", "plot twist", "2d animation", "part 1"],
@@ -216,7 +219,11 @@ def draw(cr, t, tl):
             grade(cr, (0.8, 0.82, 0.9), (0.4, 0.42, 0.5))
     cr.restore()
 
-    hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
+    if B is boy_anime:                                      # satsuei: glow, light, aberration, grain
+        satsuei.apply(cr, t, glow=0.25, shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.03)
+        hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.0)
+    else:
+        hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
     if name == "balance":
         big_number(cr, t, seg(t, Bb["b7"].start - 0.1, Bb["b7"].start + 0.4))
     hud2d.hook(cr, t, [("17 YEARS OLD.", False), (BAL, True)], end=Bb["b1"].end + 0.05, y=240, size=74)

@@ -10,13 +10,16 @@ Part 3: "And soon, they would bury Neil." (plot point 7, his own funeral)
     /home/user/.venv-main/bin/python channels/horror/make_2d.py boy_s2   -> out/stories/boy_s2.mp4
 """
 import math
+import os
 
-from motion import audio, voice
+from motion import audio, satsuei, voice
 from motion.engine import W, H, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import boy_art as B, serial
+from channels.stories import boy_anime, boy_art, serial
+
+B = boy_art if os.environ.get("ANIME") == "0" else boy_anime     # ANIME=0: the old vector look
 
 NARRATOR = dict(turbo=True, turbo_ref="bm_george")
 TAIL = 2.0
@@ -63,7 +66,7 @@ About a hundred metres away, Maya was kneeling at the crossing.
 The Boy Who Inherited Another Body, Part 2.
 Arthur Vance had a fortune, a family and enemies. Now they were all Neil's. And soon, they would bury Neil.
 
-(Original story. Fiction. 2D animation.)""",
+(Original story. Fiction. Anime-style animation.)""",
     hashtags=["#Thriller", "#Story", "#Shorts"],
     tags=["the boy who inherited another body", "reincarnation", "body swap", "billionaire", "thriller",
           "psychological thriller", "story", "plot twist", "2d animation", "part 2"],
@@ -197,7 +200,11 @@ def draw(cr, t, tl):
     cr.restore()
 
     if name not in ("white", "black", "law"):
-        hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.05)
+        if B is boy_anime:                                      # satsuei: glow, light, aberration, grain
+            satsuei.apply(cr, t, glow=0.25, shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.03)
+            hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.0)
+        else:
+            hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.05)
     if name == "law":
         B.law_card(cr, t, seg(t, s0, s0 + 0.4), seg(t, s0 + 0.4, Bb["e13"].end))
     hud2d.hook(cr, t, [("HALF A SECOND.", False), ("HE DIDN'T THINK.", True)], end=Bb["e1"].end + 0.05, y=230,
