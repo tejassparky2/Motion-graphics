@@ -202,3 +202,10 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   dma_manga_ch01_long.py, ~5:17) handed to a helper session (session_01PF511XprLcpVNCdEQUsUFF) with the chapter's
   voice takes packed in assets/voice_cache/dma_ch01_takes.tar. Chapter 2 "The Bids" (assets/manga/dma/ch02, manga
   commit 3fa8203) = Episodes 5 (pages 1-6) and 6 (pages 7-11); Ren's first-person captions in Ren's voice.
+- 28 Oct (evening): owner "That drum sound effects is very bad both in long and shorts" -> the heartbeat cue is gone
+  from every manga episode; Episodes 1-5 and the Chapter 1 long video re-rendered and re-sent. Manga Shorts made and
+  delivered: Episodes 5-6 (Chapter 2), 7-9 (Chapter 3 "The Charity"), 10-12 (Chapter 4 "Find Yourself"); long
+  videos (16:9, YouTube chapters in the sheets) for Chapters 1-3 delivered, Chapter 4 rendering in the helper
+  session (session_01PF511XprLcpVNCdEQUsUFF, which renders from the packed takes in assets/voice_cache/). Chapter 5
+  "Thirty Tokens" (20 pages) is copied to assets/manga/dma/ch05, not made yet. The disk allowance filled once: the
+  shelved anime pipeline's models and venvs, old render scratch and the multilingual Whisper model were deleted.
