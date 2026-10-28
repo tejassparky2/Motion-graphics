@@ -53,7 +53,7 @@ BEATS = [
     n(21, 18, 2, "[Class three B.|Class 3-B.] [Twenty|20] students. [Twenty|20] survivors.",
       gap=0.4),
     n(22, 18, 2, "[Event zero zero.|Event 00:] Impact.", gap=0.35),
-    n(23, 18, 2, "Status of Earth. Unknown.", gap=0.45, sfx="sting"),
+    n(23, 18, 2, "Status of Earth. Unknown.", gap=0.45),          # its sting comes after the line (cues)
     s(24, 18, 3, "haruto", "[Survivors?|Survivors...?]", gap=0.5),
     s(25, 18, 3, "student_d", "[Status of Earth. Unknown?|Status of Earth... unknown?]", gap=0.3),
     n(26, 19, 1, "Then a list. Names. Birthdays. Blood types.", gap=0.4),
@@ -105,6 +105,7 @@ def cues(t, tl):
     B = tl.by_id
     cue("heartbeat", t, B["g18"].start, B["g20"].start - B["g18"].start)
     cue("riser", t, B["g20"].start, B["g23"].start - B["g20"].start)
+    cue("sting", t, B["g23"].end + 0.05)                      # under the sting it was heard "The status of Earth"
     cue("heartbeat", t, B["g30"].start, B["g32"].start - B["g30"].start)
     cue("hush", t, B["g35"].start - 0.2, B["g36"].start - B["g35"].start + 0.1)       # nobody moved
     cue("hush", t, B["g37"].start - 0.2, B["g38"].start - B["g37"].start + 0.1)       # silence
