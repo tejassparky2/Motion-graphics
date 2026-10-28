@@ -346,7 +346,8 @@ def draw(cr, t, tl):
 
     if sid not in ("white", "l41", "l42", "l44", "black2", "l56", "title", "partI", "partII", "partIII"):
         if B is boy_anime:                                      # satsuei: glow, light, aberration, grain
-            satsuei.apply(cr, t, glow=0.25, shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.03)
+            satsuei.apply(cr, t, glow=0.25, shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0,
+                      grain=0.016)                              # lighter grain: the long file must stay < 50 MB
             hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.0)
         else:
             hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
