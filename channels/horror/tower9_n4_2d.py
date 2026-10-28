@@ -33,7 +33,7 @@ SCRIPT = [
     dict(id="k2", scene="radio", text="Tower [nine.|9.] Answer me.", speaker="base", gap=0.5),
     dict(id="k3", scene="radio", text="You don't. The radio's light goes out.", gap=0.5),
     dict(id="k4", scene="other", text="The other you sits by the hatch. Frost spreads wherever it sits."),
-    dict(id="k5", scene="watch", text="Its watch says [five.|5:00.] Then [four fifty-nine.|4:59.] Then "
+    dict(id="k5", scene="watch", text="Its watch reads [five.|5:00.] Then [four fifty-nine.|4:59.] Then "
                                       "[four fifty-eight.|4:58.]", gap=0.4),
     dict(id="k6", scene="you", text="So you ask it. Who's on the radio?", gap=0.5),
     dict(id="k7", scene="other", text="Someone who answered.", speaker="other", gap=0.4),
