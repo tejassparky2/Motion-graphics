@@ -33,4 +33,4 @@ dead mans algorithm, survival game, game theory, death game, psychological thril
 I'd bid 1. Everyone scared of ties goes high, and a hundred is where the ties are. Am I wrong? What's your number? 👇
 ```
 
-**Video facts:** 66.3 s, 180 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 66.8 s, 180 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
