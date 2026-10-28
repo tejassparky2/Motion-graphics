@@ -38,7 +38,7 @@ def _surface_from_rgba(a):
 
 
 @functools.lru_cache(maxsize=None)
-def image(path, blur=0, scale=1.0, pad_bottom=0):
+def image(path, blur=0, scale=1.0, pad_bottom=0, side_fade=0.0):
     """A PNG as a cairo surface (optionally pre-blurred / pre-scaled; cached per process). pad_bottom repeats the last
     row downward, so a bust's cut-off chest never ends inside the frame."""
     a = cv2.imread(os.path.join(ROOT, path), cv2.IMREAD_UNCHANGED)
@@ -47,6 +47,18 @@ def image(path, blur=0, scale=1.0, pad_bottom=0):
     a = cv2.cvtColor(a, cv2.COLOR_BGRA2RGBA if a.shape[2] == 4 else cv2.COLOR_BGR2RGB)
     if a.shape[2] == 3:
         a = np.dstack([a, np.full(a.shape[:2], 255, np.uint8)])
+    if side_fade:                                 # a painting cut off at its side edge fades out instead
+        w = a.shape[1]
+        n = max(1, int(w * side_fade))
+        ramp = np.ones(w, np.float32)
+        ramp[:n] = np.linspace(0, 1, n)
+        ramp[-n:] = np.linspace(1, 0, n)
+        h = a.shape[0]
+        m = max(1, int(h * side_fade * 0.6))
+        top = np.ones(h, np.float32)
+        top[:m] = np.linspace(0, 1, m)                # ... and at its top edge (big hair)
+        a = a.copy()
+        a[..., 3] = (a[..., 3] * ramp[None, :] * top[:, None]).astype(np.uint8)
     if pad_bottom:
         a = cv2.copyMakeBorder(a, 0, pad_bottom, 0, 0, cv2.BORDER_REPLICATE)
     if scale != 1.0:
@@ -113,7 +125,7 @@ class Puppet:
         k = s * 250 / self.head_h
         breathe = 1 + 0.007 * math.sin(2 * math.pi * 0.23 * tq + self.phase)
         sway = 0.006 * math.sin(2 * math.pi * 0.11 * tq + self.phase * 3) + tilt
-        base = image(os.path.join(self.dir, "base.png"), pad_bottom=0 if fade else 1200)
+        base = image(os.path.join(self.dir, "base.png"), pad_bottom=0 if fade else 1200, side_fade=0.06)
         cr.save()
         cr.translate(x, y)
         cr.rotate(sway)
