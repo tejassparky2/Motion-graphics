@@ -8,36 +8,14 @@ only describe what the panels show (plus the canon 12:17 impact). Ends at 12:16,
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_manga01   -> out/stories/dma_manga01.mp4
 """
-import os
+from motion.engine import cue
 
-import yaml
+from channels.stories import manga as M
+from channels.stories.dma_manga import MUSIC, NARRATOR, N, S, book, frame, setup  # noqa: F401  (render reads both)
 
-from motion import audio, voice
-from motion.engine import W, H, cue
-
-from channels.horror import hud, hud2d, sound  # noqa: F401
-from channels.stories import dma_kit as K, manga as M, serial
-
-NARRATOR = dict(turbo=True, turbo_ref="bm_george")            # the storyteller; Ren speaks in his own voice
 TAIL = 2.0
-MUSIC = "horror"
-voice.SPEAKERS.update(K.SPEAKERS)
-voice.SPEAKERS.update({"teacher": dict(voice="am_liam", turbo_ref="am_liam")})
-audio.GAINS.update(chime=0.6, click=0.6, sting=0.5)
-
-FOLDER = "assets/manga/dma/ch01"
-_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-ROWS = {p["page"]: p["rows"] for p in yaml.safe_load(open(os.path.join(_ROOT, FOLDER, "script.yaml")))["pages"]}
-BOOK = M.Manga(os.environ.get("MANGA_PAGES", FOLDER), ROWS)              # MANGA_PAGES: test pages
-
-
-def N(i, page, panel, text, **kw):
-    return dict(id=f"m{i}", page=page, panel=panel, text=text, **kw)
-
-
-def S(i, page, panel, who, text, **kw):
-    return dict(id=f"m{i}", page=page, panel=panel, text=text, speaker=who, **kw)
-
+setup()
+BOOK = book(1)
 
 BEATS = [
     N(1, 1, 0, "Class [three B.|3-B.] An ordinary school, on an ordinary day."),
@@ -106,19 +84,7 @@ KEY = {"ordinary", "meteor", "twelve", "seventeen", "nobody", "twenty", "asleep"
 def draw(cr, t, tl):
     B = tl.by_id
     R.draw(cr, t, tl)
-    hud.finish(cr, t, flash_at=[], vig=0.35, grain=0.03)
-    M.series_chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 1")
-    hook_end = B["m2"].end + 0.1                               # under the page: the page's own title stays clear
-    hud2d.hook(cr, t, [("12:17.", False), ("THE SKY FALLS.", True)], end=hook_end, y=1095, size=78)
-    if hook_end + 0.25 < t < B["m36"].end + 0.1:
-        M.name_chip(cr, t, R.speaker(t, tl))
-        hud2d.captions(cr, t, tl, KEY, y=1135)
-    serial.next_card(cr, t, B["m36"].end + 0.1, "DEAD MAN'S ALGORITHM · THE MANGA", "EPISODE 2", "THE SKY")
-    cue("hum", t, 0.0, tl.total)
-    for b in R.plan(tl):
-        if b["turn"]:
-            cue("whoosh", t, b["t0"] + 0.05)
-        if b.get("sfx"):
-            cue(b["sfx"], t, b["start"] - 0.08)
+    frame(cr, t, tl, R, 1, [("12:17.", False), ("THE SKY FALLS.", True)], "m36", "THE SKY", KEY,
+          hook_end=B["m2"].end + 0.1)                          # under the page: the page's own title stays clear
     cue("heartbeat", t, B["m35"].start, B["m36"].end - B["m35"].start)
     cue("riser", t, B["m36"].start, B["m36"].end - B["m36"].start)
