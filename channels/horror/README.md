@@ -196,3 +196,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   puffer; unused publicly now that The Seventh Kid is skipped). The texts and the note are read in one calm voice
   (bm_lewis), an audio clue that they're one man. "Put it back?" was re-voiced (heard "Open it back"). Vote: A put it
   back / B keep it; both Part 2 openings are in the script file.
+- 28 Oct: owner "make episode 2/3/4 ... continue dma" and "after chapter 1 in shorts make chapter 1 long video for
+  youtube in long videos format ... open another cloud ... keep opus 5.5". Manga Episodes 3 (pages 15-21) and 4
+  (pages 22-26, rules read rule by rule with a camera box per rule) made; Chapter 1 long video (16:9,
+  dma_manga_ch01_long.py, ~5:17) handed to a helper session (session_01PF511XprLcpVNCdEQUsUFF) with the chapter's
+  voice takes packed in assets/voice_cache/dma_ch01_takes.tar. Chapter 2 "The Bids" (assets/manga/dma/ch02, manga
+  commit 3fa8203) = Episodes 5 (pages 1-6) and 6 (pages 7-11); Ren's first-person captions in Ren's voice.

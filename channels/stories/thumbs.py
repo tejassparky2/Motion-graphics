@@ -255,6 +255,30 @@ def dma_manga04(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 4")
 
 
+def dma_manga05(cr):
+    """Ren's resolve (Chapter 2 page 5), filling the cover: MY NUMBER WAS ONE."""
+    folder = "assets/manga/dma/ch02"
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 5, 1, folder, ax=0.5, ay=0.42, yc=0.6)
+    _top_shade(cr, 520)
+    big_text(cr, [("MY NUMBER", (1, 1, 1, 1)), ("WAS ONE.", hud2d.RED)], 250, 112)
+    chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 5")
+
+
+def dma_manga06(cr):
+    """Riku's grin (Chapter 2 page 9) over Momo announcing the result (page 8): HE BID THIRTY."""
+    folder = "assets/manga/dma/ch02"
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 9, 1, folder, fit=1.0, yc=0.52)
+    _manga_panel(cr, 9, 2, folder, fit=0.62, yc=0.86, xc=0.69)
+    _manga_panel(cr, 9, 3, folder, fit=0.62, yc=0.86, xc=0.31)
+    _top_shade(cr, 520)
+    big_text(cr, [("HE LIED.", (1, 1, 1, 1)), ("THE PLAN HELD.", hud2d.RED)], 250, 112)
+    chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 6")
+
+
 def dma_manga_ch01_long(cr):
     """16:9: the meteor filling the sky (page 10) on the right, Momo waving in its spotlight (page 20) below it, the
     chapter title on the left: CHAPTER 1 / 12:17."""
@@ -278,7 +302,8 @@ def dma_manga_ch01_long(cr):
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
           "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
           "dma_manga01": dma_manga01, "dma_manga02": dma_manga02,
-          "dma_manga03": dma_manga03, "dma_manga04": dma_manga04, "dma_manga_ch01_long": dma_manga_ch01_long}
+          "dma_manga03": dma_manga03, "dma_manga04": dma_manga04, "dma_manga_ch01_long": dma_manga_ch01_long,
+          "dma_manga05": dma_manga05, "dma_manga06": dma_manga06}
 
 if __name__ == "__main__":
     name = sys.argv[1]

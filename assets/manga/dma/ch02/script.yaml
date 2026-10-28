@@ -1,0 +1,284 @@
+# DEAD MAN'S ALGORITHM — Chapter 2 "The Bids" — draft 1
+# Source: approved continuation v5 (story/continuation_v5_approved.md), Part A and Part 3.
+#
+# Conventions (as in chapter01):
+#   canon: true  -> verbatim from the bible or the approved continuation (CONFIRMED CANON)
+#   (no flag)    -> new text for this draft (PROPOSAL — NOT CANON). Here only SFX.
+#   Narration (Ren, first person) is lettered as captions.
+#   Reading order is right to left; rows list cells right to left.
+#   Chapter title "The Bids" comes from the approved part name.
+
+chapter: 2
+title: "The Bids"
+
+characters:
+  REN: "1boy, black hair, short hair, messy hair, hair between eyes, gakuran"
+  YUI: "1girl, long hair, black hair, straight hair, blunt bangs, serafuku"
+  HARUTO: "1boy, blonde hair, spiky hair, gakuran"
+  RIKU: "1boy, black hair, slicked back hair, sharp eyes, gakuran"
+  GO: "1boy, black hair, buzz cut, tall, broad shoulders, stoic, buttoned gakuran"
+  KOTA: "1boy, black hair, bowl cut, thin, timid, gakuran"
+  AOI: "1girl, black hair, bob cut, glasses, serafuku"
+  MIO: "1girl, light brown hair, long wavy hair, earrings, serafuku"
+  SAKI: "1girl, black hair, short hair, hair over one eye, quiet, serafuku"
+  MOMO: "no humans, solo, white mouse, chibi, big round ears, black eyes, bow tie, bell, mascot"
+
+character_negatives:
+  MOMO: "multiple mice, 2others"
+negative_extra: "rubble, ruins, cave, sky"
+
+pages:
+
+- page: 1
+  rows: [[1, [1]]]
+  panels:
+  - kind: art
+    shot: "SPLASH — the key"
+    art: "The key behind its glass barrier under a spotlight, in the dark concrete chamber. The timer is running."
+    gen: "no humans, key, old key, glass case, pedestal, spotlight, dark room, dramatic lighting, still life"
+    negative_extra: "shelves, shop, display cabinets"
+    sketch: sketches/p01_1.png
+    strength: 0.6
+    title: true
+
+# ---------------------------------------------------------------- PART A
+- page: 2
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku, smug, cracking his knuckles."
+    gen: "{RIKU}, smirk, cracking knuckles, confident, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: RIKU, say: "Easy. I'm going all in. Nobody beats a hundred.", canon: true}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi, calm, glasses catching the screen light."
+    gen: "{AOI}, calm, serious, light reflection on glasses, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: AOI, say: "Unless someone else bids a hundred. Then you're both eliminated.", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, a nervous half-joke."
+    gen: "{HARUTO}, nervous smile, sweat, scratching head, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: HARUTO, say: "So we all bid zero and go home?", canon: true}
+  - kind: art
+    shot: "CLOSE — Kota"
+    art: "Kota, quiet and grim."
+    gen: "{KOTA}, serious, looking down, quiet, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: KOTA, say: "Then rule five executes all of us.", canon: true}
+
+- page: 3
+  rows: [[1, [1]], [1.1, [1]], [0.9, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Mio"
+    art: "Mio, arms crossed, glancing around the room."
+    gen: "{MIO}, arms crossed, serious, glancing to the side, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: MIO, say: "So somebody has to bid. And everyone will remember who.", canon: true}
+  - kind: art
+    shot: "WIDE — suspicion"
+    art: "Classmates eye one another in silence. No screen in shot."
+    gen: "multiple boys, multiple girls, gakuran, serafuku, suspicious, glancing at each other, tense, standing, dark concrete room, dim light, wide shot"
+    negative_extra: "screen, monitor, television"
+    text:
+    - {t: caption, who: REN, say: "Everyone was doing the same math.", canon: true}
+  - kind: art
+    shot: "EXTREME CLOSE — eyes"
+    art: "One classmate's wary eyes, extreme close-up: exactly two eyes."
+    gen: "1girl, solo, eye focus, two eyes, extreme close-up, suspicious, side glance, sweat, dark"
+    negative_extra: "third eye, extra eyes, multiple girls"
+    text:
+    - {t: caption, who: REN, say: "Bid too high, and you might tie. Bid too low, and someone beats you.", canon: true}
+
+- page: 4
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: timer
+    shot: "SCREEN — the countdown"
+    art: "The timer at 09:12."
+    time: "09:12"
+    text:
+    - {t: caption, who: REN, say: "The countdown said 9:12.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, still, calculating."
+    gen: "{REN}, serious, thinking, calculating, upper body, dark room, screen glow"
+    text:
+    - {t: caption, who: REN, say: "And I realised a hundred might be the most dangerous number in this room.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo"
+    art: "Momo, swaying cheerfully."
+    gen: "{MOMO}, happy, swaying, waving, full body, dark room, spotlight"
+    text:
+    - {t: speech, who: MOMO, say: "Tick tock, Class 3-B!", canon: true}
+  - kind: art
+    shot: "EXTREME CLOSE — Ren's eyes"
+    art: "Ren's eyes, decided."
+    gen: "1boy, eye focus, extreme close-up, determined, serious, dark, screen reflection in eyes"
+    text:
+    - {t: caption, who: REN, say: "I already knew my number.", canon: true}
+
+# ---------------------------------------------------------------- PART 3
+- page: 5
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, quiet resolve."
+    gen: "{REN}, determined, calm, looking at viewer, upper body, dark room, screen glow"
+    text:
+    - {t: caption, who: REN, say: "My number was one.", canon: true}
+  - kind: rules
+    shot: "SCREEN — Rule 05"
+    art: "Rule 05 on the screen."
+    lines:
+    - {s: "Rule 05: If all players leave all tokens unspent when time expires, everyone is executed.", canon: true}
+    text:
+    - {t: caption, who: REN, say: "Somebody had to spend. Or rule five killed us all.", canon: true}
+  - kind: rules
+    shot: "SCREEN — Rule 03"
+    art: "Rule 03 on the screen."
+    lines:
+    - {s: "Rule 03: If two or more players submit the same highest bid, every player tied at that amount is eliminated.", canon: true}
+    text:
+    - {t: caption, who: REN, say: "But two bids at the top would tie. And a tie gets you eliminated. Nobody knew what that meant.", canon: true}
+
+- page: 6
+  rows: [[1, [1, 1]], [1.1, [1]]]
+  panels:
+  - kind: rules
+    shot: "SCREEN — Rule 02"
+    art: "Rule 02 on the screen."
+    lines:
+    - {s: "Rule 02: All spent tokens are permanently lost.", canon: true}
+    text:
+    - {t: caption, who: REN, say: "So only one person could bid. And spent tokens are gone permanently. So it had to be tiny.", canon: true}
+  - kind: art
+    shot: "CLOSE — Mio (remembered)"
+    art: "Mio, as she said it a moment ago."
+    gen: "{MIO}, serious, arms crossed, upper body, dark room, screen glow"
+    text:
+    - {t: caption, who: REN, say: "Mio was right. Everyone would remember who. So it had to be me.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Ren speaks up"
+    art: "Ren steps forward and addresses the class."
+    gen: "{REN}, solo, speaking, serious, open hand raised, palm, upper body, dark room"
+    negative_extra: "phone, card, holding object"
+    text:
+    - {t: speech, who: REN, say: "I bid one. Everyone else bids zero.", canon: true}
+
+- page: 7
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio, sceptical."
+    gen: "{MIO}, skeptical, raised eyebrow, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: MIO, say: "And if somebody lies?", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, calm."
+    gen: "{REN}, calm, serious, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: REN, say: "Then let them. Bid more than one, and you win the key. Unless two liars pick the same number.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren, to Riku"
+    art: "Ren looks pointedly toward Riku (off-panel)."
+    gen: "{REN}, side glance, looking to the side, serious, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: REN, say: "Just never bid a hundred. Riku already called it.", canon: true}
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku shrugs, easy."
+    gen: "{RIKU}, shrug, casual, half-closed eyes, upper body, dark room, screen glow"
+    text:
+    - {t: speech, who: RIKU, say: "Fine. Ren bids one.", canon: true}
+
+- page: 8
+  rows: [[1, [1, 1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Ren narrows his eyes"
+    art: "Ren watches Riku, uneasy."
+    gen: "{REN}, solo, narrowed eyes, suspicious, upper body, dark room, side lighting"
+    negative_extra: "laptop, computer, phone, screen"
+    seed: 20810
+    text:
+    - {t: caption, who: REN, say: "Riku agreed too fast.", canon: true}
+  - kind: timer
+    shot: "SCREEN — time's up"
+    art: "The timer at 00:00."
+    time: "00:00"
+    text:
+    - {t: sfx, say: "BEEP"}
+  - kind: art
+    shot: "FULL — Momo announces"
+    art: "Momo, delighted, announcing the result."
+    gen: "{MOMO}, arms up, excited, announcing, full body, dark room, spotlight"
+    text:
+    - {t: speech, who: MOMO, say: "Time's up! Highest unique bid: thirty! Kanzaki Riku!", canon: true}
+
+- page: 9
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Riku's grin"
+    art: "Riku grins, triumphant."
+    gen: "{RIKU}, smug grin, triumphant, upper body, dark room, screen glow"
+    text:
+    - {t: caption, who: REN, say: "Riku never meant a hundred. He said it so nobody would dare bid high.", canon: true}
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku, to Ren."
+    gen: "{RIKU}, smirk, looking down, arrogant, close-up, dark room"
+    text:
+    - {t: speech, who: RIKU, say: "You trusted a plan. I trusted a number.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, unshaken, almost a smile."
+    gen: "{REN}, calm, slight smile, closed mouth, close-up, dark room"
+    text:
+    - {t: caption, who: REN, say: "He thought he beat my plan. My plan was built for a liar.", canon: true}
+
+- page: 10
+  rows: [[1.2, [1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — everyone alive"
+    art: "The class stands, shaken but whole."
+    gen: "multiple boys, multiple girls, gakuran, serafuku, relieved, standing, from above, wide shot, concrete room, large metal door, black screen on wall, dim lighting"
+    negative_extra: "atrium, multiple floors, corridor, wooden"
+    sketch: sketches/p10_1.png
+    strength: 0.7
+    text:
+    - {t: caption, who: REN, say: "No tie. Nobody eliminated. Twenty survivors.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo, bored"
+    art: "Momo slumps, disappointed."
+    gen: "{MOMO}, pout, bored, slouching, full body, dark room, spotlight"
+    text:
+    - {t: speech, who: MOMO, say: "Everybody lives! How boring!", canon: true}
+
+- page: 11
+  rows: [[1.2, [1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — the exit opens"
+    art: "The huge metal door swings open onto light."
+    gen: "no humans, huge steel door opening, blinding white light beyond, concrete room, dark, dramatic, wide shot"
+    negative_extra: "landscape, horizon, sunrise, sky, outdoors"
+    note: "Only white light beyond the door. The outside world and Earth's condition stay UNRESOLVED."
+    text:
+    - {t: sfx, say: "KA-CHUNK"}
+    - {t: caption, who: REN, say: "The exit key opened the exit. Into game two.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Riku walks through"
+    art: "Riku walks into the light, seen from behind."
+    gen: "{RIKU}, from behind, walking, doorway, bright light, silhouette"
+    text:
+    - {t: caption, who: REN, say: "And Riku had just spent thirty tokens. Fewer than anyone.", canon: true}
