@@ -89,7 +89,7 @@ def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
     cue("riser", t, B["e8"].start, B["e11"].start - B["e8"].start)
-    cue("riser", t, B["e15"].start, B["e18"].start - B["e15"].start)
+    cue("riser", t, B["e15"].start, B["e17"].start - B["e15"].start)   # ends before "He couldn't look away." (under its peak it was misheard)
     cue("thud", t, B["e18"].start + 0.02)
     cue("hush", t, B["e19"].start - 0.2, B["e21"].start - B["e19"].start + 0.1)   # darkness, then silence
 
