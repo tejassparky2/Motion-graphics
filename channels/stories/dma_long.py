@@ -82,7 +82,7 @@ SCRIPT = [
     dict(id="c33", scene="chamber", text="Our teacher had been standing at the front of the room. Now there was "
                                          "no one."),
     dict(id="c34", scene="chamber", text="No signal. Nothing.", speaker="haruto"),
-    dict(id="c35", scene="chamber", text="The door's sealed.", speaker="go"),
+    dict(id="c35", scene="chamber", text="The door is sealed.", speaker="go"),
     dict(id="c36", scene="chamber", text="Then somebody open it! Hey! We're down here!", speaker="riku"),
     dict(id="c37", scene="chamber", text="Stop shouting. Look up.", speaker="aoi", gap=0.5),
     dict(id="c38", scene="chamber", text="Cameras. Four of them. All watching us.", speaker="aoi"),
