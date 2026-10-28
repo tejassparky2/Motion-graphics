@@ -18,6 +18,12 @@ Both versions:
 
 About 55-60 s each.
 
+**Checked against the 28 Oct research checklist** (reports/Psychological death game design.md). Version L had a
+timing hole. The last porch light went out at line 2, while the thing was holding nobody's hand. Then it was in the
+van holding the witch's hand, so rule 3 ("when the porch lights go out, it goes home with the hand it's holding")
+didn't add up. It also "watched you go" on the path while it was already in the van. Fixed: one light is still on at
+line 2, the path is empty when you look back, and the last light goes out at line 14, while it holds the witch's hand.
+
 ---
 
 ## Version L: most of you let go of the LEFT (the right choice)
@@ -25,9 +31,9 @@ About 55-60 s each.
 | # | Line (spoken) | On screen |
 |---|---|---|
 | 1 | Most of you let go of the left. So you open your hand. | Frame 0: your left hand opening, the sheet-hand sliding out of it. Big text: **YOU LET GO OF THE LEFT.** HUD: PORCH LIGHTS 1. |
-| 2 | The last porch light goes out. | Click. The street goes dark. |
+| 2 | One porch light left. | The last porch light flickers at the end of the street. HUD: PORCH LIGHTS 1. |
 | 3 | In the dark, two eyes catch the streetlight. Like a cat's. | The left ghost, alone on the dark path, its eyeholes shining gold (Part 1's clue paid off). |
-| 4 | It doesn't follow. It just watches you go. | Wide: you and the right ghost walking away; it stands still behind you. |
+| 4 | You look back. The path is empty. | Wide: you and the right ghost; behind you, the empty path. |
 | 5 | The ghost holding your hand hasn't made a sound. Not even a breath. | Close on the right ghost: no fog. Heartbeat. (Did you pick wrong?) |
 | 6 | Under the streetlight, you pull off its sheet. | The sheet whips away. |
 | 7 | It's Sam. Red-faced. Cheeks puffed out. | Sam, cheeks bulging, eyes squeezed shut. |
@@ -37,7 +43,7 @@ About 55-60 s each.
 | 11 | You brought five kids to that van. You count six. | Numbers pop over heads, 1 to 6; the 6 in red. |
 | 12 | The sixth one is wearing a white sheet. | Close: the van's back window, a sheet ghost, its eyes catching the light. |
 | 13 | And it's holding the little witch's hand. | The witch's small hand in the sheet-hand. Rule chip #3 turns red. |
-| 14 | The van pulls away. | Tail lights going. |
+| 14 | The last porch light goes out. The van pulls away. | Click. Dark. Tail lights going. |
 | 15 | Chase it, and Sam waits alone in the dark. | Sam under the streetlight, small, holding his sheet. |
 | 16 | Stay, and five kids ride home with it. | The van turning the corner. |
 | 17 | So, do you chase the van? Or stay with Sam? | Card: A = CHASE THE VAN, B = STAY WITH SAM. "Comment A or B · most comments decide Part 3", held 2 s. |
