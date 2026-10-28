@@ -34,7 +34,10 @@ CHARS = {
                extra=("angry",)),
     "aoi": dict(tags=f"1girl, bob cut, dark blue hair, hairpin, dark blue eyes, calm, expressionless, {SAILOR}",
                 seed=11, face=(230, 108, 422, 300), eyes=(246, 142, 396, 218), mouth=(298, 228, 346, 260)),
-    "saki": dict(tags=f"1girl, short black hair, hair over one eye, side bangs, grey eyes, quiet, sad, {SAILOR}"),
+    "saki": dict(tags=f"1girl, short black hair, hair over one eye, side bangs, grey eyes, quiet, sad, {SAILOR}",
+                 seed=22, face=(140, 130, 345, 335), eyes=(150, 166, 315, 238), mouth=(205, 264, 265, 300),
+                 face_tags="1girl, short black hair, hair over one eye, side bangs, grey eyes, quiet, sad",
+                 extra=("smile",), expr_strength=0.42),
     "mio": dict(tags=f"1girl, wavy hair, light brown hair, earrings, brown eyes, half-closed eyes, smug, {SAILOR}",
                 seed=11, face=(150, 165, 370, 385), eyes=(150, 205, 352, 285), mouth=(230, 300, 292, 338),
                 extra=("smirk",)),
@@ -51,9 +54,9 @@ BGS = {
                               "cold fluorescent ceiling lights, night, gloomy", size=(768, 512), seed=7,
                          paint=(0.86, 0.98, 1.08), neg="window, windows, sunlight, sky, daylight, corridor, hallway"),
     "white_room": dict(tags="empty white room interior, bright white walls, white floor, a huge black screen on the "
-                            "far wall, cold white light, minimalist, sterile"),
+                            "far wall, cold white light, minimalist, sterile", seed=3),
     "white_room_wide": dict(tags="empty white room interior, bright white walls, white floor, a huge black screen on "
-                                 "the far wall, cold white light, minimalist, sterile", size=(768, 512)),
+                                 "the far wall, cold white light, minimalist, sterile", size=(768, 512), seed=3),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
     "floor": dict(tags="dark grey concrete floor texture, top-down view, dust, hairline cracks, dim cold light, night",
                   seed=9, paint=(0.62, 0.7, 0.82), neg="sunlight, shadows, window, red, lines, people, person, metal"),
@@ -62,12 +65,13 @@ BGS = {
 
 def PARTS(c):
     """name: (prompt, img2img strength, region) for each face patch; "x+y" edits the x face."""
+    es = c.get("expr_strength", 0.5)                       # how far an expression face may move from the base
     p = {"blink": ("closed eyes", 0.8, "eyes"), "half": ("parted lips, talking", 0.7, "mouth"),
-         "open": ("open mouth, talking", 0.78, "mouth"), "fear": ("scared, wide eyes, frown, sweat", 0.5, "face"),
+         "open": ("open mouth, talking", 0.78, "mouth"), "fear": ("scared, wide eyes, frown, sweat", es, "face"),
          "fear+blink": ("closed eyes, scared", 0.8, "eyes"), "fear+open": ("open mouth, scared", 0.78, "mouth")}
     for e in c.get("extra", ()):
-        p[e] = {"smile": ("smile, happy", 0.5, "face"), "grin": ("grin, teeth", 0.5, "face"),
-                "smirk": ("smirk, smug", 0.5, "face"), "angry": ("angry, frown, clenched teeth", 0.5, "face")}[e]
+        p[e] = {"smile": ("smile, happy", es, "face"), "grin": ("grin, teeth", es, "face"),
+                "smirk": ("smirk, smug", es, "face"), "angry": ("angry, frown, clenched teeth", es, "face")}[e]
         p[e + "+open"] = ("open mouth, talking", 0.78, "mouth")
         p[e + "+blink"] = ("closed eyes", 0.8, "eyes")
     return p

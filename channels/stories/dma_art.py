@@ -29,11 +29,13 @@ CAST = {   # sex, skin, hair, hair style, iris, extras
     "go":     dict(sex="m", skin=SKIN[2], hair=hexa("#1a1612"), style="buzz", iris=hexa("#3b2d22"), big=True),
     "aoi":    dict(sex="f", skin=SKIN[0], hair=hexa("#18203a"), style="bob", iris=hexa("#2c3e66"), pin=True),
     "mio":    dict(sex="f", skin=SKIN[3], hair=hexa("#9a6a44"), style="wavy", iris=hexa("#7a5638"), earrings=True),
+    "saki":   dict(sex="f", skin=SKIN[0], hair=hexa("#121216"), style="bob", iris=hexa("#5a5a66")),
 }
 NAMES = {"ren": ("KURODA REN", "watches everything"), "haruto": ("SAKURAI HARUTO", "the joker"),
          "yui": ("TACHIBANA YUI", "always on Ren's side"), "riku": ("KANZAKI RIKU", "in charge"),
          "kota": ("HAYASHI KOTA", "the target"), "go": ("SHIBATA GŌ", "doesn't back down"),
-         "aoi": ("FUJIMOTO AOI", "notices"), "mio": ("AOYAMA MIO", "reads people")}
+         "aoi": ("FUJIMOTO AOI", "notices"), "mio": ("AOYAMA MIO", "reads people"),
+         "saki": ("NISHIDA SAKI", "seat 14")}
 EXTRA_STYLES = ["messy", "short", "pony", "long", "short", "bob", "messy", "pony", "short", "long", "spiky", "short"]
 EXTRAS = [dict(sex="f" if st in ("pony", "long", "bob") else "m", skin=SKIN[k % 4],
                hair=[hexa("#1a1714"), hexa("#2a1c14"), hexa("#4a3020"), hexa("#151820")][k % 4], style=st,

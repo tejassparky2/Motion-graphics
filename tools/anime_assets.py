@@ -11,6 +11,7 @@ Runs in its own venv (torch CPU, diffusers, transformers, peft, onnxruntime, ope
     PY tools/anime_assets.py char  SPEC_MODULE NAME                   chosen seed -> assets/anime/SET/NAME/base.png ...
     PY tools/anime_assets.py parts SPEC_MODULE NAME [PART...]         expression / blink / mouth patches
     PY tools/anime_assets.py bg    SPEC_MODULE NAME [SEED[,SEED...]]  painted background(s)
+    PY tools/anime_assets.py layers SPEC_MODULE NAME                  a finished shot -> figures + filled plate
 SPEC_MODULE is e.g. channels.stories.dma_cast (prompts, seeds and face boxes live there).
 """
 import functools
@@ -348,6 +349,26 @@ def bg(mod, name, seeds=None):
         log(f"bg {name} {seed}: {time.time() - t:.0f}s")
 
 
+def layers(mod, name):
+    """A finished illustration -> NAME_fg.png (the figures, cut out) + NAME_fill.png (the plate with the figures
+    painted out), so the figures can move a little against the room (parallax)."""
+    s, b = spec_of(mod, name)
+    d = out_dir(s, "bg")
+    t = time.time()
+    img = Image.open(os.path.join(d, f"{name}.png")).convert("RGB")
+    m = np.clip((alpha_mask(img) - 0.08) / 0.84, 0, 1)
+    a = np.asarray(img)
+    Image.fromarray(np.dstack([a, (m * 255 + 0.5).astype(np.uint8)]), "RGBA").save(os.path.join(d, f"{name}_fg.png"))
+    hole = cv2.dilate((m > 0.15).astype(np.uint8) * 255, np.ones((31, 31), np.uint8))
+    small = cv2.resize(a[..., ::-1], None, fx=0.25, fy=0.25, interpolation=cv2.INTER_AREA)   # inpaint at 1/4 size
+    fill = cv2.inpaint(small, cv2.resize(hole, (small.shape[1], small.shape[0])), 9, cv2.INPAINT_TELEA)
+    fill = cv2.GaussianBlur(cv2.resize(fill, (a.shape[1], a.shape[0]), interpolation=cv2.INTER_CUBIC), (0, 0), 3)
+    k = cv2.GaussianBlur(hole.astype(np.float32) / 255, (0, 0), 6)[..., None]
+    out = a[..., ::-1] * (1 - k) + fill * k
+    cv2.imwrite(os.path.join(d, f"{name}_fill.png"), out.astype(np.uint8))
+    log(f"layers {name}: {time.time() - t:.0f}s, figures cover {100 * (m > 0.5).mean():.0f}%")
+
+
 if __name__ == "__main__":
     cmd, mod, name = sys.argv[1:4]
     rest = sys.argv[4:]
@@ -359,3 +380,5 @@ if __name__ == "__main__":
         parts(mod, name, rest or None)
     elif cmd == "bg":
         bg(mod, name, [int(x) for x in rest[0].split(",")] if rest else None)
+    elif cmd == "layers":
+        layers(mod, name)

@@ -17,7 +17,8 @@ BG = "assets/anime/dma/bg/{}.png"
 RIG = {"ren": dict(neck=(580, 662), head=560), "haruto": dict(neck=(480, 680), head=445),
        "yui": dict(neck=(530, 640), head=570), "aoi": dict(neck=(700, 690), head=638),
        "mio": dict(neck=(530, 860), head=770), "riku": dict(neck=(580, 880), head=781),
-       "kota": dict(neck=(520, 640), head=456), "go": dict(neck=(580, 820), head=473)}
+       "kota": dict(neck=(520, 640), head=456), "go": dict(neck=(580, 820), head=473),
+       "saki": dict(neck=(510, 660), head=661)}
 EXPR = {"calm": "neutral", "focus": "neutral", "neutral": "neutral", "shock": "fear", "fear": "fear", "worry": "fear",
         "sad": "fear", "smile": "smile", "grin": "grin", "smirk": "smirk", "angry": "angry"}
 FALLBACK = {"smile": ("grin", "smirk"), "grin": ("smile", "smirk"), "smirk": ("grin", "smile"), "angry": ("fear",)}

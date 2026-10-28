@@ -29,7 +29,8 @@ NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen"
        "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty", "41": "forty one",
        "10": "ten", "210": "two ten", "1": "one", "5": "five", "7": "seven", "900": "nine",
        "1217": "twelve seventeen", "3b": "three b", "0": "zero", "20": "twenty", "100": "a hundred", "912": "nine twelve", "12": "twelve",
-       "16": "sixteen", "59": "fifty nine", "18": "eighteen", "19": "nineteen"}
+       "16": "sixteen", "59": "fifty nine", "18": "eighteen", "19": "nineteen", "31": "thirty one", "69": "sixty nine",
+       "70": "seventy"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring",
         "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes", "too": "two",
         "harito": "haruto", "koda": "kota", "coda": "kota",             # Whisper's spellings of the DMA names

@@ -18,6 +18,7 @@ from channels.horror.thumbs import big_text, chip   # noqa: E402
 from channels.horror.toon2d import glow   # noqa: E402
 from channels.stories import dma_anime as A   # noqa: E402
 from channels.stories import boy_anime as B   # noqa: E402
+from channels.stories import dma_kit as K   # noqa: E402
 
 OUT = os.path.join(ROOT, "out", "stories", "thumbs")
 
@@ -137,8 +138,60 @@ def boy_long(cr):
                 shadow=0.6)
 
 
+def dma_s3(cr):
+    """Ren lit by his bidding terminal, BID 1 on it: MY NUMBER: ONE."""
+    t = 40.0
+    A.chamber(cr, t, flicker=False)
+    cr.set_source_rgba(0.0, 0.02, 0.05, 0.35)
+    cr.paint()
+    A.student_bust(cr, W * 0.5, H * 0.86, 1.6, t, "ren", "focus")
+    A.terminal(cr, t, W * 0.76, H * 0.86, 0.75, tokens=100, bid=1)
+    glow(cr, W * 0.76, H * 0.8, 380, (0.4, 1, 0.9), 0.25)
+    satsuei.apply(cr, t, glow=0.3, light=((0.8, 0.7), (0.5, 1.0, 0.9), 0.22), ca=1.5, grain=0.03)
+    _top_shade(cr)
+    big_text(cr, [("MY NUMBER:", (1, 1, 1, 1)), ("ONE.", hud2d.RED)], 250, 118)
+    chip(cr, "DEAD MAN'S ALGORITHM · PART 3")
+
+
+def dma_s4(cr):
+    """Saki, quiet, in the white room, Momo small behind her: THE POOREST DIES."""
+    t = 40.0
+    K.white_room(cr, t, K.players(20), side=True)
+    A.student_bust(cr, W * 0.5, H * 0.92, 1.7, t, "saki", "calm")
+    satsuei.apply(cr, t, glow=0.25, light=((0.5, 0.0), (0.92, 0.96, 1.0), 0.15), ca=1.5, grain=0.03)
+    _top_shade(cr)
+    big_text(cr, [("THE POOREST", (1, 1, 1, 1)), ("DIES.", hud2d.RED)], 250, 118)
+    chip(cr, "DEAD MAN'S ALGORITHM · PART 4")
+
+
+def dma_s5(cr):
+    """Momo on its heap of gold tokens, Ren in front: 0 PLAYERS. 0 DEATHS?"""
+    t = 40.0
+    K.white_room(cr, t, K.players(1), momo=False, pile=1.0)
+    A.momo(cr, W * 0.62, H * 0.66, 2.0, t, mood="sly")
+    A.student_bust(cr, W * 0.3, H * 0.95, 1.4, t, "ren", "focus")
+    satsuei.apply(cr, t, glow=0.28, light=((0.6, 0.4), (1.0, 0.9, 0.6), 0.2), ca=1.5, grain=0.03)
+    _top_shade(cr)
+    big_text(cr, [("0 PLAYERS.", (1, 1, 1, 1)), ("0 DEATHS?", hud2d.RED)], 250, 118)
+    chip(cr, "DEAD MAN'S ALGORITHM · PART 5")
+
+
+def dma_s6(cr):
+    """Saki frightened, one gold token glinting in front of her: ONE TOKEN. PLAYERS: 2."""
+    t = 40.0
+    K.white_room(cr, t, K.players(2), red=True, pile=1.0, side=True)
+    cr.set_source_rgba(0.05, 0.0, 0.02, 0.25)
+    cr.paint()
+    A.student_bust(cr, W * 0.5, H * 0.95, 1.75, t, "saki", "fear")
+    K.token(cr, W * 0.78, H * 0.78, 90, glint=1.0)
+    satsuei.apply(cr, t, glow=0.3, light=((0.78, 0.75), (1.0, 0.85, 0.5), 0.25), ca=1.5, grain=0.03)
+    _top_shade(cr)
+    big_text(cr, [("ONE TOKEN.", (1, 1, 1, 1)), ("PLAYERS: 2", hud2d.RED)], 250, 118)
+    chip(cr, "DEAD MAN'S ALGORITHM · PART 6")
+
+
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
-          "boy_long": boy_long}
+          "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6}
 
 if __name__ == "__main__":
     name = sys.argv[1]
