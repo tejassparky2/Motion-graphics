@@ -243,12 +243,17 @@ def char(mod, name):
     img.save(os.path.join(d, "src512.png"))
     big = upscale(img)
     cut = cutout(big)
+    a = np.array(cut)
     if c.get("clean_light_below"):                    # drop pale stray shapes (smoke, clouds) below a line
-        a = np.array(cut)
         y0 = c["clean_light_below"] * 2
         lum = a[y0:, :, :3].mean(axis=2)
         a[y0:, :, 3][lum > 175] = 0
-        cut = Image.fromarray(a, "RGBA")
+    for x0, y0, x1, y1 in c.get("clear", ()):         # stray props the model painted (512x768 coordinates)
+        a[y0 * 2:y1 * 2, x0 * 2:x1 * 2, 3] = 0
+    for x0, y0, x1, y1 in c.get("clear_light", ()):   # ... only their pale parts, where they touch the body
+        reg = a[y0 * 2:y1 * 2, x0 * 2:x1 * 2]
+        reg[..., 3][reg[..., :3].mean(axis=2) > 110] = 0
+    cut = Image.fromarray(a, "RGBA")
     cut.save(os.path.join(d, "base.png"))
     log(f"char {name}: {time.time() - t:.0f}s")
 
