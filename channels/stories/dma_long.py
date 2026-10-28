@@ -9,14 +9,18 @@ canon: the teacher has no name, the twelve other students stay unnamed, the auct
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_long   -> out/stories/dma_long.mp4 (1280x720)
 """
-from motion import audio, voice
+import os
+
+from motion import audio, satsuei, voice
 from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_art as A, serial
+from channels.stories import dma_anime, dma_art, serial
 from channels.stories import dma_s1 as S1      # notebook, phone, the eye close-up
 from channels.stories import dma_s2 as S2      # the room, rule cards, countdown format
+
+A = dma_art if os.environ.get("ANIME") == "0" else dma_anime     # ANIME=0: the old vector look (for comparisons)
 
 NARRATOR = dict(turbo=True, turbo_ref="am_echo")
 TAIL = 2.5
@@ -140,7 +144,7 @@ THE GLASS AUCTION
 
 Ren already knows his number. Chapter 2 is next.
 
-Dead Man's Algorithm is an original story. 2D animation.""",
+Dead Man's Algorithm is an original story. Anime-style animation.""",
     hashtags=["#DeadMansAlgorithm", "#SurvivalGame", "#Anime"],
     tags=["dead mans algorithm", "survival game", "death game", "psychological thriller", "game theory",
           "anime story", "original story", "meteor", "class 3-b", "chapter 1", "2d animation"],
@@ -381,7 +385,12 @@ def draw(cr, t, tl):
     cr.restore()
 
     if kind not in ("black", "title"):
-        hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
+        if A is dma_anime:                                      # satsuei: glow, light, aberration, grain
+            satsuei.apply(cr, t, glow=0.24, light=((0.1, 0.1), (1.0, 0.85, 0.7), 0.14),
+                          shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.03)
+            hud.finish(cr, t, flash_at=[], vig=0.4, grain=0.0)
+        else:
+            hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
     A.flash(cr, t, t_flash, 0.35)
     A.flash(cr, t, t_boom, 0.25)
     if kind == "rule":

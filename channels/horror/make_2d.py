@@ -21,6 +21,7 @@ if EPISODE.endswith("_long"):                      # long videos are 16:9 (owner
 HOME = next(d for d in ("horror", "stories") if os.path.exists(os.path.join(ROOT, "channels", d, f"{EPISODE}.py")))
 if HOME == "stories":                              # anime timing: 24 fps, drawings held on 2s (reports/CPU anime ...)
     os.environ.setdefault("FPS", "24")
+    os.environ.setdefault("CRF", "21")             # the film grain makes CRF 18 files ~60 MB a minute
 import render   # noqa: E402
 from motion import timeline   # noqa: E402
 

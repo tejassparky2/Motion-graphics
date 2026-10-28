@@ -146,7 +146,8 @@ def _encode_frames(first, last, path, report=False):
     """Draw frames [first, last) and encode them to `path`; returns the sound cues registered while drawing."""
     engine.EVENTS.clear()
     cmd = [ffmpeg_bin(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
-           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p",
+           "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", os.environ.get("CRF", "18"),
+           "-pix_fmt", "yuv420p",
            "-threads", "1", path]
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)

@@ -10,13 +10,16 @@ the hook into Part 3: Ren already knows his number, and Momo's "Tick tock".
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_s2   -> out/stories/dma_s2.mp4
 """
 import math
+import os
 
-from motion import audio, voice
+from motion import audio, satsuei, voice
 from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_art as A, serial
+from channels.stories import dma_anime, dma_art, serial
+
+A = dma_art if os.environ.get("ANIME") == "0" else dma_anime     # ANIME=0: the old vector look (for comparisons)
 
 NARRATOR = dict(turbo=True, turbo_ref="am_echo")
 TAIL = 2.0
@@ -71,7 +74,7 @@ The highest UNIQUE bid wins. Tie at the top and you're eliminated. Spend nothing
 Dead Man's Algorithm, Part 2: The Glass Auction.
 Ren already knows his number. Do you? Part 3 is next.
 
-(Original story. 2D animation.)""",
+(Original story. Anime-style animation.)""",
     hashtags=["#DeadMansAlgorithm", "#SurvivalGame", "#Shorts"],
     tags=["dead mans algorithm", "survival game", "game theory", "death game", "psychological thriller", "puzzle",
           "anime story", "auction", "2d animation", "part 2"],
@@ -214,8 +217,8 @@ def draw(cr, t, tl):
     if name == "hook":
         camera(cr, t, s0, s1, 1.02, 1.1, cy=720)
         hud2d.blurred(cr, lambda c: room(c, t, 600), sigma=8)
-        A.student_bust(cr, W / 2, by + 140, 1.15, t, "ren", "focus", look=(0, 0.5), rim=(0.5, 1, 0.9, 0.6),
-                       rim_from=(0, 10))
+        A.student_bust(cr, W / 2, by + (140 if A is dma_art else -10), 1.15, t, "ren", "focus", look=(0, 0.5),
+                       rim=(0.5, 1, 0.9, 0.6), rim_from=(0, 10))
         A.terminal(cr, t, W / 2, 1090, 0.75, tokens=100)
         glow(cr, W / 2, 1000, 400, (0.4, 1, 0.9), 0.2)
     elif name in ("momo", "go"):
@@ -261,7 +264,12 @@ def draw(cr, t, tl):
         A.momo(cr, W / 2, 1180, 3.6 + 0.5 * seg(t, s0, s0 + 0.8), t, mood="wink", lean=0.1 * seg(t, s0, s0 + 0.8))
     cr.restore()
 
-    hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.06)
+    if A is dma_anime:                                          # satsuei: glow, cold light, aberration, grain
+        satsuei.apply(cr, t, glow=0.24, light=((0.5, 0.0), (0.7, 0.85, 1.0), 0.14),
+                      shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.35), ca=1.2, grain=0.03)
+        hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.0)
+    else:
+        hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.06)
     for n, gid in enumerate(("g3", "g4", "g5", "g6", "g7"), 1):
         rule_card(cr, t, B[gid].start + 0.05, B[gid].end + 0.1, n, RULES[n - 1])
     shown = sum(t >= B[g].end for g in ("g3", "g4", "g5", "g6", "g7"))
@@ -270,7 +278,7 @@ def draw(cr, t, tl):
     if t < B["g19"].start:
         rules_strip(cr, t, shown, hot)
     alert = t >= A_("g8", "now!", end=True)
-    A.status_bar(cr, t, "GAME 01 · THE GLASS AUCTION", fmt(left) if alert else "20 PLAYERS · 100 TOKENS",
+    A.status_bar(cr, t, "GAME 01 · THE GLASS AUCTION" if alert else "GAME 01", fmt(left) if alert else "20 PLAYERS · 100 TOKENS",
                  alert=alert)
     hud2d.hook(cr, t, [("100 TOKENS. 10 MINUTES.", False), ("ONE KEY.", True)], end=B["g1"].end + 0.1, y=230,
                size=72)
