@@ -38,4 +38,4 @@ dead mans algorithm, survival game, death game, psychological thriller, game the
 Chapter 1 of Dead Man's Algorithm. I'd bid 1: everyone scared of ties goes high. What's your number?
 ```
 
-**Video facts:** 210.0 s, 541 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 210.9 s, 543 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
