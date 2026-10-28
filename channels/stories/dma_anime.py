@@ -41,7 +41,7 @@ def ready(who):
 
 
 def student_bust(cr, x, y, s, t, who, expr="calm", look=(0.0, 0.0), light=(-14, -10), rim=None, rim_from=(9, 0),
-                 talk=0.0, tilt=0.0, sweat=0.0, tears=0.0, tremble=0.0, eyes_closed=False, alpha=1.0):
+                 talk=0.0, tilt=0.0, sweat=0.0, tears=0.0, tremble=0.0, eyes_closed=False, alpha=1.0, fade=False):
     """A student from the chest up; (x, y) = the base of the neck (as in dma_art)."""
     if not ready(who):
         return _v.student_bust(cr, x, y, s, t, who, expr, look, light, rim, rim_from, talk, tilt, sweat, tears,
@@ -52,7 +52,7 @@ def student_bust(cr, x, y, s, t, who, expr="calm", look=(0.0, 0.0), light=(-14, 
         e = next((f for f in FALLBACK.get(e, ()) if p.has(f)), "neutral")
     if tremble:
         x += tremble * 2.4 * math.sin(AN.held(t) * 39)
-    p.draw(cr, x, y, s, t, e, talk=talk, tilt=tilt, eyes_closed=eyes_closed, alpha=alpha)
+    p.draw(cr, x, y, s, t, e, talk=talk, tilt=tilt, eyes_closed=eyes_closed, alpha=alpha, fade=fade)
     if rim:                                                    # a coloured light from one side (meteor, screen)
         glow(cr, x + rim_from[0] * 12 * s, y - 200 * s, 260 * s, rim[:3], 0.12 * (rim[3] if len(rim) > 3 else 1))
 
@@ -105,9 +105,10 @@ def chamber(cr, t, flicker=True, screen=None, dark=0.0):
         cr.paint()
 
 
-LYING = (("ren", 0.5, 0.52, 1.55, 0.0), ("yui", 0.2, 0.3, -1.4, 0.0), ("haruto", 0.8, 0.28, 1.3, 0.3),
-         ("kota", 0.18, 0.75, 1.8, 0.0), ("go", 0.82, 0.74, -1.7, 0.6), ("aoi", 0.5, 0.12, 1.1, 0.0),
-         ("mio", 0.45, 0.9, -1.2, 0.0), ("riku", 0.9, 0.5, -1.9, 0.0))
+# (who, u, v, angle, wakes): the four with a clean eyes-closed patch show their faces; the others lie with their
+# heads past the frame edge (their blink edits smeared, and open eyes would read as awake)
+LYING = (("ren", 0.5, 0.5, 1.45, 0.0), ("haruto", 0.78, 0.24, 1.2, 0.3), ("kota", 0.22, 0.72, -1.75, 0.0),
+         ("go", 0.24, 0.26, -1.3, 0.6), ("yui", -0.1, 0.5, -1.62, 0.0), ("mio", 1.1, 0.68, 1.6, 0.0))
 
 
 def lying_students(cr, t, stir=0.0):
@@ -119,7 +120,7 @@ def lying_students(cr, t, stir=0.0):
         cr.save()
         cr.translate(W * u, H * v)
         cr.rotate(ang + 0.05 * stir * wake * math.sin(AN.held(t) * 3))
-        student_bust(cr, 0, 120, 0.62, t, who, "calm", eyes_closed=not (stir and wake))
+        student_bust(cr, 0, 120, 0.62, t, who, "calm", eyes_closed=not (stir and wake), fade=True)
         cr.restore()
     cr.set_source_rgba(0.05, 0.07, 0.12, 0.35)                # the cold light from above
     cr.paint()

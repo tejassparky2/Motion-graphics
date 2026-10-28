@@ -107,19 +107,19 @@ class Puppet:
         return pattern[int(t / STEP) % len(pattern)]
 
     def draw(self, cr, x, y, s, t, expr="neutral", talk=0.0, tilt=0.0, blink=True, alpha=1.0, flip=False,
-             eyes_closed=False):
+             eyes_closed=False, fade=False):
         """(x, y) = the base of the neck on the canvas; s = 1 gives a 250 px tall head."""
         tq = held(t)
         k = s * 250 / self.head_h
         breathe = 1 + 0.007 * math.sin(2 * math.pi * 0.23 * tq + self.phase)
         sway = 0.006 * math.sin(2 * math.pi * 0.11 * tq + self.phase * 3) + tilt
-        base = image(os.path.join(self.dir, "base.png"), pad_bottom=1200)
+        base = image(os.path.join(self.dir, "base.png"), pad_bottom=0 if fade else 1200)
         cr.save()
         cr.translate(x, y)
         cr.rotate(sway)
         cr.scale(k * (-1 if flip else 1), k * breathe)
         cr.translate(-self.neck[0], -self.neck[1])
-        if alpha < 1:
+        if alpha < 1 or fade:
             cr.push_group()
         cr.set_source_surface(base, 0, 0)
         cr.get_source().set_filter(cairo.FILTER_GOOD)
@@ -138,7 +138,14 @@ class Puppet:
                 self._paste(cr, pre + "open")
         if (eyes_closed or blink and self.blinking(t)) and self.has(pre + "blink"):
             self._paste(cr, pre + "blink")
-        if alpha < 1:
+        if fade:                                               # the torso fades out instead of ending in an edge
+            bh = base.get_height()
+            g = cairo.LinearGradient(0, self.neck[1] + 0.12 * bh, 0, self.neck[1] + 0.42 * bh)
+            g.add_color_stop_rgba(0, 0, 0, 0, alpha)
+            g.add_color_stop_rgba(1, 0, 0, 0, 0)
+            cr.pop_group_to_source()
+            cr.mask(g)
+        elif alpha < 1:
             cr.pop_group_to_source()
             cr.paint_with_alpha(alpha)
         cr.restore()
