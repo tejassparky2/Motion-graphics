@@ -8,13 +8,16 @@ One key."
 
     /home/user/.venv-main/bin/python channels/horror/make_2d.py dma_s1   -> out/stories/dma_s1.mp4
 """
-from motion import audio, voice
+import os
+
+from motion import audio, satsuei, voice
 from motion.engine import W, H, clamp01, cue, seg
 
 from channels.horror import hud, hud2d, sound  # noqa: F401  (sound registers the effects)
 from channels.horror.toon2d import INK, glow, grade, noise
-from channels.stories import dma_anime as A, serial
-from motion import satsuei
+from channels.stories import dma_anime, dma_art, serial
+
+A = dma_art if os.environ.get("ANIME") == "0" else dma_anime     # ANIME=0: the old vector look (for comparisons)
 
 NARRATOR = dict(turbo=True, turbo_ref="am_echo")       # Ren tells it
 TAIL = 2.0
@@ -69,7 +72,7 @@ Cameras. No signal. A screen that says 20 SURVIVORS. And a cheerful little masco
 Dead Man's Algorithm, Part 1: 12:17. Part 2: The Glass Auction.
 Twenty of us. One key. Part 2 is next.
 
-(Original story. 2D animation.)""",
+(Original story. Anime-style animation.)""",
     hashtags=["#DeadMansAlgorithm", "#SurvivalGame", "#Shorts"],
     tags=["dead mans algorithm", "survival game", "psychological thriller", "anime story", "death game", "meteor",
           "class 3-b", "mystery", "2d animation", "part 1"],
@@ -338,13 +341,15 @@ def draw(cr, t, tl):
                lean=0.12 * lean)
     cr.restore()
 
-    if name != "black":                                         # satsuei: glow, light, aberration, grain
+    if name != "black" and A is dma_anime:                      # satsuei: glow, light, aberration, grain
         warm = name in ("cold_face", "cold_face2", "haruto_ren", "yui", "riku_kota", "go", "mio", "aoi_window",
                         "window", "faces", "rewind", "notebook")
         satsuei.apply(cr, t, glow=0.28 if warm else 0.22,
                       light=((0.08, 0.12), (1.0, 0.82, 0.6), 0.2) if warm else ((0.5, 0.0), (0.7, 0.85, 1.0), 0.12),
                       shade=((0.3, 0.2), (0.35, 0.3, 0.45), 0.35), ca=1.2, grain=0.03)
         hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.0)
+    elif name != "black":
+        hud.finish(cr, t, flash_at=[], vig=0.5, grain=0.06)
     A.flash(cr, t, t_flash, 0.35)
     A.flash(cr, t, t_boom, 0.25)
     # name cards (the first time each speaks or is seen)
