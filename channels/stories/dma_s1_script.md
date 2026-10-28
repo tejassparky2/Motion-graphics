@@ -46,7 +46,7 @@ concrete chamber.
 | 18 | (Ren) Event zero. Impact. Status of Earth: unknown. | Screen: **EVENT 00: IMPACT — STATUS OF EARTH: UNKNOWN** | |
 | 19 | (Momo) Good afternoon, Class 3-B! I'm Momo, your administrator! | A bell jingles. A small white round-eared mascot with a bow tie and a bell hops onto the screen. Name card: **MOMO · administrator**. | jingle |
 | 20 | (Momo) Welcome to Dead Man's Algorithm! | The title slams on behind it: **DEAD MAN'S ALGORITHM**. | sting |
-| 21 | (Momo) Twenty students. Twenty games! | Momo close, happy. | bell |
+| 21 | (Momo) Twenty of you. Twenty games! | Momo close, happy. | bell |
 | 22 | (Momo) Game one is an auction. And the prize is the exit key! | Momo turns sly on "prize". | |
 | 23 | Twenty of us. One key. | The screen: GAME 01 · THE GLASS AUCTION · PRIZE: EXIT KEY, the class from behind. Then the card PART 2 · THE GLASS AUCTION, held 2 s. | |
 

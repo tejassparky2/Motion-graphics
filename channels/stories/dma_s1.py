@@ -57,7 +57,7 @@ SCRIPT = [
     dict(id="d19", scene="momo", text="Good afternoon, Class [three B!|3-B!] I'm Momo, your administrator!",
          speaker="momo", gap=0.6),
     dict(id="d20", scene="momo", text="Welcome to Dead Man's Algorithm!", speaker="momo"),
-    dict(id="d21", scene="momo", text="Twenty students. Twenty games!", speaker="momo"),
+    dict(id="d21", scene="momo", text="Twenty of you. Twenty games!", speaker="momo"),
     dict(id="d22", scene="momo", text="Game one is an auction. And the prize is the exit key!", speaker="momo", gap=0.6),
     dict(id="d23", scene="end", text="Twenty of us. One key.", gap=0.3),
 ]
