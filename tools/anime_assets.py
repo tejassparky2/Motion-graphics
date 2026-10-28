@@ -277,7 +277,8 @@ def parts(mod, name, which=None):
         if "+" in pname:                                              # e.g. "fear+blink": edit the fear face
             parent = pname.split("+")[0]
             base_face = Image.open(os.path.join(d, f"_face_{parent}.png")).convert("RGB")
-        fast = region == "mouth" and os.environ.get("PART_LCM", "1") == "1"  # mouths: LCM is enough; blinks smear with it
+        fast = region != "face" and os.environ.get("PART_LCM", "1") == "1"   # eyes / mouth: LCM (the full sampler
+        #                                                                       did no better on blinks, 5x slower)
         out = img2img(base_face, s.FACE_PROMPT.format(**c) + ", " + prompt, strength, c["seed"] + 7, fast=fast)
         if region == "face":                                          # expression faces are edited further
             out.save(os.path.join(d, f"_face_{pname}.png"))
