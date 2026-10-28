@@ -1,0 +1,727 @@
+# DEAD MAN'S ALGORITHM — Chapter 1 "12:17" — reconstruction draft 1
+# Single source of truth for script.md (readable script) and the drawn pages.
+#
+# Conventions
+#   canon: true  -> the line/text is verbatim from story_bible.md (CONFIRMED CANON)
+#   (no flag)    -> new dialogue or caption written for this draft (PROPOSAL — NOT CANON)
+#   Reading order is right-to-left (PROPOSAL — NOT CANON). Within a row, cells are listed
+#   right-to-left: the first cell is the rightmost panel.
+#   rows: [height_weight, [cell width weights, right to left]]
+#   Panel kinds: art (diffusion), clock, phone, screen, grid, card, rules, timer, black, white
+#   Character visual designs below are PROPOSAL — NOT CANON. The bible confirms only:
+#   Aoi wears glasses; Haruto is blond or light-haired; Momo's design; Gō is strong.
+
+chapter: 1
+title: "12:17"
+
+characters:
+  REN: "1boy, black hair, messy hair, gakuran"
+  YUI: "1girl, long black hair, serafuku"
+  HARUTO: "1boy, blonde hair, spiky hair, gakuran"
+  RIKU: "1boy, black hair, slicked back hair, sharp eyes, gakuran"
+  GO: "1boy, black hair, buzz cut, tall, broad shoulders, stoic, buttoned gakuran"
+  KOTA: "1boy, black hair, bowl cut, thin, timid, gakuran"
+  AOI: "1girl, bob cut, glasses, serafuku"
+  MIO: "1girl, long wavy hair, earrings, serafuku"
+  MOMO: "no humans, white mouse, chibi, big round ears, black eyes, bow tie, bell, mascot"
+
+pages:
+
+# ---------------------------------------------------------------- SCENE 1
+- page: 1
+  scene: 1
+  rows: [[1, [1]]]
+  panels:
+  - kind: art
+    shot: "SPLASH — establishing shot"
+    art: "A Japanese high school at midday under a clear, calm sky. Ordinary and peaceful. Title lettering overlaid."
+    gen: "scenery, no humans, modern japanese high school, concrete school building, white walls, rows of windows, wall clock on building, school grounds, chain-link fence, clear sky, cumulus clouds, wide shot, from below, detailed background"
+    title: true
+    text:
+    - {t: caption, say: "Class 3-B."}
+
+- page: 2
+  scene: 1
+  rows: [[0.95, [1]], [1.05, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — classroom interior"
+    art: "Class 3-B before the impact. Students talk in clusters, study, look at phones. Midday light through the windows. Teacher not shown."
+    gen: "classroom, multiple boys, multiple girls, school desk, students chatting, smile, laughing, talking, holding phone, studying, window, bright, sunlight, gakuran, serafuku, wide shot, detailed background, lively"
+    note: "20 students are present (bible Scene 1). The art does not need to show an exact count."
+  - kind: art
+    shot: "MEDIUM CLOSE — Ren asleep"
+    art: "Ren asleep at his desk by the window, head on his folded arms."
+    gen: "{REN}, sleeping, head on desk, head on arms, closed eyes, school desk, window, classroom, sunlight"
+    text:
+    - {t: offpanel, who: TEACHER, say: "Kuroda.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Haruto pokes Ren"
+    art: "Haruto, in the seat beside Ren, grins and reaches over to poke Ren's head with the end of a pen (Ren just out of frame)."
+    gen: "{HARUTO}, mischievous grin, holding pen, reaching out, leaning forward, pointing pen down, classroom, upper body"
+    text:
+    - {t: offpanel, who: TEACHER, say: "Kuroda Ren.", canon: true}
+    - {t: sfx, say: "poke"}
+
+- page: 3
+  scene: 1
+  rows: [[1, [1, 1]], [1, [1, 1]], [1, [1, 1]]]
+  note: "The bible lists these lines as variations across drafts; this ordering is a PROPOSAL, not a confirmed order."
+  panels:
+  - kind: art
+    shot: "CLOSE — Ren wakes"
+    art: "Ren lifts his head, half-asleep, hair messy, one eye barely open."
+    gen: "{REN}, waking up, half-closed eyes, sleepy, messy hair, upper body, classroom"
+    text:
+    - {t: speech, who: REN, say: "...What?", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto teasing"
+    art: "Haruto grins and taps the corner of his own mouth."
+    gen: "{HARUTO}, grin, teasing, pointing at own mouth, upper body, classroom"
+    text:
+    - {t: speech, who: HARUTO, say: "You were drooling.", canon: true}
+  - kind: art
+    shot: "TWO-SHOT — deadpan"
+    art: "Ren wipes his mouth with the back of his hand, flat expression. Haruto leans in."
+    gen: "2boys, {REN}, wiping mouth, expressionless, {HARUTO}, leaning forward, smile, classroom, upper body"
+    text:
+    - {t: speech, who: HARUTO, say: "Dead?", canon: true, at: [0.25, 0.12], tail: [0.2, 0.38]}
+    - {t: speech, who: REN, say: "Unfortunately.", canon: true, at: [0.45, 0.88], tail: [0.66, 0.52]}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, delighted, hands together."
+    gen: "{HARUTO}, happy, smile, closed eyes, hands together, upper body, classroom"
+    text:
+    - {t: speech, who: HARUTO, say: "Good. I need someone to copy homework from.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, chin on hand, unimpressed side-glance."
+    gen: "{REN}, head rest, chin on hand, half-closed eyes, annoyed, looking to the side, upper body, classroom"
+    text:
+    - {t: speech, who: REN, say: "You copied mine yesterday.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Haruto, proud"
+    art: "Haruto gives a thumbs-up with total confidence."
+    gen: "{HARUTO}, thumbs up, confident, smug, grin, upper body, classroom"
+    text:
+    - {t: speech, who: HARUTO, say: "And I'm building a sustainable business model.", canon: true}
+
+# ---------------------------------------------------------------- SCENE 2
+- page: 4
+  scene: 2
+  rows: [[1.1, [1]], [1, [1, 1]], [0.9, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — Yui arrives"
+    art: "Yui sets a carton of milk on Ren's desk. Ren seated; Haruto at the next desk."
+    gen: "1girl, 2boys, {YUI}, standing, placing milk carton on desk, smile, {REN}, sitting, school desk, classroom, window"
+    text:
+    - {t: speech, who: YUI, say: "Here."}
+    - {t: sfx, say: "tap"}
+  - kind: art
+    shot: "CLOSE — the milk"
+    art: "Ren looks down at the milk carton, surprised."
+    gen: "{REN}, surprised, looking down, milk carton on desk, upper body, classroom"
+    text:
+    - {t: speech, who: REN, say: "...Milk?"}
+  - kind: art
+    shot: "CLOSE — Yui"
+    art: "Yui, gentle smile, slightly shy."
+    gen: "{YUI}, gentle smile, looking at viewer, upper body, classroom, window, sunlight"
+    text:
+    - {t: speech, who: YUI, say: "You said your stomach hurt yesterday."}
+    note: "Bible Scene 2: she remembered his stomach had hurt the previous day."
+  - kind: art
+    shot: "CLOSE — Haruto provokes"
+    art: "Haruto leans across from the next desk, sly grin."
+    gen: "{HARUTO}, sly grin, teasing, leaning forward, upper body, classroom, school desk"
+    text:
+    - {t: speech, who: HARUTO, say: "Ohh? Personal delivery?"}
+  - kind: art
+    shot: "CLOSE — Ren, flustered"
+    art: "Ren, flustered but deadpan, looks away. Haruto's next line comes from off-panel right."
+    gen: "{REN}, flustered, blush, looking away, deadpan, upper body, classroom"
+    text:
+    - {t: speech, who: REN, say: "It's not like that.", at: [0.36, 0.1], tail: [0.47, 0.34]}
+    - {t: offpanel, who: HARUTO, say: "I didn't say anything~", at: [0.78, 0.3], tail: [1.06, 0.3]}
+
+- page: 5
+  scene: 2
+  rows: [[0.9, [1]], [1.1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: art
+    shot: "INSERT — Ren's notebook"
+    art: "Ren's open notebook: columns of handwritten numbers. Figures stay illegible; no currency, names or totals."
+    gen: "no humans, open notebook, handwritten numbers, columns of numbers, pencil, school desk, close-up, still life"
+    clue: "Ren's numerical notes (bible). Their meaning is UNRESOLVED; do not make specific figures readable."
+  - kind: art
+    shot: "OVER-THE-SHOULDER — Yui leans in"
+    art: "Yui leans over to look at the notebook, curious."
+    gen: "{YUI}, leaning forward, curious, looking down, upper body, classroom"
+    text:
+    - {t: speech, who: YUI, say: "Are these from your trading account?"}
+  - kind: art
+    shot: "CLOSE — Ren evades"
+    art: "Ren closes the notebook and looks away."
+    gen: "{REN}, closing notebook, looking away, averting eyes, upper body, classroom"
+    text:
+    - {t: speech, who: REN, say: "...Just notes."}
+    note: "Ren avoids a full explanation (bible). No account details are given."
+  - kind: art
+    shot: "CLOSE — Yui notices"
+    art: "Yui's eyes: she knows he is hiding something. Quiet concern."
+    gen: "{YUI}, close-up, worried, concerned, looking at viewer, slight frown"
+    text:
+    - {t: speech, who: YUI, say: "......"}
+
+# ---------------------------------------------------------------- SCENE 3
+- page: 6
+  scene: 3
+  rows: [[1.1, [1]], [1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE, POV (Kota) — Riku strikes"
+    art: "From Kota's seat: Riku slams his hand on the desk and snatches Kota's notebook."
+    gen: "{RIKU}, slamming hand on desk, grabbing notebook, angry, pov, from below, classroom, school desk, motion lines"
+    text:
+    - {t: sfx, say: "BAM!"}
+    - {t: speech, who: RIKU, say: "What's this?"}
+    note: "Bible: Riku 'takes or mocks' the notebook. This draft has him take it (PROPOSAL)."
+  - kind: art
+    shot: "LOW ANGLE — Riku mocks"
+    art: "Riku holds the notebook high, sneering."
+    gen: "{RIKU}, holding notebook up, sneer, mocking, from below, upper body, classroom"
+    text:
+    - {t: speech, who: RIKU, say: "Survival plans? Seriously?"}
+  - kind: art
+    shot: "CLOSE — Kota"
+    art: "Kota, seated, fists clenched on the desk, eyes down."
+    gen: "{KOTA}, sitting, clenched fists, looking down, frustrated, upper body, classroom"
+    text:
+    - {t: speech, who: KOTA, say: "Give it back."}
+  - kind: art
+    shot: "POV (Kota) — Riku looms"
+    art: "From Kota's seat: Riku leans over him, menacing."
+    gen: "{RIKU}, leaning over viewer, menacing, smirk, pov, from below, classroom"
+    text:
+    - {t: speech, who: RIKU, say: "Or what?"}
+
+- page: 7
+  scene: 3
+  rows: [[1, [1]], [1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Gō stands"
+    art: "Gō rises from his seat behind Riku, tall and calm."
+    gen: "{GO}, standing, stoic, looking down, from below, classroom, upper body"
+    text:
+    - {t: speech, who: GO, say: "Stop."}
+  - kind: art
+    shot: "CLOSE — Riku turns"
+    art: "Riku turns on Gō, teeth bared."
+    gen: "{RIKU}, angry, clenched teeth, looking back, upper body, classroom"
+    text:
+    - {t: speech, who: RIKU, say: "Huh?! You want to go?"}
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio leans toward Aoi (off-panel) and speaks quietly."
+    gen: "{MIO}, whispering, leaning to the side, worried, sitting, classroom, upper body"
+    text:
+    - {t: speech, who: MIO, say: "Don't get involved."}
+  - kind: art
+    shot: "CLOSE — Aoi's glasses"
+    art: "A streak of light reflects in Aoi's glasses. Aoi's eyes turn toward the window."
+    gen: "{AOI}, close-up, glasses, light reflection on glasses, looking to the side, surprised, window"
+    clue: "Aoi notices the approaching object first (bible 3.7)."
+
+# ---------------------------------------------------------------- SCENE 4
+- page: 8
+  scene: 4
+  rows: [[1, [1, 1]], [1.1, [1]], [0.9, [1]]]
+  panels:
+  - kind: clock
+    shot: "INSERT — wall clock"
+    art: "Classroom wall clock reading 12:16:44."
+    time: "12:16:44"
+    text:
+    - {t: stamp, say: "12:16:44", canon: true}
+  - kind: phone
+    shot: "INSERT — Ren's phone"
+    art: "Ren's phone: a market update with a lost connection."
+    mode: market
+    clue: "Ren's phone shows a market update with a lost connection at ~12:16:44 (bible Scene 4). Significance UNRESOLVED."
+  - kind: art
+    shot: "MEDIUM — Aoi at the window"
+    art: "Aoi stands at the window, looking up at the sky."
+    gen: "{AOI}, standing, looking up, window, hand on window, from side, classroom, sky"
+    text:
+    - {t: speech, who: AOI, say: "...What is that?"}
+  - kind: art
+    shot: "WIDE — the sky"
+    art: "Over the town, a single bright streak moves across the midday sky far too fast."
+    note: "One object only (bible Scene 4: 'an object'). Do not draw several."
+    gen: "no humans, scenery, noon, bright daytime sky, cumulus clouds, cityscape, rooftops, wide shot"
+    negative_extra: "shooting star, meteor, streak, star trail, contrail, light trail, meteor shower"
+    streak: [0.97, 0.06, 0.6, 0.34]   # one object, drawn by the engine
+
+- page: 9
+  scene: 4
+  rows: [[1, [1]], [1, [1, 1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — students at the windows"
+    art: "Students crowd the windows, pointing."
+    gen: "multiple boys, multiple girls, crowd, pointing, looking up, window, classroom, from behind"
+    text:
+    - {t: speech, who: STUDENT A, say: "A plane?"}
+    - {t: speech, who: STUDENT B, say: "It's way too fast—"}
+  - kind: art
+    shot: "SKY — closer"
+    art: "The object is larger now, trailing fire."
+    gen: "no humans, noon, daytime sky, single meteor, solo, fireball, burning trail, smoke trail, clouds"
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto at the window, his grin gone."
+    gen: "{HARUTO}, serious, sweat, looking up, window, upper body"
+    text:
+    - {t: speech, who: HARUTO, say: "Hey... it's getting bigger."}
+    note: "Haruto's tone changes as the threat becomes real (bible 3.3)."
+  - kind: art
+    shot: "WIDE — the meteor"
+    art: "The meteor burns bright over the town."
+    gen: "no humans, scenery, noon, single giant meteor, solo, fireball, burning, daytime sky, city, rooftops, dramatic, wide shot"
+    text:
+    - {t: shout, who: STUDENT C, say: "It's a meteor!!"}
+
+# ---------------------------------------------------------------- SCENE 5
+- page: 10
+  scene: 5
+  rows: [[1.3, [1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "SPLASH-WIDE — the meteor descends"
+    art: "The meteor fills the sky above the school. The roar arrives."
+    gen: "no humans, scenery, single giant meteor, solo, fireball, school building, daytime sky, falling, dramatic, wide shot, from below"
+    text:
+    - {t: stamp, say: "12:17:03", canon: true}
+    - {t: sfx, say: "GOOOOO"}
+  - kind: art
+    shot: "WIDE — chaos"
+    art: "Students scream, duck under desks, rush for the door. Riku shoves through."
+    gen: "multiple boys, multiple girls, panic, screaming, running, ducking, under desk, crowd, classroom, motion lines, chaos"
+    text:
+    - {t: sfx, say: "AAAAH!"}
+    - {t: shout, who: RIKU, say: "MOVE!"}
+
+- page: 11
+  scene: 5
+  rows: [[1, [1]], [1.2, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren looks"
+    art: "While others duck, Ren stands frozen, facing the window, his face lit white."
+    gen: "{REN}, standing, looking at window, face lit, backlighting, bright light, wide-eyed, classroom, upper body"
+    text:
+    - {t: stamp, say: "12:17:04", canon: true}
+  - kind: art
+    shot: "EXTREME CLOSE — inside the glare"
+    art: "Inside the meteor's glare: a shape or pattern, possibly like an eye. Keep it ambiguous; it can also read as cracks or rings of light."
+    gen: "no humans, abstract, glowing core, concentric rings, cracks, pattern, eye-like shape, bright light, fire"
+    clue: "What Ren sees inside the meteor (bible Scene 5). UNRESOLVED; do not make it definitive."
+  - kind: art
+    shot: "EXTREME CLOSE — Ren's eye"
+    art: "Ren's eye, pupil contracted, the pattern reflected in it."
+    gen: "1boy, eye focus, extreme close-up, wide-eyed, constricted pupils, reflection in eye, light"
+
+- page: 12
+  scene: 5
+  rows: [[1.6, [1]], [0.7, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "SPLASH-WIDE — impact"
+    art: "The windows explode inward in white light."
+    gen: "explosion, shattered glass, window, blinding light, shockwave, classroom, debris, motion lines, dramatic"
+    text:
+    - {t: stamp, say: "12:17:05", canon: true}
+    - {t: sfx, say: "DOOOOOM"}
+  - kind: black
+    shot: "BLACK — darkness"
+    art: "Solid black."
+  - kind: white
+    shot: "WHITE — whiteout, silence"
+    art: "Solid white, no border, no sound."
+    note: "Bible: 'darkness, whiteout and silence'. This order is a PROPOSAL."
+
+# ---------------------------------------------------------------- SCENE 6
+- page: 13
+  scene: 6
+  rows: [[0.8, [1]], [1, [1, 1]], [1.1, [1]]]
+  panels:
+  - kind: art
+    shot: "EXTREME CLOSE — an eye opens"
+    art: "Darkness. Ren's eye slowly opens."
+    gen: "1boy, eye focus, half-closed eyes, waking up, dark, darkness, extreme close-up"
+    text:
+    - {t: speech, who: REN, say: "......"}
+  - kind: art
+    shot: "MEDIUM — Ren rises"
+    art: "Ren pushes himself up from a cold concrete floor."
+    gen: "{REN}, on floor, pushing up, dazed, concrete floor, dark room, dim lighting"
+  - kind: art
+    shot: "CLOSE — blood"
+    art: "Ren touches his forehead, then stares at the blood on his fingers."
+    gen: "{REN}, looking at hand, blood on hand, blood on face, injury, dazed, dim lighting, upper body"
+    note: "Bible: blood on 'forehead or hand'. Here it is on both: he touches his forehead and sees it on his fingers."
+  - kind: art
+    shot: "WIDE — the chamber"
+    art: "A dim underground chamber of concrete. Students lie scattered, beginning to stir."
+    gen: "multiple boys, multiple girls, lying on floor, unconscious, concrete room, underground, dim lighting, bunker, wide shot"
+    text:
+    - {t: speech, who: STUDENT D, say: "Ugh..."}
+
+- page: 14
+  scene: 6
+  rows: [[1, [1]], [1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — searching"
+    art: "Ren stumbles between stirring classmates, searching."
+    gen: "{REN}, walking, searching, looking around, worried, people lying on floor, concrete room, dim lighting"
+  - kind: art
+    shot: "POV (Ren) — Yui"
+    art: "Ren's point of view: Yui, sitting up on the concrete floor, reaches toward his bleeding forehead."
+    gen: "{YUI}, sitting, reaching towards viewer, pov, worried, concrete floor, dim lighting, upper body"
+    text:
+    - {t: speech, who: YUI, say: "You're bleeding—"}
+    - {t: speech, who: REN, say: "I'm fine.", tail: [0.5, 1.08]}
+  - kind: art
+    shot: "CLOSE — relief"
+    art: "Yui, eyes wet, relieved."
+    gen: "{YUI}, tears, relieved, teary eyes, close-up, dim lighting"
+    text:
+    - {t: speech, who: YUI, say: "...You're alive."}
+    note: "Yui checks on Ren and is relieved he is alive (bible Scene 6, 3.2)."
+  - kind: art
+    shot: "MEDIUM — Haruto"
+    art: "Haruto sits up, holding his head, no trace of a joke."
+    gen: "{HARUTO}, sitting, holding head, serious, dazed, concrete floor, dim lighting, upper body"
+    text:
+    - {t: speech, who: HARUTO, say: "...Where are we?"}
+
+- page: 15
+  scene: 6
+  rows: [[1.3, [1]], [0.9, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "HIGH ANGLE WIDE — the chamber"
+    art: "The full chamber: concrete walls, a huge metal door, a large dark screen on one wall, students scattered."
+    gen: "multiple boys, multiple girls, large room, concrete walls, huge metal door, large screen on wall, underground bunker, from above, wide shot, dim lighting"
+    text:
+    - {t: thought, who: REN, say: "Eighteen. Nineteen. Twenty."}
+    note: "Ren confirms all 20 members of Class 3-B are present (bible Scene 6)."
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren looks around, realising someone is missing."
+    gen: "{REN}, looking around, serious, sweat, dim lighting, upper body, concrete wall"
+    text:
+    - {t: speech, who: REN, say: "Where's Sensei?"}
+  - kind: art
+    shot: "MEDIUM — empty space"
+    art: "Students look at one another. No adult anywhere."
+    gen: "multiple boys, multiple girls, looking at each other, anxious, concrete room, dim lighting"
+    text:
+    - {t: speech, who: STUDENT E, say: "Sensei's not here..."}
+    note: "The teacher is missing (bible Scene 6). Their fate is UNRESOLVED."
+
+# ---------------------------------------------------------------- SCENE 7
+- page: 16
+  scene: 7
+  rows: [[1, [1, 1]], [1, [1]], [1.1, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — phones"
+    art: "Students hold their phones up, searching for signal."
+    gen: "multiple boys, multiple girls, holding phone, looking at phone, worried, dim lighting, concrete room"
+    text:
+    - {t: speech, who: STUDENT F, say: "No signal..."}
+    - {t: speech, who: STUDENT G, say: "Mine too!"}
+  - kind: phone
+    shot: "INSERT — no service"
+    art: "A phone screen: no service. No clock is visible."
+    mode: nosignal
+    note: "The phone shows no time. How long they were unconscious is UNRESOLVED."
+  - kind: art
+    shot: "WIDE — shouting"
+    art: "Students shout at the walls and ceiling."
+    gen: "multiple boys, multiple girls, shouting, angry, scared, looking up, concrete room, underground, dim lighting, wide shot"
+    text:
+    - {t: shout, who: STUDENT H, say: "Let us out!!"}
+    - {t: shout, who: STUDENT I, say: "Is anyone there?!"}
+  - kind: art
+    shot: "WIDE — the door"
+    art: "Gō and Riku throw their shoulders into the huge metal door."
+    gen: "2boys, black hair, buzz cut, slicked back hair, gakuran, pushing huge metal door, straining, concrete, dim lighting, motion lines"
+    text:
+    - {t: sfx, say: "GONG!!"}
+    - {t: speech, who: RIKU, say: "Open, damn it!"}
+
+- page: 17
+  scene: 7
+  rows: [[0.9, [1]], [1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Riku kicks"
+    art: "Riku kicks the door. It does not move."
+    gen: "{RIKU}, kicking, angry, huge metal door, concrete, dim lighting, motion lines"
+    text:
+    - {t: sfx, say: "GAN!"}
+    - {t: speech, who: RIKU, say: "Damn it!!"}
+  - kind: art
+    shot: "CLOSE — Aoi examines"
+    art: "Aoi kneels at the door frame, studying its seams."
+    gen: "{AOI}, kneeling, examining, touching wall, metal door frame, serious, glasses, dim lighting"
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi's glasses catch the light."
+    gen: "{AOI}, close-up, serious, glasses, light reflection on glasses, dim lighting"
+    text:
+    - {t: speech, who: AOI, say: "This isn't a school door someone modified."}
+  - kind: art
+    shot: "MEDIUM — Aoi"
+    art: "Aoi stands, serious."
+    gen: "{AOI}, standing, serious, looking at viewer, concrete room, dim lighting, upper body"
+    text:
+    - {t: speech, who: AOI, say: "This room was built... for us."}
+    note: "Aoi's conclusion (bible 3.7). It is an observation, not proof of who built it."
+  - kind: art
+    shot: "LOW ANGLE — the camera"
+    art: "Ren looks up at a small camera in the ceiling corner."
+    gen: "{REN}, looking up, security camera, ceiling corner, concrete, dim lighting, from below"
+    text:
+    - {t: thought, who: REN, say: "Cameras."}
+
+# ---------------------------------------------------------------- SCENE 8
+- page: 18
+  scene: 8
+  rows: [[0.8, [1]], [1.5, [1]], [0.8, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — the screen wakes"
+    art: "The large screen switches on. Students turn, lit by its glow."
+    gen: "multiple boys, multiple girls, from behind, looking at screen, large screen, glowing screen, backlighting, dark room"
+    text:
+    - {t: sfx, say: "VWOOM"}
+  - kind: screen
+    shot: "FULL — status screen"
+    art: "The status screen. Exact canon text. Restrained red accent."
+    lines:
+    - {s: "CLASS 3-B", canon: true}
+    - {s: "20 STUDENTS", canon: true}
+    - {s: "20 SURVIVORS", canon: true}
+    - {s: "EVENT 00 — IMPACT", canon: true}
+    - {s: "STATUS OF EARTH: UNKNOWN", canon: true, red: true}
+  - kind: art
+    shot: "MEDIUM — reactions"
+    art: "Haruto and other students stare at the screen."
+    gen: "{HARUTO}, multiple boys, multiple girls, staring, shocked, screen glow, dark room"
+    text:
+    - {t: speech, who: HARUTO, say: "Survivors...?"}
+    - {t: speech, who: STUDENT J, say: "Status of Earth... unknown?"}
+
+- page: 19
+  scene: 8
+  rows: [[1.2, [1]], [1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: grid
+    shot: "SCREEN — student records"
+    art: "The screen lists student records. Only the five recovered records are readable; the rest are out of focus."
+  - kind: card
+    shot: "SCREEN INSERT — Ren's record"
+    art: "Ren's record: name, birthday, blood type readable; medical and emergency-contact fields present but unreadable."
+    note: "Medical information and emergency-contact contents are not recovered. Never make them readable."
+  - kind: art
+    shot: "MEDIUM — recognition"
+    art: "Students recognise their own data on the screen."
+    gen: "multiple boys, multiple girls, shocked, pointing at screen, screen glow, dark room"
+    text:
+    - {t: speech, who: STUDENT K, say: "That's my birthday..."}
+    - {t: speech, who: STUDENT L, say: "My blood type—"}
+  - kind: art
+    shot: "CLOSE — Ren realises"
+    art: "Ren's face, cold, lit by the screen."
+    gen: "{REN}, close-up, serious, cold expression, screen glow, dark room, sweat"
+    text:
+    - {t: thought, who: REN, say: "Birthdays. Blood types. Medical records. Emergency contacts."}
+    - {t: thought, who: REN, say: "It knows all twenty of us."}
+    note: "Ren realises the system has information about every student (bible Scene 8)."
+
+# ---------------------------------------------------------------- SCENE 9
+- page: 20
+  scene: 9
+  rows: [[0.9, [1, 1]], [1.3, [1]], [0.8, [1]]]
+  panels:
+  - kind: art
+    shot: "INSERT — the hatch"
+    art: "A small opening slides open in the wall beneath the screen."
+    gen: "no humans, small hatch, opening, sliding panel, wall, below screen, dark, mechanical, close-up"
+    text:
+    - {t: sfx, say: "kchak"}
+  - kind: art
+    shot: "INSERT — something white"
+    art: "Something small and white peeks out of the dark opening."
+    gen: "{MOMO}, peeking out, dark hole, small, shadow"
+    text:
+    - {t: sfx, say: "jingle"}
+  - kind: art
+    shot: "FULL — Momo"
+    art: "Momo stands beneath the screen and waves cheerfully: small, white, rodent-like, large round ears, black eyes, bow tie and bell. Cute and toy-like."
+    gen: "{MOMO}, standing, waving, happy, full body, below screen, dark room, spotlight"
+    text:
+    - {t: speech, who: MOMO, say: "Hello, hello, Class 3-B!"}
+  - kind: art
+    shot: "WIDE — frozen"
+    art: "The students stand frozen, wide-eyed."
+    gen: "multiple boys, multiple girls, shocked, wide-eyed, frozen, standing, screen glow, dark room, wide shot"
+
+- page: 21
+  scene: 9
+  rows: [[1.1, [1]], [0.9, [1, 1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — the introduction"
+    art: "Momo bows, one paw on its chest."
+    gen: "{MOMO}, bowing, hand on own chest, polite, full body, dark room, spotlight"
+    text:
+    - {t: speech, who: MOMO, say: "I am the administrator of DEAD MAN'S ALGORITHM.", canon: true}
+  - kind: art
+    shot: "WIDE — silence"
+    art: "No one moves."
+    gen: "multiple boys, multiple girls, silent, shocked, standing still, dark room, screen glow"
+    text:
+    - {t: speech, who: STUDENTS, say: "......"}
+  - kind: art
+    shot: "CLOSE — Momo"
+    art: "Momo tilts its head. Cute pose; flat black eyes."
+    gen: "{MOMO}, head tilt, close-up, black eyes, blank stare, creepy, cute"
+    text:
+    - {t: speech, who: MOMO, say: "This is usually the part where someone screams.", canon: true}
+    note: "Uncanny, not slapstick (bible Scene 9)."
+  - kind: art
+    shot: "MEDIUM — Riku"
+    art: "Riku steps forward, furious."
+    gen: "{RIKU}, shouting, angry, stepping forward, pointing, dark room, screen glow, upper body"
+    text:
+    - {t: shout, who: RIKU, say: "What the hell ARE you?!"}
+    note: "Momo does not answer. Momo has not explained why they are there (bible Scene 9)."
+
+# ---------------------------------------------------------------- SCENE 10
+- page: 22
+  scene: 10
+  rows: [[0.9, [1]], [1.2, [1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Momo turns away"
+    art: "Momo turns toward the screen, ignoring Riku. Its bell jingles."
+    gen: "{MOMO}, from behind, looking up, large screen, dark room, full body"
+    text:
+    - {t: speech, who: MOMO, say: "Let's not waste time!"}
+    - {t: sfx, say: "jingle"}
+  - kind: screen
+    shot: "SCREEN — title"
+    art: "Game title card."
+    lines:
+    - {s: "GAME 01 —", canon: true, red: true}
+    - {s: "THE GLASS AUCTION", canon: true, big: true}
+    # Canon title "GAME 01 — THE GLASS AUCTION", set on two lines.
+  - kind: screen
+    shot: "SCREEN — parameters"
+    art: "Game parameters, exact."
+    lines:
+    - {s: "Players: 20", canon: true}
+    - {s: "Tokens: 100 each", canon: true}
+    - {s: "Time limit: 10 minutes", canon: true}
+    - {s: "Objective: Obtain the exit key", canon: true}
+
+- page: 23
+  scene: 10
+  rows: [[1.3, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — the key"
+    art: "A light comes on over a glass barrier in the chamber. Behind the glass, the key. Around it, the token containers. Students turn toward it."
+    gen: "glass case, key, pedestal, transparent containers, cylinders, spotlight, dark room, concrete, multiple boys, multiple girls, from behind, wide shot"
+    text:
+    - {t: sfx, say: "KA-CHUNK"}
+    note: "The spotlight is a staging PROPOSAL. The number, form and function of the token containers are UNRESOLVED; do not draw exactly 20."
+  - kind: art
+    shot: "CLOSE — behind the glass"
+    art: "The key behind thick glass."
+    gen: "no humans, key, behind glass, glass case, reflection, spotlight, dark background, close-up"
+  - kind: art
+    shot: "MEDIUM — Momo"
+    art: "Momo gestures at the screen with a paw."
+    gen: "{MOMO}, pointing up, happy, full body, dark room, screen glow"
+    text:
+    - {t: speech, who: MOMO, say: "And these are the rules."}
+
+- page: 24
+  scene: 10
+  rows: [[1, [1]]]
+  panels:
+  - kind: rules
+    shot: "FULL PAGE — the rules"
+    art: "The five rules, exactly as displayed."
+    lines:
+    - {s: "Rule 01: The highest unique bid wins the key.", canon: true}
+    - {s: "Rule 02: All spent tokens are permanently lost.", canon: true}
+    - {s: "Rule 03: If two or more players submit the same highest bid, every player tied at that amount is eliminated.", canon: true}
+    - {s: "Rule 04: If the highest bid is not unique, the next-highest unique bid wins.", canon: true}
+    - {s: "Rule 05: If all players leave all tokens unspent when time expires, everyone is executed.", canon: true}
+
+- page: 25
+  scene: 10
+  rows: [[1, [1, 1]], [1.1, [1]], [0.8, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, pale, reading the rules."
+    gen: "{HARUTO}, pale, sweat, shocked, reading, screen glow, dark room, upper body"
+    text:
+    - {t: speech, who: HARUTO, say: "\"Eliminated\"... What does that even mean?"}
+    note: "No one answers. Meaning of 'eliminated' is UNRESOLVED (ledger 3C)."
+  - kind: art
+    shot: "CLOSE — Momo"
+    art: "Momo smiles and says nothing."
+    gen: "{MOMO}, smile, closed mouth, close-up, black eyes, creepy, cute"
+    text:
+    - {t: speech, who: MOMO, say: "......"}
+  - kind: art
+    shot: "EXTREME CLOSE — Ren's eyes"
+    art: "Ren's eyes, the rules reflected in them. He is reading, not yet concluding."
+    gen: "1boy, eye focus, extreme close-up, serious, screen reflection in eyes, dark"
+    note: "Observation only. Ren has drawn no conclusion yet."
+  - kind: art
+    shot: "MEDIUM — Momo raises a paw"
+    art: "Momo raises a paw like a starter's flag."
+    gen: "{MOMO}, raising hand, cheerful, full body, dark room, spotlight"
+    text:
+    - {t: speech, who: MOMO, say: "Time starts... now!"}
+  - kind: timer
+    shot: "SCREEN — the timer"
+    art: "The timer at 10:00."
+    time: "10:00"
+    text:
+    - {t: sfx, say: "beep"}
+
+- page: 26
+  scene: 10
+  rows: [[1, [1]]]
+  panels:
+  - kind: art
+    shot: "FULL PAGE — closing image"
+    art: "The twenty students face the glass barrier and the key under the spotlight. Above them, the timer reads 09:55."
+    gen: "multiple boys, multiple girls, crowd, from behind, standing, facing glass case, spotlight, dark room, concrete, ominous, wide shot, large screen"
+    overlay_timer: "09:55"
+    text:
+    - {t: caption, say: "And the game has just begun.", canon: true}
+    note: "Closing image: timer 09:55 and the caption (bible Scene 10)."
