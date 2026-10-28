@@ -25,7 +25,7 @@ CHARS = {
     "riku": dict(tags=f"1boy, ash blonde hair, swept bangs, narrowed eyes, smirk, {GAKURAN}, open collar",
                  seed=33, face=(172, 192, 402, 422), eyes=(178, 228, 372, 292), mouth=(255, 330, 338, 372),
                  extra=("smirk",)),
-    "kota": dict(tags=f"1boy, black hair, mushroom haircut, straight bangs, round glasses, nervous, {GAKURAN}",
+    "kota": dict(tags=f"1boy, black hair, mushroom haircut, straight bangs, round glasses, grey eyes, nervous, {GAKURAN}",
                  seed=44, face=(162, 128, 362, 328), eyes=(178, 188, 345, 252), mouth=(236, 254, 286, 290),
                  clear=((0, 270, 140, 368), (362, 232, 512, 398), (0, 462, 62, 515)),
                  clear_light=((0, 360, 132, 470), (0, 470, 84, 548), (420, 396, 512, 482))),   # painted mushrooms
