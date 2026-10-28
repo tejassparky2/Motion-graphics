@@ -190,3 +190,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   numbers one digit apart, a photo dated three weeks ago, truth sheet and both Part 2 openings written first). Five
   game proposals refitted to the manga chat's approved Game 3 ("Find Yourself": Gō dead, 18 left) sent to it as
   proposals (THE SPARE dropped: same family as Find Yourself).
+- 28 Oct: owner "Approved bench three, make it i am skipping this without research one" (The Seventh Kid is skipped;
+  Bench Three takes today's slot). Delivered out/horror/bench3_p1_2d.mp4 (57.3 s incl. the 2 s card; 163 words),
+  Whisper medium 19/19, no encoder tags; thumbnail out/horror/thumbs/bench3_p1.png. You = Riley's look (beanie, purple
+  puffer; unused publicly now that The Seventh Kid is skipped). The texts and the note are read in one calm voice
+  (bm_lewis), an audio clue that they're one man. "Put it back?" was re-voiced (heard "Open it back"). Vote: A put it
+  back / B keep it; both Part 2 openings are in the script file.
