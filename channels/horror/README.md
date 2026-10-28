@@ -161,3 +161,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   out clean) and animated as puppets on 24 fps held on 2s (anime2d.py); painted sets (portrait and 16:9); satsuei pass
   (motion/satsuei.py). Every part ends on a cliffhanger into the next (no A/B). Delivered: dma_s1, dma_s2, dma_long,
   boy_s1, boy_s2, boy_long (out/stories/, covers in out/stories/thumbs/), each checked line by line with Whisper medium.
+- 28 Oct 2026 (later): owner on the anime look: "Worst animation", then "Make manga like video like showing manga page
+  and explaining take manga pages from manga creation chat". DEAD MAN'S ALGORITHM is now made as voiced manga videos
+  from the manga creation chat's pages (tejassparky2/Manga, branch ccr-454a96aa-vj1ino, video/chNN/ pages +
+  manifest): channels/stories/manga.py zooms panel to panel in reading order (right to left), dims the other panels,
+  turns pages; a storyteller narrator (Turbo bm_george) explains, every character speaks their bubble lines in their
+  own voice. Episode 1 = Chapter 1 pages 1-7 (dma_manga01, 36/36 Whisper medium). The approved Parts 3-6 script
+  (dma_arc_games_1_2.md) was sent to the manga chat to draw as the next chapter(s) (owner: "And update our continue
+  story to manga chat"). The anime Parts 3-6 (dma_s3..s6, dma_kit, dma_shots) are shelved, not rendered.
