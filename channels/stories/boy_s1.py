@@ -35,7 +35,7 @@ SCRIPT = [
                                      "Everyone said hold.", gap=0.5),
     dict(id="b4", scene="book", text="Neil watched the order book instead. Huge buy orders kept appearing, and "
                                      "vanishing before anyone could sell into them."),
-    dict(id="b5", scene="book", text="Someone wanted the crowd to believe in a floor that wasn't there."),
+    dict(id="b5", scene="book", text="Someone wanted the crowd to think the price had a floor under it."),
     dict(id="b6", scene="room", text="He sold everything into the spike. Six minutes later, the floor disappeared.",
          gap=0.5),
     dict(id="b7", scene="balance", text="[Five million, fourteen thousand, three hundred and eighty-two dollars, and "

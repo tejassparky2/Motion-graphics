@@ -42,10 +42,10 @@ SCRIPT = [
     dict(id="l6", scene="room", text="Every chat he followed lit up with the same word. Hold. Hold for more."),
     dict(id="l7", scene="room", text="Neil didn't look at the headline. He looked at the order book."),
     dict(id="l8", scene="book", text="Thick walls of buy orders sat a few cents under the price. The kind that tell a "
-                                     "crowd there's a floor."),
+                                     "crowd the price can't fall."),
     dict(id="l9", scene="book", text="Except they kept vanishing the moment anyone tried to sell into them. And "
                                      "reappearing a cent lower."),
-    dict(id="l10", scene="book", text="Someone wanted the crowd to believe in a floor that wasn't there."),
+    dict(id="l10", scene="book", text="Someone wanted the crowd to think the price had a floor under it."),
     dict(id="l11", scene="room", text="He'd learned to read lies like that with a thousand dollars. A thousand dollars "
                                       "meant every mistake hurt. So he'd stopped making the loud ones."),
     dict(id="l12", scene="room", text="He sold everything into the spike.", gap=0.5),

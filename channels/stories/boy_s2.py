@@ -30,7 +30,7 @@ audio.GAINS.update(sting=0.55, brakes=0.7)
 
 SCRIPT = [
     dict(id="e1", scene="push", text="Neil had half a second. He didn't think. He moved."),
-    dict(id="e2", scene="push", text="He pushed Maya clear. She landed on the far kerb. Safe.", gap=0.3),
+    dict(id="e2", scene="push", text="He shoved Maya out of the way. She landed on the far kerb. Safe.", gap=0.3),
     dict(id="e3", scene="push", text="Neil's last position was the middle of the crossing.", gap=0.8),
     dict(id="e4", scene="quiet", text="It didn't hurt. There was a sound, and the sky turning over. Then a quiet, like "
                                       "the market after the closing bell.", gap=1.0),
@@ -56,7 +56,7 @@ METADATA = dict(
     title="He Died at 17. He Woke Up as an 82-Year-Old Billionaire. ⏳",
     alt_titles=["The Nearest. The Weakest. He Didn't Get to Choose. ⏳",
                 "The Boy Who Inherited Another Body, Part 2 ⏳"],
-    description="""Neil had half a second. He pushed Maya clear. Then he opened his eyes in a hospital bed, with an old man's hands and a wristband that said VANCE, ARTHUR. AGE 82. ⏳
+    description="""Neil had half a second. He shoved Maya out of the way. Then he opened his eyes in a hospital bed, with an old man's hands and a wristband that said VANCE, ARTHUR. AGE 82. ⏳
 
 About a hundred metres away, Maya was kneeling at the crossing.
 
@@ -71,7 +71,7 @@ Arthur Vance had a fortune, a family and enemies. Now they were all Neil's. And 
                    "was you?",
 )
 
-KEY = {"half", "moved", "pushed", "safe", "last", "crossing", "quiet", "wrong", "heavy", "old", "ring", "vance",
+KEY = {"half", "moved", "shoved", "safe", "last", "crossing", "quiet", "wrong", "heavy", "old", "ring", "vance",
        "eighty-two", "maya", "hundred", "nearest", "weakest", "billionaire", "failing", "fortune", "family", "enemies", "bury"}
 
 

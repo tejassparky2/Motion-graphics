@@ -31,7 +31,8 @@ NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen"
        "1217": "twelve seventeen", "3b": "three b", "0": "zero", "20": "twenty", "100": "a hundred", "912": "nine twelve"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring",
         "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes", "too": "two",
-        "harito": "haruto", "koda": "kota"}             # Whisper's spellings of the DMA names
+        "harito": "haruto", "koda": "kota",             # Whisper's spellings of the DMA names
+        "wren": "ren", "tiktok": "tick tock", "realize": "realise", "curb": "kerb", "mr": "mister"}
 
 
 def norm(s):

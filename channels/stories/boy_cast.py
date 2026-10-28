@@ -2,22 +2,22 @@
 not canon (the bible gives names, ages and the $5,014,382.61 only). Face, eyes and mouth boxes are in the 512x768
 source image."""
 SET = "boy"
-CHAR_PROMPT = ("masterpiece, best quality, anime screencap, {tags}, solo, upper body, facing viewer, looking at viewer, "
-               "straight-on, centered, standing, plain white background, simple background")
-CHAR_NEG = "dutch angle, tilted, abstract background, liquid, splashes, paint, particles, gradient background"
+CHAR_PROMPT = ("masterpiece, best quality, anime screencap, solo, plain white background, upper body, facing viewer, "
+               "looking at viewer, {tags}")
+# the whole negative prompt for characters (CLIP reads only 77 tokens: the important words come first)
+CHAR_NEG_FULL = ("worst quality, low quality, lowres, bad anatomy, abstract background, dutch angle, holding, object, "
+                 "smoke, splashes, text, watermark, nsfw")
 FACE_PROMPT = "masterpiece, best quality, anime screencap, close-up, face, {tags}"
 BG_PROMPT = "masterpiece, best quality, anime background, scenery, no humans, {tags}, detailed"
 
-CHARS = {
-    "neil": dict(tags="1boy, 17 years old, teenage boy, short dark brown hair, grey eyes, calm, intelligent, slight "
-                      "eyebags, grey hoodie"),
-    "neil_jacket": dict(tags="1boy, 17 years old, teenage boy, short dark brown hair, grey eyes, slight smile, black "
-                             "jacket over grey hoodie"),
-    "maya": dict(tags="1girl, 17 years old, dark skin, brown skin, curly black hair, voluminous curly hair, brown eyes, "
-                      "warm smile, navy coat, mustard yellow scarf"),
-    "arthur": dict(tags="1boy, old man, elderly, 82 years old, wrinkles, thin face, white hair, sparse white hair, "
-                        "grey-blue eyes, frail, hospital gown, nasal cannula", neg="young, muscular, beard"),
-    "nurse": dict(tags="1girl, adult woman, nurse, teal scrubs, brown hair, hair bun, brown eyes, kind, calm"),
+CHARS = {   # one look per character for every scene (consistency first)
+    "neil": dict(tags="1boy, teenage boy, short dark brown hair, grey eyes, calm, slight eyebags, black jacket over grey "
+                      "hoodie"),
+    "maya": dict(tags="1girl, teenage girl, dark skin, curly black hair, brown eyes, warm smile, navy coat, mustard "
+                      "yellow scarf"),
+    "arthur": dict(tags="1boy, old man, very old, wrinkled face, thin white hair, grey eyes, frail, hospital gown",
+                   neg="young, muscular, beard"),
+    "nurse": dict(tags="1girl, adult woman, nurse, teal scrubs, brown hair, hair bun, brown eyes, calm"),
 }
 BGS = {
     "room_night": dict(tags="teenager's bedroom at night, desk with three computer monitors showing stock charts, "
