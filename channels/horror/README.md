@@ -155,3 +155,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   sheet, then count six kids into the van, the sixth in a sheet holding the little witch's hand (chase or stay). R:
   Sam calls "Wiley!" from the dark, its fingers won't let go, rule 4 on the note's back: never look under its sheet
   (pull it off or leave it on).
+- 28 Oct 2026: the owner's two stories (channels/stories/) rebuilt in an anime look on this CPU (report: reports/CPU
+  anime animation pipeline.md): each character painted once with SD 1.5 Counterfeit-V3.0 (tools/anime_assets.py,
+  casts in dma_cast.py / boy_cast.py), cut out, given face patches (expressions, three mouths, blinks where they came
+  out clean) and animated as puppets on 24 fps held on 2s (anime2d.py); painted sets (portrait and 16:9); satsuei pass
+  (motion/satsuei.py). Every part ends on a cliffhanger into the next (no A/B). Delivered: dma_s1, dma_s2, dma_long,
+  boy_s1, boy_s2, boy_long (out/stories/, covers in out/stories/thumbs/), each checked line by line with Whisper medium.
