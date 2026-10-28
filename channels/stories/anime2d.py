@@ -129,6 +129,8 @@ class Puppet:
             self._paste(cr, face)
         pre = face + "+" if face else ""
         m = self.mouth(t, talk)
+        if m == "open" and not self.has(pre + "open") and self.has(pre + "half"):
+            m = "half"                                         # a smeared open mouth was dropped: use half-open
         if m and self.has(pre + m):
             self._paste(cr, pre + m)
         elif m and self.has(pre + "open"):                     # expression faces have closed / open only

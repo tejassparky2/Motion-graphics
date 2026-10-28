@@ -46,7 +46,7 @@ BGS = {
                     neg="window, windows, sunlight, sky, daylight, corridor, hallway, plants"),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
     "floor": dict(tags="dark grey concrete floor texture, top-down view, dust, hairline cracks, dim cold light, night",
-                  seed=9, neg="sunlight, shadows, window, red, lines, people, person, metal"),
+                  seed=9, paint=(0.62, 0.7, 0.82), neg="sunlight, shadows, window, red, lines, people, person, metal"),
 }
 
 
