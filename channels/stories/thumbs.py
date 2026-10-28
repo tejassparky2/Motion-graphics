@@ -190,7 +190,7 @@ def dma_s6(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · PART 6")
 
 
-def _manga_panel(cr, page, panel, folder="assets/manga/dma/ch01", ax=0.5, ay=0.5, fit=None, yc=0.5):
+def _manga_panel(cr, page, panel, folder="assets/manga/dma/ch01", ax=0.5, ay=0.5, fit=None, yc=0.5, xc=0.5):
     """A manga panel (from the manga chat's page and manifest) filling the cover, or, with fit = a share of the
     width, shown whole across the cover with its centre at yc."""
     import json
@@ -200,7 +200,7 @@ def _manga_panel(cr, page, panel, folder="assets/manga/dma/ch01", ax=0.5, ay=0.5
     x0, y0, x1, y1 = box
     k = W * fit / (x1 - x0) if fit else max(W / (x1 - x0), H / (y1 - y0))
     cr.save()
-    cr.translate(W / 2, H * yc)
+    cr.translate(W * xc, H * yc)
     cr.scale(k, k)
     cr.translate(-(x0 + (x1 - x0) * ax), -(y0 + (y1 - y0) * ay))
     cr.rectangle(x0, y0, x1 - x0, y1 - y0)                    # this panel only
@@ -255,10 +255,30 @@ def dma_manga04(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 4")
 
 
+def dma_manga_ch01_long(cr):
+    """16:9: the meteor filling the sky (page 10) on the right, Momo waving in its spotlight (page 20) below it, the
+    chapter title on the left: CHAPTER 1 / 12:17."""
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 10, 1, fit=0.62, yc=0.36, xc=0.68)
+    _manga_panel(cr, 20, 3, fit=0.4, yc=0.8, xc=0.78)
+    g = cairo.LinearGradient(0, 0, W * 0.55, 0)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.92)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    for k, (txt, col, sz) in enumerate((("CHAPTER 1", (1, 1, 1, 1), 96), ("12:17.", hud2d.RED, 120),
+                                        ("FULL CHAPTER", (1, 0.85, 0.4, 1), 40))):
+        hud2d._text(cr, txt, 50, 230 + k * 120, sz, col, hud2d.ROUND, "left", outline=(0, 0, 0, 1), ow=sz * 0.12,
+                    shadow=0.6)
+    hud2d._text(cr, "DEAD MAN'S ALGORITHM · THE MANGA", 50, 100, 30, (1, 0.85, 0.4, 1), hud2d.ROUND, "left",
+                outline=(0, 0, 0, 1), ow=4)
+
+
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
           "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
           "dma_manga01": dma_manga01, "dma_manga02": dma_manga02,
-          "dma_manga03": dma_manga03, "dma_manga04": dma_manga04}
+          "dma_manga03": dma_manga03, "dma_manga04": dma_manga04, "dma_manga_ch01_long": dma_manga_ch01_long}
 
 if __name__ == "__main__":
     name = sys.argv[1]
