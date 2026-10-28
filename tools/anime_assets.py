@@ -253,6 +253,13 @@ def char(mod, name):
     for x0, y0, x1, y1 in c.get("clear_light", ()):   # ... only their pale parts, where they touch the body
         reg = a[y0 * 2:y1 * 2, x0 * 2:x1 * 2]
         reg[..., 3][reg[..., :3].mean(axis=2) > 110] = 0
+    if c.get("keep_main", True):                      # drop floating fragments: keep the largest connected shape
+        solid = cv2.erode((a[..., 3] > 128).astype(np.uint8), np.ones((9, 9), np.uint8))   # thin links break
+        n, lab, stats, _ = cv2.connectedComponentsWithStats(solid, connectivity=8)
+        if n > 2:
+            main = (lab == 1 + int(np.argmax(stats[1:, cv2.CC_STAT_AREA]))).astype(np.uint8)
+            keep = cv2.dilate(main, np.ones((25, 25), np.uint8))                          # grow the edges back
+            a[..., 3][keep == 0] = 0
     cut = Image.fromarray(a, "RGBA")
     cut.save(os.path.join(d, "base.png"))
     log(f"char {name}: {time.time() - t:.0f}s")

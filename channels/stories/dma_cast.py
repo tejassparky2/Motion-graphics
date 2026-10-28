@@ -27,8 +27,8 @@ CHARS = {
                  extra=("smirk",)),
     "kota": dict(tags=f"1boy, black hair, mushroom haircut, straight bangs, round glasses, nervous, {GAKURAN}",
                  seed=44, face=(162, 128, 362, 328), eyes=(178, 188, 345, 252), mouth=(236, 254, 286, 290),
-                 clear=((0, 270, 140, 368), (362, 232, 512, 398)),
-                 clear_light=((0, 360, 132, 548), (420, 396, 512, 482))),   # the model painted mushrooms
+                 clear=((0, 270, 140, 368), (362, 232, 512, 398), (0, 462, 62, 515)),
+                 clear_light=((0, 360, 132, 470), (0, 470, 84, 548), (420, 396, 512, 482))),   # painted mushrooms
     "go": dict(tags=f"1boy, tall, broad shoulders, very short black hair, crew cut, thick eyebrows, serious, {GAKURAN}",
                seed=33, face=(190, 228, 390, 428), eyes=(198, 282, 364, 334), mouth=(262, 360, 316, 392),
                extra=("angry",)),
