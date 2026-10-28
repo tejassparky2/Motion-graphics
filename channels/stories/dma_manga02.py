@@ -29,7 +29,7 @@ def s(i, page, panel, who, text, **kw):
 BEATS = [
     n(1, 8, 1, "[Twelve sixteen and forty-four seconds.|12:16:44.]"),
     n(2, 8, 2, "Ren checked his phone. Connection lost.", gap=0.4),
-    n(3, 8, 3, "Fujimoto Aoi was already at the window.", gap=0.4),
+    n(3, 8, 3, "Aoi was already at the window.", gap=0.4),          # "Fujimoto" was heard as "The Yumoto"
     s(4, 8, 3, "aoi", "[What is that?|...What is that?]", gap=0.3),
     n(5, 8, 4, "One streak of light. Moving far too fast.", gap=0.4),
     s(6, 9, 1, "student_a", "A plane?"),
@@ -43,7 +43,7 @@ BEATS = [
     s(14, 10, 2, "riku", "[Move!|MOVE!]", gap=0.2, impact=True),
     n(15, 11, 1, "Everyone except Ren."),
     n(16, 11, 2, "Inside the glare, there was a shape. Rings of light. Or cracks. Or an eye.", gap=0.4),
-    n(17, 11, 3, "Ren couldn't look away.", gap=0.4),
+    n(17, 11, 3, "He couldn't look away.", gap=0.4),                # "Ren" was heard as "Ben"
     n(18, 12, 1, "[Twelve seventeen and five seconds.|12:17:05.]", impact=True, sfx="sting"),
     n(19, 12, 2, "Then darkness.", gap=0.6),
     n(20, 12, 3, "Then silence.", gap=0.5),
