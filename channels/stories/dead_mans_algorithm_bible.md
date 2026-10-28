@@ -104,3 +104,6 @@ Do not rewrite established canon without explicit permission. Do not invent addi
   7. Do unspent tokens carry over?
 - Only the 8 named students have names; the other 12 stay unnamed (no invented names).
 - Character looks are production design, not canon (the bible gives none except Momo's).
+- Owner, 28 Oct 2026: "Continue the Story ... the first game 20/20 can survival but from game 2 atlest 1 is dead this
+  is dark psychological survival". Proposed answers to questions 1, 2, 4, 5 and 7, Game 1's result and Game 2 ("The
+  Charity") are in channels/stories/dma_arc_games_1_2.md, awaiting the owner's approval (3 and 6 stay open).
