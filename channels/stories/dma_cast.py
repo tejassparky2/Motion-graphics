@@ -34,6 +34,7 @@ CHARS = {
                extra=("angry",)),
     "aoi": dict(tags=f"1girl, bob cut, dark blue hair, hairpin, dark blue eyes, calm, expressionless, {SAILOR}",
                 seed=11, face=(230, 108, 422, 300), eyes=(246, 142, 396, 218), mouth=(298, 228, 346, 260)),
+    "saki": dict(tags=f"1girl, short black hair, hair over one eye, side bangs, grey eyes, quiet, sad, {SAILOR}"),
     "mio": dict(tags=f"1girl, wavy hair, light brown hair, earrings, brown eyes, half-closed eyes, smug, {SAILOR}",
                 seed=11, face=(150, 165, 370, 385), eyes=(150, 205, 352, 285), mouth=(230, 300, 292, 338),
                 extra=("smirk",)),
@@ -49,6 +50,10 @@ BGS = {
     "chamber_wide": dict(tags="dark underground bunker room interior, large square concrete room, bare concrete walls, "
                               "cold fluorescent ceiling lights, night, gloomy", size=(768, 512), seed=7,
                          paint=(0.86, 0.98, 1.08), neg="window, windows, sunlight, sky, daylight, corridor, hallway"),
+    "white_room": dict(tags="empty white room interior, bright white walls, white floor, a huge black screen on the "
+                            "far wall, cold white light, minimalist, sterile"),
+    "white_room_wide": dict(tags="empty white room interior, bright white walls, white floor, a huge black screen on "
+                                 "the far wall, cold white light, minimalist, sterile", size=(768, 512)),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
     "floor": dict(tags="dark grey concrete floor texture, top-down view, dust, hairline cracks, dim cold light, night",
                   seed=9, paint=(0.62, 0.7, 0.82), neg="sunlight, shadows, window, red, lines, people, person, metal"),
