@@ -112,7 +112,7 @@ SCRIPT = [
                                       "is executed!", speaker="momo"),
     dict(id="c57", scene="momo", text="Ten minutes! Starting now!", speaker="momo", gap=0.6),
     # the countdown
-    dict(id="c58", scene="talk", text="Easy. I bid all hundred. Nobody beats a hundred.", speaker="riku", gap=0.8),
+    dict(id="c58", scene="talk", text="Easy. I'm going all in. Nobody beats a hundred.", speaker="riku", gap=0.8),
     dict(id="c59", scene="talk", text="Unless someone else bids a hundred. Then you're both eliminated.",
          speaker="aoi", gap=0.4),
     dict(id="c60", scene="talk", text="So we all bid zero and go home?", speaker="haruto", gap=0.5),
@@ -123,7 +123,7 @@ SCRIPT = [
     dict(id="c64", scene="ren", text="Twenty people. Twenty numbers. One key."),
     dict(id="c65", scene="ren", text="Bid too high, and you might tie. Bid too low, and someone beats you."),
     dict(id="c66", scene="ren", text="I looked at Yui. At Haruto. At the countdown."),
-    dict(id="c67", scene="ren", text="And I realised the safest number in this room might not be a hundred.",
+    dict(id="c67", scene="ren", text="And I realised a hundred might be the most dangerous number in this room.",
          gap=0.6),
     dict(id="c68", scene="ren", text="I already knew my number.", gap=0.5),
     dict(id="c69", scene="momo", text="Tick tock, Class [three B!|3-B!]", speaker="momo", gap=0.3),

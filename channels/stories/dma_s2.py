@@ -47,7 +47,7 @@ SCRIPT = [
     dict(id="g7", scene="rule", text="Rule five. If everyone leaves all tokens unspent when time expires, "
                                      "everyone is executed!", speaker="momo"),
     dict(id="g8", scene="momo", text="Ten minutes! Starting now!", speaker="momo", gap=0.6),
-    dict(id="g9", scene="talk", text="Easy. I bid all hundred. Nobody beats a hundred.", speaker="riku", gap=0.6),
+    dict(id="g9", scene="talk", text="Easy. I'm going all in. Nobody beats a hundred.", speaker="riku", gap=0.6),
     dict(id="g10", scene="talk", text="Unless someone else bids a hundred. Then you're both eliminated.",
          speaker="aoi", gap=0.4),
     dict(id="g11", scene="talk", text="So we all bid zero and go home?", speaker="haruto", gap=0.5),
@@ -57,7 +57,7 @@ SCRIPT = [
     dict(id="g14", scene="ren", text="Everyone was doing the same math."),
     dict(id="g15", scene="ren", text="Bid too high, and you might tie. Bid too low, and someone beats you."),
     dict(id="g16", scene="clock", text="The countdown said [nine twelve.|9:12.]"),
-    dict(id="g17", scene="ren", text="And I realised the safest number in this room might not be a hundred.",
+    dict(id="g17", scene="ren", text="And I realised a hundred might be the most dangerous number in this room.",
          gap=0.6),
     dict(id="g18", scene="ren", text="I already knew my number.", gap=0.5),
     dict(id="g19", scene="momo_close", text="Tick tock, Class [three B!|3-B!]", speaker="momo", gap=0.3),
