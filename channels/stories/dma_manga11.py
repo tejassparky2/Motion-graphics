@@ -36,17 +36,18 @@ BEATS = [
     n(5, 9, 1, "Kota held his notebook shut."),
     n(6, 9, 2, "He tore out one page. Carefully. The notebook stayed closed.", gap=0.4),
     n(7, 9, 3, "Ren knelt on the floor and drew.", gap=0.4),
-    s(8, 10, 1, "ren", "Start at your own locker. The card tells you which locker to open next."),
+    s(8, 10, 1, "ren", "[Start, at your own locker.|Start at your own locker.] The card tells you which locker to open "
+                       "next."),   # "Start at" was heard "Starting"
     s(9, 10, 2, "ren", "Every card points somewhere. Follow them and you go round in a loop.", gap=0.4),
     s(10, 10, 3, "ren", "[And the card that leads back to your own locker is your name.|And the card that leads back to "
                         "your own locker... is your name.]", gap=0.4),
-    n(11, 10, 3, "Say you're B. Locker B points to D. D to A. A to C. C to E. And locker E holds B.", gap=0.4),
+    n(11, 10, 3, "Say you're B. Open B, and the card says D. D says A. A says C. C says E. And E holds B.", gap=0.4),
     s(12, 11, 1, "haruto", "So we just follow the arrows?"),
     s(13, 11, 2, "aoi", "If your loop is ten or shorter, you find it. If it's longer, everyone in that loop dies "
                         "together.", gap=0.4),
     s(14, 11, 3, "aoi", "[Random lockers. About six times in ten, there's a long loop.|Random lockers... About six "
                         "times in ten, there's a long loop.]", gap=0.4),
-    n(15, 11, 4, "Ren looked toward the open door.", gap=0.45),
+    n(15, 11, 4, "Then he looked toward the open door.", gap=0.45),          # "Ren looked" was heard "Wren, look"
     s(16, 12, 1, "ren", "[Everyone's connected.|\"Everyone's connected.\"] I looked at the line on the floor. One "
                         "circle. No breaks."),
     s(17, 12, 2, "ren", "It's not random. It's one loop. All nineteen of us.", gap=0.45),
