@@ -210,8 +210,26 @@ def tower9_n4(cr):
     chip(cr, "TOWER 9 · NIGHT 4")
 
 
+def bench3_p1(cr):
+    """Bench three under its lamp, your face lit by the phone below it: $50,000 UNDER MY BENCH."""
+    from channels.horror import bench3_p1_2d as ep
+    t = 3.0
+    cr.save()
+    cr.translate(0, -170)
+    ep.bench_night(cr, t, 0, 1, ring=1.0, env=1.0)
+    cr.restore()
+    ep.you(cr, 360, 1270, 1.2, t, fear=0.55, look=(0.0, 0.25))
+    g = cairo.LinearGradient(0, 100, 0, 470)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.85)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("$50,000", (1, 1, 1, 1)), ("UNDER MY BENCH.", hud2d.RED)], 230, 108)
+    chip(cr, "BENCH THREE · PART 1")
+
+
 THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid, "tower9_n3": tower9_n3, "timelock_p1": timelock_p1,
-          "tower9_n4": tower9_n4}
+          "tower9_n4": tower9_n4, "bench3_p1": bench3_p1}
 
 if __name__ == "__main__":
     name = sys.argv[1]

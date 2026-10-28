@@ -43,7 +43,7 @@ BEATS = [
     s(12, 16, 4, "riku", "Open, damn it!", gap=0.3, impact=True),
     n(13, 17, 1, "Riku kicked it. It didn't move.", sfx="hit"),
     s(14, 17, 1, "riku", "[Damn it!|Damn it!!]", gap=0.25),
-    n(15, 17, 2, "Aoi knelt at the frame and studied the seams.", gap=0.4),
+    n(15, 17, 2, "Fujimoto Aoi knelt by the door. She studied its edges.", gap=0.4),   # "Aoi knelt" was heard "I knelt"
     s(16, 17, 3, "aoi", "This isn't a school door someone modified.", gap=0.35),
     s(17, 17, 4, "aoi", "[This room was built for us.|This room was built... for us.]", gap=0.4),
     n(18, 17, 5, "Ren looked up. In the corner of the ceiling, a small lens.", gap=0.45),
