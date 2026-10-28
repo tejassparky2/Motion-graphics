@@ -189,7 +189,29 @@ def timelock_p1(cr):
     chip(cr, "TIME LOCK · PART 1")
 
 
-THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid, "tower9_n3": tower9_n3, "timelock_p1": timelock_p1}
+def tower9_n4(cr):
+    """The radio on the desk, its display reading 4:44 and the RX light red, the other you's calm face beside it:
+    IT SPOKE IN YOUR VOICE."""
+    from channels.horror import tower9_n4_2d as ep
+    t = 3.0
+    cr.save()
+    cr.translate(0, -230)                                     # the radio high, its display under the title
+    ep.radio(cr, t, 1.0, ch="4:44")
+    cr.restore()
+    from channels.horror import tower9_n3_2d as n3
+    n3.other_bust(cr, 360, 1180, 1.25, t, tk.FACES["calm"], tremble=0.0)
+    ep.scorch(cr, 150, 1290, 0.75)
+    g = cairo.LinearGradient(0, 100, 0, 470)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.85)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("IT SPOKE IN", (1, 1, 1, 1)), ("YOUR VOICE.", hud2d.RED)], 230, 108)
+    chip(cr, "TOWER 9 · NIGHT 4")
+
+
+THUMBS = {"tower9_n2": tower9_n2, "timelock": timelock, "seventh_kid": seventh_kid, "tower9_n3": tower9_n3, "timelock_p1": timelock_p1,
+          "tower9_n4": tower9_n4}
 
 if __name__ == "__main__":
     name = sys.argv[1]
