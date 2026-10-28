@@ -42,7 +42,7 @@ BGS = {
     "classroom": dict(tags="japanese high school classroom, rows of wooden desks, green chalkboard, large windows on the "
                            "left, afternoon sunlight, light rays, wall clock", seed=4, flip=True),
     "chamber": dict(tags="dark underground bunker room interior, large square concrete room, bare concrete walls, "
-                         "cold fluorescent ceiling lights, night, gloomy", seed=7,
+                         "cold fluorescent ceiling lights, night, gloomy", seed=8, paint=(0.86, 0.98, 1.08),
                     neg="window, windows, sunlight, sky, daylight, corridor, hallway, plants"),
     "sky": dict(tags="sky seen from a school window, summer clouds, city rooftops below, bright day"),
     "floor": dict(tags="dark grey concrete floor texture, top-down view, dust, hairline cracks, dim cold light, night",

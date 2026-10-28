@@ -331,7 +331,13 @@ def bg(mod, name, seeds=None):
             os.makedirs(dd, exist_ok=True)
             img.save(os.path.join(dd, f"{s.SET}_bg_{name}_{seed}.png"))
         else:
-            upscale(img).save(os.path.join(out_dir(s, "bg"), f"{name}.png"))
+            big = upscale(img)
+            if b.get("paint"):                                        # painterly flattening + a colour grade
+                a = cv2.edgePreservingFilter(np.asarray(big)[..., ::-1].copy(), flags=1, sigma_s=50, sigma_r=0.3)
+                x = a.astype(np.float32) / 255 * np.array(b["paint"][::-1], np.float32)       # rgb gains -> bgr
+                x = np.clip((x - 0.5) * 1.12 + 0.47, 0, 1)
+                big = Image.fromarray((x * 255 + 0.5).astype(np.uint8)[..., ::-1])
+            big.save(os.path.join(out_dir(s, "bg"), f"{name}.png"))
         log(f"bg {name} {seed}: {time.time() - t:.0f}s")
 
 
