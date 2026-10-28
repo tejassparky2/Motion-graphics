@@ -37,4 +37,4 @@ the boy who inherited another body, psychological thriller, reincarnation, body 
 Chapter 1. The law is the nearest body, and the weakest. Would you go to your own funeral?
 ```
 
-**Video facts:** 257.4 s, 713 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 258.4 s, 713 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
