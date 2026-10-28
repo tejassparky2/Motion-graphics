@@ -16,12 +16,15 @@ CHARS = {   # one look per character for every scene (consistency first)
                  extra=("smile",)),
     "maya": dict(tags="1girl, teenage girl, dark skin, curly black hair, brown eyes, warm smile, navy coat, mustard "
                       "yellow scarf", seed=11, face=(160, 150, 380, 370), eyes=(165, 175, 375, 285),
-                 mouth=(234, 288, 296, 324), extra=("smile", "laugh", "grief")),
+                 mouth=(234, 288, 296, 324), extra=("smile", "laugh", "grief"),
+                 face_tags="1girl, dark skin, curly black hair, brown eyes"),
     "arthur": dict(tags="1boy, old man, very old, wrinkled face, thin white hair, grey eyes, frail, hospital gown",
                    neg="young, muscular, beard", seed=11, face=(125, 160, 345, 380), eyes=(140, 195, 300, 268),
-                   mouth=(190, 300, 262, 342), extra=("grief",)),
+                   mouth=(190, 300, 262, 342), extra=("grief",),
+                   face_tags="1boy, old man, very old, wrinkled face, thin white hair, grey eyes"),
     "nurse": dict(tags="1girl, adult woman, nurse, teal scrubs, brown hair, hair bun, brown eyes, calm", seed=11,
-                  face=(190, 150, 410, 370), eyes=(200, 190, 405, 270), mouth=(262, 300, 318, 336)),
+                  face=(190, 150, 410, 370), eyes=(200, 190, 405, 270), mouth=(262, 300, 318, 336),
+                  face_tags="1girl, adult woman, brown hair, hair bun, brown eyes"),
 }
 BGS = {
     "room_night": dict(tags="teenager's bedroom at night, desk with three computer monitors showing stock charts, "

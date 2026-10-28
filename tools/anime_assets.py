@@ -291,7 +291,8 @@ def parts(mod, name, which=None):
             base_face = Image.open(os.path.join(d, f"_face_{parent}.png")).convert("RGB")
         fast = region != "face" and os.environ.get("PART_LCM", "1") == "1"   # eyes / mouth: LCM (the full sampler
         #                                                                       did no better on blinks, 5x slower)
-        out = img2img(base_face, s.FACE_PROMPT.format(**c) + ", " + prompt, strength, c["seed"] + 7, fast=fast)
+        face = dict(c, tags=c.get("face_tags", c["tags"]))              # no clothing words: they get painted in
+        out = img2img(base_face, s.FACE_PROMPT.format(**face) + ", " + prompt, strength, c["seed"] + 7, fast=fast)
         if region == "face":                                          # expression faces are edited further
             out.save(os.path.join(d, f"_face_{pname}.png"))
         rx0, ry0, rx1, ry1 = [(v - box[i % 2]) * k for i, v in enumerate(c[region])] if region != "face" else \
