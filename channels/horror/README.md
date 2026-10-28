@@ -178,3 +178,6 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   own voice. Episode 1 = Chapter 1 pages 1-7 (dma_manga01, 36/36 Whisper medium). The approved Parts 3-6 script
   (dma_arc_games_1_2.md) was sent to the manga chat to draw as the next chapter(s) (owner: "And update our continue
   story to manga chat"). The anime Parts 3-6 (dma_s3..s6, dma_kit, dma_shots) are shelved, not rendered.
+  Episode 1 re-rendered without the horror hum (owner: "Why there is background beez sound"); the manga videos use
+  the soft "pad" bed. Episode 2 = Chapter 1 pages 8-14 (dma_manga02, 67 s, 31/31 Whisper medium after two rewordings:
+  "Fujimoto" was heard as "The Yumoto" and "Ren" as "Ben", so e3 and e17 drop the names), delivered with its cover.
