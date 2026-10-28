@@ -38,14 +38,17 @@ def _surface_from_rgba(a):
 
 
 @functools.lru_cache(maxsize=None)
-def image(path, blur=0, scale=1.0):
-    """A PNG as a cairo surface (optionally pre-blurred / pre-scaled; cached per process)."""
+def image(path, blur=0, scale=1.0, pad_bottom=0):
+    """A PNG as a cairo surface (optionally pre-blurred / pre-scaled; cached per process). pad_bottom repeats the last
+    row downward, so a bust's cut-off chest never ends inside the frame."""
     a = cv2.imread(os.path.join(ROOT, path), cv2.IMREAD_UNCHANGED)
     if a is None:
         raise FileNotFoundError(path)
     a = cv2.cvtColor(a, cv2.COLOR_BGRA2RGBA if a.shape[2] == 4 else cv2.COLOR_BGR2RGB)
     if a.shape[2] == 3:
         a = np.dstack([a, np.full(a.shape[:2], 255, np.uint8)])
+    if pad_bottom:
+        a = cv2.copyMakeBorder(a, 0, pad_bottom, 0, 0, cv2.BORDER_REPLICATE)
     if scale != 1.0:
         a = cv2.resize(a, (int(a.shape[1] * scale), int(a.shape[0] * scale)), interpolation=cv2.INTER_AREA)
     if blur:
@@ -110,7 +113,7 @@ class Puppet:
         k = s * 250 / self.head_h
         breathe = 1 + 0.007 * math.sin(2 * math.pi * 0.23 * tq + self.phase)
         sway = 0.006 * math.sin(2 * math.pi * 0.11 * tq + self.phase * 3) + tilt
-        base = image(os.path.join(self.dir, "base.png"))
+        base = image(os.path.join(self.dir, "base.png"), pad_bottom=1200)
         cr.save()
         cr.translate(x, y)
         cr.rotate(sway)
