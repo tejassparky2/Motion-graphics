@@ -66,7 +66,7 @@ SCRIPT = [
     dict(id="c21", scene="class", text="No. It's not a cloud.", speaker="aoi", gap=0.4),
     dict(id="c22", scene="class", text="Everyone went to the windows. Phones came out."),
     dict(id="c23", scene="class", text="It wasn't moving across the sky. It was coming straight at us."),
-    dict(id="c24", scene="class", text="Ren?", speaker="yui"),
+    dict(id="c24", scene="class", text="Ren? What's wrong?", speaker="yui"),
     dict(id="c25", scene="class", text="[Twelve sixteen and fifty-nine seconds.|12:16 and 59 seconds.]"),
     dict(id="c26", scene="eye", text="And in the last second, inside the fire, I saw it. A shape, like an eye. "
                                      "Looking back at me.", gap=0.4),
@@ -386,8 +386,8 @@ def draw(cr, t, tl):
 
     if kind not in ("black", "title"):
         if A is dma_anime:                                      # satsuei: glow, light, aberration, grain
-            satsuei.apply(cr, t, glow=0.24, light=((0.1, 0.1), (1.0, 0.85, 0.7), 0.14),
-                          shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.03)
+            satsuei.apply(cr, t, glow=0.24, light=((0.1, 0.1), (1.0, 0.85, 0.7), 0.14),   # lighter grain: a 3.5-min
+                          shade=((0.5, 0.3), (0.35, 0.3, 0.45), 0.3), ca=1.0, grain=0.016)  # file must stay < 50 MB
             hud.finish(cr, t, flash_at=[], vig=0.4, grain=0.0)
         else:
             hud.finish(cr, t, flash_at=[], vig=0.45, grain=0.05)
