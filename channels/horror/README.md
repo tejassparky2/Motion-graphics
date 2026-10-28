@@ -140,6 +140,10 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   cued after "bolt."; a breath effect masked "Shut it! Before" -> removed; the bolt sound and the other-you's volume
   boost clipped -> lowered. No viewer comments were sent, so none are shown (never invent them). Night 4 waits for
   the vote: A answer the radio / B stay.
+- 28 Oct: Tower 9 Night 3 vote: owner "For tower 9 all said to stay". Night 4 script for approval:
+  out/horror/scripts_night4_tower9.md (you let the radio crackle; the other you's watch runs backwards; test: "Who's
+  on the radio?" "Someone who answered."; flip: the radio reads page one in your voice; the logbook opens to a last page
+  in your handwriting, dated tomorrow; vote: read the last page, or burn the logbook).
 - 27 Oct: owner picked "Time Lock Part 1" as the next episode and approved the thief script ("Approved, make it").
   Delivered out/horror/timelock_p1_2d.mp4 (59.5 s incl. the 2 s card hold; 171 words), Whisper medium 20/20, no
   encoder tags; thumbnail out/horror/thumbs/timelock_p1.png. THIS is the Time Lock Part 1 to post; the earlier clerk
