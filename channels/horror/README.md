@@ -159,6 +159,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   sheet, then count six kids into the van, the sixth in a sheet holding the little witch's hand (chase or stay). R:
   Sam calls "Wiley!" from the dark, its fingers won't let go, rule 4 on the note's back: never look under its sheet
   (pull it off or leave it on).
+- 28 Oct: owner sent a reference Short (84 s: two bags with $20 million, a hidden phone texts "keep one, bring the other
+  back", deadline midnight, vote return or keep): "I want story something like for clever psychological tension for
+  Nancy story". New series for approval: out/horror/scripts_wrong_number_part1.md (a wrong-number text leads you to
+  $50,000 under the bench you sit on every day; the texter says an angry man is coming; flip: the envelope's back says
+  "Thank you for coming", so it was never a wrong number; vote: put it back, or keep it). Needs a posting slot.
 - 28 Oct 2026: the owner's two stories (channels/stories/) rebuilt in an anime look on this CPU (report: reports/CPU
   anime animation pipeline.md): each character painted once with SD 1.5 Counterfeit-V3.0 (tools/anime_assets.py,
   casts in dma_cast.py / boy_cast.py), cut out, given face patches (expressions, three mouths, blinks where they came
