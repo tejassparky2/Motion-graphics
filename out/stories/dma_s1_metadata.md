@@ -18,7 +18,7 @@ Cameras. No signal. A screen that says 20 SURVIVORS. And a cheerful little masco
 Dead Man's Algorithm, Part 1: 12:17. Part 2: The Glass Auction.
 Twenty of us. One key. Part 2 is next.
 
-(Original story. 2D animation.)
+(Original story. Anime-style animation.)
 
 #DeadMansAlgorithm #SurvivalGame #Shorts
 ```
@@ -33,4 +33,4 @@ dead mans algorithm, survival game, psychological thriller, anime story, death g
 Twenty students. One exit key. Part 2: The Glass Auction, and all five rules. (Pause on Kota's notebook 👀)
 ```
 
-**Video facts:** 66.1 s, 162 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 66.1 s, 163 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

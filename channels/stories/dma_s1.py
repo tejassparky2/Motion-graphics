@@ -152,7 +152,7 @@ def phone(cr, t, x, y, s):
 
 def eye_shot(cr, t, k):
     """Ren's eye, extreme close-up; in it, the reflection of the shape inside the meteor."""
-    if A.ready("ren"):
+    if A is dma_anime and A.ready("ren"):
         A.eye_closeup(cr, t, k)
         A.the_eye(cr, t, W / 2 + W * 0.05, H * 0.47, W * 0.11, a=0.8 * clamp01(k * 1.5))
         glow(cr, W / 2, H * 0.5, W, ORANGE, 0.35)
