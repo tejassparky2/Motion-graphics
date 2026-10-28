@@ -222,9 +222,20 @@ def dma_manga01(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 1")
 
 
+def dma_manga02(cr):
+    """The meteor filling the sky over the school (page 10), Ren frozen in its glare (page 11): 12:17:05."""
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 10, 1, fit=1.0, yc=0.52)
+    _manga_panel(cr, 11, 1, fit=1.0, yc=0.84)
+    _top_shade(cr, 520)
+    big_text(cr, [("12:17:05.", (1, 1, 1, 1)), ("THE SKY FELL.", hud2d.RED)], 250, 112)
+    chip(cr, "DEAD MAN'S ALGORITHM · THE MANGA · EP 2")
+
+
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
           "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
-          "dma_manga01": dma_manga01}
+          "dma_manga01": dma_manga01, "dma_manga02": dma_manga02}
 
 if __name__ == "__main__":
     name = sys.argv[1]
