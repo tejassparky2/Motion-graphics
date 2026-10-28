@@ -1,8 +1,11 @@
-# DEAD MAN'S ALGORITHM: Parts 3-6 (Game 1 resolved, Game 2 "The Charity") · v4
+# DEAD MAN'S ALGORITHM: Parts 3-6 (Game 1 resolved, Game 2 "The Charity") · v5
 
 **Status: approved by the owner, 28 Oct 2026** ("Approved, go ahead and render parts 3 to 6"), including Saki as
 the ninth named student. The anime render was then dropped for manga videos; this script went to the manga
 creation chat (tejassparky2/Manga) to be drawn (owner, 28 Oct 2026: "And update our continue story to manga chat").
+v5 (owner, 28 Oct 2026: "Approved, update and send to manga chat") fixes three logic points from the manga chat's
+continuity audit: two liars could tie in Game 1; "eliminated" stays a mystery (Q6 open) instead of "kills"; Momo says
+it isn't a player before Ren uses that.
 
 The owner, 28 Oct 2026:
 - "Continue the Story keep the suspense thriller show how human emotions greed survival betrayal e everything make games
@@ -38,26 +41,29 @@ hundred might be the most dangerous number in the room, and "I already knew my n
 
 **Ren's number is one.** His reasoning, one step at a time:
 1. Somebody has to spend, or rule 5 kills all twenty.
-2. Two equal bids at the top tie, and rule 3 kills both. So **exactly one** person may bid.
+2. Two equal bids at the top tie, and rule 3 eliminates both. Nobody knows what "eliminated" means (Q6 stays open),
+   and nobody wants to find out. So the top bid must be **unique**: one honest bid.
 3. Spent tokens are lost **permanently** (rule 2), so that bid must be as small as possible: **one token**.
 4. Mio is right that everyone will remember who bid, so Ren bids it himself.
-5. **The hard part, betrayal:** someone will lie. So Ren makes lying safe: "If you want the key, bid more than one.
-   You win, and nobody dies. Just never bid a hundred. Riku already called it." The only lie that could kill is
-   copying Ren's one, and that would kill the liar too.
+5. **The hard part, betrayal:** someone will lie. So Ren makes lying safe for everyone else: "If you want the key,
+   bid more than one. You win the key. Unless two liars pick the same number. Just never bid a hundred. Riku already
+   called it." A hundred is where liars would collide, so the only real risk left is two liars choosing the same
+   number, and that risk falls on the liars. Copying Ren's one would eliminate the liar too.
 
 **What happens:** Riku agrees too fast. Momo: "Highest unique bid: thirty! Kanzaki Riku!" The reveal: Riku never meant
 a hundred. He said it in Part 2 so nobody would dare bid high, and thirty was enough. Riku: "You trusted a plan. I
-trusted a number." Ren: "He thought he beat my plan. My plan was built for a liar." No tie: **20/20 survive**. The exit
+trusted a number." Ren: "He thought he beat my plan. My plan was built for a liar." Only one liar, so no tie: nobody
+is eliminated and **20/20 survive**. The exit
 key opens the exit, into Game 2. Tokens after Game 1: Ren 99, Riku 70 (fewest), the other 18 have 100.
 
 Answers this needs (approved): every bid is spent (Q1: losers aren't otherwise punished); the exit key opens the door
 for everyone, and it leads to Game 2 (Q2); you may bid 0 while others bid (Q4); bids are secret and final (Q5);
-tokens carry over (Q7). Q3 and Q6 stay open.
+tokens carry over (Q7). Q3 and Q6 stay open; Game 1 never shows what "eliminated" means.
 
 ## Game 2: THE CHARITY (rules fixed, approved 28 Oct 2026)
 
-A white room. A screen that shows one number: **PLAYERS: 20**. Momo sits in the middle of the room, swinging its legs.
-Ten minutes.
+A white room. A screen that shows one number: **PLAYERS: 20**. Momo sits in the middle of the room, swinging its legs,
+and says so itself as the game opens: "Twenty players! Momo just watches!" Ten minutes.
 
 - Rule 1: Nobody can take your tokens.
 - Rule 2: You may give tokens to **anyone in this room**. Gifts are final.
@@ -95,8 +101,8 @@ The price: everyone walks into Game 3 with nothing.
   floor; no gore). **19 survivors.** Riku: "She was the only one I trusted." Ren: "I found the loophole. Riku found
   the loophole in my loophole."
 
-**Why it's fair:** rule 2's "anyone in this room" is on the card, and Momo is in every shot of the room before Ren
-sees it. Riku's move uses the same rule 2 (you can give to anyone, even someone who is out). Saki's "He's still one of
+**Why it's fair:** rule 2's "anyone in this room" is on the card, Momo is in every shot of the room before Ren sees
+it, and Momo says "Twenty players! Momo just watches!" (and the screen counts 20 while Momo sits there). Riku's move uses the same rule 2 (you can give to anyone, even someone who is out). Saki's "He's still one of
 us" is planted two parts before it kills her.
 
 ## Part 3 · "THE BIDS" (~65 s)
@@ -105,12 +111,12 @@ us" is planted two parts before it kills her.
 |---|---|---|
 | 1 | My number was one. | Hook: MY NUMBER: 1 |
 | 2 | Somebody had to spend. Or rule five killed us all. | Rule 5 card |
-| 3 | But two bids at the top would tie. And a tie at the top kills. | Rule 3 card, two 100s colliding |
+| 3 | But two bids at the top would tie. And a tie gets you eliminated. Nobody knew what that meant. | Rule 3 card, two 100s colliding |
 | 4 | So only one person could bid. And spent tokens are gone permanently. So it had to be tiny. | Rule 2, PERMANENTLY in red |
 | 5 | Mio was right. Everyone would remember who. So it had to be me. | Ren |
 | 6 | I bid one. Everyone else bids zero. | Card: REN 1 · EVERYONE 0 |
 | 7 | (Mio) And if somebody lies? | Mio |
-| 8 | Then let them. Bid more than one, and you win the key. And nobody dies. | Card: LIAR WINS · NOBODY DIES |
+| 8 | Then let them. Bid more than one, and you win the key. Unless two liars pick the same number. | Card: LIAR WINS · UNLESS TWO TIE |
 | 9 | Just never bid a hundred. Riku already called it. | Riku |
 | 10 | (Riku) Fine. Ren bids one. | Riku, smirk |
 | 11 | Riku agreed too fast. | Ren's eyes (the clue) |
@@ -118,7 +124,7 @@ us" is planted two parts before it kills her.
 | 13 | Riku never meant a hundred. He said it so nobody would dare bid high. | Flashback: "Nobody beats a hundred." |
 | 14 | (Riku) You trusted a plan. I trusted a number. | Riku holds up the key |
 | 15 | He thought he beat my plan. My plan was built for a liar. | Ren |
-| 16 | No tie. Nobody died. Twenty survivors. | 20 SURVIVORS |
+| 16 | No tie. Nobody eliminated. Twenty survivors. | 20 SURVIVORS |
 | 17 | (Momo) Everybody lives! How boring! | Momo pouts |
 | 18 | The exit key opened the exit. Into game two. | The door opens on white light |
 | 19 | And Riku had just spent thirty tokens. Fewer than anyone. | Card: PART 4 · THE CHARITY |
@@ -128,7 +134,7 @@ us" is planted two parts before it kills her.
 | # | Line | On screen |
 |---|---|---|
 | 1 | The exit led to a white room. And Momo was sitting in the middle of it. | Hook; Momo on the floor |
-| 2 | (Momo) Game two! The Charity! Sharing is caring! | Momo |
+| 2 | (Momo) Game two! The Charity! Twenty players! Momo just watches! | Momo; PLAYERS: 20 |
 | 3 | (Momo) Rule one. Nobody can take your tokens. | Rule card |
 | 4 | (Momo) Rule two. You may give tokens to anyone in this room. Gifts are final. | Rule card |
 | 5 | (Momo) Rule three. When time runs out, the poorest player dies. A tie for poorest? They all die! | Rule card |
