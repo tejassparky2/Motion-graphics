@@ -27,7 +27,8 @@ BGS = {
     "room_night": dict(tags="teenager's bedroom at night, desk with three computer monitors showing stock charts, "
                             "blue screen glow, dark room, city lights through the window"),
     "cafe": dict(tags="small cafe by a train station, window seat, two cups of hot chocolate, warm afternoon light"),
-    "street": dict(tags="city street crossing at dusk, zebra crossing, traffic lights, orange sky, wet asphalt, shops"),
+    "street": dict(tags="city street crossing at dusk, zebra crossing, traffic lights, orange sky, wet asphalt, shops",
+                   seed=4),
     "hospital": dict(tags="private hospital room at night, empty hospital bed, heart monitor, large window, city "
                           "lights below, cold blue light"),
 }
