@@ -37,7 +37,26 @@ def dma_s1(cr):
     chip(cr, "DEAD MAN'S ALGORITHM · PART 1")
 
 
-THUMBS = {"dma_s1": dma_s1}
+def dma_s2(cr):
+    """Riku's smirk in the cold room, the exit key in its glass case beside him: 100 TOKENS. TIE = ELIMINATED."""
+    t = 40.0
+    A.chamber(cr, t, flicker=False)
+    cr.set_source_rgba(0.0, 0.02, 0.05, 0.35)
+    cr.paint()
+    A.glass_case(cr, t, W * 0.72, H * 0.6, 1.1)
+    glow(cr, W * 0.72, H * 0.55, 420, (1, 0.85, 0.4), 0.3)
+    A.student_bust(cr, W * 0.38, H * 0.92, 1.6, t, "riku", "smirk")
+    satsuei.apply(cr, t, glow=0.3, light=((0.7, 0.4), (1.0, 0.85, 0.55), 0.22), ca=1.5, grain=0.03)
+    g = cairo.LinearGradient(0, 100, 0, 470)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.75)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    big_text(cr, [("100 TOKENS.", (1, 1, 1, 1)), ("TIE = ELIMINATED.", hud2d.RED)], 250, 112)
+    chip(cr, "DEAD MAN'S ALGORITHM · PART 2")
+
+
+THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2}
 
 if __name__ == "__main__":
     name = sys.argv[1]
