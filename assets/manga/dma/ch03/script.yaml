@@ -1,0 +1,483 @@
+# DEAD MAN'S ALGORITHM — Chapter 3 "The Charity" — draft 1
+# Source: approved continuation v5 (story/continuation_v5_approved.md), Parts 4-6.
+#
+# Conventions (as in chapter01):
+#   canon: true  -> verbatim from the bible or the approved continuation (CONFIRMED CANON)
+#   (no flag)    -> new text for this draft (PROPOSAL — NOT CANON). Here only SFX and the
+#                   "19 SURVIVORS" screen wording, which follows the Chapter 1 screen format.
+#   Narration (Ren, first person) is lettered as captions.
+#   Reading order is right to left; rows list cells right to left.
+#   Chapter title "The Charity" is the approved name of Game 2.
+#   The execution is staged as approved: lights out, then Saki is gone. No gore.
+
+chapter: 3
+title: "The Charity"
+
+characters:
+  REN: "1boy, black hair, short hair, messy hair, hair between eyes, gakuran"
+  YUI: "1girl, long hair, black hair, straight hair, blunt bangs, serafuku"
+  HARUTO: "1boy, blonde hair, spiky hair, gakuran"
+  RIKU: "1boy, black hair, slicked back hair, sharp eyes, gakuran"
+  GO: "1boy, black hair, buzz cut, tall, broad shoulders, stoic, buttoned gakuran"
+  KOTA: "1boy, black hair, bowl cut, thin, timid, gakuran"
+  AOI: "1girl, black hair, bob cut, glasses, serafuku"
+  MIO: "1girl, light brown hair, long wavy hair, earrings, serafuku"
+  SAKI: "1girl, black hair, short hair, hair over one eye, quiet, serafuku"
+  MOMO: "no humans, solo, white mouse, chibi, big round ears, black eyes, bow tie, bell, mascot"
+
+character_negatives:
+  MOMO: "multiple mice, 2others"
+negative_extra: "rubble, ruins, sky, shelves, shop"
+
+pages:
+
+# ---------------------------------------------------------------- PART 4
+- page: 1
+  rows: [[1, [1]]]
+  panels:
+  - kind: art
+    shot: "SPLASH — the white room"
+    art: "A bare white room. Momo sits in the middle of the floor, swinging its legs. The students file in behind."
+    gen: "{MOMO}, sitting on floor, swinging legs, white room, empty room, white walls, bright, wide shot, from above"
+    title: true
+    text:
+    - {t: caption, who: REN, say: "The exit led to a white room. And Momo was sitting in the middle of it.", canon: true, at: [0.5, 0.93]}
+
+- page: 2
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "FULL — Momo opens the game"
+    art: "Momo throws its arms wide."
+    gen: "{MOMO}, arms spread, happy, full body, white room, bright"
+    text:
+    - {t: speech, who: MOMO, say: "Game two! The Charity! Twenty players! Momo just watches!", canon: true}
+  - kind: screen
+    shot: "SCREEN — players"
+    art: "The room's only screen shows one number."
+    lines:
+    - {s: "PLAYERS: 20", canon: true, big: true}
+    note: "The screen shows only PLAYERS while Momo sits in the room: the fair-play clue that Momo is not a player."
+  - kind: art
+    shot: "CLOSE — Momo, rule one"
+    art: "Momo raises one paw."
+    gen: "{MOMO}, raising one finger, cheerful, upper body, white room, bright"
+    text:
+    - {t: speech, who: MOMO, say: "Rule one. Nobody can take your tokens.", canon: true}
+
+- page: 3
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Momo, rule two"
+    art: "Momo gestures around the room."
+    gen: "{MOMO}, gesturing, pointing around, cheerful, full body, white room, bright"
+    text:
+    - {t: speech, who: MOMO, say: "Rule two. You may give tokens to anyone in this room. Gifts are final.", canon: true}
+    clue: "'Anyone in this room' — the loophole is stated in plain sight."
+  - kind: art
+    shot: "CLOSE — Momo, rule three"
+    art: "Momo, cheerful words, flat black eyes."
+    gen: "{MOMO}, head tilt, blank stare, black eyes, creepy, cute, close-up, white room"
+    text:
+    - {t: speech, who: MOMO, say: "Rule three. When time runs out, the poorest player dies. A tie for poorest? They all die!", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo, rule four"
+    art: "Momo raises a paw."
+    gen: "{MOMO}, mouse ears, raising hand, cheerful, smile, upper body, white room, bright"
+    negative_extra: "bunny"
+    seed: 30331
+    text:
+    - {t: speech, who: MOMO, say: "Rule four. Zero tokens, and you're not a player anymore.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo sits back down"
+    art: "Momo settles back on the floor, swinging its legs."
+    gen: "{MOMO}, sitting on floor, swinging legs, smile, full body, white room, bright"
+    negative_extra: "hair bow"
+    seed: 30340
+    text:
+    - {t: speech, who: MOMO, say: "Tokens are precious! You'll want them later! Ten minutes!", canon: true}
+
+- page: 4
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku, tense for the first time."
+    gen: "{RIKU}, tense, sweat, clenched jaw, upper body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "Riku had seventy. Fewer than anyone.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Riku demands"
+    art: "Riku holds out his hand to the class."
+    gen: "{RIKU}, reaching out, demanding, outstretched hand, upper body, white room, bright"
+    text:
+    - {t: speech, who: RIKU, say: "Somebody give me thirty-one.", canon: true}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi, flat logic."
+    gen: "{AOI}, calm, serious, pushing up glasses, upper body, white room, bright"
+    text:
+    - {t: speech, who: AOI, say: "Then the giver is the poorest.", canon: true}
+  - kind: art
+    shot: "CLOSE — Gō"
+    art: "Gō, cold."
+    gen: "{GO}, solo, cold expression, stern, upper body, white room, bright"
+    negative_extra: "muscular, topless, multiple boys"
+    text:
+    - {t: speech, who: GO, say: "Let him be the poorest. He lied to all of us.", canon: true}
+
+- page: 5
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Saki"
+    art: "At the edge of the group, the quietest girl lifts her head."
+    gen: "{SAKI}, standing, shy, looking up, upper body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "Then the quietest girl in our class spoke. Seat fourteen. Nishida Saki.", canon: true}
+  - kind: art
+    shot: "CLOSE — Saki"
+    art: "Saki, soft but certain."
+    gen: "{SAKI}, gentle, sad smile, close-up, white room, bright"
+    text:
+    - {t: speech, who: SAKI, say: "He's still one of us.", canon: true}
+    clue: "Riku hears this. It is the clue for his move in Part 6."
+  - kind: art
+    shot: "CLOSE — Riku looks at her"
+    art: "Riku stares at Saki (off-panel) for a long beat."
+    gen: "{RIKU}, staring, expressionless, looking to the side, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "Riku looked at her for a long time.", canon: true}
+
+- page: 6
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio, trying for a way out."
+    gen: "{MIO}, hopeful, serious, upper body, white room, bright"
+    text:
+    - {t: speech, who: MIO, say: "Then we all hold the same. Nobody is the poorest.", canon: true}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi shakes her head."
+    gen: "{AOI}, shaking head, grim, upper body, white room, bright"
+    text:
+    - {t: speech, who: AOI, say: "A tie for poorest. We'd all die.", canon: true}
+  - kind: art
+    shot: "WIDE — the class"
+    art: "The class stands apart from one another, frightened."
+    gen: "4boys, 3girls, gakuran, serafuku, scared, standing apart, white room, bright, from above"
+    negative_extra: "crowd, multiple floors"
+    text:
+    - {t: caption, who: REN, say: "Tokens can't vanish. Somebody always holds the fewest.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, thinking hard."
+    gen: "{REN}, thinking, intense, hand on chin, upper body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "Somebody in this room had to die. Unless nobody was a player at all.", canon: true}
+
+# ---------------------------------------------------------------- PART 5
+- page: 7
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, eyes fixed on nothing, reasoning."
+    gen: "{REN}, focused, serious, close-up, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "Zero tokens, and you're not a player. If nobody is a player, nobody is the poorest.", canon: true}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi counters."
+    gen: "{AOI}, serious, explaining, upper body, white room, bright"
+    text:
+    - {t: speech, who: AOI, say: "But the tokens have to go somewhere. Whoever holds them is a player.", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, grasping."
+    gen: "{HARUTO}, desperate, sweat, upper body, white room, bright"
+    text:
+    - {t: speech, who: HARUTO, say: "Then give them all to one person.", canon: true}
+  - kind: art
+    shot: "CLOSE — Momo"
+    art: "Momo, sing-song, without looking up."
+    gen: "{MOMO}, sitting, swinging legs, closed eyes, smile, upper body, white room"
+    text:
+    - {t: speech, who: MOMO, say: "One player is always the poorest!", canon: true}
+
+- page: 8
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "EXTREME CLOSE — Ren's eyes widen"
+    art: "Ren's eyes widen."
+    gen: "1boy, eye focus, extreme close-up, wide-eyed, realization, bright"
+    text:
+    - {t: caption, who: REN, say: "Then I read rule two again. Anyone in this room.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, very still."
+    gen: "{REN}, solo, shocked, realization, wide-eyed, upper body, white room, bright"
+    negative_extra: "multiple faces, extra face"
+    text:
+    - {t: caption, who: REN, say: "Not any player. Anyone.", canon: true}
+  - kind: art
+    shot: "POV (Ren) — Momo"
+    art: "From Ren's eyes: Momo, small, alone in the middle of the white floor."
+    gen: "{MOMO}, sitting on floor, small, alone, white room, empty room, wide shot, from above"
+    text:
+    - {t: caption, who: REN, say: "And Momo was in this room.", canon: true}
+  - kind: art
+    shot: "CLOSE — Momo"
+    art: "Momo, delighted."
+    gen: "{MOMO}, happy, hands on own cheeks, sparkle, upper body, white background, simple background"
+    negative_extra: "tablet, glowing"
+    seed: 30840
+    text:
+    - {t: speech, who: MOMO, say: "For Momo? How generous!", canon: true}
+
+- page: 9
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren explains"
+    art: "Ren turns to the class."
+    gen: "{REN}, solo, portrait, face focus, speaking, determined, open mouth, looking at viewer, white background"
+    negative_extra: "book, paper, holding, hands"
+    seed: 30911
+    text:
+    - {t: speech, who: REN, say: "Momo isn't a player. Give Momo everything, and there are no players. And nobody dies.", canon: true}
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio, doubtful."
+    gen: "{MIO}, doubtful, worried, upper body, white room, bright"
+    negative_extra: "book, holding"
+    seed: 30920
+    text:
+    - {t: speech, who: MIO, say: "And walk into game three with nothing?", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, a crooked smile."
+    gen: "{HARUTO}, crooked smile, determined, upper body, white room, bright"
+    text:
+    - {t: speech, who: HARUTO, say: "Tokens or our lives? That's easy.", canon: true}
+
+- page: 10
+  rows: [[1.2, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — the giving"
+    art: "Students' hands drop coins onto a growing pile beside Momo."
+    gen: "hands dropping coins onto pile of coins, {MOMO}, sitting beside coin pile, white floor, white room, bright"
+    negative_extra: "paper"
+    text:
+    - {t: caption, who: REN, say: "One by one, we gave Momo everything.", canon: true}
+  - kind: art
+    shot: "CLOSE — Saki"
+    art: "Saki lets her coins go, a small smile."
+    gen: "{SAKI}, small smile, giving coins, upper body, white room, bright"
+    text:
+    - {t: speech, who: SAKI, say: "It's okay. I never wanted them.", canon: true}
+  - kind: screen
+    shot: "SCREEN — one player"
+    art: "The screen drops to one."
+    lines:
+    - {s: "PLAYERS: 1", canon: true, big: true}
+    text:
+    - {t: caption, who: REN, say: "One player was left. Riku.", canon: true}
+
+- page: 11
+  rows: [[1, [1, 1]], [1.1, [1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku clutches his tokens."
+    gen: "{RIKU}, clutching coins, defiant, glaring, upper body, white room, bright"
+    text:
+    - {t: speech, who: RIKU, say: "I'm not walking into game three with nothing.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, hard."
+    gen: "{REN}, serious, stern, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "Then you're the only player. And the only player is always the poorest.", canon: true}
+  - kind: art
+    shot: "EXTREME CLOSE — Riku's smile"
+    art: "Riku just smiles."
+    gen: "{RIKU}, smile, sinister, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "Riku just smiled.", canon: true}
+
+# ---------------------------------------------------------------- PART 6
+- page: 12
+  rows: [[0.8, [1]], [1.2, [1]]]
+  panels:
+  - kind: timer
+    shot: "SCREEN — ten seconds"
+    art: "The timer at 00:10."
+    time: "00:10"
+    text:
+    - {t: caption, who: REN, say: "Riku was the only player left. Ten seconds. And he was smiling.", canon: true}
+  - kind: art
+    shot: "WIDE — Riku crosses the room"
+    art: "Riku walks across the white room, seen from behind."
+    gen: "{RIKU}, from above, walking, long shadow, white floor, white background, simple background, full body"
+    negative_extra: "corridor, hallway, walls"
+    text:
+    - {t: caption, who: REN, say: "He walked across the room. To Saki.", canon: true}
+
+- page: 13
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: timer
+    shot: "SCREEN — three seconds"
+    art: "The timer at 00:03."
+    time: "00:03"
+    text:
+    - {t: caption, who: REN, say: "Three seconds left.", canon: true}
+  - kind: art
+    shot: "INSERT — the gift"
+    art: "Hands only: a boy's hand presses one coin into a girl's open palm."
+    gen: "hands, close-up, giving coin, single coin, open palm, hand focus, white background"
+    negative_extra: "coin stack, multiple coins"
+    sketch: sketches/p13_2.png
+    strength: 0.85
+    text:
+    - {t: caption, who: REN, say: "He put one token in her hand.", canon: true}
+  - kind: art
+    shot: "CLOSE — Momo"
+    art: "Momo claps."
+    gen: "{MOMO}, mouse ears, clapping, excited, upper body, white room, bright"
+    negative_extra: "bunny, box"
+    seed: 31332
+    text:
+    - {t: speech, who: MOMO, say: "A gift! Gifts are final!", canon: true}
+  - kind: screen
+    shot: "SCREEN — two players"
+    art: "The screen changes."
+    lines:
+    - {s: "PLAYERS: 2", canon: true, big: true}
+    text:
+    - {t: caption, who: REN, say: "The screen changed. Players, two.", canon: true}
+
+- page: 14
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Saki and the coin"
+    art: "Saki stares at the single coin in her palm."
+    gen: "{SAKI}, looking down at hand, holding coin, shocked, upper body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "One token made her a player again. The poorest one.", canon: true}
+  - kind: art
+    shot: "WIDE — empty hands"
+    art: "The class's empty hands: several open palms held out, not one token among them."
+    gen: "multiple hands, open palms, empty hands, palms up, hand focus, close-up, outstretched hands, white background"
+    negative_extra: "coin, holding, box, ring"
+    seed: 31420
+    text:
+    - {t: caption, who: REN, say: "None of us had a single token left to stop it.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo waits"
+    art: "Momo sits by the pile of coins, waiting."
+    gen: "{MOMO}, sitting, pile of coins, smile, full body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "If she gave it to Momo, Riku would be alone again. And he would die.", canon: true}
+
+- page: 15
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren shouts"
+    art: "Ren shouts across the room."
+    gen: "{REN}, shouting, desperate, reaching out, upper body, white room, bright, motion lines"
+    text:
+    - {t: shout, who: REN, say: "Saki! Give it to Momo!", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, anguished."
+    gen: "{REN}, anguish, gritted teeth, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "I was telling her to kill him. I didn't care.", canon: true}
+  - kind: art
+    shot: "CLOSE — Saki"
+    art: "Saki looks at Riku (off-panel), trembling."
+    gen: "{SAKI}, trembling, teary eyes, looking to the side, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "Saki looked at Riku. She couldn't do it.", canon: true}
+
+- page: 16
+  rows: [[1, [1, 1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku watches her, calm."
+    gen: "{RIKU}, calm, watching, expressionless, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "Riku knew she couldn't. He'd heard her say it.", canon: true}
+  - kind: art
+    shot: "FLASHBACK — Saki"
+    art: "Flashback: the panel from page 5."
+    reuse: p05_2
+    text:
+    - {t: speech, who: SAKI, say: "He's still one of us.", canon: true}
+  - kind: timer
+    shot: "SCREEN — zero"
+    art: "The timer at 00:00."
+    time: "00:00"
+    text:
+    - {t: sfx, say: "BEEP"}
+
+- page: 17
+  rows: [[1.1, [1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "FULL — Momo announces"
+    art: "Momo, bright and cheerful."
+    gen: "{MOMO}, solo, arms up, announcing, happy, full body, white room, bright"
+    negative_extra: "letters"
+    text:
+    - {t: speech, who: MOMO, say: "Time's up! Kanzaki Riku, sixty-nine. Nishida Saki, one!", canon: true}
+  - kind: black
+    shot: "BLACK — lights out"
+    art: "Solid black."
+    text:
+    - {t: caption, who: REN, say: "The lights went out.", canon: true, at: [0.5, 0.5]}
+
+- page: 18
+  rows: [[1.3, [1]], [0.8, [1]]]
+  panels:
+  - kind: token
+    shot: "WIDE — the empty spot"
+    art: "The white floor where Saki stood. A single coin lies there. No one."
+    gen: "no humans, single small round coin lying on bare white floor, empty white room, bright, eerie, minimalist, from above"
+    negative_extra: "tablet, box, wood floor"
+    text:
+    - {t: caption, who: REN, say: "When they came back, Saki was gone. Her token lay on the floor.", canon: true}
+  - kind: screen
+    shot: "SCREEN — survivors"
+    art: "The screen."
+    lines:
+    - {s: "19 SURVIVORS", big: true}
+    text:
+    - {t: caption, who: REN, say: "The screen said nineteen survivors.", canon: true}
+
+- page: 19
+  rows: [[1, [1]], [1, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Riku looks down"
+    art: "Riku looks down at the coin on the floor, unreadable."
+    gen: "{RIKU}, looking down, expressionless, upper body, white room, bright"
+    text:
+    - {t: speech, who: RIKU, say: "She was the only one I trusted.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, hollow."
+    gen: "{REN}, solo, devastated, dull eyes, teary eyes, trembling lips, close-up, white room"
+    negative_extra: "empty eyes, no pupils, horror"
+    text:
+    - {t: caption, who: REN, say: "I found the loophole. Riku found the loophole in my loophole.", canon: true}

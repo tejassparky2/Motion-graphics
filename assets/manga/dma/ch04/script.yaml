@@ -1,0 +1,549 @@
+# DEAD MAN'S ALGORITHM — Chapter 4 "Find Yourself" — draft 1
+# Source: approved continuation v6 (story/continuation_v6_approved.md), Parts 7-9.
+#
+# Conventions (as in chapters 1-3):
+#   canon: true  -> verbatim from the approved continuation (CONFIRMED CANON)
+#   (no flag)    -> new text for this draft (PROPOSAL — NOT CANON). Here only SFX.
+#   Narration (Ren, first person) is lettered as captions.
+#   Reading order is right to left; rows list cells right to left.
+#   Chapter title "Find Yourself" is the approved name of Game 3.
+#   Art direction (not canon, only staging): the waiting room is the white room from
+#   Chapter 3; the locker room is dim concrete under one light.
+#   The token panel (Part 7, line 2) shows only a black sleeve and a notebook:
+#   whose hand it is stays hidden until Chapter 5.
+
+chapter: 4
+title: "Find Yourself"
+
+characters:
+  REN: "1boy, black hair, short hair, messy hair, hair between eyes, gakuran"
+  YUI: "1girl, long hair, black hair, straight hair, blunt bangs, serafuku"
+  HARUTO: "1boy, blonde hair, spiky hair, gakuran"
+  RIKU: "1boy, black hair, slicked back hair, sharp eyes, gakuran"
+  GO: "1boy, black hair, buzz cut, tall, broad shoulders, stoic, buttoned gakuran"
+  KOTA: "1boy, black hair, bowl cut, thin, timid, gakuran"
+  AOI: "1girl, black hair, bob cut, glasses, serafuku"
+  MIO: "1girl, light brown hair, long wavy hair, earrings, serafuku"
+  MOMO: "no humans, solo, white mouse, chibi, big round ears, black eyes, bow tie, bell, mascot"
+
+character_negatives:
+  MOMO: "multiple mice, 2others, bunny, hair bow"
+negative_extra: "rubble, sky, shelves"
+
+pages:
+
+# ---------------------------------------------------------------- PART 7
+- page: 1
+  rows: [[1, [1]]]
+  panels:
+  - kind: art
+    shot: "SPLASH — the door"
+    art: "The white room. A door stands open in the far wall, dark beyond. The students stand back from it, seen from behind."
+    gen: "6+boys, 6+girls, gakuran, serafuku, from behind, standing still, dark doorway, white room, white walls, bright, wide shot"
+    negative_extra: "window, stairs, corridor, hallway, walking"
+    sketch: sketches/p01_1.png
+    strength: 0.85
+    retouch: "Render w1 512998f: a tiny figure standing inside the doorway was painted out (nobody moved first)."
+    title: true
+    text:
+    - {t: caption, who: REN, say: "A door opened in the white room. Nobody moved first.", canon: true, at: [0.5, 0.93]}
+
+- page: 2
+  rows: [[1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: art
+    shot: "INSERT — the token is taken"
+    art: "Hands only: a hand in a black sleeve picks Saki's coin up off the white floor."
+    gen: "hand focus, close-up, reaching down, picking up coin, single coin on floor, black sleeve, white floor, from above"
+    negative_extra: "face, multiple coins, coin stack, two hands"
+    sketch: sketches/p02_1.png
+    strength: 0.8
+  - kind: art
+    shot: "INSERT — into the notebook"
+    art: "The same hand slides the coin between the pages of a small notebook."
+    gen: "hand focus, close-up, small open notebook, single coin lying on page, black sleeve, white background, from above"
+    negative_extra: "face, multiple coins, pen, pencil, text"
+    sketch: sketches/p02_2.png
+    strength: 0.8
+  - kind: art
+    shot: "WIDE — eyes on the door"
+    art: "Everyone faces the open door. No one is looking back."
+    gen: "6+boys, 6+girls, gakuran, serafuku, from behind, standing still, dark doorway, white room, white walls, bright, wide shot"
+    negative_extra: "window, stairs, corridor, hallway, walking, crowd"
+    sketch: sketches/p02_3.png
+    strength: 0.85
+    retouch: "Render w2 9251eb3: a tiny girl inside the doorway was painted out (tools/manga/retouch.py)."
+    text:
+    - {t: caption, who: REN, say: "Nobody saw who took it.", canon: true}
+
+- page: 3
+  rows: [[1.25, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "ESTABLISHING — the locker room"
+    art: "Twenty lockers stand in a ring, facing in, under one light. A painted line runs round the floor inside them."
+    gen: "no humans, school lockers, metal lockers, locker vents, name plates, lockers in circle, painted line on floor, concrete floor, dim, wide shot"
+    sketch: sketches/p03_1.png
+    strength: 0.6
+    text:
+    - {t: caption, who: REN, say: "Three rooms. In the middle one, twenty lockers stood in a ring. Every one had a name on it.", canon: true}
+  - kind: art
+    shot: "CLOSE — Saki's locker"
+    art: "One locker, taped shut. Its name plate reads NISHIDA SAKI (plate drawn at compose)."
+    gen: "no humans, metal locker, close-up, front view, locker door, taped shut, duct tape, sealed, name plate, dim"
+    retouch: "Render w2 37a0b62: two fake-kanji glyphs on the small lock plate blanked (retouch.py). Ch5 p12_3 reuses this panel."
+    negative_extra: "text, letters, caution tape"
+    plates:
+    - {at: [0.49, 0.893], w: 0.47, text: "NISHIDA SAKI"}
+    text:
+    - {t: caption, who: REN, say: "One said NISHIDA SAKI. It was sealed shut.", canon: true}
+  - kind: art
+    shot: "LOW — the line"
+    art: "The painted line on the concrete, curving away past the feet of the lockers."
+    gen: "no humans, floor, painted white line on concrete floor, curved line, bottom of lockers, from above, close-up, dim"
+    negative_extra: "text, letters, road, reflection"
+    sketch: sketches/p03_3.png
+    strength: 0.75
+    text:
+    - {t: caption, who: REN, say: "A line was painted on the floor. It ran past every locker, all the way around, without a break.", canon: true}
+
+- page: 4
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "FULL — Momo opens the game"
+    art: "Momo in the white room, arms up."
+    gen: "{MOMO}, mouse ears, arms up, announcing, happy, full body, white room, bright"
+    text:
+    - {t: speech, who: MOMO, say: "Game three! Find Yourself!", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo, the cards"
+    art: "Momo holds up a blank white card."
+    gen: "{MOMO}, mouse ears, holding card, white card, showing card, upper body, white room, bright"
+    negative_extra: "text"
+    text:
+    - {t: speech, who: MOMO, say: "Nineteen lockers! Each one holds one card, with one of your names!", canon: true}
+  - kind: art
+    shot: "CLOSE — Momo, the rule"
+    art: "Momo points at the door, grinning."
+    gen: "{MOMO}, mouse ears, standing, pointing to the side, grin, full body, white room, bright"
+    negative_extra: "napkin"
+    seed: 40413
+    text:
+    - {t: speech, who: MOMO, say: "Go in alone. Open ten lockers. Find your own name, and you live! Don't, and you die!", canon: true}
+
+- page: 5
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Momo, tokens"
+    art: "Momo holds up one coin."
+    gen: "{MOMO}, mouse ears, holding up coin with both hands, single coin, smile, full body, white room, bright"
+    negative_extra: "coin stack"
+    seed: 40501
+    text:
+    - {t: speech, who: MOMO, say: "Each token you spend opens one more! You can give tokens away before someone goes in!", canon: true}
+  - kind: art
+    shot: "MEDIUM — Momo, the swap"
+    art: "Momo crosses its arms in an X: a swap."
+    gen: "{MOMO}, mouse ears, crossed arms, playful, upper body, white room, bright"
+    text:
+    - {t: speech, who: MOMO, say: "Before you leave, you may swap the cards in two lockers. Once!", canon: true}
+  - kind: art
+    shot: "CLOSE — Momo whispers"
+    art: "Momo, paw to its mouth, sly."
+    gen: "{MOMO}, mouse ears, hand to mouth, whispering, sly smile, upper body, white room, bright"
+    text:
+    - {t: speech, who: MOMO, say: "Inside, Momo might whisper you an offer!", canon: true}
+  - kind: art
+    shot: "CLOSE — Momo, silence"
+    art: "Momo, finger to its lips."
+    gen: "{MOMO}, mouse ears, index finger to mouth, shushing, one eye closed, full body, white room, bright"
+    seed: 40504
+    overlay_timer: "30:00"
+    text:
+    - {t: speech, who: MOMO, say: "After you go in, no talking to anyone who hasn't. No signs, no notes, nothing! Thirty minutes!", canon: true, at: [0.5, 0.85], tail: [0.47, 0.6], size: 26}
+
+- page: 6
+  rows: [[0.65, [1]], [1.6, [1]]]
+  panels:
+  - kind: art
+    shot: "EXTREME CLOSE — Momo"
+    art: "Momo's face, a flat black stare under the smile."
+    gen: "{MOMO}, mouse ears, close-up, smile, shaded face, black eyes, white room"
+    text:
+    - {t: speech, who: MOMO, say: "And Momo set them up special. Everyone's connected!", canon: true, at: [0.16, 0.3], tail: [0.4, 0.62]}
+    clue: "'Everyone's connected' — the arrangement is one loop, said in plain sight."
+  - kind: rules
+    shot: "SCREEN — the rules"
+    art: "The seven rules, as displayed."
+    lines:
+    - {s: "Rule 01: Nineteen lockers each hold one card with one player's name. Every name is in exactly one locker. Cards never leave the lockers.", canon: true}
+    - {s: "Rule 02: Go in alone. Open up to ten lockers. Each token you spend opens one more, and spent tokens are gone. You may give tokens to anyone before they go in.", canon: true}
+    - {s: "Rule 03: Find the card with your own name, and you live. If you don't, you die.", canon: true}
+    - {s: "Rule 04: Before you leave, you may swap the cards in two lockers. Once.", canon: true}
+    - {s: "Rule 05: Inside, Momo may make you a private offer.", canon: true}
+    - {s: "Rule 06: Once you have been inside, you may not communicate with anyone who hasn't, in any way. Lockers close themselves when you leave.", canon: true}
+    - {s: "Rule 07: Anyone who hasn't gone in when thirty minutes are up dies.", canon: true}
+
+- page: 7
+  rows: [[0.95, [1]], [1, [1, 1]], [1, [1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — the board"
+    art: "The board lights up: nineteen slots, all blank."
+    board: {show: [1, 19]}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi, pushing up her glasses, doing the sum."
+    gen: "{AOI}, serious, adjusting glasses, upper body, white room, bright"
+    text:
+    - {t: speech, who: AOI, say: "Ten lockers out of nineteen. On average, nine of us die.", canon: true, at: [0.7, 0.15], tail: [0.66, 0.33], size: 27}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, a forced grin, sweating."
+    gen: "{HARUTO}, forced smile, sweat, upper body, white room, bright"
+    text:
+    - {t: speech, who: HARUTO, say: "Great. Half a class.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Riku"
+    art: "Riku, hand in pocket, utterly at ease."
+    gen: "{RIKU}, smirk, arrogant, hand in pocket, upper body, white room, bright"
+    text:
+    - {t: speech, who: RIKU, say: "Speak for yourselves. Sixty-nine tokens. I open all nineteen.", canon: true}
+
+# ---------------------------------------------------------------- PART 8
+- page: 8
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "LOW — Riku"
+    art: "Riku from below, arms crossed, looking down at them."
+    gen: "{RIKU}, smirk, arms crossed, looking down, from below, upper body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "Riku couldn't lose this game. Only we could.", canon: true}
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio, bitter."
+    gen: "{MIO}, bitter, frown, looking to the side, close-up, portrait, white room, bright"
+    negative_extra: "holding, book, magazine, hands"
+    seed: 40812
+    retouch: "Render w10 0728a16: a glossy rectangle in the corner bloomed out to white light (retouch.py)."
+    text:
+    - {t: speech, who: MIO, say: "Then he walks out, and we flip coins.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren thinks"
+    art: "Ren, hand at his chin, thinking."
+    gen: "{REN}, thinking, hand on own chin, serious, upper body, white room, bright"
+    text:
+    - {t: caption, who: REN, say: "I needed paper.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Ren asks"
+    art: "Ren turns to someone off-panel."
+    gen: "{REN}, looking to the side, talking, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "Kota. Can I have a page?", canon: true}
+
+- page: 9
+  rows: [[1, [1, 1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Kota hesitates"
+    art: "Kota holds his notebook shut against his chest."
+    gen: "{KOTA}, holding notebook to chest, hesitant, nervous, upper body, white room, bright"
+  - kind: art
+    shot: "MEDIUM — one page"
+    art: "Kota carefully tears out a single page, the notebook kept shut."
+    gen: "{KOTA}, tearing out single page, small notebook held closed, careful, looking down, upper body, white room, bright"
+    negative_extra: "flying paper, scattered papers, many papers, book"
+    seed: 40902
+    text:
+    - {t: sfx, say: "RIIP", at: [0.75, 0.2]}
+  - kind: art
+    shot: "HIGH — Ren draws"
+    art: "Ren kneels on the white floor, drawing on the page."
+    gen: "{REN}, kneeling, drawing on paper, pencil, paper on floor, from above, white floor, white room, bright"
+    negative_extra: "desk, table, book"
+    retouch: "Render w3 e9cf89d drew a face on the page; tools/manga/retouch.py repaints it with the A-E locker diagram."
+
+- page: 10
+  rows: [[1, [1]], [1, [1]], [1, [1]]]
+  panels:
+  - kind: notebook
+    shot: "INSERT — five lockers"
+    art: "Ren's page: five lockers, A to E, each with the card inside."
+    mode: boxes
+    center: [0.32, 0.52]
+    text:
+    - {t: offpanel, who: REN, say: "Start at your own locker. The card tells you which locker to open next.", canon: true, at: [0.76, 0.5]}
+  - kind: notebook
+    shot: "INSERT — the arrows"
+    art: "Arrows from each locker to the locker its card names."
+    mode: arrows
+    center: [0.32, 0.52]
+    text:
+    - {t: offpanel, who: REN, say: "Every card points somewhere. Follow them and you go round in a loop.", canon: true, at: [0.76, 0.5]}
+  - kind: notebook
+    shot: "INSERT — B's path"
+    art: "B's path, numbered: B, D, A, C, E. Locker E holds B."
+    mode: path
+    center: [0.32, 0.52]
+    text:
+    - {t: offpanel, who: REN, say: "And the card that leads back to your own locker... is your name.", canon: true, at: [0.76, 0.5]}
+
+- page: 11
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, head tilted."
+    gen: "{HARUTO}, confused, head tilt, upper body, white room, bright"
+    text:
+    - {t: speech, who: HARUTO, say: "So we just follow the arrows?", canon: true}
+  - kind: art
+    shot: "MEDIUM — Aoi"
+    art: "Aoi, looking down at Ren's page."
+    gen: "{AOI}, serious, looking down, holding paper, upper body, white room, bright"
+    negative_extra: "book, text, letters"
+    text:
+    - {t: speech, who: AOI, say: "If your loop is ten or shorter, you find it. If it's longer, everyone in that loop dies together.", canon: true, at: [0.7, 0.78], tail: [0.42, 0.45]}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi, worried, light glinting on her glasses."
+    gen: "{AOI}, worried, frown, glasses glint, close-up, white room"
+    text:
+    - {t: speech, who: AOI, say: "Random lockers... About six times in ten, there's a long loop.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren's eyes go wide. He looks toward the open door."
+    gen: "{REN}, wide eyes, shocked, looking to the side, close-up, white room"
+
+- page: 12
+  rows: [[1.15, [1]], [0.85, [1]], [0.85, [1]]]
+  panels:
+  - kind: art
+    shot: "HIGH — the circle"
+    art: "The locker ring from high above: the painted line is one unbroken circle."
+    gen: "no humans, from above, school lockers, metal lockers, lockers in circle, painted white circle on floor, concrete floor, dim, wide shot"
+    sketch: sketches/p12_1.png
+    strength: 0.55
+    text:
+    - {t: caption, who: REN, say: "\"Everyone's connected.\" I looked at the line on the floor. One circle. No breaks.", canon: true}
+  - kind: loop
+    shot: "DIAGRAM — one loop"
+    art: "Ren's diagram: nineteen dots in one loop."
+    mode: one
+    center: [0.3, 0.5]
+    text:
+    - {t: offpanel, who: REN, say: "It's not random. It's one loop. All nineteen of us.", canon: true, at: [0.74, 0.5]}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi, horrified."
+    gen: "{AOI}, horrified, trembling, sweat, upper body, white room, bright"
+    text:
+    - {t: speech, who: AOI, say: "Then everyone opens ten... and nobody gets there.", canon: true}
+
+- page: 13
+  rows: [[1, [1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — the class"
+    art: "The class stands frozen."
+    gen: "6+boys, 6+girls, gakuran, serafuku, standing, silent, despair, looking down, white room, white walls, bright, wide shot"
+    negative_extra: "crowd, ceiling, stadium"
+    sketch: sketches/p13_1.png
+    strength: 0.85
+    text:
+    - {t: caption, who: REN, say: "Nineteen is longer than ten.", canon: true}
+  - kind: art
+    shot: "HIGH — Ren alone"
+    art: "Ren from high above, small on the white floor, a long shadow."
+    gen: "{REN}, from above, standing, alone, small figure, long shadow, white floor, white room, wide shot"
+    negative_extra: "corridor, hallway, walls"
+    text:
+    - {t: caption, who: REN, say: "Every one of us would die.", canon: true}
+
+# ---------------------------------------------------------------- PART 9
+- page: 14
+  rows: [[1, [1, 1]], [1, [1]]]
+  panels:
+  - kind: rules
+    shot: "SCREEN — Rule 04"
+    art: "Rule 04 on the screen."
+    lines:
+    - {s: "Rule 04: Before you leave, you may swap the cards in two lockers. Once.", canon: true}
+    text:
+    - {t: caption, who: REN, say: "Then I read rule four again. Swap two cards.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, sharp, working it out aloud."
+    gen: "{REN}, determined, sharp eyes, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "Whoever opens ten and doesn't find their name knows it's the long loop.", canon: true}
+  - kind: loop
+    shot: "DIAGRAM — the cut"
+    art: "Ren's diagram: the first and tenth lockers circled, a swap."
+    mode: cut
+    center: [0.29, 0.5]
+    text:
+    - {t: offpanel, who: REN, say: "Swap the card in your first locker with the card in your tenth. The loop breaks in two.", canon: true, at: [0.795, 0.5], size: 27}
+
+- page: 15
+  rows: [[1.1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: loop
+    shot: "DIAGRAM — two loops"
+    art: "Ren's diagram: a loop of nine and a loop of ten."
+    mode: split
+    center: [0.5, 0.62]
+    text:
+    - {t: offpanel, who: REN, say: "One loop of nine. The other is what's left. Nineteen minus nine is ten.", canon: true, at: [0.76, 0.14]}
+  - kind: art
+    shot: "CLOSE — Aoi"
+    art: "Aoi, a flicker of hope."
+    gen: "{AOI}, surprised, hopeful, looking up, upper body, white room, bright"
+    negative_extra: "book, holding, paper, notebook"
+    seed: 41502
+    text:
+    - {t: speech, who: AOI, say: "Ten or shorter. Everyone after you finds their name.", canon: true, at: [0.3, 0.14], size: 27}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, grim, eyes down."
+    gen: "{REN}, grim, looking down, shaded face, close-up, white room"
+    text:
+    - {t: speech, who: REN, say: "Except the one who cuts it.", canon: true}
+
+- page: 16
+  rows: [[0.8, [1]], [1.2, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — silence"
+    art: "The class, silent, nobody meeting anyone's eyes."
+    gen: "6+boys, 6+girls, gakuran, serafuku, standing apart, silent, looking away, white room, white walls, bright, wide shot"
+    negative_extra: "crowd, ceiling, stadium, sitting"
+    sketch: sketches/p16_1.png
+    strength: 0.85
+    text:
+    - {t: caption, who: REN, say: "Silence.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Gō steps forward"
+    art: "Gō steps forward, calm."
+    gen: "{GO}, stepping forward, determined, calm, upper body, white room, bright"
+    text:
+    - {t: speech, who: GO, say: "Then I go first. If it's one loop, I'll be the one who cuts it.", canon: true}
+  - kind: art
+    shot: "CLOSE — Kota"
+    art: "Kota grabs Gō's sleeve, eyes wet."
+    gen: "{KOTA}, grabbing sleeve, holding another's sleeve, teary eyes, upper body, white room, bright"
+  - kind: art
+    shot: "CLOSE — Gō"
+    art: "Gō, looking down at Kota, quiet."
+    gen: "{GO}, gentle, looking down, quiet, close-up, white room"
+    text:
+    - {t: speech, who: GO, say: "Stay behind me.", canon: true}
+
+- page: 17
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Riku's tokens"
+    art: "Riku, half-lidded, a small smile: he knows what he holds. (No coins drawn: renders of coins in his hand kept failing.)"
+    gen: "{RIKU}, smirk, half-closed eyes, looking down, close-up, white room, bright"
+    negative_extra: "coin, hand, bubbles, orbs, light particles"
+    seed: 41711
+    text:
+    - {t: caption, who: REN, say: "Ten free. Nine more makes nineteen. Whoever goes first with nine tokens sees everything.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, facing Riku."
+    gen: "{REN}, serious, looking at viewer, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "Nobody has to die. Riku. Give Gō nine tokens.", canon: true}
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku closes his fist."
+    gen: "{RIKU}, cold eyes, expressionless, looking at viewer, close-up, portrait, white room, bright"
+    negative_extra: "paper, book, holding, hands, coin"
+    seed: 41723
+    text:
+    - {t: speech, who: RIKU, say: "My tokens don't leave my hands. I go first.", canon: true}
+
+- page: 18
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio, glaring at Riku."
+    gen: "{MIO}, glaring, angry, upper body, white room, bright"
+    text:
+    - {t: speech, who: MIO, say: "Then he decides who dies.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, tense."
+    gen: "{REN}, tense, serious, sweat, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "If he sees every locker, he can cut the loop anywhere. He could leave a loop of eleven. On purpose.", canon: true}
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku, a calm smile."
+    gen: "{RIKU}, calm smile, upper body, white room, bright"
+    text:
+    - {t: speech, who: RIKU, say: "Or I save all of you.", canon: true}
+  - kind: art
+    shot: "LOW — Riku"
+    art: "Riku from below, looking down on them."
+    gen: "{RIKU}, smug, looking down, from below, upper body, white room, bright"
+    negative_extra: "book, holding, paper"
+    seed: 41804
+    text:
+    - {t: speech, who: RIKU, say: "Eighteen lives for nine tokens. Every one of you owes me.", canon: true, at: [0.66, 0.74], tail: [0.42, 0.36]}
+
+- page: 19
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — the class and Riku"
+    art: "The class, seen from behind, faces Riku across the white room."
+    gen: "6+boys, 6+girls, gakuran, serafuku, from behind, facing one boy, standoff, white room, white walls, bright, wide shot"
+    negative_extra: "crowd, stadium, arena, audience, ceiling"
+    sketch: sketches/p19_1.png
+    strength: 0.85
+    retouch: "Render w1 512998f: the lone figure's spiky crown repainted as a smooth, slicked-back head (Riku, not Haruto)."
+    text:
+    - {t: caption, who: REN, say: "Nine of us dead on average. One of us dead for sure. Or none of us, if he keeps his word.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, staring Riku down."
+    gen: "{REN}, determined, glaring, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "He goes first. I go second. I'll know if he lied.", canon: true}
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku, half-lidded, amused."
+    gen: "{RIKU}, smirk, half-closed eyes, close-up, white room"
+    text:
+    - {t: speech, who: RIKU, say: "You'll know.", canon: true}
+
+- page: 20
+  rows: [[1, [1, 1]], [1.3, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren's plan"
+    art: "Ren addresses the whole class, from a low angle."
+    gen: "{REN}, talking, commanding, serious, from below, upper body, white room, bright"
+    negative_extra: "book, tablet, holding, hand up"
+    seed: 42001
+    text:
+    - {t: speech, who: REN, say: "Everyone else: follow the chain. Find your name, touch nothing. Fail, cut first and tenth.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, hard."
+    gen: "{REN}, stern, close-up, white room"
+    text:
+    - {t: speech, who: REN, say: "And whatever Momo offers you... say no.", canon: true}
+  - kind: art
+    shot: "FULL — Riku at the door"
+    art: "Riku at the locker-room door, dark beyond, looking back over his shoulder."
+    gen: "{RIKU}, standing at doorway, looking back, looking over shoulder, from behind, dark doorway, full body, white room"
+    text:
+    - {t: speech, who: RIKU, say: "Remember. You owe me.", canon: true}

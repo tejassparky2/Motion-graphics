@@ -1,0 +1,610 @@
+# DEAD MAN'S ALGORITHM — Chapter 5 "Thirty Tokens" — draft 1
+# Source: approved continuation v6 (story/continuation_v6_approved.md), Parts 10-12.
+#
+# Conventions (as in chapters 1-4):
+#   canon: true  -> verbatim from the approved continuation (CONFIRMED CANON)
+#   (no flag)    -> new text for this draft (PROPOSAL — NOT CANON). Here only SFX.
+#   Narration (Ren, first person) is lettered as captions.
+#   Reading order is right to left; rows list cells right to left.
+#   The chapter title "Thirty Tokens" is Part 12's approved title.
+#
+# The board. Rows by entry order, from the approved script (Parts 10-11):
+#   1 Riku 19 · 2 Ren 9 · 3 Yui 10 · 4 Aoi 9 · 5 Mio 10 · 6-8 three unnamed students
+#   · 9 Haruto 10 · 10 Gō 10 NOT FOUND · 11 Kota 9 · 12-19 the other unnamed students.
+#   Unnamed students' names are not canon, so their names are drawn out of focus.
+#   Canon says only that everyone but Gō found theirs "in 9 or 10" ("nines and tens on
+#   the board"); which unnamed slot shows 9 and which 10 is staging, not canon.
+#
+# Page 9 (Gō in the locker room) is staging of canon facts with no words: Gō opens ten
+# lockers without finding his name, cuts the loop (first and tenth), and the panel goes
+# black, as Saki's death did in Chapter 3. No gore. Haruto's swap is never shown.
+# Page 19's flashback reuses Chapter 1's panel p03_6 (copied in as ch01_p03_6.png).
+
+chapter: 5
+title: "Thirty Tokens"
+
+characters:
+  REN: "1boy, black hair, short hair, messy hair, hair between eyes, gakuran"
+  YUI: "1girl, long hair, black hair, straight hair, blunt bangs, serafuku"
+  HARUTO: "1boy, blonde hair, spiky hair, gakuran"
+  RIKU: "1boy, black hair, slicked back hair, sharp eyes, gakuran"
+  GO: "1boy, black hair, buzz cut, tall, broad shoulders, stoic, buttoned gakuran"
+  KOTA: "1boy, black hair, bowl cut, thin, timid, gakuran"
+  AOI: "1girl, black hair, bob cut, glasses, serafuku"
+  MIO: "1girl, light brown hair, long wavy hair, earrings, serafuku"
+  MOMO: "no humans, solo, white mouse, chibi, big round ears, black eyes, bow tie, bell, mascot"
+
+character_negatives:
+  MOMO: "multiple mice, 2others, bunny, hair bow"
+negative_extra: "rubble, sky, shelves"
+
+pages:
+
+# ---------------------------------------------------------------- PART 10
+- page: 1
+  rows: [[0.55, [1]], [1.45, [1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — the first result"
+    art: "The board: Riku's row."
+    board:
+      show: [1, 6]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"]}
+  - kind: art
+    shot: "SPLASH — Ren walks in"
+    art: "Ren, from behind, walks into the locker ring alone. The lockers wait under one light."
+    gen: "{REN}, from behind, walking, alone, tall metal lockers, lockers in circle, concrete floor, dim, wide shot"
+    sketch: sketches/p01_2.png
+    strength: 0.7
+    title: true
+    text:
+    - {t: caption, who: REN, say: "My turn.", canon: true, at: [0.5, 0.9]}
+
+- page: 2
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren's locker"
+    art: "Ren's hand on a locker door; its plate reads KURODA REN (plate drawn at compose)."
+    gen: "hand on locker door, opening locker, metal locker, close-up, front view, name plate, black sleeve, locker room, dim"
+    negative_extra: "text, letters"
+    plates:
+    - {at: [0.5, 0.2], w: 0.5, text: "KURODA REN"}
+    text:
+    - {t: caption, who: REN, say: "My locker. A card. A name. The next locker. Another name.", canon: true, at: [0.3, 0.88]}
+  - kind: namecard
+    shot: "INSERT — the first card"
+    art: "Inside: one white card."
+    name: "FUJIMOTO AOI"
+  - kind: art
+    shot: "MEDIUM — lockers"
+    art: "Ren moves from locker to locker, doors standing open behind him."
+    gen: "{REN}, walking, open lockers, metal lockers, motion lines, side view, upper body, locker room, dim"
+    negative_extra: "text, letters"
+  - kind: namecard
+    shot: "INSERT — his own name"
+    art: "The ninth card: his own name."
+    name: "KURODA REN"
+    text:
+    - {t: caption, who: REN, say: "Seven. Eight. Nine. KURODA REN.", canon: true}
+
+- page: 3
+  rows: [[1, [1, 1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, wide-eyed, working it out. (Card kept out of frame: the render drew a phone with an eye on it.)"
+    gen: "{REN}, wide eyes, realization, looking down, close-up, portrait, locker room, dim"
+    negative_extra: "text, letters, card, phone, holding"
+    seed: 50301
+    text:
+    - {t: caption, who: REN, say: "Nine. A loop of nine leaves ten lockers. There's no room left for a loop longer than ten.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren breathes"
+    art: "Ren, eyes shut, a long breath out."
+    gen: "{REN}, relieved, closed eyes, exhaling, close-up, locker room, dim"
+    text:
+    - {t: caption, who: REN, say: "He kept his word.", canon: true}
+  - kind: offer
+    shot: "SCREEN — the offer"
+    art: "A small screen in the locker room lights up: Momo's offer."
+    lines:
+    - {s: "Psst! Swap TACHIBANA and HAYASHI.", canon: true}
+    - {s: "Thirty tokens! Nobody will know!", canon: true}
+    text:
+    - {t: sfx, say: "BLIP", at: [0.88, 0.18]}
+
+- page: 4
+  rows: [[1, [1, 1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren, still"
+    art: "Ren stands with his fists at his sides, touching nothing."
+    gen: "{REN}, standing still, clenched fists, arms at sides, upper body, locker room, dim"
+    text:
+    - {t: caption, who: REN, say: "I didn't touch anything.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren understands"
+    art: "Ren, cold sweat: it isn't only him."
+    gen: "{REN}, shocked, realization, sweat, close-up, locker room, dim"
+    text:
+    - {t: caption, who: REN, say: "Then I understood. Momo wasn't only asking me.", canon: true}
+  - kind: art
+    shot: "WIDE — the finished room"
+    art: "A white room. Riku sits alone against the wall."
+    gen: "{RIKU}, sitting on floor, against wall, alone, one knee up, smirk, looking at viewer, full body, white room, bright"
+    negative_extra: "hallway, spiky hair, book, magazine"
+    seed: 50423
+    retouch: "Render w1 5cff8ee: a photograph lying on the floor painted out (retouch.py)."
+    text:
+    - {t: speech, who: RIKU, say: "Disappointed?", canon: true}
+
+- page: 5
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren"
+    art: "Ren, standing over him."
+    gen: "{REN}, standing, serious, looking down, upper body, white room, bright"
+    text:
+    - {t: speech, who: REN, say: "It offered you something.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Riku"
+    art: "Riku, looking up, unbothered."
+    gen: "{RIKU}, sitting on floor, against wall, smirk, looking up, upper body, white room, bright"
+    negative_extra: "chair, desk, book"
+    seed: 50502
+    text:
+    - {t: speech, who: RIKU, say: "Fifty. To leave the loop whole.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, frowning."
+    gen: "{REN}, frown, upper body, white room, bright"
+    negative_extra: "book, holding, paper"
+    seed: 50503
+    text:
+    - {t: speech, who: REN, say: "Why didn't you take it?", canon: true}
+  - kind: art
+    shot: "CLOSE — Riku"
+    art: "Riku, flat eyes."
+    gen: "{RIKU}, cold eyes, expressionless, close-up, white room"
+    text:
+    - {t: speech, who: RIKU, say: "Dead people don't owe me anything.", canon: true}
+
+- page: 6
+  rows: [[0.9, [1]], [1.1, [1]], [0.9, [1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — Ren's result"
+    art: "The board: Ren's row."
+    board:
+      show: [1, 6]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"]}
+      focus: [2]
+  - kind: art
+    shot: "WIDE — the waiting room"
+    art: "In the white room, the others sit and wait, faces turned up to the board."
+    gen: "6+boys, 6+girls, gakuran, serafuku, sitting on floor, from behind, looking up at screen, waiting, white room, bright, wide shot"
+    negative_extra: "window, chair, desk, ceiling, crowd"
+    sketch: sketches/p06_2.png
+    strength: 0.85
+    text:
+    - {t: caption, who: REN, say: "Seventeen people were waiting to be offered a price for someone's life.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, teeth gritted, hand over his mouth."
+    gen: "{REN}, clenched teeth, hand over own mouth, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "And I couldn't say a word.", canon: true}
+
+# ---------------------------------------------------------------- PART 11
+- page: 7
+  rows: [[1, [1, 1]], [1, [1, 1]], [0.9, [1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — Yui"
+    art: "The board: Yui's row."
+    board:
+      show: [1, 6]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"]}
+      focus: [3]
+  - kind: art
+    shot: "MEDIUM — Yui arrives"
+    art: "Yui walks into the finished room."
+    gen: "{YUI}, walking, serious, upper body, white room, bright"
+    text:
+    - {t: speech, who: YUI, say: "It offered me tokens. I said no.", canon: true}
+  - kind: board
+    shot: "SCREEN — Aoi and Mio"
+    art: "The board: Aoi's and Mio's rows."
+    board:
+      show: [1, 6]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"]}
+      focus: [4, 5]
+  - kind: art
+    shot: "MEDIUM — Aoi; Mio off-panel"
+    art: "Aoi, tired, quiet. Mio answers from off-panel. (One figure: two girls in one render swap their features.)"
+    gen: "{AOI}, tired, quiet, looking to the side, upper body, white room, bright"
+    seed: 50704
+    text:
+    - {t: speech, who: AOI, say: "Me too.", canon: true, at: [0.72, 0.14]}
+    - {t: offpanel, who: MIO, say: "Same.", canon: true, at: [0.2, 0.3], tail: [-0.05, 0.36]}
+  - kind: art
+    shot: "WIDE — apart"
+    art: "The finished room: students sit apart along the walls, nobody looking at anyone."
+    gen: "multiple boys, multiple girls, gakuran, serafuku, sitting on floor, against wall, far apart, silence, white room, bright, wide shot"
+    negative_extra: "window, chair, desk, crowd"
+    sketch: sketches/p07_5.png
+    strength: 0.85
+    text:
+    - {t: caption, who: REN, say: "Everyone said no. Nobody could prove it.", canon: true}
+
+- page: 8
+  rows: [[1, [1]], [1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — nines and tens"
+    art: "The board fills: three more students, then Haruto."
+    board:
+      show: [1, 10]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"], 6: ["?", 9, "FOUND"],
+             7: ["?", 10, "FOUND"], 8: ["?", 9, "FOUND"], 9: ["SAKURAI HARUTO", 10, "FOUND"]}
+      focus: [6, 7, 8, 9]
+  - kind: art
+    shot: "WIDE — Haruto by the wall"
+    art: "Haruto sits by the wall, apart, knees up, quiet."
+    gen: "{HARUTO}, sitting on floor, against wall, knees up, quiet, looking down, alone, white room, bright, wide shot"
+    negative_extra: "window, chair, desk"
+    text:
+    - {t: caption, who: REN, say: "Haruto came in and sat by the wall. He didn't make a joke.", canon: true}
+  - kind: art
+    shot: "CLOSE — Yui"
+    art: "Yui, looking over at him."
+    gen: "{YUI}, worried, looking to the side, close-up, white room"
+    text:
+    - {t: speech, who: YUI, say: "Haruto?", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto smiles. It doesn't reach his eyes."
+    gen: "{HARUTO}, smile, empty eyes, shaded face, close-up, white room"
+
+- page: 9
+  rows: [[1.2, [1]], [1, [1, 1]], [0.6, [1]]]
+  panels:
+  - kind: art
+    shot: "WIDE — Gō goes in"
+    art: "Gō, from behind, walks into the locker ring alone."
+    gen: "{GO}, from behind, walking, alone, locker room, metal lockers, lockers in circle, concrete floor, dim, wide shot"
+    sketch: sketches/p09_1.png
+    strength: 0.8
+  - kind: art
+    shot: "CLOSE — Gō"
+    art: "Gō stares into his tenth open locker. Not his name. His face is steady. (Which name it was is not canon, so no card is shown.)"
+    gen: "{GO}, looking into open locker, staring, calm, sweat, close-up, locker room, dim"
+    negative_extra: "card, playing card, holding, text, letters"
+    seed: 50902
+  - kind: swap
+    shot: "INSERT — the cut"
+    art: "Two open lockers, a blank card in each, trading places: Gō swaps his first and tenth cards. (Drawn panel; renders gave oversized sheets and tangled hands. Cards blank: which names were swapped is not canon.)"
+  - kind: black
+    shot: "BLACK"
+    art: "Solid black."
+
+- page: 10
+  rows: [[0.9, [1]], [1.2, [1]], [1, [1, 1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — NOT FOUND"
+    art: "The board: Gō's row, NOT FOUND."
+    board:
+      show: [1, 12]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"], 6: ["?", 9, "FOUND"],
+             7: ["?", 10, "FOUND"], 8: ["?", 9, "FOUND"], 9: ["SAKURAI HARUTO", 10, "FOUND"],
+             10: ["SHIBATA GŌ", 10, "NOT FOUND"]}
+      focus: [10]
+  - kind: art
+    shot: "MEDIUM — the waiting room"
+    art: "Kota stares up at the board, frozen. Around him, students shout."
+    gen: "{KOTA}, looking up, shocked, trembling, wide eyes, upper body, white room, bright"
+    text:
+    - {t: shout, who: CLASS, say: "Riku lied!", canon: true, at: [0.78, 0.18], tail: none}
+    - {t: shout, who: CLASS, say: "It's still one loop!", canon: true, at: [0.22, 0.32], tail: none}
+  - kind: art
+    shot: "CLOSE — Kota"
+    art: "Kota, fists clenched, tears standing."
+    gen: "{KOTA}, teary eyes, clenched teeth, close-up, white room"
+    text:
+    - {t: caption, who: REN, say: "Gō had told him to stay behind him. Kota was next.", canon: true}
+  - kind: art
+    shot: "FULL — Kota goes in"
+    art: "Kota walks to the dark doorway alone, seen from behind."
+    gen: "{KOTA}, from behind, walking, alone, open door, dark doorway, full body, white room, bright"
+
+- page: 11
+  rows: [[0.9, [1]], [1.2, [1]], [1, [1, 1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — Kota"
+    art: "The board: Kota's row."
+    board:
+      show: [1, 12]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"], 6: ["?", 9, "FOUND"],
+             7: ["?", 10, "FOUND"], 8: ["?", 9, "FOUND"], 9: ["SAKURAI HARUTO", 10, "FOUND"],
+             10: ["SHIBATA GŌ", 10, "NOT FOUND"], 11: ["HAYASHI KOTA", 9, "FOUND"]}
+      focus: [11]
+  - kind: art
+    shot: "WIDE — every head turns"
+    art: "The finished room: every student turns to look at Riku, who sits against the wall."
+    gen: "multiple boys, multiple girls, gakuran, serafuku, from behind, staring, boy sitting against wall, white room, bright, wide shot"
+    negative_extra: "window, chair, desk, crowd"
+    sketch: sketches/p11_2.png
+    strength: 0.85
+  - kind: art
+    shot: "MEDIUM — Riku"
+    art: "Riku, unmoved, points up at the board."
+    gen: "{RIKU}, calm, pointing up, sitting, upper body, white room, bright"
+    text:
+    - {t: speech, who: RIKU, say: "Don't look at me. Look at the board.", canon: true}
+  - kind: art
+    shot: "SCREEN — Momo"
+    art: "Momo, on every screen, grinning."
+    gen: "{MOMO}, mouse ears, grin, sinister, upper body, monitor, screen, dark background"
+    text:
+    - {t: speech, who: MOMO, say: "Momo knows who swapped! Do you?", canon: true}
+
+# ---------------------------------------------------------------- PART 12
+- page: 12
+  rows: [[1.1, [1]], [1.1, [1]], [0.8, [1, 1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — final"
+    art: "The final board."
+    board:
+      show: [1, 19]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"], 6: ["?", 9, "FOUND"],
+             7: ["?", 10, "FOUND"], 8: ["?", 9, "FOUND"], 9: ["SAKURAI HARUTO", 10, "FOUND"],
+             10: ["SHIBATA GŌ", 10, "NOT FOUND"], 11: ["HAYASHI KOTA", 9, "FOUND"], 12: ["?", 10, "FOUND"],
+             13: ["?", 9, "FOUND"], 14: ["?", 10, "FOUND"], 15: ["?", 9, "FOUND"], 16: ["?", 10, "FOUND"],
+             17: ["?", 10, "FOUND"], 18: ["?", 9, "FOUND"], 19: ["?", 10, "FOUND"]}
+      summary: "18 FOUND. 1 NOT FOUND."
+  - kind: art
+    shot: "HIGH — back in the ring"
+    art: "Everyone stands inside the locker ring again."
+    gen: "6+boys, 6+girls, gakuran, serafuku, standing, locker room, metal lockers, lockers in circle, from above, dim, wide shot"
+    negative_extra: "stadium, arena, audience, crowd"
+    sketch: sketches/p12_2.png
+    strength: 0.75
+  - kind: art
+    shot: "CLOSE — Saki's locker, dark"
+    art: "Saki's locker, still taped shut, unlit: Chapter 4's panel p03_2 (copied in as ch04_p03_2.png), darkened."
+    reuse: ch04_p03_2
+    focus: [0.5, 1.0]
+    shade: 0.6
+    plates:
+    - {at: [0.49, 0.862], w: 0.52, text: "NISHIDA SAKI"}
+  - kind: art
+    shot: "CLOSE — Gō's locker, dark"
+    art: "Gō's locker, closed, unlit."
+    gen: "no humans, metal locker, close-up, front view, closed locker, dark, shadow, locker room"
+    negative_extra: "text, letters"
+    shade: 0.6
+    plates:
+    - {at: [0.65, 0.59], w: 0.22, text: "SHIBATA GŌ"}
+
+- page: 13
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Mio"
+    art: "Mio points at Riku, furious."
+    gen: "{MIO}, pointing, angry, shouting, upper body, locker room, dim"
+    text:
+    - {t: speech, who: MIO, say: "You left a long loop.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, quiet and certain."
+    gen: "{REN}, calm, serious, upper body, locker room, dim"
+    text:
+    - {t: speech, who: REN, say: "No. He didn't.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Ren"
+    art: "Ren, explaining, steady."
+    gen: "{REN}, serious, calm, looking at viewer, close-up, portrait, locker room, dim"
+    negative_extra: "book, holding, hands, paper"
+    seed: 51313
+    text:
+    - {t: speech, who: REN, say: "I found mine in nine. A loop of nine leaves ten lockers. No room for a loop longer than ten.", canon: true, at: [0.42, 0.8], tail: [0.56, 0.42]}
+  - kind: board
+    shot: "SCREEN — up to the ninth"
+    art: "The board: rows 2 to 9 lit, every one a nine or a ten."
+    board:
+      show: [1, 11]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"], 6: ["?", 9, "FOUND"],
+             7: ["?", 10, "FOUND"], 8: ["?", 9, "FOUND"], 9: ["SAKURAI HARUTO", 10, "FOUND"],
+             10: ["SHIBATA GŌ", 10, "NOT FOUND"], 11: ["HAYASHI KOTA", 9, "FOUND"]}
+      focus: [2, 3, 4, 5, 6, 7, 8, 9]
+      reserve: 0.3
+    text:
+    - {t: offpanel, who: REN, say: "Everyone up to the ninth person found theirs in nine or ten. Still no long loop.", canon: true, at: [0.64, 0.85]}
+
+- page: 14
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: board
+    shot: "SCREEN — the tenth"
+    art: "The board: row 10 lit, NOT FOUND."
+    board:
+      show: [1, 11]
+      rows: {1: ["KANZAKI RIKU", 19, "FOUND"], 2: ["KURODA REN", 9, "FOUND"], 3: ["TACHIBANA YUI", 10, "FOUND"],
+             4: ["FUJIMOTO AOI", 9, "FOUND"], 5: ["AOYAMA MIO", 10, "FOUND"], 6: ["?", 9, "FOUND"],
+             7: ["?", 10, "FOUND"], 8: ["?", 9, "FOUND"], 9: ["SAKURAI HARUTO", 10, "FOUND"],
+             10: ["SHIBATA GŌ", 10, "NOT FOUND"], 11: ["HAYASHI KOTA", 9, "FOUND"]}
+      focus: [10]
+      reserve: 0.3
+    text:
+    - {t: offpanel, who: REN, say: "Gō went in tenth. He didn't find his in ten. Now there was a long loop.", canon: true, at: [0.68, 0.85]}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, eyes in shadow."
+    gen: "{REN}, shaded face, serious, close-up, locker room, dim"
+    text:
+    - {t: speech, who: REN, say: "Only one person went in between them.", canon: true}
+  - kind: art
+    shot: "WIDE — everyone turns"
+    art: "Every head turns to Haruto."
+    gen: "{HARUTO}, standing, surrounded, multiple boys, multiple girls, staring at him, from above, concrete floor, dim"
+    negative_extra: "crowd, audience"
+    sketch: sketches/p14_3.png
+    strength: 0.8
+
+- page: 15
+  rows: [[1, [1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Ren"
+    art: "Ren, cold, pointing."
+    gen: "{REN}, pointing at viewer, cold, stern, upper body, metal lockers, locker room, dim"
+    negative_extra: "scarf, hood, coat"
+    seed: 51501
+    text:
+    - {t: speech, who: REN, say: "Haruto. Turn out your pockets.", canon: true}
+  - kind: art
+    shot: "INSERT — thirty coins"
+    art: "Coins spill out across the concrete floor."
+    gen: "no humans, coins falling, many coins, scattered coins, bouncing coins, concrete floor, close-up, motion lines, dim"
+    negative_extra: "text, letters, coin stack, stacked coins"
+    seed: 51502
+    text:
+    - {t: sfx, say: "CLINK CLINK", at: [0.3, 0.2]}
+
+- page: 16
+  rows: [[1, [1, 1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Mio"
+    art: "Mio, turning, suspicious."
+    gen: "{MIO}, looking to the side, suspicious, narrowed eyes, upper body, locker room, dim"
+    text:
+    - {t: speech, who: MIO, say: "And Kota. You always hold that notebook.", canon: true}
+  - kind: art
+    shot: "MEDIUM — Kota"
+    art: "Kota clutches the notebook to his chest."
+    gen: "{KOTA}, holding notebook to chest, scared, upper body, locker room, dim"
+  - kind: art
+    shot: "INSERT — one coin"
+    art: "The notebook, opened: one coin between the pages."
+    gen: "hand focus, close-up, small open notebook, single coin lying on page, black sleeve, from above, dim"
+    negative_extra: "face, multiple coins, text, ring"
+    sketch: sketches/p16_3.png
+    strength: 0.8
+    retouch: "Render w10 ba8ab29 drew the coin as a sphere; tools/manga/retouch.py repaints it as a flat coin."
+  - kind: art
+    shot: "CLOSE — Kota"
+    art: "Kota, crying."
+    gen: "{KOTA}, crying, tears, looking down, close-up, locker room, dim"
+    text:
+    - {t: speech, who: KOTA, say: "It was hers.", canon: true}
+
+- page: 17
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Haruto"
+    art: "Haruto, head down, eyes hidden."
+    gen: "{HARUTO}, head down, shaded eyes, upper body, locker room, dim"
+    text:
+    - {t: speech, who: HARUTO, say: "Momo said nobody would know.", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, breaking."
+    gen: "{HARUTO}, crying, tears, desperate, clenched fists, upper body, locker room, dim"
+    negative_extra: "book, notebook, paper, holding"
+    seed: 51702
+    text:
+    - {t: speech, who: HARUTO, say: "Riku had fixed everything. One swap. I thought... maybe they were in the same loop.", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto"
+    art: "Haruto, tears, looking at Ren."
+    gen: "{HARUTO}, tears, looking at viewer, pleading, close-up, locker room, dim"
+    text:
+    - {t: speech, who: HARUTO, say: "Next game, I'd have something. I could've kept you and Yui alive.", canon: true}
+
+- page: 18
+  rows: [[1, [1, 1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "SCREEN — Momo"
+    art: "Momo on the screen, pleased."
+    gen: "{MOMO}, mouse ears, smile, happy, upper body, monitor, screen, dark background"
+    text:
+    - {t: caption, who: REN, say: "Momo paid him with the tokens we gave it for Saki.", canon: true}
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, quiet, looking down."
+    gen: "{REN}, sad, looking down, quiet, upper body, locker room, dim"
+    text:
+    - {t: speech, who: REN, say: "Kota found his in nine. Gō cut the loop before he died.", canon: true}
+  - kind: art
+    shot: "CLOSE — Gō's locker"
+    art: "Ren rests his forehead against Gō's dark locker door, eyes shut."
+    gen: "{REN}, leaning forehead against locker door, closed eyes, sad, side view, upper body, metal locker, dark, shadow, locker room"
+    negative_extra: "text, letters"
+    seed: 51803
+    plates:
+    - {at: [0.19, 0.2], w: 0.24, text: "SHIBATA GŌ"}
+    text:
+    - {t: caption, who: REN, say: "Gō's last swap saved the nine people behind him.", canon: true}
+
+- page: 19
+  rows: [[1, [1]], [1, [1, 1]]]
+  panels:
+  - kind: art
+    shot: "MEDIUM — Riku"
+    art: "Riku, arms crossed, collecting."
+    gen: "{RIKU}, smirk, arms crossed, upper body, locker room, dim"
+    text:
+    - {t: speech, who: RIKU, say: "Eighteen alive. Nine tokens. You all owe me.", canon: true}
+  - kind: art
+    shot: "FLASHBACK — the first day"
+    art: "Chapter 1's panel: Haruto's thumbs-up in the classroom."
+    reuse: ch01_p03_6
+    text:
+    - {t: caption, who: REN, say: "On the first day, Haruto said he was building a sustainable business model.", canon: true}
+  - kind: art
+    shot: "CLOSE — Haruto now"
+    art: "Haruto, hugging his knees, empty."
+    gen: "{HARUTO}, sitting, hugging own knees, empty eyes, locker room, dim"
+    text:
+    - {t: caption, who: REN, say: "Today he sold Gō for thirty tokens.", canon: true}
+
+- page: 20
+  rows: [[1, [1, 1]], [1.2, [1]]]
+  panels:
+  - kind: art
+    shot: "CLOSE — Ren"
+    art: "Ren, empty-eyed."
+    gen: "{REN}, empty eyes, expressionless, close-up, locker room, dim"
+    text:
+    - {t: caption, who: REN, say: "The boy who killed Saki kept his word. My best friend broke his.", canon: true}
+  - kind: art
+    shot: "HIGH — alone among them"
+    art: "Ren stands apart from the others, small, in the ring."
+    gen: "{REN}, from behind, standing apart, alone, multiple boys, multiple girls, distance, metal lockers, locker room, dim, wide shot"
+    negative_extra: "crowd, balls"
+    sketch: sketches/p20_2.png
+    strength: 0.65
+    retouch: "Local render (seed 2002, strength 0.65): the lone figure's bob (Aoi's silhouette) repainted as Ren's short messy hair (retouch.py)."
+    text:
+    - {t: caption, who: REN, say: "I didn't know anyone in this room anymore.", canon: true}
+  - kind: art
+    shot: "FULL — Momo"
+    art: "Momo, on the screen, arms thrown up."
+    gen: "{MOMO}, mouse ears, arms up, cheering, happy, full body, monitor, screen, dark background"
+    text:
+    - {t: speech, who: MOMO, say: "Eighteen players! Momo loves a smaller loop!", canon: true}
