@@ -88,12 +88,10 @@ KEY = {"twelve", "sixteen", "seventeen", "connection", "lost", "window", "streak
 def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
-    cue("heartbeat", t, B["e3"].start, B["e10"].end - B["e3"].start)
     cue("riser", t, B["e8"].start, B["e11"].start - B["e8"].start)
     cue("riser", t, B["e15"].start, B["e18"].start - B["e15"].start)
     cue("thud", t, B["e18"].start + 0.02)
     cue("hush", t, B["e19"].start - 0.2, B["e21"].start - B["e19"].start + 0.1)   # darkness, then silence
-    cue("heartbeat", t, B["e29"].start, B["e31"].end - B["e29"].start)
 
 
 def draw(cr, t, tl):

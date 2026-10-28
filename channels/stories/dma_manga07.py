@@ -80,7 +80,6 @@ KEY = {"charity", "twenty", "rule", "take", "anyone", "room", "final", "poorest"
 def cues(t, tl):
     """This episode's sound cues (shared with a Chapter 3 long video)."""
     B = tl.by_id
-    cue("heartbeat", t, B["q7"].start, B["q8"].end - B["q7"].start)
     cue("hush", t, B["q16"].end, B["q17"].end - B["q16"].end + 0.3)
     cue("riser", t, B["q20"].start, B["q21"].end - B["q20"].start)
 

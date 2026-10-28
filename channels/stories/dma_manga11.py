@@ -85,7 +85,6 @@ KEY = {"lose", "coins", "paper", "page", "notebook", "closed", "drew", "locker",
 def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 4 long video)."""
     B = tl.by_id
-    cue("heartbeat", t, B["y5"].start, B["y7"].start - B["y5"].start)
     cue("riser", t, B["y15"].start, B["y17"].end - B["y15"].start)
     cue("sting", t, B["y17"].end + 0.05)
     cue("hush", t, B["y20"].start - 0.2, B["y20"].end - B["y20"].start + 0.4)

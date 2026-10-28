@@ -78,7 +78,6 @@ def cues(t, tl):
     B = tl.by_id
     cue("riser", t, B["u5"].start, B["u7"].end - B["u5"].start)
     cue("hush", t, B["u7"].end, B["u8"].start - B["u7"].end + 0.1)
-    cue("heartbeat", t, B["u17"].start, B["u19"].end - B["u17"].start)
 
 
 def draw(cr, t, tl):

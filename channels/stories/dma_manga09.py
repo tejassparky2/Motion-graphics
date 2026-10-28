@@ -79,7 +79,6 @@ KEY = {"three", "seconds", "token", "hand", "gift", "final", "two", "poorest", "
 def cues(t, tl):
     """This episode's sound cues (shared with a Chapter 3 long video)."""
     B = tl.by_id
-    cue("heartbeat", t, B["w1"].start, B["w8"].start - B["w1"].start)
     cue("riser", t, B["w8"].start, B["w13"].start - B["w8"].start)
     cue("hush", t, B["w15"].start - 0.2, B["w16"].start - B["w15"].start + 0.2)   # the lights go out
 

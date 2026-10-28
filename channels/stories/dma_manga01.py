@@ -84,7 +84,6 @@ KEY = {"ordinary", "meteor", "twelve", "seventeen", "nobody", "twenty", "asleep"
 def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
-    cue("heartbeat", t, B["m35"].start, B["m36"].end - B["m35"].start)
     cue("riser", t, B["m36"].start, B["m36"].end - B["m36"].start)
 
 

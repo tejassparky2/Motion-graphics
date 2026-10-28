@@ -88,9 +88,7 @@ def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 4 long video)."""
     B = tl.by_id
     cue("hush", t, B["z7"].start - 0.2, B["z8"].start - B["z7"].start + 0.1)
-    cue("heartbeat", t, B["z8"].start, B["z10"].end - B["z8"].start)
     cue("riser", t, B["z15"].start, B["z17"].end - B["z15"].start)
-    cue("heartbeat", t, B["z21"].start, B["z23"].end - B["z21"].start)
 
 
 def draw(cr, t, tl):

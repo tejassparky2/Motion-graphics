@@ -77,11 +77,9 @@ KEY = {"lies", "liars", "same", "hundred", "called", "fast", "zero", "thirty", "
 def cues(t, tl):
     """This episode's sound cues (shared with a Chapter 2 long video)."""
     B = tl.by_id
-    cue("heartbeat", t, B["k4"].start, B["k6"].start - B["k4"].start)
     cue("riser", t, B["k5"].end, B["k6"].start - B["k5"].end)
     cue("sting", t, B["k7"].start + 0.4)
     cue("hush", t, B["k12"].start - 0.2, 0.6)
-    cue("heartbeat", t, B["k15"].start, B["k16"].end - B["k15"].start)
 
 
 def draw(cr, t, tl):
