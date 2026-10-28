@@ -181,3 +181,6 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   Episode 1 re-rendered without the horror hum (owner: "Why there is background beez sound"); the manga videos use
   the soft "pad" bed. Episode 2 = Chapter 1 pages 8-14 (dma_manga02, 67 s, 31/31 Whisper medium after two rewordings:
   "Fujimoto" was heard as "The Yumoto" and "Ren" as "Ben", so e3 and e17 drop the names), delivered with its cover.
+- 28 Oct: Tower 9 Night 4 (tower9_n4_2d, 52 s, 17/17 Whisper medium) delivered with its thumbnail. One approved line
+  changed: "Its watch says five" became "Its watch reads five" ("watch says" merged into one word); "Someone who
+  answered" was re-voiced (heard as "Someone to answer"). Vote: READ IT / BURN IT decides Night 5.
