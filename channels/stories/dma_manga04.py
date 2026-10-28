@@ -31,24 +31,21 @@ def s(i, page, panel, who, text, **kw):
 
 BEATS = [
     s(1, 22, 1, "momo", "Let's not waste time!", sfx="chime"),
-    n(2, 22, 2, "[Game one. The Glass Auction.|GAME 01: THE GLASS AUCTION.]", gap=0.45),
-    n(3, 22, 3, "[Twenty players. A hundred tokens each. Ten minutes.|20 PLAYERS. 100 TOKENS EACH. 10 MINUTES.]",
+    n(2, 22, 2, "[Game one.|GAME 01:] The Glass Auction.", gap=0.45),
+    n(3, 22, 3, "[Twenty|20] players. [A hundred|100] tokens each. [Ten|10] minutes.",
       gap=0.4),
-    n(4, 22, 3, "[Objective. Obtain the exit key.|OBJECTIVE: OBTAIN THE EXIT KEY.]", gap=0.3),
+    n(4, 22, 3, "Objective. Obtain the exit key.", gap=0.3),
     n(5, 23, 1, "A light came on over a glass case.", sfx="thud"),
     n(6, 23, 2, "Inside it, the key.", gap=0.4),
     s(7, 23, 3, "momo", "And these are the rules.", gap=0.4),
-    n(8, 24, 1, "[Rule one. The highest unique bid wins the key.|RULE 01: The highest unique bid wins the key.]",
+    n(8, 24, 1, "[Rule one.|Rule 01:] The highest unique bid wins the key.",
       box=RULE[1]),
-    n(9, 24, 1, "[Rule two. All spent tokens are permanently lost.|RULE 02: All spent tokens are permanently "
-                "lost.]", box=RULE[2], gap=0.4),
-    n(10, 24, 1, "[Rule three. If two or more players submit the same highest bid, every player tied at that amount "
-                 "is eliminated.|RULE 03: If two or more players submit the same highest bid, every player tied at "
-                 "that amount is eliminated.]", box=RULE[3], gap=0.4),
-    n(11, 24, 1, "[Rule four. If the highest bid is not unique, the next-highest unique bid wins.|RULE 04: If the "
-                 "highest bid is not unique, the next-highest unique bid wins.]", box=RULE[4], gap=0.4),
-    n(12, 24, 1, "[Rule five. If all players leave all tokens unspent when time expires, everyone is executed.|"
-                 "RULE 05: If all players leave all tokens unspent when time expires, everyone is executed.]",
+    n(9, 24, 1, "[Rule two.|Rule 02:] All spent tokens are permanently lost.", box=RULE[2], gap=0.4),
+    n(10, 24, 1, "[Rule three.|Rule 03:] If two or more players submit the same highest bid, every player tied at "
+                 "that amount is eliminated.", box=RULE[3], gap=0.4),
+    n(11, 24, 1, "[Rule four.|Rule 04:] If the highest bid is not unique, the next-highest unique bid wins.", box=RULE[4], gap=0.4),
+    n(12, 24, 1, "[Rule five.|Rule 05:] If all players leave all tokens unspent when time expires, everyone is "
+                 "executed.",
       box=RULE[5], gap=0.4, sfx="sting"),
     n(13, 24, 0, "In plain words. The biggest bid that nobody else matches wins. Every bid is spent, win or lose.",
       gap=0.6),
