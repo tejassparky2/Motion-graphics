@@ -31,20 +31,21 @@ def s(i, page, panel, who, text, **kw):
 BEATS = [
     n(1, 15, 1, "Concrete walls. A huge metal door. A dark screen."),
     s(2, 15, 1, "ren", "Eighteen. Nineteen. Twenty.", gap=0.4),
-    s(3, 15, 2, "ren", "Where's Sensei?", gap=0.4),
+    s(3, 15, 2, "ren", "[Where is Sensei?|Where's Sensei?]", gap=0.4),          # "Where's" was heard "We're"
     s(4, 15, 3, "student_e", "[Sensei's not here.|Sensei's not here...]", gap=0.35),
     n(5, 16, 1, "Everyone reached for their phones.", gap=0.4),
     s(6, 16, 1, "student_a", "[No signal.|No signal...]", gap=0.3),
     s(7, 16, 1, "student_b", "Mine too!", gap=0.25),
     n(8, 16, 2, "No service. And no clock. Nobody knew how long they'd been out.", gap=0.4),
-    s(9, 16, 3, "student_c", "[Let us out!|Let us out!!]", gap=0.3, impact=True),
+    s(9, 16, 3, "student_c", "[Let. Us. Out!|Let us out!!]", gap=0.3, impact=True),   # was heard "Letters out"
     s(10, 16, 3, "student_d", "[Is anyone there?|Is anyone there?!]", gap=0.2),
     n(11, 16, 4, "Go and Riku threw their shoulders into the door.", gap=0.35, sfx="thud"),
     s(12, 16, 4, "riku", "Open, damn it!", gap=0.3, impact=True),
     n(13, 17, 1, "Riku kicked it. It didn't move.", sfx="hit"),
     s(14, 17, 1, "riku", "[Damn it!|Damn it!!]", gap=0.25),
     n(15, 17, 2, "Fujimoto Aoi knelt by the door. She studied its edges.", gap=0.4),   # "Aoi knelt" was heard "I knelt"
-    s(16, 17, 3, "aoi", "This isn't a school door someone modified.", gap=0.35),
+    s(16, 17, 3, "aoi", "[This is not a school door someone modified.|This isn't a school door someone modified.]",
+      gap=0.35),
     s(17, 17, 4, "aoi", "[This room was built for us.|This room was built... for us.]", gap=0.4),
     n(18, 17, 5, "Ren looked up. In the corner of the ceiling, a small lens.", gap=0.45),
     s(19, 17, 5, "ren", "Cameras.", gap=0.35),
