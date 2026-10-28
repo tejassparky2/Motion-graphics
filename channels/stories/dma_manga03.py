@@ -37,7 +37,7 @@ BEATS = [
     s(6, 16, 1, "student_a", "[No signal.|No signal...]", gap=0.3),
     s(7, 16, 1, "student_b", "Mine too!", gap=0.25),
     n(8, 16, 2, "No service. And no clock. Nobody knew how long they'd been out.", gap=0.4),
-    s(9, 16, 3, "student_c", "[Let. Us. Out!|Let us out!!]", gap=0.3, impact=True),   # was heard "Letters out"
+    s(9, 16, 3, "student_b", "[Let us out!|Let us out!!]", gap=0.3, impact=True),   # bf_isabella's was heard "Letters out"
     s(10, 16, 3, "student_d", "[Is anyone there?|Is anyone there?!]", gap=0.2),
     n(11, 16, 4, "Go and Riku threw their shoulders into the door.", gap=0.35, sfx="thud"),
     s(12, 16, 4, "riku", "Open, damn it!", gap=0.3, impact=True),

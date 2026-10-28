@@ -12,7 +12,8 @@ from motion.engine import W, H, clamp01, cue
 
 from channels.horror import hud, hud2d
 from channels.stories import manga as M, serial
-from channels.stories.dma_manga import MUSIC, NARRATOR, SERIES, book, setup  # noqa: F401  (render reads both)
+from channels.stories.dma_manga import MUSIC, NARRATOR, book, setup  # noqa: F401  (render reads both)
+from channels.stories.dma_manga import SERIES as NAME     # not SERIES: the pipeline would add a second chip
 from channels.stories import dma_manga01 as E1, dma_manga02 as E2, dma_manga03 as E3, dma_manga04 as E4
 
 TAIL = 4.0
@@ -70,12 +71,12 @@ def draw(cr, t, tl):
     R.draw(cr, t, tl)
     last = BEATS[-1]["id"]
     hud.finish(cr, t, flash_at=[], vig=0.3, grain=0.03)
-    M.series_chip(cr, f"{SERIES} · CHAPTER 1")
+    M.series_chip(cr, f"{NAME} · CHAPTER 1")
     chapter_title(cr, t, B["t0"].end)
     if B["t0"].end + 0.3 < t < B[last].end + 0.1:
         M.name_chip(cr, t, R.speaker(t, tl))
         hud2d.captions(cr, t, tl, KEY, y=H - 34, size=40, max_w=1000)
-    serial.next_card(cr, t, B[last].end + 0.6, SERIES, "CHAPTER 2", "THE BIDS")
+    serial.next_card(cr, t, B[last].end + 0.6, NAME, "CHAPTER 2", "THE BIDS")
     for b in R.plan(tl):
         if b["turn"]:
             cue("whoosh", t, b["t0"] + 0.05)
