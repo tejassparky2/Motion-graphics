@@ -107,3 +107,7 @@ Do not rewrite established canon without explicit permission. Do not invent addi
 - Owner, 28 Oct 2026: "Continue the Story ... the first game 20/20 can survival but from game 2 atlest 1 is dead this
   is dark psychological survival". Proposed answers to questions 1, 2, 4, 5 and 7, Game 1's result and Game 2 ("The
   Charity") are in channels/stories/dma_arc_games_1_2.md, awaiting the owner's approval (3 and 6 stay open).
+- Owner, 28 Oct 2026 (every game): "add this too every game as a clever loopholes with all can survive and mc figures it
+  and try to make eryone survive but as game goes the greed emotions betrayal scared sacrifice better human won't let it
+  happen only few game goes without dead". Every game hides a fair all-survive loophole that Ren finds; people break it
+  (greed, fear, betrayal, sacrifice), so only a few games end with no death. Game 2 v3 follows this.
