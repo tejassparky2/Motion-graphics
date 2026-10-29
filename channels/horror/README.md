@@ -209,3 +209,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   session (session_01PF511XprLcpVNCdEQUsUFF, which renders from the packed takes in assets/voice_cache/). Chapter 5
   "Thirty Tokens" (20 pages) is copied to assets/manga/dma/ch05, not made yet. The disk allowance filled once: the
   shelved anime pipeline's models and venvs, old render scratch and the multilingual Whisper model were deleted.
+- 29 Oct: owner on the Chapter 4 long video at 1:08: "The sound effect here also annoying remove from everywhere" ->
+  the riser cue is gone from every manga episode (7264fce). All 12 Shorts and 4 long videos re-rendered without the
+  riser or the heartbeat (Episodes 1-6 by helper session_01PF511bGqrs1SFn3cpk5NqS, 7-12 here, the long videos by
+  session_01PF511XprLcpVNCdEQUsUFF) and re-sent. Effects left in the manga videos: page-turn whoosh, sting, thud/hit,
+  Momo's chime, the timer ding, one click and one static burst. Midnight with Nancy still uses the riser and the
+  heartbeat (owner asked whether to remove them there too; no answer yet).
