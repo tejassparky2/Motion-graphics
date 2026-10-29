@@ -31,6 +31,22 @@ How the explainers are built:
 - Videos: `videos/snakebite.py` (+ `snakebite_shots.py`), `videos/superbugs.py`, `videos/malaria.py`.
 - Check stills before rendering, then `tools/render_check.sh <video>` (render + Whisper small + Whisper medium).
 
+Hook and retention rules (from the owner's "shorts" chat on the laptop, 29 Oct 2026; full notes in
+`research_notes/from_shorts/` — hooks_from_shorts.md and from_shorts_chat.md, based on all 12 meanwhilemayank reels):
+- Line 1 = a contradiction about the viewer, in second person, that is TRUE. Escalate 2-3 times within ~8 s. A reality
+  anchor ("This isn't a movie. It's real."). Name the thing by ~12 s, with a short pause before the name.
+- Never open on a number, a name, a date or a concept everyone knows (his flops; number/name in line 1 ranked lower).
+- Frame 0: one subject, large, already moving; a small setup line + ONE big red word, grey ghost first, red by ~1.5 s.
+- Health shape (his rabies reel, 4.6M): "the cure exists, so why do people still die?", re-hook at ~55%, myths struck
+  through, a what-to-do list, then a YES/NO comment ending. Re-hook lines at ~40%, 55-60% and 90%. A bookend line.
+- A new literal picture every ~3 s, something changing inside it every 0.5-1.5 s; one recurring metaphor (~3 uses).
+- Music ~17 dB under the voice in pauses, above 300 Hz, dipping before reveals. Pauses 0.5 s, 0.6-0.8 s only before
+  reveals.
+- Instagram first (same files did 100-10,000x better there); covers: dark poster, one subject, <=3 words, one big
+  coloured word, inside the 3:4 grid crop; caption line 1 = hook + one number (<125 chars); 3-5 hashtags; YT title
+  <=60 chars.
+- Hook scorers (hookscore etc.) don't predict views for this genre; use these rules instead.
+
 Lessons (25 Oct 2026, owner: "Why you could not catch bug when running from hours"):
 - Before a new voice engine goes into a video, read its audio path (how tokens become samples) and test it on 20+
   varied sentences, checking each one's FIRST word. orpheus-cpp's streaming decoder silently dropped the first
