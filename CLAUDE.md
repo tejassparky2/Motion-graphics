@@ -1,3 +1,8 @@
+# Branch ccr-56282fe5-evehq4-hinglish = the new Hinglish mini-documentary channel
+On this branch, follow **channels/hinglish/README.md** (format, workflow, status). The Interestingly Strange rules
+below are kept for reference; their voice, privacy and script-first rules still apply here, but the channel's
+format, length and posting rules do not.
+
 # Interestingly Strange: standing rules
 
 ## Workflow: script first, owner approves, then render (protects monetization)
