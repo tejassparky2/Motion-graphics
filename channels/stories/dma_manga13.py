@@ -40,12 +40,12 @@ BEATS = [
     s(9, 3, 2, "ren", "He kept his word.", gap=0.45),
     s(10, 3, 3, "momo", "[Psst! Swap Tachibana and Hayashi.|Psst! Swap TACHIBANA and HAYASHI.]", gap=0.45,
       sfx="click"),
-    s(11, 3, 3, "momo", "Thirty tokens! Nobody will know!", gap=0.3),
+    s(11, 3, 3, "momo", "[Thirty tokens. Nobody will know!|Thirty tokens! Nobody will know!]", gap=0.3),   # "tokens!" was heard "token"
     s(12, 4, 1, "ren", "I didn't touch anything."),
     s(13, 4, 2, "ren", "Then I understood. Momo wasn't only asking me.", gap=0.45),
     s(14, 4, 3, "riku", "Disappointed?", gap=0.5),
     s(15, 5, 1, "ren", "It offered you something."),
-    s(16, 5, 2, "riku", "Fifty. To leave the loop whole.", gap=0.4),
+    s(16, 5, 2, "riku", "[Fifty. To leave the loop... whole.|Fifty. To leave the loop whole.]", gap=0.4),   # was heard "lead the loophole"
     s(17, 5, 3, "ren", "Why didn't you take it?", gap=0.4),
     s(18, 5, 4, "riku", "Dead people don't owe me anything.", gap=0.45),
     n(19, 6, 1, "Ren. Nine. Found."),

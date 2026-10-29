@@ -33,7 +33,7 @@ if not texts:                                    # scripts built in code (the ma
     texts = {b["id"]: b["text"] for b in mod.SCRIPT}
 NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen", "6": "six", "4": "four",
        "40": "forty", "44": "forty four", "414": "four fourteen", "440": "four forty", "444": "four forty four", "30": "thirty", "41": "forty one",
-       "10": "ten", "210": "two ten", "1": "one", "5": "five", "7": "seven", "900": "nine",
+       "10": "ten", "210": "two ten", "1": "one", "5": "five", "7": "seven", "8": "eight", "900": "nine",
        "1217": "twelve seventeen", "3b": "three b", "0": "zero", "20": "twenty", "100": "a hundred", "912": "nine twelve", "12": "twelve",
        "16": "sixteen", "59": "fifty nine", "18": "eighteen", "19": "nineteen", "31": "thirty one", "69": "sixty nine",
        "70": "seventy", "17": "seventeen", "459": "four fifty nine", "458": "four fifty eight", "00": "zero zero", "11": "eleven", "1131": "eleven thirty one", "101": "a hundred and one", "1st": "first", "10th": "tenth"}
