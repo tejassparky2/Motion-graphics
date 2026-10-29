@@ -215,3 +215,9 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   session_01PF511XprLcpVNCdEQUsUFF) and re-sent. Effects left in the manga videos: page-turn whoosh, sting, thud/hit,
   Momo's chime, the timer ding, one click and one static burst. Midnight with Nancy still uses the riser and the
   heartbeat (owner asked whether to remove them there too; no answer yet).
+- 29 Oct: owner "Now send all manga videos with meta data upload sequence and everything" and "Give me with upload
+  time according to research" -> out/stories/DMA_upload_guide.md: all 16 videos with dated IST publish times
+  (start Thu 29 Oct; Shorts 4:30 and 7:30 PM IST from the main channel's own 5-8 PM IST peak; long videos 10 AM IST
+  at weekends and 2:30 PM IST on weekdays from Buffer's 24 Jul 2026 1.8M-video study and SocialPilot's 2026
+  301k-video study), each chapter's long video the day after its last Short, plus every title, description, tag
+  and pinned comment. Assumes DMA has its own channel (Nancy holds 4:30/7:30 PM on its channel).

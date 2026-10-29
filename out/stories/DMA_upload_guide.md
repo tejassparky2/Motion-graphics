@@ -1,51 +1,88 @@
 # Dead Man's Algorithm, the manga: upload guide (Chapters 1-4)
 
 All 16 videos are final: no heartbeat, no riser, every line checked with Whisper medium, no encoder tags.
-12 Shorts (9:16, 56-93 s) and 4 long videos (16:9, one per chapter). Post them in the order below.
+12 Shorts (9:16, 56-93 s) and 4 long videos (16:9, one per chapter).
 
-## Upload order
+## Upload schedule (times in IST)
 
-| # | Episode | Format | Length | File | Title |
-|---|---|---|---|---|---|
-| 1 | Ep 1 | Short (9:16) | 1:22 | `dma_manga01.mp4` | The Last Normal Minute Before the Meteor \| Dead Man's Algorithm Manga Ep 1 ☄️ |
-| 2 | Ep 2 | Short (9:16) | 1:07 | `dma_manga02.mp4` | 12:17:05. The Meteor Hit. Then They Woke Up Somewhere Else \| Dead Man's Algorithm Manga Ep 2 ☄️ |
-| 3 | Ep 3 | Short (9:16) | 1:33 | `dma_manga03.mp4` | 20 Survivors. Status of Earth: Unknown \| Dead Man's Algorithm Manga Ep 3 ☄️ |
-| 4 | Ep 4 | Short (9:16) | 1:12 | `dma_manga04.mp4` | The Highest Unique Bid Wins. A Tie Gets You Eliminated \| Dead Man's Algorithm Manga Ep 4 🔑 |
-| 5 | Chapter 1 (long) | Long video (16:9) | 5:16 | `dma_manga_ch01_long.mp4` | Dead Man's Algorithm, Chapter 1: 12:17 \| Original Manga Read With Voices ☄️ |
-| 6 | Ep 5 | Short (9:16) | 1:11 | `dma_manga05.mp4` | He Bid 1 Token. Everyone Else Bid 0. \| Dead Man's Algorithm Manga Ep 5 🔑 |
-| 7 | Ep 6 | Short (9:16) | 0:57 | `dma_manga06.mp4` | You Trusted a Plan. I Trusted a Number. \| Dead Man's Algorithm Manga Ep 6 🔑 |
-| 8 | Chapter 2 (long) | Long video (16:9) | 2:12 | `dma_manga_ch02_long.mp4` | Dead Man's Algorithm, Chapter 2: The Bids \| Original Manga Read With Voices 🔑 |
-| 9 | Ep 7 | Short (9:16) | 1:16 | `dma_manga07.mp4` | The Poorest Player Dies. A Tie Kills Everyone. \| Dead Man's Algorithm Manga Ep 7 🪙 |
-| 10 | Ep 8 | Short (9:16) | 1:01 | `dma_manga08.mp4` | Give Everything to the Host and Nobody Dies? \| Dead Man's Algorithm Manga Ep 8 🪙 |
-| 11 | Ep 9 | Short (9:16) | 0:57 | `dma_manga09.mp4` | He Gave Her One Token. Then the Lights Went Out. \| Dead Man's Algorithm Manga Ep 9 🪙 |
-| 12 | Chapter 3 (long) | Long video (16:9) | 3:16 | `dma_manga_ch03_long.mp4` | Dead Man's Algorithm, Chapter 3: The Charity \| Original Manga Read With Voices 🪙 |
-| 13 | Ep 10 | Short (9:16) | 1:25 | `dma_manga10.mp4` | Find Your Own Name in 10 Lockers or Die \| Dead Man's Algorithm Manga Ep 10 🔒 |
-| 14 | Ep 11 | Short (9:16) | 1:10 | `dma_manga11.mp4` | Follow the Cards and You Find Your Name. Unless It's One Loop \| Dead Man's Algorithm Ep 11 🔒 |
-| 15 | Ep 12 | Short (9:16) | 1:24 | `dma_manga12.mp4` | Eighteen Lives for Nine Tokens. Every One of You Owes Me \| Dead Man's Algorithm Ep 12 🔒 |
-| 16 | Chapter 4 (long) | Long video (16:9) | 4:02 | `dma_manga_ch04_long.mp4` | Dead Man's Algorithm, Chapter 4: Find Yourself \| Original Manga Read With Voices 🔒 |
+Start today, Thu 29 Oct. Upload all 16 now and schedule each one: Visibility → Schedule, then set the time zone next
+to the time box to India Standard Time (GMT+5:30). The PH and US columns show when the video lands for the
+Philippines and US Eastern viewers; US clocks go back one hour on Sun 1 Nov, and the US column already includes that.
 
-## Suggested schedule (a suggestion: use your own time slots)
+| # | Publish (IST) | Philippines · US Eastern | Video | Format | File | Title |
+|---|---|---|---|---|---|---|
+| 1 | Thu 29 Oct, **4:30 PM IST** | 7 PM PH · 7 AM US ET | Ep 1 | Short (9:16), 1:22 | `dma_manga01.mp4` | The Last Normal Minute Before the Meteor \| Dead Man's Algorithm Manga Ep 1 ☄️ |
+| 2 | Thu 29 Oct, **7:30 PM IST** | 10 PM PH · 10 AM US ET | Ep 2 | Short (9:16), 1:07 | `dma_manga02.mp4` | 12:17:05. The Meteor Hit. Then They Woke Up Somewhere Else \| Dead Man's Algorithm Manga Ep 2 ☄️ |
+| 3 | Fri 30 Oct, **4:30 PM IST** | 7 PM PH · 7 AM US ET | Ep 3 | Short (9:16), 1:33 | `dma_manga03.mp4` | 20 Survivors. Status of Earth: Unknown \| Dead Man's Algorithm Manga Ep 3 ☄️ |
+| 4 | Fri 30 Oct, **7:30 PM IST** | 10 PM PH · 10 AM US ET | Ep 4 | Short (9:16), 1:12 | `dma_manga04.mp4` | The Highest Unique Bid Wins. A Tie Gets You Eliminated \| Dead Man's Algorithm Manga Ep 4 🔑 |
+| 5 | Sat 31 Oct, **10 AM IST** | 12:30 PM PH · 12:30 AM US ET | Chapter 1 (long) | Long (16:9), 5:16 | `dma_manga_ch01_long.mp4` | Dead Man's Algorithm, Chapter 1: 12:17 \| Original Manga Read With Voices ☄️ |
+| 6 | Sat 31 Oct, **4:30 PM IST** | 7 PM PH · 7 AM US ET | Ep 5 | Short (9:16), 1:11 | `dma_manga05.mp4` | He Bid 1 Token. Everyone Else Bid 0. \| Dead Man's Algorithm Manga Ep 5 🔑 |
+| 7 | Sat 31 Oct, **7:30 PM IST** | 10 PM PH · 10 AM US ET | Ep 6 | Short (9:16), 0:57 | `dma_manga06.mp4` | You Trusted a Plan. I Trusted a Number. \| Dead Man's Algorithm Manga Ep 6 🔑 |
+| 8 | Sun 1 Nov, **10 AM IST** | 12:30 PM PH · 12:30 AM US ET | Chapter 2 (long) | Long (16:9), 2:12 | `dma_manga_ch02_long.mp4` | Dead Man's Algorithm, Chapter 2: The Bids \| Original Manga Read With Voices 🔑 |
+| 9 | Sun 1 Nov, **4:30 PM IST** | 7 PM PH · 6 AM US ET | Ep 7 | Short (9:16), 1:16 | `dma_manga07.mp4` | The Poorest Player Dies. A Tie Kills Everyone. \| Dead Man's Algorithm Manga Ep 7 🪙 |
+| 10 | Sun 1 Nov, **7:30 PM IST** | 10 PM PH · 9 AM US ET | Ep 8 | Short (9:16), 1:01 | `dma_manga08.mp4` | Give Everything to the Host and Nobody Dies? \| Dead Man's Algorithm Manga Ep 8 🪙 |
+| 11 | Mon 2 Nov, **4:30 PM IST** | 7 PM PH · 6 AM US ET | Ep 9 | Short (9:16), 0:57 | `dma_manga09.mp4` | He Gave Her One Token. Then the Lights Went Out. \| Dead Man's Algorithm Manga Ep 9 🪙 |
+| 12 | Mon 2 Nov, **7:30 PM IST** | 10 PM PH · 9 AM US ET | Ep 10 | Short (9:16), 1:25 | `dma_manga10.mp4` | Find Your Own Name in 10 Lockers or Die \| Dead Man's Algorithm Manga Ep 10 🔒 |
+| 13 | Tue 3 Nov, **2:30 PM IST** | 5 PM PH · 4 AM US ET | Chapter 3 (long) | Long (16:9), 3:16 | `dma_manga_ch03_long.mp4` | Dead Man's Algorithm, Chapter 3: The Charity \| Original Manga Read With Voices 🪙 |
+| 14 | Tue 3 Nov, **4:30 PM IST** | 7 PM PH · 6 AM US ET | Ep 11 | Short (9:16), 1:10 | `dma_manga11.mp4` | Follow the Cards and You Find Your Name. Unless It's One Loop \| Dead Man's Algorithm Ep 11 🔒 |
+| 15 | Tue 3 Nov, **7:30 PM IST** | 10 PM PH · 9 AM US ET | Ep 12 | Short (9:16), 1:24 | `dma_manga12.mp4` | Eighteen Lives for Nine Tokens. Every One of You Owes Me \| Dead Man's Algorithm Ep 12 🔒 |
+| 16 | Wed 4 Nov, **2:30 PM IST** | 5 PM PH · 4 AM US ET | Chapter 4 (long) | Long (16:9), 4:02 | `dma_manga_ch04_long.mp4` | Dead Man's Algorithm, Chapter 4: Find Yourself \| Original Manga Read With Voices 🔒 |
 
-- **Two Shorts a day, in episode order.** Each Short ends on a cliffhanger and a "next episode" card, so the order
-  matters.
-- **Post each chapter's long video the day after that chapter's last Short:**
-  - Chapter 1 after Episode 4;
-  - Chapter 2 after Episode 6;
-  - Chapter 3 after Episode 9;
-  - Chapter 4 after Episode 12.
+If you start a day later, keep the same order. Then put a long video that lands on a Saturday or Sunday at 10:00 AM
+IST, and one that lands on a weekday at 2:30 PM IST.
 
-  Viewers who finished the Shorts can then watch the whole chapter in one go, and new viewers can start there.
-- **Seven days in all:**
+## Why these times
 
-  | Day | Shorts | Long video |
-  |---|---|---|
-  | 1 | Ep 1, Ep 2 | |
-  | 2 | Ep 3, Ep 4 | |
-  | 3 | Ep 5, Ep 6 | Chapter 1 |
-  | 4 | Ep 7, Ep 8 | Chapter 2 |
-  | 5 | Ep 9, Ep 10 | |
-  | 6 | Ep 11, Ep 12 | Chapter 3 |
-  | 7 | | Chapter 4 |
+**Facts (with sources)**
+
+1. **Our own audience** (the main channel's YouTube Analytics, 15 Oct 2026):
+   - India 21%, Philippines 16%, US 14%.
+   - Viewers peak 5-8 PM IST.
+   - The rule we use is to post about an hour before the peak, which gives 4:30 PM and 7:30 PM IST.
+   - The DMA manga has no analytics of its own yet, so this is the closest real data we have.
+2. **Buffer's study** ([Buffer, 24 Jul 2026](https://buffer.com/resources/best-time-to-post-on-youtube/)):
+   - Median engagement of 1.8 million YouTube videos, measured by hour and day, in the viewer's local time.
+   - Shorts: best at Friday 4 PM, 6 PM and 7 PM; best days Friday, Saturday, Thursday.
+   - Long videos: best at Sunday 10 AM, then Sunday 9 AM and Friday 12 PM; best days Sunday, Tuesday, Monday.
+3. **SocialPilot's study** ([SocialPilot, 2026](https://www.socialpilot.co/blog/best-time-to-post-on-youtube)):
+   - 301,000 videos from 27,000 channels that schedule through SocialPilot; engagement normalised per view.
+   - Shorts: best at 12-2 PM or 6-7 PM local time; viewers peak 12-3 PM and 7-9 PM; best days Friday, Saturday,
+     Thursday.
+   - Long videos: best at 2-4 PM local on weekdays (Wednesday to Friday strongest) and 8-10 AM at weekends.
+   - It says to post in your audience's local time, not your own.
+4. **YouTube itself** publishes no "best time".
+   - Both studies come from scheduling-tool companies measuring their own users, not from YouTube.
+   - Treat them as a starting point, not a rule.
+
+**How that becomes the schedule (my reasoning)**
+
+- **Shorts at 4:30 PM and 7:30 PM IST.**
+  - Both slots fit our own 5-8 PM IST peak.
+  - 4:30 PM is 7:00 PM in the Philippines: inside SocialPilot's 7-9 PM peak and Buffer's 4-7 PM evening band.
+  - 7:30 PM IST sits inside the 7-9 PM peak for India.
+  - The US gets them in its morning (6-10 AM ET). The US is only 14% of our audience, so it doesn't decide the slots.
+- **Episode 1 today (Thursday), Episodes 3-4 on Friday, 5-8 over the weekend.**
+  - Thursday, Friday and Saturday are the top three Shorts days in both studies.
+  - So the opening episodes, which decide whether people follow the series, get the strongest days.
+- **Long videos at the weekend at 10:00 AM IST.** That's Buffer's single best long-video slot (Sunday 10 AM) and inside
+  SocialPilot's weekend 8-10 AM window. Chapters 1 and 2 land on Saturday and Sunday.
+- **Long videos on weekdays at 2:30 PM IST.** That's inside SocialPilot's weekday 2-4 PM window. Chapter 3 lands on
+  Tuesday, which is Buffer's second-best long-video day.
+- **Each long video comes out the day after its chapter's last Short.**
+  - Nobody sees a chapter's ending in the long video before the Short that reveals it.
+  - Every long video goes up before that day's first Short, so it never lands on top of one.
+- **Ep 10 (the start of Chapter 4) comes out the evening before the Chapter 3 long video.** That keeps two Shorts every
+  day. The long video is a recap of Chapter 3, so it spoils nothing.
+
+**Check after a week**
+
+- **Compare times.** In YouTube Studio → Analytics → Audience, the "When your viewers are on YouTube" chart shows this
+  channel's own peak hours. From Episode 9 on, move the Shorts to an hour before the darkest hours there.
+- **Compare against the main channel.** Its posting-time trial (4:30 / 7:30 PM vs the old 9:30 PM / 4:30 AM) ends today.
+  If the old late-night times win on 24-hour, 7-day and 28-day views, the same will likely hold here. Then move these
+  Shorts to 9:30 PM and 4:30 AM IST, which are 11:00 AM and 6:00 PM US Eastern after 1 Nov.
+- **One channel assumption.** These times assume DMA has its own channel. If it goes on the Midnight with Nancy channel,
+  4:30 PM and 7:30 PM are already taken by Tower 9 and the 7:30 story. Tell me and I'll interleave the two series.
 
 ## Settings for every video
 
@@ -53,19 +90,20 @@ All 16 videos are final: no heartbeat, no riser, every line checked with Whisper
 - **Shorts length:** every Short runs under 3 minutes, so YouTube treats them all as Shorts. Several run 60-93 s.
 - **Covers:** use each video's cover from `out/stories/thumbs/` as its thumbnail. On a Short, if your app doesn't let
   you upload one, pick the opening frame: it carries the big hook text.
-- **Link the Shorts to the long video:** once a chapter's long video is up, edit each of that chapter's Shorts and set
-  its Related video to that long video. Viewers can then tap through from the Short to the full chapter.
+- **Link the Shorts to the long video:** once a chapter's long video is public, edit each of that chapter's Shorts and
+  set its Related video to that long video. Viewers can then tap through from the Short to the full chapter.
 - **Long-video chapters:** the YouTube chapter times are already inside each long video's description; YouTube reads
   them from there. Keep the "0:00" line first.
 - **Altered or synthetic content:** the voices are synthetic (Chatterbox Turbo; nobody real is cloned). YouTube's
   disclosure is for realistic content that could be mistaken for real people or events, and this is clearly
   animated fiction. Tick it anyway if you prefer to be safe.
-- **Pinned comment:** post the line below under each video right after uploading, then pin it.
+- **Pinned comment:** post the line below under each video right after it goes public, then pin it.
 
-## Every video's details, in upload order
+## Every video's details, in publish order
 
 ### 1. Ep 1 · Chapter 1 "12:17" · Short (9:16), 1:22
 
+- **Publish:** Thu 29 Oct, **4:30 PM IST** (7 PM PH · 7 AM US ET)
 - **Video:** `out/stories/dma_manga01.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga01.png`
 
@@ -100,6 +138,7 @@ Riku, Gō, Mio, Aoi... only one of them noticed the sky. Who do you think surviv
 
 ### 2. Ep 2 · Chapter 1 "12:17" · Short (9:16), 1:07
 
+- **Publish:** Thu 29 Oct, **7:30 PM IST** (10 PM PH · 10 AM US ET)
 - **Video:** `out/stories/dma_manga02.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga02.png`
 
@@ -135,6 +174,7 @@ Rings of light, cracks, or an eye: what do you think Ren saw inside the meteor's
 
 ### 3. Ep 3 · Chapter 1 "12:17" · Short (9:16), 1:33
 
+- **Publish:** Fri 30 Oct, **4:30 PM IST** (7 PM PH · 7 AM US ET)
 - **Video:** `out/stories/dma_manga03.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga03.png`
 
@@ -170,6 +210,7 @@ No teacher, no clock, and a screen that knows everyone's blood type. Where do yo
 
 ### 4. Ep 4 · Chapter 1 "12:17" · Short (9:16), 1:12
 
+- **Publish:** Fri 30 Oct, **7:30 PM IST** (10 PM PH · 10 AM US ET)
 - **Video:** `out/stories/dma_manga04.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga04.png`
 
@@ -204,8 +245,9 @@ dead mans algorithm, manga, manga recap, manga dub, survival game, death game, p
 You have 100 tokens and ten minutes. How much do you bid, and why? 👇
 ```
 
-### 5. Chapter 1 (long) · Chapter 1 "12:17" · Long video (16:9), 5:16
+### 5. Chapter 1 (long) · Chapter 1 "12:17" · Long (16:9), 5:16
 
+- **Publish:** Sat 31 Oct, **10 AM IST** (12:30 PM PH · 12:30 AM US ET)
 - **Video:** `out/stories/dma_manga_ch01_long.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga_ch01_long.png`
 
@@ -250,6 +292,7 @@ You have 100 tokens and ten minutes. The highest UNIQUE bid wins the key, and a 
 
 ### 6. Ep 5 · Chapter 2 "The Bids" · Short (9:16), 1:11
 
+- **Publish:** Sat 31 Oct, **4:30 PM IST** (7 PM PH · 7 AM US ET)
 - **Video:** `out/stories/dma_manga05.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga05.png`
 
@@ -286,6 +329,7 @@ Ren bids one and asks everyone else to bid zero. Would you trust that plan, or b
 
 ### 7. Ep 6 · Chapter 2 "The Bids" · Short (9:16), 0:57
 
+- **Publish:** Sat 31 Oct, **7:30 PM IST** (10 PM PH · 10 AM US ET)
 - **Video:** `out/stories/dma_manga06.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga06.png`
 
@@ -320,8 +364,9 @@ dead mans algorithm, manga, manga recap, manga dub, survival game, death game, p
 Riku won the key with thirty and walked out with the fewest tokens. Smart move, or a mistake he'll pay for in game two? 👇
 ```
 
-### 8. Chapter 2 (long) · Chapter 2 "The Bids" · Long video (16:9), 2:12
+### 8. Chapter 2 (long) · Chapter 2 "The Bids" · Long (16:9), 2:12
 
+- **Publish:** Sun 1 Nov, **10 AM IST** (12:30 PM PH · 12:30 AM US ET)
 - **Video:** `out/stories/dma_manga_ch02_long.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga_ch02_long.png`
 
@@ -365,6 +410,7 @@ Ren's plan let a liar win the key and still kept all twenty alive. Would you hav
 
 ### 9. Ep 7 · Chapter 3 "The Charity" · Short (9:16), 1:16
 
+- **Publish:** Sun 1 Nov, **4:30 PM IST** (7 PM PH · 6 AM US ET)
 - **Video:** `out/stories/dma_manga07.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga07.png`
 
@@ -400,6 +446,7 @@ Somebody always holds the fewest tokens. Can you see a way for nobody to die bef
 
 ### 10. Ep 8 · Chapter 3 "The Charity" · Short (9:16), 1:01
 
+- **Publish:** Sun 1 Nov, **7:30 PM IST** (10 PM PH · 9 AM US ET)
 - **Video:** `out/stories/dma_manga08.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga08.png`
 
@@ -435,6 +482,7 @@ Riku is the only player left, with ten seconds on the clock, and he's smiling. W
 
 ### 11. Ep 9 · Chapter 3 "The Charity" · Short (9:16), 0:57
 
+- **Publish:** Mon 2 Nov, **4:30 PM IST** (7 PM PH · 6 AM US ET)
 - **Video:** `out/stories/dma_manga09.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga09.png`
 
@@ -469,8 +517,46 @@ dead mans algorithm, manga, manga recap, manga dub, survival game, death game, p
 Should Saki have given the token to Momo? Riku would have died, and she would have lived. What would you have done? 👇
 ```
 
-### 12. Chapter 3 (long) · Chapter 3 "The Charity" · Long video (16:9), 3:16
+### 12. Ep 10 · Chapter 4 "Find Yourself" · Short (9:16), 1:25
 
+- **Publish:** Mon 2 Nov, **7:30 PM IST** (10 PM PH · 9 AM US ET)
+- **Video:** `out/stories/dma_manga10.mp4`
+- **Cover / thumbnail:** `out/stories/thumbs/dma_manga10.png`
+
+**Title**
+```
+Find Your Own Name in 10 Lockers or Die | Dead Man's Algorithm Manga Ep 10 🔒
+```
+Alternative titles: `19 Lockers. You Can Open 10. On Average, 9 of Us Die 🔒` / `Dead Man's Algorithm: The Manga, Episode 10 🔒`
+
+**Description**
+```
+Game three: Find Yourself. Nineteen lockers, each holding one card with one of their names.
+Go in alone, open ten lockers, find your own name, and you live. Each token opens one more. You may swap two cards,
+once. And Momo says everyone's connected.
+On average, nine of them die. Riku has sixty-nine tokens. He can open all nineteen.
+
+Dead Man's Algorithm, the manga, Chapter 4 "Find Yourself", pages 1 to 7.
+Episode 11 is next.
+
+(Original story. Original manga, read with voices.)
+
+#DeadMansAlgorithm #Manga #Shorts
+```
+
+**Tags**
+```
+dead mans algorithm, manga, manga recap, manga dub, survival game, death game, psychological thriller, original manga, find yourself, 100 prisoners problem, episode 10
+```
+
+**Pinned comment**
+```
+Who took Saki's token? A hand in a black sleeve, and a small notebook. Name your suspect 👇
+```
+
+### 13. Chapter 3 (long) · Chapter 3 "The Charity" · Long (16:9), 3:16
+
+- **Publish:** Tue 3 Nov, **2:30 PM IST** (5 PM PH · 4 AM US ET)
 - **Video:** `out/stories/dma_manga_ch03_long.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga_ch03_long.png`
 
@@ -512,44 +598,9 @@ dead mans algorithm, manga, manga recap, manga dub, full chapter, survival game,
 Should Saki have given the token to Momo? Riku would have died, and she would have lived. What would you have done? 👇
 ```
 
-### 13. Ep 10 · Chapter 4 "Find Yourself" · Short (9:16), 1:25
-
-- **Video:** `out/stories/dma_manga10.mp4`
-- **Cover / thumbnail:** `out/stories/thumbs/dma_manga10.png`
-
-**Title**
-```
-Find Your Own Name in 10 Lockers or Die | Dead Man's Algorithm Manga Ep 10 🔒
-```
-Alternative titles: `19 Lockers. You Can Open 10. On Average, 9 of Us Die 🔒` / `Dead Man's Algorithm: The Manga, Episode 10 🔒`
-
-**Description**
-```
-Game three: Find Yourself. Nineteen lockers, each holding one card with one of their names.
-Go in alone, open ten lockers, find your own name, and you live. Each token opens one more. You may swap two cards,
-once. And Momo says everyone's connected.
-On average, nine of them die. Riku has sixty-nine tokens. He can open all nineteen.
-
-Dead Man's Algorithm, the manga, Chapter 4 "Find Yourself", pages 1 to 7.
-Episode 11 is next.
-
-(Original story. Original manga, read with voices.)
-
-#DeadMansAlgorithm #Manga #Shorts
-```
-
-**Tags**
-```
-dead mans algorithm, manga, manga recap, manga dub, survival game, death game, psychological thriller, original manga, find yourself, 100 prisoners problem, episode 10
-```
-
-**Pinned comment**
-```
-Who took Saki's token? A hand in a black sleeve, and a small notebook. Name your suspect 👇
-```
-
 ### 14. Ep 11 · Chapter 4 "Find Yourself" · Short (9:16), 1:10
 
+- **Publish:** Tue 3 Nov, **4:30 PM IST** (7 PM PH · 6 AM US ET)
 - **Video:** `out/stories/dma_manga11.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga11.png`
 
@@ -586,6 +637,7 @@ It's one loop of nineteen, and each of them can open ten. Can you see a way out 
 
 ### 15. Ep 12 · Chapter 4 "Find Yourself" · Short (9:16), 1:24
 
+- **Publish:** Tue 3 Nov, **7:30 PM IST** (10 PM PH · 9 AM US ET)
 - **Video:** `out/stories/dma_manga12.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga12.png`
 
@@ -620,8 +672,9 @@ dead mans algorithm, manga, manga recap, manga dub, survival game, death game, p
 Riku goes first and sees every locker. He could save all eighteen, or leave a loop of eleven on purpose. Do you trust him? 👇
 ```
 
-### 16. Chapter 4 (long) · Chapter 4 "Find Yourself" · Long video (16:9), 4:02
+### 16. Chapter 4 (long) · Chapter 4 "Find Yourself" · Long (16:9), 4:02
 
+- **Publish:** Wed 4 Nov, **2:30 PM IST** (5 PM PH · 4 AM US ET)
 - **Video:** `out/stories/dma_manga_ch04_long.mp4`
 - **Cover / thumbnail:** `out/stories/thumbs/dma_manga_ch04_long.png`
 
