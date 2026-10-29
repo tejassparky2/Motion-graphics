@@ -1,4 +1,4 @@
-# Hinglish mini-documentary channel (new, name not chosen yet)
+# Hinglish mini-documentary channel: "Socho with Tejas" (@sochowithtejas)
 
 Started 29 Oct 2026 from the owner's laptop chat. Owner: "I want you to make same type of videos for my channel ...
 we do in hindi same type let's try what worked for him", then "Brand-new channel". This is **not** Interestingly
@@ -97,5 +97,6 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Nobody is cloned.
 - **No AI wording** in descriptions, captions or upload sheets (owner, 29 Oct 2026: "Don't add anything as ai in
   descriptions or anything"). Photo credits stay, because CC BY licences require them.
-- **The channel uses the owner's name and photo** (owner, 29 Oct 2026: "Use Tejas my name I will use my photo").
-  The exact name is still to be picked.
+- **Channel name: "Socho with Tejas", handle @sochowithtejas** (owner, 29 Oct 2026: "I go with sochowithtejas").
+  It uses the owner's own name and photo; every video opens with "Socho…", so the hook and the name are one brand.
+  Logo colours match the videos: paper #D9C9A8, ink #291F17, red #BD211C.
