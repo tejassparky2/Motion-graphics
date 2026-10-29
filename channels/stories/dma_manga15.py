@@ -32,7 +32,7 @@ def s(i, page, panel, who, text, **kw):
 BEATS = [
     n(1, 12, 1, "Eighteen found. One not found."),
     n(2, 12, 2, "Everyone stood in the ring of lockers again.", gap=0.4),
-    n(3, 12, 3, "Two lockers were dark now. Saki's.", gap=0.4),
+    n(3, 12, 3, "[Two lockers were dark now, Saki's.|Two lockers were dark now. Saki's.]", gap=0.4),   # alone, "Saki's." was heard "Suckies"
     n(4, 12, 4, "And Go's.", gap=0.3),
     s(5, 13, 1, "mio", "You left a long loop.", impact=True),
     s(6, 13, 2, "ren", "No. He didn't.", gap=0.45),
