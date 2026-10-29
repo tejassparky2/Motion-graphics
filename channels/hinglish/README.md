@@ -106,8 +106,9 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Photos: two lines. Line 1 is the sites they came from; line 2 is the CC BY photographers' names, because that
     licence requires them.
   - `render_hi.write_sheet` produces exactly this.
-  - For new videos, prefer photos that need no credit (public domain, CC0, Pixabay, Unsplash), so the CC BY line
-    shrinks or disappears.
+  - Credits themselves are fine (owner, 29 Oct 2026: "i never said no credits i said we give credits but only with
+    text name not with links"). Pick the best photo whatever its licence: PD, CC0, CC BY, Pixabay or Unsplash.
+    Never BY-SA, NC or ND.
 - **No AI wording** in descriptions, captions or upload sheets (owner, 29 Oct 2026: "Don't add anything as ai in
   descriptions or anything"). Photo credits stay, because CC BY licences require them.
 - **Channel name: "Socho with Tejas", handle @sochowithtejas** (owner, 29 Oct 2026: "I go with sochowithtejas").
