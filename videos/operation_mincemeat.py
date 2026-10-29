@@ -36,7 +36,7 @@ SCRIPT = [
     dict(id="m1", scene="cuff", text="We need a dead man. And he has to lie to Hitler.", speaker="brit"),
     dict(id="m2", scene="dress", text="London, [nineteen forty three.|1943.] British spies dress a dead man as an "
                                       "officer. Major William Martin."),
-    dict(id="m3", scene="map", text="His briefcase holds fake secret plans. Attack Greece. Not Sicily."),
+    dict(id="m3", scene="map", text="His briefcase holds fake secret plans. The target is Greece. Not Sicily."),
     dict(id="m4", scene="sea", text="A submarine leaves him floating off the coast of Spain."),
     dict(id="m5", scene="german", text="The plans are real. Move the troops!", speaker="german"),
     dict(id="m6", scene="sicily", text="Hitler believes it. In July, the Allies land in Sicily."),
@@ -129,7 +129,7 @@ def m_map(cr, t, arrow_at=None, cross_at=None, flags_at=None, tanks_at=None):
         bold_text(cr, txt, x, y, 26, OUTLINE, outline=None, shadow=0)
     if arrow_at is not None and t >= arrow_at:
         ring(cr, t, arrow_at, 630, 500, 110, 140)
-        bold_text(cr, "ATTACK HERE", 630, 330, 34, RED, shadow=0)
+        bold_text(cr, "TARGET", 630, 330, 40, RED, shadow=0)
     if cross_at is not None and t >= cross_at:
         red_x(cr, t, cross_at, 385, 625, 60)
     if tanks_at is not None and t >= tanks_at:

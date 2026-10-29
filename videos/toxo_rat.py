@@ -142,7 +142,7 @@ def cat_eyes(cr, t, x, y, s=1.0, open_=1.0):
     cr.set_source(rad(0, 0, 230, [(0, (0.08, 0.06, 0.1, 0.9)), (0.6, (0.08, 0.06, 0.1, 0.6)),
                                   (1, (0.08, 0.06, 0.1, 0.0))]))
     cr.fill()
-    blink = 0.12 if (t * 0.6) % 3.4 < 0.1 else 1.0
+    blink = 0.12 if (t * 0.6 + 1.0) % 3.4 < 0.1 else 1.0      # never mid-blink on frame 0
     h = 38 * open_ * blink
     for ex in (-60, 60):
         cr.save()
