@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+"""Render a Hinglish-channel video from channels/hinglish/videos/<name>.py.
+
+  python channels/hinglish/render_hi.py --video toxoplasma            # -> <shorts research>/hinglish_out/toxoplasma.mp4
+  python channels/hinglish/render_hi.py --video toxoplasma --still 2  # one frame
+  python channels/hinglish/render_hi.py --video toxoplasma --sheet 1  # contact sheet, one frame per second
+  python channels/hinglish/render_hi.py --video toxoplasma --check    # Whisper-medium check of every line
+
+Outputs go outside the repo (videos are never committed; the repo is public).
+"""
+import argparse
+import importlib.util
+import json
+import multiprocessing as mp
+import os
+import re
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(HERE))
+sys.path[:0] = [HERE, ROOT]
+
+import cairo  # noqa: E402
+import narrate  # noqa: E402
+from poster import FPS, H, W  # noqa: E402
+
+OUT = os.path.join(os.path.dirname(ROOT), "hinglish_out")
+BUILD = os.path.join(ROOT, "build", "hinglish")
+CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+         "-flags:a", "+bitexact", "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name=",
+         "-metadata:s:a", "handler_name="]
+
+_mod, _tl = None, None
+
+
+def load_module(name):
+    spec = importlib.util.spec_from_file_location(f"hvideo_{name}", os.path.join(HERE, "videos", f"{name}.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def build_timeline(name):
+    mod = load_module(name)
+    tl = narrate.Timeline(mod.SCRIPT, mod.NARRATOR, tail=getattr(mod, "TAIL", narrate.TAIL))
+    os.makedirs(BUILD, exist_ok=True)
+    json.dump(tl.to_json(), open(os.path.join(BUILD, f"{name}_timeline.json"), "w", encoding="utf-8"), ensure_ascii=False)
+    for b in tl.beats:
+        print(f"  {b.id:>4} {b.start:6.2f}-{b.end:6.2f}  {b.text[:60]}", file=sys.stderr)
+    print(f"total {tl.total:.1f} s", file=sys.stderr)
+    return mod, tl
+
+
+def _init(name):
+    global _mod, _tl
+    _mod = load_module(name)
+    _tl = narrate.Timeline.from_json(json.load(open(os.path.join(BUILD, f"{name}_timeline.json"), encoding="utf-8")))
+
+
+def draw(surface, frame):
+    cr = cairo.Context(surface)
+    _mod.draw(cr, frame / FPS, _tl)
+    surface.flush()
+
+
+def _part(args):
+    name, first, last, path = args
+    if _mod is None:
+        _init(name)
+    cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}", "-r", str(FPS),
+           "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-threads", "1", path]
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    for i in range(first, last):
+        draw(surface, i)
+        proc.stdin.write(bytes(surface.get_data()))
+    proc.stdin.close()
+    if proc.wait():
+        raise RuntimeError("ffmpeg failed")
+    return path
+
+
+def render(name, audio=True):
+    mod, tl = build_timeline(name)
+    os.makedirs(OUT, exist_ok=True)
+    n = int(round(tl.total * FPS))
+    workers = max(1, min(int(os.environ.get("RENDER_WORKERS", (os.cpu_count() or 2) - 2)), 12))
+    chunk = max(FPS * 2, n // (workers * 3))
+    jobs = [(name, a, min(n, a + chunk), os.path.join(BUILD, f"{name}_part{k:03d}.mp4"))
+            for k, a in enumerate(range(0, n, chunk))]
+    with mp.get_context("spawn").Pool(workers, initializer=_init, initargs=(name,)) as pool:
+        for k, _ in enumerate(pool.imap(_part, jobs)):
+            print(f"\rparts {k + 1}/{len(jobs)}", end="", file=sys.stderr, flush=True)
+    print(file=sys.stderr)
+    listing = os.path.join(BUILD, f"{name}_parts.txt")
+    with open(listing, "w") as f:
+        f.writelines(f"file '{j[3].replace(os.sep, '/')}'\n" for j in jobs)
+    silent = os.path.join(BUILD, f"{name}_silent.mp4")
+    subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", listing, "-c", "copy",
+                           silent])
+    for j in jobs:
+        os.remove(j[3])
+    out = os.path.join(OUT, f"{name}.mp4")
+    if audio:
+        from motion.audio import build_soundtrack
+        wav = os.path.join(BUILD, f"{name}_soundtrack.wav")
+        events = mod.sfx(tl) if hasattr(mod, "sfx") else []
+        lufs = build_soundtrack(events, n / FPS, wav, tl.clips(), seed=name, bed=getattr(mod, "MUSIC", "pad"))
+        print(f"soundtrack {lufs:.1f} LUFS", file=sys.stderr)
+        subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy", "-c:a", "aac",
+                               "-b:a", "192k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
+    else:
+        subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-c", "copy", *CLEAN, out])
+    print(f"wrote {out}", file=sys.stderr)
+    write_sheet(mod, tl, os.path.join(OUT, f"{name}_upload_sheet.md"))
+    return out
+
+
+def write_sheet(mod, tl, path):
+    m = getattr(mod, "METADATA", None)
+    if not m:
+        return
+    credits = []
+    for f in getattr(mod, "CREDITS_FILES", []):
+        if os.path.exists(f):
+            credits += json.load(open(f, encoding="utf-8"))
+    used = set(getattr(mod, "USED_ASSETS", []))
+    lines = [f"# Upload sheet: {m['title']}", "",
+             f"**Instagram caption**\n```\n{m['caption'].strip()}\n\n{' '.join(m['hashtags'])}\n```", "",
+             f"**YouTube title**\n```\n{m['yt_title']}\n```", "",
+             f"**YouTube description**\n```\n{m['yt_description'].strip()}\n\n{' '.join(m['hashtags'])}\n```", "",
+             f"**Pinned comment**\n```\n{m['pinned_comment']}\n```", "",
+             f"**Video facts:** {tl.total:.1f} s, voice: {mod.NARRATOR_LABEL}. Made for kids: No.", "",
+             "**Image credits** (put in the description/caption):"]
+    for c in credits:
+        if not used or os.path.basename(c["file"]) in used:
+            lines.append(f"- {c['subject']}: \"{c['title']}\" by {c['author']}, {c['license']} ({c['page_url']})")
+    lines += ["", "**Sources**"] + [f"- {s}" for s in m.get("sources", [])]
+    open(path, "w", encoding="utf-8").write("\n".join(lines) + "\n")
+    print(f"wrote {path}", file=sys.stderr)
+
+
+def still(name, t, out):
+    build_timeline(name)
+    _init(name)
+    s = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    draw(s, int(t * FPS))
+    s.write_to_png(out)
+    print(f"wrote {out}", file=sys.stderr)
+
+
+def sheet(name, step, out, cols=8, thumb=180):
+    _, tl = build_timeline(name)
+    _init(name)
+    times = [i * step for i in range(int(tl.total / step) + 1)]
+    th = int(thumb * H / W)
+    rows = (len(times) + cols - 1) // cols
+    sh = cairo.ImageSurface(cairo.FORMAT_ARGB32, cols * thumb, rows * (th + 24))
+    sc = cairo.Context(sh)
+    sc.set_source_rgb(1, 1, 1)
+    sc.paint()
+    fr = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    for k, t in enumerate(times):
+        draw(fr, int(t * FPS))
+        x, y = (k % cols) * thumb, (k // cols) * (th + 24)
+        sc.save()
+        sc.translate(x, y)
+        sc.scale(thumb / W, th / H)
+        sc.set_source_surface(fr)
+        sc.paint()
+        sc.restore()
+        sc.set_source_rgb(0, 0, 0)
+        sc.set_font_size(16)
+        sc.move_to(x + 6, y + th + 18)
+        sc.show_text(f"{t:.1f}s")
+    sh.write_to_png(out)
+    print(f"wrote {out}", file=sys.stderr)
+
+
+def _words(s):
+    return re.findall(r"[\wऀ-ॿ]+", s.replace("़", ""))
+
+
+def check(name):
+    """Whisper medium (Hindi) on every line; flags lines whose word error rate is above 30%."""
+    import librosa
+    from faster_whisper import WhisperModel
+    _, tl = build_timeline(name)
+    model = WhisperModel("medium", device="cpu", compute_type="int8")
+    bad = 0
+    for b in tl.beats:
+        y, _ = librosa.load(b.wav, sr=16000)
+        heard = " ".join(s.text for s in model.transcribe(y, language="hi", beam_size=5)[0])
+        ref, hyp = _words(b.text), _words(heard)
+        d = list(range(len(hyp) + 1))
+        for i, r in enumerate(ref, 1):
+            prev, d[0] = d[0], i
+            for j, h in enumerate(hyp, 1):
+                prev, d[j] = d[j], min(d[j] + 1, d[j - 1] + 1, prev + (r != h))
+        wer = d[-1] / max(1, len(ref))
+        flag = wer > 0.30
+        bad += flag
+        print(f"{'!!' if flag else 'ok'} {b.id:>4} WER {wer:4.0%}  heard: {heard.strip()}")
+    print(f"{bad} line(s) flagged")
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--video", required=True)
+    ap.add_argument("--still", type=float)
+    ap.add_argument("--sheet", type=float)
+    ap.add_argument("--check", action="store_true")
+    ap.add_argument("--no-audio", action="store_true")
+    a = ap.parse_args()
+    os.makedirs(BUILD, exist_ok=True)
+    if a.check:
+        check(a.video)
+    elif a.still is not None:
+        still(a.video, a.still, os.path.join(BUILD, f"{a.video}_still_{a.still}.png"))
+    elif a.sheet:
+        sheet(a.video, a.sheet, os.path.join(BUILD, f"{a.video}_sheet.png"))
+    else:
+        render(a.video, audio=not a.no_audio)

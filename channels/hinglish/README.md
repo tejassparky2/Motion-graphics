@@ -57,8 +57,19 @@ word is marked as it's spoken (red strike-through, tick or circle).
 Interestingly Strange's workflow applies: script first, owner approves, render one, then the rest, Whisper-check
 every line, upload sheet. Sources go with every script, and health claims must be checked before rendering.
 
+## How to render (owner's laptop)
+- Run `python -I -X utf8 channels/hinglish/render_hi.py --video toxoplasma`, using `--still T`, `--sheet 1.5` or
+  `--check` as needed.
+- It uses the research venv: pycairo, Pillow, edge-tts, faster-whisper and rembg.
+- Photos go in `<shorts research>/hinglish_assets/<video>/` with `credits.json`. Renders go to
+  `<shorts research>/hinglish_out/`. Both live outside the repo.
+- Keys come from `<shorts research>/.env`, which is git-ignored.
+
 ## Status (29 Oct 2026)
-- **Scripts batch 1:** `scripts_batch1.md`, waiting for the owner's approval.
+- **Scripts batch 1:** `scripts_batch1.md`. The owner approved all 3 ("Approve all 3").
+- **Video 1:** Toxoplasma (`videos/toxoplasma.py`), 2:01, rendered with the placeholder voice and sent for the
+  owner's OK on the look.
+  - Photos come from Wikimedia Commons (PD / CC0 / CC BY); the credits are in the upload sheet.
   1. Toxoplasma: the parasite that makes rats walk to cats.
   2. Krait and snakebite in India: about 58,000 deaths a year, though the anti-venom is made in India.
   3. Demodex face mites.
