@@ -47,6 +47,30 @@ Hook and retention rules (from the owner's "shorts" chat on the laptop, 29 Oct 2
   <=60 chars.
 - Hook scorers (hookscore etc.) don't predict views for this genre; use these rules instead.
 
+From 29 Oct 2026 every explainer is made with the shorts chat's pipeline, copied in English (owner: "copy everything
+it does but this goes English", and later, with its Toxoplasma video attached: "i want same 1:1 like that"):
+- `channels/doctor/`: `poster.py` (paper, slate, print texture, two-tier headline with a grey ghost word, stamps,
+  strikes, ticks, rings, cards, flip counters, calendars, gauges, icon arrays, YES/NO card, photo cut-outs with
+  shadows, framed photos), `shots.py` (SHOTS = [(line id, cue word, draw fn, "paper"|"slate")], cut 0.12 s before
+  the cue), `stock_search.py` (free-licence photo search; `STOCK_SOURCES=commons` here), `channel.py` (voice,
+  music, pauses), `render_doc.py` (render, preview, upload sheet, cover, stills, contact sheet).
+  The video modules are `channels/doctor/videos/<name>.py`, and the photos with their `credits.json` live in
+  `assets/doctor_photos/<name>/` (PD, CC0 and CC BY only).
+- Voice: our Chatterbox stock narrator through `motion.voice` (each take checked by Whisper medium). Music: the
+  `doc` bed in `motion/audio.py` (~16 dB under the voice, ducked ~4 dB, with `dip` cues before reveals).
+- Look, from the Toxoplasma video: almost every shot is on paper; slate only for "inside the body" (a flat grey
+  silhouette). Big photo cut-outs or line drawings with dark outlines. One subject per shot, with one mark on it.
+  Small mono footnotes give the source of a number. There are no subtitles; the headline is the only text tied to
+  the voice.
+- Upload sheet (`out/<name>_upload_sheet.md`): Instagram caption + hashtags, a second comment with sources and photo
+  credits (names only, no links), YouTube title (<=60 chars) and description, tags, pinned YES/NO comment. No AI or
+  voice wording anywhere in it.
+- Commands: `python channels/doctor/render_doc.py --video amoeba [--voice | --sheet 1 | --still 2 | --cover |
+  --remix]`.
+- Photo search is slow from the cloud: Wikimedia rate-limits the shared address (429), Openverse times out, and the
+  Smithsonian DEMO_KEY returns 429. Gray's Anatomy plates can be fetched straight from upload.wikimedia.org (the
+  path is the md5 of the file name).
+
 Lessons (25 Oct 2026, owner: "Why you could not catch bug when running from hours"):
 - Before a new voice engine goes into a video, read its audio path (how tokens become samples) and test it on 20+
   varied sentences, checking each one's FIRST word. orpheus-cpp's streaming decoder silently dropped the first
