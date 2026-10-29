@@ -16,6 +16,14 @@ also push here. The repo is **public**.
 - **Meanwhile Mayank research (research_notes/meanwhilemayank_2026-10-29.md):** 63.7K Instagram followers from 12 posts,
   but 2,130 YouTube subs; the same videos did 100-800x better on Instagram. Findings sent to the doctor chat. The
   owner should also post Interestingly Strange on Instagram Reels.
+- **Rows 75, 77, 79, 81 made (29 Oct, owner: "Make it from research currently did"):** operation_mincemeat, toxo_rat,
+  same_you, ai_art, the first videos on the Mayank frame-0 rules (bq_kit.hook2 / ring / plain). 30-36 s each; Whisper
+  medium flags only spellings ("Glyndwr" -> "Glender", "leftover", "A.I.", "U.S."). Sent as set 3 with kitten_evil
+  (out/packs/order/upload_sheets_set3.md). Next sets: the held tests, then new scripts.
+- **Remotion + GSAP (29 Oct):** installed and tested in experiments/remotion_gsap (README has the verdict): same look,
+  ~10x slower, would mean porting every character, so pycairo stays. Worth porting: motion blur (sub-frame
+  averaging) and GSAP-style motion (elastic/wiggle eases, letter pops, follow-through); asked the owner. GSAP's and
+  Remotion's official skills are installed in .claude/skills.
 - **Downloads:** YouTube and Instagram block downloads from the cloud server; don't try to get around their bot
   checks. The owner's laptop is Windows (C:\Users\tejas\Documents\shorts research, Claude desktop app), which a
   cloud chat can't attach to; downloads run in the owner's local session there with yt-dlp.

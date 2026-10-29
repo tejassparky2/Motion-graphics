@@ -3,7 +3,8 @@
 Owner: "Ship it". Post in this order, 4:30 PM and 7:30 PM IST: **76 heaven_forever, 67 free_will_god,
 69 trolley_problem, 72 grandma_dog, 74 who_made_evil, 73 perfect_life, 71 euthyphro, 80 prayer_plan, 58 newcomb_box,
 70 grandfather_paradox, 82 kitten_evil, then the four on the Mayank frame-0 rules (29 Oct): 75 operation_mincemeat,
-77 toxo_rat, 79 same_you, 81 ai_art**. Held as tests (narrator-first openings), at most one every 2-3 days:
+77 toxo_rat, 79 same_you, 81 ai_art**. Sent so far: set 1 (76, 67, 69, 72, 74), set 2 (73, 71, 80, 58, 70),
+set 3 on 29 Oct (82 kitten_evil, 75 operation_mincemeat, 77 toxo_rat, 79 same_you, 81 ai_art). Held as tests (narrator-first openings), at most one every 2-3 days:
 57, 59, 61, 62, 63, 64, 65, 66, 68, 78. Packs: `python tools/make_order_pack.py out/packs/order LABEL name...`.
 
 
