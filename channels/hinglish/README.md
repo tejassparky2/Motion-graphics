@@ -67,23 +67,21 @@ every line, upload sheet. Sources go with every script, and health claims must b
 
 ## Status (29 Oct 2026)
 - **Scripts batch 1:** `scripts_batch1.md`. The owner approved all 3 ("Approve all 3").
-- **Video 1:** Toxoplasma (`videos/toxoplasma.py`), 2:01, rendered with the placeholder voice and sent for the
-  owner's OK on the look.
-  - Photos come from Wikimedia Commons (PD / CC0 / CC BY); the credits are in the upload sheet.
+- **The three videos:**
   1. Toxoplasma: the parasite that makes rats walk to cats.
   2. Krait and snakebite in India: about 58,000 deaths a year, though the anti-venom is made in India.
   3. Demodex face mites.
-- **Voice: not chosen.**
-  - Ten free Microsoft neural voices were tested against Mayank's narration (speaker-embedding similarity). The
-    best scored 0.728 (Florian multilingual); his own clips score 0.97 with each other. So no free stock voice is
-    close.
-  - Whisper clarity was best for Madhur (hi-IN), Florian and Swara (hi-IN); Andrew and Brian have an English
-    accent in Hindi.
-  - Owner chose to test premium voices next: Sarvam Bulbul (v4-flash documentary/story personas, v3 male speakers)
-    and ElevenLabs eleven_v3 premade male voices.
-  - The test is `voice_premium.py`. It runs on the owner's laptop, where the reference clips are, and needs
-    `SARVAM_API_KEY` / `ELEVENLABS_API_KEY` set as Windows user environment variables (never pasted in chat).
-- **Still to decide:**
-  - the channel name and handle
-  - the voice
-  - the renderer: the 2D pycairo pipeline needs a photo-cut-out/poster style kit for this look
+- **Video 1, Toxoplasma: v2 script approved** (owner, 29 Oct: "Yes").
+  - Changes: a second-person hook made true ("it may be inside you"), the Tom & Jerry anchor, the "only the cat
+    fear" precision beat (Vyas 2007, House 2011) and a "socho" bookend.
+  - Evidence: `research_notes/meanwhilemayank_parasite_reels_study_2026-10-29.md`.
+  - Visuals rebuilt as 44 shots, about 3 s each. They are photo cut-outs from `hinglish_assets/toxoplasma2/` with
+    credits, and FEAR is rubbed out by an eraser as the recurring metaphor (`poster.erase`).
+- **Voice: Aman.**
+  - Indic Parler-TTS's named speaker "Aman" is used only as the voice prompt; AI4Bharat IndicF5 speaks every line
+    in that synthetic voice.
+  - Processing: one even tempo (×1.13), then the studio chain v3.
+  - Every line gets a Whisper retake (`retake.py`) and a liveliness retake (`lively_retake.py`, keeping the take
+    with the widest pitch movement that stays clear).
+  - Nobody is cloned.
+- **Still to decide:** the channel name and handle.

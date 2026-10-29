@@ -118,11 +118,11 @@ def _parler_batch(jobs, cfg):
 
 def _raw_path(text, cfg):
     """Raw engine output, keyed only by what changes the generated voice (not by pace or the studio chain)."""
-    gen = {k: v for k, v in cfg.items() if k not in ("studio", "pace_wps")}
+    gen = {k: v for k, v in cfg.items() if k not in ("studio", "pace_wps", "pitch_expand", "tempo")}
     return os.path.join(CACHE, f"raw_{_hash(text, gen)}.wav")
 
 
-def pace(a, text, target_wps, max_pause=0.3, keep_pause=0.24):
+def pace(a, text, target_wps, max_pause=0.3, keep_pause=0.24, fixed_tempo=None):
     """Match the reference delivery (owner, 29 Oct 2026: "match voice speech pace all to mayank"): shorten pauses
     inside a line longer than `max_pause` to `keep_pause`, then time-stretch (rubberband, pitch kept) so the words per
     second of the whole line equal `target_wps`. The stretch is limited to 0.85-1.35x so it never sounds processed."""
@@ -150,15 +150,44 @@ def pace(a, text, target_wps, max_pause=0.3, keep_pause=0.24):
     a = np.concatenate(out)
     # whole-line rate (words / take length), the same way the reference's 198-200 wpm (3.3 w/s) was measured; an
     # energy-gated "speaking time" undercounts quiet consonants and made lines slower instead of faster
-    words = len([w for w in text.replace("...", " ").split() if any(ch.isalnum() for ch in w)])
-    rate = words / max(0.3, len(a) / SR)
-    tempo = float(np.clip(target_wps / rate, 0.85, 1.35)) if rate > 0 else 1.0
+    if fixed_tempo:
+        # one factor for the whole video (owner, 29 Oct 2026: "somewhere too fast and some too slow", robotic): per-line
+        # word-rate targets pushed lines with long English/science words to 1.35x and slowed short-word lines to 0.88x
+        tempo = float(fixed_tempo)
+    else:
+        words = len([w for w in text.replace("...", " ").split() if any(ch.isalnum() for ch in w)])
+        rate = words / max(0.3, len(a) / SR)
+        tempo = float(np.clip(target_wps / rate, 0.85, 1.35)) if rate > 0 else 1.0
     if abs(tempo - 1) < 0.02:
         return a
+    # small changes: WSOLA atempo is the most natural on speech; bigger ones need rubberband
+    filt = (f"atempo={tempo:.4f}" if abs(tempo - 1) <= 0.15
+            else f"rubberband=tempo={tempo:.4f}:transients=mixed:formant=preserved")
     p = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1",
-                        "-i", "pipe:0", "-af", f"rubberband=tempo={tempo:.4f}:transients=crisp:formant=preserved",
-                        "-f", "f32le", "pipe:1"], input=a.astype(np.float32).tobytes(), capture_output=True, check=True)
+                        "-i", "pipe:0", "-af", filt, "-f", "f32le", "pipe:1"],
+                       input=a.astype(np.float32).tobytes(), capture_output=True, check=True)
     return np.frombuffer(p.stdout, np.float32).astype(np.float64)
+
+
+def expand_pitch(a, up=1.5, down=1.3):
+    """Widen the intonation of a take (research, 29 Oct 2026: description wording leaves our narrator at ~13-16 st of
+    pitch range; lively documentary narration runs ~20-25 st). Praat PSOLA: every pitch point moves away from the
+    take's median in the log domain, by `up` above it and the gentler `down` below it (deep lows turn creaky).
+    Duration, timing and the voice's spectral character are kept."""
+    import parselmouth
+    from parselmouth.praat import call
+    snd = parselmouth.Sound(a.astype(np.float64), sampling_frequency=SR)
+    f0 = snd.to_pitch(time_step=0.01, pitch_floor=70, pitch_ceiling=450).selected_array["frequency"]
+    f0 = f0[f0 > 0]
+    if len(f0) < 10:
+        return a
+    m = float(np.median(f0))
+    manip = call(snd, "To Manipulation", 0.01, 70, 450)
+    tier = call(manip, "Extract pitch tier")
+    call(tier, "Formula", f"if self > {m} then {m} * (self / {m}) ^ {up} else {m} * (self / {m}) ^ {down} fi")
+    call([tier, manip], "Replace pitch tier")
+    out = call(manip, "Get resynthesis (overlap-add)").values[0]
+    return out.astype(np.float64)
 
 
 VOICE_EQ = os.path.join(HERE, "voice_eq.json")
@@ -170,11 +199,19 @@ def studio(a, version):
     narrator compression, de-essing and a peak limiter. `version` only names the chain for the cache key."""
     eq = json.load(open(VOICE_EQ))
     entries = ";".join(f"entry({f},{g})" for f, g in zip(eq["bands_hz"], eq["gain_db"]))
+    if version in ("v1", "v2"):
+        comp = "acompressor=threshold=-22dB:ratio=3:attack=5:release=70:makeup=3dB"
+    else:
+        # v3 (research, 29 Oct 2026): the fast 3:1 squashed syllables (speech spread 7.2 dB vs ~9.5 in the reference);
+        # speech engineering guidance is ~2:1, 15-30 ms attack, 150-250 ms release, RMS detection, 2-4 dB reduction
+        peak = np.abs(a).max()
+        a = a * (10 ** (-3 / 20) / peak) if peak > 0 else a      # same input level for every take
+        comp = "acompressor=threshold=-20dB:ratio=2:attack=20:release=200:detection=rms:knee=4:makeup=2dB"
     chain = ",".join([
         "afftdn=nf=-38",                                   # gentle: a stronger setting dulled the 5-9 kHz range
         "highpass=f=75",
         f"firequalizer=gain_entry='{entries}'",
-        "acompressor=threshold=-22dB:ratio=3:attack=5:release=70:makeup=3dB",
+        comp,
         "deesser=i=0.25:m=0.5:f=0.5",                      # light: v1's 0.5 cut the presence the EQ adds
         "alimiter=limit=0.89:level=false",
     ])
@@ -191,7 +228,26 @@ def _parler(text, cfg):
     return open(raw, "rb").read(), None
 
 
-ENGINES = {"edge": _edge, "sarvam": _sarvam, "eleven": _eleven, "parler": _parler}
+F5_PY = os.path.join(os.path.dirname(ROOT), "tools", ".venv-f5", "Scripts", "python.exe")
+
+
+def _f5_batch(jobs, cfg):
+    """Voice [(text, wav_path), ...] with IndicF5 in one run of f5_say.py, from the channel voice's reference prompt
+    (cfg ref_audio / ref_text). IndicF5 samples noise each run, so a different `take` gives a different reading."""
+    spec = {"ref_audio": cfg["ref_audio"], "ref_text": cfg["ref_text"], "jobs": [{"text": t, "out": o} for t, o in jobs]}
+    subprocess.run([F5_PY, "-I", "-X", "utf8", "-W", "ignore", os.path.join(HERE, "f5_say.py")],
+                   input=json.dumps(spec, ensure_ascii=False).encode("utf-8"), check=True)
+
+
+def _f5(text, cfg):
+    raw = _raw_path(text, cfg)
+    if not os.path.exists(raw):
+        _f5_batch([(text, raw)], cfg)
+    return open(raw, "rb").read(), None
+
+
+BATCH = {"parler": _parler_batch, "f5": _f5_batch}
+ENGINES = {"edge": _edge, "sarvam": _sarvam, "eleven": _eleven, "parler": _parler, "f5": _f5}
 
 
 def _hash(text, cfg):
@@ -199,15 +255,15 @@ def _hash(text, cfg):
 
 
 def prefetch(script, cfg):
-    """Engines that load a big model (parler) voice every uncached line in one batch."""
-    if cfg["engine"] != "parler":
+    """Engines that load a big model (parler, f5) voice every uncached line in one batch."""
+    if cfg["engine"] not in BATCH:
         return
     os.makedirs(CACHE, exist_ok=True)
     jobs = [(l["text"], _raw_path(l["text"], cfg)) for l in script
             if not os.path.exists(os.path.join(CACHE, f"{_hash(l['text'], cfg)}.wav"))
             and not os.path.exists(_raw_path(l["text"], cfg))]
     if jobs:
-        _parler_batch(jobs, cfg)
+        BATCH[cfg["engine"]](jobs, cfg)
 
 
 def _trim(a, thresh=0.012):
@@ -227,8 +283,10 @@ def take(text, cfg):
     if not os.path.exists(wav):
         data, words = ENGINES[cfg["engine"]](text, cfg)
         a, off = _trim(_decode(data))
-        if cfg.get("pace_wps"):
-            a = pace(a, text, cfg["pace_wps"])
+        if cfg.get("pitch_expand"):
+            a = expand_pitch(a, *cfg["pitch_expand"])
+        if cfg.get("pace_wps") or cfg.get("tempo"):
+            a = pace(a, text, cfg.get("pace_wps"), fixed_tempo=cfg.get("tempo"))
             words = None                                   # boundaries no longer line up after the stretch
         if cfg.get("studio"):
             a = studio(a, cfg["studio"])

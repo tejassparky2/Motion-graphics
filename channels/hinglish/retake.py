@@ -41,8 +41,10 @@ def main():
     narrate.prefetch(mod.SCRIPT, cfg)                     # make sure every default take exists
     model = WhisperModel("medium", device="cpu", compute_type="int8")
     enc = VoiceEncoder(verbose=False)
-    ref_emb = enc.embed_utterance(preprocess_wav(VOICE_REF))
-    log_path = os.path.join(narrate.ROOT, "build", "hinglish", f"{name}_retakes.json")
+    ref_emb = enc.embed_utterance(preprocess_wav(getattr(mod, "VOICE_REF", VOICE_REF)))   # the video's own voice
+    voice = narrate._hash("", {k: v for k, v in cfg.items()
+                               if k not in ("studio", "pace_wps", "pitch_expand", "tempo", "take")})
+    log_path = os.path.join(narrate.ROOT, "build", "hinglish", f"{name}_retakes_{voice}.json")   # one log per voice
     log = json.load(open(log_path, encoding="utf-8")) if os.path.exists(log_path) else {}
 
     def score(path, text):
@@ -52,39 +54,42 @@ def main():
         sim = float(np.dot(enc.embed_utterance(preprocess_wav(y, source_sr=16000)), ref_emb))
         return wer(words(text), words(heard)), sim, heard.strip()
 
+    # Parler varies a take by its seed; IndicF5 samples fresh noise each run, so a "take" number just names a new run
+    key, extra = ("seed", EXTRA_SEEDS) if cfg["engine"] == "parler" else ("take", [1, 2])
+    base = cfg.get(key, 0)
+    variant = lambda v: {**cfg, key: v}
     todo = []
     for line in mod.SCRIPT:
         if line["id"] in log and log[line["id"]].get("text") == line["text"]:
             continue                                       # already decided for this exact text
         w, s, heard = score(narrate._raw_path(line["text"], cfg), line["text"])
-        print(f"{line['id']:>4} take s{cfg['seed']}: WER {w:4.0%} sim {s:.2f}", flush=True)
+        print(f"{line['id']:>4} take {key} {base}: WER {w:4.0%} sim {s:.2f}", flush=True)
         if w > MAX_WER or "--all" in sys.argv:
             todo.append((line, w, s))
         else:
-            log[line["id"]] = dict(text=line["text"], seed=cfg["seed"], wer=w, sim=s)
-    jobs = [(l["text"], narrate._raw_path(l["text"], {**cfg, "seed": sd})) for l, _, _ in todo for sd in EXTRA_SEEDS
-            if not os.path.exists(narrate._raw_path(l["text"], {**cfg, "seed": sd}))]
-    for sd in EXTRA_SEEDS:                                 # one batch per seed: parler_say uses one seed per batch
-        batch = [(t, p) for t, p in jobs if p.endswith(".wav") and p == narrate._raw_path(t, {**cfg, "seed": sd})]
+            log[line["id"]] = dict(text=line["text"], take=base, wer=w, sim=s)
+    for v in extra:                                        # one batch per variant (one seed per Parler batch)
+        batch = [(l["text"], narrate._raw_path(l["text"], variant(v))) for l, _, _ in todo
+                 if not os.path.exists(narrate._raw_path(l["text"], variant(v)))]
         if batch:
-            narrate._parler_batch(batch, {**cfg, "seed": sd})
+            narrate.BATCH[cfg["engine"]](batch, variant(v))
     for line, w0, s0 in todo:
-        cands = [(w0, -s0, cfg["seed"], s0)]
-        for sd in EXTRA_SEEDS:
-            w, s, heard = score(narrate._raw_path(line["text"], {**cfg, "seed": sd}), line["text"])
-            print(f"{line['id']:>4} take s{sd}: WER {w:4.0%} sim {s:.2f}  {heard[:70]}", flush=True)
+        cands = [(w0, -s0, base, s0)]
+        for v in extra:
+            w, s, heard = score(narrate._raw_path(line["text"], variant(v)), line["text"])
+            print(f"{line['id']:>4} take {key} {v}: WER {w:4.0%} sim {s:.2f}  {heard[:70]}", flush=True)
             if s >= MIN_SIM:
-                cands.append((w, -s, sd, s))
+                cands.append((w, -s, v, s))
         w, _, sd, s = min(cands)
-        if sd != cfg["seed"]:                              # the chosen take becomes the line's take
-            shutil.copyfile(narrate._raw_path(line["text"], {**cfg, "seed": sd}), narrate._raw_path(line["text"], cfg))
+        if sd != base:                                     # the chosen take becomes the line's take
+            shutil.copyfile(narrate._raw_path(line["text"], variant(sd)), narrate._raw_path(line["text"], cfg))
             h = narrate._hash(line["text"], cfg)
             for ext in (".wav", ".json"):
                 p = os.path.join(narrate.CACHE, h + ext)
                 if os.path.exists(p):
                     os.remove(p)                           # re-process from the new raw take
-        log[line["id"]] = dict(text=line["text"], seed=sd, wer=w, sim=s, was_wer=w0)
-        print(f"  -> {line['id']}: seed {sd}, WER {w0:.0%} -> {w:.0%}", flush=True)
+        log[line["id"]] = dict(text=line["text"], take=sd, wer=w, sim=s, was_wer=w0)
+        print(f"  -> {line['id']}: {key} {sd}, WER {w0:.0%} -> {w:.0%}", flush=True)
     json.dump(log, open(log_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 

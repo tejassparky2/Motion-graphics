@@ -65,6 +65,36 @@ Change any line you like.
 - CDC toxoplasmosis prevention pages (pregnancy, litter box, indoor cats)
 - The "1 in 3 worldwide" figure is a widely cited estimate, so it is said as "andaza".
 
+### v2, approved by the owner 29 Oct 2026 ("Yes"); from research_notes/meanwhilemayank_parasite_reels_study_2026-10-29.md. This replaces the table above.
+Changes only; every other line stays as above. "Tum" all through, as Mayank does.
+- **Hook:** the ant reel's second-person line, made true. Toxoplasma really can be inside the viewer; the ant
+  reel's "you" turned out to be an ant.
+- **Escalation:** the wasp reel's ladder of escalating shocks.
+- **Tom & Jerry:** plays the role of his "The Last of Us" anchor.
+- **New precision beat:** the parasite removes only the fear of cats.
+- **Ending:** a "socho" bookend before the comment question.
+
+| # | Narration | On screen |
+|---|---|---|
+| 1 (new) | Socho, agar koi tumhara darr hi mita de... aur tum khud chal ke apne shikaari ke paas pahunch jao. | frame 0: wooden mannequin walking toward a huge cat shadow; `YOUR FEAR` / **`ERASED`**, an eraser rubs out FEAR |
+| 2 (new) | Tom and Jerry mein chuha billi se darta nahi tha. Par wo cartoon tha. | old TV set (no Tom & Jerry art); `ONLY IN A` / **`CARTOON`** |
+| 3 (new) | Asli duniya mein ye sach mein hota hai. Ek chhota sa parasite chuhe ka darr mita deta hai. | the real rat; red stamp REAL; the eraser rubs out FEAR beside it |
+| 4 (was 3) | Aur sabse ajeeb baat? Ye tumhare andar bhi ho sakta hai. Andaza hai ki duniya mein har teen mein se ek insaan ke andar ye hai. | mannequin again, a red dot in its head; 3 silhouettes, one fills red; `1 IN 3` |
+| 5 (was 4) | Iska naam hai Toxoplasma gondii. (0.9 s pause before it) | name in red bars |
+| new, after "fatal attraction" | Aur sabse hairaani ki baat? Baaki saare darr waise hi rehte hain. Doosre shikaariyon ki smell se, khuli jagah se, chuha ab bhi darta hai. Mitta hai to sirf billi ka darr. (0.9 s pause before it) | card `FEARS`: OTHER PREDATORS ✓, OPEN SPACE ✓, LEARNED DANGER ✓, CAT gets erased; stamp **ONLY CATS** |
+| 19 | ...litter box khud saaf mat karo, meat achhe se pakao, aur sabzi dho ke khao. | as before |
+| new, before the last line | Socho, ek cell wala jeev, jo aankh se dikhta bhi nahi... wo chuhe ka wo darr mita deta hai, jo uske andar janam se tha. (0.9 s pause before it) | callback: the eraser and the word FEAR, then the rat circled in red |
+| last | Tumhare ghar mein billi hai? Aur kya tumhe ye pata tha? Comment mein batao. | YES/NO card |
+
+Extra sources for the new beat:
+- Vyas et al. 2007, *PNAS* 104:6442, "Behavioral changes induced by Toxoplasma infection of rodents are highly
+  specific to aversion of cat odors" ([PMC1851063](https://pmc.ncbi.nlm.nih.gov/articles/PMC1851063)). Learned fear,
+  anxiety, smell and learning stayed normal.
+- House, Vyas & Sapolsky 2011, *PLoS ONE* 6:e23277 ([PubMed 21858053](https://pubmed.ncbi.nlm.nih.gov/21858053)).
+  There was no change in response to non-cat predator odour.
+
+Length goes from ~1:53 to about 2:06; Mayank's run 2:19-2:38.
+
 ---
 
 ## 2. "Saanp jo sote hue kaatta hai" (common krait, snakebite in India)

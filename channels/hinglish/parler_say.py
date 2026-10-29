@@ -19,9 +19,9 @@ model = ParlerTTSForConditionalGeneration.from_pretrained(
     MODEL, token=tok_hf, torch_dtype=torch.float16 if dev == "cuda" else torch.float32).to(dev)
 tok = AutoTokenizer.from_pretrained(MODEL, token=tok_hf)
 dtok = AutoTokenizer.from_pretrained(model.config.text_encoder._name_or_path, token=tok_hf)
-desc_ids = dtok(spec["description"], return_tensors="pt").input_ids.to(dev)
-for job in spec["jobs"]:
-    torch.manual_seed(spec["seed"])
+for job in spec["jobs"]:                       # a job may override the batch's description and seed (voice search)
+    desc_ids = dtok(job.get("description", spec["description"]), return_tensors="pt").input_ids.to(dev)
+    torch.manual_seed(job.get("seed", spec["seed"]))
     g = model.generate(input_ids=desc_ids, prompt_input_ids=tok(job["text"], return_tensors="pt").input_ids.to(dev))
     sf.write(job["out"], g.to(torch.float32).cpu().numpy().squeeze(), model.config.sampling_rate)
     print("voiced", os.path.basename(job["out"]), flush=True)
