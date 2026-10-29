@@ -104,7 +104,44 @@ def _eleven(text, cfg):
     return audio, None
 
 
-ENGINES = {"edge": _edge, "sarvam": _sarvam, "eleven": _eleven}
+PARLER_PY = os.path.join(os.path.dirname(ROOT), ".venv-parler", "Scripts", "python.exe")
+
+
+def _parler_batch(jobs, cfg):
+    """Voice [(text, wav_path), ...] in one run of parler_say.py (the model loads once)."""
+    spec = {"description": cfg["description"], "seed": cfg["seed"], "jobs": [{"text": t, "out": o} for t, o in jobs]}
+    subprocess.run([PARLER_PY, "-I", "-X", "utf8", "-W", "ignore", os.path.join(HERE, "parler_say.py")],
+                   input=json.dumps(spec, ensure_ascii=False).encode("utf-8"), check=True)
+
+
+def _raw_path(text, cfg):
+    return os.path.join(CACHE, f"raw_{_hash(text, cfg)}.wav")
+
+
+def _parler(text, cfg):
+    raw = _raw_path(text, cfg)
+    if not os.path.exists(raw):
+        _parler_batch([(text, raw)], cfg)
+    return open(raw, "rb").read(), None
+
+
+ENGINES = {"edge": _edge, "sarvam": _sarvam, "eleven": _eleven, "parler": _parler}
+
+
+def _hash(text, cfg):
+    return hashlib.sha1(json.dumps([cfg, text], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def prefetch(script, cfg):
+    """Engines that load a big model (parler) voice every uncached line in one batch."""
+    if cfg["engine"] != "parler":
+        return
+    os.makedirs(CACHE, exist_ok=True)
+    jobs = [(l["text"], _raw_path(l["text"], cfg)) for l in script
+            if not os.path.exists(os.path.join(CACHE, f"{_hash(l['text'], cfg)}.wav"))
+            and not os.path.exists(_raw_path(l["text"], cfg))]
+    if jobs:
+        _parler_batch(jobs, cfg)
 
 
 def _trim(a, thresh=0.012):
@@ -119,7 +156,7 @@ def _trim(a, thresh=0.012):
 def take(text, cfg):
     """(samples, [(word, start, dur)] or None) for one line, cached by engine settings + text."""
     os.makedirs(CACHE, exist_ok=True)
-    h = hashlib.sha1(json.dumps([cfg, text], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+    h = _hash(text, cfg)
     wav, meta = os.path.join(CACHE, f"{h}.wav"), os.path.join(CACHE, f"{h}.json")
     if not os.path.exists(wav):
         data, words = ENGINES[cfg["engine"]](text, cfg)
@@ -159,6 +196,7 @@ class Beat:
 class Timeline:
     def __init__(self, script, cfg, tail=TAIL):
         self.beats, self.by_id, self._clips = [], {}, []
+        prefetch(script, cfg)
         t = LEAD
         for i, line in enumerate(script):
             a, words, wav = take(line["text"], cfg)

@@ -69,7 +69,8 @@ def _part(args):
     if _mod is None:
         _init(name)
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}", "-r", str(FPS),
-           "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p", "-threads", "1", path]
+           "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "14", "-pix_fmt", "yuv420p", "-threads", "1", path]
+    # owner, 29 Oct 2026: "i want best qaulity possible no limits" - near-lossless master; phone copies are separate
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
     for i in range(first, last):
@@ -109,7 +110,7 @@ def render(name, audio=True):
         lufs = build_soundtrack(events, n / FPS, wav, tl.clips(), seed=name, bed=getattr(mod, "MUSIC", "pad"))
         print(f"soundtrack {lufs:.1f} LUFS", file=sys.stderr)
         subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy", "-c:a", "aac",
-                               "-b:a", "192k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
+                               "-b:a", "256k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
     else:
         subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-c", "copy", *CLEAN, out])
     print(f"wrote {out}", file=sys.stderr)
