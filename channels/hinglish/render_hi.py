@@ -104,18 +104,32 @@ def render(name, audio=True):
         os.remove(j[3])
     out = os.path.join(OUT, f"{name}.mp4")
     if audio:
-        from motion.audio import build_soundtrack
-        wav = os.path.join(BUILD, f"{name}_soundtrack.wav")
-        events = mod.sfx(tl) if hasattr(mod, "sfx") else []
-        lufs = build_soundtrack(events, n / FPS, wav, tl.clips(), seed=name, bed=getattr(mod, "MUSIC", "pad"))
-        print(f"soundtrack {lufs:.1f} LUFS", file=sys.stderr)
-        subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy", "-c:a", "aac",
-                               "-b:a", "256k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
+        mux_audio(name, mod, tl, n / FPS, silent, out)
     else:
         subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-c", "copy", *CLEAN, out])
     print(f"wrote {out}", file=sys.stderr)
     write_sheet(mod, tl, os.path.join(OUT, f"{name}_upload_sheet.md"))
     return out
+
+
+def mux_audio(name, mod, tl, total, silent, out):
+    """Voice + music bed + sound effects at -14 LUFS, muxed onto the silent picture track (video stream copied)."""
+    from motion.audio import build_soundtrack
+    wav = os.path.join(BUILD, f"{name}_soundtrack.wav")
+    events = mod.sfx(tl) if hasattr(mod, "sfx") else []
+    lufs = build_soundtrack(events, total, wav, tl.clips(), seed=name, bed=getattr(mod, "MUSIC", "pad"))
+    print(f"soundtrack {lufs:.1f} LUFS", file=sys.stderr)
+    subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy", "-c:a", "aac",
+                           "-b:a", "256k", "-shortest", *CLEAN, "-movflags", "+faststart", out])
+
+
+def remix(name):
+    """Only the soundtrack changed (music, effects): rebuild it and remux onto the last render's picture track."""
+    mod, tl = build_timeline(name)
+    silent = os.path.join(BUILD, f"{name}_silent.mp4")
+    out = os.path.join(OUT, f"{name}.mp4")
+    mux_audio(name, mod, tl, int(round(tl.total * FPS)) / FPS, silent, out)
+    print(f"wrote {out}", file=sys.stderr)
 
 
 def _site(c):
@@ -230,10 +244,13 @@ if __name__ == "__main__":
     ap.add_argument("--sheet", type=float)
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--no-audio", action="store_true")
+    ap.add_argument("--remix", action="store_true", help="rebuild only the soundtrack onto the last render")
     a = ap.parse_args()
     os.makedirs(BUILD, exist_ok=True)
     if a.check:
         check(a.video)
+    elif a.remix:
+        remix(a.video)
     elif a.still is not None:
         still(a.video, a.still, os.path.join(BUILD, f"{a.video}_still_{a.still}.png"))
     elif a.sheet:

@@ -670,4 +670,5 @@ def sfx(tl):
            (T(tl, "b24", "कमेंट"), "typing", 1.0)]
     for bid in ("b5", "b7", "b9", "b12", "b17", "b20"):
         ev.append((tl[bid].start + 0.4, "pop", 0.0))
+    ev += [(at, "dip", 0.5) for at, name, _ in list(ev) if name == "tick"]   # the bed dips just before a reveal
     return ev

@@ -378,18 +378,64 @@ def pad(total, seed=None):
     return (mix * swell)[: int(total * SR)]
 
 
+def doc(total, seed=None):
+    """Documentary bed for the Hinglish mini-docs (owner, 29 Oct 2026: "Didn't added bg music?"; the reference keeps
+    a bed that never stops, ~17 dB under the voice, sustained bass + pad tones). The pad is voiced an octave above
+    pad() so phone speakers, which drop most sound below ~300 Hz, still carry it; a soft sub-bass holds the root for
+    headphones and a muted pulse on the eighths keeps a little forward motion."""
+    rng = np.random.default_rng(zlib.crc32(("doc" + str(seed)).encode()))   # own progression and key per video
+    n = int(total * SR) + 2 * SR
+    t = np.arange(n) / SR
+    progs = [[(-9, -5, -2, 3), (-14, -9, -5, 0), (-16, -12, -9, -4), (-11, -7, -4, 1)],
+             [(-9, -5, -2, 3), (-11, -7, -4, 1), (-14, -9, -5, 0), (-16, -11, -7, -2)],
+             [(-14, -9, -5, 0), (-9, -5, -2, 3), (-16, -12, -9, -4), (-11, -7, -2, 1)]]
+    shift = int(rng.integers(-3, 4))
+    chords = [[440.0 * 2 ** ((x + shift) / 12) for x in c] for c in progs[int(rng.integers(0, len(progs)))]]
+    span = float(rng.choice([4.0, 4.4, 4.8]))
+    beat = span / 8
+    out = np.zeros(n)
+    for k in range(int(np.ceil((total + 2) / span))):
+        notes = chords[k % len(chords)]
+        i0, i1 = int(k * span * SR), min(n, int((k + 1) * span * SR + 1.2 * SR))
+        tt = t[i0:i1] - k * span
+        env = np.clip(tt / 0.9, 0, 1) * np.clip((span + 1.2 - tt) / 1.2, 0, 1)
+        for f in notes:                                               # pad, ~180-900 Hz: audible on phones
+            for det in (-0.15, 0.0, 0.15):
+                out[i0:i1] += env * np.sin(2 * np.pi * f * (1 + det / 100) * tt + rng.uniform(0, 6.3)) * 0.05
+        root = notes[0] / 4                                           # sub-bass root, ~45-90 Hz
+        out[i0:i1] += env * np.sin(2 * np.pi * root * tt) * 0.10
+        for j in range(8):                                            # muted pulse on the eighths
+            j0 = i0 + int(j * beat * SR)
+            m = min(n - j0, int(0.35 * SR))
+            if m <= 0:
+                break
+            tn = np.arange(m) / SR
+            f = notes[1] * (2 if j % 4 == 2 else 1)
+            out[j0:j0 + m] += np.sin(2 * np.pi * f * tn) * np.exp(-tn * 14) * (0.05 if j % 2 == 0 else 0.03)
+    ir_n = int(1.6 * SR)                                              # small-room reverb
+    ir = rng.normal(0, 1, ir_n) * np.exp(-np.arange(ir_n) / SR * 3.5)
+    ir[0] = 6
+    m = 1 << int(np.ceil(np.log2(n + ir_n)))
+    wet = np.fft.irfft(np.fft.rfft(out, m) * np.fft.rfft(ir / np.abs(ir).sum() * 8, m), m)[:n]
+    mix = 0.6 * out + 0.4 * wet
+    swell = 0.85 + 0.15 * np.clip((t - total * 0.6) / max(total * 0.4, 1), 0, 1)
+    return (mix * swell)[: int(total * SR)]
+
+
 GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
          "fall": 0.8, "laugh": 0.0}
 
 
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
-    bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; a "hush" cue silences bed and effects for its
-    duration (the sudden silence before a shock)."""
+    bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; bed="doc": the
+    documentary bed (Hinglish channel), louder and less ducked; a "hush" cue silences bed and effects for its
+    duration (the sudden silence before a shock); a "dip" cue lowers only the bed for its duration (before a reveal)."""
     import pyloudnorm
     n = int(total * SR)
     style = bed
-    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
+    beds = {"thriller": drone, "pad": pad, "doc": doc}
+    bed = beds.get(bed, music)(total, seed)[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()
@@ -398,11 +444,12 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         if key in seen or GAINS.get(name, 1.0) == 0:
             continue
         seen.add(key)
-        if name == "hush":
+        if name in ("hush", "dip"):
             i0, i1 = int(at * SR), int((at + dur) * SR)
             f = int(0.05 * SR)
-            hush[max(0, i0):max(0, i1)] = 0
-            hush[max(0, i1):max(0, i1 + f)] = np.linspace(0, 1, len(hush[max(0, i1):max(0, i1 + f)]))
+            hush[max(0, i0):max(0, i1)] = 0 if name == "hush" else 0.3
+            hush[max(0, i1):max(0, i1 + f)] = np.linspace(hush[max(0, i1) - 1] if i1 > 0 else 0, 1,
+                                                          len(hush[max(0, i1):max(0, i1 + f)]))
             continue
         th = thriller_sfx(name, dur)
         s = (th if th is not None else sfx(name, dur)) * GAINS.get(name, 1.0)
@@ -422,9 +469,11 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     room = room_tone(total, seed)[:n] if style == "pad" else None
     if clips:
         v_rms = rms(voice[loud])
-        # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
-        bed *= (v_rms * 10 ** ((-15 if style == "pad" else -10) / 20)) / rms(bed)   # the pad sits softer
-        mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
+        # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps; the
+        # documentary bed sits ~16 dB under in gaps and ~20 dB under while speaking (ducked ~4 dB), like the reference
+        level, duck = {"pad": (-15, 0.75), "doc": (-16, 0.35)}.get(style, (-10, 0.75))
+        bed *= (v_rms * 10 ** (level / 20)) / rms(bed)
+        mix = voice + bed * (1 - duck * speaking) + fx * (1 - 0.3 * speaking)
         if room is not None:                                      # ~32 dB under the voice, never ducked
             mix += room * (v_rms * 10 ** (-32 / 20)) / rms(room)
     else:

@@ -16,7 +16,7 @@ NARRATOR = dict(engine="f5", studio="v3", tempo=1.15,   # one even speed-up for 
 VOICE_REF = os.path.join(_VOICES, "f5_refs", "named_aman_s3_ref.wav")
 NARRATOR_LABEL = ("synthetic narrator: Indic Parler-TTS named speaker 'Aman' (Apache-2.0; datasets CC BY 4.0) as the "
                   "voice prompt, spoken by AI4Bharat IndicF5 (MIT), studio chain; nobody is cloned")   # records only
-MUSIC = "pad"
+MUSIC = "doc"   # motion.audio.doc: a bed phone speakers can carry, ~16-20 dB under the voice (owner: "Didn't added bg music?")
 TAIL = 0.9
 # the longer pause Mayank leaves only before a reveal (the name, the precision beat, the closing line)
 REVEAL_GAP = 0.6
