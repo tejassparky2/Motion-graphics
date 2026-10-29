@@ -402,6 +402,46 @@ def dma_manga_ch01_long(cr):
                 outline=(0, 0, 0, 1), ow=4)
 
 
+def dma_manga13(cr):
+    _cover(cr, "assets/manga/dma/ch05", [("SWAP TWO NAMES", (1, 1, 1, 1)), ("FOR 30 TOKENS?", hud2d.RED)],
+           (3, 3, 1.0, 0.49), (4, 3, 1.0, 0.89), 13)
+
+
+def dma_manga14(cr):
+    _cover(cr, "assets/manga/dma/ch05", [("EVERYONE SAID NO.", (1, 1, 1, 1)), ("SOMEONE LIED.", hud2d.RED)],
+           (10, 1, 1.0, 0.5), (11, 4, 1.0, 0.86), 14)
+
+
+def dma_manga15(cr):
+    _cover(cr, "assets/manga/dma/ch05", [("WHO SWAPPED", (1, 1, 1, 1)), ("THE CARDS?", hud2d.RED)],
+           (13, 1, 1.0, 0.53), (15, 1, 1.0, 0.86), 15)
+
+
+def dma_manga16(cr):
+    _cover(cr, "assets/manga/dma/ch05", [("HE SOLD GO", (1, 1, 1, 1)), ("FOR 30 TOKENS.", hud2d.RED)],
+           (17, 2, 1.0, 0.53), (15, 2, 1.0, 0.86), 16)
+
+
+def dma_manga_ch05_long(cr):
+    """16:9: Ren pointing (Chapter 5 page 15) on the right, Momo's whispered offer (page 3) below it."""
+    folder = "assets/manga/dma/ch05"
+    cr.set_source_rgba(0.05, 0.05, 0.06, 1)
+    cr.paint()
+    _manga_panel(cr, 15, 1, folder, fit=0.62, yc=0.36, xc=0.68)
+    _manga_panel(cr, 3, 3, folder, fit=0.44, yc=0.8, xc=0.76)
+    g = cairo.LinearGradient(0, 0, W * 0.55, 0)
+    g.add_color_stop_rgba(0, 0, 0, 0, 0.92)
+    g.add_color_stop_rgba(1, 0, 0, 0, 0)
+    cr.set_source(g)
+    cr.paint()
+    for k, (txt, col, sz) in enumerate((("CHAPTER 5", (1, 1, 1, 1), 96), ("THIRTY TOKENS.", hud2d.RED, 84),
+                                        ("FULL CHAPTER", (1, 0.85, 0.4, 1), 40))):
+        hud2d._text(cr, txt, 50, 230 + k * 120, sz, col, hud2d.ROUND, "left", outline=(0, 0, 0, 1), ow=sz * 0.12,
+                    shadow=0.6)
+    hud2d._text(cr, "DEAD MAN'S ALGORITHM · THE MANGA", 50, 100, 30, (1, 0.85, 0.4, 1), hud2d.ROUND, "left",
+                outline=(0, 0, 0, 1), ow=4)
+
+
 THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": boy_s1, "boy_s2": boy_s2,
           "boy_long": boy_long, "dma_s3": dma_s3, "dma_s4": dma_s4, "dma_s5": dma_s5, "dma_s6": dma_s6,
           "dma_manga01": dma_manga01, "dma_manga02": dma_manga02,
@@ -409,7 +449,9 @@ THUMBS = {"dma_s1": dma_s1, "dma_s2": dma_s2, "dma_long": dma_long, "boy_s1": bo
           "dma_manga05": dma_manga05, "dma_manga06": dma_manga06, "dma_manga_ch02_long": dma_manga_ch02_long,
           "dma_manga_ch03_long": dma_manga_ch03_long, "dma_manga07": dma_manga07, "dma_manga08": dma_manga08,
           "dma_manga09": dma_manga09, "dma_manga10": dma_manga10, "dma_manga11": dma_manga11,
-          "dma_manga12": dma_manga12, "dma_manga_ch04_long": dma_manga_ch04_long}
+          "dma_manga12": dma_manga12, "dma_manga_ch04_long": dma_manga_ch04_long, "dma_manga13": dma_manga13,
+          "dma_manga14": dma_manga14, "dma_manga15": dma_manga15, "dma_manga16": dma_manga16,
+          "dma_manga_ch05_long": dma_manga_ch05_long}
 
 if __name__ == "__main__":
     name = sys.argv[1]
