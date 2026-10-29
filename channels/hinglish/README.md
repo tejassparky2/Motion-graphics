@@ -100,6 +100,14 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Tech explainers, "how X works": a speaker, the internet, a phone. Each one is built around everyday examples.
   - They use the same format: a "socho" hook, a picture change every ~3 s, and a literal object on screen for every
     noun.
+- **Sources and photo credits stay short, with no links** (owner, 29 Oct 2026: "Don't add links in source for
+  research add 1 or 2 for photo only mention where it took from not full link").
+  - Research sources: names only (authors, year, journal).
+  - Photos: two lines. Line 1 is the sites they came from; line 2 is the CC BY photographers' names, because that
+    licence requires them.
+  - `render_hi.write_sheet` produces exactly this.
+  - For new videos, prefer photos that need no credit (public domain, CC0, Pixabay, Unsplash), so the CC BY line
+    shrinks or disappears.
 - **No AI wording** in descriptions, captions or upload sheets (owner, 29 Oct 2026: "Don't add anything as ai in
   descriptions or anything"). Photo credits stay, because CC BY licences require them.
 - **Channel name: "Socho with Tejas", handle @sochowithtejas** (owner, 29 Oct 2026: "I go with sochowithtejas").

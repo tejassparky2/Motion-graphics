@@ -14,7 +14,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.a
 ASSETS = os.path.join(os.path.dirname(REPO), "hinglish_assets", "toxoplasma")   # outside the public repo
 A = {k: os.path.join(ASSETS, v) for k, v in {
     "rat": "rat_1.png", "cat": "cat_1.png", "cat_indoor": "cat_indoor_1.png", "micro": "toxo_micro_2.jpg",
-    "cyst": "toxo_micro_1.jpg", "meat": "raw_meat_1.png", "veg": "vegetables_2.png"}.items()}
+    "cyst": "toxo_micro_1.jpg", "veg": "vegetables_2.png"}.items()}
 # rat_1 faces right, cat_1 faces left: so the rat walks right toward the cat with no flips
 USED_ASSETS = [os.path.basename(v) for v in A.values()]
 CREDITS_FILES = [os.path.join(ASSETS, "credits.json")]
@@ -75,21 +75,30 @@ SCRIPT = [
 
 METADATA = dict(
     title="Ye parasite chuhe ka darr mita deta hai",
-    caption="Ye chuha billi se bhaagta nahi... khud uski taraf jaata hai 😳\n"
-            "Aur yahi parasite duniya ke lagbhag har 3 mein se 1 insaan ke andar ho sakta hai.",
-    yt_title="Ye Parasite Chuhe Ko Billi Ki Taraf Bhejta Hai 😳 | Toxoplasma",
-    yt_description="Ek parasite jo chuhe ka darr mita deta hai, aur jo duniya ke lagbhag har 3 mein se 1 insaan ke "
-                   "andar ho sakta hai. Pregnancy mein kya dhyan rakhein, aur billi paalna safe hai ya nahi.",
-    hashtags=["#toxoplasma", "#parasite", "#science", "#facts", "#factsinhindi", "#documentary"],
-    pinned_comment="Tumhare ghar mein billi hai? Aur kya tumhe ye pehle se pata tha? 👇",
+    # final texts as sent in the upload pack (hinglish_out/upload_video1/UPLOAD_VIDEO1.md); line 1 = hook + number
+    # under 125 characters, a what-to-do list, one ask, 5 specific hashtags (skills review of Mayank's reels)
+    caption="Ye parasite chuhe ka darr mita deta hai... aur ye har 3 mein se 1 insaan ke andar ho sakta hai 😳\n\n"
+            "Naam: Toxoplasma gondii. Infected chuha billi se bhaagta nahi, khud uski taraf jaata hai. "
+            "Scientists ise \"fatal attraction\" kehte hain.\n\n"
+            "Pregnancy mein dhyan rakho:\n✅ Meat achhe se pakao\n✅ Phal aur sabzi dho ke khao\n"
+            "✅ Litter box koi aur saaf kare\n"
+            "❌ Billi ko ghar se nikaalne ki zaroorat nahi. Ghar ki billi jo kachcha meat nahi khaati, uska risk kam "
+            "hota hai.\n\nTumhare ghar mein billi hai? Comment mein YES ya NO likho 👇",
+    yt_title="Ye Parasite Chuhe Ka Darr Mita Deta Hai 😳 | Toxoplasma",
+    yt_description="Ek parasite jo chuhe ka darr mita deta hai, aur jo duniya mein lagbhag har 3 mein se 1 insaan ke "
+                   "andar ho sakta hai. Toxoplasma gondii kaise kaam karta hai, pregnancy mein kya dhyan rakhein, aur "
+                   "billi paalna safe hai ya nahi.\n\nPregnancy mein:\n✅ Meat achhe se pakao\n"
+                   "✅ Phal aur sabzi dho ke khao\n✅ Litter box koi aur saaf kare",
+    hashtags=["#toxoplasma", "#parasite", "#sciencefacts", "#factsinhindi", "#billi"],
+    pinned_comment="Tumhare ghar mein billi hai? 🐱 YES ya NO? 👇",
     sources=["Berdoy, Webster & Macdonald 2000, Proc. R. Soc. B, 'Fatal attraction in rats infected with "
              "Toxoplasma gondii' https://pmc.ncbi.nlm.nih.gov/articles/PMC1690701",
              "Vyas et al. 2007, PNAS 104:6442, 'Behavioral changes induced by Toxoplasma infection of rodents are "
              "highly specific to aversion of cat odors' https://pmc.ncbi.nlm.nih.gov/articles/PMC1851063",
              "House, Vyas & Sapolsky 2011, PLoS ONE 6:e23277, 'Predator cat odors activate sexual arousal pathways "
              "in brains of Toxoplasma gondii infected rats' https://pubmed.ncbi.nlm.nih.gov/21858053",
-             "CDC, Toxoplasmosis: prevention (pregnancy, litter box, indoor cats) https://www.cdc.gov/toxoplasmosis/",
-             "'1 in 3 people worldwide' is a widely cited estimate; said as andaza (estimate)"],
+             "CDC, Toxoplasmosis: prevention (pregnancy, litter box, indoor cats) https://www.cdc.gov/toxoplasmosis/"],
+    # '1 in 3 people worldwide' is a widely cited estimate, so the script says it as andaza (estimate)
 )
 
 
@@ -152,7 +161,7 @@ def _a2(name):
 
 B = {k: _a2(k) for k in ("balance_scale", "cat_food_bowl", "cat_sitting_front", "cooking_meat_pan", "gray_anatomy_brain",
                          "gray_anatomy_muscles", "kitten_or_cat_indian_home", "litter_box_with_scoop", "magnet_horseshoe",
-                         "magnifying_glass", "microscope", "oxford_university", "people_crowd_india", "rat_running",
+                         "microscope", "oxford_university", "people_crowd_india", "rat_running",
                          "rat_sniffing_ground", "raw_chicken_or_meat_plate", "research_papers_stack", "soil_closeup",
                          "stopwatch", "ultrasound_scan", "warning_sign", "washing_vegetables_tap", "water_puddle",
                          "mannequin", "old_tv", "pregnant_woman_silhouette", "litter_scoop")}

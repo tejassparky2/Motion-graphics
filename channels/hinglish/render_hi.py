@@ -118,6 +118,17 @@ def render(name, audio=True):
     return out
 
 
+def _site(c):
+    u = c.get("page_url", "")
+    return c.get("source") or ("Wikimedia Commons" if "wikimedia" in u else "Pixabay" if "pixabay" in u
+                               else "Unsplash" if "unsplash" in u else "")
+
+
+def _short_source(src):
+    """A research source as a name only: no URL, no paper title (owner, 29 Oct 2026: "Don't add links in source")."""
+    return re.split(r" '|\shttps?://| \(", src)[0].rstrip(", ")
+
+
 def write_sheet(mod, tl, path):
     m = getattr(mod, "METADATA", None)
     if not m:
@@ -127,17 +138,23 @@ def write_sheet(mod, tl, path):
         if os.path.exists(f):
             credits += json.load(open(f, encoding="utf-8"))
     used = set(getattr(mod, "USED_ASSETS", []))
+    credits = [c for c in credits if not used or os.path.basename(c["file"]) in used]
+    # owner, 29 Oct 2026: photo credits in 1-2 lines saying where they came from, no links. CC BY photos still need
+    # the photographer's name, so the second line lists those names.
+    sites = sorted({_site(c) for c in credits} - {""})
+    by = sorted({c["author"].split(" from ")[0].split(" (")[0].rstrip(". ") for c in credits
+                 if c["license"].startswith("CC BY")})
+    photo = f"Photos: {', '.join(sites)}." + (f"\nCC BY: {', '.join(by)}." if by else "")
+    sources = "Sources: " + "; ".join(_short_source(x) for x in m.get("sources", []))
+    tags = " ".join(m["hashtags"])
+    fence = lambda body: f"```\n{body}\n```"
     lines = [f"# Upload sheet: {m['title']}", "",
-             f"**Instagram caption**\n```\n{m['caption'].strip()}\n\n{' '.join(m['hashtags'])}\n```", "",
-             f"**YouTube title**\n```\n{m['yt_title']}\n```", "",
-             f"**YouTube description**\n```\n{m['yt_description'].strip()}\n\n{' '.join(m['hashtags'])}\n```", "",
-             f"**Pinned comment**\n```\n{m['pinned_comment']}\n```", "",
-             f"**Video facts:** {tl.total:.1f} s. Made for kids: No."   # no voice/AI wording (owner, 29 Oct 2026), "",
-             "**Image credits** (put in the description/caption):"]
-    for c in credits:
-        if not used or os.path.basename(c["file"]) in used:
-            lines.append(f"- {c['subject']}: \"{c['title']}\" by {c['author']}, {c['license']} ({c['page_url']})")
-    lines += ["", "**Sources**"] + [f"- {s}" for s in m.get("sources", [])]
+             "**Instagram caption**", fence(f"{m['caption'].strip()}\n\n{tags}"), "",
+             "**Instagram second comment** (photo credits)", fence(f"{photo}\n{sources}"), "",
+             "**YouTube title**", fence(m["yt_title"]), "",
+             "**YouTube description**", fence(f"{m['yt_description'].strip()}\n\n{sources}\n{photo}\n\n{tags}"), "",
+             "**Pinned comment**", fence(m["pinned_comment"]), "",
+             f"**Video facts:** {tl.total:.1f} s. Made for kids: No."]   # no voice/AI wording (owner, 29 Oct 2026)
     open(path, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     print(f"wrote {path}", file=sys.stderr)
 
