@@ -38,8 +38,9 @@ the engine; Remotion is ~10x slower here and would mean rewriting every characte
   -render, -captions, -studio, -docs, -interactivity, -maps, -multimedia, -saas, -upgrade; from the
   remotion-dev/skills repo, commit 30d4553). Read before installing: guidance and examples only, no scripts that run
   on their own.
-- They caught a real bug straight away: with motion blur the scene is drawn several times per frame, and unscoped
-  GSAP selectors made every copy animate the same elements; `gsap.context(..., root)` (gsap-react) fixed it.
+- One rule they teach mattered at once: with motion blur the scene is drawn several times per frame, and unscoped
+  GSAP selectors would make every copy animate the same elements; scoping with `gsap.context(..., root)`
+  (gsap-react) keeps each copy separate.
 - Tried two features they point to (`RatHookFX`, `compare_fx.png`, top plain GSAP, bottom with the extras):
   - **Motion blur** (`@remotion/motion-blur`, CameraMotionBlur, 6 samples, 180° shutter): a visible gain on fast
     moves (the zoom, the letter pops). 61 s to render the 6.6 s clip. Worth adding to our own renderer: draw each
