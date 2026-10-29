@@ -3,15 +3,16 @@
 import math
 import os
 
-import cairo
+from poster import (CORAL, CREAM, GOLD, GREEN, INK, MARGIN, RED, FADED, W, _round, calendar, card, clamp, counter,
+                    cross, cyst, draw_text, drop, erase, footnote, gauge, head_profile, headline, icon_array, knock,
+                    magnifier, parasite, path, photo, photo_width, prog, ring, slide, stamp, text_size, tick,
+                    yes_no_card)
 
-from poster import (CORAL, CREAM, GOLD, GREEN, INK, MARGIN, MONO_FONT, RED, FADED, W, H, _round, blob, calendar,
-                    card, clamp, counter, cross, cyst, draw_text, drop, ease, erase, finish, footnote, framed_photo,
-                    gauge, head_profile, headline, icon_array, knock, magnifier, paper, parasite, path, person,
-                    photo, photo_width, prog, push, ring, rule, slate, slide, stamp, text_size, tick, window, yes_no_card)
+# the narrator, music and tail are channel-wide; render_hi reads them from this module
+from channel import ASSETS_ROOT, MUSIC, NARRATOR, NARRATOR_LABEL, REVEAL_GAP, TAIL, VOICE_REF  # noqa: F401
+from shots import T, asset_finder, checklist, draw_frame, pic, screen, starts, tv
 
-REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-ASSETS = os.path.join(os.path.dirname(REPO), "hinglish_assets", "toxoplasma")   # outside the public repo
+ASSETS = os.path.join(ASSETS_ROOT, "toxoplasma")   # outside the public repo
 A = {k: os.path.join(ASSETS, v) for k, v in {
     "rat": "rat_1.png", "cat": "cat_1.png", "cat_indoor": "cat_indoor_1.png", "micro": "toxo_micro_2.jpg",
     "cyst": "toxo_micro_1.jpg", "veg": "vegetables_2.png"}.items()}
@@ -19,24 +20,10 @@ A = {k: os.path.join(ASSETS, v) for k, v in {
 USED_ASSETS = [os.path.basename(v) for v in A.values()]
 CREDITS_FILES = [os.path.join(ASSETS, "credits.json")]
 
-# Owner, 29 Oct 2026: "Aman looks good" / "the words are not clear". Aman's voice comes from Indic Parler-TTS
-# (named speaker, prompt 'named_aman_s3'); IndicF5 then speaks every line in that synthetic voice: WER 33% -> 22%,
-# UTMOS 2.76 -> 3.66, same voice (ECAPA 0.81 to the prompt) in the 3-line test.
-_VOICES = os.path.join(os.path.dirname(REPO), "mayank", "voice")
-NARRATOR = dict(engine="f5", studio="v3", tempo=1.15,   # one even speed-up for every line (owner: "speed up voice little",
-                # then "speed up slightly like matching mayank speed"); 1.15 is the most atempo takes before rubberband
-                ref_audio=os.path.join(_VOICES, "f5_refs", "named_aman_s3_ref.wav"),
-                ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।")
-VOICE_REF = os.path.join(_VOICES, "f5_refs", "named_aman_s3_ref.wav")
-NARRATOR_LABEL = ("synthetic narrator: Indic Parler-TTS named speaker 'Aman' (Apache-2.0; datasets CC BY 4.0) as the "
-                  "voice prompt, spoken by AI4Bharat IndicF5 (MIT), studio chain; nobody is cloned")
-MUSIC = "pad"
-TAIL = 0.9
-
+# The narrator (Aman via IndicF5), MUSIC, TAIL and REVEAL_GAP are channel-wide: channel.py.
 # v2, approved by the owner 29 Oct 2026 ("Yes"): hook, Tom & Jerry anchor, "only the cat fear" beat and the "socho"
 # bookend come from research_notes/meanwhilemayank_parasite_reels_study_2026-10-29.md. "gap" = the longer pause
 # Mayank leaves only before a reveal (the name, the precision beat, the closing line).
-REVEAL_GAP = 0.6
 SCRIPT = [
     dict(id="b1", text="सोचो, अगर कोई तुम्हारा डर ही मिटा दे... और तुम ख़ुद चल के अपने शिकारी के पास पहुँच जाओ।"),
     dict(id="b2", text="टॉम एंड जेरी में चूहा बिल्ली से डरता नहीं था। पर वो कार्टून था।"),
@@ -147,18 +134,7 @@ def _scent(cr, cx, cy, t, alpha):
 # word; the visual is the literal noun of the sentence; one recurring metaphor (an eraser rubbing out FEAR); red =
 # threat, green = reassurance, gold = numbers; dark slate for inside a body; no section labels (bare rule only).
 
-TOXO2 = os.path.join(os.path.dirname(REPO), "hinglish_assets", "toxoplasma2")
-
-
-def _a2(name):
-    """First file in toxoplasma2 whose name starts with `name` (None if the asset search hasn't found one yet)."""
-    if os.path.isdir(TOXO2):
-        for f in sorted(os.listdir(TOXO2)):
-            if f.startswith(name) and f.lower().endswith((".png", ".jpg", ".jpeg")) and "_orig" not in f:
-                return os.path.join(TOXO2, f)
-    return None
-
-
+_a2 = asset_finder("toxoplasma2")
 B = {k: _a2(k) for k in ("balance_scale", "cat_food_bowl", "cat_sitting_front", "cooking_meat_pan", "gray_anatomy_brain",
                          "gray_anatomy_muscles", "kitten_or_cat_indian_home", "litter_box_with_scoop", "magnet_horseshoe",
                          "microscope", "oxford_university", "people_crowd_india", "rat_running",
@@ -168,26 +144,11 @@ B = {k: _a2(k) for k in ("balance_scale", "cat_food_bowl", "cat_sitting_front", 
 B["eraser"] = _a2("eraser_plain")                       # brand text smoothed off (public domain original)
 B["gray_anatomy_muscles"] = _a2("gray_anatomy_muscles_alt_sobotta")   # the sharper engraving
 USED_ASSETS += [os.path.basename(v) for v in B.values() if v]
-CREDITS_FILES.append(os.path.join(TOXO2, "credits.json"))
-
-def T(tl, bid, cue=None):
-    """Time of a cue inside line `bid`: None = line start, str = that word, float = fraction of the line."""
-    b = tl[bid]
-    if cue is None:
-        return b.start
-    return b.at(cue) if isinstance(cue, str) else b.at(frac=cue)
+CREDITS_FILES.append(os.path.join(ASSETS_ROOT, "toxoplasma2", "credits.json"))
 
 
-def _pic(cr, key, cx, cy, h, t, t0, rot=0.0, flip=False, tint=None, alpha=1.0, frame=None):
-    """Photo cut-out (or framed photo when `frame` = (w, h)) that pops up into place at t0."""
-    path_ = B.get(key) or A.get(key)
-    if not path_:
-        return
-    p = prog(t, t0, 0.3)
-    if frame:
-        framed_photo(cr, path_, cx, cy + 50 * (1 - p), frame[0], frame[1], alpha=p * alpha, rot=rot)
-    else:
-        photo(cr, path_, cx, cy + 50 * (1 - p), h, alpha=p * alpha, rot=rot, flip=flip, tint=tint)
+def _pic(cr, key, cx, cy, h, t, t0, **kw):
+    pic(cr, B.get(key) or A.get(key), cx, cy, h, t, t0, **kw)
 
 
 def _mq(cr, x, cy, h, t=0.0, bob=True, red=0.0, alpha=1.0):
@@ -205,56 +166,14 @@ def _mq(cr, x, cy, h, t=0.0, bob=True, red=0.0, alpha=1.0):
 
 
 def _tv(cr, cx, cy, h, alpha=1.0):
-    """The old CRT photo (logo removed); returns its screen glass rectangle (measured on the photo) so a picture can
-    be drawn into it."""
-    photo(cr, B["old_tv"], cx, cy, h, alpha=alpha)
-    w = photo_width(B["old_tv"], h)
-    x0, y0 = cx - w / 2, cy - h / 2
-    return x0 + 0.136 * w, y0 + 0.083 * h, 0.634 * w, 0.356 * h
+    return tv(cr, B["old_tv"], cx, cy, h, alpha)
 
 
-def _screen(cr, rect, alpha, on=1.0):
-    """CRT picture area: pale glow when on; collapses to a line then a dot as `on` goes 1 -> 0."""
-    sx, sy, sw_, sh_ = rect
-    vy = max(0.02, clamp(on * 2 - 1)) if on < 1 else 1.0
-    vx = clamp(on * 2) if on < 1 else 1.0
-    cx, cy = sx + sw_ / 2, sy + sh_ / 2
-    cr.set_source_rgba(0.80, 0.86, 0.82, alpha * (1 if on > 0 else 0))
-    _round(cr, cx - sw_ * vx / 2, cy - sh_ * vy / 2, sw_ * vx, sh_ * vy, 30 * vy)
-    cr.fill()
+_screen = screen
 
 
 def _checklist(cr, t, x, y, w, title, items, alpha=1.0):
-    """Kraft card with a title and rows: (label, t_show, mark, t_mark), mark in {"tick", "cross", "erase", None}."""
-    rows = len(items)
-    h = 120 + 110 * rows
-    p = prog(t, items[0][1] - 0.35, 0.3) * alpha
-    if p <= 0:
-        return
-    cr.set_source_rgba(0, 0, 0, 0.2 * p)
-    _round(cr, x + 8, y + 14, w, h, 16)
-    cr.fill()
-    cr.set_source_rgba(0.83, 0.72, 0.54, p)
-    _round(cr, x, y, w, h, 16)
-    cr.fill()
-    draw_text(cr, title, x + 40, y + 34, 40, INK, p, MONO_FONT, tracking=4)
-    for i, (label, t_show, mark, t_mark) in enumerate(items):
-        ry = y + 150 + 110 * i
-        q = prog(t, t_show, 0.25) * alpha
-        if q <= 0:
-            continue
-        cr.set_source_rgba(*INK, 0.85 * q)
-        cr.set_line_width(5)
-        cr.rectangle(x + 40, ry - 32, 64, 64)
-        cr.stroke()
-        if mark == "erase":
-            erase(cr, t, t_mark, label, x + 130, ry, 70, INK, dur=0.8, eraser=B["eraser"], anchor="lm")
-        else:
-            draw_text(cr, label, x + 130, ry, 70, INK, q, anchor="lm")
-        if mark == "tick":
-            tick(cr, x + 48, ry - 4, 62, prog(t, t_mark, 0.3))
-        elif mark == "cross":
-            cross(cr, x + 72, ry, 56, prog(t, t_mark, 0.3))
+    checklist(cr, t, x, y, w, title, items, alpha, eraser=B["eraser"])
 
 
 def _fear_tag(cr, t, x, y, t0, t_erase=None, size=96, anchor=None):
@@ -732,46 +651,17 @@ SHOTS = [   # (line, cue where the shot starts, draw function, background)
 
 
 def _starts(tl):
-    out = []
-    for k, (bid, cue, _, _) in enumerate(SHOTS):
-        if k == 0:
-            out.append(0.0)
-            continue
-        s = T(tl, bid, cue)
-        if cue is not None:
-            s -= 0.12                                            # cut just before the word lands
-        out.append(max(s, out[-1] + 0.5))
-    return out
-
-
-def _shot_at(t, tl):
-    starts = getattr(tl, "_shot_starts", None)
-    if starts is None:
-        starts = tl._shot_starts = _starts(tl)
-    k = max(i for i, s in enumerate(starts) if t >= s)
-    return k, starts[k], starts[k + 1] if k + 1 < len(starts) else tl.total
+    return starts(tl, SHOTS)
 
 
 def draw(cr, t, tl):
-    k, t0, t1 = _shot_at(t, tl)
-    _, _, fn, bg = SHOTS[k]
-    if bg == "slate":
-        slate(cr)
-    else:
-        paper(cr, seed=1 + k % 3)
-    cr.save()
-    push(cr, t, t0, t1, 1.0, 1.04)
-    fn(cr, t, tl, t0)
-    cr.restore()
-    rule(cr, color=CREAM if bg == "slate" else INK)
-    finish(cr)
+    draw_frame(cr, t, tl, SHOTS)
 
 
 def sfx(tl):
     """Small sounds on the turning points: a whoosh on every cut, a scribble when FEAR is erased, thuds on stamps,
     a tick before the precision re-hook and the closing line."""
-    starts = _starts(tl)
-    ev = [(s, "whoosh", 0.25) for s in starts[1:]]
+    ev = [(s, "whoosh", 0.25) for s in _starts(tl)[1:]]
     ev += [(T(tl, "b1", "मिटा"), "scribble", 0.6), (T(tl, "b3", "मिटा"), "scribble", 0.6),
            (T(tl, "b11", "डरता"), "scribble", 0.6), (T(tl, "b14", "मिटता") + 0.2, "scribble", 0.6),
            (T(tl, "b23", "मिटा"), "scribble", 0.7),

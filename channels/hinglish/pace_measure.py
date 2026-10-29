@@ -4,9 +4,10 @@ into short phrase pauses and longer sentence pauses. Used to match our narrator'
 
 Usage: python -I -X utf8 channels/hinglish/pace_measure.py <out_json> file1 [file2 ...]   (audio or video)
 """
-import json, subprocess, sys
+import json, os, subprocess, sys
 import numpy as np
-from faster_whisper import WhisperModel
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from asr import whisper  # noqa: E402
 
 SR = 16000
 PAUSE = 0.12          # a gap shorter than this is just coarticulation, not a pause
@@ -18,7 +19,7 @@ def load(path):
     return np.frombuffer(out, np.float32)
 
 
-model = WhisperModel("medium", device="cpu", compute_type="int8")
+model = whisper()
 results = {}
 for path in sys.argv[2:]:
     segs, _ = model.transcribe(load(path), language="hi", beam_size=5, word_timestamps=True, vad_filter=False)

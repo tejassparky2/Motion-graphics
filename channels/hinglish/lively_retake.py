@@ -6,12 +6,12 @@ Usage: python -I -X utf8 channels/hinglish/lively_retake.py <video> [--also b14 
 (--also: only these lines, re-taken even if not flat, e.g. a line the owner heard as robotic)"""
 import importlib.util, json, os, re, shutil, sys
 import numpy as np, librosa
-from faster_whisper import WhisperModel
 from resemblyzer import VoiceEncoder, preprocess_wav
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [HERE]
 import narrate  # noqa: E402
+from asr import whisper  # noqa: E402
 
 MIN_SD, MIN_SIM, EXTRA = 4.5, 0.85, [3, 4, 5]
 words = lambda s: re.findall(r"[\wऀ-ॿ]+", s.replace("़", ""))
@@ -32,7 +32,7 @@ def main():
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     cfg = mod.NARRATOR
-    model = WhisperModel("medium", device="cpu", compute_type="int8")
+    model = whisper()
     enc = VoiceEncoder(verbose=False)
     ref_emb = enc.embed_utterance(preprocess_wav(mod.VOICE_REF))
 

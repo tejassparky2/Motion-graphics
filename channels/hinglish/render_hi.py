@@ -203,9 +203,9 @@ def _words(s):
 def check(name):
     """Whisper medium (Hindi) on every line; flags lines whose word error rate is above 30%."""
     import librosa
-    from faster_whisper import WhisperModel
+    from asr import whisper
     _, tl = build_timeline(name)
-    model = WhisperModel("medium", device="cpu", compute_type="int8")
+    model = whisper()
     bad = 0
     for b in tl.beats:
         y, _ = librosa.load(b.wav, sr=16000)

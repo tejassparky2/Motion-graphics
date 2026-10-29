@@ -7,12 +7,12 @@ Usage: python -I -X utf8 channels/hinglish/retake.py <video> [--all]
 """
 import importlib.util, json, os, re, shutil, sys
 import numpy as np, librosa
-from faster_whisper import WhisperModel
 from resemblyzer import VoiceEncoder, preprocess_wav
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [HERE]
 import narrate  # noqa: E402
+from asr import whisper  # noqa: E402
 
 MAX_WER, MIN_SIM = 0.30, 0.85
 EXTRA_SEEDS = [101, 202, 303]
@@ -39,7 +39,7 @@ def main():
     spec.loader.exec_module(mod)
     cfg = mod.NARRATOR
     narrate.prefetch(mod.SCRIPT, cfg)                     # make sure every default take exists
-    model = WhisperModel("medium", device="cpu", compute_type="int8")
+    model = whisper()
     enc = VoiceEncoder(verbose=False)
     ref_emb = enc.embed_utterance(preprocess_wav(getattr(mod, "VOICE_REF", VOICE_REF)))   # the video's own voice
     voice = narrate._hash("", {k: v for k, v in cfg.items()
