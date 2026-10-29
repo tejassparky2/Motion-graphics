@@ -13,7 +13,7 @@ import math
 from motion import voice
 from motion.engine import W, H, cue, hexc, lerp, seg
 from motion.kit import whip
-from motion.pkit import BLUE, GOLD, GREEN, PURPLE, RED, bubble, buttons, check, red_x, tag
+from motion.pkit import BLUE, GOLD, GREEN, PURPLE, RED, bubble, buttons, red_x, tag
 from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, captions, ellipse, enter, lin, paint,
                            rad, rrect, sign, smooth, soft_disc, stroke_line, vignette)
 from motion.toons import person
@@ -284,7 +284,7 @@ def scene_study(cr, t, tl):
     rat_box(cr, t, 535, 600, "INFECTED", RED)
     # healthy rat runs to the far corner when its line comes
     u = seg(t, A("r5", "avoided"), A("r5", "avoided") + 0.5)
-    rat(cr, t, lerp(190, 150, u), lerp(660, 770, u), 0.55, facing=1 if u < 0.05 else -1,
+    rat(cr, t, lerp(190, 150, u), lerp(660, 730, u), 0.55, facing=1 if u < 0.05 else -1,
         walk=t * 12 if 0 < u < 1 else None)
     # the infected one stays put, then walks into the cat smell
     v = seg(t, A("r5", "looking"), A("r5", "looking") + 0.6)
@@ -292,7 +292,6 @@ def scene_study(cr, t, tl):
         eyes="happy" if v > 0.9 else "open")
     if t >= A("r5", "avoided"):
         bold_text(cr, "RUNS AWAY", 185, 790, 34, GREEN)
-        check(cr, t, A("r5", "avoided"), 300, 480, 30)
     if t >= A("r5", "stopped"):
         bold_text(cr, "STAYS", 535, 790, 34, RED)
     if t >= A("r5", "looking"):
