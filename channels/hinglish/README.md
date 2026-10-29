@@ -57,6 +57,17 @@ word is marked as it's spoken (red strike-through, tick or circle).
 Interestingly Strange's workflow applies: script first, owner approves, render one, then the rest, Whisper-check
 every line, upload sheet. Sources go with every script, and health claims must be checked before rendering.
 
+**Don't trust the yt-*/ig-* skill scorers for this channel** (29 Oct 2026; tested on Mayank's 12 reels, reports in
+`<shorts research>/mayank/skills_review/`).
+- None of them ranks his hits above his flops: hookscore, title.py, caption.py, detect.py, or swipe's formula names.
+  - hookscore rates every one of his openings WEAK. His 11.2M wasp hook scores 26, his 84K stress flop 46.
+  - "Put a number in line 1" went the wrong way for him: hooks with a number or name did worse.
+  - detect.py marks normal Hinglish as machine-written.
+- What does hold up:
+  - the outlier multiple (views ÷ the channel's own median);
+  - beats.py, but only as a length stopwatch.
+- Judge hooks by the study rules instead: "socho" plus an impossible claim, and a contradiction in line 1.
+
 ## How to render (owner's laptop)
 - Run `python -I -X utf8 channels/hinglish/render_hi.py --video toxoplasma`, using `--still T`, `--sheet 1.5` or
   `--check` as needed.

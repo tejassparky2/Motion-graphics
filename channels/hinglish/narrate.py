@@ -27,8 +27,10 @@ SR = 44100
 LEAD = 0.10        # first word lands this early (his reels speak from ~0.08 s)
 # Pauses between lines, from Whisper word timings of the reference reels (pace_measure.py, 29 Oct 2026): sentence
 # pauses 0.50-0.61 s median. Our takes keep ~0.07 s of trimmed edge, so the added gap is a little shorter.
-GAP = 0.43         # silence between two lines
-QGAP = 0.53        # after a question
+# Owner, 29 Oct 2026: "speed up slightly like matching mayank speed". Whisper on both: syllable rate already equal
+# (5.84 vs 5.87 syl/s on his wasp reel) but our long pauses ran longer (median 0.82 s vs 0.52 s), so the gaps shrink.
+GAP = 0.36         # silence between two lines
+QGAP = 0.46        # after a question
 TAIL = 0.8         # after the last line
 
 

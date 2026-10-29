@@ -23,7 +23,8 @@ CREDITS_FILES = [os.path.join(ASSETS, "credits.json")]
 # (named speaker, prompt 'named_aman_s3'); IndicF5 then speaks every line in that synthetic voice: WER 33% -> 22%,
 # UTMOS 2.76 -> 3.66, same voice (ECAPA 0.81 to the prompt) in the 3-line test.
 _VOICES = os.path.join(os.path.dirname(REPO), "mayank", "voice")
-NARRATOR = dict(engine="f5", studio="v3", tempo=1.13,   # one even speed-up for every line (owner: "speed up voice little")
+NARRATOR = dict(engine="f5", studio="v3", tempo=1.15,   # one even speed-up for every line (owner: "speed up voice little",
+                # then "speed up slightly like matching mayank speed"); 1.15 is the most atempo takes before rubberband
                 ref_audio=os.path.join(_VOICES, "f5_refs", "named_aman_s3_ref.wav"),
                 ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।")
 VOICE_REF = os.path.join(_VOICES, "f5_refs", "named_aman_s3_ref.wav")
@@ -35,7 +36,7 @@ TAIL = 0.9
 # v2, approved by the owner 29 Oct 2026 ("Yes"): hook, Tom & Jerry anchor, "only the cat fear" beat and the "socho"
 # bookend come from research_notes/meanwhilemayank_parasite_reels_study_2026-10-29.md. "gap" = the longer pause
 # Mayank leaves only before a reveal (the name, the precision beat, the closing line).
-REVEAL_GAP = 0.8
+REVEAL_GAP = 0.6
 SCRIPT = [
     dict(id="b1", text="सोचो, अगर कोई तुम्हारा डर ही मिटा दे... और तुम ख़ुद चल के अपने शिकारी के पास पहुँच जाओ।"),
     dict(id="b2", text="टॉम एंड जेरी में चूहा बिल्ली से डरता नहीं था। पर वो कार्टून था।"),
