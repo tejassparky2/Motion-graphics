@@ -39,7 +39,7 @@ NUM = {"2": "two", "9": "nine", "13": "thirteen", "3": "three", "14": "fourteen"
        "70": "seventy", "17": "seventeen", "459": "four fifty nine", "458": "four fifty eight", "00": "zero zero", "11": "eleven", "1131": "eleven thirty one", "101": "a hundred and one", "1st": "first", "10th": "tenth"}
 SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "keyring": "key ring",
         "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes", "too": "two",
-        "harito": "haruto", "ricky": "riku", "nishita": "nishida", "koda": "kota", "coda": "kota",             # Whisper's spellings of the DMA names
+        "harito": "haruto", "harudo": "haruto", "ricky": "riku", "nishita": "nishida", "koda": "kota", "coda": "kota",             # Whisper's spellings of the DMA names
         "wren": "ren", "tiktok": "tick tock", "realize": "realise", "curb": "kerb", "mr": "mister", "ohh": "oh", "dammit": "damn it", "birthdays": "birth days", "won": "one",
         "logbook": "log book", "it's": "its", "cota": "kota", "9s": "nines", "10s": "tens", "hole": "whole"}
 
