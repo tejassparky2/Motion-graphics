@@ -1,4 +1,4 @@
-"""tools/precheck.py EP...: Whisper medium on each voice take before the video is rendered (same scoring as check.py)."""
+"""tools/precheck.py EP (one episode per run: render.load keeps the first one loaded): Whisper medium on each voice take before the video is rendered (same scoring as check.py)."""
 import difflib, importlib.util, os, re, sys
 ROOT = "/home/user/Motion-graphics"
 sys.path.insert(0, ROOT)

@@ -38,17 +38,17 @@ BEATS = [
     s(6, 7, 5, "ren", "Everyone said no. Nobody could prove it.", gap=0.45),
     n(7, 8, 1, "Nines and tens. Then Haruto. Ten. Found."),
     s(8, 8, 2, "ren", "Haruto came in and sat by the wall. He didn't make a joke.", gap=0.4),
-    s(9, 8, 3, "yui", "Haruto?", gap=0.4),
+    s(9, 8, 3, "yui", "[Haruto...?|Haruto?]", gap=0.4),                     # "Haruto?" was heard "or retail?"
     n(10, 8, 4, "Haruto smiled. It didn't reach his eyes.", gap=0.45),
     n(11, 9, 1, "Then Go went in. Alone."),
     n(12, 9, 2, "He opened ten lockers. None of them had his name.", gap=0.45),
     n(13, 9, 3, "So he swapped the cards in his first and tenth lockers.", gap=0.4),
     n(14, 9, 4, "", hold=1.4, gap=0.5),
     n(15, 10, 1, "[Shibata Go. Ten.|SHIBATA GO. Ten.] Not found.", impact=True, sfx="sting"),
-    s(16, 10, 2, "student_b", "Riku lied!", gap=0.35, impact=True),
+    s(16, 10, 2, "student_d", "Riku lied!", gap=0.35, impact=True),       # am_michael's was heard "Riku live"
     s(17, 10, 2, "student_a", "It's still one loop!", gap=0.25),
-    s(18, 10, 3, "ren", "Go had told him to stay behind him. Kota was next.",
-      gap=0.45),
+    s(18, 10, 3, "ren", "[Go, had told him to stay behind him.|Go had told him to stay behind him.] Kota was next.",
+      gap=0.45),                                                     # "Go had" merged into "Goaad"
     n(19, 10, 4, "Kota walked in alone.", gap=0.4),
     n(20, 11, 1, "Kota. Nine. Found."),
     n(21, 11, 2, "Every head turned to Riku.", gap=0.4),
