@@ -102,13 +102,13 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 72 | Tue Nov 3 | 7:30 PM | grandma_dog | Grandma Asked About Her Dog. He Ran Away 3 Days Ago 🐶 *(big question, original story; owner auto-approved 20 Oct; Turbo female + tags; outcome: both lied (twist reveal))* |
 | 73 | Wed Nov 4 | 4:30 PM | perfect_life | A Booth Offered Him a Perfect Life. One Catch 🔘 *(big question; owner auto-approved 20 Oct; Turbo female + tags; outcome: reframe (the viewer is flipped))* |
 | 74 | Wed Nov 4 | 7:30 PM | who_made_evil | Kid: If God Made Everything, Did He Make Evil? 😶 *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: teacher answers, kid fires back (open))* |
-| 75 | Thu Nov 5 | 4:30 PM | operation_mincemeat | A Dead Man Fooled Hitler *(idea; non-religion slot between the God topics)* |
+| 75 | Thu Nov 5 | 4:30 PM | operation_mincemeat | This Spy Fooled Hitler. He Was Already Dead. 💼 *(script sent 29 Oct for approval: out/scripts_slots_75-81.md)* |
 | 76 | Thu Nov 5 | 7:30 PM | heaven_forever | Heaven Is Forever. Then the Boy Did the Math ♾️ *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: reframe (both sides, funny callback))* |
-| 77 | Fri Nov 6 | 4:30 PM | slot_77 | *(non-religion video to write: twist story or funny history)* |
+| 77 | Fri Nov 6 | 4:30 PM | toxo_rat | Her Rat Walked Straight Up to the Cat 🐀 *(script sent 29 Oct for approval)* |
 | 78 | Fri Nov 6 | 7:30 PM | pascal_bet | A Bet You Can't Lose? 1 Question Broke It 🎲 *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: kid wins (Sir's homework callback))* |
-| 79 | Sat Nov 7 | 4:30 PM | slot_79 | *(non-religion video to write)* |
+| 79 | Sat Nov 7 | 4:30 PM | same_you | Grandpa Says the Boy in This Photo Is Gone 📷 *(script sent 29 Oct for approval)* |
 | 80 | Sat Nov 7 | 7:30 PM | prayer_plan | She Prayed Before Her Exam. Her Brother Asked 1 Question 🙏 *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: answered, backfires on her (study too))* |
-| 81 | Sun Nov 8 | 4:30 PM | slot_81 | *(non-religion video to write)* |
+| 81 | Sun Nov 8 | 4:30 PM | ai_art | She Won the Art Prize. A Computer Drew It. 🖼️ *(script sent 29 Oct for approval)* |
 | 82 | Sun Nov 8 | 7:30 PM | kitten_evil | She Asked Her Dad 3 Questions About God 🐱 *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: nobody wins (Dad has no answer))* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
