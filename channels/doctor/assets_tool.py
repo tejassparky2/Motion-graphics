@@ -15,6 +15,8 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 
 from PIL import Image, ImageDraw
@@ -38,14 +40,26 @@ def fetch(jsonl, work):
         r["id"] = f"q{q:02d}_{k + 1}"
         r["file"] = os.path.join(work, r["id"] + ".jpg")
         if not os.path.exists(r["file"]):
-            try:
-                req = urllib.request.Request(r["url"], headers=UA)
-                with urllib.request.urlopen(req, timeout=90) as f:
-                    data = f.read()
-                open(r["file"], "wb").write(data)
-                Image.open(r["file"]).verify()
-            except Exception as e:                                # noqa: BLE001
-                print(f"download failed {r['id']}: {type(e).__name__}")
+            if "wikimedia" in r["url"]:
+                time.sleep(6)                                     # Wikimedia throttles bursts from shared addresses
+            ok = False
+            for k in range(6):
+                try:
+                    req = urllib.request.Request(r["url"], headers=UA)
+                    with urllib.request.urlopen(req, timeout=90) as f:
+                        data = f.read()
+                    open(r["file"], "wb").write(data)
+                    Image.open(r["file"]).verify()
+                    ok = True
+                    break
+                except urllib.error.HTTPError as e:
+                    if e.code != 429:
+                        break
+                    time.sleep(min(60, int(e.headers.get("Retry-After") or 10) + 2))
+                except Exception:                                 # noqa: BLE001
+                    break
+            if not ok:
+                print(f"download failed {r['id']}", flush=True)
                 continue
         by_q[q].append(r)
     json.dump([r for v in by_q.values() for r in v], open(os.path.join(work, "candidates.json"), "w"), indent=1)
