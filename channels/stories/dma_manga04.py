@@ -90,7 +90,6 @@ def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
     cue("hush", t, B["h16"].start - 0.2, B["h17"].end - B["h16"].start + 0.2)        # Momo's silence, Ren reading
-    cue("riser", t, B["h17"].end, B["h19"].start - B["h17"].end)
 
 
 def draw(cr, t, tl):

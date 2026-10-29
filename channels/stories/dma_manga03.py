@@ -103,11 +103,9 @@ KEY = {"twenty", "sensei", "signal", "clock", "door", "damn", "moved", "aoi", "b
 def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 1 long video)."""
     B = tl.by_id
-    cue("riser", t, B["g20"].start, B["g23"].start - B["g20"].start)
     cue("sting", t, B["g23"].end + 0.05)                      # under the sting it was heard "The status of Earth"
     cue("hush", t, B["g35"].start - 0.2, B["g36"].start - B["g35"].start + 0.1)       # nobody moved
     cue("hush", t, B["g37"].start - 0.2, B["g38"].start - B["g37"].start + 0.1)       # silence
-    cue("riser", t, B["g38"].start, B["g39"].start - B["g38"].start)
 
 
 def draw(cr, t, tl):

@@ -82,7 +82,6 @@ KEY = {"door", "token", "notebook", "took", "lockers", "ring", "name", "saki", "
 def cues(t, tl):
     """This episode's sound cues (shared with the Chapter 4 long video)."""
     B = tl.by_id
-    cue("riser", t, B["x16"].start, B["x17"].end - B["x16"].start)
     cue("sting", t, B["x17"].end + 0.05)
 
 
