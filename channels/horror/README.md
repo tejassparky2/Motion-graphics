@@ -230,3 +230,13 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
 - 29 Oct: owner "I am uploading to Nancy removed all old short and no more interactive horror there": the Nancy channel
   is now the DMA manga channel; interactive horror stopped (see Status at the top). The 4:30 / 7:30 PM IST slots in
   the upload guide are free for the manga.
+- 29 Oct: owner "Make chapter 5 shorts and long video too" -> Chapter 5 "Thirty Tokens" (manga commit 9d4632c, approved
+  canon v6 Parts 10-12) as four Shorts, since Part 12 alone would run ~2 min: Episodes 13 (pages 1-6, 54.7 s), 14 (7-11,
+  60.7 s), 15 (12-15, 40.1 s; ends on "Haruto. Turn out your pockets." and the thirty coins) and 16 (16-20, 53.0 s),
+  plus dma_manga_ch05_long (3:30). Episodes 15-16 and the long video were made by helper session_01PF511XprLcpVNCdEQUsUFF
+  from assets/voice_cache/dma_turbo_refs.tar and the per-episode takes tars. On-screen "Go", not "Gō": Fredoka has no
+  Ō. Spoken-only rewordings: r11, r16 ("loop... whole": "loop whole" was heard "lead the loophole"), s9, s16 (other
+  classmate voice), s18, v3. Fixed in hud2d: a long [spoken|shown] line used to caption as one small squeezed line; it
+  now splits into 1-3 word captions (Episodes 1-12 and the Ch1-4 long videos still have ~21 such lines; owner asked).
+  Ep16's end card says "EPISODE 17 · GAME FOUR"; no Chapter 6 exists yet in the manga chat. Schedule: Ep13/14 Wed 4 Nov,
+  Ep15/16 Thu 5 Nov (4:30/7:30 PM IST), Ch5 long Fri 6 Nov 2:30 PM IST; pack out/packs/dma (rows 17-21).

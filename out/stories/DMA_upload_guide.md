@@ -1,11 +1,12 @@
-# Dead Man's Algorithm, the manga: upload guide (Chapters 1-4)
+# Dead Man's Algorithm, the manga: upload guide (Chapters 1-5)
 
-All 16 videos are final: no heartbeat, no riser, every line checked with Whisper medium, no encoder tags.
-12 Shorts (9:16, 56-93 s) and 4 long videos (16:9, one per chapter).
+All 21 videos are final: no heartbeat, no riser, every line checked with Whisper medium, no encoder tags.
+16 Shorts (9:16, 40-93 s) and 5 long videos (16:9, one per chapter). Chapter 5 (Episodes 13-16 and its long video,
+rows 17-21) follows straight on from Chapter 4.
 
 ## Upload schedule (times in IST)
 
-Start today, Thu 29 Oct. Upload all 16 now and schedule each one: Visibility → Schedule, then set the time zone next
+Start today, Thu 29 Oct. Upload them all now and schedule each one: Visibility → Schedule, then set the time zone next
 to the time box to India Standard Time (GMT+5:30). The PH and US columns show when the video lands for the
 Philippines and US Eastern viewers; US clocks go back one hour on Sun 1 Nov, and the US column already includes that.
 
@@ -27,6 +28,11 @@ Philippines and US Eastern viewers; US clocks go back one hour on Sun 1 Nov, and
 | 14 | Tue 3 Nov, **4:30 PM IST** | 7 PM PH · 6 AM US ET | Ep 11 | Short (9:16), 1:10 | `dma_manga11.mp4` | Follow the Cards and You Find Your Name. Unless It's One Loop \| Dead Man's Algorithm Ep 11 🔒 |
 | 15 | Tue 3 Nov, **7:30 PM IST** | 10 PM PH · 9 AM US ET | Ep 12 | Short (9:16), 1:24 | `dma_manga12.mp4` | Eighteen Lives for Nine Tokens. Every One of You Owes Me \| Dead Man's Algorithm Ep 12 🔒 |
 | 16 | Wed 4 Nov, **2:30 PM IST** | 5 PM PH · 4 AM US ET | Chapter 4 (long) | Long (16:9), 4:02 | `dma_manga_ch04_long.mp4` | Dead Man's Algorithm, Chapter 4: Find Yourself \| Original Manga Read With Voices 🔒 |
+| 17 | Wed 4 Nov, **4:30 PM IST** | 7 PM PH · 6 AM US ET | Ep 13 | Short (9:16), 0:55 | `dma_manga13.mp4` | Swap Two Names. Thirty Tokens. Nobody Will Know \| Dead Man's Algorithm Ep 13 🃏 |
+| 18 | Wed 4 Nov, **7:30 PM IST** | 10 PM PH · 9 AM US ET | Ep 14 | Short (9:16), 1:01 | `dma_manga14.mp4` | Everyone Said No. Then One Name Said NOT FOUND \| Dead Man's Algorithm Ep 14 🃏 |
+| 19 | Thu 5 Nov, **4:30 PM IST** | 7 PM PH · 6 AM US ET | Ep 15 | Short (9:16), 0:40 | `dma_manga15.mp4` | Only One Person Went In Between Them \| Dead Man's Algorithm Ep 15 🃏 |
+| 20 | Thu 5 Nov, **7:30 PM IST** | 10 PM PH · 9 AM US ET | Ep 16 | Short (9:16), 0:53 | `dma_manga16.mp4` | He Sold His Friend for Thirty Tokens \| Dead Man's Algorithm Ep 16 🃏 |
+| 21 | Fri 6 Nov, **2:30 PM IST** | 5 PM PH · 4 AM US ET | Chapter 5 (long) | Long (16:9), 3:30 | `dma_manga_ch05_long.mp4` | Dead Man's Algorithm, Chapter 5: Thirty Tokens \| Original Manga Read With Voices 🃏 |
 
 If you start a day later, keep the same order. Then put a long video that lands on a Saturday or Sunday at 10:00 AM
 IST, and one that lands on a weekday at 2:30 PM IST.
@@ -73,6 +79,9 @@ IST, and one that lands on a weekday at 2:30 PM IST.
   - Every long video goes up before that day's first Short, so it never lands on top of one.
 - **Ep 10 (the start of Chapter 4) comes out the evening before the Chapter 3 long video.** That keeps two Shorts every
   day. The long video is a recap of Chapter 3, so it spoils nothing.
+- **Chapter 5 keeps the same slots.** Episodes 13-14 go out on Wed 4 Nov after the Chapter 4 long video, Episodes 15-16
+  on Thu 5 Nov, and the Chapter 5 long video on Fri 6 Nov at 2:30 PM IST (SocialPilot's Friday 1-3 PM window; Buffer's
+  third-best long-video slot is Friday 12 PM).
 
 **Check after a week**
 
@@ -715,4 +724,196 @@ dead mans algorithm, manga, manga recap, manga dub, full chapter, survival game,
 **Pinned comment**
 ```
 Riku goes first and sees every locker. He could save all eighteen, or leave a loop of eleven on purpose. Do you trust him? 👇
+```
+
+### 17. Ep 13 · Chapter 5 "Thirty Tokens" · Short (9:16), 0:55
+
+- **Publish:** Wed 4 Nov, **4:30 PM IST** (7 PM PH · 6 AM US ET)
+- **Video:** `out/stories/dma_manga13.mp4`
+- **Cover / thumbnail:** `out/stories/thumbs/dma_manga13.png`
+
+**Title**
+```
+Swap Two Names. Thirty Tokens. Nobody Will Know | Dead Man's Algorithm Ep 13 🃏
+```
+Alternative titles: `The Host Whispered an Offer in the Locker Room 🃏` / `Dead Man's Algorithm: The Manga, Episode 13 🃏`
+
+**Description**
+```
+Riku went in first and opened all nineteen lockers. Then it was Ren's turn: his own name in nine, so
+there's no room left for a loop longer than ten. Riku kept his word.
+Then a small screen lit up. "Psst! Swap TACHIBANA and HAYASHI. Thirty tokens! Nobody will know!"
+Momo wasn't only asking Ren. Seventeen people were still waiting to be offered a price for someone's life.
+
+Dead Man's Algorithm, the manga, Chapter 5 "Thirty Tokens", pages 1 to 6.
+Episode 14 is next.
+
+(Original story. Original manga, read with voices.)
+
+#DeadMansAlgorithm #Manga #Shorts
+```
+
+**Tags**
+```
+dead mans algorithm, manga, manga recap, manga dub, survival game, death game, psychological thriller, original manga, thirty tokens, betrayal, episode 13
+```
+
+**Pinned comment**
+```
+Momo offers thirty tokens for one secret swap, and nobody will know. Seventeen people still have to go in. Does anyone take it? 👇
+```
+
+### 18. Ep 14 · Chapter 5 "Thirty Tokens" · Short (9:16), 1:01
+
+- **Publish:** Wed 4 Nov, **7:30 PM IST** (10 PM PH · 9 AM US ET)
+- **Video:** `out/stories/dma_manga14.mp4`
+- **Cover / thumbnail:** `out/stories/thumbs/dma_manga14.png`
+
+**Title**
+```
+Everyone Said No. Then One Name Said NOT FOUND | Dead Man's Algorithm Ep 14 🃏
+```
+Alternative titles: `Someone Took Momo's Offer. Nobody Can Prove Who 🃏` / `Dead Man's Algorithm: The Manga, Episode 14 🃏`
+
+**Description**
+```
+Yui said no to Momo's offer. So did Aoi. So did Mio. Nobody could prove it.
+Nines and tens on the board. Haruto came in and sat by the wall, and didn't make a joke.
+Then Gō went in, and the board said NOT FOUND. "Riku lied!" "It's still one loop!"
+Riku: "Don't look at me. Look at the board." Momo: "Momo knows who swapped! Do you?"
+
+Dead Man's Algorithm, the manga, Chapter 5 "Thirty Tokens", pages 7 to 11.
+Episode 15 is next.
+
+(Original story. Original manga, read with voices. The game's maths is the published "100 prisoners problem".)
+
+#DeadMansAlgorithm #Manga #Shorts
+```
+
+**Tags**
+```
+dead mans algorithm, manga, manga recap, manga dub, survival game, death game, psychological thriller, original manga, 100 prisoners problem, betrayal, episode 14
+```
+
+**Pinned comment**
+```
+Riku saw every locker and kept his word. Then someone swapped two cards and Gō died. Who did it? Name your suspect before Episode 15 👇
+```
+
+### 19. Ep 15 · Chapter 5 "Thirty Tokens" · Short (9:16), 0:40
+
+- **Publish:** Thu 5 Nov, **4:30 PM IST** (7 PM PH · 6 AM US ET)
+- **Video:** `out/stories/dma_manga15.mp4`
+- **Cover / thumbnail:** `out/stories/thumbs/dma_manga15.png`
+
+**Title**
+```
+Only One Person Went In Between Them | Dead Man's Algorithm Ep 15 🃏
+```
+Alternative titles: `He Solved Who Swapped the Cards From the Board Alone 🃏` / `Dead Man's Algorithm: The Manga, Episode 15 🃏`
+
+**Description**
+```
+Eighteen found. One not found. "You left a long loop."
+"No. He didn't." Ren found his name in nine, and a loop of nine leaves no room for a loop longer than ten. Everyone up
+to the ninth person found theirs in nine or ten. Gō went in tenth and didn't find his. So the long loop appeared
+between them. Only one person went in between them.
+"Haruto. Turn out your pockets."
+
+Dead Man's Algorithm, the manga, Chapter 5 "Thirty Tokens", pages 12 to 15.
+Episode 16 is next.
+
+(Original story. Original manga, read with voices. The game's maths is the published "100 prisoners problem".)
+
+#DeadMansAlgorithm #Manga #Shorts
+```
+
+**Tags**
+```
+dead mans algorithm, manga, manga recap, manga dub, survival game, death game, psychological thriller, original manga, 100 prisoners problem, plot twist, episode 15
+```
+
+**Pinned comment**
+```
+Did you work it out before Ren did? The board alone was enough. When did you know? 👇
+```
+
+### 20. Ep 16 · Chapter 5 "Thirty Tokens" · Short (9:16), 0:53
+
+- **Publish:** Thu 5 Nov, **7:30 PM IST** (10 PM PH · 9 AM US ET)
+- **Video:** `out/stories/dma_manga16.mp4`
+- **Cover / thumbnail:** `out/stories/thumbs/dma_manga16.png`
+
+**Title**
+```
+He Sold His Friend for Thirty Tokens | Dead Man's Algorithm Ep 16 🃏
+```
+Alternative titles: `The Boy Who Killed Saki Kept His Word. My Best Friend Broke His 🃏` / `Dead Man's Algorithm: The Manga, Episode 16 🃏`
+
+**Description**
+```
+Thirty coins on the floor, and one more in Kota's notebook: Saki's. "It was hers."
+Haruto: "Momo said nobody would know." He thought one swap was safe. Momo paid him with the tokens they gave it for
+Saki. Gō cut the loop before he died, and saved the nine people behind him.
+On the first day, Haruto said he was building a sustainable business model. Today he sold Gō for thirty tokens.
+"The boy who killed Saki kept his word. My best friend broke his."
+
+Dead Man's Algorithm, the manga, Chapter 5 "Thirty Tokens", pages 16 to 20: the end of Chapter 5 and of game three.
+
+(Original story. Original manga, read with voices.)
+
+#DeadMansAlgorithm #Manga #Shorts
+```
+
+**Tags**
+```
+dead mans algorithm, manga, manga recap, manga dub, survival game, death game, psychological thriller, original manga, betrayal, thirty tokens, episode 16
+```
+
+**Pinned comment**
+```
+Haruto says he did it to keep Ren and Yui alive in the next game. Riku killed Saki but kept his word. Who is worse: Riku or Haruto? 👇
+```
+
+### 21. Chapter 5 (long) · Chapter 5 "Thirty Tokens" · Long (16:9), 3:30
+
+- **Publish:** Fri 6 Nov, **2:30 PM IST** (5 PM PH · 4 AM US ET)
+- **Video:** `out/stories/dma_manga_ch05_long.mp4`
+- **Cover / thumbnail:** `out/stories/thumbs/dma_manga_ch05_long.png`
+
+**Title**
+```
+Dead Man's Algorithm, Chapter 5: Thirty Tokens | Original Manga Read With Voices 🃏
+```
+Alternative titles: `Someone Swapped Two Cards for Thirty Tokens | Dead Man's Algorithm Ch. 5` / `He Sold His Best Friend for Thirty Tokens | Dead Man's Algorithm Manga, Chapter 5`
+
+**Description**
+```
+Riku went in first, saw every locker and kept his word: no loop longer than ten. Then Momo started
+whispering offers in the locker room. "Swap TACHIBANA and HAYASHI. Thirty tokens! Nobody will know!" Everyone said
+no, and nobody could prove it. Then the board said SHIBATA GŌ: NOT FOUND. Ren works out who swapped from the board
+alone, and the answer breaks him.
+
+Dead Man's Algorithm, Chapter 5 "Thirty Tokens": the whole chapter, every page, with a narrator and a voice for every
+character. The end of game three.
+
+Chapters
+0:00 The offer
+0:56 Not found
+1:56 Who swapped
+2:34 Thirty tokens
+
+(Original story. Original manga, read with voices. The game's maths is the published "100 prisoners problem".)
+
+#DeadMansAlgorithm #Manga #DeathGame
+```
+
+**Tags**
+```
+dead mans algorithm, manga, manga recap, manga dub, full chapter, survival game, death game, psychological thriller, original manga, 100 prisoners problem, betrayal, chapter 5
+```
+
+**Pinned comment**
+```
+Haruto says he did it to keep Ren and Yui alive in the next game. Riku killed Saki but kept his word. Who is worse: Riku or Haruto? 👇
 ```
