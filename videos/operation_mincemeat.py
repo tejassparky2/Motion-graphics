@@ -114,7 +114,7 @@ def m_map(cr, t, arrow_at=None, cross_at=None, flags_at=None, tanks_at=None):
     cr.set_source(lin(0, 0, 0, H, [(0, hexc("#7ab8d8")), (1, hexc("#5a98c0"))]))
     cr.fill()
     cr.save()
-    cr.translate(0, 120)
+    cr.translate(-50, 120)
     land = hexc("#e8d8a8")
     smooth(cr, [(250, 180), (330, 260), (380, 380), (450, 470), (470, 540), (420, 560), (390, 500), (330, 420),
                 (270, 330), (220, 240)])                            # Italy
@@ -140,12 +140,36 @@ def m_map(cr, t, arrow_at=None, cross_at=None, flags_at=None, tanks_at=None):
             paint(cr, hexc("#5a6070"), OUTLINE, 3)
             stroke_line(cr, [(tx, ty - 4), (tx + 30, ty - 10)], 5, OUTLINE, curve=False)
     if flags_at is not None and t >= flags_at:
-        for k, (fx, fy) in enumerate(((350, 600), (390, 590), (430, 610))):
+        ring(cr, t, flags_at, 390, 625, 90, 60, col=GREEN)
+        for k, (fx, fy) in enumerate(((345, 620), (395, 610), (440, 630))):
             if t < flags_at + 0.2 * k:
                 continue
-            stroke_line(cr, [(fx, fy), (fx, fy - 60)], 5, OUTLINE, curve=False)
-            rrect(cr, fx, fy - 60, 40, 26, 3)
-            paint(cr, (BLUE, RED, GREEN)[k], OUTLINE, 3)
+            stroke_line(cr, [(fx, fy), (fx, fy - 90)], 7, OUTLINE, curve=False)
+            rrect(cr, fx, fy - 90, 56, 36, 4)
+            paint(cr, (BLUE, RED, GREEN)[k], OUTLINE, 4)
+    cr.restore()
+
+
+def uniform(cr, x, y, s=1.0, swing=0.0):
+    """An officer's jacket on a hanger (hook at (x, y))."""
+    cr.save()
+    cr.translate(x, y)
+    cr.rotate(swing)
+    cr.scale(s, s)
+    stroke_line(cr, [(0, 0), (0, -30), (14, -44)], 6, OUTLINE)
+    stroke_line(cr, [(-110, 40), (0, 0), (110, 40)], 8, hexc("#8a5a2b"), curve=False)
+    cr.move_to(-110, 40)
+    cr.line_to(-140, 260)
+    cr.line_to(140, 260)
+    cr.line_to(110, 40)
+    cr.line_to(30, 20)
+    cr.line_to(0, 110)
+    cr.line_to(-30, 20)
+    cr.close_path()
+    paint(cr, lin(0, 20, 0, 260, [(0, hexc("#5a5a6e")), (1, hexc("#3a3a4e"))]), OUTLINE, 6)
+    for by in (140, 190, 240):
+        ellipse(cr, 0, by, 8, 8)
+        paint(cr, GOLD, OUTLINE, 3)
     cr.restore()
 
 
@@ -189,7 +213,7 @@ def scene_cuff(cr, t, tl):
     A = tl.at
     plain(cr, NAVY, "#141a30")
     cr.save()
-    enter(cr, camera(t, [(0, (1.0, 360, 640)), (A("m1", "Hitler"), (1.12, 380, 680))], dur=1.0))
+    enter(cr, camera(t, [(0, (1.3, 330, 690)), (A("m1", "Hitler"), (1.45, 340, 700))], dur=1.0))
     cuffed_hand(cr, t, 330, 620, 1.0)
     briefcase(cr, 460 + 6 * math.sin(t * 2), 790, 0.9)
     ring(cr, t, A("m1", "dead"), 205, 620, 66, 86)
@@ -203,12 +227,20 @@ def scene_dress(cr, t, tl):
     s0 = tl.scene_at(t)[1]
     dressed = t >= A("m2", "dress")
     if not dressed:
-        person(cr, t, 360, 1050, 1.0, "fermi", **dict(MARTIN, skin=hexc("#9a9aa8"), suit=hexc("#8a8a98"),
-               shirt=hexc("#8a8a98"), tie=None, eyes="closed", mouth="flat", arms=("down", "down")))
+        person(cr, t, 360, 1050, 1.0, "fermi", **dict(MARTIN, skin=hexc("#b8b8c4"), suit=None,
+               shirt=hexc("#e8e8ee"), tie=None, eyes="closed", mouth="flat", arms=("down", "down")))
+        if t >= A("m2", "spies"):                                  # the uniform swings in on a hanger
+            u = seg(t, A("m2", "spies"), A("m2", "spies") + 0.4)
+            uniform(cr, lerp(760, 560, u), 520, 0.8, swing=math.sin(t * 3) * 0.08)
     else:
         k = appear(t, A("m2", "dress"), 0.35)
         person(cr, t, 360, 1050 - 30 * (1 - k), 1.0, "fermi", **dict(MARTIN, eyes="closed", mouth="flat",
                arms=("down", "down")))
+        sparkles(cr, t, A("m2", "dress"), 360, 760, n=8, col=GOLD, spread=160)
+    if t >= A("m2", "officer"):                                    # a medal on his chest
+        k = appear(t, A("m2", "officer"), 0.3)
+        ellipse(cr, 320, 700, 16 * k, 16 * k)
+        paint(cr, GOLD, OUTLINE, 4)
     tag(cr, t, s0, 360, 200, "LONDON · 1943", col=PURPLE, size=44)
     if t >= A("m2", "Martin"):
         card(cr, t, A("m2", "Major"), 360, 360, 460, 150, "ID CARD", ["MAJOR W. MARTIN"], col=BLUE, title_size=30,
@@ -233,14 +265,18 @@ def scene_sea(cr, t, tl):
     cr.fill()
     soft_disc(cr, 560, 200, 70, (1, 1, 0.9, 0.5))                 # moon
     s0 = tl.scene_at(t)[1]
+    smooth(cr, [(560, 790), (640, 740), (720, 720), (760, 760), (760, 840), (560, 840)])   # the coast of Spain
+    paint(cr, hexc("#e8d8a8"), OUTLINE, 5)
     up = seg(t, s0, A("m4", "submarine", end=True))
-    stroke_line(cr, [(170, 760), (170, 760 - 160 * up)], 12, hexc("#5a6070"), curve=False)   # periscope
-    stroke_line(cr, [(170, 760 - 160 * up), (210, 760 - 160 * up)], 12, hexc("#5a6070"), curve=False)
+    stroke_line(cr, [(110, 800), (110, 800 - 260 * up)], 20, hexc("#5a6070"), curve=False)   # periscope
+    stroke_line(cr, [(110, 800 - 260 * up), (170, 800 - 260 * up)], 20, hexc("#5a6070"), curve=False)
+    if t >= A("m4", "submarine"):
+        tag(cr, t, A("m4", "submarine"), 150, 450, "SUBMARINE", col=BLUE, size=34)
     drift = seg(t, A("m4", "floating"), A("m4", "Spain", end=True) + 0.8)
     cr.save()                                                      # the body, lying on the water
-    cr.translate(lerp(300, 520, drift), 800 + 8 * math.sin(t * 2))
+    cr.translate(lerp(420, 540, drift), 800 + 8 * math.sin(t * 2))
     cr.rotate(-math.pi / 2)
-    person(cr, t, 0, 0, 0.55, "fermi", bob=False, shadow=False,
+    person(cr, t, 0, 0, 0.75, "fermi", bob=False, shadow=False,
            **dict(MARTIN, eyes="closed", mouth="flat", arms=("down", "down")))
     cr.restore()
     for k in range(6):                                             # waves over it
@@ -252,10 +288,8 @@ def scene_sea(cr, t, tl):
         cr.line_to(0, H)
         cr.close_path()
         paint(cr, alpha(hexc("#2a5a8a"), 0.5), None, 0)
-    if t >= A("m4", "Spain"):
-        rrect(cr, 600, 760, 160, 60, 20)                           # the beach
-        paint(cr, hexc("#e8d8a8"), OUTLINE, 4)
-        tag(cr, t, A("m4", "Spain"), 360, 200, "SPAIN · 30 APRIL 1943", col=GOLD, size=40)
+    if t >= A("m4", "coast"):
+        tag(cr, t, A("m4", "coast"), 360, 220, "OFF SPAIN · 30 APRIL 1943", col=GOLD, size=38)
     vignette(cr, 0.5)
 
 
@@ -288,12 +322,15 @@ def scene_grave(cr, t, tl):
     plain(cr, "#c8ccd4", "#a8acb8")
     grass(cr, 820)
     named = t >= A("m8", "Glyndwr")
-    gravestone(cr, 360, 830, 1.0, name="GLYNDWR MICHAEL" if named else None,
+    gravestone(cr, 360, 830, 1.2, name="GLYNDWR MICHAEL" if named else None,
                k=appear(t, A("m8", "Glyndwr"), 0.35) if named else 1.0)
     if A("m7") <= t < A("m8"):
         counter(cr, t, A("m7", "fifty"), 360, 300, 53, size=120, dur=0.8, col=GOLD, sub="YEARS. NOBODY KNEW.")
     if t >= A("m8", "historian"):
-        tag(cr, t, A("m8", "historian"), 360, 220, "1996: A HISTORIAN FINDS THE NAME", col=BLUE, size=36)
+        tag(cr, t, A("m8", "historian"), 360, 220, "1996: A HISTORIAN FINDS THE NAME", col=BLUE, size=36,
+            end=A("m8", "Welsh") - 0.05)
+    if t >= A("m8", "Welsh"):
+        tag(cr, t, A("m8", "Welsh"), 360, 220, "A POOR WELSHMAN", col=BLUE, size=44)
     if t >= A("m8", "Nobody"):
         stamp(cr, t, A("m8", "Nobody"), 360, 360, "NOBODY ASKED HIM", col=RED, size=52)
     vignette(cr, 0.4)

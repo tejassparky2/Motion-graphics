@@ -13,7 +13,7 @@ import math
 from motion import voice
 from motion.engine import W, H, cue, hexc, lerp, seg
 from motion.kit import whip
-from motion.pkit import BLUE, GOLD, GREEN, PURPLE, RED, bubble, buttons, red_x, tag
+from motion.pkit import BLUE, GOLD, GREEN, PURPLE, RED, bubble, buttons, check, red_x, tag
 from motion.polish import (OUTLINE, WHITE, alpha, appear, bold_text, camera, captions, ellipse, enter, lin, paint,
                            rad, rrect, sign, smooth, soft_disc, stroke_line, vignette)
 from motion.toons import person
@@ -138,7 +138,10 @@ def cat_eyes(cr, t, x, y, s=1.0, open_=1.0):
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
-    soft_disc(cr, 0, 0, 240, (0.1, 0.08, 0.12, 0.85), blur=0.5)
+    ellipse(cr, 0, 0, 230, 170)
+    cr.set_source(rad(0, 0, 230, [(0, (0.08, 0.06, 0.1, 0.9)), (0.6, (0.08, 0.06, 0.1, 0.6)),
+                                  (1, (0.08, 0.06, 0.1, 0.0))]))
+    cr.fill()
     blink = 0.12 if (t * 0.6) % 3.4 < 0.1 else 1.0
     h = 38 * open_ * blink
     for ex in (-60, 60):
@@ -169,13 +172,16 @@ def smell_waves(cr, t, start, x0, x1, y):
 
 def rat_box(cr, t, x, y, label, col):
     """A test box seen from above, with a cat-smell corner (top right)."""
-    rrect(cr, x - 150, y - 190, 300, 380, 16)
+    rrect(cr, x - 160, y - 210, 320, 420, 16)
     paint(cr, hexc("#f4efe4"), OUTLINE, 6)
-    soft_disc(cr, x + 105, y - 145, 80, (0.78, 0.56, 0.9, 0.55))
-    for dx, dy in ((0, 0), (-14, -16), (0, -22), (14, -16)):       # a paw print = cat smell
-        ellipse(cr, x + 105 + dx, y - 140 + dy * 1.2, 9 if dy else 13, 9 if dy else 11)
+    ellipse(cr, x + 110, y - 160, 90, 90)
+    cr.set_source(rad(x + 110, y - 160, 90, [(0, (0.78, 0.56, 0.9, 0.6)), (1, (0.78, 0.56, 0.9, 0.0))]))
+    cr.fill()
+    for dx, dy in ((0, 0), (-18, -20), (0, -28), (18, -20)):       # a paw print = cat smell
+        ellipse(cr, x + 110 + dx, y - 150 + dy * 1.2, 11 if dy else 16, 11 if dy else 13)
         paint(cr, hexc("#8a5aa8"), None, 0)
-    bold_text(cr, label, x, y - 215, 40, col)
+    bold_text(cr, "CAT SMELL", x + 80, y - 95, 22, hexc("#8a5aa8"), outline=None, shadow=0)
+    bold_text(cr, label, x, y - 235, 40, col)
 
 
 def plate(cr, x, y, s=1.0):
@@ -220,9 +226,9 @@ def scene_rat(cr, t, tl):
     zoom = A("r2", "Something")
     cr.save()
     enter(cr, camera(t, [(0, (1.0, 360, 640)), (zoom, (1.9, 330, 690))], dur=0.6))
-    cat_eyes(cr, t, 700, 560, 1.0, open_=1.0 if t < A("r2", "eat") else 0.55)
-    x = lerp(150, 300, seg(t, 0, A("r1", end=True)))
-    rat(cr, t, x, 780, 1.3, walk=t * 7 if t < A("r1", end=True) else None,
+    cat_eyes(cr, t, 590, 560, 1.0, open_=1.0 if t < A("r2", "eat") else 0.55)
+    x = lerp(130, 250, seg(t, 0, A("r1", end=True)))
+    rat(cr, t, x, 800, 1.45, walk=t * 7 if t < A("r1", end=True) else None,
         glow=appear(t, zoom + 0.3, 0.5) if t >= zoom + 0.3 else 0.0)
     cr.restore()
     if t >= A("r2", "eat"):
@@ -234,22 +240,21 @@ def scene_cycle(cr, t, tl):
     A = tl.at
     plain(cr, "#eaf4ec", "#d4e8d8")
     s0 = tl.scene_at(t)[1]
-    if t >= s0:
-        cr.save()
-        k = appear(t, s0, 0.4)
-        cr.translate(200, 560)
-        cr.scale(k, k)
-        germ(cr, t, 0, 0, 0.9)
-        cr.restore()
+    cr.save()
+    k = appear(t, s0, 0.4)
+    cr.translate(190, 600)
+    cr.scale(k, k)
+    germ(cr, t, 0, 0, 1.25)
+    cr.restore()
+    cat(cr, t, 530, 830, 0.95, tie=False, eyes="half" if t < A("r3", "breed") else "open")
     if t >= A("r3", "Toxoplasma"):
         sign(cr, t, A("r3", "Toxoplasma"), 360, 230, "TOXOPLASMA", col=GREEN, size=60)
     if t >= A("r3", "breed"):
-        cat(cr, t, 540, 820, 0.95 * appear(t, A("r3", "breed"), 0.4), tie=False)
         u = seg(t, A("r3", "breed"), A("r3", "breed") + 0.4)
-        stroke_line(cr, [(300, 600), (lerp(300, 470, u), lerp(600, 720, u))], 12, RED)
+        stroke_line(cr, [(290, 640), (lerp(290, 450, u), lerp(640, 740, u))], 12, RED)
     if t >= A("r3", "inside"):
-        ring(cr, t, A("r3", "inside"), 540, 740, 90, 80)
-        tag(cr, t, A("r3", "inside"), 540, 450, "BREEDS ONLY HERE", col=RED, size=36)
+        ring(cr, t, A("r3", "inside"), 530, 760, 90, 80)
+        tag(cr, t, A("r3", "inside"), 400, 420, "BREEDS ONLY IN CATS", col=RED, size=40)
     vignette(cr, 0.3)
 
 
@@ -275,22 +280,23 @@ def scene_study(cr, t, tl):
     plain(cr, "#e8ecf4", "#d4dae8")
     s0 = tl.scene_at(t)[1]
     tag(cr, t, s0, 360, 200, "2000 · OXFORD", col=BLUE, size=46)
-    rat_box(cr, t, 190, 620, "HEALTHY", GREEN)
-    rat_box(cr, t, 530, 620, "INFECTED", RED)
+    rat_box(cr, t, 185, 600, "HEALTHY", GREEN)
+    rat_box(cr, t, 535, 600, "INFECTED", RED)
     # healthy rat runs to the far corner when its line comes
-    u = seg(t, A("r5", "avoided"), A("r5", "avoided") + 0.6)
-    rat(cr, t, lerp(200, 140, u), lerp(660, 770, u), 0.42, facing=1 if u < 0.05 else -1,
+    u = seg(t, A("r5", "avoided"), A("r5", "avoided") + 0.5)
+    rat(cr, t, lerp(190, 150, u), lerp(660, 770, u), 0.55, facing=1 if u < 0.05 else -1,
         walk=t * 12 if 0 < u < 1 else None)
     # the infected one stays put, then walks into the cat smell
-    v = seg(t, A("r5", "looking"), A("r5", "looking") + 1.0)
-    rat(cr, t, lerp(500, 560, v), lerp(700, 500, v), 0.42, walk=t * 9 if 0 < v < 1 else None, glow=0.8,
+    v = seg(t, A("r5", "looking"), A("r5", "looking") + 0.6)
+    rat(cr, t, lerp(500, 540, v), lerp(700, 500, v), 0.55, walk=t * 9 if 0 < v < 1 else None, glow=0.8,
         eyes="happy" if v > 0.9 else "open")
     if t >= A("r5", "avoided"):
-        bold_text(cr, "RUNS", 190, 860, 34, GREEN)
+        bold_text(cr, "RUNS AWAY", 185, 790, 34, GREEN)
+        check(cr, t, A("r5", "avoided"), 300, 480, 30)
     if t >= A("r5", "stopped"):
-        bold_text(cr, "STAYS", 530, 860, 34, RED)
+        bold_text(cr, "STAYS", 535, 790, 34, RED)
     if t >= A("r5", "looking"):
-        ring(cr, t, A("r5", "looking", end=True), 635, 475, 70, 60)
+        ring(cr, t, A("r5", "looking"), 645, 440, 80, 70)
     vignette(cr, 0.25)
 
 
@@ -359,10 +365,10 @@ def scene_argue(cr, t, tl):
 def scene_end(cr, t, tl):
     A = tl.at
     plain(cr, *CREAM)
-    cat_eyes(cr, t, 700, 600, 0.9)
-    rat(cr, t, 300, 800, 1.2, glow=1.0)
-    sign(cr, t, A("r9", "choice"), 360, 210, "WHOSE CHOICE?", col=GOLD, size=60)
-    buttons(cr, t, A("r9", "germ"), [("MY CHOICE", GREEN), ("THE GERM'S", RED)], y=380, size=44, w=300)
+    cat_eyes(cr, t, 590, 600, 0.9)
+    rat(cr, t, 250, 820, 1.3, glow=1.0)
+    sign(cr, t, A("r9", "change"), 360, 210, "WHOSE CHOICE?", col=GOLD, size=60)
+    buttons(cr, t, A("r9", "germ", nth=2), [("MY CHOICE", GREEN), ("THE GERM'S", RED)], y=380, size=44, w=300)
     vignette(cr, 0.3)
 
 
