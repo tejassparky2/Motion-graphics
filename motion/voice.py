@@ -323,7 +323,10 @@ def _kokoro_wav(text, speed, out, voice=None):
     voice = voice or VOICE
     if voice[0] not in _kokoro:
         from kokoro import KPipeline
-        _kokoro[voice[0]] = KPipeline(lang_code=voice[0], repo_id="hexgrad/Kokoro-82M")
+        try:
+            _kokoro[voice[0]] = KPipeline(lang_code=voice[0], repo_id="hexgrad/Kokoro-82M")
+        except TypeError:    # kokoro < 0.9 has no repo_id argument
+            _kokoro[voice[0]] = KPipeline(lang_code=voice[0])
     audio = np.concatenate([r.audio.numpy() for r in _kokoro[voice[0]](text, voice=voice, speed=speed)])
     soundfile.write(out, resample_poly(audio, 147, 80), SR, subtype="PCM_16")  # 24 kHz -> 44.1 kHz
 

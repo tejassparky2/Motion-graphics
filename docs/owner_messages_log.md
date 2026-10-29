@@ -281,3 +281,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-29** and access instagram too do full deep dive on that instagram page use any opensource avaliable
 - **2026-10-29** (on adding Mayank's frame-0 rules to this channel) Yes, add the rules
 - **2026-10-29** Merge the laptop chat's branch (ccr-56282fe5-evehq4-local: Mayank frame-0 rules in CLAUDE.md + research_notes/meanwhilemayank_deep_dive_2026-10-29.md), then push. Use the new rules for the next scripts (rows 75, 77, 79, 81).
+- **2026-10-29** (after the scripts for rows 75, 77, 79, 81 were sent) Make it from research currently did
