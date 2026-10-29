@@ -179,7 +179,7 @@ def living_room(cr):
     cr.rectangle(0, 1010, W, H - 1010)
     cr.set_source_rgb(*hexc("#a8805a")[:3])
     cr.fill()
-    rrect(cr, 470, 300, 150, 120, 6)                               # a frame on the wall
+    rrect(cr, 60, 330, 130, 104, 6)                                # a frame on the wall
     paint(cr, hexc("#c8b08a"), hexc("#7a5a3a"), 10)
 
 
@@ -215,6 +215,12 @@ def scene_blood(cr, t, tl):
     s0 = tl.scene_at(t)[1]
     pop = A("p3", "months", end=True) + 0.15
     k = appear(t, s0, 0.4) * (1 - seg(t, pop, pop + 0.15))
+    for j in range(7):                                             # more cells drifting past behind
+        bx = (90 + j * 113 + 60 * t * (1 + j % 3)) % (W + 160) - 80
+        blood_cell(cr, t + j, bx, 330 + (j * 137) % 560, 46 + 8 * (j % 3), 0.55)
+    cr.rectangle(0, 0, W, H)
+    cr.set_source_rgba(0.98, 0.9, 0.89, 0.35)
+    cr.fill()
     blood_cell(cr, t, 360, 560, 170, k)
     if t >= pop + 0.15:
         blood_cell(cr, t, 360, 560, 170, appear(t, pop + 0.35, 0.4) if t >= pop + 0.35 else 0)
@@ -313,14 +319,22 @@ def scene_brain(cr, t, tl):
     s0 = tl.scene_at(t)[1]
     glow = appear(t, A("p7", "brain"), 0.5) if t >= A("p7", "brain") else 0.0
     brain(cr, t, 360, 600, 1.15 * appear(t, s0, 0.4), glow=glow)
+    if t >= A("p7", "think"):                                      # thoughts sparking across it
+        for j in range(9):
+            ph = (t * 2.2 + j * 0.37) % 1.0
+            sx, sy = 260 + (j * 53) % 200, 500 + (j * 37) % 130
+            ellipse(cr, sx, sy, 7 * (1 - ph) + 2, 7 * (1 - ph) + 2)
+            paint(cr, (1, 0.95, 0.5, 1 - ph), None, 0)
     if t >= A("p7", "Yes"):
-        check(cr, t, A("p7", "Yes"), 560, 420, 50)
+        check(cr, t, A("p7", "Yes"), 150, 450, 50)
     if t >= A("p7", "old") and t < A("p7", "carbon"):
         tag(cr, t, A("p7", "old"), 360, 230, "AS OLD AS YOU", col=GOLD, size=52)
     if t >= A("p7", "carbon"):
         card(cr, t, A("p7", "carbon"), 230, 250, 300, 140, "2005 STUDY", ["CARBON-14"], col=BLUE, title_size=30,
              line_size=40)
-        bomb_cloud(cr, 540, 310, appear(t, A("p7", "bomb"), 0.4) if t >= A("p7", "bomb") else 0)
+        bomb_cloud(cr, 540, 330, appear(t, A("p7", "atom"), 0.4) if t >= A("p7", "atom") else 0)
+    if t >= A("p7", "old", nth=2):
+        tag(cr, t, A("p7", "old", nth=2), 540, 440, "1950s TESTS", col=RED, size=30)
     vignette(cr, 0.4)
 
 
@@ -358,5 +372,5 @@ def draw(cr, t, tl):
     SCENES[name](cr, t, tl)
     cr.restore()
     hook2(cr, t, "IS THIS BOY", "GRANDPA?", end=tl.at("p1", end=True), y=190, big_at=tl.at("p1", "boy"),
-          mark="circle", mark_at=tl.at("p1", "me"))
+          big_size=112, mark="tick", mark_at=tl.at("p1", "me"))
     captions(cr, t, tl)

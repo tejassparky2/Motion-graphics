@@ -391,8 +391,8 @@ def scene_office(cr, t, tl):
     s0 = tl.scene_at(t)[1]
     card(cr, t, s0, 360, 520, 460, 400, "US COPYRIGHT", ["Application:", "AI-made picture", "Owner: ?"], col=BLUE,
          title_size=34, line_size=36)
-    if t >= A("a7", "not him"):
-        stamp(cr, t, A("a7", "not him"), 360, 600, "REFUSED", col=RED, size=80)
+    if t >= A("a7", "not"):
+        stamp(cr, t, A("a7", "not"), 360, 600, "REFUSED", col=RED, size=80)
     if t >= A("a7", "human"):
         tag(cr, t, A("a7", "human"), 360, 230, "NOT ENOUGH HUMAN WORK", col=RED, size=40)
     if t >= A("a7", "court"):
@@ -406,6 +406,11 @@ def scene_office(cr, t, tl):
 def scene_split(cr, t, tl):
     A = tl.at
     plain(cr, "#f4ecf8", "#e2d4ec")
+    sign(cr, t, tl.scene_at(t)[1], 360, 220, "WHAT MAKES IT ART?", col=PURPLE, size=50)
+    for x in (190, 530):                                           # two empty cards wait for their word
+        rrect(cr, x - 150, 360, 300, 400, 24)
+        paint(cr, alpha(WHITE, 0.45), alpha(OUTLINE, 0.35), 5)
+        bold_text(cr, "?", x, 600, 120, alpha(OUTLINE, 0.25), outline=None, shadow=0)
     if t >= A("a8", "idea"):
         k = appear(t, A("a8", "idea"), 0.4)
         cr.save()
@@ -437,7 +442,7 @@ def scene_end(cr, t, tl):
     ribbon(cr, t, 540, 740, 0.8)
     girl(cr, t, tl, 140, 1060, 0.85, arms=("hips", "down"), eyes="half", mouth="smug")
     sign(cr, t, A("a9", "painting"), 360, 210, "WHOSE PAINTING?", col=GOLD, size=56)
-    buttons(cr, t, A("a9", "machine"), [("MINE", GREEN), ("THE MACHINE'S", RED)], y=370, size=44, w=330)
+    buttons(cr, t, A("a9", "machine"), [("MINE", GREEN), ("THE MACHINE'S", RED)], y=370, size=40, w=300)
     vignette(cr, 0.3)
 
 
