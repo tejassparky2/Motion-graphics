@@ -25,8 +25,10 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 CACHE = os.path.join(ROOT, "build", "hinglish", "tts")
 SR = 44100
 LEAD = 0.10        # first word lands this early (his reels speak from ~0.08 s)
-GAP = 0.26         # silence between two lines
-QGAP = 0.34        # after a question
+# Pauses between lines, from Whisper word timings of the reference reels (pace_measure.py, 29 Oct 2026): sentence
+# pauses 0.50-0.61 s median. Our takes keep ~0.07 s of trimmed edge, so the added gap is a little shorter.
+GAP = 0.43         # silence between two lines
+QGAP = 0.53        # after a question
 TAIL = 0.8         # after the last line
 
 
@@ -115,7 +117,71 @@ def _parler_batch(jobs, cfg):
 
 
 def _raw_path(text, cfg):
-    return os.path.join(CACHE, f"raw_{_hash(text, cfg)}.wav")
+    """Raw engine output, keyed only by what changes the generated voice (not by pace or the studio chain)."""
+    gen = {k: v for k, v in cfg.items() if k not in ("studio", "pace_wps")}
+    return os.path.join(CACHE, f"raw_{_hash(text, gen)}.wav")
+
+
+def pace(a, text, target_wps, max_pause=0.3, keep_pause=0.24):
+    """Match the reference delivery (owner, 29 Oct 2026: "match voice speech pace all to mayank"): shorten pauses
+    inside a line longer than `max_pause` to `keep_pause`, then time-stretch (rubberband, pitch kept) so the words per
+    second of the whole line equal `target_wps`. The stretch is limited to 0.85-1.35x so it never sounds processed."""
+    hop = int(0.02 * SR)
+    env = np.sqrt(np.convolve(a ** 2, np.ones(hop) / hop, mode="same"))
+    quiet = env < max(1e-4, env.max() * 0.02)
+    out, i, n = [], 0, len(a)
+    while i < n:                                   # squeeze long internal silences
+        if quiet[i]:
+            j = i
+            while j < n and quiet[j]:
+                j += 1
+            seg = a[i:j]
+            if (j - i) / SR > max_pause and 0 < i and j < n:
+                k = int(keep_pause * SR / 2)
+                seg = np.concatenate([seg[:k], seg[-k:]])
+            out.append(seg)
+            i = j
+        else:
+            j = i
+            while j < n and not quiet[j]:
+                j += 1
+            out.append(a[i:j])
+            i = j
+    a = np.concatenate(out)
+    # whole-line rate (words / take length), the same way the reference's 198-200 wpm (3.3 w/s) was measured; an
+    # energy-gated "speaking time" undercounts quiet consonants and made lines slower instead of faster
+    words = len([w for w in text.replace("...", " ").split() if any(ch.isalnum() for ch in w)])
+    rate = words / max(0.3, len(a) / SR)
+    tempo = float(np.clip(target_wps / rate, 0.85, 1.35)) if rate > 0 else 1.0
+    if abs(tempo - 1) < 0.02:
+        return a
+    p = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1",
+                        "-i", "pipe:0", "-af", f"rubberband=tempo={tempo:.4f}:transients=crisp:formant=preserved",
+                        "-f", "f32le", "pipe:1"], input=a.astype(np.float32).tobytes(), capture_output=True, check=True)
+    return np.frombuffer(p.stdout, np.float32).astype(np.float64)
+
+
+VOICE_EQ = os.path.join(HERE, "voice_eq.json")
+
+
+def studio(a, version):
+    """Studio narration chain (owner, 29 Oct 2026: "give voice a studio effect like mayank"): light denoise,
+    75 Hz high-pass, the EQ measured to move our voice toward his narration's tonal balance (voice_match.py),
+    narrator compression, de-essing and a peak limiter. `version` only names the chain for the cache key."""
+    eq = json.load(open(VOICE_EQ))
+    entries = ";".join(f"entry({f},{g})" for f, g in zip(eq["bands_hz"], eq["gain_db"]))
+    chain = ",".join([
+        "afftdn=nf=-38",                                   # gentle: a stronger setting dulled the 5-9 kHz range
+        "highpass=f=75",
+        f"firequalizer=gain_entry='{entries}'",
+        "acompressor=threshold=-22dB:ratio=3:attack=5:release=70:makeup=3dB",
+        "deesser=i=0.25:m=0.5:f=0.5",                      # light: v1's 0.5 cut the presence the EQ adds
+        "alimiter=limit=0.89:level=false",
+    ])
+    p = subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-f", "f32le", "-ar", str(SR), "-ac", "1",
+                        "-i", "pipe:0", "-af", chain, "-f", "f32le", "pipe:1"],
+                       input=a.astype(np.float32).tobytes(), capture_output=True, check=True)
+    return np.frombuffer(p.stdout, np.float32).astype(np.float64)
 
 
 def _parler(text, cfg):
@@ -161,6 +227,11 @@ def take(text, cfg):
     if not os.path.exists(wav):
         data, words = ENGINES[cfg["engine"]](text, cfg)
         a, off = _trim(_decode(data))
+        if cfg.get("pace_wps"):
+            a = pace(a, text, cfg["pace_wps"])
+            words = None                                   # boundaries no longer line up after the stretch
+        if cfg.get("studio"):
+            a = studio(a, cfg["studio"])
         if words:
             words = [(w, max(0.0, s - off), d) for w, s, d in words]
         with wave.open(wav, "wb") as f:

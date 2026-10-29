@@ -16,8 +16,12 @@ A = {k: os.path.join(ASSETS, v) for k, v in {
 USED_ASSETS = [os.path.basename(v) for v in A.values()]
 CREDITS_FILES = [os.path.join(ASSETS, "credits.json")]
 
-NARRATOR = dict(engine="edge", voice="hi-IN-MadhurNeural", rate="+35%")
-NARRATOR_LABEL = "PLACEHOLDER Microsoft Madhur (hi-IN) via edge-tts, until the owner picks the channel voice"
+NARRATOR = dict(engine="parler", seed=3, studio="v2", pace_wps=3.3,   # his reels: 198-200 wpm = 3.3 words/s per line
+                description="Rohit speaks with a slightly high pitch in a calm, clear and slightly expressive tone, at a "
+                            "fast pace, like a documentary narrator explaining a surprising fact. The recording is very "
+                            "clear and close-sounding, with no background noise.")
+NARRATOR_LABEL = ("the channel's own designed narrator (Indic Parler-TTS 'Rohit', made from a text description; nobody "
+                  "is cloned), studio chain matched to the reference narration's tonal balance")
 MUSIC = "pad"
 TAIL = 0.9
 
@@ -25,7 +29,7 @@ SCRIPT = [
     dict(id="b1", text="सोचो, एक ऐसा चूहा जो बिल्ली की स्मेल से भागता नहीं... बल्कि ख़ुद चल के उसकी तरफ़ जाता है।"),
     dict(id="b2", text="और ये कोई कार्टून नहीं है। ये एक छोटा सा पैरासाइट करवाता है।"),
     dict(id="b3", text="और सबसे अजीब बात? अंदाज़ा है कि दुनिया में हर तीन में से एक इंसान के अंदर भी ये हो सकता है।"),
-    dict(id="b4", text="इसका नाम है टॉक्सोप्लाज़्मा गोंडी।"),
+    dict(id="b4", text="इसका नाम है टॉक्सो-प्लाज़्मा गोंडी।"),
     dict(id="b5", text="इस पैरासाइट की ज़िंदगी का एक ही गोल है: बिल्ली के पेट तक पहुँचना।"),
     dict(id="b6", text="क्योंकि ये अपने बच्चे सिर्फ़ बिल्ली के अंदर ही बना सकता है।"),
     dict(id="b7", text="बिल्ली की पॉटी से इसके अंडे मिट्टी और पानी में आते हैं। चूहा उन्हें खा लेता है।"),
@@ -42,9 +46,9 @@ SCRIPT = [
     dict(id="b16", text="कुछ स्टडीज़ ने इन्फ़ेक्टेड लोगों के बिहेवियर में फ़र्क़ देखा है। पर ये अभी प्रूफ़ नहीं है। "
                         "साइंटिस्ट्स अभी भी इससे लेकर डिबेट कर रहे हैं।"),
     dict(id="b17", text="इंसान को ये अक्सर बिल्ली से नहीं, बल्कि कच्चे या अधपके मीट से, और बिना धुले फल-सब्ज़ी से मिलता है।"),
-    dict(id="b18", text="पर एक जगह ये सच में ख़तरनाक है: प्रेगनेंसी। अगर प्रेगनेंसी में पहली बार इन्फ़ेक्शन हो, "
+    dict(id="b18", text="पर एक जगह ये सच में ख़तरनाक है: प्रेग्नेंसी। अगर प्रेग्नेंसी में पहली बार इन्फ़ेक्शन हो, "
                         "तो ये बच्चे तक पहुँच सकता है।"),
-    dict(id="b19", text="इसलिए डॉक्टर कहते हैं: प्रेगनेंसी में बिल्ली का लिटर बॉक्स ख़ुद साफ़ मत करिए, मीट अच्छे से पकाइए, "
+    dict(id="b19", text="इसलिए डॉक्टर कहते हैं: प्रेग्नेंसी में बिल्ली का लिटर बॉक्स ख़ुद साफ़ मत करिए, मीट अच्छे से पकाइए, "
                         "और सब्ज़ी धो के खाइए।"),
     dict(id="b20", text="और हाँ, इसका मतलब ये नहीं कि बिल्ली पालना ग़लत है। जो बिल्ली घर के अंदर रहती है और कच्चा मीट "
                         "नहीं खाती, उसके इन्फ़ेक्टेड होने का चांस काफ़ी कम होता है।"),
