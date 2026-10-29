@@ -582,7 +582,7 @@ def _along(pts, p):
     return pts[-1]
 
 
-def erase(cr, t, t0, text, x, y, size, color=INK, dur=0.9, eraser=None, ghost=0.12, anchor="lt"):
+def erase(cr, t, t0, text, x, y, size, color=INK, dur=0.9, eraser=None, ghost=0.12, anchor="lt", eraser_h=None):
     """A word rubbed out by an eraser (the Toxoplasma metaphor, "dar mita deta hai"): zig-zag strokes clear it left to
     right, leaving a faint smudge and crumbs below. `eraser` = cut-out photo drawn at the stroke head (flat pink block
     if None)."""
@@ -616,7 +616,7 @@ def erase(cr, t, t0, text, x, y, size, color=INK, dur=0.9, eraser=None, ghost=0.
         return
     ex, ey = _along(pts, p)
     ey -= 80 * clamp((t - t0 - dur) / 0.3)                 # lifts off when done
-    eh = h * 1.0
+    eh = eraser_h or h * 1.0
     if eraser:
         photo(cr, eraser, ex, ey - eh * 0.25, eh, alpha=a, rot=-0.45)
     else:

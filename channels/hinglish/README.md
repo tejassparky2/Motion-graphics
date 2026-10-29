@@ -95,6 +95,11 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Every line gets a Whisper retake (`retake.py`) and a liveliness retake (`lively_retake.py`, keeping the take
     with the widest pitch movement that stays clear).
   - Nobody is cloned.
+- **Topics: science AND tech** (owner, 29 Oct 2026: "Not only science we also do tech like how speaker works how
+  internet works with examples").
+  - Tech explainers, "how X works": a speaker, the internet, a phone. Each one is built around everyday examples.
+  - They use the same format: a "socho" hook, a picture change every ~3 s, and a literal object on screen for every
+    noun.
 - **No AI wording** in descriptions, captions or upload sheets (owner, 29 Oct 2026: "Don't add anything as ai in
   descriptions or anything"). Photo credits stay, because CC BY licences require them.
 - **Channel name: "Socho with Tejas", handle @sochowithtejas** (owner, 29 Oct 2026: "I go with sochowithtejas").
