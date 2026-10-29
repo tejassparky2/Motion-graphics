@@ -1,0 +1,150 @@
+{
+ "words": [
+  {
+   "beat": "r1",
+   "word": "Doctor,",
+   "start": 0.12,
+   "end": 0.4
+  },
+  {
+   "beat": "r1",
+   "word": "why",
+   "start": 0.82,
+   "end": 1.0
+  },
+  {
+   "beat": "r1",
+   "word": "does",
+   "start": 1.0,
+   "end": 1.14
+  },
+  {
+   "beat": "r1",
+   "word": "my",
+   "start": 1.14,
+   "end": 1.28
+  },
+  {
+   "beat": "r1",
+   "word": "rat",
+   "start": 1.28,
+   "end": 1.46
+  },
+  {
+   "beat": "r1",
+   "word": "walk",
+   "start": 1.46,
+   "end": 1.62
+  },
+  {
+   "beat": "r1",
+   "word": "straight",
+   "start": 1.62,
+   "end": 1.84
+  },
+  {
+   "beat": "r1",
+   "word": "up",
+   "start": 1.84,
+   "end": 2.0
+  },
+  {
+   "beat": "r1",
+   "word": "to",
+   "start": 2.0,
+   "end": 2.12
+  },
+  {
+   "beat": "r1",
+   "word": "our",
+   "start": 2.12,
+   "end": 2.24
+  },
+  {
+   "beat": "r1",
+   "word": "cat?",
+   "start": 2.24,
+   "end": 2.42
+  },
+  {
+   "beat": "r2",
+   "word": "Your",
+   "start": 2.769,
+   "end": 2.889
+  },
+  {
+   "beat": "r2",
+   "word": "rat",
+   "start": 2.889,
+   "end": 3.089
+  },
+  {
+   "beat": "r2",
+   "word": "isn't",
+   "start": 3.089,
+   "end": 3.389
+  },
+  {
+   "beat": "r2",
+   "word": "brave.",
+   "start": 3.389,
+   "end": 3.589
+  },
+  {
+   "beat": "r2",
+   "word": "Something",
+   "start": 3.957,
+   "end": 4.357
+  },
+  {
+   "beat": "r2",
+   "word": "inside",
+   "start": 4.357,
+   "end": 4.757
+  },
+  {
+   "beat": "r2",
+   "word": "it",
+   "start": 4.757,
+   "end": 4.957
+  },
+  {
+   "beat": "r2",
+   "word": "wants",
+   "start": 4.957,
+   "end": 5.157
+  },
+  {
+   "beat": "r2",
+   "word": "the",
+   "start": 5.157,
+   "end": 5.337
+  },
+  {
+   "beat": "r2",
+   "word": "cat",
+   "start": 5.337,
+   "end": 5.537
+  },
+  {
+   "beat": "r2",
+   "word": "to",
+   "start": 5.537,
+   "end": 5.697
+  },
+  {
+   "beat": "r2",
+   "word": "eat",
+   "start": 5.697,
+   "end": 5.897
+  },
+  {
+   "beat": "r2",
+   "word": "it.",
+   "start": 5.897,
+   "end": 6.057
+  }
+ ],
+ "r2_start": 2.7685260770975058,
+ "end": 6.082698412698413
+}

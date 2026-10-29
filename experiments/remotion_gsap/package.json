@@ -1,0 +1,17 @@
+{
+  "name": "remotion-gsap-test",
+  "private": true,
+  "description": "Test: can Remotion + GSAP upgrade the Interestingly Strange animation pipeline?",
+  "scripts": {
+    "render": "remotion render src/index.ts RatHook out/rat_hook.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.539",
+    "@types/react": "^19.3.0",
+    "gsap": "^3.15.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.539",
+    "typescript": "^5.9.3"
+  }
+}
