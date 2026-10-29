@@ -180,4 +180,11 @@
 - **Interactive 3D horror stories** (owner, 25 Oct 2026: "not for this channel", "3D"): separate chat
   session_0153qDV4AufFgT2PhEBEfS8n, branch `ccr-56282fe5-evehq4-horror` (second-person, viewers vote what happens in
   part 2). Don't make them on this branch.
+- **Two chats for this channel (owner, 29 Oct 2026: "keep two chats like you said"):** this cloud chat
+  (session_013CwwMNXoAKQ7CXyLhTs3ka, branch `ccr-56282fe5-evehq4`) makes, checks and sends the videos. The owner's
+  laptop chat (Claude desktop app on Windows, folder C:\Users\tejas\Documents\shorts research) does what needs the
+  owner's own computer and internet: downloading reference videos (YouTube/Instagram block the cloud server) and
+  research. It works on branch `ccr-56282fe5-evehq4-local`; its findings go to `research_notes/` there, and this chat
+  reads them with `git fetch origin ccr-56282fe5-evehq4-local`. Neither chat commits downloaded videos or chat
+  transcripts (the repo is public).
 - The global news & tech channel is also separate, with its own chat and branch (`ccr-56282fe5-evehq4-news`). Don't make news videos on this branch.
