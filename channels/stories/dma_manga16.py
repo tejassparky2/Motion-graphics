@@ -39,13 +39,12 @@ BEATS = [
                           "fixed everything. One swap. I thought... maybe they were in the same loop.]", gap=0.4),
     s(7, 17, 3, "haruto", "Next game, I'd have something. I could've kept you and Yui alive.", gap=0.4),
     s(8, 18, 1, "ren", "Momo paid him with the tokens we gave it for Saki."),
-    s(9, 18, 2, "ren", "Kota found his in nine. [Go cut the loop before he died.|Gō cut the loop before he died.]",
+    s(9, 18, 2, "ren", "Kota found his in nine. Go cut the loop before he died.",
       gap=0.45),
-    s(10, 18, 3, "ren", "[Go's last swap saved the nine people behind him.|Gō's last swap saved the nine people behind "
-                        "him.]", gap=0.45),
+    s(10, 18, 3, "ren", "Go's last swap saved the nine people behind him.", gap=0.45),
     s(11, 19, 1, "riku", "Eighteen alive. Nine tokens. You all owe me."),
     s(12, 19, 2, "ren", "On the first day, Haruto said he was building a sustainable business model.", gap=0.45),
-    s(13, 19, 3, "ren", "[Today he sold Go for thirty tokens.|Today he sold Gō for thirty tokens.]", gap=0.4),
+    s(13, 19, 3, "ren", "Today he sold Go for thirty tokens.", gap=0.4),
     s(14, 20, 1, "ren", "The boy who killed Saki kept his word. My best friend broke his."),
     s(15, 20, 2, "ren", "I didn't know anyone in this room anymore.", gap=0.5),
     s(16, 20, 3, "momo", "Eighteen players! Momo loves a smaller loop!", gap=0.5, sfx="chime"),
@@ -86,5 +85,5 @@ def cues(t, tl):
 
 def draw(cr, t, tl):
     R.draw(cr, t, tl)
-    frame(cr, t, tl, R, 16, [("HE SOLD GŌ", False), ("FOR 30 TOKENS.", True)], "o16", "GAME FOUR", KEY)
+    frame(cr, t, tl, R, 16, [("HE SOLD GO", False), ("FOR 30 TOKENS.", True)], "o16", "GAME FOUR", KEY)
     cues(t, tl)
