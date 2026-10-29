@@ -100,9 +100,42 @@ def stats(cr, t, items, y=28):
 
 
 # ------------------------------------------------------------------ captions (sentence case, key word coloured)
+class _Word:
+    """One caption word cut out of a `[spoken|shown]` unit."""
+    __slots__ = ("shown", "start", "end")
+
+    def __init__(self, shown, start, end):
+        self.shown, self.start, self.end = shown, start, end
+
+
+def _split(u):
+    """A bracketed unit whose caption is several words, cut into one word each (its time shared out by length), so
+    it gets the usual 1-3 word captions instead of the whole sentence squeezed small onto one line."""
+    words = u.shown.split()
+    if len(words) < 2:
+        return [u]
+    total, t, out = sum(len(w) for w in words), u.start, []
+    for w in words:
+        d = (u.end - u.start) * len(w) / total
+        out.append(_Word(w, t, t + d))
+        t += d
+    return out
+
+
 def _chunks(tl):
-    from motion.captions import _chunks as base
-    return base(tl)
+    """motion.captions' rule (1-3 words, break at punctuation, at most 16 characters) on the split words."""
+    from motion.captions import PUNCT
+    out = []
+    for b in tl.beats:
+        cur = []
+        for u in (w for v in b.units for w in _split(v)):
+            cur.append(u)
+            if u.shown[-1] in PUNCT or len(cur) == 3 or len(" ".join(x.shown for x in cur)) > 16:
+                out.append(cur)
+                cur = []
+        if cur:
+            out.append(cur)
+    return out
 
 
 _caps = {}
