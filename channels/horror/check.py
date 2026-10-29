@@ -41,7 +41,7 @@ SAME = {"grey": "gray", "meter": "metre", "meters": "metres", "mrs": "mrs", "key
         "wylie": "wiley", "wily": "wiley", "wanna": "want to", "eyeholes": "eye holes", "too": "two",
         "harito": "haruto", "harudo": "haruto", "ricky": "riku", "nishita": "nishida", "koda": "kota", "coda": "kota",             # Whisper's spellings of the DMA names
         "wren": "ren", "tiktok": "tick tock", "realize": "realise", "curb": "kerb", "mr": "mister", "ohh": "oh", "dammit": "damn it", "birthdays": "birth days", "won": "one",
-        "logbook": "log book", "it's": "its", "cota": "kota", "9s": "nines", "10s": "tens", "hole": "whole"}
+        "logbook": "log book", "it's": "its", "cota": "kota", "9s": "nines", "10s": "tens", "hole": "whole", "goes": "go's", "could've": "could have", "sackies": "saki's", "sakeys": "saki's", "sakis": "saki's", "saccies": "saki's"}
 
 
 def norm(s):
