@@ -21,7 +21,7 @@ argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 ap = argparse.ArgumentParser()
 ap.add_argument('--out', default='/tmp/pelican.blend')
 ap.add_argument('--seconds', type=float, default=shots.DURATION)
-ap.add_argument('--samples', type=int, default=48)
+ap.add_argument('--samples', type=int, default=10)
 args = ap.parse_args(argv)
 
 t0 = time.time()

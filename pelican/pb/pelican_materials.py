@@ -113,10 +113,10 @@ def pouch(name="Pouch"):
     folds = n.wave(n.mapping(uv, scale=(1.0, 1.0, 1.0)), scale=24.0, dist=4.0, detail=3.0, axis='Y',
                    dscale=2.0)
     fine = n.noise(obj, scale=700.0, detail=4.0)
-    veins = n.wave(obj, scale=60.0, dist=18.0, detail=6.0, kind='RINGS')
+    veins = n.wave(obj, scale=60.0, dist=18.0, detail=2.0, kind='RINGS')
     vein_m = n.maprange(veins.outputs['Fac'], 0.0, 0.12, 1.0, 0.0)
     col = n.mix(n.noise(obj, scale=40.0).outputs['Fac'], (1.0, 0.62, 0.04), (0.98, 0.50, 0.04))
-    col = n.mix(n.math('MULTIPLY', vein_m, 0.35), col, (0.85, 0.30, 0.06))
+    col = n.mix(n.math('MULTIPLY', vein_m, 0.10), col, (0.90, 0.40, 0.06))
     rim = n.maprange(n.math('ABSOLUTE', n.math('SUBTRACT', vv, 0.5)), 0.38, 0.5, 0.0, 1.0)
     col = n.mix(n.math('MULTIPLY', rim, 0.5), col, (0.95, 0.45, 0.25))
     h = n.math('ADD', n.math('MULTIPLY', folds.outputs['Fac'], 1.0), n.math('MULTIPLY', fine.outputs['Fac'], 0.3))

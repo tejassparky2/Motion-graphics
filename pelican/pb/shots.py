@@ -113,16 +113,16 @@ def setup(scene, T, bike, pel, rg, m, sun, sky):
         return (X + 0.45, Y, 0.80)
     shot_camera('approach', 105, 2.2, body_focus, p1, q1, 0.0, 4.0)
 
-    # 2. side tracking on the drive side, rising from wheel height to the rider
+    # 2. side tracking on the drive side, drifting up from the drivetrain to the rider
     def p2(x):
         X, Y = bike_at(x)
         u = smoothstep(4.0, 8.0, x)
-        return (X + 0.35 + 0.25 * u, Y - 1.95 + 0.15 * u, 0.42 + 0.30 * u)
+        return (X + 0.42 + 0.06 * u, Y - 2.25, 0.50 + 0.30 * u)
 
     def q2(x):
         X, Y = bike_at(x)
         u = smoothstep(4.0, 8.0, x)
-        return (X + 0.40 + 0.05 * u, Y, 0.40 + 0.30 * u)
+        return (X + 0.44, Y, 0.56 + 0.16 * u)
     shot_camera('side', 32, 4.0, body_focus, p2, q2, 4.0, 8.0)
 
     # 3. front three-quarter, camera retreating ahead of the bike; the bird looks at us

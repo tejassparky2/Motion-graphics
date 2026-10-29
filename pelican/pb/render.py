@@ -2,8 +2,8 @@
 import bpy
 
 
-def setup(scene, res=(1920, 1080), samples=48, pct=100, fps=24, motion_blur=True,
-          noise_threshold=0.03, preview=False):
+def setup(scene, res=(1920, 1080), samples=10, pct=100, fps=24, motion_blur=True,
+          noise_threshold=0.04, preview=False):
     r = scene.render
     r.engine = 'CYCLES'
     r.resolution_x, r.resolution_y = res
@@ -27,7 +27,7 @@ def setup(scene, res=(1920, 1080), samples=48, pct=100, fps=24, motion_blur=True
     c.denoiser = 'OPENIMAGEDENOISE'
     c.denoising_input_passes = 'RGB_ALBEDO_NORMAL'
     c.denoising_prefilter = 'ACCURATE'
-    c.denoising_quality = 'HIGH'
+    c.denoising_quality = 'BALANCED'
     c.adaptive_min_samples = 4
     c.max_bounces = 6
     c.diffuse_bounces = 2
@@ -50,8 +50,7 @@ def setup(scene, res=(1920, 1080), samples=48, pct=100, fps=24, motion_blur=True
     c.use_animated_seed = True
     c.texture_limit_render = 'OFF'
     try:
-        c.use_auto_tile = True
-        c.tile_size = 1024
+        c.use_auto_tile = False
     except AttributeError:
         pass
     if preview:
