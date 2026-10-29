@@ -44,7 +44,7 @@ BEATS = [
     n(12, 9, 2, "He opened ten lockers. None of them had his name.", gap=0.45),
     n(13, 9, 3, "So he swapped the cards in his first and tenth lockers.", gap=0.4),
     n(14, 9, 4, "", hold=1.4, gap=0.5),
-    n(15, 10, 1, "[Shibata Go. Ten.|SHIBATA GO. Ten.] Not found.", impact=True, sfx="sting"),
+    n(15, 10, 1, "[Shibata Go. Ten.|SHIBATA GO. Ten.] Not found.", impact=True, sfx="sting", sfx_at=-1.1),   # on the name, "Shibata" was heard "Shimata"
     s(16, 10, 2, "student_d", "Riku lied!", gap=0.35, impact=True),       # am_michael's was heard "Riku live"
     s(17, 10, 2, "student_a", "It's still one loop!", gap=0.25),
     s(18, 10, 3, "ren", "[Go, had told him to stay behind him.|Go had told him to stay behind him.] Kota was next.",
