@@ -209,3 +209,8 @@ platforms; the hits (2.3M-11.2M) differ from the flops (84K-147K) in their openi
   reads them with `git fetch origin ccr-56282fe5-evehq4-local`. Neither chat commits downloaded videos or chat
   transcripts (the repo is public).
 - The global news & tech channel is also separate, with its own chat and branch (`ccr-56282fe5-evehq4-news`). Don't make news videos on this branch.
+- **Hinglish mini-documentary channel** (owner, 29 Oct 2026: "make same type of videos ... in hindi ... let's try what
+  worked for him", then "Brand-new channel"): a NEW channel copying Meanwhile Mayank's winning format (2-minute
+  Hinglish explainers, photo cut-outs on poster paper, Instagram first). Name not chosen yet. Branch
+  `ccr-56282fe5-evehq4-hinglish`, rules and scripts in `channels/hinglish/` there; started from the laptop chat.
+  Don't make them on this branch.
