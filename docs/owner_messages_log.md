@@ -267,3 +267,7 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-26** [uploaded Studio export Content_2026-09-29_2026-10-26.zip]
 - **2026-10-26** Ship it (the re-cut plan: character asks first in 10 queued videos, new posting order)
 - **2026-10-29** (screenshot of instagram.com/meanwhilemayank: 12 posts, 63.7K followers; reels 257K, 2.8M, 255K, 373K, 83.6K, 3.3M) Deeply research this channel within weeks it reach this much followers get insta access workaround or I will provide you insta account to acess
+- **2026-10-29** Use opensouce to download
+- **2026-10-29** Do it
+- **2026-10-29** [photo of the laptop: Claude desktop app, local session in C:\Users\tejas\Documents\shorts research, git init done, Remote Control turned on] Do it
+- **2026-10-29** Do a thing tranfer all and everything of this chat to it evey message everything we do every research

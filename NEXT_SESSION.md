@@ -4,6 +4,24 @@ Read CLAUDE.md first, then PROJECT_HISTORY.md and docs/owner_messages_log.md (ev
 Branch: `ccr-56282fe5-evehq4` (Interestingly Strange, English). Always `git pull --rebase` before pushing: other chats
 also push here. The repo is **public**.
 
+## Status on 29 Oct 2026 (session_013CwwMNXoAKQ7CXyLhTs3ka)
+- **26 Oct analytics (out/analytics_2026-10-26.md):** stayed-to-watch decides everything; openings where a character
+  asks the question from the first words hold ~72%, narrator-scene openings ~62%, talking to the viewer ~47%. Average
+  viewed is 85.7%. Rule added to CLAUDE.md ("Line 1 = a character asking the impossible question").
+- **Re-cut and posting order (owner: "Ship it"):** 10 queued videos re-cut so the character asks first. Sent as
+  out/packs/order set 1 (heaven_forever, free_will_god, trolley_problem, grandma_dog, who_made_evil) and set 2
+  (perfect_life, euthyphro, prayer_plan, newcomb_box, grandfather_paradox). Next: kitten_evil, then the held tests
+  (57, 59, 61-66, 68, 78) at most one every 2-3 days, plus new character-first scripts for rows 75, 77, 79, 81.
+  Waiting for the owner's stayed-to-watch numbers on set 1 (2 days after posting).
+- **Meanwhile Mayank research (research_notes/meanwhilemayank_2026-10-29.md):** 63.7K Instagram followers from 12 posts,
+  but 2,130 YouTube subs; the same videos did 100-800x better on Instagram. Findings sent to the doctor chat. The
+  owner should also post Interestingly Strange on Instagram Reels.
+- **Downloads:** YouTube and Instagram block downloads from the cloud server; don't try to get around their bot
+  checks. The owner's laptop is Windows (C:\Users\tejas\Documents\shorts research, Claude desktop app), which a
+  cloud chat can't attach to; downloads run in the owner's local session there with yt-dlp.
+- **Owner wants the local laptop session to have everything (29 Oct):** it clones this branch and reads the two chat
+  transcripts the owner saves next to it (old account + this account; never committed, the repo is public).
+
 ## Status on 25 Oct 2026 (session_013CwwMNXoAKQ7CXyLhTs3ka)
 - Sets go out 5 at a time from the row after the owner's last post; last set sent = rows 52, 53, 55, 56, 57 (row 54
   zeigarnik skipped: "not good"). Next set = rows 58-62. Calendar dates run ~1 day behind real posting.
