@@ -3,6 +3,12 @@
 Owner, 25 Oct 2026: "stories videos like this but with better animation, not for this channel" / "Yes open separate chat, 3D".
 Branch `ccr-56282fe5-evehq4-horror`. Not Interestingly Strange: never put these in that calendar.
 
+**Status (owner, 29 Oct 2026): "I am uploading to Nancy removed all old short and no more interactive horror there".**
+The Midnight with Nancy channel now carries the Dead Man's Algorithm manga (channels/stories/dma_manga*.py;
+schedule and metadata in out/stories/DMA_upload_guide.md). The owner deleted the channel's old Shorts. Interactive
+horror is stopped: don't make Tower 9 Night 5, Bench Three Part 2, Time Lock or The Seventh Kid, and don't put any of
+them on that channel. The tools below stay in the repo in case the owner wants them back.
+
 ## Format
 - Second person ("you"), 70-80 s, numbered series (Part 1 / Night 1 style).
 - A ticking resource on a HUD (battery, fuel, light), one rule, a mostly unseen threat, a phone/radio message that
@@ -220,4 +226,7 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   (start Thu 29 Oct; Shorts 4:30 and 7:30 PM IST from the main channel's own 5-8 PM IST peak; long videos 10 AM IST
   at weekends and 2:30 PM IST on weekdays from Buffer's 24 Jul 2026 1.8M-video study and SocialPilot's 2026
   301k-video study), each chapter's long video the day after its last Short, plus every title, description, tag
-  and pinned comment. Assumes DMA has its own channel (Nancy holds 4:30/7:30 PM on its channel).
+  and pinned comment. Goes on the Nancy channel (now manga only).
+- 29 Oct: owner "I am uploading to Nancy removed all old short and no more interactive horror there": the Nancy channel
+  is now the DMA manga channel; interactive horror stopped (see Status at the top). The 4:30 / 7:30 PM IST slots in
+  the upload guide are free for the manga.

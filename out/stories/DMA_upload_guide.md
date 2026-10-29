@@ -81,8 +81,8 @@ IST, and one that lands on a weekday at 2:30 PM IST.
 - **Compare against the main channel.** Its posting-time trial (4:30 / 7:30 PM vs the old 9:30 PM / 4:30 AM) ends today.
   If the old late-night times win on 24-hour, 7-day and 28-day views, the same will likely hold here. Then move these
   Shorts to 9:30 PM and 4:30 AM IST, which are 11:00 AM and 6:00 PM US Eastern after 1 Nov.
-- **One channel assumption.** These times assume DMA has its own channel. If it goes on the Midnight with Nancy channel,
-  4:30 PM and 7:30 PM are already taken by Tower 9 and the 7:30 story. Tell me and I'll interleave the two series.
+- **Channel.** These go on the Midnight with Nancy channel, which now carries only the manga (the old horror Shorts are
+  deleted), so 4:30 PM and 7:30 PM IST are free.
 
 ## Settings for every video
 
