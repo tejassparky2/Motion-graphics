@@ -78,7 +78,7 @@ def sea(T):
         brown = np.cumsum(w)
         brown -= signal.savgol_filter(brown, 4001, 1) if n > 4001 else brown.mean()
         brown /= np.abs(brown).max() + 1e-9
-        surf = butter(RNG.normal(0, 1, n), 250, 2500)
+        surf = butter(RNG.normal(0, 1, n), 200, 1800)
         swell = 0.55 + 0.45 * np.sin(2 * np.pi * t / (6.5 + ch * 0.8) + ch * 1.7) ** 2
         lap = np.zeros(n)
         k = 0.3
@@ -134,7 +134,7 @@ def bicycle(T, m, gains):
             place(thump, clip * RNG.uniform(0.5, 1.0), i / SR)
     # chain whir follows cadence; freewheel ticks while coasting
     cad = np.interp(t, m['t'], np.gradient(m['crank'], m['t']) / (2 * np.pi))
-    whir = butter(RNG.normal(0, 1, n), 1500, 6000) * np.clip(cad, 0, 2) * 0.25
+    whir = butter(RNG.normal(0, 1, n), 1200, 4500) * np.clip(cad, 0, 2) * 0.10
     whir *= 0.6 + 0.4 * np.sin(2 * np.pi * np.cumsum(cad * 44) / SR) ** 2
     wheel = np.interp(t, m['t'], m['wheel'])
     cog = np.interp(t, m['t'], m['cog'])
@@ -249,10 +249,28 @@ def main(npz, out_wav):
         gt += [a + 0.01, b - 0.01]
         gv += [bike_g.get(i, 0.6)] * 2
     gains = (np.array(gt), np.array(gv))
-    mix = (sea(T) * 0.55 + bicycle(T, m, gains) * 0.9 + bill_clacks(T, m['jaw']) * 0.8
-           + gulls(T, [(1.2, 3, -0.6, 0.18), (6.4, 2, 0.7, 0.10), (11.8, 4, -0.3, 0.14),
-                       (16.6, 3, 0.5, 0.22), (18.7, 2, -0.7, 0.12)]) * 0.9
-           + music(T) * 0.55)
+    layers = {
+        'sea': sea(T),
+        'bike': bicycle(T, m, gains),
+        'clacks': bill_clacks(T, m['jaw']),
+        'gulls': gulls(T, [(1.2, 3, -0.6, 0.18), (6.4, 2, 0.7, 0.10), (11.8, 4, -0.3, 0.14),
+                           (16.6, 3, 0.5, 0.22), (18.7, 2, -0.7, 0.12)]),
+        'music': music(T),
+    }
+    # target loudness of each layer relative to the music (RMS, dB)
+    target_db = {'music': 0.0, 'sea': -9.0, 'bike': -10.0, 'gulls': -12.0, 'clacks': -14.0}
+    ref = None
+    mix = 0
+    for k in ('music', 'sea', 'bike', 'gulls', 'clacks'):
+        x = layers[k]
+        rms = np.sqrt(np.mean(x ** 2)) + 1e-12
+        if k == 'clacks':
+            rms = np.sqrt(np.mean(x[np.abs(x) > 1e-4] ** 2)) * 0.25 + 1e-12
+        if ref is None:
+            ref = rms
+        g = ref / rms * 10 ** (target_db[k] / 20)
+        mix = mix + x * g
+        print(f"  layer {k:7s} rms {20 * np.log10(rms):6.1f} dB gain {20 * np.log10(g):6.1f} dB")
     # fade in / out
     n = len(mix)
     fade = np.ones(n)
