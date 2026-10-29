@@ -1,2 +1,4 @@
 build/
 __pycache__/
+out/packs/dma/*.mp4
+out/packs/dma/*.png
