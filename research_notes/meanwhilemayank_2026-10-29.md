@@ -1,5 +1,9 @@
 # Meanwhile Mayank: why it grew (research, 29 Oct 2026)
 
+> **Superseded in part by meanwhilemayank_deep_dive_2026-10-29.md** (all 12 reels downloaded on the laptop): the
+> screenshot showed only the 6 newest. His biggest reel is the jewel wasp (11.2M), then rabies 4.6M and tardigrade
+> 2.3M, so animal topics are not flops; they flopped only on YouTube.
+
 Sources: the owner's Instagram screenshot (29 Oct 2026); the public YouTube channel @meanwhilemayank (video list and
 view counts via yt-dlp's playlist listing; thumbnails from i.ytimg.com). YouTube refused per-video details and
 downloads from our server ("confirm you're not a bot"), and Instagram requires a login, so dates, likes and the reels
