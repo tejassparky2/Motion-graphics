@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "@remotion/cli": "^4.0.539",
+    "@remotion/motion-blur": "4.0.539",
+    "@remotion/rough-notation": "4.0.539",
     "@types/react": "^19.3.0",
     "gsap": "^3.15.0",
     "react": "^19.3.1",

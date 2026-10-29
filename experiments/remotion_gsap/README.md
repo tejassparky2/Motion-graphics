@@ -31,3 +31,19 @@ the engine; Remotion is ~10x slower here and would mean rewriting every characte
   pops, squash and stretch, follow-through (tails, hair, ears lagging behind), pupils that react.
 - Remotion stays installed for one-off jobs where a browser wins: Lottie animations, heavy text effects or an
   interactive preview.
+
+## The official skills (owner, 29 Oct 2026: github.com/greensock/gsap-skills and github.com/remotion-dev/skill)
+- Installed in `.claude/skills/`: GSAP's 8 skills (gsap-core, -timeline, -plugins, -react, -utils, -performance,
+  -scrolltrigger, -frameworks; MIT, commit aed9cfd) and Remotion's 12 (remotion-best-practices router, -markup, -create,
+  -render, -captions, -studio, -docs, -interactivity, -maps, -multimedia, -saas, -upgrade; from the
+  remotion-dev/skills repo, commit 30d4553). Read before installing: guidance and examples only, no scripts that run
+  on their own.
+- They caught a real bug straight away: with motion blur the scene is drawn several times per frame, and unscoped
+  GSAP selectors made every copy animate the same elements; `gsap.context(..., root)` (gsap-react) fixed it.
+- Tried two features they point to (`RatHookFX`, `compare_fx.png`, top plain GSAP, bottom with the extras):
+  - **Motion blur** (`@remotion/motion-blur`, CameraMotionBlur, 6 samples, 180° shutter): a visible gain on fast
+    moves (the zoom, the letter pops). 61 s to render the 6.6 s clip. Worth adding to our own renderer: draw each
+    frame at a few in-between times and average them (pycairo draws ~70 fps, so 6 samples still render fast).
+  - **Hand-drawn strike-through** (`@remotion/rough-notation`): too thin and red on red, reads worse than our
+    thick line with a shadow. A hand-drawn wobble on our own rings and strikes is the better use of the idea.
+- Not tried, worth it only with a browser renderer: light-leak transitions (`@remotion/effects`), Lottie animations.

@@ -2,8 +2,10 @@
 // times as the pycairo render, to compare the two side by side. Layout follows videos/toxo_rat.py.
 import React, {useLayoutEffect, useRef} from 'react';
 import {
-  AbsoluteFill, Audio, continueRender, delayRender, spring, staticFile, useCurrentFrame, useVideoConfig,
+  AbsoluteFill, Audio, continueRender, delayRender, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig,
 } from 'remotion';
+import {CameraMotionBlur} from '@remotion/motion-blur';
+import {StrikeThrough} from '@remotion/rough-notation';
 import gsap from 'gsap';
 import {DrawSVGPlugin} from 'gsap/DrawSVGPlugin';
 import {CustomEase} from 'gsap/CustomEase';
@@ -53,12 +55,29 @@ const textStyle = (size: number, color: string, font: string, stroke: number): R
   textShadow: `${size * 0.03}px ${size * 0.06}px 0 rgba(0,0,0,0.6)`, lineHeight: 1, whiteSpace: 'nowrap',
 });
 
-export const RatHook: React.FC = () => {
+// v1: GSAP only. v2 (RatHookFX): + Remotion's motion blur and a hand-drawn (rough-notation) strike-through.
+export const RatHook: React.FC = () => (
+  <AbsoluteFill>
+    <Audio src={staticFile('rat_open.wav')} />
+    <RatScene rough={false} />
+  </AbsoluteFill>
+);
+
+export const RatHookFX: React.FC = () => (
+  <AbsoluteFill>
+    <Audio src={staticFile('rat_open.wav')} />
+    <CameraMotionBlur samples={6} shutterAngle={180}>
+      <RatScene rough />
+    </CameraMotionBlur>
+  </AbsoluteFill>
+);
+
+const RatScene: React.FC<{rough: boolean}> = ({rough}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const t = frame / fps;
   const root = useRef<HTMLDivElement>(null);
-  const tl = useRef<gsap.core.Timeline>();
+  const tl = useRef<gsap.core.Timeline | null>(null);
 
   // Build one paused GSAP timeline, then seek it to the current frame on every render: deterministic frames.
   useLayoutEffect(() => {
@@ -73,6 +92,8 @@ export const RatHook: React.FC = () => {
     const zoom = at('Something');
     const r1end = WORDS.filter((w) => w.beat === 'r1').slice(-1)[0].end;
 
+    // gsap.context scopes every selector string to this copy of the scene (motion blur renders several copies)
+    const ctx = gsap.context(() => {
     const m = gsap.timeline({paused: true, defaults: {ease: 'power2.out'}});
     // camera: slow push-in, then a fast zoom into the rat's head on "Something inside it"
     m.to(cam, {z: 1.04, duration: zoom, ease: 'none', onUpdate: setCam}, 0)
@@ -98,16 +119,15 @@ export const RatHook: React.FC = () => {
     // hook: AFRAID pops in letter by letter on "straight", struck through on "brave", then shivers; gone after it
     m.fromTo('.big', {scale: 0, y: 50, rotation: -12}, {scale: 1, y: 0, rotation: 0, duration: 0.45,
       ease: 'back.out(2.6)', stagger: 0.04}, at('straight'))
-      .fromTo('#strike', {drawSVG: '0%'}, {drawSVG: '100%', duration: 0.28, ease: 'power3.in'}, at('brave'))
-      .to('#bigRow', {x: 8, duration: 0.5, ease: 'shiver'}, at('brave') + 0.28)
+    if (q('#strike').length) m.fromTo('#strike', {drawSVG: '0%'}, {drawSVG: '100%', duration: 0.28, ease: 'power3.in'}, at('brave'));
+    m.to('#bigRow', {x: 8, duration: 0.5, ease: 'shiver'}, at('brave') + 0.28)
       .to('#hook', {opacity: 0, y: -30, duration: 0.25, ease: 'power2.in'}, at('brave', 1, true) + 0.3);
     // "IT WANTS THIS" tag
     m.fromTo('#want', {scale: 0, rotation: -20}, {scale: 1, rotation: -4, duration: 0.6, ease: 'elastic.out(1, 0.5)'},
       at('eat'));
     tl.current = m;
-    return () => {
-      m.kill();
-    };
+    }, root);
+    return () => ctx.revert();
   }, []);
 
   useLayoutEffect(() => {
@@ -125,7 +145,6 @@ export const RatHook: React.FC = () => {
 
   return (
     <AbsoluteFill ref={root} style={{background: '#f0e4cc'}}>
-      <Audio src={staticFile('rat_open.wav')} />
       <svg width={720} height={1280} viewBox="0 0 720 1280" style={{position: 'absolute'}}>
         <defs>
           <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
@@ -197,15 +216,23 @@ export const RatHook: React.FC = () => {
       <div id="hook" style={{position: 'absolute', top: 152, width: 720, textAlign: 'center'}}>
         <div style={textStyle(46, '#fff', 'Anton', 6)}>THIS RAT IS NOT</div>
         <div id="bigRow" style={{position: 'relative', marginTop: 4, display: 'inline-block'}}>
-          {'AFRAID'.split('').map((c, i) => (
+          {rough ? (
+            <StrikeThrough color={RED} strokeWidth={13} iterations={2} seed={4}
+              progress={interpolate(t, [at('brave'), at('brave') + 0.35], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'})}>
+              {'AFRAID'.split('').map((c, i) => (
+                <span key={i} className="big" style={{...textStyle(150, RED, 'Anton', 18), display: 'inline-block',
+                  transform: 'scale(0)'}}>{c}</span>
+              ))}
+            </StrikeThrough>
+          ) : 'AFRAID'.split('').map((c, i) => (
             <span key={i} className="big" style={{...textStyle(150, RED, 'Anton', 18), display: 'inline-block',
               transform: 'scale(0)'}}>{c}</span>
           ))}
-          <svg width="560" height="200" viewBox="0 0 560 200" style={{position: 'absolute', left: '50%', top: 0,
+          {!rough && <svg width="560" height="200" viewBox="0 0 560 200" style={{position: 'absolute', left: '50%', top: 0,
             marginLeft: -280, overflow: 'visible'}}>
             <path id="strike" d="M20,112 L540,84" stroke={RED} strokeWidth={17} strokeLinecap="round" fill="none"
               style={{filter: 'drop-shadow(0 3px 0 rgba(0,0,0,0.5))'}} />
-          </svg>
+          </svg>}
         </div>
       </div>
 
