@@ -95,4 +95,7 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Every line gets a Whisper retake (`retake.py`) and a liveliness retake (`lively_retake.py`, keeping the take
     with the widest pitch movement that stays clear).
   - Nobody is cloned.
-- **Still to decide:** the channel name and handle.
+- **No AI wording** in descriptions, captions or upload sheets (owner, 29 Oct 2026: "Don't add anything as ai in
+  descriptions or anything"). Photo credits stay, because CC BY licences require them.
+- **The channel uses the owner's name and photo** (owner, 29 Oct 2026: "Use Tejas my name I will use my photo").
+  The exact name is still to be picked.

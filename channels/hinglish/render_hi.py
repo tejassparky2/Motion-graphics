@@ -132,7 +132,7 @@ def write_sheet(mod, tl, path):
              f"**YouTube title**\n```\n{m['yt_title']}\n```", "",
              f"**YouTube description**\n```\n{m['yt_description'].strip()}\n\n{' '.join(m['hashtags'])}\n```", "",
              f"**Pinned comment**\n```\n{m['pinned_comment']}\n```", "",
-             f"**Video facts:** {tl.total:.1f} s, voice: {mod.NARRATOR_LABEL}. Made for kids: No.", "",
+             f"**Video facts:** {tl.total:.1f} s. Made for kids: No."   # no voice/AI wording (owner, 29 Oct 2026), "",
              "**Image credits** (put in the description/caption):"]
     for c in credits:
         if not used or os.path.basename(c["file"]) in used:
