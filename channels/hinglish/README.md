@@ -88,6 +88,12 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Evidence: `research_notes/meanwhilemayank_parasite_reels_study_2026-10-29.md`.
   - Visuals rebuilt as 44 shots, about 3 s each. They are photo cut-outs from `hinglish_assets/toxoplasma2/` with
     credits, and FEAR is rubbed out by an eraser as the recurring metaphor (`poster.erase`).
+- **Videos 1-3 are finished, with upload packs** (`<shorts research>/hinglish_out/upload_*`, masters also in
+  the owner's Google Drive): Toxoplasma (2:12), Speaker (2:18, the first tech video) and Krait (1:56).
+- **Music: the `doc` bed** (motion/audio.py; owner, 29 Oct 2026: "Sounds good").
+  - It sits ~17 dB under the voice in pauses, as in the reference, and is voiced so phone speakers carry it.
+  - It dips before reveals.
+  - `render_hi.py --remix` swaps only the soundtrack.
 - **Voice: Aman.**
   - Indic Parler-TTS's named speaker "Aman" is used only as the voice prompt; AI4Bharat IndicF5 speaks every line
     in that synthetic voice.
