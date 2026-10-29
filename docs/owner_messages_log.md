@@ -273,3 +273,10 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-10-29** Do a thing tranfer all and everything of this chat to it evey message everything we do every research
 - **2026-10-29** So now chatting with that new session is same as texting here?
 - **2026-10-29** Ok keep two chats like you said
+
+## Laptop chat (Claude desktop app, C:\Users\tejas\Documents\shorts research, branch ccr-56282fe5-evehq4-local), 29 Oct 2026
+- **2026-10-29** (loader prompt from the cloud chat) clone the branch, read the docs and both chat files, summarise in
+  10 lines, then install yt-dlp and ffmpeg, download Meanwhile Mayank's Shorts into a `mayank` folder outside the repo
+  and analyse the first 3 seconds, script structure, cut pace and ending of each, hits vs flops
+- **2026-10-29** and access instagram too do full deep dive on that instagram page use any opensource avaliable
+- **2026-10-29** (on adding Mayank's frame-0 rules to this channel) Yes, add the rules

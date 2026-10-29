@@ -76,6 +76,27 @@
   properly?", "Press the button. Live the perfect life."); the narrator's setup comes second, in one short line.
 - No more hook tests that talk to the viewer. Business ads (Yours3D) never go on this channel.
 
+## Frame 0 and pacing from Meanwhile Mayank's hits (owner, 29 Oct 2026: "Yes, add the rules")
+Evidence: research_notes/meanwhilemayank_deep_dive_2026-10-29.md. His 12 reels are the same edits on both
+platforms; the hits (2.3M-11.2M) differ from the flops (84K-147K) in their opening seconds, not in voice or length.
+- **Frame 0 = one subject on a plain background**: the character with the "wrong" object, large and alone. No busy
+  establishing scene (streets, crowds, full shelves); add the set after the hook. Every one of his hits opens this
+  way, and his flops open on busy scenes.
+- **Hook text in two tiers**: a few small dark setup words plus ONE big red key word that carries the contradiction
+  ("CAN GOD MAKE A / **ROCK**", "IT WON'T / ~~KILL~~"). It is fully on screen by ~2 s, timed to the spoken word, and
+  marked as it's spoken (red strike-through, tick or circle). Never a bare topic word or a number as the headline.
+- **Line 1 (still the character's question) contains the contradiction itself** ("vaccine exists / still deadly",
+  "your legs walk / not you"). Give the premise away in the first sentences; keep only the payoff hidden.
+- **A visible change every 1-1.5 s, densest in seconds 3-15** (a new element, a mark, a pose, a card). His hits
+  ran 10-12 changes per 10 s there; his number-card reels ran 3-4 and flopped. Pace alone doesn't save a weak line 1.
+- **Over 40 s: one short re-hook question at about 60%** ("So why did the teacher smile?"), in a character's mouth
+  where possible. It must not add more than ~1.5 s.
+- **Ending**: keep the debate rules above. Give the either/or question a personal stake ("Would *you* press it?").
+  Still no spoken "comment below".
+- **Post every Short as an Instagram Reel too** (remind the owner with each set). His identical files did 100-10,000x
+  better on Instagram than on YouTube.
+- Don't copy his 2-3 minute length; the 40-50 s rule comes from this channel's own YouTube data.
+
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
   one second with something already wrong or tense ("A kid in the last row raises his hand…", "A teacher finds a pack
