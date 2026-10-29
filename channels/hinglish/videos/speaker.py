@@ -72,6 +72,9 @@ P = {k: _find(k) for k in ("phone_speaker_grille", "phone_face_down", "magnet", 
                            "ear_engraving", "drum", "acoustic_guitar", "stage_microphone", "whistle", "ruler",
                            "micro_speaker", "smartwatch", "water_drops", "earphones", "stopwatch",
                            "gray_anatomy_brain")}
+P["phone_face_down"] = _find("smartphone_hand")          # no logo-free phone back exists; the phone in a hand
+P["ear_engraving"] = _find("ear_engraving_gray907")      # the cross-section, eardrum labelled
+P["magnet"] = _find("magnet_neodymium_discs")            # small magnets with a matchstick for scale
 USED_ASSETS = [os.path.basename(v) for v in P.values() if v]
 CREDITS_FILES = [os.path.join(ASSETS_ROOT, d, "credits.json") for d in ("speaker", "toxoplasma2")]
 
@@ -228,9 +231,14 @@ def chest(cr, t, x, y, t0, reach=1.0, alpha=1.0):
 # one recurring picture (air dots getting a dhakka), red = the key word, dark slate for "inside" (the air, the ear).
 
 def h_no_sound(cr, t, tl, t0):                           # b1 "socho, your phone's speaker makes no sound..."
-    _pic(cr, "phone_face_down", W / 2, 1080, 720, t, -1, rot=-0.06)
-    ring(cr, W / 2 + 10, 1380, 230, 90, prog(t, 0.9, 0.5))
-    headline(cr, t, "YOUR SPEAKER MAKES", "NO SOUND", -1, min(1.2, T(tl, "b1", "नहीं")), t_ghost=0.0)
+    _pic(cr, "phone_face_down", 440, 1000, 780, t, -1, rot=-0.04)
+
+    def grille(c):                                             # the phone's speaker holes, zoomed
+        if P["phone_speaker_grille"]:
+            photo(c, P["phone_speaker_grille"], 700, 1390, 130, shadow=False)
+    magnifier(cr, t, -1, 760, 1390, 200, grille)
+    ring(cr, 760, 1390, 230, 230, prog(t, 0.9, 0.5))
+    headline(cr, t, "YOUR SPEAKER MAKES", "NO SOUND", -1, min(1.2, T(tl, "b1", "नहीं")), t_ghost=-1)
 
 
 def h_pushes_air(cr, t, tl, t0):                         # b1 "...it just pushes air"
@@ -247,8 +255,8 @@ def h_thousands(cr, t, tl, t0):                          # b1 "...a thousand tim
 
 
 def h_magnet_wire(cr, t, tl, t0):                        # b2 "a small magnet and a coil of wire. That's it."
-    tm, tw = T(tl, "b2", "मैग्नेट"), T(tl, "b2", "तार")
-    _pic(cr, "magnet", 320, drop(t, tm - 0.2, 1080), 360, t, tm - 0.2)
+    tw = T(tl, "b2", "तार")
+    _pic(cr, "magnet", 320, drop(t, t0 + 0.2, 1080), 360, t, t0 + 0.2)          # on screen from the cut
     _pic(cr, "copper_coil", 760, drop(t, tw - 0.2, 1080), 380, t, tw - 0.2)
     draw_text(cr, "+", W / 2, 1080, 120, RED, prog(t, tw - 0.1, 0.2), anchor="cm")
     stamp(cr, t, "THAT'S IT", T(tl, "b2", "इतना"), W / 2, 1420, 70)
@@ -270,7 +278,7 @@ def h_air_touch(cr, t, tl, t0):                          # b4 "that's not sound.
 
 
 def n_name(cr, t, tl, t0):                               # b5 "its name: the moving-coil speaker"
-    _pic(cr, "speaker_driver", W / 2, 950, 640, t, t0)
+    _pic(cr, "speaker_driver", W / 2, 960, 460, t, t0)
     tn = T(tl, "b5", "मूविंग")
     for i, (txt, ty) in enumerate((("MOVING-COIL", 1330), ("SPEAKER", 1450))):
         p = prog(t, tn + 0.3 * i, 0.3)
@@ -299,11 +307,18 @@ def p_parts(cr, t, tl, t0):                              # b6 "inside: a magnet,
 
 
 def p_paper(cr, t, tl, t0):                              # b6 "...in many speakers the cone is paper"
-    _pic(cr, "speaker_driver", 480, 1060, 680, t, t0)
+    _pic(cr, "speaker_driver", 400, 1060, 460, t, t0)
 
-    def inner(c):                                             # the cone, zoomed
-        if P["speaker_driver"]:
-            photo(c, P["speaker_driver"], 640, 1000, 1500, shadow=False)
+    def inner(c):                                             # paper fibres of a (black-dyed) paper cone, zoomed
+        c.set_source_rgba(0.13, 0.12, 0.11, 1)
+        c.paint()
+        c.set_source_rgba(0.42, 0.40, 0.37, 0.8)
+        c.set_line_width(2)
+        for i in range(90):
+            x, y = 600 + (i * 53) % 400, 800 + (i * 97) % 400
+            c.move_to(x, y)
+            c.curve_to(x + 20, y + 8, x + 40, y - 6, x + 60 + i % 30, y + 4)
+        c.stroke()
     magnifier(cr, t, t0 + 0.3, 800, 1000, 200, inner)
     stamp(cr, t, "PAPER", T(tl, "b6", "काग़ज़"), 800, 1290, 80)
     headline(cr, t, "THE CONE IS OFTEN", "PAPER", t0, T(tl, "b6", "काग़ज़"))
@@ -379,7 +394,7 @@ def w_343(cr, t, tl, t0):                                # b12 "this push travel
 
 def w_ear(cr, t, tl, t0):                                # b12 "...and reaches your eardrum"
     _pic(cr, "ear_engraving", W / 2, 1050, 0, t, t0 - 0.1, rot=-0.02, frame=(860, 700))
-    ring(cr, 610, 1060, 90, 110, prog(t, T(tl, "b12", "कान") + 0.3, 0.5))
+    ring(cr, 560, 1110, 80, 110, prog(t, T(tl, "b12", "कान") + 0.3, 0.5))      # the eardrum on Gray 907
     footnote(cr, "engraving: Gray's Anatomy (1918), public domain", prog(t, t0, 0.4), y=1470)
     headline(cr, t, "TO YOUR", "EARDRUM", t0, T(tl, "b12", "कान"))
 
@@ -393,6 +408,7 @@ def w_brain(cr, t, tl, t0):                              # b13 "the eardrum move
 
 
 def m_band(cr, t, tl, t0):                               # b14 "and the strangest part? drums, guitar, singer, all at once..."
+    _pic(cr, "phone_face_down", W / 2, 1450, 300, t, t0, rot=-0.05)     # the phone that will play all of them
     for key, x, cue in (("drum", 220, "ड्रम"), ("acoustic_guitar", 540, "गिटार"), ("stage_microphone", 860, "सिंगर")):
         _pic(cr, key, x, 1060, 380, t, T(tl, "b14", cue) - 0.2)
     headline(cr, t, "THE STRANGEST", "PART", t0, t0 + 0.5, t_ghost=t0)
@@ -418,14 +434,16 @@ def m_one_cone(cr, t, tl, t0):                           # b14 "...one tiny cone
 
 def m_bass(cr, t, tl, t0):                               # b15 "deep bass: the cone moves only 30-40 times a second"
     wave_line(cr, 100, 1000, 880, 120, 2, (t - t0) * 3, INK, 9)
-    counter(cr, t, T(tl, "b15", "तीस"), W / 2, 1260, "30-40 / SEC", 110, color=GOLD)
+    counter(cr, t, T(tl, "b15", "तीस"), W / 2, 1260, "30-40", 130, color=GOLD)
+    draw_text(cr, "PER SECOND", W / 2, 1390, 50, INK, prog(t, T(tl, "b15", "तीस") + 0.3, 0.3), anchor="ct")
     headline(cr, t, "DEEP BASS:", "SLOW", t0, T(tl, "b15", "तीस"))
 
 
 def m_whistle(cr, t, tl, t0):                            # b15 "...a thin whistle: thousands of times"
-    _pic(cr, "whistle", 250, 1250, 260, t, t0)
+    _pic(cr, "whistle", 240, 1480, 220, t, t0, rot=0.1)
     wave_line(cr, 100, 960, 880, 60, 24, (t - t0) * 30, RED, 5)
-    counter(cr, t, t0 + 0.3, 720, 1240, "1000s / SEC", 100, color=GOLD)
+    counter(cr, t, t0 + 0.3, 700, 1240, "1000s", 130, color=GOLD)
+    draw_text(cr, "PER SECOND", 700, 1370, 50, INK, prog(t, t0 + 0.6, 0.3), anchor="ct")
     headline(cr, t, "A WHISTLE:", "FAST", t0, t0 + 0.3)
 
 
@@ -440,13 +458,23 @@ def m_range(cr, t, tl, t0):                              # b15 "...and our ears 
     cr.stroke()
     for f, lab in ((0.0, "20"), (0.33, "200"), (0.66, "2,000"), (1.0, "20,000")):
         if p >= f:
-            draw_text(cr, lab, x0 + (x1 - x0) * f, y + 30, 46, RED if f in (0.0, 1.0) else INK, 1.0, anchor="ct")
+            draw_text(cr, lab, x0 + (x1 - x0) * f, y + 30, 46, RED if f in (0.0, 1.0) else INK, 1.0,
+                      anchor="rt" if f == 1.0 else "ct")
     headline(cr, t, "YOUR EARS HEAR", "20 TO 20,000", t0, T(tl, "b15", "बीस"))
 
 
 def s_tiny(cr, t, tl, t0):                               # b16 "your phone's speaker? just 1-1.5 cm"
-    _pic(cr, "ruler", W / 2, 1280, 220, t, t0)
-    _pic(cr, "micro_speaker", W / 2, 1000, 260, t, t0 + 0.2)
+    _pic(cr, "phone_speaker_grille", W / 2, 720, 150, t, t0)
+    _pic(cr, "ruler", W / 2, 1360, 300, t, t0)
+    p = prog(t, t0 + 0.3, 0.3)                                    # the micro-speaker inside: about 11 x 15 mm
+    cr.set_source_rgba(0.12, 0.12, 0.13, p)
+    cr.rectangle(W / 2 - 75, 960, 150, 110)
+    cr.fill()
+    cr.set_source_rgba(0.35, 0.35, 0.38, p)
+    cr.rectangle(W / 2 - 55, 980, 110, 70)
+    cr.fill()
+    path(cr, [(W / 2 - 75, 1110), (W / 2 + 75, 1110)], prog(t, t0 + 0.6, 0.3), 5, RED, 0.9)
+    draw_text(cr, "~1.5 CM", W / 2, 1125, 48, RED, prog(t, t0 + 0.7, 0.3), anchor="ct")
     headline(cr, t, "YOUR PHONE'S SPEAKER:", "1.5 CM", t0, T(tl, "b16", "सेंटीमीटर"))
 
 
@@ -483,7 +511,7 @@ def r_big_cone(cr, t, tl, t0):                           # b18 "bass needs lots 
 
 
 def r_thats_why(cr, t, tl, t0):                          # b18 "...that's why DJ speakers are huge, and phone bass is thin"
-    _pic(cr, "dj_speakers", 330, 1080, 900, t, t0)
+    _pic(cr, "dj_speakers", 400, 1100, 720, t, t0)
     _pic(cr, "phone_face_down", 820, 1360, 230, t, t0 + 0.2, rot=0.08)
     stamp(cr, t, "THIN BASS", T(tl, "b18", "पतला"), 820, 1120, 54)
     headline(cr, t, "THAT'S WHY DJ SPEAKERS", "ARE HUGE", t0, t0 + 0.4)
@@ -513,7 +541,7 @@ def x_stage(cr, t, tl, t0):                              # b20 "...the dynamic m
     _pic(cr, "stage_microphone", 420, 1080, 760, t, t0, rot=-0.2)
     section(cr, 820, 900, 0.3, alpha=prog(t, t0 + 0.3, 0.3))
     path(cr, [(560, 820), (740, 880)], prog(t, t0 + 0.4, 0.3), 5, RED, 0.9, arrow=True)
-    stamp(cr, t, "SAME IDEA", t0 + 0.8, 800, 1300, 64)
+    stamp(cr, t, "SAME IDEA", t0 + 0.8, 760, 720, 64)
     headline(cr, t, "A STAGE MIC:", "SAME IDEA", t0, t0 + 0.6)
 
 

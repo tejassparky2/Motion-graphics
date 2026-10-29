@@ -72,7 +72,7 @@ _find = asset_finder("krait", "krait2", "toxoplasma2")
 P = {k: _find(k) for k in ("krait_3", "krait_2", "cobra_1", "russells_viper_1", "saw_scaled_viper_2",
                            "antivenom_vial_1", "mosquito_net_1", "floor_mat_1", "old_tv", "sleeping_person",
                            "india_map", "village_house_night", "monsoon_rain", "skin_closeup", "hospital",
-                           "ambulance_108", "rope", "kitchen_knife", "wristwatch", "finger_ring", "eye_closeup",
+                           "ambulance", "rope", "kitchen_knife", "wristwatch", "finger_ring", "eye_closeup",
                            "lungs_engraving", "clock", "gray_anatomy_brain", "gray_anatomy_muscles_alt_sobotta")}
 USED_ASSETS = [os.path.basename(v) for v in P.values() if v]
 CREDITS_FILES = [os.path.join(ASSETS_ROOT, d, "credits.json") for d in ("krait", "krait2", "toxoplasma2")]
@@ -92,7 +92,7 @@ def sleeper(cr, t, x, y, alpha=1.0):
         photo(cr, P["sleeping_person"], x, y - 40, 260, alpha=alpha)
     else:
         cr.save()
-        cr.translate(x, y)
+        cr.translate(x + 210, y)                                       # lying down, head to the left, on the mat
         cr.rotate(-math.pi / 2)
         person(cr, 0, 0, 420, INK, 0.85 * alpha)
         cr.restore()
@@ -142,8 +142,8 @@ def nerve(cr, t, t0, t_block, x0, x1, y, alpha=1.0):
 # red = threat, green = what to do / reassurance, gold = numbers, dark slate for inside the body.
 
 def h_snake(cr, t, tl, t0):                              # b1 frame 0: "socho, you're asleep on the floor..."
-    _pic(cr, "krait_3", W / 2, 1100, 560, t, -1)
-    headline(cr, t, "IT BITES WHILE YOU", "SLEEP", -1, min(1.2, T(tl, "b1", "रहे")), t_ghost=0.0)   # "सो" would match "सोचो"
+    _pic(cr, "krait_3", W / 2, 1100, 420, t, -1)
+    headline(cr, t, "IT BITES WHILE YOU", "SLEEP", -1, min(1.2, T(tl, "b1", "रहे")), t_ghost=-1)   # "सो" would match "सोचो"
 
 
 def h_comes(cr, t, tl, t0):                              # b1 "...a snake comes, bites and leaves"
@@ -161,10 +161,18 @@ def h_no_pain(cr, t, tl, t0):                            # b1 "...you don't even
 
 def h_eyelids(cr, t, tl, t0):                            # b2 "hours later the eyelids get heavy..."
     _pic(cr, "eye_closeup", W / 2, 1050, 0, t, t0, frame=(860, 520))
-    p = prog(t, t0 + 0.6, 2.0)
-    cr.set_source_rgba(0.72, 0.55, 0.45, 0.92)                         # the lid sliding down over the photo
-    cr.rectangle(W / 2 - 420, 800, 840, 230 * p)
+    p = prog(t, t0 + 0.6, 2.0)                                       # the upper lid drooping over the photo
+    cr.save()
+    cr.rectangle(W / 2 - 430, 790, 860, 520)
+    cr.clip()
+    cr.move_to(W / 2 - 430, 790)
+    cr.line_to(W / 2 + 430, 790)
+    cr.line_to(W / 2 + 430, 800 + 120 * p)
+    cr.curve_to(W / 2 + 200, 860 + 220 * p, W / 2 - 200, 860 + 220 * p, W / 2 - 430, 800 + 120 * p)
+    cr.close_path()
+    cr.set_source_rgba(0.62, 0.45, 0.36, 0.93)
     cr.fill()
+    cr.restore()
     headline(cr, t, "HOURS LATER: HEAVY", "EYELIDS", t0, t0 + 0.4)
 
 
@@ -201,7 +209,7 @@ def t_real(cr, t, tl, t0):                               # b3 "...in real life, 
 
 
 def n_name(cr, t, tl, t0):                               # b4 "its name: common krait. Many call it karait."
-    _pic(cr, "krait_3", W / 2, 940, 520, t, t0)
+    _pic(cr, "krait_3", W / 2, 940, 400, t, t0)
     tn = T(tl, "b4", "कॉमन")
     for i, (txt, ty, sz) in enumerate((("COMMON KRAIT", 1300, 96), ("BUNGARUS CAERULEUS", 1430, 54))):
         p = prog(t, tn + 0.3 * i, 0.3)
@@ -216,7 +224,7 @@ def n_name(cr, t, tl, t0):                               # b4 "its name: common 
 
 
 def n_58000(cr, t, tl, t0):                              # b5 "58,000 deaths a year in India..."
-    _pic(cr, "india_map", 300, 1100, 0, t, t0, frame=(460, 520))
+    _pic(cr, "india_map", 300, 1100, 560, t, t0, tint=INK)
     counter(cr, t, T(tl, "b5", "अट्ठावन"), 740, 980, "58,000", 150, color=GOLD)
     draw_text(cr, "EVERY YEAR", 740, 1090, 44, INK, prog(t, T(tl, "b5", "अट्ठावन") + 0.3, 0.3), anchor="ct")
     headline(cr, t, "SNAKEBITE DEATHS IN INDIA", "58,000/YEAR", t0, T(tl, "b5", "अट्ठावन"), big_size=140)
@@ -230,6 +238,10 @@ def n_per_day(cr, t, tl, t0):                            # b5 "...about 160 ever
 
 
 def n_big_four(cr, t, tl, t0):                           # b6 "most deaths: cobra, krait, Russell's viper, saw-scaled viper"
+    t_first = T(tl, "b6", "कोबरा") - 0.2
+    if t < t_first:                                            # "four snakes" before the first name is spoken
+        counter(cr, t, t0 + 0.1, W / 2, 1000, "4", 300, color=GOLD)
+        draw_text(cr, "SNAKES", W / 2, 1200, 90, INK, prog(t, t0 + 0.3, 0.3), anchor="ct")
     for i, (key, cue, label) in enumerate((("cobra_1", "कोबरा", "COBRA"), ("krait_3", "क्रेट", "KRAIT"),
                                            ("russells_viper_1", "रसेल्स", "RUSSELL'S VIPER"),
                                            ("saw_scaled_viper_2", "सॉ", "SAW-SCALED VIPER"))):
@@ -345,7 +357,7 @@ def m_wrong(cr, t, tl, t0):                              # b14 "all wrong, and i
 
 def d_calm(cr, t, tl, t0):                               # b15 "if bitten: don't panic; keep the limb still and straight"
     cr.save()
-    cr.translate(W / 2, 1200)
+    cr.translate(W / 2 + 320, 1250)                                    # lying down, resting
     cr.rotate(-math.pi / 2)
     person(cr, 0, 0, 640, INK, 0.85)
     cr.restore()
@@ -372,7 +384,7 @@ def d_hospital(cr, t, tl, t0):                           # b16 "...go straight t
 
 
 def d_108(cr, t, tl, t0):                                # b16 "...call 108"
-    _pic(cr, "ambulance_108", W / 2, 1100, 0, t, t0, frame=(880, 600))
+    _pic(cr, "ambulance", W / 2, 1100, 0, t, t0, frame=(880, 600))
     counter(cr, t, t0 + 0.2, W / 2, 680, "108", 200, color=GOLD)
     headline(cr, t, "CALL", "108", t0, t0 + 0.2, big_color=GREEN)
 
@@ -382,21 +394,29 @@ def d_no_pain(cr, t, tl, t0):                            # b17 "a night bite wit
     cr.rectangle(0, 560, W, 900)
     cr.fill()
     _pic(cr, "clock", 300, 1000, 300, t, t0)
-    draw_text(cr, "NO PAIN ≠", 560, 940, 90, CREAM, prog(t, t0 + 0.3, 0.3), anchor="lm")
-    draw_text(cr, "NO DANGER", 560, 1060, 110, CORAL, prog(t, T(tl, "b17", "हॉस्पिटल"), 0.3), anchor="lm")
+    draw_text(cr, "NO PAIN,", 560, 940, 90, CREAM, prog(t, t0 + 0.3, 0.3), anchor="lm")   # (Anton has no "≠")
+    draw_text(cr, "STILL DANGER", 560, 1060, 100, CORAL, prog(t, T(tl, "b17", "हॉस्पिटल"), 0.3), anchor="lm")
     headline(cr, t, "BITTEN AT NIGHT?", "GO ANYWAY", t0, T(tl, "b17", "हॉस्पिटल"), big_color=GREEN)
 
 
 def d_net(cr, t, tl, t0):                                # b18 "on the floor, sleep under a mosquito net (Nepal study)"
     _pic(cr, "mosquito_net_1", 460, 1080, 760, t, t0)
     _pic(cr, "krait_2", 900, 1440, 130, t, t0 + 0.4, flip=True)
-    cross(cr, 880, 1440, 140, prog(t, T(tl, "b18", "कम"), 0.4))
-    footnote(cr, "Nepal study, Chappuis et al. 2007", prog(t, T(tl, "b18", "नेपाल"), 0.4), y=1520)
     headline(cr, t, "SLEEP UNDER A", "MOSQUITO NET", t0, T(tl, "b18", "मच्छरदानी"), big_color=GREEN)
 
 
+def d_study(cr, t, tl, t0):                              # b18 "...in a Nepal study, people under nets were bitten less"
+    _pic(cr, "mosquito_net_1", 330, 1180, 560, t, -1)
+    card(cr, t, t0 + 0.1, 560, 760, ["NEPAL, 2007", "UNDER A NET:", "FEWER BITES"], size=48)
+    _pic(cr, "krait_2", 820, 1420, 120, t, -1, flip=True)
+    cross(cr, 820, 1420, 140, prog(t, T(tl, "b18", "कम"), 0.4))
+    footnote(cr, "Chappuis et al. 2007, American Journal of Tropical Medicine and Hygiene", prog(t, t0, 0.4),
+             y=1540)
+    headline(cr, t, "A STUDY", "IN NEPAL", t0, t0 + 0.3, big_color=GREEN)
+
+
 def e_bookend(cr, t, tl, t0):                            # b19 "socho: a snake whose bite doesn't hurt..."
-    _pic(cr, "krait_3", W / 2, 1100, 560, t, -1)
+    _pic(cr, "krait_3", W / 2, 1100, 420, t, -1)
     draw_text(cr, "NO PAIN", W / 2, 1450, 90, RED, 1 - prog(t, T(tl, "b19", "इसी"), 1.0), anchor="cm")
     headline(cr, t, "THE DANGER IS", "SILENCE", t0, T(tl, "b19", "इसी"), t_ghost=t0)
 
@@ -418,7 +438,7 @@ SHOTS = [   # (line, cue where the shot starts, draw function, background)
     ("b11", None, r_made_here, "paper"), ("b11", "तो", r_why, "paper"), ("b12", None, r_home, "paper"),
     ("b13", None, m_myths, "paper"), ("b14", None, m_wrong, "paper"),
     ("b15", None, d_calm, "paper"), ("b16", None, d_remove, "paper"), ("b16", "हॉस्पिटल", d_hospital, "paper"),
-    ("b16", "एक सौ", d_108, "paper"), ("b17", None, d_no_pain, "paper"), ("b18", None, d_net, "paper"),
+    ("b16", "एक सौ", d_108, "paper"), ("b17", None, d_no_pain, "paper"), ("b18", None, d_net, "paper"), ("b18", "नेपाल", d_study, "paper"),
     ("b19", None, e_bookend, "paper"), ("b20", None, e_question, "paper"),
 ]
 
