@@ -164,7 +164,10 @@ def _cam(name, loc, target, lens, focus=None, fstop=None):
     return o
 
 
-def _face_light(name, loc, target, energy, color="#7fe6ff", size=0.25):
+TANK_CYAN = "#4fd8e8"          # the tank's light on Kai: a saturated cyan (QA, LC9), from one side only
+
+
+def _face_light(name, loc, target, energy, color=TANK_CYAN, size=0.25):
     ld = bpy.data.lights.new(name, "AREA")
     ld.energy, ld.color, ld.size, ld.use_shadow = energy, lab.hx(color)[:3], size, False
     o = bpy.data.objects.new(name, ld)
@@ -186,25 +189,50 @@ def _focus_face(cam, rig):
     cam.data.dof.focus_distance = (_head_pos(rig) - cam.matrix_world.translation).length - 0.085 * H
 
 
-def _tint_hero(k=0.35):
+def _tint_hero(k=0.35, cool=(0.74, 0.93, 1.0)):
     """hero.blend's toon shade turns the light grey before the two-tone ramp, so a coloured light can't tint Kai. Add
-    the coloured light back on top (like the lab grade does for the room), so the tank lights his face cyan."""
-    for name in ("hair", "huku_bake", "body_bake", "body_nm"):
+    the coloured light back on top (like the lab grade does for the room), then multiply by the lab's cool night
+    colour, so the tank lights him cyan and the cap and skin don't read as white (LC1, LC9)."""
+    mats = ["hair", "huku_bake", "body_bake", "body_nm"]
+    mats += [m.name for m in bpy.data.materials if m.name.startswith("cap")]
+    for name in mats:
         m = bpy.data.materials.get(name)
-        if not m or "lab_tint" in m.node_tree.nodes:
+        if not m or not m.use_nodes or "lab_tint" in m.node_tree.nodes:
             continue
         nt = m.node_tree
-        s2r = next(n for n in nt.nodes if n.type == "SHADERTORGB")
-        em = next(n for n in nt.nodes if n.type == "EMISSION")
+        em = next((n for n in nt.nodes if n.type == "EMISSION"), None)
+        if em is None or not em.inputs[0].links:
+            continue
         src = em.inputs[0].links[0].from_socket
-        sc = nt.nodes.new("ShaderNodeVectorMath")
-        sc.operation, sc.inputs["Scale"].default_value = "SCALE", k
-        add = nt.nodes.new("ShaderNodeVectorMath")
-        add.operation, add.name = "ADD", "lab_tint"
-        nt.links.new(s2r.outputs[0], sc.inputs[0])
-        nt.links.new(src, add.inputs[0])
-        nt.links.new(sc.outputs[0], add.inputs[1])
-        nt.links.new(add.outputs[0], em.inputs[0])
+        s2r = next((n for n in nt.nodes if n.type == "SHADERTORGB"), None)
+        if s2r is not None:
+            # the light's hue (normalised) times its strength capped at 1, times k: coloured, never blown out
+            nrm = nt.nodes.new("ShaderNodeVectorMath")
+            nrm.operation = "NORMALIZE"
+            ln = nt.nodes.new("ShaderNodeVectorMath")
+            ln.operation = "LENGTH"
+            cap1 = nt.nodes.new("ShaderNodeMath")
+            cap1.operation, cap1.inputs[1].default_value = "MINIMUM", 1.0
+            kk = nt.nodes.new("ShaderNodeMath")
+            kk.operation, kk.inputs[1].default_value = "MULTIPLY", k
+            sc = nt.nodes.new("ShaderNodeVectorMath")
+            sc.operation = "SCALE"
+            add = nt.nodes.new("ShaderNodeVectorMath")
+            add.operation = "ADD"
+            nt.links.new(s2r.outputs[0], nrm.inputs[0])
+            nt.links.new(s2r.outputs[0], ln.inputs[0])
+            nt.links.new(ln.outputs["Value"], cap1.inputs[0])
+            nt.links.new(cap1.outputs[0], kk.inputs[0])
+            nt.links.new(kk.outputs[0], sc.inputs["Scale"])
+            nt.links.new(nrm.outputs[0], sc.inputs[0])
+            nt.links.new(src, add.inputs[0])
+            nt.links.new(sc.outputs[0], add.inputs[1])
+            src = add.outputs[0]
+        mul = nt.nodes.new("ShaderNodeVectorMath")
+        mul.operation, mul.name = "MULTIPLY", "lab_tint"
+        mul.inputs[1].default_value = cool
+        nt.links.new(src, mul.inputs[0])
+        nt.links.new(mul.outputs[0], em.inputs[0])
 
 
 def s03a():
@@ -219,8 +247,8 @@ def s03a():
     _key_pose(rig, 22, BODY)
     head = _head_pos(rig)
     _cam("cam_s03a", (-0.5, 0.62, 1.42), (-0.98, 2.05, 1.06), 30, focus=head, fstop=1.6)
-    _face_light("s03a_tank_on_face", tuple(tank + Vector((-0.2, -0.3, 0.25))), tuple(head), 6)
-    _tint_hero(0.2)
+    _face_light("s03a_tank_on_face", tuple(tank + Vector((-0.2, -0.3, 0.25))), tuple(head), 1.6, size=0.15)
+    _tint_hero(0.12)
     hero.face(rig, "neutral", 1)
     hero.face(rig, "blink", 31)
     hero.face(rig, "neutral", 34)
@@ -241,13 +269,15 @@ def s03b():
     cam_loc = Vector((tank.x - 0.05, glass_y - 0.06, head.z - 0.035))     # just in front of the glass
     cam = _cam("cam_s03b", tuple(cam_loc), tuple(head + Vector((0, 0, -0.035))), 40, fstop=1.4)
     _focus_face(cam, rig)
-    _face_light("s03b_tank_on_face", tuple(Vector((tank.x - 0.15, tank.y - 0.17, head.z - 0.05))), tuple(head), 2.5)
-    _tint_hero(0.15)
+    # from the tank on his right only, so his left cheek falls into the cool shadow tone
+    _face_light("s03b_tank_on_face", tuple(Vector((head.x + 0.35, head.y + 0.2, head.z - 0.02))), tuple(head), 0.9,
+                size=0.12)
+    _tint_hero(0.1, cool=(0.6, 0.88, 1.0))            # a close-up: the tank's cyan fills the frame
     hero.line_width(rig, 0.0015)                     # face close-up: ~2-3 px lines
     hero.face(rig, "neutral", 1)
     hero.face(rig, "look_right", 1, 0.4)
     hero.face(rig, "relaxed", 19, 0.6)               # the fond smile, mid-line ("...and the pistol shrimp")
-    hero.face(rig, "happy", 22, 0.45)
+    hero.face(rig, "happy", 22, 0.75)
     return dict(frames=n, step=3, subject=[rig["arm"]])
 
 
@@ -277,16 +307,16 @@ def s05b():
     _focus_face(cam, rig)
     # the bubble's flash on his face, fading on 1s (from S05a's collapse), then the tank's steady cyan
     fl = _face_light("s05b_flash", (fx - 0.12, glass_y - 0.05, fz + 0.12), tuple(head), 0, "#e8fbff", 0.15)
-    for f, e in ((1, 22), (2, 16), (4, 10), (7, 5), (11, 2.5), (16, 0.8), (20, 0)):
+    for f, e in ((1, 8), (2, 6), (4, 4), (7, 2), (11, 1), (16, 0.3), (20, 0)):
         fl.data.energy = e
         fl.data.keyframe_insert("energy", frame=f)
-    _face_light("s05b_tank_on_face", (fx - 0.15, glass_y - 0.15, head.z - 0.05), tuple(head), 2.5)
-    _tint_hero(0.15)
+    _face_light("s05b_tank_on_face", (head.x + 0.35, head.y + 0.2, head.z - 0.02), tuple(head), 0.9, size=0.12)
+    _tint_hero(0.1)
     hero.line_width(rig, 0.002)
     hero.face(rig, "surprised", 1, 0.7)               # eyes still wide from the flash
     hero.face(rig, "neutral", 13)
     hero.face(rig, "relaxed", 25, 0.5)
-    hero.face(rig, "happy", 31, 0.4)                  # the tap lands: a small smile
+    hero.face(rig, "happy", 31, 0.7)                  # the tap lands: a small smile
     return dict(frames=n, step=1, subject=[rig["arm"]])
 
 
