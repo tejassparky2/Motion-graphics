@@ -178,7 +178,7 @@ def erase_trees(trees, origin, f0, speed=None, seed=7, direction=None, ground=0.
     ring = _ring((ox, oy, ground), f0, speed, reach)
     flash = _flash(cam, f0) if cam else None
 
-    puffs, bits, stumps, pops = [], [], [], {}
+    puffs, bits, left, pops = [], [], [], {}
     for i in order:
         t = trees[i]
         tp = f0 + max(2, round(dist[i] / speed))
@@ -189,12 +189,12 @@ def erase_trees(trees, origin, f0, speed=None, seed=7, direction=None, ground=0.
         st.scale = (1, 1, 1)
         anim.key(st, "scale", f0 - 1, 0.0, "CONSTANT")
         anim.key(st, "scale", tp, 1.0, "CONSTANT")
-        stumps.append(st)
+        left.append(st)
         puffs += _cloud(t, tp, (ox, oy), rnd, life, f"{i}")
         bits += _leaf_bits(t, tp, (ox, oy), rnd, life, ground, f"{i}")
         puffs += _wisps(t, tp, rnd, life, f"{i}")
     end = max(pops.values()) + life + 10                                         # the stump wisps go last
-    return dict(order=order, pop_frames=[pops[i] for i in range(len(trees))], puffs=puffs, bits=bits, stumps=stumps,
+    return dict(order=order, pop_frames=[pops[i] for i in range(len(trees))], puffs=puffs, bits=bits, stumps=left,
                 ring=ring, streak=streak, flash=flash, speed=speed, end=end)
 
 
