@@ -93,3 +93,33 @@ Reuse the existing helper sessions listed in channels/horror/README.md (owner: d
 ## Standing rule (owner, 30 Oct 2026): "Update all helpers the same whenever we Update anything here"
 Every change to the look, the kit or the rules goes into HELPERS.md under "Latest updates", and a note goes by
 send_message to EVERY helper session in the work-split table (active or waiting).
+
+## Owner direction, 30 Oct 2026 (evening): stop, study three episodes, rewrite the story, no HUD
+Word for word:
+- (with two more episode links, S22E22 and S20E43) "One more for you to study deep dive" / "One more deep dive"
+- "I said anime then why Health bar i want you to write good engaging interesting story do deep research take
+  inspiration from Pokémon episodes First study all 3 episodes i gave you do deep dive animation story take full
+  inspiration then make animation after that research launch parallel angents to make deep dive on all episodes story
+  everything no hallucinations"
+- "I said stop and First study all 3 episodes ..." (repeated)
+- "Also stop helpers too"
+- "I want you to make best out of it possible use any tools skills opensouce free character animation community tools
+  anything needed output best animation and best story"
+- "No if it's slow take help from helpers sessions"
+- "And our story should still have option a and b so we go as viewer's comment but all should be engaging brilliant
+  clever entertainment interesting suspens thirrling"
+
+What changes:
+- The series is a pure anime. NO game HUD: no health bar, status bar, WILD tag, threat pips, menus, BOND pop-up or
+  fact cards.
+- Every episode still ends on an A/B choice decided by viewers' comments. Both options must be clever, thrilling and
+  fair; a losing branch is never a dead end.
+- Order:
+  1. Study all three episodes (animation AND story), with parallel deep-dive agents and no unsupported claims.
+  2. Research tools, assets and story craft.
+  3. Rewrite the story; the owner approves the script.
+  4. Then animate.
+- The helpers are stopped; six of them only transcribe episode halves (Whisper medium). Episode files stay in
+  scratchpads; nothing from them goes into git.
+- Research notes: `research_notes/Pokémon episodes story and animation/`. Report: `reports/Pokémon episodes story and
+  animation.md`.
