@@ -1,9 +1,13 @@
 """Video 4: "Machhar ke munh se 3D printing" - a dead mosquito's feeding tube as a 3D-printer nozzle (3D necroprinting,
 McGill + Drexel, Science Advances). Script approved by the owner 30 Oct 2026 ("Approve both"; scripts_batch2.md,
 video 4); narration below is that script word for word, in Devanagari for the voice, with numbers written as words.
+Hook b0 added by the owner, 30 Oct 2026 ("make strong hook as in further your kidney and liver can be 3d printed with
+help of mosquito what yes mosquito"); it says "ho sakte hain" (could be), and b19-b20 still answer "not yet".
 Organs appear only as the field's dream and as "not yet": the study printed tiny cell-laden structures, not organs."""
 import math
 import os
+
+from PIL import Image
 
 from poster import (CORAL, CREAM, GOLD, GREEN, INK, MARGIN, RED, W, calendar, card, clamp, counter, draw_text, ease,
                     footnote, gauge, headline, path, photo, prog, ring, stamp, text_size, yes_no_card)
@@ -13,6 +17,7 @@ from channel import ASSETS_ROOT, MUSIC, NARRATOR, NARRATOR_LABEL, REVEAL_GAP, TA
 from shots import T, asset_finder, checklist, draw_frame, pic, starts
 
 SCRIPT = [
+    dict(id="b0", text="फ्यूचर में तुम्हारी किडनी और लिवर थ्री-डी प्रिंट हो सकते हैं... एक मच्छर की मदद से। क्या? हाँ, मच्छर।"),
     dict(id="b1", text="सोचो, जो मच्छर तुम्हारा ख़ून चूसता है... उसका मुँह अब साइंटिस्ट्स के थ्री-डी प्रिंटर की नोज़ल "
                        "बन गया है।"),
     dict(id="b2", text="और ये नोज़ल ज़िंदा सेल्स प्रिंट करती है। वो भी मच्छर के मरने के बाद।"),
@@ -45,13 +50,15 @@ SCRIPT = [
 
 METADATA = dict(
     title="Machhar ke munh se 3D printing",
-    caption="Jo machhar tumhara khoon choosta hai, uska munh ab 3D printer ki nozzle hai... aur ye zinda cells print "
-            "karta hai 😳\n\n"
+    caption="Future mein tumhari kidney aur liver 3D print ho sakte hain... ek machhar ki madad se. Kya? Haan, "
+            "machhar 😳\n\n"
+            "Jo machhar tumhara khoon choosta hai, uska munh ab 3D printer ki nozzle hai, aur ye zinda cells print "
+            "karta hai.\n\n"
             "Scientists ne mare hue machhar ki feeding tube ko nozzle banaya: lines sirf ~20 micron, insaan ke baal se "
             "kai guna patli. Printing ke baad ~86% cells zinda bache.\n\n"
             "Organs abhi nahi, par tissue ki taraf ye ek pehla qadam hai.\n\n"
             "Machhar ke munh se bana tissue tumhare ilaaj mein lage, toh lagwaoge? Comment mein YES ya NO likho 👇",
-    yt_title="Machhar Ke Munh Se 3D Printing? 😳 | Necroprinting",
+    yt_title="Machhar Se 3D Print Hogi Kidney? 😳 | Necroprinting",
     yt_description="Canada ki McGill University aur America ki Drexel University ke scientists ne mare hue machhar ki "
                    "feeding tube ko 3D printer ki nozzle bana diya: 3D necroprinting. Lines sirf ~20 micron, aur zinda "
                    "cells ke saath printing. Organs abhi nahi, par tissue ki taraf ek pehla qadam.",
@@ -68,7 +75,7 @@ P = {k: _find(k) for k in ("mosquito", "mosquito_proboscis", "mehndi_cone", "hen
                            "bioprinter_lab", "glass_pipette", "syringe", "needle_tip", "tweezers", "rice_grains",
                            "human_hair", "red_blood_cells", "petri_dish", "honeybee", "housefly", "clapperboard",
                            "world_map", "university_building", "heart_engraving", "kidney_engraving", "pressure_gauge",
-                           "microscope", "mosquito_proboscis_sem", "henna_hand_alt")}
+                           "microscope", "mosquito_proboscis_sem", "henna_hand_alt", "kidney_bioart", "liver_bioart")}
 USED_ASSETS = [os.path.basename(v) for v in P.values() if v]
 CREDITS_FILES = [os.path.join(ASSETS_ROOT, d, "credits.json") for d in ("mosquito", "toxoplasma2")]
 
@@ -187,10 +194,61 @@ def crack(cr, x, y, p, alpha=1.0):
 # Rules (style bible + parasite-reels study): a new picture every ~3-4 s cut on the word, the literal noun on screen,
 # red = the key word, green = good news, gold = numbers, dark slate for the microscopic world.
 
-def h_mouth(cr, t, tl, t0):                              # b1 frame 0: "socho: the mosquito that sucks your blood..."
-    _pic(cr, "mosquito", W / 2, 1060, 520, t, -1)
-    ring(cr, 230, 1090, 170, 90, prog(t, 0.8, 0.5))
-    headline(cr, t, "ITS MOUTH IS A", "3D PRINTER", -1, min(1.8, T(tl, "b1", "नोज़ल")), t_ghost=-1)
+_SIZE = {}
+
+
+def printing(cr, t, key, cx, cy, h, p):
+    """A photo being 3D printed: shown from the bottom up to p (0-1), a fresh layer and the print head on the top edge."""
+    if not P.get(key) or p <= 0:
+        return
+    if key not in _SIZE:
+        with Image.open(P[key]) as im:
+            _SIZE[key] = im.width / im.height
+    w, y = h * _SIZE[key], cy + h / 2 - h * p
+    cr.save()
+    cr.rectangle(0, y, W, 1920)
+    cr.clip()
+    _pic(cr, key, cx, cy, h, t, -1)
+    cr.restore()
+    if p < 1:
+        path(cr, [(cx - w / 2, y), (cx + w / 2, y)], 1.0, 6, HENNA, 0.9)
+        x = cx + 0.45 * w * math.sin(t * 7)
+        cr.set_source_rgba(*STEEL, 1)
+        cr.rectangle(x - 30, y - 90, 60, 66)
+        cr.fill()
+        cr.move_to(x - 14, y - 24)
+        cr.line_to(x + 14, y - 24)
+        cr.line_to(x, y - 2)
+        cr.close_path()
+        cr.fill()
+
+
+def h_organs(cr, t, tl, t0):                             # b0 frame 0: "someday your kidney and liver could be 3D printed..."
+    printing(cr, t, "kidney_bioart", 290, 1120, 560, 0.6 + 0.4 * prog(t, 0.0, 1.6))
+    printing(cr, t, "liver_bioart", 800, 1160, 360, 0.5 + 0.5 * prog(t, 0.6, 1.6))
+    headline(cr, t, "SOMEDAY, YOUR KIDNEY & LIVER", "3D PRINTED", -1, min(1.8, T(tl, "b0", "प्रिंट")), t_ghost=-1)
+
+
+def h_mosq(cr, t, tl, t0):                               # b0 "...with the help of a mosquito"
+    _pic(cr, "liver_bioart", 230, 1000, 190, t, -1)
+    _pic(cr, "kidney_bioart", 230, 1330, 300, t, -1)
+    _pic(cr, "mosquito", 1320 - 560 * prog(t, t0, 0.5), 1170, 360, t, -1)   # flies in from the right
+    headline(cr, t, "WITH THE HELP OF A", "MOSQUITO", t0, t0 + 0.15)
+
+
+def h_what(cr, t, tl, t0):                               # b0 "What? Yes, a mosquito."
+    th = T(tl, "b0", "हाँ")
+    _pic(cr, "mosquito", W / 2 + 60, 1180, 420, t, t0 - 0.2, flip=True)   # on screen from the cut's first frame
+    q = prog(t, t0, 0.25) * (1 - prog(t, th, 0.2))
+    draw_text(cr, "?", 230, 900, 300 * (0.8 + 0.2 * q), RED, q, anchor="cm")
+    stamp(cr, t, "YES!", th, 230, 900, 90)
+    headline(cr, t, "WHAT? YES,", "A MOSQUITO", t0, th, t_ghost=t0)
+
+
+def h_mouth(cr, t, tl, t0):                              # b1 "socho: the mosquito that sucks your blood..."
+    _pic(cr, "mosquito", W / 2, 1060, 520, t, t0)
+    ring(cr, 230, 1090, 170, 90, prog(t, t0 + 0.6, 0.5))
+    headline(cr, t, "THE SAME ONE THAT", "DRINKS YOUR BLOOD", t0, T(tl, "b1", "चूसता"))
 
 
 def h_nozzle(cr, t, tl, t0):                             # b1 "...its mouth is now a 3D printer's nozzle"
@@ -461,6 +519,7 @@ def e_question(cr, t, tl, t0):                           # b24 "would you take t
 
 
 SHOTS = [   # (line, cue where the shot starts, draw function, background)
+    ("b0", None, h_organs, "paper"), ("b0", "मच्छर", h_mosq, "paper"), ("b0", "क्या", h_what, "paper"),
     ("b1", None, h_mouth, "paper"), ("b1", "मुँह", h_nozzle, "paper"),
     ("b2", None, h_cells, "paper"), ("b2", "वो", h_dead, "paper"),
     ("b3", None, r_real, "paper"), ("b3", "कनाडा", r_unis, "paper"),
@@ -487,7 +546,7 @@ def draw(cr, t, tl):
 def sfx(tl):
     """A whoosh on every cut, thuds on stamps, a tick (and a music dip) before the re-hooks and the closing line."""
     ev = [(s, "whoosh", 0.25) for s in starts(tl, SHOTS)[1:]]
-    ev += [(T(tl, "b2", "वो") + 0.3, "thud", 0.0), (T(tl, "b11", "जीत") + 0.3, "thud", 0.0),
+    ev += [(T(tl, "b0", "हाँ"), "thud", 0.0), (T(tl, "b2", "वो") + 0.3, "thud", 0.0), (T(tl, "b11", "जीत") + 0.3, "thud", 0.0),
            (T(tl, "b13", None) - 0.35, "tick", 0.0), (T(tl, "b19", None) - 0.35, "tick", 0.0),
            (T(tl, "b23", None) - 0.35, "tick", 0.0), (T(tl, "b24", "यस"), "typing", 1.0)]
     for bid in ("b4", "b8", "b12", "b16", "b18"):

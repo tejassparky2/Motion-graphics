@@ -95,6 +95,12 @@ every line, upload sheet. Sources go with every script, and health claims must b
 - **Video 4, mosquito 3D necroprinting** (owner, 30 Oct 2026: "Approve both"): a dead female mosquito's proboscis
   as a 3D-printer nozzle (Puma et al., Science Advances; McGill + Drexel). No organs were printed: the script says
   "not yet, a first step" (~20 µm lines, living cells, ~86% survived).
+  - New hook (owner, 30 Oct: "make strong hook as in further your kidney and liver can be 3d printed with help of
+    mosquito what yes mosquito"): b0 shows a kidney and liver being printed, then the mosquito. It says "ho sakte hain"
+    (could), and b19-b20 still say "not yet".
+- **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
+  (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
+  minutes, side facts are the first thing to drop.
 - **Music: the `doc` bed** (motion/audio.py; owner, 29 Oct 2026: "Sounds good").
   - It sits ~17 dB under the voice in pauses, as in the reference, and is voiced so phone speakers carry it.
   - It dips before reveals.

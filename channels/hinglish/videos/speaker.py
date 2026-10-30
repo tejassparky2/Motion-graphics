@@ -1,6 +1,8 @@
 """Video 2 (tech): "Speaker awaaz banata hi nahi" - how a moving-coil speaker works. Script approved by the owner
 29 Oct 2026 ("Approve both"; scripts_batch2.md, video 2); narration below is that script word for word, in Devanagari
-for the voice, with numbers written as words so the voice reads them right."""
+for the voice, with numbers written as words so the voice reads them right.
+Trimmed 30 Oct 2026, 2:18 -> about 1:35 (owner: "try to make it little shorter the viewers should not feel bored and
+stay till end"): the side facts in CUT are dropped from the voice and the shots; their lines stay below for the record."""
 import math
 import os
 
@@ -35,7 +37,7 @@ SCRIPT = [
     dict(id="b16", text="और तुम्हारे फ़ोन का स्पीकर? बस एक-डेढ़ सेंटीमीटर का। और उसका कोन आधे मिलीमीटर से भी कम हिलता है।"),
     dict(id="b17", text="तो फिर डीजे का बेस सीने तक क्यों पहुँचता है... और फ़ोन का बेस क्यों नहीं?"),
     dict(id="b18", text="क्योंकि बेस के लिए बहुत सारी हवा धकेलनी पड़ती है। बड़ा कोन, ज़्यादा हवा। "
-                        "इसलिए डीजे के स्पीकर इतने बड़े होते हैं, और फ़ोन का बेस पतला लगता है।"),
+                        "इसलिए डीजे के स्पीकर इतने बड़े होते हैं, और फ़ोन का बेस पतला लगता है।", gap=REVEAL_GAP),
     dict(id="b19", text="एक और अजीब बात। स्पीकर को उल्टा चलाओ, तो वो माइक्रोफ़ोन बन जाता है।"),
     dict(id="b20", text="आवाज़ कोन को हिलाती है, कॉइल मैग्नेट के पास हिलता है, और बिजली बन जाती है। "
                         "स्टेज पर सिंगर्स जो डायनेमिक माइक पकड़ते हैं, वो इसी तरह काम करता है।"),
@@ -45,25 +47,24 @@ SCRIPT = [
                         "और तुम्हारा दिमाग़ उससे म्यूज़िक बना देता है।"),
     dict(id="b23", text="शादी में डीजे का बेस तुम्हें सीने में महसूस होता है? यस या नो, कमेंट में बताओ।"),
 ]
+# the 1925 inventors, the bass/whistle/hearing numbers, the phone speaker's size, speaker-as-microphone, the smartwatch
+CUT = {"b5", "b15", "b16", "b19", "b20", "b21"}
+SCRIPT = [l for l in SCRIPT if l["id"] not in CUT]
 
 METADATA = dict(
     title="Speaker awaaz banata hi nahi",
     caption="Tumhare phone ka speaker awaaz nahi banata... wo hawa ko ek second mein hazaaron baar dhakka deta hai 😳\n\n"
-            "Andar bas ek magnet, taar ka coil aur ek patla cone. Ye idea 1925 mein Chester Rice aur Edward Kellogg "
-            "ne banaya tha.\n\n"
-            "Shaadi ke DJ ka seene wala dhak-dhak? Wo awaaz nahi, hawa ka dhakka hai. Aur speaker ko ulta chalao toh "
-            "wo microphone ban jaata hai.\n\n"
+            "Andar bas ek magnet, taar ka coil aur ek patla cone. Aur phone ka ek hi chhota cone drum, guitar aur "
+            "singer, sab ek saath bana deta hai.\n\n"
+            "Shaadi ke DJ ka seene wala dhak-dhak? Wo awaaz nahi, hawa ka dhakka hai.\n\n"
             "Shaadi mein DJ ka bass tumhe seene mein mehsoos hota hai? Comment mein YES ya NO likho 👇",
     yt_title="Speaker Awaaz Banata Hi Nahi? 😳 Kaise Kaam Karta Hai",
     yt_description="Phone ka speaker asal mein kaise kaam karta hai: magnet, coil aur cone se hawa ko dhakka, aur wo "
-                   "dhakka tumhare kaan tak kaise pahunchta hai. DJ ka bass seene mein kyun lagta hai, phone ka bass "
-                   "patla kyun hota hai, aur speaker ko ulta chalao toh wo microphone kaise ban jaata hai.",
+                   "dhakka tumhare kaan tak kaise pahunchta hai. DJ ka bass seene mein kyun lagta hai, aur phone ka "
+                   "bass patla kyun hota hai.",
     hashtags=["#speaker", "#howitworks", "#techinhindi", "#sciencefacts", "#factsinhindi"],
     pinned_comment="Shaadi mein DJ ka bass seene mein mehsoos hota hai? 🔊 YES ya NO? 👇",
-    sources=["Rice & Kellogg 1925, the moving-coil loudspeaker, General Electric",
-             "Apple Support, Use Water Lock on Apple Watch",
-             "Knowles microspeaker datasheets; audioXpress, Characterizing the Microspeaker Industry",
-             "IEC Electropedia, electroacoustic reciprocity"],
+    sources=["Rice & Kellogg 1925, the moving-coil loudspeaker, General Electric"],
 )
 
 _find = asset_finder("speaker", "toxoplasma2")
@@ -75,7 +76,9 @@ P = {k: _find(k) for k in ("phone_speaker_grille", "phone_face_down", "magnet", 
 P["phone_face_down"] = _find("smartphone_hand")          # no logo-free phone back exists; the phone in a hand
 P["ear_engraving"] = _find("ear_engraving_gray907")      # the cross-section, eardrum labelled
 P["magnet"] = _find("magnet_neodymium_discs")            # small magnets with a matchstick for scale
-USED_ASSETS = [os.path.basename(v) for v in P.values() if v]
+CUT_ONLY = {"earphones", "micro_speaker", "rice_kellogg_1925", "ruler", "smartwatch", "speaker_driver_side",
+            "water_drops", "whistle"}                    # photos seen only in the cut shots: not credited
+USED_ASSETS = [os.path.basename(v) for k, v in P.items() if v and k not in CUT_ONLY]
 CREDITS_FILES = [os.path.join(ASSETS_ROOT, d, "credits.json") for d in ("speaker", "toxoplasma2")]
 
 COPPER, STEEL, PAPER_CONE, BOLT = (0.78, 0.45, 0.20), (0.36, 0.37, 0.40), (0.92, 0.86, 0.72), (0.98, 0.80, 0.15)
@@ -260,7 +263,7 @@ def h_magnet_wire(cr, t, tl, t0):                        # b2 "a small magnet an
     _pic(cr, "copper_coil", 760, drop(t, tw - 0.2, 1080), 380, t, tw - 0.2)
     draw_text(cr, "+", W / 2, 1080, 120, RED, prog(t, tw - 0.1, 0.2), anchor="cm")
     stamp(cr, t, "THAT'S IT", T(tl, "b2", "इतना"), W / 2, 1420, 70)
-    headline(cr, t, "JUST A MAGNET +", "A WIRE", t0, tw)
+    headline(cr, t, "JUST A MAGNET AND", "A WIRE", t0, tw)   # Anton's "+" and "=" are tiny
 
 
 def h_dj(cr, t, tl, t0):                                 # b3 "near the DJ at a shaadi, the dhak-dhak in your chest?"
@@ -507,7 +510,7 @@ def r_big_cone(cr, t, tl, t0):                           # b18 "bass needs lots 
     air(cr, t, 420, 720, 520, 360, cols=10, rows=8, amp=24, freq=1.4)
     section(cr, 230, 1390, 0.28, d=3 * math.sin((t - t0) * 9), alpha=prog(t, T(tl, "b18", "बड़ा"), 0.3))
     air(cr, t, 330, 1360, 160, 60, cols=4, rows=2, amp=5, freq=1.4, alpha=prog(t, T(tl, "b18", "बड़ा"), 0.3))
-    headline(cr, t, "BIG BASS =", "BIG CONE", t0, T(tl, "b18", "बड़ा"))
+    headline(cr, t, "BIG BASS NEEDS A", "BIG CONE", t0, T(tl, "b18", "बड़ा"))
 
 
 def r_thats_why(cr, t, tl, t0):                          # b18 "...that's why DJ speakers are huge, and phone bass is thin"
@@ -603,6 +606,7 @@ SHOTS = [   # (line, cue where the shot starts, draw function, background)
     ("b22", None, e_bookend, "paper"), ("b22", "दिमाग़", e_music, "paper"),
     ("b23", None, e_question, "paper"),
 ]
+SHOTS = [s for s in SHOTS if s[0] not in CUT]
 
 
 def draw(cr, t, tl):
@@ -615,7 +619,7 @@ def sfx(tl):
     ev += [(T(tl, "b2", "इतना"), "thud", 0.0), (T(tl, "b4", "छू"), "thud", 0.0), (T(tl, "b13", "आवाज़"), "thud", 0.0),
            (T(tl, "b14", None) - 0.35, "tick", 0.0), (T(tl, "b17", None) - 0.35, "tick", 0.0),
            (T(tl, "b22", None) - 0.35, "tick", 0.0), (T(tl, "b23", "यस"), "typing", 1.0)]
-    for bid in ("b5", "b6", "b12", "b16", "b20"):
+    for bid in ("b6", "b12", "b14", "b18"):
         ev.append((tl[bid].start + 0.4, "pop", 0.0))
     ev += [(at, "dip", 0.5) for at, name, _ in list(ev) if name == "tick"]   # the bed dips just before a reveal
     return ev
