@@ -19,6 +19,17 @@ had no inverted-hull outline and inverted toon light. An SDF creature without it
 their offset. In every puff-shrimp shot the snapping finger must stay attached to the claw and the lids must close
 over the eyes. A shrimp shot rendered before 1d22a94 (or, for outlines, before 3b0fc70) is a FIX.
 
+**Since tonight's fixes, the key checks (coordinator, 30 Oct):**
+- SDF creatures have outlines and a lit side (from 0c0ceeb).
+- The shrimp's snapping finger stays attached.
+- The shrimp has its locked-on eyes in S01, S16, S19 and S20.
+
+## Known minor issues (revisit after Episode 1)
+- **Outline slivers (look.outline, shared).** Since the SDF normal fix, short dark slivers show inside SDF bodies
+  at full size, where the inverted-hull shell pokes through creases. They are not shadow acne and not mesh noise.
+  Barely visible at 360 px. The coordinator decided to leave look.outline alone for this episode (seen on the
+  jelly-snail in S10a).
+
 **Verdicts:** PASS (ready for the cut), FIX (a concrete change, sent to the builder), or NOTE (weak but acceptable).
 Most serious first within each shot. Updated as shots land.
 
@@ -29,9 +40,9 @@ Most serious first within each shot. Updated as shots land.
 | S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
 | S09 | helper 3 | PASS (v2, 6d95527) | 66 / 66 | 0.47 | v1 FIX resolved: eyes open on "woke up", crack held through "cracked sky" |
 | S06 | helper 9 | PASS | 48 / 41 | 0.37 | double flash on the line, lights cut out on 2s |
-| S10a | helper 4 | PASS (v8 re-render) | 56 / 56 | 0.38 | outline and lit side back; 1 NOTE (outline slivers) |
+| S10a | helper 4 | PASS (coordinator's second read of v2) | 56 / 56 | 0.38 | outline and lit side; known minor issue: outline slivers |
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
-| S11a | helper 4 | delivered (v8 rework), awaiting the coordinator's re-read | 39 / 39 | 0.51 | holes big at y 510-790, smoke dark |
+| S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
 | S21 | bGqrs (coordinator render) | PASS | 64 / 64 | 0.45 | finger stays on the claw; 1 NOTE |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
@@ -160,8 +171,8 @@ on "wrong", then hold still. 38 frames, saturation 0.49.
 ## S11a: the trail of smoking burnt holes (helper 4)
 **Second read (coordinator): FIX.** In 1.12 s the wrong detail must read instantly (EP4), and it didn't: the holes
 were small dark specks in the upper third at 360 px, a sharp red mushroom in the corner was the brightest thing in
-the frame, and the smoke was faint grey on green. Reworked (commit 840944e) and **re-rendered from 0c0ceeb**: 39 frames, saturation 0.51, on 1s. Waiting for the
-coordinator's re-read:
+the frame, and the smoke was faint grey on green. Reworked (commit 840944e) and **re-rendered from 0c0ceeb**: 39 frames, saturation 0.51, on 1s. **The coordinator's
+re-read: PASS** ("the ember-rimmed, smoking holes now lead the eye up the trail to the snail in its 1.1 s"):
 - **Camera:** low and close behind the trail. The nearest holes are big in the lower middle, at y 510-790 above
   the captions, and the trail leads the eye up to the snail.
 - **Mushroom:** removed in this scene.
