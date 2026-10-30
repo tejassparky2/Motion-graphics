@@ -41,11 +41,13 @@ def _stage():
     fx, fy, fz = tank["floor"]
     rig = ps.build((fx - 0.03, fy - 0.07, fz), turn=TURN, scale=K)
     gy = tank["glass"].location.y
+    sand_m = look.paint("tank_sand", look.hexc("#d9c39a"), noise=0.18, scale=220.0)
+    bpy.data.objects["hero_gravel"].data.materials[0] = sand_m       # its front face showed white through the glass
     bpy.ops.mesh.primitive_plane_add(size=1, location=(fx, (gy + fy + 0.15) / 2, fz + 0.0004))
     sand = bpy.context.object
     sand.name = "h2_sand"
     sand.scale = (0.52, fy + 0.15 - gy - 0.004, 1)
-    sand.data.materials.append(look.paint("tank_sand", look.hexc("#d9c39a"), noise=0.18, scale=220.0))
+    sand.data.materials.append(sand_m)
     ps.gravel_bed((fx - 0.25, fx + 0.25), (gy + 0.004, fy + 0.14), fz, random.Random(5), n=1600, k=K * 1.6,
                   clear=(fx - 0.03, fy - 0.07, 0.05, 0.03), name="h2_gravel")
     return h, tank, rig
@@ -160,7 +162,7 @@ def _pulse(objs, f0, f1, amount=0.18):
         a = mix.inputs[0].default_value
         base = sorted((kp.co.x, kp.co.y) for fc in anim.all_fcurves(m.node_tree.animation_data.action)
                       for kp in fc.keyframe_points)
-        a = base[1][1] if len(base) > 1 else a                   # the alpha it was born with
+        a = next((v for _, v in base if v > 0), a)                # the alpha it was born with
         for n in range(f0, f1, 2):
             mix.inputs[0].default_value = min(1.0, a * (1 + amount if (n - f0) % 4 == 0 else 1 - amount * 0.5))
             mix.inputs[0].keyframe_insert("default_value", frame=n)
@@ -236,7 +238,7 @@ def s07():
     ps.crack(gc, S07_CRACK, frames=5)
     eye = _eye_cam(rig, "cam_eye")
     _dim_water(tank, [(S07_WIND, 1.0), (S07_SHUT, 0.6)])
-    cam = _cam("cam_tank", (0.07, 1.775, 0.855), (0.05, 2.08, 0.87), 30, None)
+    cam = _cam("cam_tank", (0.075, 1.86, 0.81), (0.045, 2.08, 0.865), 24, None)
     cam.data.dof.use_dof = True
     cam.data.dof.focus_distance = (Vector((0.04, gy, 0.86)) - cam.location).length
     cam.data.dof.aperture_fstop = 2.8
