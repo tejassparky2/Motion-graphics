@@ -152,7 +152,7 @@ def body(rig, look, cams):
     cam_pos = lambda name: cams[name].location.copy()   # noqa: E731
     for t, p in ((0.0, hands_c), (2.6, hands_c + Vector((0, 0, 0.05))), (2.85, cam_pos('crack')),
                  (3.3, cam_pos('crack')), (3.5, OPEN_R[0] + Vector((0, -0.08, 0))), (5.8, OPEN_R[0]),
-                 (10.5, cam_pos('smile')), (12.1, hands_c), (14.0, hands_c),
+                 (10.5, cam_pos('smile')), (12.0, cam_pos('smile')), (12.1, hands_c), (14.0, hands_c),
                  (14.2, hands_c + Vector((0.1, 0, 0.1))), (14.6, Vector((-0.06, -0.4, 1.25))),
                  (15.55, Vector((-0.06, -0.4, 1.25))), (15.75, cam_pos('again')), (16.0, cam_pos('again'))):
         key_loc(look, t, p)
@@ -214,7 +214,7 @@ def cameras(coll, scene):
     cams = {}
     cams['crack'] = cam('Cam1_Crack', 36, (-0.55, -1.6, 1.52), (0.0, -0.18, 1.43))
     cams['xray'] = cam('Cam2_Xray', 35, (-0.01, -0.60, 1.70), (-0.04, -0.46, 1.27), fstop=4.0, up=(0, 1, 0))
-    cams['smile'] = cam('Cam4_Smile', 48, (0.16, -0.80, 1.64), (0.0, -0.08, 1.63), fstop=2.0)
+    cams['smile'] = cam('Cam4_Smile', 48, (0.16, -0.80, 1.68), (0.0, -0.08, 1.66), fstop=2.8)
     cams['again'] = cam('Cam5_Again', 36, (0.55, -1.6, 1.52), (0.0, -0.18, 1.43))
     # slow push-ins
     for name, dt, push in (('crack', (0.0, 3.55), 0.14), ('xray', (3.55, 5.75), 0.07),

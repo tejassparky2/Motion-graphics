@@ -24,7 +24,7 @@ from xb import anim  # noqa: E402
 argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 ap = argparse.ArgumentParser()
 ap.add_argument('--out', default='/tmp/knuckles.blend')
-ap.add_argument('--samples', type=int, default=12)
+ap.add_argument('--samples', type=int, default=8)
 args = ap.parse_args(argv)
 
 t0 = time.time()

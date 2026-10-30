@@ -2,7 +2,7 @@
 import bpy
 
 
-def setup(scene, res=(1080, 1920), samples=12, fps=24, motion_blur=True, noise_threshold=0.04):
+def setup(scene, res=(1080, 1920), samples=8, fps=24, motion_blur=True, noise_threshold=0.05):
     r = scene.render
     r.engine = 'CYCLES'
     r.resolution_x, r.resolution_y = res

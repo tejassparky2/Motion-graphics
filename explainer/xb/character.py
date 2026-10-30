@@ -70,7 +70,26 @@ def restyle_clothes(rig, color):
         me.loops.foreach_get('vertex_index', vi)
         zc = np.add.reduceat(co[vi][:, 2], ls) / lt
         denim_tex = (c[:, 2] > c[:, 0] * 1.15) & (sat > 0.18) & (mx < 0.85)
-        denim = (zc < 0.86) | (denim_tex & (zc < 1.1))
+        denim_face = (zc < 0.86) | (denim_tex & (zc < 1.1))
+        # decide per connected piece of cloth (shirt vs jeans), so worn denim patches stay denim
+        parent = list(range(len(me.vertices)))
+
+        def find(a):
+            while parent[a] != a:
+                parent[a] = parent[parent[a]]
+                a = parent[a]
+            return a
+        for p_ in me.polygons:
+            r0 = find(p_.vertices[0])
+            for vv in p_.vertices[1:]:
+                r1 = find(vv)
+                if r1 != r0:
+                    parent[r1] = r0
+        island = np.array([find(p_.vertices[0]) for p_ in me.polygons])
+        denim = np.zeros(len(island), dtype=bool)
+        for isl in np.unique(island):
+            sel = island == isl
+            denim[sel] = denim_face[sel].mean() > 0.5
         shirt = m.copy()
         shirt.name = 'Shirt'
         snt = shirt.node_tree
