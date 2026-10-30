@@ -44,11 +44,14 @@ Most serious first within each shot. Updated as shots land.
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
 | S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
+| S24bot | XprL | **FIX** | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
+| S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
+| S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
 | S21 | bGqrs (coordinator render) | PASS | 64 / 64 | 0.45 | finger stays on the claw; 1 NOTE |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S01, S02, S03a, S04, S05a, S05b, S07, S08, S12-S20, S24.
+Waiting for: S01, S02, S03a, S04, S05a, S05b, S08, S12-S20.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -224,3 +227,45 @@ The first version's notes, for the record:
 - **NOTE:** mean saturation is 0.63 (frames peak at 0.70) because the deep blue sky fills the upper frames. That is
   just over the 0.34-0.61 band but inside E22's measured 0.26-0.69. Not blocking. A slightly paler sky gradient
   would bring it in.
+
+## S07: Snap. The crack runs up the tank (helper 2)
+**PASS**, with two NOTEs.
+- **Length and level:** 36 frames (36 needed). Mean saturation 0.32; it dips on the white flash, and the lab
+  frames measure about 0.40.
+- **The hit (IM1, as far as a 24-frame cut allows):**
+  - frames 1-2: the eye close-up;
+  - frames 3-8: the claw cocked and held, with only the glint moving (IM2);
+  - frames 8-9: the strike;
+  - frame 10: a 1-frame white flash (IM3);
+  - frames 11-12: two inverted radial impact frames with the shrimp in silhouette;
+  - then the shock ring and bubble, and from frame 14 the crack running up the glass in 5 frames;
+  - the result holds to the cut, and the camera drifts rather than shakes on the final hit (IM5).
+- **Timing:** "Snap." (voice in 0.30 s, frame 8) lands on the strike.
+- **Continuity:** the crack is `pistolshrimp.glass_crack()` on `crack_path()`, the same main zigzag S09 draws in
+  the sky (code-checked). S07 adds the starburst and branches on the glass, which suits glass.
+- **NOTE (IM1):** the wind-up is 5 frames, against IM1's 12-29. There is no target or observer reaction inside the
+  shot; S08 follows on the floor. Both are forced by the 24-frame cut, and S04 already gave the snap its long
+  wind-up.
+- **NOTE (IM4/HELPERS):** each impact frame shows for 1 frame, where the target is 2-6 frames on 2s. Holding each
+  inverted burst for 2 frames would hit harder, but the 1-frame pair reads as a strobe at 24 fps. Not blocking.
+
+## S24top: the SAVE plate (XprL)
+**PASS.**
+- **Length and level:** 97 frames (97 needed), saturation 0.53. Kai acts on 3s.
+- **Split-ready (AB13):** the action sits in the upper half (Kai from y 30 to 570). He walks in from the right and
+  crouches toward the shrimp at the puddle, which raises its wet claw again.
+- On-model: the cap, the K and the teal jacket. Graded lighter than the RUN plate (value 0.75 against 0.67; LC8).
+
+## S24bot: the RUN plate (XprL)
+**FIX** (sent to XprL, 30 Oct).
+1. **Kai backs into the Shorts right rail and under the caption band (HELPERS v3.2 safe areas; TP16).**
+   - The plate's action is in the lower half, as it should be for the split. But Kai backs to the right: his
+     jacket is at x 435-550 on frame 1, x 531-642 on frame 60 and x 546-655 on frame 97, with his raised arm and
+     shoulder beyond that.
+   - From about frame 50 his shoulder, his outflung arm and his side are inside the right rail (x > 620,
+     y 640-1180), where the like and comment buttons sit.
+   - The caption band (y 845-930) crosses his torso, and this is the shot that carries the question line.
+   - Fix: start him further left, or frame the camera about 150 px to the right, so he ends at x ≤ 580. Keep his
+     face above about y 820.
+- **Passes:** 97 frames; the bird drops from the top of the thorn tree into the lower half; it is graded darker
+  (the riskier option, LC8); he is on-model; acting runs on 2s and 4s.
