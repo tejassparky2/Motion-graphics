@@ -85,7 +85,6 @@ def build(loc=(0, 0, 0), name="puff"):
     # body: one smooth shape (round body, belly patch, stubby legs, tail fan)
     body = sdf.build(f"{name}_bodymesh", [
         (E((0, 0, 1.0), (1.0, 0.92, 0.95)), aqua.name, None),
-        (E((0, -0.42, 0.82), (0.66, 0.5, 0.62)), cream.name, 0.08),
         (E((-0.5, -0.4, 0.18), (0.2, 0.22, 0.2)), aqua.name, 0.15),
         (E((0.5, -0.4, 0.18), (0.2, 0.22, 0.2)), aqua.name, 0.15),
         (E((-0.45, 0.35, 0.18), (0.2, 0.22, 0.2)), aqua.name, 0.15),
@@ -97,6 +96,9 @@ def build(loc=(0, 0, 0), name="puff"):
     look.outline(body, 0.025)
     body.location = (body.location.x + loc[0], body.location.y + loc[1], body.location.z + loc[2])
     _parent(body, body_pivot)
+    # the belly: its own smooth shape pressed into the front of the body, so its edge is one clean curve
+    bel = _sphere(f"{name}_belly", (loc[0], loc[1] - 0.5, loc[2] + 0.82), (0.62, 0.48, 0.58), cream, 0.0, 48)
+    _parent(bel, body_pivot)
     # fluffy collar
     for i in range(14):
         a = i / 14 * 2 * math.pi

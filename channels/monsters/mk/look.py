@@ -6,7 +6,7 @@ import bpy
 
 OUTLINE_RGB = "#2a1f2e"
 STYLE = "anime"        # "anime": hard two-tone cel (TV anime look); "soft": three soft bands + rim (toy look)
-LINE_SCALE = 0.7       # anime lines are thin
+LINE_SCALE = 1.5       # clean ~2-3 px lines at 720 px wide, like the TV anime
 SHADOW_TINT = (0.78, 0.74, 0.93)   # anime shadows are the base colour, darker and a little cooler
 _outline = None
 
