@@ -48,3 +48,27 @@ Shader to RGB banding + rim + inverted-hull outlines + blob contact shadow. Meas
 
 ## Parallel sessions
 Reuse the existing helper sessions listed in channels/horror/README.md (owner: don't create new ones).
+
+## Pelican session follow-up (30 Oct): explainer toolkit and speed-ups (branch ccr-33aaae6e-sdrhrs, explainer/)
+- **Humans:** MPFB2 (add-on GPL; generated characters + MakeHuman system assets CC0).
+  - Asset packs: makehuman_system_assets_cc0.zip, skins01_cc0.zip, faceunits01.zip (52 ARKit face units).
+  - Data folder: ~/.config/blender/4.5/extensions/.user/user_default/mpfb/data.
+  - `--factory-startup` disables the extension.
+  - Names: finger1 = thumb, metacarpal1 = index.
+  - Arm IK: lowerarm02, chain 4, use_tail=True. Fingers flex with +X local rotation.
+  - Replace the MakeHuman logo T-shirt with a plain dye.
+- **Stylised rigs:** Blender Studio "Rain" and "Snow" rigs, CC-BY (credit line required).
+- **Mocap, lip sync, voice, font:**
+  - Mixamo needs the owner's Adobe ID.
+  - CMU mocap was unreachable from that container.
+  - Lip sync: Rhubarb Lip Sync.
+  - Voice: Kokoro af_heart at speed 1.1 (word timings for captions).
+  - Font: Montserrat Black (OFL).
+- **Cycles speed-ups:**
+  - `emission_sampling='NONE'` on glow-only materials.
+  - No subsurface except skin.
+  - 8 samples, adaptive 0.05, OIDN.
+  - Never Add-Shader a Transparent BSDF (it doubles the transparency).
+  - These took 110 s down to ~62 s per frame at 1080x1920.
+- **Look at every image.** Things they only caught by looking: IK not reaching its target, gaze drifting under the eyelids, a backdrop leaking into other shots.
+- **Previews:** a Workbench contact sheet every 2nd frame.
