@@ -1,5 +1,6 @@
-"""Episode 1 (v2), helper 10: S15, THE SNAP (no words, ~4 s), the episode's biggest moment, staged with the report's
-nine-step hit (IM1-IM5, SS2, SG6, SG8, SG9) on the meadow "before" set:
+"""Episode 1 (v2), helper 10: S15, THE SNAP (no words, 115 frames + a 12-frame handle; channels/monsters/ep01v2/
+TIMING.md), the episode's biggest moment, staged with the report's nine-step hit (IM1-IM5, SS2, SG6, SG8, SG9) on the
+meadow "before" set. The strike (the snap sound) is on frame 42; frames 19-41 are the ~1 s of near-silence (SS2).
 
     1. A   POV: Kai's hand reaches toward the puff-shrimp drinking at the puddle (the observation; Kai acts on 3s)
     2. B   the shrimp's eyes, 3 frames: they narrow (SG6)
@@ -7,7 +8,8 @@ nine-step hit (IM1-IM5, SS2, SG6, SG8, SG9) on the meadow "before" set:
     4. D   strike: the claw snaps shut (2 frames)
     5.     flash: 2 white frames                                    (2D, composite())
     6.     impact frames on 2s from the subject pass (comp.impact)  (2D, composite())
-    7. E   the white ring, the forest wall sliced and popped into dust (mk/erase.py), the result held, camera locked
+    7. E   from behind Kai, small under the towering forest (SG8, SG9): the white ring, the forest wall sliced and
+           popped into dust (mk/erase.py), the result held, camera locked
     8. F   Kai blown backwards (on 2s)
     9. G   Kai on his back, shocked, the observer shake on 2s decaying from ~30% to ~1% of the frame width (IM5);
            his eyes close (into S16, "When I opened my eyes...")
@@ -15,11 +17,12 @@ nine-step hit (IM1-IM5, SS2, SG6, SG8, SG9) on the meadow "before" set:
 Blender (render_shot.py builds SHOTS["S15"]), then the 2D pass and delivery, outside Blender:
     BLENDER_USER_SCRIPTS=/home/user/tools/blender_scripts blender -b -y -P channels/monsters/render_shot.py -- \\
         ep01v2 S15 build/monsters/S15
-    blender ... render_shot.py -- ep01v2 S15 build/monsters/S15_sub --frames 40-43 --subject
+    blender ... render_shot.py -- ep01v2 S15 build/monsters/S15_sub --frames 46-49 --subject
     python channels/monsters/ep01v2/helper10.py build/monsters/S15 build/monsters/S15_sub out/monsters/ep01v2/shots
 
-Units: 1 unit = 20 cm; the shrimp is 2 units tall, Kai hero.build(scale=5.8). The erased trees' stumps are the
-meadow "after" stumps (sliced, glowing cuts), so the later chest shots match."""
+Units: 1 unit = 20 cm; the shrimp is 2 units tall, Kai hero.load(scale=5.8) (~8.7 units), the meadow trees 25-35
+units. The erased trees' stumps are the meadow "after" stumps (sliced, glowing cuts), so the later chest shots
+match."""
 import math
 import os
 import random
@@ -32,9 +35,9 @@ except ImportError:                                            # composite() run
     bpy = None
 
 FPS = 24
-A, B, C, D = 1, 17, 20, 36                                     # the cuts (Blender frames)
-FLASH, IMPACT = 38, 40                                         # 2D: 2 white frames, then 4 impact frames on 2s
-E, F, G, END = 44, 70, 82, 99
+A, B, C, D = 1, 19, 22, 42                                     # the cuts (Blender frames); D = the strike
+FLASH, IMPACT = 44, 46                                         # 2D: 2 white frames, then 4 impact frames on 2s
+E, F, G, END = 50, 80, 94, 115
 HANDLE = 12                                                    # tail handle for the edit
 KAI_SCALE = 5.8
 FWD = (0.0, 1.0, 0.0)                                          # Kai faces +Y (toward the shrimp)
@@ -79,26 +82,40 @@ def _world(k, name, tail=False):
 
 def _pose(k, spec, loc, rot=(0, 0, 0)):
     """Place the armature and pose it. spec: [(bone, direction in Kai's own frame: +Y forward, +Z up, +X his
-    right)], applied in order (parents first)."""
+    right)], applied in order (parents first). The model itself faces -Y, so it gets a half turn on top (the VRM
+    import leaves the armature in quaternion mode, where rotation_euler does nothing: switch it to XYZ)."""
     arm = k["arm"]
-    arm.location, arm.rotation_euler = loc, rot
-    _reset(k)
     r = Euler(rot).to_matrix()
+    arm.rotation_mode = "XYZ"
+    arm.location = loc
+    arm.rotation_euler = (r @ Matrix.Rotation(math.pi, 3, "Z")).to_euler()
+    _reset(k)
     for name, d in spec:
         _aim(k, name, r @ Vector(d))
 
 
 def _key_pose(k, frame):
+    """Remember the current pose for `frame`. The keys go in at the end (_flush_keys): once the armature has an
+    action, every depsgraph update re-applies it and would overwrite the pose being built."""
     arm = k["arm"]
+    k.setdefault("rec", []).append((frame, arm.location.copy(), arm.rotation_euler.copy(),
+                                    {pb.name: pb.rotation_quaternion.copy() for pb in arm.pose.bones}))
+
+
+def _flush_keys(k):
+    """Insert every remembered pose as CONSTANT keys (Kai acts on 3s/2s: poses snap)."""
     from channels.monsters.mk import anim
-    for path in ("location", "rotation_euler"):
-        anim.key(arm, path, frame, tuple(getattr(arm, path)), "CONSTANT")
-    for pb in arm.pose.bones:
-        pb.keyframe_insert("rotation_quaternion", frame=frame)
+    arm = k["arm"]
+    for frame, loc, rot, quats in k.get("rec", []):
+        arm.location, arm.rotation_euler = loc, rot
+        arm.keyframe_insert("location", frame=frame)
+        arm.keyframe_insert("rotation_euler", frame=frame)
+        for pb in arm.pose.bones:
+            pb.rotation_quaternion = quats[pb.name]
+            pb.keyframe_insert("rotation_quaternion", frame=frame)
     for fc in anim.all_fcurves(arm.animation_data.action):
         for kp in fc.keyframe_points:
-            if abs(kp.co.x - frame) < 0.01:
-                kp.interpolation = "CONSTANT"
+            kp.interpolation = "CONSTANT"
 
 
 KNEEL = [("spine", (0, 0.72, 0.7)), ("chest", (0, 0.8, 0.6)), ("upper_chest", (0, 0.8, 0.6)),
@@ -162,6 +179,7 @@ def _cam(name, loc, tgt, lens, frame, sc):
     c.rotation_euler = (math.atan2(math.hypot(d[0], d[1]), -d[2]), 0, math.atan2(d[1], d[0]) - math.pi / 2)
     c.data.lens = lens
     c.data.clip_start = 0.05
+    c.data.clip_end = 2000
     c.data.dof.use_dof = True
     c.data.dof.focus_distance = math.dist(loc, tgt)
     c.data.dof.aperture_fstop = 0.15                           # anime-strength background blur
@@ -203,7 +221,7 @@ def _claw_pt(lowest=True):
     return sum(vs, Vector()) / len(vs)
 
 
-def _puff_smoke(sources, f1, seed=4):
+def _puff_smoke(sources, f1, size=1.0, seed=4):
     """Painted smoke curling up off the hot stumps once their tree is gone (sources: [(x, y, z, first_frame)])."""
     from channels.monsters.mk import anim, meadow
     rnd = random.Random(seed)
@@ -223,13 +241,13 @@ def _puff_smoke(sources, f1, seed=4):
                 for pg in lobe.data.polygons:
                     pg.use_smooth = True
                 lobe.parent = p
-            s = rnd.uniform(0.45, 0.75)
+            s = rnd.uniform(0.45, 0.75) * size
             anim.key(p, "scale", f - 1, 0.001, "CONSTANT")
             anim.key(p, "location", f, (x, y, z))
             anim.key(p, "scale", f, s * 0.3, "LINEAR")
             anim.key(p, "scale", f + life * 0.6, s)
             anim.key(p, "scale", f + life, 0.001)
-            anim.key(p, "location", f + life, (x + rnd.uniform(-0.3, 0.3), y, z + rnd.uniform(2.2, 3.2)))
+            anim.key(p, "location", f + life, (x + rnd.uniform(-0.3, 0.3) * size, y, z + rnd.uniform(2.2, 3.2) * size))
             f += rnd.randint(9, 14)
 
 
@@ -248,7 +266,7 @@ def s15():
     # ---- the puff-shrimp at the puddle, its claw dipped in the water
     rig = puffshrimp.build((0, 0, 0))
     root, body, sh, hg = rig["root"], rig["body"], rig["shoulder"], rig["hinge"]
-    DIP, UP, STRIKE = (2.0, 0.6, 1.4), (0.35, 0.75, 0.0), (-0.45, 0.55, 0.0)
+    DIP, UP, STRIKE = (1.8, 0.0, 0.3), (0.35, 0.75, 0.0), (-0.45, 0.55, 0.0)   # DIP: tip in the puddle's edge
     anim.key(sh, "rotation_euler", A, DIP, "CONSTANT")
     anim.key(hg, "rotation_euler", A, (0.1, 0, 0), "CONSTANT")
     anim.key(root, "rotation_euler", A, (0, 0, 0), "CONSTANT")
@@ -256,8 +274,8 @@ def s15():
     for f in range(A, B, 6):                                   # a gentle drinking bob on 3s
         anim.squash(body, f, -0.03, "CONSTANT")
         anim.squash(body, f + 3, 0.0, "CONSTANT")
-    anim.key(root, "rotation_euler", 10, (0, 0, 0.18), "CONSTANT")   # it notices the hand: turns and looks up
-    anim.key(body, "rotation_euler", 10, (-0.14, 0, 0), "CONSTANT")
+    anim.key(root, "rotation_euler", 13, (0, 0, 0.18), "CONSTANT")   # it notices the hand: turns and looks up
+    anim.key(body, "rotation_euler", 13, (-0.14, 0, 0), "CONSTANT")
     for e in rig["eyes"]:
         anim.key(e, "scale", A, (1, 1, 1), "CONSTANT")
         anim.key(e, "scale", 7, (1.1, 1, 0.1), "CONSTANT")    # a blink
@@ -294,25 +312,35 @@ def s15():
         erase._twos_from(o, f)
 
     # ---- Kai, on his knees in front of the puddle
-    k = hero.build((0, 0, 0), scale=KAI_SCALE)
+    k = hero.load((0, 0, 0), scale=KAI_SCALE, outfit="world")
     reach = Vector((0.25, -1.45, 2.05))
     loc = Vector((-0.45, -6.4, 0))
     for _ in range(3):                                         # slide him so the reached arm is nearly straight
         _apply_kneel(k, loc, 1.0, reach)
         d = (reach - _world(k, "right_upper_arm")).length
         loc.y += d - 2.55
-    for f, s in ((A, 0.0), (A + 3, 0.3), (A + 6, 0.6), (A + 9, 0.85), (A + 12, 1.0)):
-        _apply_kneel(k, loc, s, reach)
+    for f, s in ((A, 0.0), (A + 3, 0.2), (A + 6, 0.45), (A + 9, 0.7), (A + 12, 0.9), (A + 15, 1.0)):
+        _apply_kneel(k, loc, s, reach + (1 - s) * Vector((0.3, -1.6, 1.3)))    # drawn back, then reaching
         _key_pose(k, f)
-    hero.expression(k, "relaxed", 0.5, A)
-    # A: his point of view (the camera at his eyes, at the mid-reach pose)
-    _apply_kneel(k, loc, 0.5, reach)
-    head = _world(k, "head")
-    eye = head + Vector((0, 0.65, 0.5))
-    _cam("S15_A_pov", tuple(eye), (0.15, 0.0, 1.15), 24, A, sc)
-    _cam("S15_B_eyes", (0.05, -2.35, 1.3), (0.0, -0.8, 1.22), 55, B, sc)
+    hero.face(k, "relaxed", A, 0.6)
+    for o in k["arm"].children_recursive:                      # off screen in the eye and claw shots (B-D)
+        if o.type == "MESH":
+            o.hide_render = False
+            o.keyframe_insert("hide_render", frame=A)
+            o.hide_render = True
+            o.keyframe_insert("hide_render", frame=B)
+            o.hide_render = False
+            o.keyframe_insert("hide_render", frame=E)
+    # A: low, beside his reaching arm: the hand comes in from the top of frame toward the shrimp's face
+    _cam("S15_A_reach", (1.7, -3.9, 1.05), (0.0, -0.4, 1.45), 30, A, sc)
+    sc.frame_set(B + 1)
+    bpy.context.view_layer.update()
+    ec = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
+    cam_b = _cam("S15_B_eyes", tuple(ec + Vector((0.0, -1.55, 0.05))), tuple(ec), 30, B, sc)
+    cam_b.data.dof.aperture_fstop = 1.0
     cam_c = _cam("S15_C_claw", (-3.6, -5.6, 1.15), (-0.55, 0.0, 2.1), 32, C, sc)
-    cam_e = _cam("S15_E_result", (-7.8, -3.2, 0.8), (1.2, 7.5, 3.4), 24, E, sc)
+    # E: low behind Kai, who kneels small in the foreground; the shrimp; the forest wall towering behind (SG8, SG9)
+    cam_e = _cam("S15_E_result", (loc.x + 3.4, loc.y - 8.0, 1.3), (-0.3, 22.0, 10.0), 22, E, sc)
 
     # ---- E: the ring, the forest wall sliced and erased, held
     fx = erase.erase_trees(m["trees"], origin=tuple(blast), f0=E - 1, cam=cam_e, stumps=stumps)
@@ -333,37 +361,36 @@ def s15():
     hot_frames = {}
     for i, st in enumerate(stumps):
         hot_frames[(round(st.location.x, 3), round(st.location.y, 3))] = fx["pop_frames"][i]
-    _puff_smoke([(x, y, z, hot_frames.get((round(x, 3), round(y, 3)), E + 10)) for (x, y, z) in hot[:7]], n + 1)
+    _puff_smoke([(x, y, z, hot_frames.get((round(x, 3), round(y, 3)), E + 10)) for (x, y, z) in hot[:7]], n + 1,
+                size=meadow.TREE * 0.6)
 
     # ---- F: Kai blown backwards (on 2s), G: on his back, shocked, the shake, his eyes close
     y0 = loc.y
-    path = [(F, 0.4, 0.15), (F + 2, 1.6, 0.45), (F + 4, 3.0, 0.8), (F + 6, 4.2, 1.1), (F + 8, 5.4, 1.35),
-            (F + 10, 6.6, 1.5)]
+    path = [(F, 0.4, 0.15), (F + 2, 1.6, 0.35), (F + 4, 3.0, 0.55), (F + 6, 4.2, 0.75), (F + 8, 5.4, 0.9),
+            (F + 10, 6.6, 1.0)]
     for f, back, tilt in path:
         u = (f - F) / 10
         _pose(k, BLOWN, (loc.x, y0 - back * 1.6, 1.0 + 7.0 * u * (1 - u) * 1.6), (tilt, 0, 0))
         _key_pose(k, f)
-    hero.expression(k, "relaxed", 0.0, F)
-    hero.expression(k, "surprised", 1.0, F)
+    hero.face(k, "shock", F)
     land = Vector((loc.x + 0.4, y0 - 12.5, 0))
     _pose(k, LYING, tuple(land), (math.pi / 2, 0, 0.12))
     _ground(k)
     _key_pose(k, G)
-    hero.expression(k, "blink", 0.0, G)
-    hero.expression(k, "blink", 0.6, END - 3)
-    hero.expression(k, "surprised", 0.4, END - 3)
-    hero.expression(k, "blink", 1.0, END - 1)
-    hero.expression(k, "surprised", 0.0, END - 1)
-    fly = Vector((loc.x, y0 - 5.5, 4.6))
-    _cam("S15_F_blown", (fly.x + 21, fly.y + 1.5, 4.2), tuple(fly), 22, F, sc)
-    face = _world(k, "head")
-    cam_g = _cam("S15_G_shock", (face.x + 0.35, face.y + 2.4, face.z + 4.4), (face.x, face.y - 0.35, face.z + 0.6),
-                 38, G, sc)
+    hero.face(k, "shock", G)
+    hero.face(k, "blink", END - 4, 0.5)                       # his eyes fall shut (into S16's "When I opened my eyes")
+    hero.face(k, "blink", END - 2)
+    fly = Vector((loc.x, y0 - 4.5, 4.2))
+    _cam("S15_F_blown", (fly.x + 17, fly.y + 0.5, 4.0), tuple(fly), 24, F, sc)
+    face = (_world(k, "head") + _world(k, "head", True)) / 2 + Vector((0, 0, 0.35))
+    cam_g = _cam("S15_G_shock", (face.x + 0.3, face.y + 1.7, face.z + 3.1), tuple(face), 42, G, sc)
+    cam_g.data.dof.aperture_fstop = 1.2
     _shake(cam_g, G, 14)
+    _flush_keys(k)
 
     cam_c.data.dof.focus_distance = math.dist(cam_c.location, (0, 0, 1.4))
-    cam_e.data.dof.focus_distance = math.dist(cam_e.location, (0, 9.0, 2.5))   # the result: the forest wall
-    cam_e.data.dof.aperture_fstop = 0.6
+    cam_e.data.dof.focus_distance = math.dist(cam_e.location, (0, 24.0, 10.0))   # the result: the forest wall
+    cam_e.data.dof.aperture_fstop = 0.9
     return dict(frames=n, step=1, subject=[root])
 
 
