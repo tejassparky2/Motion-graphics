@@ -60,6 +60,16 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v7 (exact timing; rot_z fixed):**
+  - **Exact shot lengths are in `channels/monsters/ep01v2/TIMING.md`** (and `timing.json`), measured from the voice
+    takes. They replace the estimates in EP01V2_SHOTS.md. The episode is 62.48 s = 1500 frames.
+  - Render **frames + 12** (the "Render frames" column). Longer is fine: the edit trims. Shorter is not: re-render.
+  - Every shot cuts in 0.30 s (7 frames) before its line. The voice in/out columns are seconds from the shot's first
+    frame, so mouth flaps (aa/oh on 3s), blinks and hits land on them. Word times are in timing.json.
+  - Silences belong to the shot BEFORE the next line: S08 ends on ~0.8 s of black, S19 holds the quiet drying for
+    ~1.4 s after its line, S20 holds the pff, the stare, the head tilt and Kai's 2 s deadpan after "It tried anyway."
+  - **`hero.load(rot_z=...)` now works** (the VRM import left the armature in quaternion mode; thanks, helper 10).
+    Pull before your next render. If you worked around it, your workaround still works.
 - **30 Oct, v6 (hero ready, new outfit, meadow scale):**
   - **Kai is ready, with no add-on needed:**
     - `from channels.monsters.mk import hero`
