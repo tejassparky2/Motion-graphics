@@ -98,6 +98,10 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - New hook (owner, 30 Oct: "make strong hook as in further your kidney and liver can be 3d printed with help of
     mosquito what yes mosquito"): b0 shows a kidney and liver being printed, then the mosquito. It says "ho sakte hain"
     (could), and b19-b20 still say "not yet".
+- **Video 5, the two-headed space worm** (owner, 30 Oct: picked "Two-headed space worm", then "Approve";
+  scripts_batch3.md). Planarians are drawn by `worm()` in videos/planarian.py: each end can be a head, a tail or a
+  cut, and grows back out of pale new tissue. The real two-headed photo is from a different lab (Nogi et al.) and the
+  video says so on screen. Frame 0 is our illustration, marked as one.
 - **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
   (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
   minutes, side facts are the first thing to drop.

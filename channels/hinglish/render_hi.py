@@ -136,7 +136,7 @@ def _site(c):
     u = c.get("page_url", "")
     s = c.get("source") or ("Wikimedia Commons" if "wikimedia" in u else "Pixabay" if "pixabay" in u
                             else "Unsplash" if "unsplash" in u else "")
-    via = re.match(r"Openverse \(via (\w+)\)", s)                 # Openverse only searches: name the real site
+    via = re.match(r"openverse(?: \(via |:)(\w+)", s, re.I)       # Openverse only searches: name the real site
     return {"wikimedia": "Wikimedia Commons", "flickr": "Flickr"}.get(via[1], via[1]) if via else s
 
 
