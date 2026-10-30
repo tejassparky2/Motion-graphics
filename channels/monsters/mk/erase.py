@@ -147,7 +147,8 @@ def _stump(name, base, r, h, rnd):
     return o
 
 
-def erase_trees(trees, origin, f0, speed=None, seed=7, direction=None, ground=0.0, life=20, cam=None):
+def erase_trees(trees, origin, f0, speed=None, seed=7, direction=None, ground=0.0, life=20, cam=None,
+                stumps=None):
     """Erase `trees` with a blast from `origin` (x, y, z: the claw) at frame `f0`.
 
     trees     : paintbg.tree() (trunk, canopy) pairs, lists of objects (trunk first) or mesh objects, one per tree
@@ -156,8 +157,10 @@ def erase_trees(trees, origin, f0, speed=None, seed=7, direction=None, ground=0.
     direction : blast direction for the light streak (default: from origin toward the trees' centre)
     life      : frames the debris takes to settle and shrink away after a tree pops
     cam       : if given, a 2-frame white flash in front of this camera at f0, and the streak faces it
-    Returns dict(order, pop_frames, puffs, bits, stumps, ring, streak, flash, end) with `end` the last animated
-    frame."""
+    stumps    : optional objects, one per tree (e.g. a set's own "after" stumps), revealed when their tree pops
+                instead of the built-in stumps
+    Returns dict(order, pop_frames, puffs, bits, stumps, ring, streak, flash, speed, end) with `end` the last
+    animated frame."""
     rnd = random.Random(seed)
     ox, oy, oz = origin
     trees = [_as_tree(t, i) for i, t in enumerate(trees)]
@@ -175,22 +178,24 @@ def erase_trees(trees, origin, f0, speed=None, seed=7, direction=None, ground=0.
     ring = _ring((ox, oy, ground), f0, speed, reach)
     flash = _flash(cam, f0) if cam else None
 
-    puffs, bits, stumps, pops = [], [], [], {}
+    puffs, bits, left, pops = [], [], [], {}
     for i in order:
         t = trees[i]
         tp = f0 + max(2, round(dist[i] / speed))
         pops[i] = tp
         _pop(t, tp, rnd)
-        st = _stump(f"stump{i}", t["base"], t["trunk_r"], t["crown_r"] * rnd.uniform(0.2, 0.28), rnd)
+        st = stumps[i] if stumps else _stump(f"stump{i}", t["base"], t["trunk_r"],
+                                             t["crown_r"] * rnd.uniform(0.2, 0.28), rnd)
+        st.scale = (1, 1, 1)
         anim.key(st, "scale", f0 - 1, 0.0, "CONSTANT")
         anim.key(st, "scale", tp, 1.0, "CONSTANT")
-        stumps.append(st)
+        left.append(st)
         puffs += _cloud(t, tp, (ox, oy), rnd, life, f"{i}")
         bits += _leaf_bits(t, tp, (ox, oy), rnd, life, ground, f"{i}")
         puffs += _wisps(t, tp, rnd, life, f"{i}")
     end = max(pops.values()) + life + 10                                         # the stump wisps go last
-    return dict(order=order, pop_frames=[pops[i] for i in range(len(trees))], puffs=puffs, bits=bits, stumps=stumps,
-                ring=ring, streak=streak, flash=flash, end=end)
+    return dict(order=order, pop_frames=[pops[i] for i in range(len(trees))], puffs=puffs, bits=bits, stumps=left,
+                ring=ring, streak=streak, flash=flash, speed=speed, end=end)
 
 
 def _pop(t, tp, rnd):

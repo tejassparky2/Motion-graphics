@@ -117,10 +117,9 @@ def _p3(name, dark, mid, light, cuts=(0.32, 0.68), noise=0.18, scale=3.0):
     return _hazed(paintbg.paint3("w_" + name, hx(dark), hx(mid), hx(light), cuts, noise, scale))
 
 
-def _grass():
-    """The ground: paintbg's brush strokes stretched sideways, in its three greens, but driven by the light as well,
-    so the rolling hills keep their shape; big soft patches break up the meadows."""
-    name = "w_grass"
+def grass(name="w_grass", cols=("#2c8f36", "#46c046", "#7fdc58")):
+    """The ground: paintbg's brush strokes stretched sideways, in its three greens (or `cols`), but driven by the light
+    as well, so the rolling hills keep their shape; big soft patches break up the meadows."""
     if name in bpy.data.materials:
         return bpy.data.materials[name]
     m = bpy.data.materials.new(name)
@@ -153,10 +152,10 @@ def _grass():
     ramp = nt.nodes.new("ShaderNodeValToRGB")
     cr = ramp.color_ramp
     cr.interpolation = "CONSTANT"
-    cr.elements[0].position, cr.elements[0].color = 0.0, look.hexc("#2c8f36")
-    cr.elements[1].position, cr.elements[1].color = 0.38, look.hexc("#46c046")
+    cr.elements[0].position, cr.elements[0].color = 0.0, look.hexc(cols[0])
+    cr.elements[1].position, cr.elements[1].color = 0.38, look.hexc(cols[1])
     e3 = cr.elements.new(0.66)
-    e3.color = look.hexc("#7fdc58")
+    e3.color = look.hexc(cols[2])
     em = nt.nodes.new("ShaderNodeEmission")
     L(dif.outputs[0], s2r.inputs[0])
     L(s2r.outputs[0], bw.inputs[0])
@@ -463,7 +462,7 @@ def build(seed=7):
     sph, ball = _sphere(16, 10), _sphere(8, 5)
     h = dict(ground=ground)
 
-    h["terrain"] = _terrain(ground, _grass())
+    h["terrain"] = _terrain(ground, grass())
     h["terrain"].visible_shadow = False                        # the painted light bands shade the hills already
 
     # --- keep-outs: the clearing, the pond, the camera's last stretch of fall ---------------------------------------
