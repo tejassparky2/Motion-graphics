@@ -85,3 +85,22 @@ handle; the coordinator sends exact frame counts once the takes are measured, an
 - **Before pushing, LOOK at every rendered frame** and compare it with the reference measurements in the report
   (TP3).
 - **Report to the coordinator:** shot names, commit, sec/frame, anything weak.
+
+## Who to message (send_message session IDs)
+| Builder | Shots / job | Session |
+|---|---|---|
+| coordinator | S02, final cut, delivery | session_0153qDV4AufFgT2PhEBEfS8n |
+| bGqrs | S01, S16-S21 | session_01PF511bGqrs1SFn3cpk5NqS |
+| helper 1 | S03a, S03b, S05b | session_01PF511bDdsYwHy141n4jcnn |
+| helper 2 | S04, S05a, S07 | session_01PF511Y13zuEX6TW3egNyxM |
+| helper 3 | S09 | session_01PF511b6tpL8dByjU7Qp3Tu |
+| helper 4 | S10a, S11a; QA reviewer (out/monsters/ep01v2/QA.md) | session_01PF511YEojWTNPFKxSeURms |
+| helper 5 | S22, S23; butcher bird, thorn bush | session_01PF511ahSS4W8tEQ9ukoLwF |
+| helper 6 | S10b, S11b | session_01PF511Y382fBtBJa7rzyVDQ |
+| helper 7 | sound mix (ep01v2_sound.py) | session_01PF511bWPhLFvpRbgd3zffg |
+| helper 8 | picture assembly (assemble_ep01v2.py), fx2d_anime | session_01PF511Yk7bwbspWweS95hGA |
+| helper 9 | S06, S08, S12, S13, S14 | session_01PF511ZFaQeq2RigHZ22DrB |
+| helper 10 | S15 | session_01PF511YTmbSi3KeLNnX6GyZ |
+| XprL (render helper) | voice (done), S24 plates | session_01PF511XprLcpVNCdEQUsUFF |
+
+Exact lengths: `channels/monsters/ep01v2/TIMING.md` (wins over the estimates above).
