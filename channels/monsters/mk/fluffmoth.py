@@ -8,7 +8,8 @@ over each one). Built as a small rig of parented objects so shots can animate it
     hover     : the hover height (animate location z for the bob)
     body      : squash & stretch pivot at the body's centre
     wings     : [fore L, fore R, hind L, hind R]; rotation_euler = (0, flap, sweep), see wing_pose()
-    spots     : the four eye-spot discs; their custom property "lid" is 0 (open) .. 1 (shut), see spot_lid()
+    spots     : the four eye-spot discs; their custom property "lid" is 0 (open) .. 1 (shut), see spot_lid(), and
+                "glow" 0 .. 1 lights the open irises (the creepy beat's local light, LC4)
     eyes      : the face's eye pivots (scale z to blink, anim.blink works)
     antennae  : antenna pivots at their bases (small rotations to wave)
     shadow    : the blob shadow on the ground
@@ -191,8 +192,16 @@ def _spot_mat(name, wing, iris):
     mul.inputs[0].default_value = 1.0
     L(ramp.outputs[0], mul.inputs[6])
     L(c, mul.inputs[7])
+    # "glow" (object property, 0-1): the open iris lights up, unshaded and brighter (the creepy beat's local light)
+    glow = node("ShaderNodeAttribute", attribute_type="OBJECT", attribute_name="glow").outputs["Fac"]
+    gfac = M("MULTIPLY", glow, M("MULTIPLY", M("LESS_THAN", rp, 0.58), M("SUBTRACT", 1.0, M("MAXIMUM", shut, lash))))
+    bright = node("ShaderNodeMix", data_type="RGBA", blend_type="MULTIPLY")
+    bright.inputs[0].default_value = 1.0
+    L(c, bright.inputs[6])
+    bright.inputs[7].default_value = (1.5, 1.5, 1.5, 1)
+    lit = mix(mul.outputs[2], bright.outputs[2], gfac)
     em = node("ShaderNodeEmission")
-    L(mul.outputs[2], em.inputs[0])
+    L(lit, em.inputs[0])
     out = node("ShaderNodeOutputMaterial")
     L(em.outputs[0], out.inputs[0])
     return m
@@ -219,6 +228,8 @@ def _wing(name, side, ctrl, spot, dots, wmat, smat, dmat, body, root_loc, up, sw
     s.scale = (r, r, r)
     s["lid"] = 0.0
     s.id_properties_ui("lid").update(min=0.0, max=1.0)
+    s["glow"] = 0.0
+    s.id_properties_ui("glow").update(min=0.0, max=1.0)
     for i, (u, v, r) in enumerate(dots):
         d = _disc(f"{name}_dot{i}", r, dmat, 24)
         _attach(d, w, (side * u, -0.024 - back, v))
@@ -302,13 +313,16 @@ def build(loc=(0, 0, 0), name="moth"):
     bm = sdf.build(f"{name}_bodymesh", parts, k=0.1, res=0.03)
     look.outline(bm, 0.025)
     _attach(bm, body)
-    # cream fur collar: one scalloped ring of fluff, low under the face and up behind the head
+    # cream fur collar: a shawl of round fluff tufts around the back and sides of the neck, open in front (a band
+    # across the face read as a beard), peeking out beside the cheeks and over the shoulders
     ring = []
-    for i in range(18):
-        a = i / 18 * 2 * math.pi
-        sa = math.sin(a)
-        s = 0.21 + 0.025 * math.sin(3 * a)
-        ring.append((E((math.cos(a) * 0.76, sa * 0.64 - 0.06, -0.24 + 0.24 * sa), (s, s, s * 0.8)), cream.name, 0.07))
+    for i in range(24):
+        a = i / 24 * 2 * math.pi
+        sa, ca = math.sin(a), math.cos(a)
+        if sa < -0.42:                                               # leave the front open
+            continue
+        r = 0.19 + 0.04 * (i % 2)
+        ring.append((E((ca * 0.8, sa * 0.66 + 0.02, -0.1 + 0.2 * sa), (r, r, r * 0.85)), cream.name, 0.07))
     col = sdf.build(f"{name}_collar", ring, k=0.07, res=0.025, smooth_iter=6)
     look.outline(col, 0.016)
     _attach(col, body)
@@ -355,11 +369,11 @@ def wing_pose(rig, frame, flap_fore, flap_hind=None, sweep=0.0):
         anim.key(w, "rotation_euler", frame, (0.0, -side * (up + fl), side * (sw + sweep)), "LINEAR")
 
 
-def spot_lid(rig, frame, value, spots=None, interp="BEZIER"):
-    """Key the eye-spot lids at `frame` (0 = open, 1 = shut)."""
+def spot_lid(rig, frame, value, spots=None, interp="BEZIER", prop="lid"):
+    """Key the eye-spot lids at `frame` (0 = open, 1 = shut); prop="glow" keys the iris glow the same way."""
     for s in spots or rig["spots"]:
-        s["lid"] = value
-        s.keyframe_insert(data_path='["lid"]', frame=frame)
+        s[prop] = value
+        s.keyframe_insert(data_path=f'["{prop}"]', frame=frame)
         for fc in anim.all_fcurves(s.animation_data.action):
             for kp in fc.keyframe_points:
                 if abs(kp.co.x - frame) < 0.01:
