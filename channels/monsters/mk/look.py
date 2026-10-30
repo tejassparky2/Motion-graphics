@@ -205,6 +205,7 @@ def outline_mat():
     if _outline is None or _outline.name not in bpy.data.materials:
         _outline = flat("outline", hexc(OUTLINE_RGB))
         _outline.use_backface_culling = True
+        _outline.use_backface_culling_shadow = True   # the shell must not shadow the body it wraps (helper 6)
     return _outline
 
 
@@ -245,6 +246,7 @@ def outline(o, width=0.025, colored=True):
             name = f"line_{m.name}"
             lm = bpy.data.materials.get(name) or flat(name, line_color(_base_color(m)))
             lm.use_backface_culling = True
+            lm.use_backface_culling_shadow = True        # since SDF bodies face outward the shell wraps them (helper 6)
             o.data.materials.append(lm)
         offset = n
     else:
