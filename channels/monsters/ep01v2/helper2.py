@@ -64,6 +64,14 @@ def _dim_water(tank, keys):
         em.default_value = base
 
 
+FLOOR0 = Vector((0.10, 2.23, 0.785))   # the hero tank floor the camera positions below were set against
+
+
+def _at(tank, p):
+    """A position set against FLOOR0, moved with the hero tank (lab.py may move the tank)."""
+    return Vector(p) + (Vector(tank["floor"]) - FLOOR0)
+
+
 def _cam(name, loc, target, lens, focus=None, fstop=FSTOP):
     cam = ps._camera(name, loc, target, lens, focus, fstop)
     cam.data.clip_start, cam.data.clip_end = 0.002, 40.0
@@ -199,8 +207,8 @@ def _snap_sequence(offset):
     ps.bubbles(Vector(tank["floor"]) + Vector((-0.06, -0.02, 0.0)), F(1), F(122), n=6, seed=8, rise=0.3, spread=0.04, size=K)
     cams = dict(
         eye=_eye_cam(rig, "cam_eye"),
-        side=_cam("cam_claw", (0.175, 1.998, 0.805), (0.035, 2.125, 0.80), 50, rig["hinge"]),
-        front=_cam("cam_front", (0.075, 1.90, 0.812), (0.03, 2.105, 0.80), 55, rig["tip"]))
+        side=_cam("cam_claw", _at(tank, (0.175, 1.998, 0.805)), _at(tank, (0.035, 2.125, 0.80)), 50, rig["hinge"]),
+        front=_cam("cam_front", _at(tank, (0.075, 1.90, 0.812)), _at(tank, (0.03, 2.105, 0.80)), 55, rig["tip"]))
     return h, tank, rig, cams, F
 
 
@@ -238,9 +246,9 @@ def s07():
     ps.crack(gc, S07_CRACK, frames=5)
     eye = _eye_cam(rig, "cam_eye")
     _dim_water(tank, [(S07_WIND, 1.0), (S07_SHUT, 0.6)])
-    cam = _cam("cam_tank", (0.075, 1.86, 0.81), (0.045, 2.08, 0.865), 24, None)
+    cam = _cam("cam_tank", _at(tank, (0.075, 1.86, 0.81)), _at(tank, (0.045, 2.08, 0.865)), 24, None)
     cam.data.dof.use_dof = True
-    cam.data.dof.focus_distance = (Vector((0.04, gy, 0.86)) - cam.location).length
+    cam.data.dof.focus_distance = (Vector((lx, gy, lz + 0.12)) - cam.location).length
     cam.data.dof.aperture_fstop = 2.8
     anim.key(cam, "location", S07_CRACK, cam.location.copy(), "LINEAR")          # the final hit drifts (IM5)
     anim.key(cam, "location", LEN["S07"] + TAIL, cam.location + Vector((0.0, 0.012, 0.004)), "LINEAR")
