@@ -252,7 +252,7 @@ def s07():
     cam = _cam("cam_tank", _at(tank, (0.07, 1.90, 0.815)), _at(tank, (0.045, 2.08, 0.86)), 28, None)
     cam.data.dof.use_dof = True
     cam.data.dof.focus_distance = (Vector((lx, gy, lz + 0.12)) - cam.location).length
-    cam.data.dof.aperture_fstop = 2.8
+    cam.data.dof.aperture_fstop = 8.0          # crack and shrimp both readable
     anim.key(cam, "location", S07_CRACK, cam.location.copy(), "LINEAR")          # the final hit drifts (IM5)
     anim.key(cam, "location", LEN["S07"] + TAIL, cam.location + Vector((0.0, 0.012, 0.004)), "LINEAR")
     _bind([(S07_EYE, eye), (S07_WIND, cam)])
