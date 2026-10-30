@@ -24,6 +24,8 @@ For other pieces to plug in:
 - "room_lights": the ceiling light and lamp, their glow materials, and the grade (for the flicker);
 - "desk": top height, centre, laptop, screen material, "seat" (an empty on the chair cushion where Kai sits),
   "chair" (the chair's root: rotate z to swivel it toward the camera, e.g. for S03) and "tank_slot";
+- "hero_tank": the lab's own painted tank in the desk slot (helper 2 stands the shrimp on it): "floor" (gravel centre),
+  "inner", "waterline", "glass" (front pane object), "leak", "water" / "surface" (materials), "hood" (its light);
 - "tank_slot": the slot empty, centre, size, the scale and root location place_tank uses, the leak point, its glow;
 - "floor": the tiles object and the floor's extent (z = 0);
 - "strip", "strip_end" (where the water arrives), "spark_at"; "tanks" (the four shelf tanks), "lights", "grade".
@@ -504,22 +506,23 @@ def _window(rnd):
     return dict(sky=sky, bolt=bolt.data.materials[0])
 
 
-def _tank(name, center, size, glow, rnd):
+def _tank(name, center, size, glow, rnd, hero=False):
     """An aquarium: glowing back/side water panels, gravel, plants, rocks, fish, rising bubbles, a visible water
     surface with a bright waterline, a tinted front pane with highlight streaks, dark rims and a lit hood."""
     cx, cy, cz = center            # cz = bottom of the tank
     w, d, h = size
     wl = cz + h * 0.88             # water line
     deep = {"cyan": ("#0f4f86", "#56d6ff"), "teal": ("#0e5a63", "#4fe8cf"), "blue": ("#143a86", "#6aa8ff"),
-            "violet": ("#2a2f86", "#8f9cff")}[glow]
+            "violet": ("#2a2f86", "#8f9cff"), "hero": ("#1f6f8c", "#7fd0dc")}[glow]
     back = _gradient(f"water_{name}", deep[0], deep[1], 1.0)
     side = _gradient(f"waterside_{name}", deep[0], deep[1], 0.55)
     rim = _paint("tank_rim", "#141a26", "#222b3c", 0.0)
     _box(f"{name}_back", (cx, cy + d / 2 - 0.01, cz + (wl - cz) / 2), (w - 0.02, 0.01, wl - cz), back)
     for s in (-1, 1):
         _box(f"{name}_side{s}", (cx + s * (w / 2 - 0.012), cy, cz + (wl - cz) / 2), (0.01, d - 0.02, wl - cz), side)
-    _box(f"{name}_gravel", (cx, cy, cz + 0.035), (w - 0.03, d - 0.03, 0.06), _paint("gravel", "#b8a98a", "#d8cfb4",
-                                                                                       0.25, 30.0))
+    sand = _paint("hero_sand", "#d9c39a", noise=0.18, scale=9.0) if hero else _paint("gravel", "#b8a98a", "#d8cfb4",
+                                                                                         0.25, 30.0)
+    _box(f"{name}_gravel", (cx, cy, cz + 0.035), (w - 0.03, d - 0.03, 0.06), sand)
     surf = look.fade(f"lab_surface_{name}", hx(deep[1]), 0.55)
     _box(f"{name}_surface", (cx, cy, wl), (w - 0.02, d - 0.02, 0.004), surf)
     _box(f"{name}_waterline", (cx, cy - d / 2 + 0.008, wl - 0.004), (w - 0.03, 0.004, 0.008),
@@ -531,22 +534,31 @@ def _tank(name, center, size, glow, rnd):
         for sy in (-1, 1):
             _box(f"{name}_post{sx}{sy}", (cx + sx * w / 2, cy + sy * d / 2, cz + h / 2), (0.016, 0.016, h), rim)
     _box(f"{name}_hood", (cx, cy, cz + h + 0.025), (w + 0.03, d + 0.03, 0.05), rim)
-    # plants and rocks
-    greens = [_paint("plant0", "#2f9e6e", "#56c98d", 0.1), _paint("plant1", "#5cbf4a", "#8de070", 0.1),
-              _paint("plant2", "#1f7f6a", "#3fae8f", 0.1)]
-    rock = _paint("tank_rock", "#6c7488", "#8f98ad", 0.12)
-    for i in range(rnd.randint(5, 8)):
-        px = cx + rnd.uniform(-w / 2 + 0.05, w / 2 - 0.05)
+    # plants and rocks (the hero tank matches mk/pistolshrimp.tank()'s colours and keeps its middle clear for the
+    # shrimp and its burrow)
+    if hero:
+        greens = [_paint("hero_leaf0", "#3fae6a", noise=0.1), _paint("hero_leaf1", "#69c96e", noise=0.1),
+                  _paint("hero_leaf2", "#2e8f66", noise=0.1)]
+        rock = _paint("hero_rock", "#9b8fb0", noise=0.12, scale=4.0)
+    else:
+        greens = [_paint("plant0", "#2f9e6e", "#56c98d", 0.1), _paint("plant1", "#5cbf4a", "#8de070", 0.1),
+                  _paint("plant2", "#1f7f6a", "#3fae8f", 0.1)]
+        rock = _paint("tank_rock", "#6c7488", "#8f98ad", 0.12)
+    for i in range(5 if hero else rnd.randint(5, 8)):
+        if hero:
+            px = cx + (-1 if i % 2 else 1) * rnd.uniform(w * 0.28, w * 0.45)
+        else:
+            px = cx + rnd.uniform(-w / 2 + 0.05, w / 2 - 0.05)
         ph = rnd.uniform(0.35, 0.8) * (wl - cz)
         _cyl(f"{name}_plant{i}", (px, cy + rnd.uniform(0, d / 3), cz + 0.06 + ph / 2), rnd.uniform(0.018, 0.035), ph,
              rnd.choice(greens), verts=6, r2=0.002, rot=(rnd.uniform(-0.15, 0.15), rnd.uniform(-0.15, 0.15), 0))
-    for i in range(2):
-        s = rnd.uniform(0.04, 0.07)
-        rx = cx + rnd.uniform(-w / 2.5, w / 2.5)
+    for i in range(3 if hero else 2):
+        s = rnd.uniform(0.04, 0.07) * (1.4 if hero and i == 0 else 1)
+        rx = cx + (w * 0.22 if hero and i == 0 else rnd.uniform(-w / 2.5, w / 2.5))
         _ball(f"{name}_rock{i}", (rx, cy + rnd.uniform(0, d / 4), cz + 0.065), (s * 1.3, s, s * 0.8), rock, 10)
-    # fish swimming back and forth
+    # fish swimming back and forth (none in the hero tank)
     fish_cols = ["#ff9f45", "#ffd85e", "#ff6f91", "#7ae7ff"]
-    for i in range(rnd.randint(2, 3)):
+    for i in range(0 if hero else rnd.randint(2, 3)):
         fm = _paint(f"fish{i % 4}", fish_cols[i % 4], noise=0.0)
         fz = rnd.uniform(cz + 0.15, wl - 0.07)
         fy = cy + rnd.uniform(-d / 5, d / 5)
@@ -726,11 +738,15 @@ def _desk(rnd):
     slot_e.scale = (sw / 2, sd / 2, 0.13)
     glow = _light("tank_glow", "AREA", (slot_c.x, slot_c.y - 0.4, top + 0.28), (math.radians(-50), 0, 0), 14,
                   "#7fd0dc", 0.55, 0.3, shadow=False)
-    hood = _light("tank_hood", "AREA", (slot_c.x, slot_c.y, top + 0.2), (0, 0, 0), 0.0, "#bff2ff", sw * 0.85,
-                  sd * 0.8, shadow=False)  # lights the placed tank's sand and plants from above; place_tank turns it on
-    slot = dict(empty=slot_e, center=tuple(slot_c), size=(sw, sd, 0.26), scale=s_,
-                root_loc=(slot_c.x, slot_c.y - 0.5 * s_, top + 0.73 * s_), glow=glow, hood=hood,
-                leak=(slot_c.x - 0.07, slot_c.y - sd / 2 - 0.005, top + 0.004))
+    # the lab's own painted hero tank fills the slot (helper 2's shots stand the 1/40-scale shrimp on its gravel);
+    # place_tank() swaps in mk/pistolshrimp.tank() instead
+    hero = _tank("hero", (slot_c.x, slot_c.y, top), (sw, sd, 0.3), "hero", rnd, hero=True)
+    _ball("hero_burrow", (slot_c.x + 0.1, slot_c.y + 0.04, top + 0.08), (0.035, 0.008, 0.022),
+          _paint("burrow", "#2c2238", noise=0.0), 12)
+    hero["leak"] = (slot_c.x - 0.07, slot_c.y - sd / 2 - 0.005, top + 0.004)
+    slot = dict(empty=slot_e, center=tuple(slot_c), size=(sw, sd, 0.3), scale=s_,
+                root_loc=(slot_c.x, slot_c.y - 0.5 * s_, top + 0.73 * s_), glow=glow, hood=hero["hood"],
+                leak=hero["leak"], hero=hero)
     return dict(screen=screen, bulb=bulb_m, lamp=lamp, pool=pool, top=top, seat=(cx + 0.05, y0 - 0.55, 0.5),
                 charger=(lx + 0.2, ly + 0.1, top), slot=slot, front_y=y0, x=(x0, x1), center=(cx, cy, top),
                 laptop=(lx, ly, top))
@@ -836,7 +852,7 @@ def build(seed=7):
     room_glows = [(room["tube"], 1.1), (desk["bulb"], 2.0), (desk["pool"], 0.35)]
     tank_lights = [t["hood"] for t in tanks] + shelf_glow + [slot["glow"], slot["hood"]]
     spill_m = _water_floor()
-    tank_glows = [(m, _em(m).inputs[1].default_value) for t in tanks for m in t["water"]]
+    tank_glows = [(m, _em(m).inputs[1].default_value) for t in tanks + [slot["hero"]] for m in t["water"]]
     slot_glows = []              # the placed shrimp tank's materials (place_tank), dimmed by power_out
     base_energy = {o.name: o.data.energy for o in room_lights + tank_lights}
 
@@ -889,7 +905,9 @@ def build(seed=7):
         tank, unless dim_on_power_out=False)."""
         root = t["root"]
         root.location, root.scale = slot["root_loc"], (slot["scale"],) * 3
-        slot["hood"].data.energy = base_energy["tank_hood"] = 4.0
+        for o in bpy.context.scene.objects:          # the lab's own painted hero tank steps aside
+            if o.name.startswith("hero_"):
+                o.hide_render = o.hide_viewport = True
         bpy.context.view_layer.update()
         if dim_on_power_out:
             seen, todo = set(), [root]
@@ -1030,7 +1048,7 @@ def build(seed=7):
                                                for m in o.data.materials)
         if see_through or o.name.startswith(("sky", "bldg", "tree_sil", "bolt", "rain", "glass_drops")):
             o.visible_shadow = False
-    return dict(cams=cams, seat=seat, chair=chair, tank_slot=slot, tanks=tanks, strip=strip,
+    return dict(cams=cams, seat=seat, chair=chair, hero_tank=slot["hero"], tank_slot=slot, tanks=tanks, strip=strip,
                 strip_end=tuple(strip_end), spark_at=tuple(spark_at), grade=grade,
                 lights=dict(ceiling=ceiling, lamp=desk["lamp"], window=moon, lightning=strike, spark=spark_l,
                             tanks=tank_lights),
