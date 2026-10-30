@@ -13,7 +13,7 @@ Send original files from the phone or PC, not WhatsApp copies.
 
 ## Week 1 (please send by Thu 30 Oct)
 
-### A. Photo → 3D figurine in 60 s
+### A. Photo → 3D figurine in 60 s (full shot list: `reel07/shot_list.md`)
 Film one real figurine from start to finish (with the customer's OK, or a family member's).
 1. The original phone photo (the file itself).
 2. Screen recording: ChatGPT. Upload the photo, type the prompt, the design appears.
