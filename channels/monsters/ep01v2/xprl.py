@@ -9,7 +9,7 @@ the coordinator's top/bottom split with a jagged divider (AB13): A above, B belo
 
 Set: meadow.build("after") (the crater, the stumps, the small puddle). Kai: mk/hero.load (world outfit, scale 5.8:
 1 unit = 20 cm). Acting on 3s (IM2), effects on 1s; locked cameras (SG4). 3.4 s (line 24 is 2.88 s, cut within
-0.5 s of its end) plus the 12-frame tail.
+0.5 s of its end): 85 frames in the cut plus the 12-frame tail (TIMING.md).
 
     blender -b -y -P channels/monsters/render_shot.py -- ep01v2 S24top OUTDIR
 """
@@ -21,7 +21,7 @@ from mathutils import Matrix, Vector
 from channels.monsters.mk import anim, hero, look, meadow, puffshrimp, tuftwing
 
 TAIL = 12
-SECONDS = 3.4
+CUT_FRAMES = 85                                # ep01v2/TIMING.md: line 24 at 0.30-3.02 s, the cut ~0.5 s after it
 SCALE = 5.8                                    # hero.blend is 1.5 m in metres; the creature world is 20 cm per unit
 PUDDLE = (-1.3, -0.4)                          # meadow.build("after")
 SHRIMP_AT = (-2.95, 0.9, 0.0)                  # facing +X, its claw reaching into the puddle in front of it
@@ -31,7 +31,7 @@ BODY = ["hips", "spine", "chest", "neck", "head 1", "shoulder.L", "shoulder.R", 
 
 
 def _frames():
-    return round(SECONDS * 24) + TAIL
+    return CUT_FRAMES + TAIL                   # 97 to render
 
 
 def _hero(loc, rot_z_deg):
