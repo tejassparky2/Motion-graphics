@@ -22,12 +22,17 @@ AQUA, CREAM, CORAL, BLUSH, INK = "#8fe3d6", "#fff3dc", "#ff7a5c", "#ff9fb4", "#1
 
 
 def _empty(name, loc, parent=None):
+    """A pivot at `loc` in WORLD space. With a parent, the parent's current transform is cancelled (as _parent does
+    for the meshes); before 30 Oct it wasn't, so nested pivots sat at twice their offset: the claw hinge swung the
+    snapping finger off the claw and the lids closed in the wrong place (found by bGqrs)."""
     e = bpy.data.objects.new(name, None)
     e.empty_display_size = 0.2
     bpy.context.scene.collection.objects.link(e)
     e.location = loc
     if parent:
+        bpy.context.view_layer.update()
         e.parent = parent
+        e.matrix_parent_inverse = parent.matrix_world.inverted()
     return e
 
 
@@ -108,7 +113,7 @@ def build(loc=(0, 0, 0), name="puff"):
     E, C = sdf.E, sdf.C
 
     root = _empty(f"{name}_root", loc)
-    body_pivot = _empty(f"{name}_body", (0, 0, 0), root)
+    body_pivot = _empty(f"{name}_body", loc, root)
     bpy.context.view_layer.update()
     # body: one smooth shape (round body, belly patch, stubby legs, tail fan)
     body = sdf.build(f"{name}_bodymesh", [
