@@ -252,6 +252,8 @@ def impact(cr, t, start, frames=2, cx=None, cy=None, clear=0.2, lines=56, ctx=No
     lum = (0.114 * s[..., 0] + 0.587 * s[..., 1] + 0.299 * s[..., 2]) / np.maximum(a, 1e-3)
     ink = cv2.GaussianBlur(((lum < 75) & (a > 0.5)).astype(np.float32), (0, 0), 0.8)   # its lines and eyes
     cov = np.clip((a - 0.35) / 0.3, 0, 1)                                              # crisp silhouette edge
+    solid = cv2.dilate((a > 0.97).astype(np.uint8), np.ones((7, 7), np.uint8)).astype(np.float32)
+    cov *= solid                         # drops the soft contact shadow (look.blob_shadow is parented to the rig)
     out = np.zeros((H, W, 4), np.float32)
     for c, (f, b) in enumerate(zip(fgc[::-1], bgc[::-1])):                              # BGR order
         out[..., c] = (f * (1 - ink) + b * ink) * 255 * cov
