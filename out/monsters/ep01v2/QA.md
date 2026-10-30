@@ -44,6 +44,10 @@ Most serious first within each shot. Updated as shots land.
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
 | S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
+| S01 | bGqrs | PASS | 69 / 69 | 0.46 | frame 0 reads at 360 px; 2 NOTEs |
+| S04 | helper 2 | PASS | 73 / 73 | 0.31 | claw held open, shuts, white-hot on "boils"; 1 NOTE |
+| S18 | bGqrs (helper 5 render) | PASS | 60 / 60 | 0.42 | eyes narrow; realisation background on "wet"; 1 NOTE |
+| S19 | bGqrs | PASS | 105 / 105 | 0.49 | the drop dries on "dry it"; 1 NOTE (shrimp's eyes not in frame) |
 | S24bot | XprL | **FIX** | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
 | S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
 | S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
@@ -51,7 +55,7 @@ Most serious first within each shot. Updated as shots land.
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S01, S02, S03a, S04, S05a, S05b, S08, S12-S20.
+Waiting for: S02, S03a, S05a, S05b, S08, S12-S17, S20.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -269,3 +273,51 @@ The first version's notes, for the record:
      face above about y 820.
 - **Passes:** 97 frames; the bird drops from the top of the thorn tree into the lower half; it is graded darker
   (the riskier option, LC8); he is on-model; acting runs on 2s and 4s.
+
+## S01: frame 0, the shrimp on Kai's chest (bGqrs)
+**PASS**, with two NOTEs.
+- **Length and level:** 69 frames (69 needed), saturation 0.46.
+- **Frame 0 (ST1, EP2, TP16):**
+  - At 360 px it reads at once: Kai on his back with 2D terror eyes and a sweat drop (TP7), the shrimp sitting on
+    his chest glaring at him with its narrow, locked-on eyes, and its claw raised and open over his face.
+  - The sliced, glowing, smoking stumps are at the top of the frame (EP4: what it just did).
+  - Locked camera; the smoke runs on 1s.
+- **Mouth:** Kai whispers the line. The mouth changes on frames 4, 10 and 13 ("Don't move."), then every 3 frames
+  from 26 to 50 ("That claw can boil water.").
+- **On-model** (cap, K, teal jacket). The finger stays on the claw.
+- The claw is raised over his face rather than "2-3 cm from his nose". That is the coordinator's reviewed pose
+  (bgqrs.py `s01` docstring), not a defect.
+- **NOTE:** under the lower 2D terror eye, a sliver of the 3D eye shows (frame 12 at full size). A slightly bigger
+  sprite, or hiding the 3D eye while the sprite is on, would clean it up.
+- **NOTE:** Kai's chin reaches about y 870, the top of the caption band (845-930). The terror eyes, at y 730-790,
+  stay clear.
+
+## S04: the slow-motion snap (helper 2)
+**PASS**, with one NOTE.
+- **Length and level:** 73 frames (73 needed). On 1s: the effects and the slow motion.
+- **Picture:** an extreme close-up of the big red snapping claw (IM13 scale). It is held open with only the glints
+  moving on frames 8-16, shuts at about frame 22 (just after "snaps", frame 16), and the bubble swells in front of
+  it to white-hot on "boils" (frame 45). The shock ring rises through the water.
+- The pistol shrimp has its outline, and the snapping finger stays on the claw.
+- **NOTE:** saturation is 0.31, just under the band but inside E22's 0.26, and fine for the cool tank.
+
+## S18: "Its claw only works wet." (bGqrs; rendered by helper 5)
+**PASS**, with one NOTE.
+- **Length and level:** 60 frames (60 needed), saturation 0.42. Acting on 2s.
+- **Picture:** Kai's eyes go from the pinprick shock to open, then narrow: by frames 40-60 the lids are visibly
+  lower. On "wet." (frame 32) the background swaps from the grass to a blue speed-line realisation background (SU16,
+  IM6).
+- **NOTE:** it is framed as a face close-up (cap to chin) rather than an extreme close-up of the eyes, so the
+  narrowing is subtle at 360 px. A tighter crop on the eyes would land "realisation" harder. Not blocking.
+
+## S19: "So I didn't move. I let the sun dry it." (bGqrs)
+**PASS**, with one NOTE.
+- **Length and level:** 105 frames (105 needed), saturation 0.49.
+- **Picture:**
+  - One held, quiet shot (SG14) with the sun glare and sparkles on 1s, and a comic sweat bead on Kai (TP7).
+  - The last drop on the claw tip shrinks and is gone by "dry it" (frames 49-55).
+  - It then holds still for 43 frames, the ~1.4 s quiet hold that v7 asks for.
+  - Kai blinks once. He is on-model, and the finger stays on the claw.
+- **NOTE (the coordinator's key check):** the shrimp's face is out of frame (only its claw shows), so its
+  locked-on eyes can't be seen here. If the eyes matter in S19, a slightly wider framing would include them.
+  Otherwise S01, S16 and S20 carry them.
