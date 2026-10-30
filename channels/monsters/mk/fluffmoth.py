@@ -198,7 +198,7 @@ def _spot_mat(name, wing, iris):
     bright = node("ShaderNodeMix", data_type="RGBA", blend_type="MULTIPLY")
     bright.inputs[0].default_value = 1.0
     L(c, bright.inputs[6])
-    bright.inputs[7].default_value = (1.5, 1.5, 1.5, 1)
+    bright.inputs[7].default_value = (1.8, 1.8, 1.8, 1)
     lit = mix(mul.outputs[2], bright.outputs[2], gfac)
     em = node("ShaderNodeEmission")
     L(lit, em.inputs[0])
