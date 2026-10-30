@@ -137,11 +137,18 @@ def _fix_pivots(sh):
     fixes += [(lp, Vector((sx * 0.36, -0.78, 1.2))) for lp, sx in zip(sh["lids"], (-1, 1))]
     bpy.context.view_layer.update()
     for e, want in fixes:
+        # since 1d22a94 puffshrimp._empty puts these pivots in the right place already; setting `location` here as
+        # well moved them a second time (by the parent's offset) and detached the snapping finger (coordinator,
+        # 30 Oct). Only correct a pivot that is actually off, and do it in world space so the parent inverse counts.
+        if (e.matrix_world.translation - want).length < 1e-4:
+            continue
         kids = [(k, k.matrix_world.copy()) for k in e.children]
-        e.location = e.parent.matrix_world.inverted() @ want
+        mw = e.matrix_world.copy()
+        mw.translation = want
+        e.matrix_world = mw
         bpy.context.view_layer.update()
-        for k, mw in kids:
-            k.matrix_world = mw
+        for k, kmw in kids:
+            k.matrix_world = kmw
         bpy.context.view_layer.update()
 
 
