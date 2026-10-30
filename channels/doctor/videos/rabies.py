@@ -19,7 +19,7 @@ SCRIPT = [
     dict(id="b2", text="And it all started with a small scratch from a puppy. Weeks ago. You'd already forgotten it."),
     dict(id="b3", text="And by now, it's too late."),
     dict(id="b4", text="This isn't a zombie movie. It's real."),
-    dict(id="b5", text="It's called rabies.", gap=REVEAL_GAP),
+    dict(id="b5", text="It's called rabies. It's a virus.", gap=REVEAL_GAP),
     dict(id="b6", text="In India, there are about nine million animal bites every year. Three out of four are from "
                        "dogs."),
     dict(id="b7", text="And an estimated five thousand seven hundred people die of rabies. Every year."),
@@ -30,8 +30,8 @@ SCRIPT = [
     dict(id="b11", text="That's why it can hide for weeks, or even months, while you feel completely fine."),
     dict(id="b12", text="A bite on the face reaches the brain faster."),
     dict(id="b13", text="When it gets there, the signs begin. Fever. A strange tingling where you were bitten."),
-    dict(id="b14", text="Then swallowing hurts so much that the throat goes into spasms. Even the sight of water can "
-                        "set them off."),
+    dict(id="b14", text="Then swallowing hurts so much that the throat goes into spasms. Even seeing water can set "
+                        "them off."),
     dict(id="b15", text="Once these signs start, rabies is almost always fatal."),
     dict(id="b16", text="But here's the strange part. There's a vaccine. And it works, even after the bite.",
          gap=REVEAL_GAP),
@@ -97,15 +97,18 @@ METADATA = dict(
 ASSETS = os.path.join(ASSETS_ROOT, "rabies")
 SHARED = os.path.join(ASSETS_ROOT, "amoeba")
 _FILES = {
+    # shared cut-outs (amoeba folder)
     "mq_run": "mq_run.png", "mq_head": "mq_head.png", "mq_sit": "mq_sit.png", "glass": "glass.png",
-    "thermometer": "thermometer.png", "doctor": "doctor.png", "tv": "tv_legs.png", "tap": "tap.png",
-    "head_lineart": "head_lineart.png", "headache_man": "headache_man.png",
-    "dog_street": "dog_street.png", "puppy": "puppy.png", "dog_snarl": "dog_snarl.png", "cat": "cat.png",
-    "monkey": "monkey.png", "scratch": "scratch.jpg", "throat": "throat.png", "vaccine": "vaccine.png",
-    "injection_arm": "injection_arm.jpg", "hospital": "hospital.jpg", "wash_hands": "wash_hands.jpg",
-    "soap": "soap.png", "turmeric": "turmeric.png", "chillies": "chillies.png", "stopwatch": "stopwatch.png",
-    "clapper": "clapper.png", "bandage": "bandage.png", "dog_lick": "dog_lick.jpg", "street_dogs": "street_dogs.jpg",
-    "child_dog": "child_dog.jpg", "drinking": "drinking.png",
+    "thermometer": "thermometer.png", "tv": "tv_legs.png", "head_lineart": "head_lineart.png",
+    # cut-outs: animals and objects
+    "dog_street": "dog_street.png", "dog_front": "dog_front.png", "puppy": "puppy.png", "dog_snarl": "dog_snarl.png",
+    "dog_snarl2": "dog_snarl2.png", "cat": "cat.png", "monkey": "monkey.png", "throat": "throat.png",
+    "vaccine": "vaccine.png", "soap": "soap.png", "turmeric": "turmeric.png", "chillies": "chillies.png",
+    "stopwatch": "stopwatch.png",
+    # framed photos: scenes
+    "scratch": "scratch.jpg", "neck_man": "neck_man.jpg", "injection_arm": "injection_arm.jpg",
+    "hospital": "hospital.jpg", "wash_hands": "wash_hands.jpg", "dog_lick": "dog_lick.jpg",
+    "street_dogs": "street_dogs.jpg", "child_dog": "child_dog.jpg", "bandage_arm": "bandage_arm.jpg",
 }
 P = {}
 for _k, _v in _FILES.items():
@@ -183,6 +186,35 @@ def virus(cr, x, y, s, rot=0.0, alpha=1.0, t=0.0):
         cr.line_to(px + s * 0.02, w * 0.32)
         cr.stroke()
     cr.restore()
+
+
+def syringe(cr, x, y, h, alpha=1.0):
+    """An upright syringe icon, needle down, centred at (x, y), `h` px tall."""
+    w = h * 0.2
+    cr.set_line_width(max(3, h * 0.03))
+    cr.set_source_rgba(0.96, 0.95, 0.92, alpha)               # barrel
+    cr.rectangle(x - w / 2, y - h * 0.3, w, h * 0.55)
+    cr.fill_preserve()
+    cr.set_source_rgba(*INK, alpha)
+    cr.stroke()
+    cr.set_source_rgba(0.75, 0.85, 0.95, 0.9 * alpha)         # the dose inside
+    cr.rectangle(x - w / 2 + 3, y - h * 0.02, w - 6, h * 0.25)
+    cr.fill()
+    cr.set_source_rgba(*INK, alpha)
+    cr.move_to(x, y - h * 0.3)                                 # plunger
+    cr.line_to(x, y - h * 0.45)
+    cr.stroke()
+    cr.move_to(x - w * 0.55, y - h * 0.45)
+    cr.line_to(x + w * 0.55, y - h * 0.45)
+    cr.stroke()
+    for k in range(4):                                         # marks
+        cr.move_to(x - w / 2, y - h * 0.22 + k * h * 0.1)
+        cr.line_to(x - w * 0.15, y - h * 0.22 + k * h * 0.1)
+        cr.stroke()
+    cr.set_line_width(max(2, h * 0.015))                       # needle
+    cr.move_to(x, y + h * 0.25)
+    cr.line_to(x, y + h * 0.5)
+    cr.stroke()
 
 
 def bite_marks(cr, x, y, s, p, color=RED, alpha=1.0):
@@ -303,8 +335,8 @@ def _screen(cr, rect, t, on=1.0):
     cr.set_source_rgba(0.06, 0.08, 0.07, 1)
     cr.paint()
     if on >= 1:
-        if "dog_snarl" in P:
-            photo(cr, P["dog_snarl"], cx, cy + sh * 0.08, sh * 0.95, tint=(0.35, 0.55, 0.30), shadow=False)
+        if "dog_snarl2" in P:
+            photo(cr, P["dog_snarl2"], cx, cy + sh * 0.04, sh * 0.95, tint=(0.35, 0.55, 0.30), shadow=False)
         cr.set_source_rgba(0.2, 0.6, 0.2, 0.18 + 0.1 * math.sin(t * 13))
         cr.paint()
         cr.set_source_rgba(1, 1, 1, 0.06)
@@ -329,9 +361,9 @@ def h_movie(cr, t, tl, t0):                              # b4 "this isn't a zomb
 
 
 def n_name(cr, t, tl, t0):                               # b5 "it's called rabies"
-    _pic(cr, "dog_snarl", W / 2, 960, 720, t, t0)
+    _pic(cr, "dog_snarl2", W / 2, 960, 760, t, t0)
     tn = T(tl, "b5", "rabies")
-    for i, (txt, ty, sz, cue) in enumerate((("RABIES", 1380, 150, tn), ("A VIRUS", 1580, 70, tn + 0.4))):
+    for i, (txt, ty, sz, cue) in enumerate((("RABIES", 1380, 150, tn), ("A VIRUS", 1580, 70, T(tl, "b5", "virus")))):
         p = prog(t, cue, 0.3)
         if p > 0:
             tw_, th = text_size(txt, sz)
@@ -339,7 +371,7 @@ def n_name(cr, t, tl, t0):                               # b5 "it's called rabie
             cr.rectangle(MARGIN, ty - 12, (tw_ + 50) * p, th + 24)
             cr.fill()
             draw_text(cr, txt, MARGIN + 25, ty, sz, CREAM, clamp(p * 2 - 1))
-    virus(cr, 820, 1640, 150, -0.2, prog(t, tn + 0.5, 0.3), t)
+    virus(cr, 820, 1640, 150, -0.2, prog(t, T(tl, "b5", "virus"), 0.3), t)
     headline(cr, t, "ITS NAME", "", t0, 1e9)
 
 
@@ -358,7 +390,7 @@ def n_bites(cr, t, tl, t0):                              # b6 "in India, about n
 
 
 def n_dogs(cr, t, tl, t0):                               # b6 "three out of four are from dogs"
-    keys = ("dog_street", "dog_street", "dog_street", "monkey" if "monkey" in P else "cat")
+    keys = ("dog_street", "dog_front", "dog_street", "monkey")
     for i, k in enumerate(keys):
         tc = t0 + 0.15 * i
         cx, cy = 290 + 500 * (i % 2), 820 + 520 * (i // 2)
@@ -459,22 +491,22 @@ def s_tingle(cr, t, tl, t0):                             # b13 "...a strange tin
 
 
 def s_spasm(cr, t, tl, t0):                              # b14 "swallowing hurts so much the throat goes into spasms"
-    X = cut(cr, "throat", W / 2, 1200, 900)
-    tx, ty = X(0.5, 0.55)
-    spasm(cr, tx, ty, 90, t, prog(t, T(tl, "b14", "spasms"), 0.3))
+    fw, fh = 860, 645
+    _pic(cr, "neck_man", W / 2, 1060, 0, t, t0, frame=(fw, fh), rot=0.02)
+    spasm(cr, W / 2 - fw / 2 + 0.47 * fw, 1060 - fh / 2 + 0.42 * fh, 70, t, prog(t, T(tl, "b14", "spasms"), 0.3))
     headline(cr, t, "THE THROAT GOES INTO", "SPASMS", t0, T(tl, "b14", "spasms"))
 
 
-def s_water(cr, t, tl, t0):                              # b14 "even the sight of water can set them off"
+def s_water(cr, t, tl, t0):                              # b14 "even seeing water can set them off"
     X = cut(cr, "glass", 380, 1180, 640)
     x0, y0 = X(0.12, 0.40)
     x1, y1 = X(0.88, 0.97)
     cr.set_source_rgba(*WATER, 0.4)
     _round(cr, x0 + 18, y0, x1 - x0 - 36, y1 - y0, 26)
     cr.fill()
-    stamp(cr, t, "SPASM", T(tl, "b14", "sight"), 790, 980, 90)
-    draw_text(cr, "!", 790, 1300, 260, RED, prog(t, T(tl, "b14", "sight") + 0.2, 0.3), anchor="cm")
-    headline(cr, t, "EVEN THE SIGHT OF", "WATER", t0, T(tl, "b14", "water"))
+    stamp(cr, t, "SPASM", T(tl, "b14", "seeing"), 790, 980, 90)
+    draw_text(cr, "!", 790, 1300, 260, RED, prog(t, T(tl, "b14", "seeing") + 0.2, 0.3), anchor="cm")
+    headline(cr, t, "EVEN SEEING", "WATER", t0, T(tl, "b14", "water"))
 
 
 def s_fatal(cr, t, tl, t0):                              # b15 "once these signs start, rabies is almost always fatal"
@@ -540,14 +572,8 @@ def v_shots(cr, t, tl, t0):                              # b21 "not fourteen inj
     if t < ta - 0.15:
         for i in range(14):
             p = prog(t, t0 + 0.05 * i, 0.2)
-            x, y = 220 + (i % 7) * 107, 820 + (i // 7) * 260
-            cr.set_source_rgba(*INK, 0.85 * p)
-            cr.set_line_width(10)
-            cr.move_to(x, y - 90)
-            cr.line_to(x, y + 70)
-            cr.stroke()
-            cr.rectangle(x - 18, y - 60, 36, 110)
-            cr.fill()
+            if p > 0:
+                syringe(cr, 220 + (i % 7) * 107, 820 + (i // 7) * 260, 200, p)
         strike(cr, 160, 1150, 940, 830, prog(t, T(tl, "b21", "stomach"), 0.4))
         stamp(cr, t, "MYTH", T(tl, "b21", "anymore"), 540, 1450, 100)
         headline(cr, t, "NOT 14 SHOTS IN THE", "STOMACH", t0, T(tl, "b21", "stomach"))
@@ -579,7 +605,7 @@ def d_doses(cr, t, tl, t0):                              # b24 "and finish every
     doses = ["DOSE 1", "DOSE 2", "DOSE 3", "DOSE 4"]
     checklist(cr, t, 110, 600, 860, "EVERY DOSE", [(d, t0 + 0.1 + 0.18 * i, "tick", t0 + 0.25 + 0.18 * i)
                                                    for i, d in enumerate(doses)])
-    _pic(cr, "vaccine", 800, 1500, 360, t, t0 + 0.3)
+    _pic(cr, "bandage_arm", W / 2, 1420, 0, t, t0 + 0.3, frame=(620, 413), rot=0.03)
     headline(cr, t, "FINISH EVERY", "DOSE", t0, T(tl, "b24", "dose"), big_color=GREEN)
 
 
@@ -628,7 +654,7 @@ def sfx(tl):
     closing line, typing under the YES/NO card."""
     ev = [(s, "whoosh", 0.25) for s in starts(tl, SHOTS)[1:]]
     ev += [(T(tl, "b3", "late"), "thud", 0.0), (T(tl, "b4", "real") + 0.2, "thud", 0.0),
-           (T(tl, "b14", "sight"), "thud", 0.0), (T(tl, "b21", "anymore"), "thud", 0.0)]
+           (T(tl, "b14", "seeing"), "thud", 0.0), (T(tl, "b21", "anymore"), "thud", 0.0)]
     for bid in ("b5", "b8", "b17", "b25"):
         ev.append((tl[bid].start - 0.45, "tick", 0.0))
     ev += [(T(tl, "b26", "Yes"), "typing", 1.0), (tl["b6"].start + 0.4, "pop", 0.0), (tl["b18"].start + 0.3, "pop", 0.0)]
@@ -641,8 +667,8 @@ def cover(cr):
     everything inside Instagram's 3:4 grid crop (y 240-1680)."""
     from poster import finish, slate
     slate(cr)
-    if "dog_snarl" in P:
-        photo(cr, P["dog_snarl"], W / 2, 1150, 820)
+    if "dog_snarl2" in P:
+        photo(cr, P["dog_snarl2"], W / 2, 1180, 900)
     draw_text(cr, "AFRAID OF", W / 2, 330, 110, CREAM, anchor="ct")
     draw_text(cr, "WATER", W / 2, 460, 230, CORAL, anchor="ct")
     finish(cr)

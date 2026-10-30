@@ -33,7 +33,7 @@ one-off search; it saves nothing on its side.
 | b2 | And it all started with a small scratch from a puppy. Weeks ago. You'd already forgotten it. |
 | b3 | And by now, it's too late. |
 | b4 | This isn't a zombie movie. It's real. |
-| b5 | It's called rabies. |
+| b5 | It's called rabies. It's a virus. |
 | b6 | In India, there are about nine million animal bites every year. Three out of four are from dogs. |
 | b7 | And an estimated five thousand seven hundred people die of rabies. Every year. |
 | b8 | So how does a tiny scratch reach your brain? |
@@ -42,7 +42,7 @@ one-off search; it saves nothing on its side.
 | b11 | That's why it can hide for weeks, or even months, while you feel completely fine. |
 | b12 | A bite on the face reaches the brain faster. |
 | b13 | When it gets there, the signs begin. Fever. A strange tingling where you were bitten. |
-| b14 | Then swallowing hurts so much that the throat goes into spasms. Even the sight of water can set them off. |
+| b14 | Then swallowing hurts so much that the throat goes into spasms. Even seeing water can set them off. ("Even the sight of water" was heard as "the side of water" by Whisper medium three times, so it was reworded.) |
 | b15 | Once these signs start, rabies is almost always fatal. |
 | b16 | But here's the strange part. There's a vaccine. And it works, even after the bite. |
 | b17 | So why do thousands still die? |

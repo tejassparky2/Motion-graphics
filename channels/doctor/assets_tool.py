@@ -23,8 +23,17 @@ from PIL import Image, ImageDraw
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 UA = {"User-Agent": "DocAndTheOrgansAssets/0.1 (https://github.com/tejassparky2/motion-graphics)"}
-OK = re.compile(r"^(public domain|pd|cc0|pdm|cc by( \d(\.\d)?)?|pixabay.*|unsplash.*|pexels.*)$", re.I)
+OK = re.compile(r"^(public domain|pd|cc0( 1\.0)?|pdm|cc by( \d(\.\d)?)?|pixabay.*|unsplash.*|pexels.*)$", re.I)
 SITES = {"pixabay": "Pixabay", "unsplash": "Unsplash", "pexels": "Pexels", "commons": "Wikimedia Commons"}
+HOSTS = {"flickr.com": "Flickr", "wordpress.org": "WordPress Photo Directory", "wikimedia.org": "Wikimedia Commons",
+         "pixabay.com": "Pixabay", "unsplash.com": "Unsplash", "pexels.com": "Pexels"}
+
+
+def site(r):
+    """The site a photo is credited to: the one hosting its page (Openverse results live on Flickr etc.)."""
+    if r["source"] in SITES:
+        return SITES[r["source"]]
+    return next((name for host, name in HOSTS.items() if host in r.get("page", "")), r["source"])
 
 
 def fetch(jsonl, work):
@@ -42,6 +51,8 @@ def fetch(jsonl, work):
         if not os.path.exists(r["file"]):
             if "wikimedia" in r["url"]:
                 time.sleep(6)                                     # Wikimedia throttles bursts from shared addresses
+            elif "pixabay" in r["url"]:
+                time.sleep(1.5)                                   # so do Pixabay's /get/ links
             ok = False
             for k in range(6):
                 try:
@@ -54,6 +65,7 @@ def fetch(jsonl, work):
                     break
                 except urllib.error.HTTPError as e:
                     if e.code != 429:
+                        print(f"  {r['id']}: HTTP {e.code}", flush=True)
                         break
                     time.sleep(min(60, int(e.headers.get("Retry-After") or 10) + 2))
                 except Exception:                                 # noqa: BLE001
@@ -118,7 +130,7 @@ def cut(work, cid, video, key, frame=False, crop=None):
     credits = json.load(open(cpath)) if os.path.exists(cpath) else []
     credits = [c for c in credits if c["file"] != name]
     credits.append(dict(file=name, author=r.get("author", ""), license=r.get("license", ""), page=r.get("page", ""),
-                        title=r.get("note", "") or r.get("title", ""), site=SITES.get(r["source"], r["source"])))
+                        title=r.get("note", "") or r.get("title", ""), site=site(r)))
     json.dump(credits, open(cpath, "w"), indent=1, ensure_ascii=False)
     print(f"wrote {os.path.join(out_dir, name)}")
 
