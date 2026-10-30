@@ -137,3 +137,10 @@ What changes:
 - Plan: the owner makes the hero in VRoid Studio (Windows laptop, free; its guidelines allow monetized videos of
   models you make) and sends the .vrm. We pose and animate it here, with motion from Mixamo (the owner's free Adobe ID)
   or CMU mocap (free for all uses), retargeted to the VRM humanoid bones.
+
+## Hero model decision (owner, 30 Oct 2026)
+- The owner chose "Restyle free sample (Recommended)": the hero is built HERE by restyling the VRM Consortium's
+  Seed-san sample. Its licence (VRM Public License 1.0, from the model's own metadata) allows corporate commercial use,
+  modification and redistribution; credit is required.
+- New hair, outfit and eye colours, with the robot arm and backpack removed.
+- Every upload description carries: "Hero base model: Seed-san by VirtualCast, Inc. (VRM Public License 1.0)".
