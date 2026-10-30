@@ -56,7 +56,12 @@ else:
     sc.render.image_settings.color_depth = '16' if opts.get('deep') else '8'
     ext = 'png'
 prefix = opts.get('prefix', 'f')
+budget = float(opts.get('budget', 1e12))     # seconds; stop starting new frames after this
+t_start = time.time()
 for f in frames:
+    if time.time() - t_start > budget:
+        print("BUDGET_REACHED", flush=True)
+        break
     sc.frame_set(f)
     sc.render.filepath = os.path.join(out, f"{prefix}_{f:04d}.{ext}")
     if opts.get('skip_existing') and os.path.exists(sc.render.filepath):
