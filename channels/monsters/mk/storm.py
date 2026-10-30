@@ -364,7 +364,10 @@ def power_out(cam, frame, flicker=True, lights=None):
         _key_energy(lt, frame, 0.0)
     g = _group(cam, "black")
     m = _overlay(f"black_m_{frame}", (0, 0, 0, 1), 0.0)
-    p = _screen_plane(f"black_{frame}", cam, D_BLACK, m, g)
+    if hasattr(m, "surface_render_method"):
+        m.surface_render_method = "DITHERED"   # alpha is only 0 or 1: opaque and depth-tested, so no see-through
+    p = _screen_plane(f"black_{frame}", cam, D_BLACK, m, g)    # objects (rain) can sort in front of it
+    p.visible_shadow = False
     keys = [(frame - 1, 0.0), (frame, 1.0)]
     if flicker:
         keys = [(frame - 4, 0.0), (frame - 3, 1.0), (frame - 2, 0.0)] + keys
