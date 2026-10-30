@@ -1,10 +1,10 @@
 """Episode 1 (v2), helper 6: the fluffmoth's two shots (channels/monsters/EP01V2_SHOTS.md, line 10-11 of the script).
 
-    S10b (~1.4 s + 12-frame handle): "Everything here was tiny. And cute." Close, locked, low at the moth's eye level
+    S10b (23 frames + 12-frame handle; TIMING.md): "Everything here was tiny. And cute." Close, locked, low at the moth's eye level
           against the bright sky of the new world's clearing. It hovers (wings on 1s, bob and antennae on 2s) and
           snaps into its head-tilt pose a beat in (SG2: one pose change in the shot), then blinks. Its wing eye-spots
           stay SHUT, so they read as innocent curved wing markings.
-    S11b (~1.1 s + handle): "And every one of them was wrong." The wrong detail (EP4): head-on and closer. The wings
+    S11b (26 frames + handle): "And every one of them was wrong." The wrong detail (EP4): head-on and closer. The wings
           stop dead, spread wide, and all four eye-spots open together and stare straight into the camera, their
           irises lit (LC4/TP11: local light on the creature, never a regrade). Then everything is held still; only a
           few pollen motes drift (LC10).
@@ -154,7 +154,7 @@ def s11b():
     frames = 26 + HANDLE
     rig = _scene(0)
     sp = rig["spots"]
-    stop = 8                                                     # the wings stop dead on this frame
+    stop = 4             # the wings stop dead here, and the spots open on "wrong" (TIMING.md: "was wrong." 0.00-0.48 s)
     for f in range(1, stop):
         ph = (f - 1) % 4
         fluffmoth.wing_pose(rig, f, fluffmoth.WING_BEAT[ph], fluffmoth.WING_BEAT[(ph - 1) % 4] * 0.8)

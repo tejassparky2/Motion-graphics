@@ -40,3 +40,33 @@ SCRIPT = [
 
 # Shots that split one line: (shot, line, the word the second shot opens on)
 SPLITS = [("S03b", "l3", "Just"), ("S05b", "l5", "But"), ("S10b", "l10", "And"), ("S11b", "l11", "was")]
+
+# The upload sheet (story_v2.md "Packaging"; report TP16: no Pokémon terms in the title, thumbnail or tags).
+# Audience: NOT made for kids (comments stay on for the vote). Fully animated fantasy: no altered-content disclosure
+# (report TP15). Music and effects are original (SS9).
+METADATA = dict(
+    title="I Died Because of a Shrimp. Then I Woke Up Here 🦐",
+    alt_titles=["This Shrimp Erased a Forest. It Was Sitting on My Chest 🦐",
+                "Reborn in a World Where Cute Things Kill 🦐"],
+    description="""A marine-biology student dies in a lab accident during a storm, and wakes up under a cracked sky in
+a world of tiny, adorable creatures. Every one of them has a real animal's power.
+
+His only weapon is what he knows.
+
+Cute Things Kill Here, Episode 1.
+SAVE the shrimp, or RUN? The side named in more comments decides Episode 2.
+
+The real facts:
+- A pistol shrimp snaps its claw so fast it makes a collapsing bubble that briefly reaches about 4,700 °C, against
+  about 5,500 °C at the surface of the sun, and it only forms in water (Lohse et al., Nature 2001; Versluis et al.,
+  Science 2000).
+- Shrikes, the "butcher birds", impale their prey on thorns to store it.
+
+Original story and animation. The creatures and the world are fictional.
+Hero base model: Seed-san by VirtualCast, Inc. (VRM Public License 1.0)""",
+    hashtags=["#anime", "#isekai", "#Shorts"],
+    tags=["original anime", "isekai", "reincarnated", "anime short", "3d anime", "cute monsters", "pistol shrimp",
+          "butcher bird", "shrike", "animal facts", "cute things kill here", "episode 1", "choose the ending"],
+    pinned_comment="SAVE or RUN? 🦐 The side named in more comments within 48 hours of this video going up decides "
+                   "Episode 2. Save the shrimp that tried to kill him, or run while he can?",
+)

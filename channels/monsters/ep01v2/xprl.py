@@ -9,7 +9,7 @@ the coordinator's top/bottom split with a jagged divider (AB13): A above, B belo
 
 Set: meadow.build("after") (the crater, the stumps, the small puddle). Kai: mk/hero.load (world outfit, scale 5.8:
 1 unit = 20 cm). Acting on 3s (IM2), effects on 1s; locked cameras (SG4). 3.4 s (line 24 is 2.88 s, cut within
-0.5 s of its end) plus the 12-frame tail.
+0.5 s of its end): 85 frames in the cut plus the 12-frame tail (TIMING.md).
 
     blender -b -y -P channels/monsters/render_shot.py -- ep01v2 S24top OUTDIR
 """
@@ -21,7 +21,7 @@ from mathutils import Matrix, Vector
 from channels.monsters.mk import anim, hero, look, meadow, puffshrimp, tuftwing
 
 TAIL = 12
-SECONDS = 3.4
+CUT_FRAMES = 85                                # ep01v2/TIMING.md: line 24 at 0.30-3.02 s, the cut ~0.5 s after it
 SCALE = 5.8                                    # hero.blend is 1.5 m in metres; the creature world is 20 cm per unit
 PUDDLE = (-1.3, -0.4)                          # meadow.build("after")
 SHRIMP_AT = (-2.95, 0.9, 0.0)                  # facing +X, its claw reaching into the puddle in front of it
@@ -31,7 +31,7 @@ BODY = ["hips", "spine", "chest", "neck", "head 1", "shoulder.L", "shoulder.R", 
 
 
 def _frames():
-    return round(SECONDS * 24) + TAIL
+    return CUT_FRAMES + TAIL                   # 97 to render
 
 
 def _hero(loc, rot_z_deg):
@@ -276,8 +276,14 @@ def _bird_drop(f0, f1, n, at):
     lift, shadow = b["lift"], b["shadow"]
     for f, z in ((1, 16.0), (f0, 16.0), (f0 + 10, 11.0), (f0 + 20, 6.5), (f1, 2.6), (n, 2.2)):
         anim.key(lift, "location", f, (0, 0, z), "LINEAR")
-    for f, sc in ((1, 0.35), (f0, 0.35), (f1, 1.0), (n, 1.05)):
+    for f, sc in ((1, 0.55), (f0, 0.55), (f1, 1.0), (n, 1.05)):
         anim.key(shadow, "scale", f, (sc, sc, 1), "LINEAR")
+    # the giant shadow sweeps in from under Kai (~6.5 units toward +X) to where the bird comes down: the threat in
+    # RUN. (A real cast shadow can't darken him: the painted and toon materials ignore cast shadows, so darkening him
+    # as it passes is left to the comp, through the subject pass.)
+    x0 = shadow.location.x
+    for f, dx in ((1, 7.6), (f0, 7.6), (f0 + 16, 4.0), (f1, 0.0), (n, 0.0)):
+        anim.key(shadow, "location", f, (x0 + dx, shadow.location.y, shadow.location.z), "LINEAR")
     for i, w in enumerate(b["wings"]):
         side = -1 if i == 0 else 1
         for f, ang in ((1, 1.1), (f0, 1.1), (f0 + 4, 0.5), (f0 + 8, 1.2), (f0 + 12, 0.5), (f1, 1.3)):
