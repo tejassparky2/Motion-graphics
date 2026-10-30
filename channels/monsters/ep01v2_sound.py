@@ -245,6 +245,17 @@ def stomp(seed=0):
     return thump + rustle
 
 
+def huff(seed=0):
+    """A tiny creature's indignant "hmph": a short nasal puff of breath with a little voiced buzz under it."""
+    r = _rng("huff", seed)
+    m = _n(0.28)
+    t = _t(m)
+    env = np.minimum(1, t / 0.02) * np.exp(-t / 0.08)
+    breath = _bp(r.uniform(-1, 1, m), 700, 3000) * env
+    buzz = _bp(signal.sawtooth(2 * np.pi * (520 - 160 * t / 0.28) * t), 600, 2400) * env * 0.5
+    return breath + buzz
+
+
 def flutter(dur=0.6, seed=0):
     """Small wings beating as a bird lands: fast soft air pulses that slow down."""
     r = _rng("flutter", seed)
@@ -400,7 +411,7 @@ def build(timing, n, v):
     collapse_t = c.t("S05a", 1.65)
     amb(lambda d, s: bubble_hiss(d, 20 + s), hiss0, collapse_t, -22, 0.4, 0.05)
     hit(bubble_collapse(), collapse_t, -10)
-    hit(sfx.thunder(), c.f("S06", 14), -3)                        # the crack lands on the bolt and flash (S06 f14, on "storm")
+    hit(sfx.thunder(), c.f("S06", 13), -3)                        # the crack lands on the bolt and flash (S06 v2 f13, on "storm")
     hit(sfx.snap(1), c.f("S07", 9), -2)                          # the snap and its flash (S07 f8-9)
     hit(glass_crack(), c.f("S07", 10), -8, 0.2)
     amb(lambda d, s: trickle(d, 30 + s), c.t("S08"), spark_t + 0.1, -22, 0.2, 0.1)
@@ -445,8 +456,10 @@ def build(timing, n, v):
 
     # --- S21-S23: plucks back with the stomps, then the thorn tree and the bird
     amb(lambda d, s: meadow_wind(d, 90 + s), c.t("S21"), total, -28, 0.4, 0.02)
-    for k in range(6):
-        hit(stomp(k), c.t("S21", 0.35 + 0.19 * k), -15, (-0.25 + 0.1 * k))
+    hit(huff(), c.f("S21", 4), -18)                              # it turns its back, puffed up (f4-8)
+    for k, (f, db) in enumerate(((13, -17), (21, -14), (29, -10))):   # landings, heavier each time, the last biggest
+        hit(stomp(k), c.f("S21", f), db, -0.1 + 0.1 * k)
+    hit(drip(1), c.f("S21", 42), -18)                            # the claw dips into the puddle
     music_at(bed("wonder", c.t("S22") - c.t("S21") + 1.0, 3), c.t("S21"), c.t("S22"), -16, 0.4, 0.3)
     dip = c.word("l24", "Save") - 0.5                            # SS3: the bed dips ~0.5 s before the A/B line
     music_at(soft_pad(dip - c.t("S22") + 0.3, (50, 57, 62, 63), 0.1, 2), c.t("S22"), dip, -19, 0.4, 0.2)
