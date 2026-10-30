@@ -47,22 +47,31 @@ def s06():
     win = bpy.data.objects["win_glass"]
     h["lightning"](14)
     storm.lightning(cam, 14, window=win, depth=7.5, flash=False, room_light=0, seed=3)
-    h["flicker"]([20, 23, 26, 30, 34])
+    stutter = [20, 23, 26, 30, 34]
+    h["flicker"](stutter)
+    lv = h["grade"].nodes["level"].outputs[0]               # darker than the lab's default dip: fear is darkness (LC2)
+    for f in stutter:
+        lv.default_value = 0.3
+        lv.keyframe_insert("default_value", frame=f)
+    for fc in anim.all_fcurves(h["grade"].animation_data.action):
+        if '"level"' in fc.data_path:
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
     return dict(frames=RENDER["S06"], step=1, subject=[])
 
 
 def s08():
     """S08 "Water. Cables. Me." (73 frames): floor level, locked. Water runs across the tiles on "Water." (frame 8) and
-    reaches the power strip on "Cables." (frame 28); the lights stutter; the spark lands on "Me." (frame 48); then
-    black, held to the end (~0.8 s). Nothing graphic: the cut to black is the whole event."""
+    reaches the power strip on "Cables." (frame 28); the lights stutter; the spark comes just after "Me." (frame 55,
+    matching the sound mix, which keeps the word clear); then black from frame 58, held to the end. Nothing graphic: the cut to black is the whole event."""
     h = lab.build()
     cam = h["cams"]["floor"]
     bpy.context.scene.camera = cam
     h["crack_puddle"](-1, 28)                              # trickling as the shot opens; it touches the strip at 28
     h["flicker"]([34, 38, 42])
-    h["spark"](48)
-    h["power_out"](53)
-    storm.power_out(cam, 54, flicker=False)
+    h["spark"](55)                                          # just AFTER "Me." (f47-50), as in the sound mix
+    h["power_out"](57)
+    storm.power_out(cam, 58, flicker=False)
     return dict(frames=RENDER["S08"], step=1, subject=[])
 
 
