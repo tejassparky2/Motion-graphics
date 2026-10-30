@@ -176,7 +176,7 @@ def all_fcurves(action):
     return out
 
 
-def on_twos(objects, step=2):
+def on_twos(objects, step=3):
     """TV-anime timing: characters hold each pose for `step` frames (a Stepped modifier on every F-curve); the camera
     and VFX stay on ones."""
     for o in objects:
