@@ -41,11 +41,13 @@ def _stage():
     fx, fy, fz = tank["floor"]
     rig = ps.build((fx - 0.03, fy - 0.07, fz), turn=TURN, scale=K)
     gy = tank["glass"].location.y
+    sand_m = look.paint("tank_sand", look.hexc("#d9c39a"), noise=0.18, scale=220.0)
+    bpy.data.objects["hero_gravel"].data.materials[0] = sand_m       # its front face showed white through the glass
     bpy.ops.mesh.primitive_plane_add(size=1, location=(fx, (gy + fy + 0.15) / 2, fz + 0.0004))
     sand = bpy.context.object
     sand.name = "h2_sand"
     sand.scale = (0.52, fy + 0.15 - gy - 0.004, 1)
-    sand.data.materials.append(look.paint("tank_sand", look.hexc("#d9c39a"), noise=0.18, scale=220.0))
+    sand.data.materials.append(sand_m)
     ps.gravel_bed((fx - 0.25, fx + 0.25), (gy + 0.004, fy + 0.14), fz, random.Random(5), n=1600, k=K * 1.6,
                   clear=(fx - 0.03, fy - 0.07, 0.05, 0.03), name="h2_gravel")
     return h, tank, rig
@@ -60,6 +62,14 @@ def _dim_water(tank, keys):
             em.default_value = base * lv
             em.keyframe_insert("default_value", frame=f)
         em.default_value = base
+
+
+FLOOR0 = Vector((0.10, 2.23, 0.785))   # the hero tank floor the camera positions below were set against
+
+
+def _at(tank, p):
+    """A position set against FLOOR0, moved with the hero tank (lab.py may move the tank)."""
+    return Vector(p) + (Vector(tank["floor"]) - FLOOR0)
 
 
 def _cam(name, loc, target, lens, focus=None, fstop=FSTOP):
@@ -160,7 +170,7 @@ def _pulse(objs, f0, f1, amount=0.18):
         a = mix.inputs[0].default_value
         base = sorted((kp.co.x, kp.co.y) for fc in anim.all_fcurves(m.node_tree.animation_data.action)
                       for kp in fc.keyframe_points)
-        a = base[1][1] if len(base) > 1 else a                   # the alpha it was born with
+        a = next((v for _, v in base if v > 0), a)                # the alpha it was born with
         for n in range(f0, f1, 2):
             mix.inputs[0].default_value = min(1.0, a * (1 + amount if (n - f0) % 4 == 0 else 1 - amount * 0.5))
             mix.inputs[0].keyframe_insert("default_value", frame=n)
@@ -197,8 +207,8 @@ def _snap_sequence(offset):
     ps.bubbles(Vector(tank["floor"]) + Vector((-0.06, -0.02, 0.0)), F(1), F(122), n=6, seed=8, rise=0.3, spread=0.04, size=K)
     cams = dict(
         eye=_eye_cam(rig, "cam_eye"),
-        side=_cam("cam_claw", (0.175, 1.998, 0.805), (0.035, 2.125, 0.80), 50, rig["hinge"]),
-        front=_cam("cam_front", (0.075, 1.90, 0.812), (0.03, 2.105, 0.80), 55, rig["tip"]))
+        side=_cam("cam_claw", _at(tank, (0.175, 1.998, 0.805)), _at(tank, (0.035, 2.125, 0.80)), 50, rig["hinge"]),
+        front=_cam("cam_front", _at(tank, (0.075, 1.90, 0.812)), _at(tank, (0.03, 2.105, 0.80)), 55, rig["tip"]))
     return h, tank, rig, cams, F
 
 
@@ -236,9 +246,9 @@ def s07():
     ps.crack(gc, S07_CRACK, frames=5)
     eye = _eye_cam(rig, "cam_eye")
     _dim_water(tank, [(S07_WIND, 1.0), (S07_SHUT, 0.6)])
-    cam = _cam("cam_tank", (0.07, 1.775, 0.855), (0.05, 2.08, 0.87), 30, None)
+    cam = _cam("cam_tank", _at(tank, (0.075, 1.86, 0.81)), _at(tank, (0.045, 2.08, 0.865)), 24, None)
     cam.data.dof.use_dof = True
-    cam.data.dof.focus_distance = (Vector((0.04, gy, 0.86)) - cam.location).length
+    cam.data.dof.focus_distance = (Vector((lx, gy, lz + 0.12)) - cam.location).length
     cam.data.dof.aperture_fstop = 2.8
     anim.key(cam, "location", S07_CRACK, cam.location.copy(), "LINEAR")          # the final hit drifts (IM5)
     anim.key(cam, "location", LEN["S07"] + TAIL, cam.location + Vector((0.0, 0.012, 0.004)), "LINEAR")
