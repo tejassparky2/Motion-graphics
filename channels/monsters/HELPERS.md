@@ -60,6 +60,24 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v6 (hero ready, new outfit, meadow scale):**
+  - **Kai is ready, with no add-on needed:**
+    - `from channels.monsters.mk import hero`
+    - `rig = hero.load(loc, scale, rot_z, outfit="world"|"earth", line=0.004)` appends `assets/monsters/hero/hero.blend`.
+    - Scale: 5.8 in the creature world (1 unit = 20 cm), 1.1 in metre scenes (the lab).
+    - Faces: `hero.face(rig, "surprised", frame)`. Names: neutral happy angry sad relaxed surprised blink wink squint
+      star shock pinprick dot v blush aa ih ou ee oh mouth_open grit brows_up brows_down look_up look_down look_left
+      look_right, or any raw shape key on the `head` mesh. Faces snap (CONSTANT).
+    - Bones: `rig["bone"]("left_upper_arm")`, with Rigify names underneath: upper_arm.L, forearm.L, hand.L, thigh.L,
+      shin.L, foot.L, spine, chest, neck, "head 1", hips. The rest pose is a T-pose; arms down is upper_arm
+      rotation_euler z = ±(-72°) in XYZ mode.
+    - Outline: `hero.line_width(rig, 0.0015)` for face close-ups.
+  - **His look** (owner, 30 Oct: "change his dress... Pokémon and modern anime"): a teal zip jacket, charcoal joggers,
+    bare forearms with fingerless gloves, a teal sweatband, white sneakers with yellow toes, and a white cap with a
+    teal visor and a teal "K". See `out/monsters/tests/hero_v2_outfit.png`.
+  - **Meadow scale:** `mk/meadow.py` trees are now real size (TREE = 4.5), so Kai is dwarfed by them and the stumps
+    are big and glowing. Set cameras to `clip_end = 2000`. See `out/monsters/tests/meadow_scale_kai.png`.
+  - **Credit:** every upload carries the line in `assets/monsters/hero/CREDIT.md`.
 - **30 Oct, v5 (owner APPROVED Episode 1 v2: "build full with animation like Pokémon, apply all research, quality
   first, use all helpers"):**
   - **Script:** `out/monsters/story_v2.md`.
