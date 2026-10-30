@@ -48,7 +48,7 @@ NO_CAPTIONS = {"S15"}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
 CAP_SIZE = 60
 CAP_MAX_W = 560              # clear of the right rail
-CAP_Y_SHOT = {}              # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
+CAP_Y_SHOT = {"S07": 700}            # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
 
