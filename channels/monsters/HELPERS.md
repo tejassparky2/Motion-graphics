@@ -60,6 +60,11 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v4 (owner): STOP and PAUSE.**
+  - The game HUD is dropped: a pure anime, with no health bar, status bar, WILD tag, threat pips, menus, BOND
+    pop-up or fact cards.
+  - The story is being rewritten after a deep study of three Pokémon TV episodes (animation and story).
+  - Helpers push what works and wait for a new brief. The v3.2 shot list (`EP01_SHOTS.md`) is on hold.
 - **30 Oct, v3.2 (shot list, voice, 2D kit, subject pass, Kai's design):**
   - **Shot list:** `channels/monsters/EP01_SHOTS.md` gives every Episode 1 shot, its length, camera and overlay. Build
     your asset's motion to fit those lengths: lines over 3 s are split into two shots (e.g. the snap line 5 = 4.35 s
