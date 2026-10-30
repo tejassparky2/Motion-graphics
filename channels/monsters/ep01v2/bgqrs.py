@@ -121,10 +121,35 @@ def _shrimp(rig, yaw=-160, chest_offset=(0.0, 0.0, 0.0)):
     face is about 180. Its claw is on its right (-X local)."""
     c = kai_point(rig, "chest") + Vector(chest_offset)
     sh = puffshrimp.build((0, 0, 0))
+    _fix_pivots(sh)
     sh["root"].location = c
     sh["root"].rotation_euler = (0, 0, math.radians(yaw))
     bpy.context.view_layer.update()
     return sh
+
+
+def _fix_pivots(sh):
+    """puffshrimp.build() places nested pivots (the claw hinge under the shoulder, the lids under the eye pivots) at
+    their world spot but parents them without an inverse, so each lands at twice its offset: the snapping finger
+    swings around a point 0.71 units off its base and the lids drop in the wrong place. Move each pivot to where it
+    belongs (the shrimp is still at the origin here), keeping its children where they are."""
+    fixes = [(sh["hinge"], Vector((-1.95, -0.42, 2.65)))]
+    fixes += [(lp, Vector((sx * 0.36, -0.78, 1.2))) for lp, sx in zip(sh["lids"], (-1, 1))]
+    bpy.context.view_layer.update()
+    for e, want in fixes:
+        # since 1d22a94 puffshrimp._empty puts these pivots in the right place already; setting `location` here as
+        # well moved them a second time (by the parent's offset) and detached the snapping finger (coordinator,
+        # 30 Oct). Only correct a pivot that is actually off, and do it in world space so the parent inverse counts.
+        if (e.matrix_world.translation - want).length < 1e-4:
+            continue
+        kids = [(k, k.matrix_world.copy()) for k in e.children]
+        mw = e.matrix_world.copy()
+        mw.translation = want
+        e.matrix_world = mw
+        bpy.context.view_layer.update()
+        for k, kmw in kids:
+            k.matrix_world = kmw
+        bpy.context.view_layer.update()
 
 
 def claw_tip(sh, name="puff"):
@@ -153,14 +178,59 @@ def aim_claw(sh, target):
     return tuple(shd.rotation_euler)
 
 
+def raise_claw(sh, up_target, face_target):
+    """Turn the shoulder so the arm (shoulder -> fingertip) points at `up_target` and the claw's front (local -Y, the
+    side the snapping finger opens toward) faces `face_target`. Two directions fix the claw's roll, so poses keyed
+    one after another never flip. Returns the shoulder's rotation_euler."""
+    from mathutils import Matrix
+    shd = sh["shoulder"]
+    shd.rotation_euler = (0, 0, 0)
+    bpy.context.view_layer.update()
+    piv = shd.matrix_world.translation.copy()
+    a = (claw_tip(sh) - piv).normalized()
+    b = shd.matrix_world.to_3x3() @ Vector((0, -1, 0))
+    b = (b - a * a.dot(b)).normalized()
+    a2 = (Vector(up_target) - piv).normalized()
+    b2 = Vector(face_target) - piv
+    b2 = (b2 - a2 * a2.dot(b2)).normalized()
+    R = (Matrix((a2, b2, a2.cross(b2))).transposed() @ Matrix((a, b, a.cross(b)))).to_4x4()
+    shd.matrix_world = Matrix.Translation(piv) @ R @ Matrix.Translation(-piv) @ shd.matrix_world
+    bpy.context.view_layer.update()
+    return tuple(shd.rotation_euler)
+
+
 def cock(sh, f=None):
-    """The S01 threat pose (coordinator, 30 Oct): the claw aimed AT his face, the snapping tip ~18 cm from his nose,
-    pincer open, clear of his face on screen. sh["cock"] is computed in _scene for the shared geometry."""
-    vals = ((sh["shoulder"], sh["cock"]), (sh["hinge"], (0.75, 0.0, 0.0)))
+    """The S01 threat pose (coordinator review, 30 Oct): the claw RAISED over his face and leaning in, the pincer
+    wide open, the snapping finger angled down at his nose; its outline against the ground and stumps behind, clear
+    of both faces. sh["cock"] is computed in _scene for the shared geometry."""
+    vals = ((sh["shoulder"], sh["cock"]), (sh["hinge"], (1.4, 0.0, 0.0)))
     for o, v in vals:
         o.rotation_euler = v
         if f is not None:
             anim.key(o, "rotation_euler", f, v, "CONSTANT")
+
+
+def lock_on(sh, target, f, lids=0.38, slant=0.32, max_turn=25):
+    """The shrimp's "locked on" look (coordinator review): eyes turned toward `target` (Kai's face), the lids dropped
+    ~38% and slanted (inner corners lower) so it reads determined, still cute. Keys at frame f (CONSTANT)."""
+    for piv, lp, hi, sx in zip(sh["eyes"], sh["lids"], sh["hi"], (-1, 1)):
+        bpy.context.view_layer.update()
+        d = piv.parent.matrix_world.inverted().to_3x3() @ (Vector(target) - piv.matrix_world.translation)
+        yaw = max(-max_turn, min(max_turn, math.degrees(math.atan2(-d.x, -d.y))))   # rest gaze is -Y
+        pitch = max(-max_turn, min(max_turn, math.degrees(math.atan2(d.z, math.hypot(d.x, d.y)))))
+        anim.key(piv, "rotation_euler", f, (math.radians(pitch), 0.0, math.radians(-yaw)), "CONSTANT")
+        anim.key(hi, "scale", f, 0.001, "CONSTANT")                 # no upper highlight under a dropped lid
+        anim.key(lp, "scale", f, 1.0, "CONSTANT")
+        anim.key(lp, "rotation_euler", f, ((lids - 0.5) * math.pi, -sx * slant, 0.0), "CONSTANT")
+
+
+def unlock(sh, f, lids=0.0):
+    """Back to the plain wide-eyed look at frame f."""
+    for piv, lp, hi in zip(sh["eyes"], sh["lids"], sh["hi"]):
+        anim.key(piv, "rotation_euler", f, (0.0, 0.0, 0.0), "CONSTANT")
+        anim.key(hi, "scale", f, 1.0, "CONSTANT")
+        anim.key(lp, "scale", f, 0.001 if lids <= 0.01 else 1.0, "CONSTANT")
+        anim.key(lp, "rotation_euler", f, ((lids - 0.5) * math.pi, 0.0, 0.0), "CONSTANT")
 
 
 # ---------------------------------------------------------------- the hero's face
@@ -192,9 +262,9 @@ def whisper(rig, f0, f1, base, seed=3):
     f = f0
     while f < f1:
         lip = rnd.choice(("lip_a", "lip_o", "lip_u", None))
-        kai_face(rig, f, **base, **({lip: 0.45} if lip else {}))
+        kai_face(rig, f, **base, **({lip: 0.45} if lip else {"mouth_short": 1.0}))
         f += 3
-    kai_face(rig, f1, **base)
+    kai_face(rig, f1, **base, mouth_short=1.0)
 
 
 # ---------------------------------------------------------------- cameras and shared scene
@@ -235,20 +305,23 @@ def _pink_grass(rig, n=46, seed=4):
             p.use_smooth = True
 
 
-SH_OFF = (1.8, -0.2, 0.0)            # shrimp on his belly, so the aimed claw stops ~18 cm short of his nose
+SH_OFF = (0.3, -0.3, 0.0)            # shrimp on his chest, its raised claw leaning over his face
+SH_YAW = -55                         # turned toward his face (3/4 to camera); its claw side is toward his head
 OLD_OFF = (0.8, -0.2, 0.0)           # S17 and S21 were rendered with the shrimp higher on his chest
 
 
-def _scene(n_frames, shrimp_yaw=-15, shrimp_off=SH_OFF, line=None):
+def _scene(n_frames, shrimp_yaw=None, shrimp_off=SH_OFF, line=None):
     look.world()
     m = meadow.build("after")
     rig = _kai()
+    if shrimp_yaw is None:
+        shrimp_yaw = SH_YAW if shrimp_off == SH_OFF else -15
     if line is not None and not rig.get("standin"):
         from channels.monsters.mk import hero
         hero.line_width(rig, line)                                 # thinner hero lines in close-ups
     sh = _shrimp(rig, shrimp_yaw, shrimp_off)
     sh["nose"] = kai_point(rig, "nose")
-    sh["cock"] = aim_claw(sh, sh["nose"] + Vector((0, 0, 0.25)))
+    sh["cock"] = raise_claw(sh, sh["nose"] + Vector((0.0, 0.3, 2.4)), sh["nose"])
     sh["shoulder"].rotation_euler = (0, 0, 0)
     meadow.smoke(m["smoke_sources"], -40, n_frames + 10, every=14, rise=3.5, size=0.9)
     sc = bpy.context.scene
@@ -315,8 +388,8 @@ def _cut(cams):
 def _s01_camera(rig, sh, name="cam_s01"):
     """Frame 0: low and close, both faces below the top 30% (the hook text), the claw reaching across at his face."""
     face = kai_point(rig, "nose")
-    tgt = face.lerp(sh["root"].location, 0.47) + Vector((0, 0.2, 0.9))
-    return _camera(name, tgt + Vector((0.5, -7.6, 2.2)), tgt, 27, dof=sh["body"], fstop=0.3)
+    tgt = face + Vector((1.1, 0.0, 1.0))                          # his face lower-left, the claw upper-middle
+    return _camera(name, tgt + Vector((0.4, -3.8, 2.4)), tgt, 24, dof=sh["body"], fstop=0.6)
 
 
 def _drop(loc, f_grow, f_fall, f_hit, land, r=0.075, mat=None):
@@ -365,7 +438,6 @@ def _key_pose(sh, f, shoulder=None, hinge=None, squash=None, interp="BEZIER"):
 
 
 COCK = (-0.5, -1.42, 0.0)
-STARE = (0.9, 0.35, -0.35)                                        # claw held up in front of its own face
 
 
 # ---------------------------------------------------------------- shots
@@ -379,11 +451,12 @@ def s01():
     cock(sh)
     cam = _s01_camera(rig, sh)
     bpy.context.scene.camera = cam
-    anim.lids(sh, 1, 0.0)
+    lock_on(sh, kai_point(rig, "eyes"), 1)
     kai_face(rig, 1, **TERROR)
     whisper(rig, 4, 13, TERROR)                                   # "Don't move." 0.12-0.52 s
     whisper(rig, 26, 51, TERROR, seed=5)                          # "That claw can boil water." 1.04-2.12 s
-    _anchors("S01", cam, {k: (lambda k=k: kai_point(rig, k)) for k in ("eyes", "temple", "nose")}, n)
+    _anchors("S01", cam, {k: (lambda k=k: kai_point(rig, k)) for k in ("eyes", "temple", "nose", "eye_l", "eye_r")},
+             n)
     return dict(frames=n, step=1, subject=[sh["root"]], cam=cam, rig=rig, sh=sh)
 
 
@@ -397,7 +470,7 @@ def s16():
     wide = _s01_camera(rig, sh, "cam_s16_wide")
     cut = 33                                                      # just before "it was on my chest" (1.38 s)
     _cut([(1, ecu), (cut, wide)])
-    anim.lids(sh, 1, 0.0)
+    lock_on(sh, kai_point(rig, "eyes"), 1)
     kai_face(rig, 1, eye_close=1.0)
     kai_face(rig, 15, eye_close=0.55)                             # a flutter on "opened"
     kai_face(rig, 18, eye_close=1.0)
@@ -405,10 +478,9 @@ def s16():
     kai_face(rig, 24, eye_close=0.0)                              # open, still dazed ("my eyes")
     kai_face(rig, cut, eye_open=0.6)
     kai_face(rig, cut + 9, **TERROR)                              # he sees it ("chest")
-    for f in (cut + 30,):                                         # the shrimp's slow blank blink (on 3s)
-        anim.lids(sh, f, 0.6)
-        anim.lids(sh, f + 3, 1.0)
-        anim.lids(sh, f + 6, 0.0)
+    anim.lids(sh, cut + 30, 1.0)                                  # one slow blink, then locked on again (on 3s)
+    lock_on(sh, kai_point(rig, "eyes"), cut + 33)
+    _anchors("S16", wide, {k: (lambda k=k: kai_point(rig, k)) for k in ("eyes", "eye_l", "eye_r")}, n)
     return dict(frames=n, step=3, subject=[sh["root"]])
 
 
@@ -416,15 +488,15 @@ def s17():
     """Then I saw the drops. Insert (CH3, the clue a second time): a drop swells at the claw tip, falls and darkens a
     spot on his tunic; the next drop starts to swell. Drops on 2s (step 2)."""
     n = FRAMES["S17"]
-    m, rig, sh = _scene(n, shrimp_off=OLD_OFF)
-    sh["shoulder"].rotation_euler = (-0.25, -0.95, 0.0)           # claw tip over his collar for the insert
+    m, rig, sh = _scene(n, shrimp_off=(1.7, -0.2, 0.0), shrimp_yaw=-15)   # an insert: the shrimp sits lower
+    raise_claw(sh, kai_point(rig, "chest") + Vector((-0.6, 0.2, 0.6)), sh["nose"])  # tip ~13 cm over his jacket
     sh["hinge"].rotation_euler = (0.5, 0, 0)
     bpy.context.view_layer.update()
     tip = claw_tip(sh) + Vector((0.0, -0.05, -0.08))
     land, nrm = _surface_below(tip)
     _drop(tip, 1, 17, 23, land + nrm * 0.02)                       # lands on "drops" (0.82-1.04 s)
     _drop(tip, 34, n + 20, n + 26, land)                          # the next one swelling at the end
-    wet = look.flat("wet_tunic", look.hexc("#56806a"))
+    wet = look.flat("wet_tunic", look.hexc("#0f5d60"))            # the teal jacket, darkened where it's wet
     bpy.ops.mesh.primitive_circle_add(vertices=32, radius=1.0, fill_type="NGON", location=land + nrm * 0.012)
     spot = bpy.context.object
     spot.rotation_euler = nrm.to_track_quat("Z", "Y").to_euler()
@@ -432,9 +504,8 @@ def s17():
     for f, r in ((22, 0.001), (23, 0.07), (25, 0.12), (29, 0.16), (35, 0.18)):
         anim.key(spot, "scale", f, (r, r * 0.8, 1), "LINEAR" if f > 23 else "CONSTANT")
     tgt = tip.lerp(land, 0.5)
-    away = tip - sh["shoulder"].matrix_world.translation             # look back past the tip, so the claw is behind
-    away = Vector((away.x, away.y, 0)).normalized()
-    cam = _camera("cam_s17", tgt + away * 3.3 + Vector((0, -1.6, 0.3)), tgt, 58)
+    cam = _camera("cam_s17", tgt + Vector((0.5, -3.1, 0.75)), tgt, 50)   # from his side: the claw comes from the
+    #                                                                      right, the drop falls clear of it
     foc = bpy.data.objects.new("s17_focus", None)
     bpy.context.scene.collection.objects.link(foc)
     foc.location = tgt
@@ -480,14 +551,13 @@ def s19():
     foc.location = tgt
     cam.data.dof.use_dof, cam.data.dof.focus_object, cam.data.dof.aperture_fstop = True, foc, 0.3
     bpy.context.scene.camera = cam
-    anim.lids(sh, 1, 0.0)
+    lock_on(sh, kai_point(rig, "eyes"), 1)
     set_face = dict(eye_brow_down=0.45, mouth_short=1.0, eye_open=0.2)
     kai_face(rig, 1, **set_face)
     kai_face(rig, 60, **set_face, eye_close=1.0)                  # one slow blink
     kai_face(rig, 63, **set_face)
-    for f in (36,):
-        anim.lids(sh, f, 1.0)
-        anim.lids(sh, f + 3, 0.0)
+    anim.lids(sh, 36, 1.0)                                        # one blink, then locked on again
+    lock_on(sh, kai_point(rig, "eyes"), 39)
     _anchors("S19", cam, {"tip": lambda: tip, **{k: (lambda k=k: kai_point(rig, k))
                                                   for k in ("temple", "eyes", "eye_l", "eye_r")}}, n)
     return dict(frames=n, step=3, subject=[sh["root"]])
@@ -499,27 +569,39 @@ def s20():
     n = FRAMES["S20"]
     m, rig, sh = _scene(n, line=0.002)
     root = sh["root"].location.copy()
-    camA = _camera("cam_s20_shrimp", root + Vector((-1.6, -7.4, 3.2)), root + Vector((-1.0, 0.0, 1.7)), 34,
+    yaw = sh["root"].rotation_euler.z
+    front = Vector((math.sin(yaw), -math.cos(yaw), 0))             # the way the shrimp faces
+    camA = _camera("cam_s20_shrimp", root + front * 6.0 + Vector((0.8, -2.6, 3.0)), root + Vector((-0.6, 0.0, 1.9)), 32,
                    dof=sh["body"], fstop=0.3)
     cut = 44
     camB = _ecu_camera(rig, "cam_s20_kai", dist=4.6, lens=55, lift=-0.25, fstop=1.2)
     _cut([(1, camA), (cut, camB)])
     nose = sh["nose"]
-    windup = aim_claw(sh, nose + Vector((0.6, 0.4, 1.6)))         # pulled up and back
-    jab = aim_claw(sh, nose + Vector((0, 0, -0.1)))               # thrown at his nose
-    _key_pose(sh, 1, sh["cock"], 0.75, 0.0)
-    _key_pose(sh, 14, sh["cock"], 0.75, 0.0)
-    _key_pose(sh, 20, windup, 0.85, -0.09)                        # wind-up: cocked back, body squashed
-    _key_pose(sh, 22, windup, 0.85, -0.09)
+    windup = raise_claw(sh, nose + Vector((0.5, 0.4, 3.1)), nose)  # pulled up and back
+    jab = raise_claw(sh, nose + Vector((-0.6, 0.2, 1.3)), nose)    # thrown down at his nose
+    _key_pose(sh, 1, sh["cock"], 1.4, 0.0)
+    _key_pose(sh, 14, sh["cock"], 1.4, 0.0)
+    _key_pose(sh, 20, windup, 1.5, -0.09)                         # wind-up: cocked back, body squashed
+    _key_pose(sh, 22, windup, 1.5, -0.09)
     _key_pose(sh, 24, jab, -0.25, 0.08, "LINEAR")                 # SNAP (nothing happens)
     _key_pose(sh, 28, jab, -0.25, 0.0)
     _key_pose(sh, 32, jab, -0.25)
-    _key_pose(sh, 36, STARE, 0.1)                                 # brings the claw round to stare at it
     body = sh["body"]
+    body.rotation_euler = (0, math.radians(-14), math.radians(-20))  # where it ends up, to place the claw for that
+    bpy.context.view_layer.update()
+    side = yaw - math.radians(55)                                  # its right-front: the claw held up there
+    stare = raise_claw(sh, root + Vector((math.sin(side), -math.cos(side), 0)) * 1.3 + Vector((0, 0, 2.2)),
+                       root + Vector((0, 0, 1.3)))
+    body.rotation_euler = (0, 0, 0)
+    sh["shoulder"].rotation_euler = sh["cock"]
+    bpy.context.view_layer.update()
+    _key_pose(sh, 36, stare, 0.4)                                 # brings the claw round in front of its face
     anim.key(body, "rotation_euler", 30, (0, 0, 0))
-    anim.key(body, "rotation_euler", 34, (0, 0, math.radians(-25)))  # turns to stare at its claw
-    anim.key(body, "rotation_euler", 40, (0, math.radians(-14), math.radians(-25)))  # ...and tilts its head
-    anim.key(body, "rotation_euler", n, (0, math.radians(-16), math.radians(-25)))
+    anim.key(body, "rotation_euler", 34, (0, 0, math.radians(-20)))  # turns to stare at its claw
+    anim.key(body, "rotation_euler", 40, (0, math.radians(-14), math.radians(-20)))  # ...and tilts its head
+    anim.key(body, "rotation_euler", n, (0, math.radians(-16), math.radians(-20)))
+    lock_on(sh, kai_point(rig, "eyes"), 1)                        # locked on through the wind-up and the snap
+    unlock(sh, 28)                                                # ...nothing happened: wide, blank eyes
     anim.lids(sh, 36, 0.3)
     anim.lids(sh, 40, 0.0)
     anim.on_twos([sh["shoulder"], sh["hinge"], body], 2)
@@ -539,6 +621,9 @@ def s20():
         json.dump(a, fh)
     bpy.context.scene.camera = camA
     return dict(frames=n, step=2, subject=[sh["root"]])
+
+
+S21_CAM = ((10.0, -3.2, 3.9), (-0.8, -2.35, 0.2), 30)   # from his feet: the stomp crosses the frame to the puddle
 
 
 def s21():
@@ -580,8 +665,8 @@ def s21():
     kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
     # raised (coordinator, 30 Oct): from 1.05 his lying body hid the shrimp's stomps and the puddle after frame ~20;
     # from here Kai stays the foreground at the bottom and the whole hop path and the puddle read above him
-    cam_loc = Vector((-0.2, -9.6, 5.2))
-    cam = _camera("cam_s21", cam_loc, Vector((-1.0, -1.3, 0.2)), 26, dof=sh["body"], fstop=0.6)
+    cam_loc = Vector(S21_CAM[0])
+    cam = _camera("cam_s21", cam_loc, Vector(S21_CAM[1]), S21_CAM[2], dof=sh["body"], fstop=0.6)
     bpy.context.scene.camera = cam
     _anchors("S21", cam, {"feet": lambda: r.matrix_world.translation.copy()}, n)
     with open(os.path.join(ANCHORS, "S21_lands.json"), "w") as fh:

@@ -44,6 +44,21 @@ def face_geom(a, t):
     return ((lx + rx) / 2, (ly + ry) / 2), d * 2.6, tilt, ((lx, ly), (rx, ry))
 
 
+def skin_near_eyes(frame_png, eyes, er):
+    """Kai's rendered skin colour on the cheeks just below each eye (median), so the comic dot-eye patches match
+    his own skin in that light rather than a fixed cream."""
+    from PIL import Image
+    im = Image.open(frame_png).convert("RGB")
+    px = []
+    for ex, ey in eyes:
+        for dx in (-0.6, 0.0, 0.6):
+            for dy in (1.7, 2.1):
+                px.append(im.getpixel((int(ex + dx * er), int(ey + dy * er))))
+    px.sort(key=sum)
+    r, g, b = px[len(px) // 2]
+    return (r / 255, g / 255, b / 255, 1.0)
+
+
 def at(a, t, name):
     """Anchor `name` at shot time t (frame-accurate, held past the last frame)."""
     f = min(max(1, int(round(t * FPS)) + 1), max(a))
@@ -120,6 +135,13 @@ def puff(cr, t, start, x, y, size=1.0, seed=0):
 
 def overlays(shot):
     """Shot-local overlays [(fn, kwargs)] for each shot."""
+    if shot in ("S01", "S16"):                                    # frame 0 (and its rhyme): pin-prick terror + sweat
+        a = anchors(shot)
+        t0 = 0.0 if shot == "S01" else 41 / FPS                   # S16: from his terror on the wide (frame 42)
+        (cx, cy), size, tilt, eyes = face_geom(a, t0)
+        er = size / 2.6 * 0.26
+        return [(fx2d_anime.terror_eyes, dict(start=t0, end=99, x=cx, y=cy, size=size, eyes=eyes, er=er, tilt=tilt)),
+                (fx2d_anime.sweat_drop, dict(start=t0 - 0.2, end=99, x=cx, y=cy, size=size, tilt=tilt))]
     if shot == "S18":                                             # the realisation lands on "wet" (frame 30)
         a = anchors("S18")
         ex, ey = at(a, 32 / FPS, "eyes")
@@ -138,10 +160,15 @@ def overlays(shot):
         a = anchors("S20")
         px, py = at(a, 23 / FPS, "tip")
         (cx, cy), size, tilt, eyes = face_geom(a, 50 / FPS)
+        er = size / 2.6 * 0.23
+        f70 = os.path.join(BUILD, "S20", "0070.png")
+        if not os.path.exists(f70):
+            f70 = os.path.join(BUILD, "bg", "review", "S20", "still_70.png")
+        skin = skin_near_eyes(f70, eyes, er) if os.path.exists(f70) else fx2d_anime.SKIN
         return [(puff, dict(start=23 / FPS, x=px, y=py, size=1.0)),
-                (fx2d_anime.dot_eyes, dict(start=43 / FPS, x=cx, y=cy, size=size, eyes=eyes, tilt=tilt,
-                                           er=size / 2.6 * 0.19)),
-                (fx2d_anime.sweat_drop, dict(start=52 / FPS, x=cx, y=cy, size=size, tilt=tilt))]
+                (fx2d_anime.dot_eyes, dict(start=43 / FPS, x=cx, y=cy, size=size, eyes=eyes, tilt=tilt, er=er,
+                                           skin=skin)),
+                (fx2d_anime.sweat_drop, dict(start=52 / FPS, end=99, x=cx, y=cy, size=size, tilt=tilt))]
     if shot == "S21":
         a = anchors("S21")
         with open(os.path.join(BUILD, "S21_lands.json")) as fh:
@@ -168,12 +195,17 @@ def run(shot):
     rep = comp.render([comp.Shot(src, overlays=overlays(shot), name=shot)], out_frames, verbose=False)
     os.makedirs(SHOTS_OUT, exist_ok=True)
     mp4 = os.path.join(SHOTS_OUT, f"{shot}.mp4")
+    tmp = os.path.join(BUILD, f"{shot}_enc.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i",
                     os.path.join(out_frames, "%05d.png"), "-c:v", "libx264", "-crf", "12", "-preset", "slow",
-                    "-pix_fmt", "yuv420p", *CLEAN, mp4], check=True)
+                    "-pix_fmt", "yuv420p", *CLEAN, tmp], check=True)
+    # a stream-copy remux drops the encoder name the first pass leaves in the track header (as render.py does)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN, "-movflags", "+faststart",
+                    mp4], check=True)
+    os.remove(tmp)
     sheet(out_frames, rep["frames"], os.path.join(SHOTS_OUT, f"{shot}_sheet.jpg"))
     data = open(mp4, "rb").read()
-    tags = {s: data.count(s.encode()) for s in ("x264 - core", "Lavf", "Lavc", "encoder")}
+    tags = {s: data.count(s.encode()) for s in ("x264 - core", "Lavf", "Lavc", "libx264", "encoder")}
     print(f"{shot}: {rep['frames']} frames, 2D {rep['ms_per_frame']:.0f} ms/frame, {mp4} "
           f"({os.path.getsize(mp4) / 1e6:.1f} MB), tags {tags}")
 
