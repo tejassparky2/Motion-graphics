@@ -78,18 +78,22 @@ the hook rules from `research_notes/from_shorts/hooks_from_shorts.md`.
 Left out as unsettled: exact survival rates (media figures vary). The script only says "some patients survived".
 Nothing in it is treatment advice; it says "see a doctor fast, and tell them you swam".
 
-## Pictures (all public domain or CC BY; credits in `assets/doctor_photos/amoeba/credits.json`)
+## Pictures (v2, 30 Oct 2026: rebuilt on photos after the owner said the drawn version was "not even close")
 
-- `micrograph_cdc.jpg`: N. fowleri in brain tissue, immunofluorescence (CDC / Dr. Govinda S. Visvesvara, public
-  domain).
-- `gray_brain.png`, `gray_olfactory.png`, `gray_ethmoid.png`, `gray_nasal.png`: Gray's Anatomy (1918) figs. 720,
-  771, 149 and 856 (Henry Vandyke Carter, public domain).
-- `pond_kerala.jpg`: "Temple pond kerala" (Sreekanthv, CC BY 2.5).
-- `kerala_tank.jpg`: "The Peralassery temple pond, Kannur" (Suresh Babunair, CC BY 3.0).
-- Everything else is drawn in code: the amoeba, the head cross-section, the pictogram people, the water scenes, the
-  map (Natural Earth, public domain, with Kerala traced by hand), the thermometer, the tap, the neti pot, the
-  hospital and the microscope.
+The photo search was done by the Hinglish channel's chat (one-off; it saved nothing on its side) with its Pixabay and
+Unsplash keys plus Commons and Openverse, because this cloud server has no keys and Wikimedia throttles its address.
+Its method, copied here: one subject on a plain background, at least ~1000 px; cut out with rembg
+(isnet-general-use) and checked on the paper, or kept whole and framed when busy or a scene; main subject 450-700 px,
+second object 250-400 px, framed photos up to ~860x640. Brand logos painted out (the TV's "SHARP").
 
-Wikimedia's API rate-limits this cloud server's shared address (HTTP 429), and Openverse and Smithsonian's
-DEMO_KEY time out or return 429. So photo search is slow here, and most scenes are drawn. Gray's plates can be
-fetched straight from upload.wikimedia.org by file name, which skips the API.
+- Cut-outs (Pixabay): wooden mannequin in three poses (running, hand on head, sitting; Alexas_Fotos and WolfBlur),
+  line-art head cross-section (OpenClipart-Vectors), microscope, clinical thermometer, glass, brass tap, doctor, man
+  with a headache, old TV on legs.
+- Framed photos: Kerala temple pond (Sreekanthv, CC BY 2.5) and the Peralassery temple tank (Suresh Babunair, CC BY
+  3.0) from Commons; from Pixabay an Assam village pond, two boys in a river, a lake swimmer, a dark pool, sun, cracked
+  earth, hair macro, boots in mud, blood-sample tubes, a pot on a stove, a boy jumping off a pier, a man in profile.
+- Kept from v1: the CDC micrograph (public domain) and Gray's Anatomy figs. 720, 771, 149 (public domain).
+- Still drawn: the amoeba, the India/Kerala map (Natural Earth), the neti pot (no usable photo), the nose clip (none
+  found anywhere), the calendar, gauge, checklists, stamps.
+
+Credits for every file: `assets/doctor_photos/amoeba/credits.json`. The upload sheet lists them as names only.

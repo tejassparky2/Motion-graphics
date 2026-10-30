@@ -91,18 +91,24 @@ def cut(work, cid, video, key, frame=False, crop=None):
     r = rows[cid]
     out_dir = os.path.join(ROOT, "assets", "doctor_photos", video)
     os.makedirs(out_dir, exist_ok=True)
-    im = Image.open(r["file"]).convert("RGB")
+    src = Image.open(r["file"])
+    src = src.convert("RGBA") if src.mode in ("RGBA", "LA", "P") else src.convert("RGB")
     if crop:
-        im = im.crop(tuple(int(v) for v in crop.split(",")))
-    im.thumbnail((1800, 1800), Image.LANCZOS)
+        src = src.crop(tuple(int(v) for v in crop.split(",")))
+    src.thumbnail((1800, 1800), Image.LANCZOS)
+    im = src.convert("RGB")
     if frame:
         name = f"{key}.jpg"
         im.save(os.path.join(out_dir, name), quality=90, optimize=True)
     else:
-        from rembg import new_session, remove
-        cutout = remove(im, session=new_session("isnet-general-use"), post_process_mask=True)
+        if src.mode == "RGBA" and src.getchannel("A").getextrema()[0] < 128:
+            cutout = src                                          # already a transparent PNG: keep its own alpha
+        else:
+            from rembg import new_session, remove
+            cutout = remove(im, session=new_session("isnet-general-use"), post_process_mask=True)
         a = cutout.getchannel("A").point(lambda v: 0 if v < 12 else v)    # drop faint haze left round the subject
         cutout.putalpha(a)
+        cutout = cutout.convert("RGBA")
         box = a.getbbox()
         cutout = cutout.crop((max(0, box[0] - 8), max(0, box[1] - 8), min(cutout.width, box[2] + 8),
                               min(cutout.height, box[3] + 8)))

@@ -67,9 +67,18 @@ it does but this goes English", and later, with its Toxoplasma video attached: "
   voice wording anywhere in it.
 - Commands: `python channels/doctor/render_doc.py --video amoeba [--voice | --sheet 1 | --still 2 | --cover |
   --remix]`.
-- Photo search is slow from the cloud: Wikimedia rate-limits the shared address (429), Openverse times out, and the
-  Smithsonian DEMO_KEY returns 429. Gray's Anatomy plates can be fetched straight from upload.wikimedia.org (the
-  path is the md5 of the file name).
+- Photos carry the look (owner, 30 Oct 2026: the drawn version was "not even close"): big cut-outs and framed photos
+  in every shot, as in the Toxoplasma video. This cloud server has no Pixabay/Unsplash/Pexels keys, and Wikimedia
+  throttles its address hard (429 on the API and on downloads). Ways to get photos, in order:
+  1. If the owner has added `PIXABAY_API_KEY` / `UNSPLASH_ACCESS_KEY` / `PEXELS_API_KEY` to this environment, search
+     here with `stock_search.py`.
+  2. Otherwise ask the Hinglish "shorts" chat (owner's rule: one-off help for photos only; it must save nothing on its
+     side). It replies with JSON lines (q, source, url, page, author, license). Pixabay `/get/` links expire, so
+     download them at once.
+  3. Keyless fallbacks: `commons_search.py` (api.wikimedia.org search + batched licence lookup) and
+     `museum_search.py` (Met / Smithsonian CC0 objects). Both are slow or thin from here.
+  Then `assets_tool.py fetch` (contact sheets) and `assets_tool.py cut` (rembg isnet-general-use; transparent PNGs
+  are kept as they are; `--frame` keeps a photo whole). Check every cut-out on the paper. Paint out brand logos.
 
 Lessons (25 Oct 2026, owner: "Why you could not catch bug when running from hours"):
 - Before a new voice engine goes into a video, read its audio path (how tokens become samples) and test it on 20+

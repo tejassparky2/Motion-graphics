@@ -21,7 +21,7 @@ Do you swim in ponds, rivers or lakes? Comment YES or NO 👇
 
 **Instagram second comment** (sources and photo credits)
 ```
-Photos: CDC, Wikimedia Commons.
+Photos: CDC, Pixabay, Wikimedia Commons.
 CC BY: Sreekanthv, Suresh Babunair.
 Sources: CDC, Naegleria fowleri: about, causes, symptoms, prevention; Government of India, Lok Sabha reply on amoebic meningoencephalitis, December 2025; The Lancet, 2025, Naegleria fowleri in Kerala, India: prevention over panic
 ```
@@ -50,7 +50,7 @@ To stay safe:
 General information, not medical advice.
 
 Sources: CDC, Naegleria fowleri: about, causes, symptoms, prevention; Government of India, Lok Sabha reply on amoebic meningoencephalitis, December 2025; The Lancet, 2025, Naegleria fowleri in Kerala, India: prevention over panic
-Photos: CDC, Wikimedia Commons.
+Photos: CDC, Pixabay, Wikimedia Commons.
 CC BY: Sreekanthv, Suresh Babunair.
 
 #braineatingamoeba #naegleriafowleri #kerala #healthawareness #sciencefacts
