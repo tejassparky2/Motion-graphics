@@ -29,12 +29,12 @@ Most serious first within each shot. Updated as shots land.
 | S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
 | S09 | helper 3 | **FIX** | 67 / 66 | 0.44 | crack gone and frame blurred on "cracked sky"; Kai's wake-up mostly after the 54-frame cut |
 | S06 | helper 9 | PASS | 48 / 41 | 0.37 | double flash on the line, lights cut out on 2s |
-| S10a | helper 4 | re-rendering (v8 outline) | 56 / 56 | 0.39 | coordinator's second read: PASS; re-render for the SDF fix |
+| S10a | helper 4 | PASS (v8 re-render) | 56 / 56 | 0.38 | outline and lit side back; 1 NOTE (outline slivers) |
 | S10b | helper 6 | **FIX** (v8) | 46 / 35 | 0.44 | rendered before the SDF normal fix: body and antennae have no outline |
-| S11a | helper 4 | re-rendering (FIX from the coordinator) | 39 / 39 | 0.52 | the wrong detail too small; reworked |
+| S11a | helper 4 | delivered (v8 rework), awaiting the coordinator's re-read | 39 / 39 | 0.51 | holes big at y 510-790, smoke dark |
 | S11b | helper 6 | **FIX** (v8) | 38 / 38 | 0.47 | same: no outline on the SDF body and antennae |
 
-Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24; re-renders of S09, S10b, S11b (v8) and S10a/S11a (v8).
+Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24; re-renders of S09 and of S10b and S11b (v8).
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -122,7 +122,13 @@ frames in the cut** (66 to render), and the picture no longer lands on the words
   captions.
 
 ## S10a: jelly-snail, close, cute held pose (helper 4)
-**Second read (coordinator): PASS.** Re-rendering after 3b0fc70 so the body carries its coloured line (v8).
+**Second read (coordinator): PASS.** **v8 re-render, delivered:**
+- Built from 0c0ceeb (outline shells cast no shadow) with the body pivot fix: under puffshrimp's new `_empty`, the
+  head-tilt had dropped the face about 0.25 m. 56 frames, saturation 0.38, holds on 3s.
+- The body now has its coloured line and a lit side with a cool shadow side.
+- **NOTE (shared look.outline):** at full size a few short dark slivers show inside the body, where the
+  inverted-hull shell pokes through creases. They are not shadow acne (turning off self-shadow changes nothing) and
+  not mesh noise (more smoothing changes nothing). Barely visible at 360 px. Reported to the coordinator.
 - **Length and level:** 56 frames, 720x1280, 24 fps. Saturation 0.39, value 0.84 (bright day, LC). No black
   frames.
 - **Timing:** characters on 3s. The frame runs are all 3 or longer; the longer runs are where the bob turns. The
@@ -137,7 +143,8 @@ frames in the cut** (66 to render), and the picture no longer lands on the words
 ## S11a: the trail of smoking burnt holes (helper 4)
 **Second read (coordinator): FIX.** In 1.12 s the wrong detail must read instantly (EP4), and it didn't: the holes
 were small dark specks in the upper third at 360 px, a sharp red mushroom in the corner was the brightest thing in
-the frame, and the smoke was faint grey on green. Reworked (commit 840944e and the v8 re-render):
+the frame, and the smoke was faint grey on green. Reworked (commit 840944e) and **re-rendered from 0c0ceeb**: 39 frames, saturation 0.51, on 1s. Waiting for the
+coordinator's re-read:
 - **Camera:** low and close behind the trail. The nearest holes are big in the lower middle, at y 510-790 above
   the captions, and the trail leads the eye up to the snail.
 - **Mushroom:** removed in this scene.
