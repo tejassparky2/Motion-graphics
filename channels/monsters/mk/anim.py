@@ -121,7 +121,7 @@ def flash(cam, f, frames=3, color="#ffffff"):
     m = look.fade(f"flash_m_{f}", look.hexc(color), 0.0)
     p.data.materials.append(m)
     mix = m.node_tree.nodes["Mix"]
-    for fr, a in ((f - 1, 0.0), (f, 0.85), (f + 1, 0.6), (f + frames, 0.0)):
+    for fr, a in ((f - 1, 0.0), (f, 0.7), (f + 1, 0.25), (f + frames, 0.0)):
         mix.inputs[0].default_value = a
         mix.inputs[0].keyframe_insert("default_value", frame=fr)
     return p
@@ -132,7 +132,7 @@ def dust(origin, f, n=14, spread=3.0, seed=3, color="#efe6da"):
     rnd = random.Random(seed)
     m = look.fade(f"dust_m_{f}", look.hexc(color), 0.0)
     mix = m.node_tree.nodes["Mix"]
-    for fr, a in ((f - 1, 0.0), (f, 0.75), (f + 18, 0.0)):
+    for fr, a in ((f - 1, 0.0), (f, 0.45), (f + 18, 0.0)):
         mix.inputs[0].default_value = a
         mix.inputs[0].keyframe_insert("default_value", frame=fr)
     for i in range(n):

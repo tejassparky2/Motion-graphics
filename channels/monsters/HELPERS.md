@@ -39,6 +39,26 @@ get blocked.
 - **Effects:** 4-point sparkle stars, glows, speed lines, impact frames (2D overlays are a separate job).
 - **Format:** vertical 720x1280 (9:16), 24 fps, EEVEE, 16 samples (`look.render_setup()`).
 
+## Frame-by-frame targets (from studying 140 Horizons screenshots; match these, don't copy designs)
+- **Characters and creatures:**
+  - Clean dark-navy lines ~2-3 px at 720 px wide (`look.LINE_SCALE = 1.5`, the default).
+  - One flat base colour plus one hard, cool shadow tone.
+  - A colour boundary on a character (belly patch, markings) must be ONE clean curve. Build markings as their own
+    smooth shapes pressed into the body, not per-face materials from sdf.py, which come out jagged.
+- **Trees:** "cauliflower" masses of merged leaf clumps, painted in three greens (dark inside and underneath, mid,
+  yellow-green where lit), with no lines: `mk/paintbg.py` `tree()`, `paint3()`, `greens()`. Mostly natural greens;
+  candy colours only as rare accents.
+- **Grass:** painted brush strokes stretched sideways (`paintbg.grass_material()`).
+- **Sky:** gradient with thin, flat-bottomed, wispy clouds with lavender shadows (`paintbg.sky()`).
+- **Depth:** the background is strongly soft behind characters. Use camera DOF with an exaggerated aperture,
+  `aperture_fstop ≈ 0.15` (a real f-stop gives <1 px of blur at these distances). Things far away get paler and bluer
+  (`far=` in paintbg).
+- **Framing:** the character is big in the frame, camera low at its eye level (35-50 mm). Wides are for establishing
+  shots only.
+- **Effects:** glowing beams with white cores and streaks, 4-point sparkles, soft bokeh glows. Keep flashes short
+  (1-2 frames) and dust light.
+- **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
+
 ## Hard rules
 - **Original designs only.** Nothing that looks like a Pokémon, Kirby, Digimon or any franchise character: no
   red-and-white ball, no Pokédex-style UI, no pink round puffballs. Cute round bodies; each creature has ONE odd,
