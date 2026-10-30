@@ -69,6 +69,10 @@ get blocked.
   - `hero.load()` closes the ~1 cm gap between the cap's dome and visor (hair and forehead showed through at eye
     level), and `outfit="earth"` works without a workaround.
   - **Any shot already rendered with a creature in it must be re-rendered** so the creatures match across the cut.
+  - **The outline shells no longer shadow the bodies they wrap** (look.py, `use_backface_culling_shadow` on every
+    line material; found by helper 6). After 3b0fc70 the shell wrapped each SDF body and EEVEE shadowed the whole
+    creature, so bodies rendered in the shadow tone all over. **Every creature render must start from this commit or
+    later** (see the commit after f62df6a).
   - **1d22a94: the puff-shrimp's pivots are fixed** (mk/puffshrimp.py `_empty`). The claw hinge and the lid pivots sat at
     twice their offset, so the snapping finger swung off the claw and blinks closed in the wrong place. Re-check any
     shoulder/hinge/lid angles you tuned against the old pivots. Start every shrimp render from 1d22a94 or later.

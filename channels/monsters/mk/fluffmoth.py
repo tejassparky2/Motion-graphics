@@ -350,6 +350,10 @@ def build(loc=(0, 0, 0), name="moth"):
         wings[2 + k], spots[2 + k] = _wing(f"{name}_hind{sx}", sx, HIND, HIND_SPOT, HIND_DOTS, peach, hind_spot, mint,
                                            body, (sx * 0.46, 0.4, -0.12), HIND_UP, HIND_SWEEP, 0.0)
         _sphere(f"{name}_wingfluff{sx}", (sx * 0.6, 0.34, 0.02), (0.24, 0.22, 0.3), white, body, 0.016, 20)
+    # the outline shells enclose the body and would shadow it (EEVEE shadows ignore backface culling): lines cast none
+    for m in bpy.data.materials:
+        if m.name.startswith(f"line_{name}_"):
+            m.use_backface_culling_shadow = True
     bpy.context.view_layer.update()
     shadow = look.blob_shadow(f"{name}_shadow", (loc[0], loc[1] + 0.1, loc[2] + 0.03), (1.1, 0.8), root)
     return dict(root=root, hover=hover, body=body, wings=wings, spots=spots, eyes=eyes, antennae=antennae,
