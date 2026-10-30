@@ -310,6 +310,10 @@ def s09():
     _sky_crack(CAM, up)
     _bloom(cam)
     _motes(KAI_HEAD)
+    for o in rig["arm"].users_collection[0].objects:              # the cap's line ghosted through the pure white
+        for f, hide in ((1, True), (5, False)):
+            o.hide_render = hide
+            o.keyframe_insert("hide_render", frame=f)
     for f, names in ((1, ("blink",)), (12, ("blink",)), (15, ("squint",)), (18, ("surprised", "brows_up"))):
         _faces(rig, names, f)                                      # waking on "woke up", on 3s
     return dict(frames=FRAMES, step=1, subject=[rig["arm"]])
