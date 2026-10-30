@@ -3,6 +3,7 @@
     tar xf assets/voice_cache/monsters_ep01v2_takes.tar
     python channels/monsters/ep01v2_sound.py            # mix.wav + stems voice.wav, music.wav, sfx.wav
     python channels/monsters/ep01v2_sound.py --check    # also Whisper medium.en on every line of mix.wav
+    python channels/monsters/ep01v2_sound.py --roughcut # also mux picture.mp4 + mix.wav -> roughcut.mp4
 
 Needs numpy, scipy, pyloudnorm, pycairo and imageio-ffmpeg (motion/), ffmpeg on PATH, openai-whisper for --check.
 
@@ -389,7 +390,7 @@ def build(timing, n, v):
     collapse_t = c.t("S05a", 1.65)
     amb(lambda d, s: bubble_hiss(d, 20 + s), hiss0, collapse_t, -22, 0.4, 0.05)
     hit(bubble_collapse(), collapse_t, -10)
-    hit(sfx.thunder(), c.t("S06", 0.05), -3)
+    hit(sfx.thunder(), c.f("S06", 7), -3)                         # the crack lands on the lightning flash (S06 f7)
     hit(sfx.snap(1), c.t("S07", 0.06), -2)
     hit(glass_crack(), c.t("S07", 0.12), -8, 0.2)
     amb(lambda d, s: trickle(d, 30 + s), c.t("S08"), spark_t + 0.1, -22, 0.2, 0.1)
@@ -581,7 +582,18 @@ def check(model_name="medium.en"):
     return bad
 
 
+def roughcut():
+    """Mux helper 8's picture.mp4 with mix.wav -> out/monsters/ep01v2/roughcut.mp4 (no re-encode of the picture)."""
+    out = os.path.join(OUT, "roughcut.mp4")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", os.path.join(OUT, "picture.mp4"), "-i", os.path.join(OUT, "mix.wav"),
+                    "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                    "-map_metadata", "-1", "-fflags", "+bitexact", out], check=True)
+    print(f"{os.path.relpath(out, ROOT)}: {os.path.getsize(out) / 1e6:.1f} MB")
+
+
 if __name__ == "__main__":
     main()
     if "--check" in sys.argv:
         check()
+    if "--roughcut" in sys.argv:
+        roughcut()
