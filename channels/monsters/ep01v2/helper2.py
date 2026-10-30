@@ -8,7 +8,7 @@ at SPLIT; each shot carries a 12-frame tail handle.
     S04  "Its claw snaps so fast, the water boils."  eye close-up 4f -> claw cocked and HELD while only a glint grows
          (tiny bubbles are drawn into the claw) -> a 4-frame slow-motion shut -> 2-frame flash -> the bubble swells
          white-hot for the rest of the shot (IM13's long quiet scale shot), a slow shock ring spreading.
-    S05a (first half of line 5)  the bubble at its peak, shimmering -> it shrinks, brightens and collapses (2-frame
+    S05a "Almost as hot as the surface of the sun."  the bubble at its peak, shimmering -> it shrinks, brightens and collapses (2-frame
          flash) -> micro-bubbles drift up in the dark water.
     S07  "Snap."  eye close-up 2f -> claw cocked, held, glint growing -> shut in 2 frames -> 1-frame flash -> 2 impact
          frames (comp.impact from the subject pass) -> the crack runs up the glass in 5 frames; the shrimp is frozen in
@@ -27,7 +27,7 @@ from channels.monsters.mk import pistolshrimp as ps
 K = 0.025                     # shrimp scale in the metre-scale lab (~6 cm body)
 TURN = math.radians(45)       # the claw points at the front glass, near the leak
 TAIL = 12                     # handle frames after every shot
-LEN = dict(S04=62, S05a=48, S07=24)     # estimated lengths (EP01V2_SHOTS.md); +TAIL when rendered
+LEN = dict(S04=61, S05a=63, S07=24)     # frames in the cut (ep01v2/TIMING.md, v7); +TAIL when rendered
 SPLIT = LEN["S04"]            # S05a starts at sequence frame SPLIT + 1 of the S04/S05a snap
 FSTOP = 0.3 / K               # the anime background blur at this scale (f/0.3 at unit scale)
 
@@ -184,27 +184,29 @@ def _snap_sequence(offset):
 
     h, tank, rig = _stage()
     _freeze_pose(rig, F(1), ps.OPEN)
-    _freeze_pose(rig, F(26), ps.OPEN)
-    _charge(rig, F(5), F(26))
-    anim.key(rig["hinge"], "rotation_euler", F(26), (0, ps.OPEN, 0), "LINEAR")
-    anim.key(rig["hinge"], "rotation_euler", F(30), (0, 0.0, 0), "CONSTANT")      # 4-frame slow-motion strike
-    anim.key(rig["shoulder"], "rotation_euler", F(30), (0, 0.05, -0.06))
-    anim.key(rig["body"], "location", F(30), (0, 0, 0))
-    anim.key(rig["body"], "location", F(46), (0.08, 0, 0.01))                    # a slow recoil
-    anim.key(rig["tail"], "rotation_euler", F(30), (0, 0.0, 0))
-    anim.key(rig["tail"], "rotation_euler", F(44), (0, 0.35, 0))
+    # S04's words, in shot frames: "snaps" 15-21 (the strike), "boils" 44-50 (the bubble reaches its peak)
+    _freeze_pose(rig, F(15), ps.OPEN)
+    _charge(rig, F(5), F(15))
+    anim.key(rig["hinge"], "rotation_euler", F(15), (0, ps.OPEN, 0), "LINEAR")
+    anim.key(rig["hinge"], "rotation_euler", F(19), (0, 0.0, 0), "CONSTANT")      # 4-frame slow-motion strike
+    anim.key(rig["shoulder"], "rotation_euler", F(19), (0, 0.05, -0.06))
+    anim.key(rig["body"], "location", F(19), (0, 0, 0))
+    anim.key(rig["body"], "location", F(35), (0.08, 0, 0.01))                    # a slow recoil
+    anim.key(rig["tail"], "rotation_euler", F(19), (0, 0.0, 0))
+    anim.key(rig["tail"], "rotation_euler", F(33), (0, 0.35, 0))
     anim.on_twos([rig["body"], rig["tail"], rig["shoulder"], *rig["antennae"]], step=2)
     # the bubble: born at the shut, swells to 3x through S04, held shimmering, then collapses in S05a
-    b = ps.bubble(rig, F(31), t=(0, 31, 56, 61, 62, 68, 80), peak_scale=1.6)
+    # born on the flash (20), peak on "boils" (48); held through S05a, collapsing on "sun" (S05a frame 52)
+    b = ps.bubble(rig, F(20), t=(0, 28, 88, 93, 94, 100, 110), peak_scale=1.6)
     layers = [o for o in b.children if "_core" in o.name or "_glow" in o.name]
     for o in layers:                                   # hold the peak until sequence frame 84
         fc = [c for c in anim.all_fcurves(o.animation_data.action) if c.data_path == "scale"]
         peak = max(kp.co.y for kp in fc[0].keyframe_points)
-        anim.key(o, "scale", F(84), peak)
-    _pulse(layers, F(40), F(86))
-    ps.shock(rig, F(30), slow=4, radius=1.8)
-    _dim_water(tank, [(F(4), 1.0), (F(26), 0.45)])
-    ps.bubbles(Vector(tank["floor"]) + Vector((-0.06, -0.02, 0.0)), F(1), F(122), n=6, seed=8, rise=0.3, spread=0.04, size=K)
+        anim.key(o, "scale", F(105), peak)
+    _pulse(layers, F(28), F(107))
+    ps.shock(rig, F(19), slow=4, radius=1.8)
+    _dim_water(tank, [(F(4), 1.0), (F(15), 0.45)])
+    ps.bubbles(Vector(tank["floor"]) + Vector((-0.06, -0.02, 0.0)), F(1), F(140), n=6, seed=8, rise=0.3, spread=0.04, size=K)
     cams = dict(
         eye=_eye_cam(rig, "cam_eye"),
         side=_cam("cam_claw", _at(tank, (0.175, 1.998, 0.805)), _at(tank, (0.035, 2.125, 0.80)), 50, rig["hinge"]),
@@ -215,19 +217,20 @@ def _snap_sequence(offset):
 def s04():
     h, tank, rig, cams, F = _snap_sequence(0)
     _bind([(1, cams["eye"]), (5, cams["side"])])
-    _flash(cams["side"], [(30, 0.0), (31, 0.9), (32, 0.55), (33, 0.0)])
+    _flash(cams["side"], [(19, 0.0), (20, 0.9), (21, 0.55), (22, 0.0)])
     return dict(frames=LEN["S04"] + TAIL, step=1, subject=[rig["root"]])
 
 
 def s05a():
     h, tank, rig, cams, F = _snap_sequence(SPLIT)
     _bind([(1, cams["front"])])
-    _flash(cams["front"], [(F(91), 0.0), (F(92), 0.85), (F(93), 0.4), (F(94), 0.0)])   # the collapse's light
+    _flash(cams["front"], [(F(112), 0.0), (F(113), 0.85), (F(114), 0.4), (F(115), 0.0)])   # the collapse's light
     return dict(frames=LEN["S05a"] + TAIL, step=1, subject=[rig["root"]])
 
 
 # frames inside S07 (1-based): eye insert, wind-up, strike, flash, impact (composited), crack
-S07_EYE, S07_WIND, S07_SHUT, S07_FLASH, S07_IMPACT, S07_CRACK = 1, 3, 11, 13, 14, 16
+# "Snap." is at frames 8-13: the shut lands on it, then flash, the 2 impact frames and the 5-frame crack
+S07_EYE, S07_WIND, S07_SHUT, S07_FLASH, S07_IMPACT, S07_CRACK = 1, 3, 8, 10, 11, 13
 
 
 def s07():
@@ -246,7 +249,7 @@ def s07():
     ps.crack(gc, S07_CRACK, frames=5)
     eye = _eye_cam(rig, "cam_eye")
     _dim_water(tank, [(S07_WIND, 1.0), (S07_SHUT, 0.6)])
-    cam = _cam("cam_tank", _at(tank, (0.075, 1.86, 0.81)), _at(tank, (0.045, 2.08, 0.865)), 24, None)
+    cam = _cam("cam_tank", _at(tank, (0.07, 1.90, 0.815)), _at(tank, (0.045, 2.08, 0.86)), 28, None)
     cam.data.dof.use_dof = True
     cam.data.dof.focus_distance = (Vector((lx, gy, lz + 0.12)) - cam.location).length
     cam.data.dof.aperture_fstop = 2.8
