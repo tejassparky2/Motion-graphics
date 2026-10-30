@@ -17,6 +17,7 @@ import bpy
 from . import anim, look, paintbg
 
 WALL_SEED = 21
+TREE = 4.5      # creature units (1 unit = 20 cm): Kai is ~8.7 units, so real trees are ~25-35 units (5-7 m) tall
 
 
 def _wall_spots():
@@ -26,7 +27,11 @@ def _wall_spots():
     for row, (y0, n) in enumerate(((6.0, 7), (8.5, 9), (12.0, 10), (15.5, 11))):
         for i in range(n):
             x = -15 + i * 30 / (n - 1) + rnd.uniform(-1.0, 1.0) + (row % 2) * 1.4
-            spots.append((x, y0 + rnd.uniform(-1.0, 1.0), rnd.uniform(5.5, 7.5), rnd.uniform(2.0, 2.8), i % 4))
+            y = y0 + rnd.uniform(-1.0, 1.0)
+            # spread out by TREE so the trunks keep their spacing at the bigger size; the first row starts ~10 units
+            # behind the creature
+            spots.append((x * TREE * 0.7, 4 + (y - 4) * TREE, rnd.uniform(5.5, 7.5) * TREE, rnd.uniform(2.0, 2.8) * TREE,
+                          i % 4))
     return spots
 
 
@@ -40,16 +45,16 @@ def _cyl(loc, r, depth, mat, verts=14):
 
 
 def _ground():
-    bpy.ops.mesh.primitive_plane_add(size=240)
+    bpy.ops.mesh.primitive_plane_add(size=1200)
     bpy.context.object.data.materials.append(paintbg.grass_material())
 
 
 def _far_forest():
     rnd = random.Random(5)
     for i in range(14):
-        x = -36 + i * 5.6 + rnd.uniform(-1.5, 1.5)
-        paintbg.tree((x, 34 + rnd.uniform(-3, 3), 0), height=rnd.uniform(8, 11), radius=rnd.uniform(3.2, 4.2),
-                     seed=40 + i, variant=i % 4, far=0.45, res=0.2)
+        x = (-36 + i * 5.6 + rnd.uniform(-1.5, 1.5)) * TREE
+        paintbg.tree((x, (34 + rnd.uniform(-3, 3)) * TREE, 0), height=rnd.uniform(8, 11) * TREE,
+                     radius=rnd.uniform(3.2, 4.2) * TREE, seed=40 + i, variant=i % 4, far=0.45, res=0.2 * TREE)
 
 
 def _flowers(avoid_r, seed=9, n=40):
@@ -175,24 +180,24 @@ def _stumps(spots):
     core = look.flat("stump_core", look.hexc("#ffe08a"))
     scorch = paintbg.paint3("scorch", look.hexc("#3a2c2a"), look.hexc("#54403a"), look.hexc("#6e5648"), noise=0.3,
                             scale=0.8)
-    bpy.ops.mesh.primitive_circle_add(vertices=64, radius=1.0, fill_type="NGON", location=(0, 11.5, 0.006))
+    bpy.ops.mesh.primitive_circle_add(vertices=64, radius=1.0, fill_type="NGON", location=(0, 4 + 7.5 * TREE, 0.006))
     fan = bpy.context.object
     fan.name = "scorched_fan"
-    fan.scale = (21, 8.5, 1)
+    fan.scale = (21 * TREE * 0.75, 8.5 * TREE, 1)
     fan.data.materials.append(scorch)
     rnd = random.Random(WALL_SEED + 1)
     stumps, smoke = [], []
     for (x, y, h, r, v) in spots:
         tr = r * 0.17
-        sh = rnd.uniform(0.6, 1.7)
+        sh = rnd.uniform(0.6, 1.7) * TREE * 0.6
         yaw = math.atan2(y, x) - math.pi / 2                    # local +Y points away from the creature
         s = _slice((x, y, 0), tr, sh, math.radians(rnd.uniform(28, 40)), yaw, bark, ring, core)
         stumps.append(s)
         if rnd.random() < 0.5:
             smoke.append((x, y, sh))
     for _ in range(26):                                        # sliced undergrowth between the stumps
-        x, y = rnd.uniform(-17, 17), rnd.uniform(5.5, 17)
-        _slice((x, y, 0), rnd.uniform(0.05, 0.12), rnd.uniform(0.1, 0.3), math.radians(30),
+        x, y = rnd.uniform(-17, 17) * TREE * 0.7, 4 + rnd.uniform(1.5, 13) * TREE
+        _slice((x, y, 0), rnd.uniform(0.05, 0.12) * TREE, rnd.uniform(0.1, 0.3) * TREE, math.radians(30),
                math.atan2(y, x) - math.pi / 2, bark, ring, core)
     return stumps, smoke
 
@@ -255,6 +260,7 @@ def smoke(sources, f0, f1, every=12, rise=3.0, size=0.8, seed=1):
 
 
 def build(state="before", sky=True):
+    """Cameras in this set need clip_end >= 1000 (the far forest stands ~150 units away)."""
     if sky:
         paintbg.sky()
     look.sun(elev=45, azim=-30)
