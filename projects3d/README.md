@@ -21,6 +21,10 @@ Owner's standing preferences for every video made here (keep them unless the own
 - **Brand / call to action:** @yours3dindia · "Comment below to get a DM" (no keyword) · free preview on WhatsApp
   +91 91647 48401. WhatsApp replaces the website as the place to send people (owner, 12 Oct 2026): don't put
   yours3dindia.com in new videos unless the owner asks.
+- **Learning reels (owner, 30 Oct 2026: "in first second people should see we getting something to learn"):** the
+  very first frame already reads as a tutorial, with no fade-in: a "HOW TO" tag, the topic as a big title, the
+  numbered steps on screen and a "SAVE IT" bookmark; every step then gets a "STEP n OF N" bar and the tool's name.
+  Learning reels can run up to 1:10 when the information needs it (owner, 27 Oct 2026).
 - **Look:** motion graphics between shots (see `reel01/build_v3.py`: tracker, scan, counters, wipes, word-by-word
   captions), light grade + vignette on phone clips.
 - **Background:** keep the real background. No background replacement (owner, 11 Oct 2026); lighting and colour

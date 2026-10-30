@@ -24,7 +24,7 @@ and this one moves to Wednesday.
 
 | # | Script line | Shot | Length |
 |---|---|---|---|
-| 1 | "How to make a photo into a 3D figurine…" / "This figurine started as one phone photo…" | **Hook.** Phone in one hand showing the original photo full screen, figurine in the other, side by side at the same height, close to the camera. Turn the figurine slowly from a side view to the front. Screen brightness at max, tilted so the window doesn't reflect. **3 takes.** | 10 s each |
+| 1 | "How to make a photo into a 3D figurine…" / "This figurine started as one phone photo…" | **Hook.** Phone in one hand showing the original photo full screen, figurine in the other, side by side at the same height, close to the camera. Turn the figurine slowly from a side view to the front. **Phone on the left, figurine on the right, both in the middle of the frame:** the top third and the bottom quarter get the "HOW TO" title and the 4 steps. Screen brightness at max, tilted so the window doesn't reflect. **3 takes.** | 10 s each |
 | 1b | (same) | The figurine standing on the table with the phone leaning beside it, showing the photo. | 8 s |
 | 1c | "…for your desktop…" | **On a desk:** the figurine on a work desk beside a laptop or monitor, as if it lives there. A slow slide of the phone past it. | 5 s |
 | 1d | "…or gifting." | **As a gift:** your hands placing the figurine in a gift box, or handing the box to someone. | 5 s |

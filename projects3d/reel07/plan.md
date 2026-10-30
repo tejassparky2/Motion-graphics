@@ -6,9 +6,9 @@ in [brackets] come from the owner.
 
 | # | Voice | On screen |
 |---|---|---|
-| 1 | How to make a photo into a 3D figurine, for your desktop or gifting. | Hook shot (photo next to the figurine), quick cuts to the figurine on a desk and in a gift box. Text: "PHOTO → 3D FIGURINE" |
+| 1 | How to make a photo into a 3D figurine, for your desktop or gifting. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** the hook shot (phone photo left, figurine right) with a "HOW TO" tag, "PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Bambu Studio · Print + finish) and a "SAVE IT" bookmark. On "desktop" and "gifting", quick cuts to the desk and gift-box shots, title still on. No subtitle on this line (the title is the subtitle) |
 | 2 | This figurine started as one phone photo. Here's exactly how we make it, in four steps. | Photo next to the figurine, slow turn |
-| 3 | Step one. We upload the photo to ChatGPT, and ask for a cute, cartoon-style 3D design. | ChatGPT screen recording |
+| 3 | Step one. We upload the photo to ChatGPT, and ask for a cute, cartoon-style 3D design. | ChatGPT screen recording. From here on a "STEP n OF 4" bar at the top and the tool's name in a gold tag; zooms follow the cursor to each click |
 | 4 | Same face. Same outfit. Same pose. Just cuter. | Photo vs design split |
 | 5 | Step two. We give that design to [Tripo] 3D, and in [a few minutes], it builds a full 3D model. | Tripo screen, model spinning |
 | 6 | The colours aren't perfect yet. So, step three. In Bambu Studio, we paint the parts it missed: eyes, hair, and outfit details. | Colour painting, sped up |
@@ -18,5 +18,7 @@ in [brackets] come from the owner.
 | 10 | Want the full step-by-step guide? Comment GUIDE. | "COMMENT GUIDE" card |
 | 11 | Or skip the work. Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
 | 12 | Would you try making one yourself? Tell me below. | Figurine |
+
+Mock-up of frame 1 and a step frame (reel 04 stills standing in): sent to the owner 30 Oct 2026.
 
 Voice spellings: "Chat G P T" for ChatGPT; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
