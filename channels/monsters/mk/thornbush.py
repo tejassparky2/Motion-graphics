@@ -1,14 +1,17 @@
-"""The butcher bird's thorn bush (Episode 1 v2, S22-S24): a wiry thorn bush beside the meadow puddle, about 6 creature
-units (1.2 m) tall, its thorns hung with the bird's larder: tiny empty snail shells and beetle shells skewered on the
-thorns (shells only, nothing gory). Near the top, one big thorn is empty and shrimp-sized.
+"""The butcher bird's thorn bush (Episode 1 v2, S22-S24): a leafless, wiry thorn bush beside the meadow puddle, as tall as Kai or
+taller (default 9.6 creature units, ~1.9 m), its thorns hung with the bird's larder: tiny empty snail shells and beetle shells skewered on the
+thorns (shells only, nothing gory), at shrimp scale (the shrimp is 2 units). Near the top, one big thorn is empty and
+shrimp-sized (~2 units long).
 
 Painted background look (paintbg): no outlines, three painted bands; the shells are the focal props and get thin
 coloured lines.
 
-    h = build(loc=BUSH_AT)  ->  dict(root, perch=(x, y, z), empty_thorn=(base, tip), shells=[objs], shell_spots=[...])
+    h = build(loc=BUSH_AT, height=9.6)  ->  dict(root, perch=(x, y, z), empty_thorn=(base, tip), shells=[objs], shell_spots=[...])
     perch       : the top of the leader, where the bird lands (feet at this point)
     empty_thorn : world base and tip of the big empty thorn (for the insert)
-The bush is built facing -Y (the meadow cameras look along +Y), at BUSH_AT beside the puddle unless told otherwise.
+The bush is built facing -Y (the meadow cameras look along +Y). BUSH_AT stands it beside the "after" puddle at
+(-1.3, -0.4), on the green grass in front of the scorched ground (so the bird's giant shadow reads on it), left of
+where the puff-shrimp drinks in S24 (xprl.SHRIMP_AT).
 """
 import math
 import random
@@ -20,10 +23,10 @@ from mathutils import Vector
 from . import look, paintbg
 from .tuftwing import _catmull, _line
 
-BUSH_AT = (-2.5, -0.5, 0.0)            # left of the puddle (centre (0.1, -1.25)); the puff-shrimp drinks on its right
+BUSH_AT = (-4.8, -1.6, 0.0)
 
-PERCH_CLEAR = (0.08, 0.0, 7.1)        # (bush space) where the perched bird's body sits: no thorns through it
-# The leader runs up to the perch; branches leave it at these heights (height, azimuth, length, rise).
+# The design is drawn 6 units tall and stretched to `height` (stems and spacing grow; thorns and shells keep their
+# size). The leader runs up to the perch; branches leave it at these heights (height, azimuth, length, rise).
 LEADER = [(0, 0, 0), (0.06, 0.0, 1.0), (0.14, 0.05, 2.0), (0.06, 0.0, 3.2), (-0.08, -0.04, 4.4), (0.0, 0.0, 5.4),
           (0.08, 0.0, 6.0)]
 BRANCHES = [(0.6, 2.4, 1.5, 0.6), (0.9, -0.3, 1.7, 0.9), (1.3, 1.6, 1.4, 0.8), (1.6, -1.9, 1.8, 1.0),
@@ -119,13 +122,16 @@ def _beetle(name, center, rot, size, mat, seam, gloss):
     return o
 
 
-def build(loc=BUSH_AT, seed=8):
+def build(loc=BUSH_AT, height=9.6, seed=8, bird_scale=1.3):
+    """bird_scale: the size of the bird that perches on top (its body is kept clear of thorns)."""
     rnd = random.Random(seed)
+    k = height / 6.0
+    leader = [(x * k, y * k, z * k) for x, y, z in LEADER]
+    perch_clear = np.array((leader[-1][0], leader[-1][1], leader[-1][2] + 0.75 * bird_scale))
     hx = look.hexc
     bark = paintbg.paint3("thorn_bark", hx("#3a2a2c"), hx("#5a4038"), hx("#7c5d4c"), noise=0.12, scale=6.0)
     thorn_m = paintbg.paint3("thorn", hx("#8a6a52"), hx("#c4a27e"), hx("#ecd6b2"), noise=0.05)
     bone = paintbg.paint3("thorn_big", hx("#6e5a4c"), hx("#b39a80"), hx("#efe2c8"), noise=0.04)
-    leaf = paintbg.paint3("thorn_leaf", *paintbg.greens(2), noise=0.12)
     shell_ms = [look.toon("shell_cream", hx("#f3dcae")), look.toon("shell_peach", hx("#eeb48e")),
                 look.toon("shell_lemon", hx("#f6e27a"))]
     beetle_ms = [look.toon("beetle_green", hx("#2f9e6e"), gloss=True), look.toon("beetle_blue", hx("#3d63c8"),
@@ -135,30 +141,18 @@ def build(loc=BUSH_AT, seed=8):
 
     root = bpy.data.objects.new("thornbush", None)
     bpy.context.scene.collection.objects.link(root)
-    parts = [_tube("bush_leader", LEADER, 0.2, 0.05, bark)]
-    stems = [(_catmull(np.asarray(LEADER, float), 60), 0.2, 0.05)]
+    parts = [_tube("bush_leader", leader, 0.2 * k ** 0.7, 0.05, bark)]
+    stems = [(_catmull(np.asarray(leader, float), int(60 * k)), 0.2 * k ** 0.7, 0.05)]
     for i, (h, az, ln, rise) in enumerate(BRANCHES):
-        k = min(range(len(LEADER)), key=lambda j: abs(LEADER[j][2] - h))
-        p0 = np.array((LEADER[k][0], LEADER[k][1], h))
+        h, ln, rise = h * k, ln * k, rise * k
+        j = min(range(len(leader)), key=lambda j: abs(leader[j][2] - h))
+        p0 = np.array((leader[j][0], leader[j][1], h))
         out = np.array((math.cos(az), math.sin(az), 0.0))
         pts = [p0, p0 + out * ln * 0.35 + (0, 0, rise * 0.3), p0 + out * ln * 0.7 + (0, 0, rise * 0.7),
                p0 + out * ln + (rnd.uniform(-0.1, 0.1), rnd.uniform(-0.1, 0.1), rise)]
-        r0 = 0.09 - 0.007 * i
+        r0 = (0.09 - 0.006 * i) * k ** 0.7
         parts.append(_tube(f"bush_branch{i}", [tuple(p) for p in pts], r0, 0.02, bark))
-        stems.append((_catmull(np.asarray(pts, float), 30), r0, 0.02))
-        tip = pts[-1]
-        if h > 3.0:                                            # leafless up top: the bare thorns hold the perch
-            continue
-        for j in range(2):                                     # a few small leaves low down
-            bpy.ops.mesh.primitive_uv_sphere_add(segments=12, ring_count=6, location=(
-                tip[0] + rnd.uniform(-0.15, 0.15), tip[1] + rnd.uniform(-0.15, 0.15), tip[2] + rnd.uniform(-0.05, 0.1)))
-            lf = bpy.context.object
-            s = rnd.uniform(0.1, 0.15)
-            lf.scale = (s, s * 0.8, s * 0.55)
-            lf.data.materials.append(leaf)
-            for pg in lf.data.polygons:
-                pg.use_smooth = True
-            parts.append(lf)
+        stems.append((_catmull(np.asarray(pts, float), int(30 * k)), r0, 0.02))
     # thorns all along every stem, alternating sides, pointing out and a little up
     thorns = []
     for si, (P, r0, r1) in enumerate(stems):
@@ -176,9 +170,9 @@ def build(loc=BUSH_AT, seed=8):
             d /= np.linalg.norm(d)
             r = r0 + (r1 - r0) * i / (n - 1)
             base = P[i] + d * r * 0.6
-            if np.linalg.norm(base + d * 0.5 - PERCH_CLEAR) < 1.35:        # keep the bird's seat clear
+            if np.linalg.norm(base + d * 0.5 - perch_clear) < 0.95 * bird_scale:        # keep the bird's seat clear
                 continue
-            larder = 1.0 < base[2] < 3.8 and d[1] < -0.2               # long thorns for the shells to hang on
+            larder = 1.0 < base[2] < 4.6 and d[1] < -0.2               # long thorns for the shells to hang on
             ln = rnd.uniform(0.6, 0.75) if larder else rnd.uniform(0.32, 0.52)
             o = _thorn(f"thorn{si}_{i}", base, d, ln, 0.045, thorn_m)
             parts.append(o)
@@ -186,9 +180,9 @@ def build(loc=BUSH_AT, seed=8):
     # the larder: shells skewered on thorns at the shrimp's height and a little above, each pierced through so the
     # thorn's tip shows beyond it
     shells, spots = [], []
-    cands = [t for t in thorns if 1.0 < t[0][2] < 3.8 and t[1][1] < -0.2]       # pointing toward the camera side
+    cands = [t for t in thorns if 1.0 < t[0][2] < 4.6 and t[1][1] < -0.2]       # pointing toward the camera side
     rnd.shuffle(cands)
-    for i, (base, d, ln) in enumerate(cands[:10]):
+    for i, (base, d, ln) in enumerate(cands[:12]):
         c = tuple(base + d * ln * 0.5)
         if i % 3 == 2:                                         # beetles show their domed backs to the camera
             rot = (math.radians(rnd.uniform(70, 110)), rnd.uniform(-0.5, 0.5), rnd.uniform(-0.6, 0.6))
@@ -200,15 +194,16 @@ def build(loc=BUSH_AT, seed=8):
         shells.append(o)
         spots.append(c)
     # the big empty thorn near the top, jutting out to the left into clear air: shrimp-sized, and nothing on it yet
-    big_base = np.array((0.02, -0.08, 5.15))
+    BIG = 2.0
+    big_base = np.array((0.02 * k, -0.08 * k, 5.15 * k))
     big_dir = np.array((-0.9, -0.35, 0.32))
     big_dir /= np.linalg.norm(big_dir)
-    big = _thorn("thorn_empty", tuple(big_base), big_dir, 1.15, 0.1, bone)
+    big = _thorn("thorn_empty", tuple(big_base), big_dir, BIG, 0.17, bone)
     parts.append(big)
     for o in parts + shells:
         o.parent = root
     root.location = loc
     off = np.asarray(loc, float)
-    return dict(root=root, perch=tuple(np.asarray(LEADER[-1]) + off), shells=shells,
+    return dict(root=root, perch=tuple(np.asarray(leader[-1]) + off), shells=shells,
                 shell_spots=[tuple(np.asarray(s) + off) for s in spots],
-                empty_thorn=(tuple(big_base + off), tuple(big_base + big_dir * 1.15 + off)))
+                empty_thorn=(tuple(big_base + off), tuple(big_base + big_dir * BIG + off)))

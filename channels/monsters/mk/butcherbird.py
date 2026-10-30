@@ -1,4 +1,15 @@
-"""The butcher bird (Episode 1 v2, S23; Episode 2's threat): a small, round, fluffy shrike of our own design. Shrikes
+"""The butcher bird's moves (Episode 1 v2, S23-S24; Episode 2's threat), and a shrike-dressed variant of the bird.
+
+In the episode the butcher bird IS the tuftwing (mk/tuftwing.py, the small fluffy bird whose shadow is far too big).
+land(), stare(), dive() and idle_perch() work on any rig with the tuftwing's handles, so they drive it directly:
+
+    rig = tuftwing.build((x, y, 0))                    # its root (and its giant shadow) on the ground
+    rig["root"].scale = (s, s, s)                      # optional
+    land(rig, f, drop=(0.5, 1.6, 2.8), rest=(0, 0, perch_z / s))   # perch on top of something perch_z high
+    stare(rig, f + 12, down=0.5)
+    dive(rig, f0, f1, target=(dx, dy, dz))             # plunge at something (rig units, relative to the root)
+
+build() below is the alternative look: a small, round, fluffy shrike of our own design. Shrikes
 really do impale their food on thorns to store it (the "butcher bird"). It is the tuftwing's body (mk/tuftwing.py)
 re-dressed: a pale blue-grey ball, a black "bandit" mask through big black eyes (amber crescent, two highlights), a
 white throat and belly with a scalloped edge, a little hooked beak, dark wings with a white patch, a small crest and
@@ -181,14 +192,15 @@ def objects(rig):
     return [rig[k] for k in ("lift", "body", "head", "crest", "tail")] + rig["eyes"] + rig["wings"]
 
 
-def land(rig, f, drop=(0.0, 0.6, 3.0), frames=18):
-    """Flap down from `drop` (in rig units, above and behind the perch) and touch down at frame f: wings beating on
-    2s on the way down, a squash on touchdown, wings folding, a tail flick. Then it holds still."""
+def land(rig, f, drop=(0.0, 0.6, 3.0), frames=18, rest=(0.0, 0.0, 0.0)):
+    """Flap down from `drop` (rig units, above and behind the perch) onto `rest` (the perch, as the lift's location in
+    rig units) and touch down at frame f: wings beating on 2s on the way down, a squash on touchdown, wings folding,
+    a tail flick. Then it holds still."""
     lift, body, tail = rig["lift"], rig["body"], rig["tail"]
     f0 = f - frames
     for t in range(frames + 1):                               # ease out: fast at first, slowing to the perch
         k = 1 - (1 - t / frames) ** 2
-        anim.key(lift, "location", f0 + t, tuple(d * (1 - k) for d in drop), "LINEAR")
+        anim.key(lift, "location", f0 + t, tuple(r + d * (1 - k) for r, d in zip(rest, drop)), "LINEAR")
     for sx, w in zip((-1, 1), rig["wings"]):
         t, up = f0, True
         while t < f + 2:
@@ -226,6 +238,26 @@ def stare(rig, f, down=0.38, turn=0.0, hold=None):
     anim.key(rig["crest"], "rotation_euler", f + 6, (-0.35, 0, 0))   # raised
     if hold:
         anim.key(head, "rotation_euler", f + hold, (down, 0, turn))
+
+
+def dive(rig, f0, f1, target, start=None):
+    """The dive pose and plunge: from `start` (the lift's location, rig units; default where it is) to `target` over
+    f0..f1, accelerating. Body stretched, head pitched down at the prey, wings swept back half-open, tail up. Key the
+    pose on 2s (action) with anim.on_twos(objects(rig), step=2)."""
+    lift = rig["lift"]
+    start = tuple(lift.location) if start is None else start
+    n = f1 - f0
+    for t in range(n + 1):                                    # ease in: slow off the perch, fast at the end
+        k = (t / n) ** 2
+        anim.key(lift, "location", f0 + t, tuple(a + (b - a) * k for a, b in zip(start, target)), "LINEAR")
+    anim.squash(rig["body"], f0 - 4, -0.12)                   # a crouch before it goes
+    anim.squash(rig["body"], f0, 0.25, "LINEAR")              # stretched like a dart
+    anim.key(rig["head"], "rotation_euler", f0, (0.55, 0, 0))
+    for sx, w in zip((-1, 1), rig["wings"]):
+        anim.key(w, "rotation_euler", f0 - 4, (0, -sx * 1.3, 0))   # spread, then swept back for the plunge
+        anim.key(w, "rotation_euler", f0 + 2, (0, -sx * 0.5, 0))
+    anim.key(rig["tail"], "rotation_euler", f0, (0.45, 0, 0))
+    anim.key(rig["crest"], "rotation_euler", f0, (-0.5, 0, 0))   # flattened by the wind
 
 
 def idle_perch(rig, f0, f1, period=36, seed=3):
