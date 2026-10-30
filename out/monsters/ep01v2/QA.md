@@ -15,6 +15,10 @@ The checks:
 **v8 check (coordinator, 30 Oct):** until `mk/sdf.py` 3b0fc70, every SDF-built mesh faced inward, so SDF bodies
 had no inverted-hull outline and inverted toon light. An SDF creature without its coloured line is a FIX.
 
+**v8b check (coordinator, 30 Oct):** until `mk/puffshrimp.py` 1d22a94, the claw hinge and lid pivots sat at twice
+their offset. In every puff-shrimp shot the snapping finger must stay attached to the claw and the lids must close
+over the eyes. A shrimp shot rendered before 1d22a94 (or, for outlines, before 3b0fc70) is a FIX.
+
 **Verdicts:** PASS (ready for the cut), FIX (a concrete change, sent to the builder), or NOTE (weak but acceptable).
 Most serious first within each shot. Updated as shots land.
 
