@@ -161,3 +161,29 @@ def shake(cam, f, frames=10, amp=0.12, seed=5):
         d = amp * (1 - i / frames) ** 2
         key(cam, "location", f + i, (base.x + rnd.uniform(-d, d), base.y, base.z + rnd.uniform(-d, d)), "LINEAR")
     key(cam, "location", f + frames, base)
+
+
+def all_fcurves(action):
+    out = []
+    try:
+        out += list(action.fcurves)
+    except Exception:
+        pass
+    for layer in getattr(action, "layers", []):
+        for strip in layer.strips:
+            for bag in getattr(strip, "channelbags", []):
+                out += list(bag.fcurves)
+    return out
+
+
+def on_twos(objects, step=2):
+    """TV-anime timing: characters hold each pose for `step` frames (a Stepped modifier on every F-curve); the camera
+    and VFX stay on ones."""
+    for o in objects:
+        ad = o.animation_data
+        if not (ad and ad.action):
+            continue
+        for fc in all_fcurves(ad.action):
+            if not any(m.type == "STEPPED" for m in fc.modifiers):
+                m = fc.modifiers.new("STEPPED")
+                m.frame_step = step

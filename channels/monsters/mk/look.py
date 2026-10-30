@@ -5,6 +5,9 @@ import math
 import bpy
 
 OUTLINE_RGB = "#2a1f2e"
+STYLE = "anime"        # "anime": hard two-tone cel (TV anime look); "soft": three soft bands + rim (toy look)
+LINE_SCALE = 0.7       # anime lines are thin
+SHADOW_TINT = (0.78, 0.74, 0.93)   # anime shadows are the base colour, darker and a little cooler
 _outline = None
 
 
@@ -16,9 +19,12 @@ def hexc(h, a=1.0):
 
 
 def toon(name, base, shade=0.62, rim=0.35, gloss=False):
-    """Three soft bands (shadow / mid / light) + a rim; `gloss` adds a hard specular dot (eyes, wet claws)."""
+    """Cel material. STYLE "anime": one flat base colour and one hard, cool shadow tone. STYLE "soft": three soft bands
+    (shadow / mid / light) + a rim. `gloss` adds a hard specular dot (eyes, wet claws)."""
     if name in bpy.data.materials:
         return bpy.data.materials[name]
+    if STYLE == "anime":
+        return _anime(name, base, gloss)
     m = bpy.data.materials.new(name)
     m.use_nodes = True
     nt = m.node_tree
@@ -75,6 +81,85 @@ def toon(name, base, shade=0.62, rim=0.35, gloss=False):
     return m
 
 
+def _anime(name, base, gloss=False, threshold=0.45, tint=None):
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    L = nt.links.new
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    dif = nt.nodes.new("ShaderNodeBsdfDiffuse")
+    s2r = nt.nodes.new("ShaderNodeShaderToRGB")
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    cr = ramp.color_ramp
+    cr.interpolation = "CONSTANT"
+    t = tint or SHADOW_TINT
+    cr.elements[0].position, cr.elements[0].color = 0.0, (*t, 1)
+    cr.elements[1].position, cr.elements[1].color = threshold, (1, 1, 1, 1)
+    mul = nt.nodes.new("ShaderNodeMix")
+    mul.data_type, mul.blend_type = "RGBA", "MULTIPLY"
+    mul.inputs["Factor"].default_value = 1.0
+    mul.inputs[7].default_value = base
+    em = nt.nodes.new("ShaderNodeEmission")
+    L(dif.outputs[0], s2r.inputs[0])
+    L(s2r.outputs[0], ramp.inputs[0])
+    L(ramp.outputs[0], mul.inputs[6])
+    col = mul.outputs[2]
+    if gloss:
+        gl = nt.nodes.new("ShaderNodeBsdfGlossy")
+        gl.inputs["Roughness"].default_value = 0.12
+        s2 = nt.nodes.new("ShaderNodeShaderToRGB")
+        r2 = nt.nodes.new("ShaderNodeValToRGB")
+        r2.color_ramp.interpolation = "CONSTANT"
+        r2.color_ramp.elements[1].position = 0.6
+        a2 = nt.nodes.new("ShaderNodeMix")
+        a2.data_type, a2.blend_type = "RGBA", "ADD"
+        a2.inputs["Factor"].default_value = 1.0
+        L(gl.outputs[0], s2.inputs[0])
+        L(s2.outputs[0], r2.inputs[0])
+        L(col, a2.inputs[6])
+        L(r2.outputs[0], a2.inputs[7])
+        col = a2.outputs[2]
+    L(col, em.inputs[0])
+    L(em.outputs[0], out.inputs[0])
+    return m
+
+
+def paint(name, base, top=None, noise=0.08, scale=6.0):
+    """Painted-background material (no lines, soft light): the base colour lifts toward `top` on lit, upward faces and
+    is broken up by a soft noise, like a TV anime background painting."""
+    if name in bpy.data.materials:
+        return bpy.data.materials[name]
+    top = top or tuple(min(1.0, c * 1.25 + 0.04) for c in base[:3]) + (1,)
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    L = nt.links.new
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    dif = nt.nodes.new("ShaderNodeBsdfDiffuse")
+    s2r = nt.nodes.new("ShaderNodeShaderToRGB")
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    cr = ramp.color_ramp
+    cr.interpolation = "EASE"
+    cr.elements[0].position, cr.elements[0].color = 0.25, (*[c * 0.8 for c in base[:3]], 1)
+    cr.elements[1].position, cr.elements[1].color = 0.75, top
+    nz = nt.nodes.new("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = scale
+    nz.inputs["Detail"].default_value = 3.0
+    mixn = nt.nodes.new("ShaderNodeMix")
+    mixn.data_type, mixn.blend_type = "RGBA", "OVERLAY"
+    mixn.inputs["Factor"].default_value = noise
+    em = nt.nodes.new("ShaderNodeEmission")
+    L(dif.outputs[0], s2r.inputs[0])
+    L(s2r.outputs[0], ramp.inputs[0])
+    L(ramp.outputs[0], mixn.inputs[6])
+    L(nz.outputs["Color"], mixn.inputs[7])
+    L(mixn.outputs[2], em.inputs[0])
+    L(em.outputs[0], out.inputs[0])
+    return m
+
+
 def flat(name, rgba, strength=1.0):
     """Unlit colour (glows, highlights, VFX)."""
     if name in bpy.data.materials:
@@ -127,6 +212,7 @@ def outline(o, width=0.025):
     """Inverted-hull outline: a flipped, slightly fattened shell that only shows its back faces."""
     if not width:
         return o
+    width *= LINE_SCALE
     if outline_mat().name not in [m.name for m in o.data.materials if m]:
         o.data.materials.append(outline_mat())
     s = o.modifiers.new("outline", "SOLIDIFY")
@@ -176,8 +262,9 @@ def blob_shadow(name, loc, size, parent=None):
     return sh
 
 
-def world(sky="#8fd3ff", fill="#bfe6ff", fill_strength=0.45):
-    """The camera sees a bright sky; the lighting gets a dimmer fill so cel shadows read."""
+def world(sky="#5fb4f0", horizon="#d6f0ff", fill="#bfe6ff", fill_strength=0.45):
+    """The camera sees a painted gradient sky (deep blue overhead, pale at the horizon); the lighting gets a dimmer fill
+    so cel shadows read."""
     sc = bpy.context.scene
     w = bpy.data.worlds.new("world")
     sc.world = w
@@ -187,7 +274,15 @@ def world(sky="#8fd3ff", fill="#bfe6ff", fill_strength=0.45):
     bg.inputs[0].default_value = hexc(fill)
     bg.inputs[1].default_value = fill_strength
     sk = nt.nodes.new("ShaderNodeBackground")
-    sk.inputs[0].default_value = hexc(sky)
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    gr = nt.nodes.new("ShaderNodeValToRGB")
+    gr.color_ramp.interpolation = "EASE"
+    gr.color_ramp.elements[0].position, gr.color_ramp.elements[0].color = 0.0, hexc(horizon)
+    gr.color_ramp.elements[1].position, gr.color_ramp.elements[1].color = 0.45, hexc(sky)
+    nt.links.new(tc.outputs["Generated"], sep.inputs[0])
+    nt.links.new(sep.outputs["Z"], gr.inputs[0])
+    nt.links.new(gr.outputs[0], sk.inputs[0])
     lp = nt.nodes.new("ShaderNodeLightPath")
     mix = nt.nodes.new("ShaderNodeMixShader")
     nt.links.new(lp.outputs["Is Camera Ray"], mix.inputs[0])

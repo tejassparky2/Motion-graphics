@@ -1,0 +1,70 @@
+# Helper brief: monster series ("Cute Things Kill Here"), Episode 1 assets
+
+You are one of several cloud sessions building pieces of a Pokémon-ANIME-style 3D series in Blender, coordinated by
+session_0153qDV4AufFgT2PhEBEfS8n ("Interactive 3D horror stories"). Reply to it with send_message when you finish or
+get blocked.
+
+## Setup (once)
+1. Get the repo: tejassparky2/Motion-graphics, branch `ccr-56282fe5-evehq4-horror`. If it isn't in your session, call
+   add_repo(owner="tejassparky2", repo="Motion-graphics", access="push") and clone it to /home/user/Motion-graphics.
+2. Blender 4.5.15 LTS (no GUI, CPU only):
+   ```
+   mkdir -p /home/user/tools && cd /home/user/tools
+   curl -sSL -o b.tar.xz https://download.blender.org/release/Blender4.5/blender-4.5.15-linux-x64.tar.xz && tar -xf b.tar.xz && rm b.tar.xz
+   B=/home/user/tools/blender-4.5.15-linux-x64; $B/4.5/python/bin/python3.11 -m ensurepip; $B/4.5/python/bin/python3.11 -m pip install scikit-image scipy
+   ```
+   EEVEE renders headless through Mesa llvmpipe/EGL (needs libegl1 + libegl-mesa0; `apt-get install -y libegl1 libegl-mesa0` if missing).
+   Ignore "EGL_BAD_MATCH" warnings.
+3. Read, in this order:
+   - `channels/monsters/NOTES.md`
+   - `channels/monsters/mk/look.py` (the anime look)
+   - `channels/monsters/mk/sdf.py` (sculpting smooth bodies)
+   - `channels/monsters/mk/puffshrimp.py` (an example creature rig)
+   - `channels/monsters/mk/anim.py` (keyframes, on-2s timing, VFX)
+   - `channels/monsters/mk/sets.py`
+   - `channels/monsters/test_puff.py` (an example test)
+   - Look at `out/monsters/style_frame_toon_v1.png`.
+
+## The style: Pokémon anime (TV cel look), studied from Pokémon Horizons episodes 1385-1386 (Sept 2026)
+- **Characters and creatures:**
+  - Flat base colour plus ONE hard, slightly cool shadow tone: `look.toon(...)` with `look.STYLE = "anime"`.
+  - Thin dark outlines: `look.outline(obj, width)`.
+  - Big glossy eyes with two white highlights.
+- **Backgrounds and set pieces:**
+  - NO outlines.
+  - Painted, soft light with gentle noise: `look.paint(...)`.
+  - Gradient sky with big cumulus clouds: `look.world()`.
+  - Distant things paler and bluer.
+- **Timing:** characters animate on 2s (`anim.on_twos(objs)`); the camera stays smooth.
+- **Effects:** 4-point sparkle stars, glows, speed lines, impact frames (2D overlays are a separate job).
+- **Format:** vertical 720x1280 (9:16), 24 fps, EEVEE, 16 samples (`look.render_setup()`).
+
+## Hard rules
+- **Original designs only.** Nothing that looks like a Pokémon, Kirby, Digimon or any franchise character: no
+  red-and-white ball, no Pokédex-style UI, no pink round puffballs. Cute round bodies; each creature has ONE odd,
+  creepy "tell".
+- **Reproducible code.** Everything is built in Python (bpy + numpy), deterministic with seeded RNG. Every shot must
+  render identically on every session.
+- **Assets:** if you use downloaded assets, only CC0 (Quaternius, Kenney, Poly Haven), and note the source in a
+  docstring.
+- **Files:** only add your own files:
+  - `channels/monsters/mk/<yourmodule>.py`
+  - `channels/monsters/test_<yourmodule>.py`
+  - `out/monsters/tests/<yourmodule>_*.png` (PNG stills at 720x1280; keep each under ~2 MB, no frame sequences in
+    git)
+- **Don't edit shared files** (look.py, sdf.py, anim.py, sets.py, puffshrimp.py). If you need a change there, put it
+  in your module or ask the coordinator.
+- **Check your own output.** LOOK at every render before reporting (silhouette readable at phone size, nothing cut
+  off, no black frames). Blender 4.4+: hand-made F-curves need `anim_data.action_slot = action.slots[0]`.
+- **Git:**
+  - `git pull --no-rebase origin ccr-56282fe5-evehq4-horror` before each push.
+  - Push with `git push -u origin ccr-56282fe5-evehq4-horror`.
+  - If refused: `git -c push.negotiate=false push --no-thin -u origin ccr-56282fe5-evehq4-horror`.
+  - Retry on network errors (2/4/8/16 s).
+  - Commit messages end with your own session's attribution lines.
+- **Long renders:** run them as tracked background tasks in chunks under 2 h. The container sleeps when idle.
+
+## Report back (send_message to session_0153qDV4AufFgT2PhEBEfS8n)
+- The files you added and the commit hash.
+- The render time per frame.
+- What still looks weak.
