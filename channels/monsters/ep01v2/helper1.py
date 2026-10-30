@@ -272,12 +272,12 @@ def s03b():
     # from the tank on his right only, so his left cheek falls into the cool shadow tone
     _face_light("s03b_tank_on_face", tuple(Vector((head.x + 0.35, head.y + 0.2, head.z - 0.02))), tuple(head), 0.9,
                 size=0.12)
-    _tint_hero(0.1, cool=(0.6, 0.88, 1.0))            # a close-up: the tank's cyan fills the frame
+    _tint_hero(0.1, cool=(0.54, 0.79, 0.9))           # a close-up: lit skin ~0.8 with the cyan in it
     hero.line_width(rig, 0.0015)                     # face close-up: ~2-3 px lines
     hero.face(rig, "neutral", 1)
     hero.face(rig, "look_right", 1, 0.4)
-    hero.face(rig, "relaxed", 19, 0.6)               # the fond smile, mid-line ("...and the pistol shrimp")
-    hero.face(rig, "happy", 22, 0.75)
+    hero.face(rig, "relaxed", 19, 0.7)               # the fond smile in two steps (SG2): the eyes soften...
+    hero.face(rig, "happy", 22, 1.0)                 # ...then the smile ("...and the pistol shrimp")
     return dict(frames=n, step=3, subject=[rig["arm"]])
 
 
