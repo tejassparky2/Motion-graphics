@@ -60,6 +60,31 @@ def skin_near_eyes(frame_png, eyes, er):
     return (r / 255, g / 255, b / 255, 1.0)
 
 
+def plate_eyes(frame_png, eyes, er):
+    """Kai's eyes where the render actually drew them: the centre of the pale sclera pixels near each anchor eye
+    (the bone-based anchors can be ~10 px off at close range), each searched on its own side of the midpoint.
+    Keeps the anchor for an eye with too few sclera pixels or one that would move more than er."""
+    import numpy as np
+    im = np.asarray(Image.open(frame_png).convert("RGB")).astype(int)
+    pale = (im[..., 2] > im[..., 0] + 4) & (im.sum(axis=2) > 540)
+    (lx, ly), (rx, ry) = eyes
+    mx, my = (lx + rx) / 2, (ly + ry) / 2
+    out = []
+    for ex, ey in eyes:
+        r = int(2.2 * er)
+        x0, y0 = max(0, int(ex) - r), max(0, int(ey) - r)
+        ys, xs = np.nonzero(pale[y0:int(ey) + r, x0:int(ex) + r])
+        xs, ys = xs + x0, ys + y0
+        own = (xs - mx) * (ex - mx) + (ys - my) * (ey - my) > 0     # this eye's half of the face
+        xs, ys = xs[own], ys[own]
+        if len(xs) < 40:
+            out.append((ex, ey))
+            continue
+        px, py = (xs.min() + xs.max()) / 2, (ys.min() + ys.max()) / 2
+        out.append((px, py) if math.hypot(px - ex, py - ey) <= er else (ex, ey))
+    return tuple(out)
+
+
 def at(a, t, name):
     """Anchor `name` at shot time t (frame-accurate, held past the last frame)."""
     f = min(max(1, int(round(t * FPS)) + 1), max(a))
@@ -127,6 +152,30 @@ def push(cr, t, start, end, cx=W / 2, cy=H / 2, amount=0.08):
     cr.restore()
 
 
+def snap_zoom(cr, t, start, cx, cy, amount=0.18, frames=3):
+    """An anime snap-zoom into the eyes: the picture scales 1 -> 1 + amount about (cx, cy) over `frames` frames
+    from `start` (on 1s), then holds; edges are filled by stretching the border pixels, as fx2d_anime.shake does."""
+    if t < start - 1e-6:
+        return
+    k = 1 + amount * min(1.0, (int(round((t - start) * FPS)) + 1) / frames)
+    surf = cr.get_target()
+    surf.flush()
+    copy = cairo.ImageSurface(cairo.FORMAT_ARGB32, surf.get_width(), surf.get_height())
+    c = cairo.Context(copy)
+    c.set_source_surface(surf, 0, 0)
+    c.paint()
+    pat = cairo.SurfacePattern(copy)
+    pat.set_extend(cairo.EXTEND_PAD)
+    pat.set_filter(cairo.FILTER_GOOD)
+    pat.set_matrix(cairo.Matrix(1 / k, 0, 0, 1 / k, cx * (1 - 1 / k), cy * (1 - 1 / k)))
+    cr.save()
+    cr.identity_matrix()
+    cr.set_operator(cairo.OPERATOR_SOURCE)
+    cr.set_source(pat)
+    cr.paint()
+    cr.restore()
+
+
 def puff(cr, t, start, x, y, size=1.0, seed=0):
     """A tiny, sad "pff" of dust: three small cel puffs (no text)."""
     fx2d.dust_puffs(cr, t, start, x, y, n=3, spread=int(30 * size), size=int(15 * size), dur=0.5, seed=seed)
@@ -140,7 +189,9 @@ def overlays(shot):
         a = anchors(shot)
         t0 = 0.0 if shot == "S01" else 41 / FPS                   # S16: from his terror on the wide (frame 42)
         (cx, cy), size, tilt, eyes = face_geom(a, t0)
-        er = size / 2.6 * 0.26
+        er = size / 2.6 * 0.26 * 1.08                             # 8% over the 3D eye, so none of it peeks out
+        if shot == "S01":                                         # on the eyes as rendered (QA: a sliver showed)
+            eyes = plate_eyes(os.path.join(BUILD, shot, "0012.png"), eyes, er)
         return [(fx2d_anime.terror_eyes, dict(start=t0, end=99, x=cx, y=cy, size=size, eyes=eyes, er=er, tilt=tilt)),
                 (fx2d_anime.sweat_drop, dict(start=t0 - 0.2, end=99, x=cx, y=cy, size=size, tilt=tilt))]
     if shot == "S18":                                             # the realisation lands on "wet" (frame 30)
@@ -148,7 +199,8 @@ def overlays(shot):
         ex, ey = at(a, 32 / FPS, "eyes")
         return [(comp.backdrop, dict(start=29 / FPS, end=99, fn=fx2d_anime.emotion_bg,
                                      args=dict(mood="realisation", cx=ex, cy=ey))),
-                (glint, dict(start=32 / FPS, x=ex + 70, y=ey - 40))]
+                (glint, dict(start=32 / FPS, x=ex + 70, y=ey - 40)),
+                (snap_zoom, dict(start=29 / FPS, cx=ex, cy=ey))]    # last, so the glint stays on the eye
     if shot == "S19":
         a = anchors("S19")
         n = max(a)
