@@ -184,6 +184,7 @@ def _camera(name, loc, target, lens, roll=0.0, dof=None, fstop=0.15):
     cam.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
     cam.rotation_euler.rotate(Euler((0, 0, roll)))
     cam.data.lens = lens
+    cam.data.clip_end = 2000
     if dof is not None:
         cam.data.dof.use_dof = True
         cam.data.dof.focus_object = dof
@@ -211,10 +212,13 @@ def _pink_grass(rig, n=46, seed=4):
             p.use_smooth = True
 
 
-def _scene(n_frames, shrimp_yaw=-15, shrimp_off=(0.8, -0.2, 0.0)):
+def _scene(n_frames, shrimp_yaw=-15, shrimp_off=(0.8, -0.2, 0.0), line=None):
     look.world()
     m = meadow.build("after")
     rig = _kai()
+    if line is not None and not rig.get("standin"):
+        from channels.monsters.mk import hero
+        hero.line_width(rig, line)                                 # thinner hero lines in close-ups
     sh = _shrimp(rig, shrimp_yaw, shrimp_off)
     meadow.smoke(m["smoke_sources"], -40, n_frames + 10, every=14, rise=3.5, size=0.9)
     sc = bpy.context.scene
@@ -258,6 +262,7 @@ def _ecu_camera(rig, name, dist=2.8, lens=60, lift=0.0, dof=True, fstop=2.0):
     x = y.cross(z)
     cam.rotation_euler = Matrix((x, y, z)).transposed().to_euler()
     cam.data.lens = lens
+    cam.data.clip_end = 2000
     if dof:
         foc = bpy.data.objects.new(f"{name}_focus", None)
         bpy.context.scene.collection.objects.link(foc)
@@ -346,7 +351,7 @@ def s16():
     """When I opened my eyes, it was on my chest. An eye close-up as his eyes open (on 3s), then a cut to S01's exact
     framing (SU9: the frame-0 picture returns), his eyes going to pin-pricks; the shrimp blinks once. Step 3."""
     n = int(round(2.8 * 24)) + HANDLE
-    m, rig, sh = _scene(n)
+    m, rig, sh = _scene(n, line=0.0025)
     cock(sh)
     ecu = _ecu_camera(rig, "cam_s16_eyes", dist=2.8, lens=60)
     wide = _s01_camera(rig, sh, "cam_s16_wide")
@@ -402,7 +407,7 @@ def s18():
     SG2), with the real background swapped for a realisation background in 2D (IM6/SU16, bgqrs_post via the subject
     pass). Step 3."""
     n = int(round(1.8 * 24)) + HANDLE
-    m, rig, sh = _scene(n)
+    m, rig, sh = _scene(n, line=0.0015)
     cock(sh)
     cam = _ecu_camera(rig, "cam_s18", dist=2.5, lens=60, lift=0.02)
     bpy.context.scene.camera = cam
@@ -450,7 +455,7 @@ def s20():
     """It tried anyway. The gag (1-2 s): wind-up, SNAP, and only a tiny puff (2D); the shrimp stares at its claw and
     tilts its head (CH14). Then a cut to Kai's deadpan face, held ~2 s (SU11), a 2D sweat drop. Action on 2s."""
     n = int(round(3.5 * 24)) + HANDLE
-    m, rig, sh = _scene(n)
+    m, rig, sh = _scene(n, line=0.002)
     root = sh["root"].location.copy()
     camA = _camera("cam_s20_shrimp", root + Vector((-1.4, -6.4, 3.0)), root + Vector((-1.15, 0.0, 1.75)), 42,
                    dof=sh["body"], fstop=0.3)
