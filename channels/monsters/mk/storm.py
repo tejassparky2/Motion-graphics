@@ -51,12 +51,14 @@ def screen_rect(cam, points, sc=None):
     """The 0..1 screen rectangle (x0, y0, x1, y1), y up, covering world-space `points`."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = sc or bpy.context.scene
+    bpy.context.view_layer.update()                       # cameras and windows just built have stale matrices
     co = [world_to_camera_view(sc, cam, Vector(p)) for p in points]
     return (min(c.x for c in co), min(c.y for c in co), max(c.x for c in co), max(c.y for c in co))
 
 
 def window_rect(cam, window):
     """The screen area a window object (its bounding box, e.g. the glass or the opening) covers."""
+    bpy.context.view_layer.update()
     return screen_rect(cam, [window.matrix_world @ Vector(c) for c in window.bound_box])
 
 

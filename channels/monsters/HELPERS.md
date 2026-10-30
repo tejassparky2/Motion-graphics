@@ -60,6 +60,23 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v5 (owner APPROVED Episode 1 v2: "build full with animation like Pokémon, apply all research, quality
+  first, use all helpers"):**
+  - **Script:** `out/monsters/story_v2.md`.
+  - **Shot list, who builds what, and the rules per shot:** `channels/monsters/EP01V2_SHOTS.md`.
+  - **Rules:** `reports/Pokémon episodes story and animation.md`. Read sections SG, IM, LC, SU, CH, TP before
+    building. Every shot must follow them, and you compare your frames against them.
+  - **No HUD and no text in the picture.** The 2D kit is used only for effects (impact frames, speed lines,
+    sparkles, emotion backgrounds, comic faces).
+  - **The hero:** `channels/monsters/mk/hero.py` (Seed-san restyled; credit in `assets/monsters/hero/CREDIT.md`). A
+    no-add-on `hero.blend` version is coming from the coordinator; until then build your sets and creatures.
+  - **The runner:** `render_shot.py` supports `step` (render only frames that change).
+  - **Deliver** finished shot mp4s plus contact sheets in `out/monsters/ep01v2/shots/`.
+- **30 Oct, v4 (owner): STOP and PAUSE.**
+  - The game HUD is dropped: a pure anime, with no health bar, status bar, WILD tag, threat pips, menus, BOND
+    pop-up or fact cards.
+  - The story is being rewritten after a deep study of three Pokémon TV episodes (animation and story).
+  - Helpers push what works and wait for a new brief. The v3.2 shot list (`EP01_SHOTS.md`) is on hold.
 - **30 Oct, v3.2 (shot list, voice, 2D kit, subject pass, Kai's design):**
   - **Shot list:** `channels/monsters/EP01_SHOTS.md` gives every Episode 1 shot, its length, camera and overlay. Build
     your asset's motion to fit those lengths: lines over 3 s are split into two shots (e.g. the snap line 5 = 4.35 s
