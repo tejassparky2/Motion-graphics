@@ -8,6 +8,8 @@ claw on its right side. Built as a small rig of parented objects so shots can an
     shoulder  : the claw arm's pivot (rotate X to raise/lower the claw)
     hinge     : the snapping finger's pivot (rotation X: 0 = open, -0.9 = snapped shut)
     eyes      : eye objects (scale z to blink)
+    hi        : the upper eye highlights (anim.lids hides them while the lids are down)
+    lids      : upper-lid pivots, hidden at rest (scale 0); anim.lids() lowers them for a half-shut, smug look
     antennae  : antenna pivots (small rotations for wobble)
 """
 import math
@@ -68,6 +70,31 @@ def _tube(name, pts, radius, mat, line=0.012):
     return look.outline(o, line)
 
 
+def _lid(name, loc, scale, mat):
+    """An upper eyelid: the top half of a shell just bigger than the eye, in the body colour. Its cut edge gets the
+    outline's rim, which draws the dark lid line."""
+    import bmesh
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=16, radius=1.0)
+    bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < -0.02], context="VERTS")
+    for v in bm.verts:
+        v.co.x, v.co.y, v.co.z = v.co.x * scale[0], v.co.y * scale[1], v.co.z * scale[2]
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(o)
+    o.location = loc
+    o.data.materials.append(mat)
+    for p in o.data.polygons:
+        p.use_smooth = True
+    look.outline(o, 0.018)
+    md = o.modifiers["outline"]
+    md.use_rim = True                                           # the rim along the cut edge is the lid line
+    md.material_offset_rim = md.material_offset
+    return o
+
+
 def build(loc=(0, 0, 0), name="puff"):
     hx = look.hexc
     look.toon(f"{name}_aqua", hx(AQUA))
@@ -107,7 +134,7 @@ def build(loc=(0, 0, 0), name="puff"):
                                          loc[2] + 1.55 + 0.05 * math.sin(3 * a)), (0.26, 0.26, 0.2), cream, 0.016, 20)
         _parent(f, body_pivot)
     # face
-    eyes = []
+    eyes, lids, his = [], [], []
     for sx in (-1, 1):
         ex = sx * 0.36
         piv = _empty(f"{name}_eyepiv{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), body_pivot)
@@ -119,6 +146,13 @@ def build(loc=(0, 0, 0), name="puff"):
         for o in (e, cres, h1, h2):
             _parent(o, piv)
         eyes.append(piv)
+        his.append(h1)
+        lp = _empty(f"{name}_lidpiv{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), piv)
+        bpy.context.view_layer.update()
+        lid = _lid(f"{name}_lid{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), (0.233, 0.124, 0.313), aqua)
+        _parent(lid, lp)
+        lp.scale = (0.001, 0.001, 0.001)                           # hidden at rest
+        lids.append(lp)
         b = _sphere(f"{name}_blush{sx}", (loc[0] + sx * 0.62, loc[1] - 0.7, loc[2] + 0.98), (0.14, 0.04, 0.08), blush_m, 0, 16)
         _parent(b, body_pivot)
     mo = _sphere(f"{name}_mouth", (loc[0], loc[1] - 0.87, loc[2] + 0.9), (0.1, 0.03, 0.07), eye_m, 0, 16)
@@ -157,4 +191,4 @@ def build(loc=(0, 0, 0), name="puff"):
     finger.location = (finger.location.x + loc[0], finger.location.y + loc[1], finger.location.z + loc[2])
     _parent(finger, hinge)
     look.blob_shadow(f"{name}_shadow", (loc[0] - 0.2, loc[1] - 0.05, loc[2] + 0.075), (1.35, 1.1), root)
-    return dict(root=root, body=body_pivot, shoulder=shoulder, hinge=hinge, eyes=eyes, antennae=antennae)
+    return dict(root=root, body=body_pivot, shoulder=shoulder, hinge=hinge, eyes=eyes, lids=lids, hi=his, antennae=antennae)
