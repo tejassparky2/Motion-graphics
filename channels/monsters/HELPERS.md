@@ -60,6 +60,15 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v8 (outlines on every creature; the cap gap; earth outfit). Pull 3b0fc70 or later before ANY render:**
+  - `sdf.build` meshes now face outward. Until now every SDF body (puff-shrimp body and claw, pistol shrimp,
+    jelly-snail, fluffmoth parts) faced INWARD: their inverted-hull outline was hidden and their toon light was
+    inverted (the lit side came out dark). Now they get crisp coloured lines like Kai. If your module flips SDF
+    normals itself, check it still faces outward (tuftwing's check-and-flip is fine).
+  - `look.outline` uses quality normals: no long dark spikes from sliver triangles.
+  - `hero.load()` closes the ~1 cm gap between the cap's dome and visor (hair and forehead showed through at eye
+    level), and `outfit="earth"` works without a workaround.
+  - **Any shot already rendered with a creature in it must be re-rendered** so the creatures match across the cut.
 - **30 Oct, v7 (exact timing; rot_z fixed):**
   - **Exact shot lengths are in `channels/monsters/ep01v2/TIMING.md`** (and `timing.json`), measured from the voice
     takes. They replace the estimates in EP01V2_SHOTS.md. The episode is 62.48 s = 1500 frames.
