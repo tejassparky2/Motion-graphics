@@ -317,10 +317,10 @@ class Cue:
     def end(self, shot):
         return self.shot[shot]["start"] + self.shot[shot]["seconds"]
 
-    def word(self, line, word):
+    def word(self, line, word, edge="start"):
         for w in self.line[line]["words"]:
             if w["w"].strip(".,?!\"'").lower() == word.lower():
-                return w["start"]
+                return w[edge]
         raise KeyError((line, word))
 
 
@@ -344,11 +344,13 @@ def _db(x):
 
 
 def build(timing, n, v):
-    """Returns (music, sfx_l, sfx_r): music is mono, effects are stereo (the ambience decorrelated per side)."""
+    """Returns (music, fx, amb): music is mono; the one-shot effects and the ambience are stereo (the ambience
+    decorrelated per side, and ducked under the voice later so its ticks never blur a consonant)."""
     c = Cue(timing)
     total = n / SR
     music = np.zeros(n)
     fx = [np.zeros(n), np.zeros(n)]
+    ambience = [np.zeros(n), np.zeros(n)]
     v_rms = _rms(v[np.abs(v) > 0.01])
     strike = c.f("S15", STRIKE_FRAME)
 
@@ -358,7 +360,7 @@ def build(timing, n, v):
     def amb(gen, t0, t1, db, fi=0.3, fo=0.3):
         for side in (0, 1):
             x = gen(t1 - t0 + 0.1, side)
-            _span(fx[side], x / _rms(x) * v_rms * _db(db), t0, t1, fi, fo)
+            _span(ambience[side], x / _rms(x) * v_rms * _db(db), t0, t1, fi, fo)
 
     def hit(x, at, db, pan=0.0):
         x = np.asarray(x, np.float64)
@@ -373,7 +375,7 @@ def build(timing, n, v):
     hit(sfx.glitch(c.end("S02") - c.t("S02"), 0), c.t("S02"), -14)
 
     # --- the lab, quiet (SS7): rain, hum, bubbles under a low bed; it stops dead after the spark
-    lab0, spark_t = c.t("S03a"), c.word("l8", "Me") - 0.12
+    lab0, spark_t = c.t("S03a"), c.word("l8", "Me", "end") + 0.02    # the spark answers "Me." (never masks it)
     silence0 = spark_t + 0.3                                     # the power dies with the spark: rain and hum cut
     amb(lambda d, s: sfx.rain(d, s), lab0, silence0, -24, 0.4, 0.05)
     amb(lambda d, s: sfx.lab_hum(d, s), lab0, silence0, -28, 0.4, 0.05)
@@ -389,8 +391,8 @@ def build(timing, n, v):
     hit(glass_crack(), c.t("S07", 0.12), -8, 0.2)
     amb(lambda d, s: trickle(d, 30 + s), c.t("S08"), spark_t + 0.1, -22, 0.2, 0.1)
     hit(sfx.spark(), spark_t, -6)
-    i0, i1, f = int((spark_t + 0.55) * SR), int(c.t("S09") * SR), _n(0.08)
-    for tr in (music, fx[0], fx[1]):                             # dead silence through the black
+    i0, i1, f = int((spark_t + 0.4) * SR), int(c.t("S09") * SR), _n(0.08)
+    for tr in (music, *fx, *ambience):                             # dead silence through the black
         tr[i0:i0 + f] *= np.linspace(1, 0, f)
         tr[i0 + f:i1] = 0
 
@@ -435,7 +437,7 @@ def build(timing, n, v):
     hit(flutter(0.6), c.t("S23", 0.2), -14, 0.15)
     hit(sfx.whoosh(), c.t("S24") + 0.02, -10)
     music_at(sting(total - c.word("l24", "Save")), c.word("l24", "Save"), total, -14, 0.25, 0.01)
-    return music, fx
+    return music, fx, ambience
 
 
 def true_peak(x, os_=4):
@@ -506,9 +508,10 @@ def main():
     total = timing["total"]
     n = int(round(total * SR))
     v = voice_track(tl, n)
-    music, fx = build(timing, n, v)
-    duck = 1 - (1 - _db(-10)) * duck_env(v)                     # ~10 dB of sidechain duck while a word is heard
-    music *= duck
+    music, fx, ambience = build(timing, n, v)
+    env = duck_env(v)
+    music *= 1 - (1 - _db(-10)) * env                           # ~10 dB of sidechain duck while a word is heard
+    fx = [f + a * (1 - (1 - _db(-8)) * env) for f, a in zip(fx, ambience)]   # ambience ~8 dB down under words
     stems = dict(voice=np.stack([v, v], 1), music=np.stack([music, signal.lfilter([0.6, 1], [1, 0.6], music)], 1),
                  sfx=np.stack(fx, 1))
     out_n = int(round(total * OUT_SR))
@@ -544,9 +547,12 @@ def main():
 
 # ---------------------------------------------------------------- Whisper check
 
+NUMBERS = {"10": "ten"}                                         # Whisper writes some numbers as digits
+
+
 def _norm_words(s):
     s = s.lower().replace("’", "'")
-    return re.sub(r"[^a-z' ]+", " ", s).split()
+    return [NUMBERS.get(w, w) for w in re.sub(r"[^a-z0-9' ]+", " ", s).split()]
 
 
 def check(model_name="medium.en"):
