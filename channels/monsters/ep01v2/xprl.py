@@ -52,6 +52,7 @@ def _cam(name, loc, target, lens, shift_y=0.0, fstop=None, focus=None):
     c.rotation_euler = (Vector(target) - Vector(loc)).to_track_quat("-Z", "Y").to_euler()
     c.data.lens = lens
     c.data.shift_y = shift_y
+    c.data.clip_end = 2000                    # the true-scale meadow (HELPERS.md v6)
     if fstop:
         c.data.dof.use_dof = True
         c.data.dof.aperture_fstop = fstop
