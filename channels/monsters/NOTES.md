@@ -123,3 +123,17 @@ What changes:
   scratchpads; nothing from them goes into git.
 - Research notes: `research_notes/Pokémon episodes story and animation/`. Report: `reports/Pokémon episodes story and
   animation.md`.
+
+## VRoid/VRM test (owner-approved, 30 Oct 2026): WORKS headless
+- VRM Add-on for Blender v4.10.3 (MIT/GPL, saturday06/VRM-Addon-for-Blender), installed as a normal add-on:
+  `BLENDER_USER_SCRIPTS=<dir with addons/io_scene_vrm>` and `bpy.ops.preferences.addon_enable(module="io_scene_vrm")`.
+  Calling register() directly fails ("No add-on preferences").
+- Run Blender with `-y` (auto-run scripts). Without it the expression drivers don't evaluate and faces stay neutral.
+- Test model: the VRM Consortium's Seed-san sample (VRM Public License; used for the TEST ONLY, not in videos).
+  - Import: 17-34 s, a 141-bone humanoid armature.
+  - All 18 expression presets work through `armature.data.vrm_addon_extension.vrm1.expressions.preset.<name>.preview`:
+    happy, angry, sad, relaxed, surprised, neutral, aa/ih/ou/ee/oh, blink (both eyes or one), and look up/down/left/right.
+  - MToon renders in EEVEE: 32 s per frame at 360x640 after the first (shader-compile) render of 87 s.
+- Plan: the owner makes the hero in VRoid Studio (Windows laptop, free; its guidelines allow monetized videos of
+  models you make) and sends the .vrm. We pose and animate it here, with motion from Mixamo (the owner's free Adobe ID)
+  or CMU mocap (free for all uses), retargeted to the VRM humanoid bones.
