@@ -1,29 +1,35 @@
-"""Earth LAB set for Episode 1: a university wildlife-biology lab at night in a rainstorm. A desk with laptop, notebook
-and lamp; glowing aquarium shelves plus the hero tank (for the pistol shrimp, mk/pistolshrimp.py); a rain-streaked
-window; a power strip with cables on a dark tiled floor.
+"""Earth LAB set for Episode 1: a university wildlife-biology lab at night in a rainstorm. A desk with laptop, notebook,
+lamp and a slot for the pistol shrimp's tank (mk/pistolshrimp.tank(), helper 2's); glowing aquarium shelves; a
+rain-streaked window; a power strip with cables on a dark tiled floor.
 
-Painted-background look (look.paint, no outlines); thin outlines only on the props a person touches (desk edge, laptop,
-chair, power strip). Every room material runs through one shared grade ("lab_grade") that adds a little of the coloured
-light (so the tanks tint the room cyan and the lamp warm) and holds two keyable values: `level` (room brightness, for
-flicker and power-out) and `flash` (the blue lightning flash).
+Painted-background look (look.paint, no outlines); thin coloured lines only on the props a person touches (desk edge,
+laptop, chair, mug, lamp base, power strip). Every room material runs through one shared grade ("lab_grade") that adds
+a little of the coloured light (so the tanks tint the room cyan and the lamp warm) and holds two keyable values:
+`level` (room brightness, for flicker and power-out) and `flash` (the blue lightning flash).
 
     handles = lab.build()
-    handles["lightning"](frame)          # window flashes white, room flashes blue
-    handles["flicker"]([40, 43, 47])     # lights stutter off for 2 frames at each frame listed
-    handles["crack_puddle"](f0, f1)      # water runs down the hero-tank stand and reaches the power strip at f1
+    handles["place_tank"](pistolshrimp.tank())   # helper 2's tank into the desk slot (scaled), before crack_puddle
+    handles["lightning"](frame)          # the sky goes pale, a bolt shows in the window, the room flashes blue
+    handles["flicker"]([40, 43, 47])     # the ceiling light and lamp stutter off for 2 frames at each frame listed
+    handles["crack_puddle"](f0, f1)      # water leaks across the desk, pours off it and reaches the power strip at f1
     handles["spark"](frame)              # bright spark at the strip
     handles["power_out"](frame)          # every lab light goes out (the window stays lit by the storm)
+    handles["floor_pan"](f0, f1)         # S09's short pan from the pouring water to the strip
 
 Cameras: handles["cams"]["wide" | "desk" | "medium" | "window" | "floor"], framed for 720x1280 and the caption safe
 areas. "desk" is over Kai's shoulder (the lower left is left for him); "medium" is S03 (Kai's seat with the glowing
-tanks behind him); "window" is S07; "floor" is S09/S10. handles["floor_pan"](f0, f1) is S09's short pan from the
-stand to the strip. Kai's chair: handles["chair"] is its root (rotate z to swivel it toward the camera, e.g. for S03)
-and handles["seat"] is an empty on the seat cushion that turns with it.
-Hero tank: handles["hero_tank"]: "floor" (centre of the gravel, where the shrimp sits), "inner" (usable w, d, h of the
-water), "waterline" (z), "glass" (the front pane object, for the crack), "leak" (where crack_puddle's water starts),
-"water" / "surface" (its materials), "hood" (its light).
-Other handles: "tanks" (the four shelf tanks, same keys), "strip", "strip_end", "lights", "grade" (the shared node
-group). build() replaces the scene's world with a dark night world.
+tanks behind him); "window" is S07; "floor" is S09/S10.
+For other pieces to plug in:
+- "window": its centre and size, the sky and bolt materials and the moon / lightning suns (for helper 9's storm);
+- "room_lights": the ceiling light and lamp, their glow materials, and the grade (for the flicker);
+- "desk": top height, centre, laptop, screen material, "seat" (an empty on the chair cushion where Kai sits),
+  "chair" (the chair's root: rotate z to swivel it toward the camera, e.g. for S03) and "tank_slot";
+- "hero_tank": the lab's own painted tank in the desk slot (helper 2 stands the shrimp on it): "floor" (gravel centre),
+  "inner", "waterline", "glass" (front pane object), "leak", "water" / "surface" (materials), "hood" (its light);
+- "tank_slot": the slot empty, centre, size, the scale and root location place_tank uses, the leak point, its glow;
+- "floor": the tiles object and the floor's extent (z = 0);
+- "strip", "strip_end" (where the water arrives), "spark_at"; "tanks" (the four shelf tanks), "lights", "grade".
+build() replaces the scene's world with a dark night world.
 Everything is procedural and seeded; no downloaded assets."""
 import math
 import random
@@ -31,12 +37,12 @@ import random
 import bpy
 from mathutils import Vector
 
-from . import anim, look
+from . import anim, look, paintbg
 
 hx = look.hexc
 WALL_Y = 2.5                 # back wall (the window and the tanks are on it)
 ROOM = (-2.5, 2.5, -3.0, WALL_Y, 2.9)   # x0, x1, y0, y1, height
-FLOOR_CAM, FLOOR_AIM = (0.86, 0.72, 0.22), (0.4, 1.66, 0.08)
+FLOOR_CAM, FLOOR_AIM = (0.35, 0.5, 0.32), (-0.5, 1.65, 0.05)
 LIGHT_K = 0.42               # how much coloured light the grade adds on top of the painted colour
 FLASH_RGB = (0.32, 0.5, 1.0)  # the room's lightning tint
 
@@ -85,7 +91,10 @@ def _grade():
 
 def _paint(name, color, top=None, noise=0.08, scale=6.0):
     """look.paint() plus the shared lab grade (coloured light, flicker level, lightning flash)."""
-    m = look.paint("lab_" + name, hx(color), hx(top) if top else None, noise, scale)
+    base = hx(color)
+    lit = hx(top) if top else tuple(min(1.0, c * 1.25 + 0.04) for c in base[:3]) + (1,)
+    m = paintbg.paint3("lab_" + name, tuple(c * 0.8 for c in base[:3]) + (1,), base, lit, cuts=(0.3, 0.62),
+                       noise=0.1 + noise, scale=scale)
     m["base"] = hx(color)            # look.outline() derives each material's line colour from this
     nt = m.node_tree
     if "lab_grade" in nt.nodes:
@@ -100,6 +109,11 @@ def _paint(name, color, top=None, noise=0.08, scale=6.0):
     nt.links.new(s2r.outputs[0], g.inputs["Light"])
     nt.links.new(g.outputs["Color"], em.inputs[0])
     return m
+
+
+def _em(m):
+    """A material's (first) Emission node: every lab, look.* and pistolshrimp material ends in one."""
+    return next((n for n in m.node_tree.nodes if n.type == "EMISSION"), None) if m and m.use_nodes else None
 
 
 def _glow(name, color, strength=1.0):
@@ -520,7 +534,8 @@ def _tank(name, center, size, glow, rnd, hero=False):
         for sy in (-1, 1):
             _box(f"{name}_post{sx}{sy}", (cx + sx * w / 2, cy + sy * d / 2, cz + h / 2), (0.016, 0.016, h), rim)
     _box(f"{name}_hood", (cx, cy, cz + h + 0.025), (w + 0.03, d + 0.03, 0.05), rim)
-    # plants and rocks (leave the middle clear in the hero tank: the shrimp and its burrow go there)
+    # plants and rocks (the hero tank matches mk/pistolshrimp.tank()'s colours and keeps its middle clear for the
+    # shrimp and its burrow)
     if hero:
         greens = [_paint("hero_leaf0", "#3fae6a", noise=0.1), _paint("hero_leaf1", "#69c96e", noise=0.1),
                   _paint("hero_leaf2", "#2e8f66", noise=0.1)]
@@ -529,8 +544,7 @@ def _tank(name, center, size, glow, rnd, hero=False):
         greens = [_paint("plant0", "#2f9e6e", "#56c98d", 0.1), _paint("plant1", "#5cbf4a", "#8de070", 0.1),
                   _paint("plant2", "#1f7f6a", "#3fae8f", 0.1)]
         rock = _paint("tank_rock", "#6c7488", "#8f98ad", 0.12)
-    n_pl = 5 if hero else rnd.randint(5, 8)
-    for i in range(n_pl):
+    for i in range(5 if hero else rnd.randint(5, 8)):
         if hero:
             px = cx + (-1 if i % 2 else 1) * rnd.uniform(w * 0.28, w * 0.45)
         else:
@@ -623,22 +637,25 @@ def _shelf_and_tanks(rnd):
     return tanks, glow
 
 
-def _hero_stand(rnd):
+def _cabinet(rnd):
+    """A low lab cabinet between the desk and the shelf, with the microscope and a book stack on top."""
     cab = _paint("cabinet", "#3a3f57", "#4d5472", 0.05)
     sx, sy, sw, sd, sh = 0.1, WALL_Y - 0.27, 0.72, 0.5, 0.72
-    _box("hero_stand", (sx, sy, sh / 2), (sw, sd, sh), cab, bevel=0.008)
+    _box("cabinet", (sx, sy, sh / 2), (sw, sd, sh), cab, bevel=0.008)
     knob = _paint("knob", "#9aa3b8", noise=0.0)
-    _box("hero_stand_door", (sx, sy - sd / 2 - 0.004, sh / 2 + 0.02), (sw - 0.06, 0.008, sh - 0.12), cab)
-    _cyl("hero_stand_knob", (sx + sw / 2 - 0.08, sy - sd / 2 - 0.015, sh * 0.62), 0.012, 0.02, knob,
+    _box("cabinet_door", (sx, sy - sd / 2 - 0.004, sh / 2 + 0.02), (sw - 0.06, 0.008, sh - 0.12), cab)
+    _cyl("cabinet_knob", (sx + sw / 2 - 0.08, sy - sd / 2 - 0.015, sh * 0.62), 0.012, 0.02, knob,
          rot=(math.radians(90), 0, 0), verts=12)
-    hero = _tank("hero", (sx, sy, sh), (0.56, 0.34, 0.42), "hero", rnd, hero=True)
-    # a burrow mouth by the big rock (pistol shrimp live in burrows)
-    _ball("hero_burrow", (sx + 0.1, sy + 0.04, sh + 0.08), (0.035, 0.008, 0.022), _paint("burrow", "#2c2238",
-                                                                                         noise=0.0), 12)
-    g = _light("hero_glow", "AREA", (sx, sy - 0.3, sh + 0.25), (math.radians(-45), 0, 0), 16, "#7aeeff", 0.6, 0.45)
-    hero["stand_front_y"] = sy - sd / 2
-    hero["leak"] = (sx - 0.06, sy - sd / 2 - 0.006, sh + 0.02)
-    return hero, g
+    for i, c in enumerate(("#3d6b8f", "#8f5a3d", "#4f7a4a")):
+        _box(f"book{i}", (sx + 0.17, sy + 0.05, sh + 0.02 + i * 0.035), (0.26 - i * 0.02, 0.19, 0.033),
+             _paint(f"book{i}", c, noise=0.05), rot=(0, 0, math.radians(rnd.uniform(-8, 8))))
+    scope = _paint("scope", "#e5e9f2", "#ffffff", 0.03)
+    tube = _paint("scope_tube", "#3d4458", noise=0.0)
+    mx, my = sx - 0.15, sy - 0.02
+    _box("scope_base", (mx, my, sh + 0.015), (0.14, 0.18, 0.03), scope, bevel=0.008)
+    _box("scope_arm", (mx, my + 0.06, sh + 0.12), (0.04, 0.04, 0.2), scope, bevel=0.01)
+    _cyl("scope_tube", (mx, my + 0.01, sh + 0.2), 0.022, 0.16, tube, rot=(math.radians(-25), 0, 0))
+    _box("scope_stage", (mx, my - 0.01, sh + 0.09), (0.11, 0.09, 0.008), tube)
 
 
 def _desk(rnd):
@@ -655,7 +672,7 @@ def _desk(rnd):
     _box("desk_modesty", (cx - 0.2, y1 - 0.06, 0.45), (x1 - x0 - 0.5, 0.02, 0.45), side)
     # laptop: base + lid opened ~110 degrees, glowing screen with a few UI bars (the night-shift data sheet)
     shell = _paint("laptop", "#a7afc4", "#c9d0e2", 0.03)
-    lx, ly = cx + 0.05, cy - 0.02
+    lx, ly = cx - 0.22, cy - 0.04
     _box("laptop_base", (lx, ly, top + 0.009), (0.36, 0.25, 0.016), shell, line=0.003, bevel=0.004)
     _box("laptop_keys", (lx, ly + 0.02, top + 0.0175), (0.3, 0.12, 0.002), _paint("keys", "#4a5164", noise=0.0))
     tilt = math.radians(-18)
@@ -671,9 +688,9 @@ def _desk(rnd):
                                       (0.08, -0.05, 0.1), (-0.05, -0.06, 0.06))):
         p = lid_c + nrm * 0.008 + Vector((ox, 0, 0)) + up * oz
         _box(f"ui{i}", tuple(p), (ww, 0.001, 0.012), ui[i % 3], rot=(tilt, 0, 0))
-    # open notebook + pen (under the lamp), a mug, a small book stack, a microscope
+    # open notebook + pen (under the lamp) at the left end, a mug between the laptop and the tank
     page = _paint("page", "#e9e2cf", "#f6f1e3", 0.04)
-    nx, ny = cx + 0.42, cy - 0.1
+    nx, ny = x0 + 0.33, cy - 0.1
     for s in (-1, 1):
         _box(f"notebook_page{s}", (nx + s * 0.085, ny, top + 0.006), (0.16, 0.22, 0.008), page,
              rot=(0, s * math.radians(-3), math.radians(8)))
@@ -684,27 +701,18 @@ def _desk(rnd):
     _cyl("pen", (nx + 0.02, ny - 0.13, top + 0.006), 0.005, 0.14, _paint("pen", "#2f5fb3", noise=0.0),
          rot=(0, math.radians(90), math.radians(30)), verts=8)
     mug_m = _paint("mug", "#d96c5a", "#f08a76", 0.04)
-    _cyl("mug", (cx - 0.34, cy - 0.16, top + 0.05), 0.04, 0.1, mug_m, line=0.002)
+    mx_, my_ = cx + 0.13, cy - 0.21
+    _cyl("mug", (mx_, my_, top + 0.05), 0.04, 0.1, mug_m, line=0.002)
     bpy.ops.mesh.primitive_torus_add(major_radius=0.025, minor_radius=0.007,
-                                     location=(cx - 0.295, cy - 0.16, top + 0.05), rotation=(math.radians(90), 0, 0))
+                                     location=(mx_ + 0.045, my_, top + 0.05), rotation=(math.radians(90), 0, 0))
     bpy.context.object.data.materials.append(mug_m)
-    for i, c in enumerate(("#3d6b8f", "#8f5a3d", "#4f7a4a")):
-        _box(f"book{i}", (x0 + 0.25, cy + 0.12, top + 0.02 + i * 0.035), (0.26 - i * 0.02, 0.19, 0.033),
-             _paint(f"book{i}", c, noise=0.05), rot=(0, 0, math.radians(rnd.uniform(-8, 8))))
-    scope = _paint("scope", "#e5e9f2", "#ffffff", 0.03)
-    mx, my = x0 + 0.3, cy - 0.12
-    _box("scope_base", (mx, my, top + 0.015), (0.14, 0.18, 0.03), scope, bevel=0.008)
-    _box("scope_arm", (mx, my + 0.06, top + 0.12), (0.04, 0.04, 0.2), scope, bevel=0.01)
-    _cyl("scope_tube", (mx, my + 0.01, top + 0.2), 0.022, 0.16, _paint("scope_tube", "#3d4458", noise=0.0),
-         rot=(math.radians(-25), 0, 0))
-    _box("scope_stage", (mx, my - 0.01, top + 0.09), (0.11, 0.09, 0.008), _paint("scope_tube", "#3d4458"))
-    # the lamp: base, two arm segments, a shade aimed at the notebook, a warm bulb and a spot light
+    # the lamp at the back-left corner: base, two arm segments, a shade aimed at the notebook, bulb and spot light
     lampm = _paint("lamp", "#e3b04b", "#f5cd6e", 0.04)
-    bx, by = cx + 0.64, cy + 0.2
+    bx, by = x0 + 0.14, cy + 0.22
     _cyl("lamp_base", (bx, by, top + 0.012), 0.065, 0.024, lampm, line=0.002)
     a = Vector((bx, by, top + 0.02))
-    b = Vector((bx - 0.03, by - 0.02, top + 0.38))
-    c = Vector((bx - 0.14, by - 0.22, top + 0.44))
+    b = Vector((bx + 0.03, by - 0.02, top + 0.38))
+    c = Vector((bx + 0.13, by - 0.22, top + 0.44))
     for nm, p, q in (("lamp_arm0", a, b), ("lamp_arm1", b, c)):
         dvec = q - p
         o = _cyl(nm, tuple((p + q) / 2), 0.009, dvec.length, lampm, verts=10)
@@ -718,9 +726,30 @@ def _desk(rnd):
     _ball("lamp_bulb", tuple(c + aim * 0.085), (0.03, 0.03, 0.03), bulb_m, 12)
     lamp = _light("lamp_light", "SPOT", tuple(c + aim * 0.07), aim.to_track_quat("-Z", "Y").to_euler(), 90, "#ffd28a",
                   0.04, spot=math.radians(110))
-    pool = _pool("lamp", (nx - 0.02, ny + 0.02, top + 0.0005), (0.42, 0.32), "#ffb85c", 0.35)
+    pool = _pool("lamp", (nx + 0.02, ny + 0.02, top + 0.0005), (0.42, 0.32), "#ffb85c", 0.35)
+    # the slot for the pistol shrimp's tank (mk/pistolshrimp.tank(), helper 2) on the right of the desk, within reach
+    # of Kai's right hand (S04a: he taps the glass). place_tank() scales that tank (12.3 x 6.45 x 5.6 units) to fit.
+    sw, sd = 0.56, 0.3
+    slot_c = Vector((x1 - 0.36, cy + 0.05, top))
+    s_ = sw / 12.3
+    bpy.ops.object.empty_add(type="CUBE", location=tuple(slot_c + Vector((0, 0, 0.13))))
+    slot_e = bpy.context.object
+    slot_e.name = "shrimp_tank_slot"
+    slot_e.scale = (sw / 2, sd / 2, 0.13)
+    glow = _light("tank_glow", "AREA", (slot_c.x, slot_c.y - 0.4, top + 0.28), (math.radians(-50), 0, 0), 14,
+                  "#7fd0dc", 0.55, 0.3, shadow=False)
+    # the lab's own painted hero tank fills the slot (helper 2's shots stand the 1/40-scale shrimp on its gravel);
+    # place_tank() swaps in mk/pistolshrimp.tank() instead
+    hero = _tank("hero", (slot_c.x, slot_c.y, top), (sw, sd, 0.3), "hero", rnd, hero=True)
+    _ball("hero_burrow", (slot_c.x + 0.1, slot_c.y + 0.04, top + 0.08), (0.035, 0.008, 0.022),
+          _paint("burrow", "#2c2238", noise=0.0), 12)
+    hero["leak"] = (slot_c.x - 0.07, slot_c.y - sd / 2 - 0.005, top + 0.004)
+    slot = dict(empty=slot_e, center=tuple(slot_c), size=(sw, sd, 0.3), scale=s_,
+                root_loc=(slot_c.x, slot_c.y - 0.5 * s_, top + 0.73 * s_), glow=glow, hood=hero["hood"],
+                leak=hero["leak"], hero=hero)
     return dict(screen=screen, bulb=bulb_m, lamp=lamp, pool=pool, top=top, seat=(cx + 0.05, y0 - 0.55, 0.5),
-                charger=(lx + 0.2, ly + 0.1, top))
+                charger=(lx + 0.2, ly + 0.1, top), slot=slot, front_y=y0, x=(x0, x1), center=(cx, cy, top),
+                laptop=(lx, ly, top))
 
 
 def _chair(seat):
@@ -752,12 +781,12 @@ def _chair(seat):
     return root, e
 
 
-def _power_strip(hero, desk):
-    """Power strip on the floor in front of the hero stand, plugs and cables to the tanks and the desk."""
+def _power_strip(desk):
+    """Power strip on the floor by the desk's right end, plugs and cables to the desk tank, laptop, shelf and wall."""
     body_m = _paint("strip", "#d7dbe4", "#eef1f6", 0.03)
     dark = _paint("socket", "#262a33", noise=0.0)
     cable = _paint("cable", "#1e222b", "#2c313c", 0.0)
-    px, py, rz = 0.62, 1.28, math.radians(-18)
+    px, py, rz = -0.1, 1.32, math.radians(-14)
     strip = _box("power_strip", (px, py, 0.024), (0.44, 0.075, 0.042), body_m, line=0.0015, rot=(0, 0, rz),
                  bevel=0.008)
     ax = Vector((math.cos(rz), math.sin(rz), 0))
@@ -770,35 +799,37 @@ def _power_strip(hero, desk):
                               _paint("plug", "#2b2f3a", noise=0.0), line=0.0012, rot=(0, 0, rz), bevel=0.004))
     sw = Vector((px, py, 0.047)) + ax * 0.19
     _box("strip_switch", tuple(sw), (0.03, 0.03, 0.01), _glow("switch", "#ff5a4a", 1.4), rot=(0, 0, rz))
-    # cords: strip -> hero stand, strip -> shelf (up the wall behind), strip -> desk (laptop charger), strip -> wall
+    # cords: strip -> the desk tank's filter, strip -> laptop charger (under the desk), strip -> shelf, strip -> wall
     p0, p1, p2 = (Vector(plugs[i].location) + Vector((0, 0, 0.02)) for i in range(3))
-    hx_, hy, _ = hero["floor"]
-    _cable("cord_hero", [tuple(p0), (0.4, 1.55, 0.008), (0.3, 1.8, 0.008), (0.46, WALL_Y - 0.03, 0.05),
-                         (0.42, WALL_Y - 0.03, 0.8), (hx_ + 0.2, WALL_Y - 0.05, 1.08)], cable)
-    _cable("cord_shelf", [tuple(p1), (0.75, 1.6, 0.008), (0.92, 2.05, 0.008), (0.85, WALL_Y - 0.03, 0.06),
-                          (0.82, WALL_Y - 0.03, 1.3)], cable)
+    top = desk["top"]
+    sx_, sy_, _ = desk["slot"]["center"]
+    _cable("cord_tank", [tuple(p0), (-0.25, 1.6, 0.008), (-0.36, 2.1, 0.008), (-0.42, WALL_Y - 0.04, 0.05),
+                         (-0.42, WALL_Y - 0.04, top - 0.03), (sx_ + 0.22, sy_ + 0.18, top + 0.01)], cable)
     dx, dy, dz = desk["charger"]
-    _cable("cord_desk", [tuple(p2), (0.35, 1.25, 0.008), (-0.2, 1.4, 0.008), (-0.6, 1.95, 0.008),
-                         (-0.45, WALL_Y - 0.05, 0.1), (-0.45, WALL_Y - 0.05, dz - 0.05), (dx, dy, dz + 0.005)], cable)
-    _cable("cord_wall", [tuple(Vector((px, py, 0.024)) - ax * 0.23), (0.95, 1.15, 0.008), (1.6, 1.4, 0.008),
+    _cable("cord_desk", [tuple(p1), (-0.5, 1.62, 0.008), (-0.95, 2.15, 0.008), (-1.05, WALL_Y - 0.04, 0.05),
+                         (-1.05, WALL_Y - 0.04, dz - 0.03), (dx, dy, dz + 0.005)], cable)
+    _cable("cord_shelf", [tuple(p2), (0.35, 1.45, 0.008), (0.85, 2.0, 0.008), (0.82, WALL_Y - 0.03, 0.06),
+                          (0.82, WALL_Y - 0.03, 1.3)], cable)
+    _cable("cord_wall", [tuple(Vector((px, py, 0.024)) + ax * 0.23), (0.6, 1.1, 0.008), (1.6, 1.35, 0.008),
                          (2.47, 1.5, 0.05), (2.47, 1.5, 0.3)], cable)
     _box("wall_outlet", (2.49, 1.5, 0.32), (0.02, 0.08, 0.12), body_m)
-    end = Vector((px, py, 0.0)) - ax * 0.23      # the end nearest the stand, where the water arrives
+    end = Vector((px, py, 0.0)) - ax * 0.23      # the end nearest the desk, where the water arrives
     return strip, end, Vector((px, py, 0.105)) - ax * 0.13 + Vector((0, -0.06, 0))   # in front of the end plug
 
 
 # ---------------------------------------------------------------- the set
 def build(seed=7):
-    """Build the lab into the current scene and return handles (cameras, lights, hero tank, effect functions)."""
+    """Build the lab into the current scene and return handles (cameras, lights, tank slot, effect functions)."""
     rnd = random.Random(seed)
     _night_world()
     room = _room(rnd)
     win = _window(rnd)
     tanks, shelf_glow = _shelf_and_tanks(rnd)
-    hero, hero_glow = _hero_stand(rnd)
+    _cabinet(rnd)
     desk = _desk(rnd)
+    slot = desk["slot"]
     chair, seat = _chair(desk["seat"])
-    strip, strip_end, spark_at = _power_strip(hero, desk)
+    strip, strip_end, spark_at = _power_strip(desk)
 
     h = ROOM[4]
     ceiling = _light("ceiling_light", "AREA", (0.1, 0.2, h - 0.1), (0, 0, 0), 40, "#cfe4ff", 1.2, 0.16)
@@ -812,17 +843,17 @@ def build(seed=7):
     head = (sx, sy, 1.25)                 # Kai's head when seated
     cams = dict(                          # see EP01_SHOTS.md: S03 medium, S07 window, S09/S10 floor
         wide=_cam("cam_wide", (-1.6, -1.45, 1.5), (0.25, 2.1, 0.9), 16),
-        desk=_cam("cam_desk", (-0.78, 0.38, 1.43), (-1.28, 2.15, 0.86), 27, fstop=1.4, focus=(-1.175, 2.1, 0.8)),
-        medium=_cam("cam_medium", (-2.05, -0.15, 1.12), (-0.3, 1.95, 0.98), 32, fstop=1.2, focus=head),
+        desk=_cam("cam_desk", (-0.6, 0.45, 1.45), (-1.1, 2.15, 0.88), 27, fstop=1.0, focus=desk["laptop"]),
+        medium=_cam("cam_medium", (-2.05, -0.15, 1.12), (-0.3, 1.95, 0.98), 32, fstop=0.6, focus=head),
         window=_cam("cam_window", (-1.05, 0.3, 1.45), (-1.15, 2.5, 1.3), 24),
-        floor=_cam("cam_floor", FLOOR_CAM, FLOOR_AIM, 22, fstop=1.0, focus=tuple(strip_end)),
+        floor=_cam("cam_floor", FLOOR_CAM, FLOOR_AIM, 24, fstop=0.6, focus=tuple(strip_end)),
     )
     room_lights = [ceiling, desk["lamp"]]
     room_glows = [(room["tube"], 1.1), (desk["bulb"], 2.0), (desk["pool"], 0.35)]
-    tank_lights = [t["hood"] for t in tanks + [hero]] + shelf_glow + [hero_glow]
+    tank_lights = [t["hood"] for t in tanks] + shelf_glow + [slot["glow"], slot["hood"]]
     spill_m = _water_floor()
-    tank_glows = [(m, m.node_tree.nodes["Emission"].inputs[1].default_value) for t in tanks + [hero]
-                  for m in t["water"]]
+    tank_glows = [(m, _em(m).inputs[1].default_value) for t in tanks + [slot["hero"]] for m in t["water"]]
+    slot_glows = []              # the placed shrimp tank's materials (place_tank), dimmed by power_out
     base_energy = {o.name: o.data.energy for o in room_lights + tank_lights}
 
     def lightning(frame, strength=1.0):
@@ -852,7 +883,7 @@ def build(seed=7):
         for o in room_lights:
             _kprop(o.data, "energy", f, base_energy[o.name] * (1.0 if on else 0.04), "CONSTANT")
         for m, s in room_glows:
-            _ksock(m.node_tree.nodes["Emission"].inputs[1], f, s if on else s * 0.08, "CONSTANT")
+            _ksock(_em(m).inputs[1], f, s if on else s * 0.08, "CONSTANT")
 
     def power_out(frame):
         """Every lab light dies at `frame` (tanks, lamp, ceiling, laptop); only the storm outside lights the room."""
@@ -861,74 +892,85 @@ def build(seed=7):
         for o in tank_lights:
             _kprop(o.data, "energy", frame - 1, base_energy[o.name], "CONSTANT")
             _kprop(o.data, "energy", frame, 0.0, "CONSTANT")
-        for m, s in tank_glows + [(desk["screen"], 1.15), (spill_m, 1.0)]:
-            em = m.node_tree.nodes["Emission"].inputs[1]
+        for m, s in tank_glows + slot_glows + [(desk["screen"], 1.15), (spill_m, 1.0)]:
+            em = _em(m).inputs[1]
             _ksock(em, frame - 1, s, "CONSTANT")
             _ksock(em, frame, s * 0.06, "CONSTANT")
 
     spill_parts = []
 
+    def place_tank(t, dim_on_power_out=True):
+        """Put mk/pistolshrimp.tank()'s result (helper 2's tank and its crack) into the desk slot, scaled to fit, and
+        start crack_puddle's water at its crack. Call before crack_puddle and power_out (which then also darkens the
+        tank, unless dim_on_power_out=False)."""
+        root = t["root"]
+        root.location, root.scale = slot["root_loc"], (slot["scale"],) * 3
+        for o in bpy.context.scene.objects:          # the lab's own painted hero tank steps aside
+            if o.name.startswith("hero_"):
+                o.hide_render = o.hide_viewport = True
+        bpy.context.view_layer.update()
+        if dim_on_power_out:
+            seen, todo = set(), [root]
+            while todo:
+                o = todo.pop()
+                todo += list(o.children)
+                for m in getattr(o.data, "materials", None) or []:
+                    if m and m.name not in seen and _em(m):
+                        seen.add(m.name)
+                        slot_glows.append((m, _em(m).inputs[1].default_value))
+        o = t.get("crack_origin")
+        if o is not None:
+            p = root.matrix_world @ Vector((o.x, o.y - 0.1, 0.0))
+            slot["leak"] = (p.x, p.y, desk["top"] + 0.004)
+        return t
+
     def crack_puddle(f0, f1):
-        """Water leaks from the hero tank's front, runs down the stand (first quarter), then spreads across the floor
-        and touches the power strip at f1."""
+        """Water leaks from the front of the tank in the slot, runs across the desk top, pours off the front edge,
+        then spreads across the floor and touches the power strip at f1. (The crack itself is helper 2's:
+        pistolshrimp.crack(t, f0).)"""
         spill = _water_floor()
-        lx, ly, lz = hero["leak"]
-        # a crack runs up the hero tank's front glass from the leak (matches pistolshrimp.crack in the close-ups)
-        gy = hero["glass"].location.y - 0.004
-        r = random.Random(17)
-        pts, x, z = [(0.0, 0.0)], 0.0, 0.0
-        while z < 0.3:
-            x += r.uniform(-0.03, 0.04)
-            z += r.uniform(0.03, 0.06)
-            pts.append((x, z))
-        verts, faces = [], []
-        for (xa, za), (xb, zb) in zip(pts, pts[1:]):
-            k = len(verts)
-            verts += [(xa - 0.0015, 0, za), (xa + 0.0015, 0, za), (xb + 0.0015, 0, zb), (xb - 0.0015, 0, zb)]
-            faces.append((k, k + 1, k + 2, k + 3))
-        ck = _mesh("hero_crack", verts, faces, _glow("crack", "#f2fbff", 1.3), (lx, gy, lz - 0.005))
-        ck.visible_shadow = False
-        anim.key(ck, "scale", f0 - 1, (1, 1, 0.001), "CONSTANT")
-        anim.key(ck, "scale", f0 + 3, (1, 1, 1), "LINEAR")
-        # the sheet of water crossing the stand top from the glass to the front edge
-        top = _mesh("spill_top", [(-0.02, -1, 0), (0.02, -1, 0), (0.02, 0, 0), (-0.02, 0, 0)], [(0, 1, 2, 3)], spill,
-                    (lx, gy, lz - 0.017))
-        anim.key(top, "scale", f0 - 1, (1, 0.001, 1), "CONSTANT")
-        anim.key(top, "scale", f0 + 4, (1, gy - ly, 1), "LINEAR")
-        # the trickle down the stand front: a thin strip whose top is fixed and which grows downward
-        verts = [(-0.012, 0, -1), (0.012, 0, -1), (0.012, 0, 0), (-0.012, 0, 0)]
-        tr = _mesh("spill_trickle", verts, [(0, 1, 2, 3)], spill, (lx, ly - 0.002, lz))
-        tr.scale = (1, 1, 0.001)
-        t1 = f0 + (f1 - f0) * 0.25
-        anim.key(tr, "scale", f0, (1, 1, 0.001), "LINEAR")
-        anim.key(tr, "scale", t1, (1, 1, lz), "LINEAR")
-        anim.key(tr, "scale", f1, (1.6, 1, lz), "LINEAR")
-        # the floor puddle: overlapping irregular discs along a curving path from the stand to the strip
-        a = Vector((lx, ly - 0.06, 0.0))
+        lx, ly, lz = slot["leak"]
+        y0, top = desk["front_y"], desk["top"]
+        t_edge, t_floor = f0 + (f1 - f0) * 0.15, f0 + (f1 - f0) * 0.3
+        # the sheet of water on the desk, from the tank to the front edge
+        sheet = _mesh("spill_desk", [(-0.035, -1, 0), (0.035, -1, 0), (0.05, 0, 0), (-0.05, 0, 0)], [(0, 1, 2, 3)],
+                      spill, (lx, ly, lz))
+        anim.key(sheet, "scale", f0 - 1, (1, 0.001, 1), "CONSTANT")
+        anim.key(sheet, "scale", t_edge, (1, ly - y0 + 0.005, 1), "LINEAR")
+        anim.key(sheet, "scale", f1, (1.5, ly - y0 + 0.005, 1), "LINEAR")
+        # the stream pouring off the edge: a thin ribbon whose top is fixed and which grows down to the floor
+        tr = _mesh("spill_stream", [(-0.01, 0, -1), (0.01, 0, -1), (0.012, 0, 0), (-0.012, 0, 0)], [(0, 1, 2, 3)],
+                   spill, (lx, y0 - 0.012, top))
+        tr.visible_shadow = False
+        anim.key(tr, "scale", t_edge - 1, (1, 1, 0.001), "CONSTANT")
+        anim.key(tr, "scale", t_floor, (1, 1, top), "LINEAR")
+        anim.key(tr, "scale", f1, (1.4, 1, top), "LINEAR")
+        # the floor puddle: overlapping irregular discs along a curving path from below the edge to the strip
+        a = Vector((lx, y0 - 0.06, 0.0))
         b = Vector((strip_end.x - 0.02, strip_end.y + 0.03, 0.0))
-        bend = Vector((-0.12, -0.05, 0))
+        bend = Vector((0.05, -0.08, 0))
         r = random.Random(21)
-        n = 16
+        n = 14
         for i in range(n):
             u = i / (n - 1)
             p = a.lerp(b, u) + bend * math.sin(u * math.pi)
-            rad = 0.1 + 0.07 * math.sin(u * math.pi) + r.uniform(-0.01, 0.02)
+            rad = 0.09 + 0.06 * math.sin(u * math.pi) + r.uniform(-0.01, 0.02)
             verts = [(math.cos(k / 20 * 2 * math.pi) * rad * r.uniform(0.82, 1.1),
                       math.sin(k / 20 * 2 * math.pi) * rad * r.uniform(0.82, 1.1), 0) for k in range(20)]
             d = _mesh(f"spill{i}", verts, [tuple(range(20))], spill, (p.x, p.y, 0.0045 + i * 0.00001))
-            ts = t1 + (f1 - t1) * u
+            ts = t_floor + (f1 - t_floor) * u
             anim.key(d, "scale", ts - 1, 0.001, "CONSTANT")
             anim.key(d, "scale", ts + 5, 1.0)
             spill_parts.append(d)
-        for i in range(3):        # the pool by the stand keeps widening while the leak runs
-            d = _mesh(f"spill_pool{i}", [(math.cos(k / 24 * 2 * math.pi) * 0.17 * r.uniform(0.85, 1.1),
-                                          math.sin(k / 24 * 2 * math.pi) * 0.12 * r.uniform(0.85, 1.1), 0)
+        for i in range(3):        # the pool under the stream keeps widening while the leak runs
+            d = _mesh(f"spill_pool{i}", [(math.cos(k / 24 * 2 * math.pi) * 0.15 * r.uniform(0.85, 1.1),
+                                          math.sin(k / 24 * 2 * math.pi) * 0.11 * r.uniform(0.85, 1.1), 0)
                                          for k in range(24)], [tuple(range(24))], spill,
-                      (a.x + r.uniform(-0.08, 0.08), a.y + r.uniform(-0.04, 0.02), 0.0044))
-            anim.key(d, "scale", t1 - 1, 0.001, "CONSTANT")
+                      (a.x + r.uniform(-0.06, 0.06), a.y + r.uniform(-0.04, 0.02), 0.0044))
+            anim.key(d, "scale", t_floor - 1, 0.001, "CONSTANT")
             anim.key(d, "scale", f1, 1.0 + 0.2 * i, "LINEAR")
         hl = _glow("spill_hl", "#e6f8ff", 1.2)
-        for i in (3, 7, 11, 14):  # a few white glints that arrive with their disc
+        for i in (3, 7, 10, 12):  # a few white glints that arrive with their disc
             d = spill_parts[i]
             g = _mesh(f"spill_glint{i}", [(-0.03, -0.004, 0), (0.03, -0.004, 0), (0.03, 0.004, 0), (-0.03, 0.004, 0)],
                       [(0, 1, 2, 3)], hl, (0, 0, 0.0005))
@@ -936,10 +978,10 @@ def build(seed=7):
             g.rotation_euler = (0, 0, r.uniform(-0.6, 0.6))
 
     def floor_pan(f0, f1):
-        """S09's short pan on the floor camera: from the foot of the stand, where the water lands, to the strip."""
+        """S09's short pan on the floor camera: from the water pouring off the desk to the strip."""
         cam = cams["floor"]
-        lx, ly, _ = hero["leak"]
-        anim.key(cam, "rotation_euler", f0, _aim(FLOOR_CAM, (lx + 0.05, ly - 0.1, 0.3)), "BEZIER")
+        lx, _, _ = slot["leak"]
+        anim.key(cam, "rotation_euler", f0, _aim(FLOOR_CAM, (lx, desk["front_y"], 0.3)), "BEZIER")
         anim.key(cam, "rotation_euler", f1, _aim(FLOOR_CAM, FLOOR_AIM), "BEZIER")
 
     def spark(frame):
@@ -1006,8 +1048,16 @@ def build(seed=7):
                                                for m in o.data.materials)
         if see_through or o.name.startswith(("sky", "bldg", "tree_sil", "bolt", "rain", "glass_drops")):
             o.visible_shadow = False
-    return dict(cams=cams, seat=seat, chair=chair, hero_tank=hero, tanks=tanks, strip=strip, strip_end=tuple(strip_end),
-                grade=grade, lights=dict(ceiling=ceiling, lamp=desk["lamp"], window=moon, lightning=strike,
-                                         spark=spark_l, tanks=tank_lights),
+    return dict(cams=cams, seat=seat, chair=chair, hero_tank=slot["hero"], tank_slot=slot, tanks=tanks, strip=strip,
+                strip_end=tuple(strip_end), spark_at=tuple(spark_at), grade=grade,
+                lights=dict(ceiling=ceiling, lamp=desk["lamp"], window=moon, lightning=strike, spark=spark_l,
+                            tanks=tank_lights),
+                window=dict(center=(-1.2, WALL_Y, 1.675), size=(1.3, 1.25), sky=win["sky"], bolt=win["bolt"],
+                            moon=moon, lightning=strike),
+                room_lights=dict(lights=room_lights, glows=[m for m, _ in room_glows], grade=grade),
+                desk=dict(top=desk["top"], center=desk["center"], x=desk["x"], front_y=desk["front_y"],
+                          laptop=desk["laptop"], screen=desk["screen"], seat=seat, chair=chair, tank_slot=slot),
+                floor=dict(object=bpy.data.objects["floor_tiles"], z=0.0, x=ROOM[:2], y=ROOM[2:4]),
+                place_tank=place_tank,
                 lightning=lightning, flicker=flicker, crack_puddle=crack_puddle, spark=spark, power_out=power_out,
                 floor_pan=floor_pan)

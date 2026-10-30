@@ -160,6 +160,7 @@ def burn_trail(loc=(0, 0, 0), name="jsnail", length=4.2, n=6, seed=7):
     a charred ring, a glowing ember edge and smoke wisps (animated by idle()). Returns dict(root, holes, wisps, path);
     holes are (x, y, r) in world space so a set can leave the grass out around them."""
     rnd = random.Random(seed)
+    wr = random.Random(seed + 1)                               # the smoke's own stream, so the holes stay put
     hx = look.hexc
     slime = look.fade(f"{name}_slime", hx(SLIME), 0.5)
     char_m = look.flat(f"{name}_char", hx(CHAR))
@@ -210,11 +211,13 @@ def burn_trail(loc=(0, 0, 0), name="jsnail", length=4.2, n=6, seed=7):
             st.name = f"{name}_stub{k}_{j}"
             st.data.materials.append(singed)
             _parent(st, root)
-        for j in range(2):
+        for j in range(3):                                     # a thin column: puffs a third of a cycle apart
             w = _sphere(f"{name}_wisp{k}_{j}", (x, y, z + 0.05), (1, 1, 1),
                         look.fade(f"{name}_wisp_m{k}_{j}", hx(SMOKE), 0.0), 0, 12)
+            w.visible_shadow = False                           # smoke casts no shadow on the grass
             _parent(w, root)
-            wisps.append(dict(obj=w, base=(x, y, z), r=r, phase=rnd.randint(0, 39), drift=rnd.uniform(-0.15, 0.15)))
+            wisps.append(dict(obj=w, base=(x, y, z), r=r, phase=(j * 13 + wr.randint(0, 39)) % 40,
+                              drift=wr.uniform(-0.15, 0.15)))
         holes.append((x, y, r))
     return dict(root=root, holes=holes, wisps=wisps, path=pts)
 
@@ -350,8 +353,8 @@ def smoke(trail, f0, period=40):
             continue
         mix = o.data.materials[0].node_tree.nodes["Mix"]
         s = f0 - w["phase"]
-        for df, dz, sc, a, dx in ((0, 0.04, 0.4, 0.0, 0.0), (8, 0.22, 0.75, 0.7, 0.2), (24, 0.65, 1.2, 0.45, 0.6),
-                                  (period, 1.1, 1.6, 0.0, 1.0)):
+        for df, dz, sc, a, dx in ((0, 0.04, 0.3, 0.0, 0.0), (8, 0.2, 0.55, 0.5, 0.2), (24, 0.6, 0.85, 0.3, 0.6),
+                                  (period, 1.0, 1.1, 0.0, 1.0)):
             anim.key(o, "location", s + df, (x + w["drift"] * dx, y + 0.05 * dx, z + dz), "LINEAR")
             anim.key(o, "scale", s + df, (r * sc, r * sc, r * sc * 1.4), "LINEAR")
             mix.inputs[0].default_value = a
