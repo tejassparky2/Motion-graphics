@@ -225,6 +225,28 @@ def line_width(rig, line):
             o.modifiers["outline"].thickness = -line * look.LINE_SCALE
 
 
+def cap_skirt(dome, drop=0.02, tuck=1.0):
+    """Close the gap between the cap's dome and its visor: the dome's open bottom edge sat ~1 cm above the brim, so
+    hair and forehead showed through in eye-level shots (S03b). Extrudes that edge down into the brim's thickness and
+    tucks it in a little. Runs once per dome (marked with a custom property), so old and new hero.blend files work."""
+    import bmesh
+    if dome is None or dome.get("skirt"):
+        return
+    bm = bmesh.new()
+    bm.from_mesh(dome.data)
+    edges = [e for e in bm.edges if e.is_boundary]
+    ret = bmesh.ops.extrude_edge_only(bm, edges=edges)
+    for v in [g for g in ret["geom"] if isinstance(g, bmesh.types.BMVert)]:
+        v.co.x *= tuck
+        v.co.y *= tuck
+        v.co.z -= drop
+    bm.to_mesh(dome.data)
+    bm.free()
+    for p in dome.data.polygons:
+        p.use_smooth = True
+    dome["skirt"] = True
+
+
 def cap(rig, letter="K"):
     """A navy cap with a cream letter on the front, fixed to the head bone. Hair under the dome is removed so the
     cowlick can't poke through; the fringe and sides stay."""
@@ -253,6 +275,7 @@ def cap(rig, letter="K"):
     dome.data.materials.append(cap_m)
     for p in dome.data.polygons:
         p.use_smooth = True
+    cap_skirt(dome)
     look.outline(dome, 0.004)
     dome.modifiers["outline"].use_rim = True
     dome.modifiers["outline"].material_offset_rim = dome.modifiers["outline"].material_offset
@@ -514,6 +537,7 @@ def load(loc=(0, 0, 0), scale=1.0, rot_z=0.0, outfit="world", line=0.004):
                 return bones[cand]
         raise KeyError(f"no bone for {name}; have {sorted(bones)}")
 
+    cap_skirt(next((o for o in col.objects if o.type == "MESH" and o.data.name.startswith("cap_dome")), None))
     rig = dict(arm=arm, bone=bone, cap=[o for o in col.objects if o.name.startswith("cap")])
     line_width(rig, line)
     return rig

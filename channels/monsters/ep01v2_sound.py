@@ -42,7 +42,10 @@ sys.path.insert(0, ROOT)
 os.chdir(ROOT)
 os.environ.setdefault("CLONE_RATE", "5.0")
 
-STRIKE_FRAME = 35        # S15 frame (0-based) where the claw snaps shut: helper10.py D = 36 in Blender's 1-based frames
+STRIKE_FRAME = 41        # S15 frame, 0-based in the cut: the claw snaps shut (helper10.py re-stage, Blender frame 42)
+FLASH_FRAME = 43         # the 2-frame white flash (Blender 44-45): the shockwave boom
+DUST_FRAME = 49          # the forest wall pops into dust (Blender 50 on): the erase
+BLOWN_FRAME = 79         # Kai is blown back (Blender 80)
 OUT_SR = 48000
 OUT = os.path.join(ROOT, "out", "monsters", "ep01v2")
 
@@ -412,9 +415,10 @@ def build(timing, n, v):
     for k, d in enumerate((0.75, 0.35)):
         hit(drip(k), strike - d, -22)
     hit(sfx.snap(2), strike, 0)
-    hit(sfx.shockwave(), strike + 0.02, 0)
-    hit(sfx.erase(), strike + 0.45, -4)
-    hit(ring_out(3.2), strike + 0.3, -16)
+    hit(sfx.shockwave(), c.f("S15", FLASH_FRAME), 0)
+    hit(sfx.erase(), c.f("S15", DUST_FRAME), -4)
+    hit(ring_out(3.2), c.f("S15", FLASH_FRAME) + 0.3, -16)
+    hit(sfx.whoosh(1), c.f("S15", BLOWN_FRAME) - 0.15, -14)
 
     # --- after the snap: quiet under S16-S18, a held tense tone under S19
     amb(lambda d, s: meadow_wind(d, 70 + s), strike + 1.5, c.t("S20"), -29, 1.0, 0.3)

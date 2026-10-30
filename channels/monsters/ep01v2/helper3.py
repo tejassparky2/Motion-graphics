@@ -1,12 +1,12 @@
 """Episode 1 (v2), helper 3: the new world shots (channels/monsters/EP01V2_SHOTS.md).
 
-S09 "I woke up under a cracked sky." (2.3 s + 12-frame tail handle = 67 frames at 24 fps)
+S09 "I woke up under a cracked sky." (54 frames in the cut + 12-frame handle = 66 frames at 24 fps)
   f1-3    pure white (S08 ends on black, then white: the death)
   f4-16   the white blooms open from the middle onto a pastel sky with a hairline crack, the same zigzag as the tank crack
-          (read from pistolshrimp.tank(), so it matches exactly)
-  f17-24  hold on the cracked sky (pollen motes drift: LC10)
-  f24-48  the camera tilts down (SG5, locked position, on 1s) past the giant mushrooms to Kai lying in pink-tinted grass
-  f48-67  Kai blinks awake (acting on 3s, IM2): eyes closed, squint, open, one blink
+          (pistolshrimp.crack_path())
+  f17-38  hold on the cracked sky while "cracked sky" is spoken (f31-44); pollen motes drift (LC10)
+  f38-48  the camera tilts down (SG5, locked position, on 1s; stopped down while moving) to Kai in pink-tinted grass
+  f48-66  Kai blinks awake (acting on 3s, IM2): closed, squint f49, open f52 (the cut ends at f54), blink f58, open f61
 
 Kai is mk/hero.py's hero.blend (world outfit), laid on his back with his arms down; faces are hero.face() keys.
 
@@ -21,11 +21,11 @@ from mathutils import Euler, Quaternion, Vector
 
 from channels.monsters.mk import anim, hero, look, paintbg, pistolshrimp, world
 
-FRAMES = 67
+FRAMES = 66
 KAI_HEAD = (-2.0, -2.0)            # where Kai wakes: 5 m from the puddle he crawls to in S12, lying with his feet to -y
 CAM = (-2.0, -2.12, 1.0)           # S09's camera: locked above his face, tilting from the sky down to it
-SKY_PITCH = 50.0                   # degrees above the horizon at the start (the crack is straight ahead)
-TILT = (24, 48)                    # the tilt down, eased in and out
+SKY_PITCH = 36.0                   # degrees above the horizon at the start (the crack is straight ahead)
+TILT = (38, 48)                    # the tilt down, eased in and out ("cracked sky" is spoken at f31-44)
 
 
 def _key(o, path, f, value, interp="CONSTANT"):
@@ -275,13 +275,16 @@ def s09():
     for f, q in ((1, up), (TILT[0], up), (TILT[1], down)):
         cam.rotation_euler = q.to_euler("XYZ", cam.rotation_euler)
         cam.keyframe_insert("rotation_euler", frame=f)
-    for f, focus in ((1, 1000.0), (TILT[0], 1000.0), (38, 25.0), (TILT[1] - 2, (face - Vector(CAM)).length)):
+    for f, focus in ((1, 1000.0), (TILT[0], 1000.0), (TILT[0] + 6, 4.0), (TILT[1], (face - Vector(CAM)).length)):
         cd.dof.focus_distance = focus                              # sky, then the meadow, then his face
         cd.keyframe_insert("dof.focus_distance", frame=f)
+    for f, stop in ((TILT[0], 0.6), (TILT[0] + 4, 4.0), (TILT[1] - 1, 4.0), (TILT[1] + 1, 0.6)):
+        cd.dof.aperture_fstop = stop                               # stopped down while moving: no smeared grass
+        cd.keyframe_insert("dof.aperture_fstop", frame=f)
     _sky_crack(CAM, up)
     _bloom(cam)
     _motes(KAI_HEAD)
-    for f, name in ((1, "blink"), (51, "squint"), (54, "neutral"), (60, "blink"), (63, "neutral")):
+    for f, name in ((1, "blink"), (49, "squint"), (52, "neutral"), (58, "blink"), (61, "neutral")):
         hero.face(rig, name, f)                                    # waking: closed, squint, open, one blink (on 3s)
     return dict(frames=FRAMES, step=1, subject=[rig["arm"]])
 
