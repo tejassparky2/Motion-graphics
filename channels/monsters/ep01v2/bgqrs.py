@@ -543,8 +543,11 @@ def s19():
     cock(sh)
     tip = claw_tip(sh) + Vector((0.0, -0.06, -0.1))
     d = _drop(tip, 1, n + 40, n + 46, tip - Vector((0, 0, 2)), r=0.09)
-    for f, sc_ in ((3, 1.0), (24, 0.85), (45, 0.66), (66, 0.42), (81, 0.18), (90, 0.001)):
+    d.animation_data_clear()                                      # only the drying: no swell, no fall, no regrowth
+    d.location = tip
+    for f, sc_ in ((1, 1.0), (24, 0.85), (45, 0.66), (66, 0.42), (81, 0.18), (90, 0.001)):
         anim.key(d, "scale", f, (sc_, sc_, sc_ * 1.2), "LINEAR")
+    anim.key(d, "scale", n, (0.001, 0.001, 0.001), "CONSTANT")     # stays gone
     face = kai_point(rig, "nose")
     tgt = face.lerp(tip, 0.45) + Vector((0.15, 0, 0.1))
     cam = _camera("cam_s19", tgt + Vector((0.3, -4.2, 2.6)), tgt, 38, dof=None)

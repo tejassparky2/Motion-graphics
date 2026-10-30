@@ -3,7 +3,8 @@ comp.py over the Blender frames, then the mp4 and contact sheet for out/monsters
 
     FPS=24 python channels/monsters/ep01v2/bgqrs_post.py S19 [S20 ...]
 
-Reads build/monsters/ep01v2/<SHOT>/0001.png ... (render_shot.py output; subject/ when rendered with --subject) and
+Needs a venv with pycairo, numpy, scipy, opencv-python-headless and pillow, plus ffmpeg (helpers 5 and 6: fx2d
+imports scipy). Reads build/monsters/ep01v2/<SHOT>/0001.png ... (render_shot.py output; subject/ when rendered with --subject) and
 the screen anchors the builder wrote (build/monsters/ep01v2/<SHOT>_anchors.json). No text and no HUD (owner's rule).
 """
 import json
