@@ -26,7 +26,7 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03b | helper 1 | **FIX** | 51 / 51 | **0.23** | face washed white, no cyan; shirt bleached toward the world teal |
+| S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
 | S09 | helper 3 | **FIX** | 67 / 66 | 0.44 | crack gone and frame blurred on "cracked sky"; Kai's wake-up mostly after the 54-frame cut |
 | S06 | helper 9 | PASS | 48 / 41 | 0.37 | double flash on the line, lights cut out on 2s |
 | S10a | helper 4 | re-rendering (v8 outline) | 56 / 56 | 0.39 | coordinator's second read: PASS; re-render for the SDF fix |
@@ -34,10 +34,17 @@ Most serious first within each shot. Updated as shots land.
 | S11a | helper 4 | re-rendering (FIX from the coordinator) | 39 / 39 | 0.52 | the wrong detail too small; reworked |
 | S11b | helper 6 | **FIX** (v8) | 38 / 38 | 0.47 | same: no outline on the SDF body and antennae |
 
-Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24.
+Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24; re-renders of S09, S10b, S11b (v8) and S10a/S11a (v8).
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
-**FIX** (sent to helper 1, 30 Oct).
+**v2 (9ff69f6): PASS**, with one NOTE.
+- **Fixed:** the tank light is now cyan from one side, so the left of the face falls into a hard, designed cool
+  shadow tone. The shirt reads dark slate again (the earth outfit). The smile lands in two steps: the eyes soften
+  around frame 19, then the closed-eye `happy` smile at about frame 22 (SG2).
+- **NOTE:** mean saturation is 0.28. That is under the 0.34-0.61 band but inside E22's measured 0.26-0.69, and it
+  suits a pale face in a dark lab. Not blocking. S03a and S05b come from the same rig, so check they cut with it.
+
+**v1: FIX** (sent to helper 1, 30 Oct).
 1. **Most serious: the tank light washes the frame out instead of lighting it cyan (row: "lit cyan by the tank";
    LC9, LC1).**
    - Mean saturation is 0.23, below the 0.34-0.61 band and below even E22's measured minimum of 0.26. S06, the same
