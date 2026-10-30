@@ -104,6 +104,7 @@ def build(loc=(0, 0, 0), scale=1.0, rot_z=0.0):
     _swap_pixels("body", os.path.join(A, "body_hero.png"))
     arm.location = loc
     arm.scale = (scale, scale, scale)
+    arm.rotation_mode = "XYZ"           # the VRM import leaves it in QUATERNION mode (helper 10)
     arm.rotation_euler = (0, 0, rot_z)
     hb = arm.data.vrm_addon_extension.vrm1.humanoid.human_bones
 
@@ -485,6 +486,7 @@ def load(loc=(0, 0, 0), scale=1.0, rot_z=0.0, outfit="world", line=0.004):
     arm = next(o for o in col.objects if o.type == "ARMATURE")
     arm.location = loc
     arm.scale = (scale, scale, scale)
+    arm.rotation_mode = "XYZ"           # saved in QUATERNION mode by the VRM import; Euler so rot_z works
     arm.rotation_euler = (0, 0, rot_z)
     if outfit == "earth":
         wear = bpy.data.materials["huku_bake"].node_tree.nodes
