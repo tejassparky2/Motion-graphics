@@ -79,26 +79,40 @@ def _world(k, name, tail=False):
 
 def _pose(k, spec, loc, rot=(0, 0, 0)):
     """Place the armature and pose it. spec: [(bone, direction in Kai's own frame: +Y forward, +Z up, +X his
-    right)], applied in order (parents first)."""
+    right)], applied in order (parents first). The model itself faces -Y, so it gets a half turn on top (the VRM
+    import leaves the armature in quaternion mode, where rotation_euler does nothing: switch it to XYZ)."""
     arm = k["arm"]
-    arm.location, arm.rotation_euler = loc, rot
-    _reset(k)
     r = Euler(rot).to_matrix()
+    arm.rotation_mode = "XYZ"
+    arm.location = loc
+    arm.rotation_euler = (r @ Matrix.Rotation(math.pi, 3, "Z")).to_euler()
+    _reset(k)
     for name, d in spec:
         _aim(k, name, r @ Vector(d))
 
 
 def _key_pose(k, frame):
+    """Remember the current pose for `frame`. The keys go in at the end (_flush_keys): once the armature has an
+    action, every depsgraph update re-applies it and would overwrite the pose being built."""
     arm = k["arm"]
+    k.setdefault("rec", []).append((frame, arm.location.copy(), arm.rotation_euler.copy(),
+                                    {pb.name: pb.rotation_quaternion.copy() for pb in arm.pose.bones}))
+
+
+def _flush_keys(k):
+    """Insert every remembered pose as CONSTANT keys (Kai acts on 3s/2s: poses snap)."""
     from channels.monsters.mk import anim
-    for path in ("location", "rotation_euler"):
-        anim.key(arm, path, frame, tuple(getattr(arm, path)), "CONSTANT")
-    for pb in arm.pose.bones:
-        pb.keyframe_insert("rotation_quaternion", frame=frame)
+    arm = k["arm"]
+    for frame, loc, rot, quats in k.get("rec", []):
+        arm.location, arm.rotation_euler = loc, rot
+        arm.keyframe_insert("location", frame=frame)
+        arm.keyframe_insert("rotation_euler", frame=frame)
+        for pb in arm.pose.bones:
+            pb.rotation_quaternion = quats[pb.name]
+            pb.keyframe_insert("rotation_quaternion", frame=frame)
     for fc in anim.all_fcurves(arm.animation_data.action):
         for kp in fc.keyframe_points:
-            if abs(kp.co.x - frame) < 0.01:
-                kp.interpolation = "CONSTANT"
+            kp.interpolation = "CONSTANT"
 
 
 KNEEL = [("spine", (0, 0.72, 0.7)), ("chest", (0, 0.8, 0.6)), ("upper_chest", (0, 0.8, 0.6)),
@@ -248,7 +262,7 @@ def s15():
     # ---- the puff-shrimp at the puddle, its claw dipped in the water
     rig = puffshrimp.build((0, 0, 0))
     root, body, sh, hg = rig["root"], rig["body"], rig["shoulder"], rig["hinge"]
-    DIP, UP, STRIKE = (2.0, 0.6, 1.4), (0.35, 0.75, 0.0), (-0.45, 0.55, 0.0)
+    DIP, UP, STRIKE = (1.8, 0.0, 0.3), (0.35, 0.75, 0.0), (-0.45, 0.55, 0.0)   # DIP: tip in the puddle's edge
     anim.key(sh, "rotation_euler", A, DIP, "CONSTANT")
     anim.key(hg, "rotation_euler", A, (0.1, 0, 0), "CONSTANT")
     anim.key(root, "rotation_euler", A, (0, 0, 0), "CONSTANT")
@@ -302,17 +316,26 @@ def s15():
         d = (reach - _world(k, "right_upper_arm")).length
         loc.y += d - 2.55
     for f, s in ((A, 0.0), (A + 3, 0.3), (A + 6, 0.6), (A + 9, 0.85), (A + 12, 1.0)):
-        _apply_kneel(k, loc, s, reach)
+        _apply_kneel(k, loc, s, reach + (1 - s) * Vector((0.3, -1.6, 1.3)))    # drawn back, then reaching
         _key_pose(k, f)
     hero.expression(k, "relaxed", 0.5, A)
-    # A: his point of view (the camera at his eyes, at the mid-reach pose)
-    _apply_kneel(k, loc, 0.5, reach)
-    head = _world(k, "head")
-    eye = head + Vector((0, 0.65, 0.5))
-    _cam("S15_A_pov", tuple(eye), (0.15, 0.0, 1.15), 24, A, sc)
-    _cam("S15_B_eyes", (0.05, -2.35, 1.3), (0.0, -0.8, 1.22), 55, B, sc)
+    for o in k["arm"].children:                                # off screen from the eyes to the blast (B-E)
+        if o.type == "MESH":
+            o.hide_render = False
+            o.keyframe_insert("hide_render", frame=A)
+            o.hide_render = True
+            o.keyframe_insert("hide_render", frame=B)
+            o.hide_render = False
+            o.keyframe_insert("hide_render", frame=F)
+    # A: low, beside his reaching arm: the hand comes in from the top of frame toward the shrimp's face
+    _cam("S15_A_reach", (1.7, -3.9, 1.05), (0.0, -0.4, 1.45), 30, A, sc)
+    sc.frame_set(B + 1)
+    bpy.context.view_layer.update()
+    ec = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
+    cam_b = _cam("S15_B_eyes", tuple(ec + Vector((0.0, -1.55, 0.05))), tuple(ec), 30, B, sc)
+    cam_b.data.dof.aperture_fstop = 1.0
     cam_c = _cam("S15_C_claw", (-3.6, -5.6, 1.15), (-0.55, 0.0, 2.1), 32, C, sc)
-    cam_e = _cam("S15_E_result", (-7.8, -3.2, 0.8), (1.2, 7.5, 3.4), 24, E, sc)
+    cam_e = _cam("S15_E_result", (-6.5, -5.5, 0.9), (1.6, 6.0, 3.0), 24, E, sc)
 
     # ---- E: the ring, the forest wall sliced and erased, held
     fx = erase.erase_trees(m["trees"], origin=tuple(blast), f0=E - 1, cam=cam_e, stumps=stumps)
@@ -337,8 +360,8 @@ def s15():
 
     # ---- F: Kai blown backwards (on 2s), G: on his back, shocked, the shake, his eyes close
     y0 = loc.y
-    path = [(F, 0.4, 0.15), (F + 2, 1.6, 0.45), (F + 4, 3.0, 0.8), (F + 6, 4.2, 1.1), (F + 8, 5.4, 1.35),
-            (F + 10, 6.6, 1.5)]
+    path = [(F, 0.4, 0.15), (F + 2, 1.6, 0.35), (F + 4, 3.0, 0.55), (F + 6, 4.2, 0.75), (F + 8, 5.4, 0.9),
+            (F + 10, 6.6, 1.0)]
     for f, back, tilt in path:
         u = (f - F) / 10
         _pose(k, BLOWN, (loc.x, y0 - back * 1.6, 1.0 + 7.0 * u * (1 - u) * 1.6), (tilt, 0, 0))
@@ -354,12 +377,13 @@ def s15():
     hero.expression(k, "surprised", 0.4, END - 3)
     hero.expression(k, "blink", 1.0, END - 1)
     hero.expression(k, "surprised", 0.0, END - 1)
-    fly = Vector((loc.x, y0 - 5.5, 4.6))
-    _cam("S15_F_blown", (fly.x + 21, fly.y + 1.5, 4.2), tuple(fly), 22, F, sc)
-    face = _world(k, "head")
-    cam_g = _cam("S15_G_shock", (face.x + 0.35, face.y + 2.4, face.z + 4.4), (face.x, face.y - 0.35, face.z + 0.6),
-                 38, G, sc)
+    fly = Vector((loc.x, y0 - 4.5, 4.2))
+    _cam("S15_F_blown", (fly.x + 17, fly.y + 0.5, 4.0), tuple(fly), 24, F, sc)
+    face = (_world(k, "head") + _world(k, "head", True)) / 2 + Vector((0, 0, 0.35))
+    cam_g = _cam("S15_G_shock", (face.x + 0.3, face.y + 1.7, face.z + 3.1), tuple(face), 42, G, sc)
+    cam_g.data.dof.aperture_fstop = 1.2
     _shake(cam_g, G, 14)
+    _flush_keys(k)
 
     cam_c.data.dof.focus_distance = math.dist(cam_c.location, (0, 0, 1.4))
     cam_e.data.dof.focus_distance = math.dist(cam_e.location, (0, 9.0, 2.5))   # the result: the forest wall
