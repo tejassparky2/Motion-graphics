@@ -531,8 +531,10 @@ def s21():
     _key_pose(sh, 42, (0.85, 0.35, 0.0), 0.3)                               # dips the claw in the water
     anim.on_twos([r, body, sh["shoulder"], sh["hinge"]], 2)
     kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
-    cam_loc = Vector((-0.2, -9.4, 1.05))
-    cam = _camera("cam_s21", cam_loc, Vector((-1.0, -2.0, 1.1)), 26, dof=sh["body"], fstop=0.6)
+    # raised (coordinator, 30 Oct): from 1.05 his lying body hid the shrimp's stomps and the puddle after frame ~20;
+    # from here Kai stays the foreground at the bottom and the whole hop path and the puddle read above him
+    cam_loc = Vector((-0.2, -9.6, 5.2))
+    cam = _camera("cam_s21", cam_loc, Vector((-1.0, -1.3, 0.2)), 26, dof=sh["body"], fstop=0.6)
     bpy.context.scene.camera = cam
     _anchors("S21", cam, {"feet": lambda: r.matrix_world.translation.copy()}, n)
     with open(os.path.join(ANCHORS, "S21_lands.json"), "w") as fh:
