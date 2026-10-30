@@ -72,3 +72,20 @@ Reuse the existing helper sessions listed in channels/horror/README.md (owner: d
   - These took 110 s down to ~62 s per frame at 1080x1920.
 - **Look at every image.** Things they only caught by looking: IK not reaching its target, gaze drifting under the eyelids, a backdrop leaking into other shots.
 - **Previews:** a Workbench contact sheet every 2nd frame.
+
+## Episode 1 work split (30 Oct 2026, owner: "Use all this dma sessions to speed up")
+| Who | Piece | Module |
+|---|---|---|
+| DMA helper 1 (session_01PF511bDdsYwHy141n4jcnn) | Earth lab set (tanks, rain window, power strip, lightning/flicker/puddle/spark) | mk/lab.py |
+| DMA helper 2 (session_01PF511Y13zuEX6TW3egNyxM) | Pistol shrimp in its tank (snap, bubble glow, glass crack) | mk/pistolshrimp.py |
+| DMA helper 3 (session_01PF511b6tpL8dByjU7Qp3Tu) | The new world landscape + fall-through-clouds camera | mk/world.py |
+| DMA helper 4 (session_01PF511YEojWTNPFKxSeURms) | Jelly-snail (tell: smoking holes in its trail) | mk/jellysnail.py |
+| DMA helper 5 (session_01PF511ahSS4W8tEQ9ukoLwF) | Tuftwing bird (tell: a giant shadow) | mk/tuftwing.py |
+| DMA helper 6 (session_01PF511Y382fBtBJa7rzyVDQ) | Fluffmoth (tell: the wing eye-spots blink) | mk/fluffmoth.py |
+| DMA helper 7 (session_01PF511bWPhLFvpRbgd3zffg) | Kai (MPFB2, anime toon, poses, expressions) | mk/kai.py |
+| DMA helper 8 (session_01PF511Yk7bwbspWweS95hGA) | 2D anime FX + original game HUD (pycairo) | fx2d.py |
+| DMA helper 9 (session_01PF511ZFaQeq2RigHZ22DrB) | Storm, power-out, white-out, sky reveal | mk/storm.py |
+| DMA helper 10 (session_01PF511YTmbSi3KeLNnX6GyZ) | Forest-erase effect | mk/erase.py |
+| session_01PF511bGqrs1SFn3cpk5NqS | Sound effects + music beds (numpy) | sfx.py |
+| session_01PF511XprLcpVNCdEQUsUFF | Kai's voice (pick of 4 Turbo refs) + Episode 1 takes | assets/voice_cache/monsters_ep01_takes.tar |
+| Coordinator (this session) | Puff-shrimp, crater shots, shot list and timeline, integration, final parallel render | mk/puffshrimp.py, ep01 |
