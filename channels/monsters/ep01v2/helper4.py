@@ -132,7 +132,7 @@ def _ember_flicker(f0, f1, seed=6):
 
 
 def s10a():
-    frames = 31 + HANDLE
+    frames = 44 + HANDLE                                             # TIMING.md (v7): 44 in the cut
     h, rig = _scene(trail=False)
     jellysnail.hold(rig, 1, frames, "cute", bob=0.025, period=36)    # one slow bob over the shot
     anim.blink(rig, 23)                                               # SG2: one face change (shut on a 3s frame)
@@ -146,7 +146,7 @@ def s10a():
 
 
 def s11a():
-    frames = 24 + HANDLE
+    frames = 27 + HANDLE                                             # TIMING.md (v7): 27 in the cut
     h, rig = _scene(trail=True)
     jellysnail.idle(rig, 1, frames)
     _ember_flicker(1, frames)
