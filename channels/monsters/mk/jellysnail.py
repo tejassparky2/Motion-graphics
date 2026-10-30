@@ -344,20 +344,25 @@ def _cycle(idblock):
             fc.modifiers.new("CYCLES")
 
 
-def smoke(trail, f0, period=40):
+def smoke(trail, f0, period=40, strength=1.0, color=None):
     """Each wisp rises from its hole, swells, drifts and fades, over and over (VFX: on 1s). Already-smoking wisps are
-    left alone, so idle() and hold() can share one rig."""
+    left alone, so idle() and hold() can share one rig. `strength` > 1 makes the smoke thicker (more opaque and a
+    little bigger) and `color` (hex) recolours it, for shots where it has to read at a glance."""
     for w in trail["wisps"]:
         o, (x, y, z), r = w["obj"], w["base"], w["r"]
         if o.animation_data:
             continue
-        mix = o.data.materials[0].node_tree.nodes["Mix"]
+        nt = o.data.materials[0].node_tree
+        mix = nt.nodes["Mix"]
+        if color:
+            next(n for n in nt.nodes if n.type == "EMISSION").inputs[0].default_value = look.hexc(color)
+        r *= 1 + 0.25 * (strength - 1)
         s = f0 - w["phase"]
         for df, dz, sc, a, dx in ((0, 0.04, 0.3, 0.0, 0.0), (8, 0.2, 0.55, 0.5, 0.2), (24, 0.6, 0.85, 0.3, 0.6),
                                   (period, 1.0, 1.1, 0.0, 1.0)):
             anim.key(o, "location", s + df, (x + w["drift"] * dx, y + 0.05 * dx, z + dz), "LINEAR")
             anim.key(o, "scale", s + df, (r * sc, r * sc, r * sc * 1.4), "LINEAR")
-            mix.inputs[0].default_value = a
+            mix.inputs[0].default_value = min(0.95, a * strength)
             mix.inputs[0].keyframe_insert("default_value", frame=s + df)
         _cycle(o)
         _cycle(o.data.materials[0].node_tree)
