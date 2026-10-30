@@ -249,3 +249,11 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   session_01PF511YTmbSi3KeLNnX6GyZ (10); and this branch's helpers session_01PF511XprLcpVNCdEQUsUFF and
   session_01PF511bGqrs1SFn3cpk5NqS. They were made for tejassparky2/Manga, so a job must tell them to clone
   tejassparky2/Motion-graphics (branch ccr-56282fe5-evehq4-horror) first.
+- 30 Oct 2026: owner "Manga and previous story both didn't worked" -> new series: a cute little monster world with
+  terrifying powers, an MC reincarnated into it (learns, struggles, wins), game-like look (2D/2.5D/3D, whichever is
+  best), up to 8-10 h of machine time per episode, quality first. Report: reports/Monster tamer anime pipeline and
+  hooks.md (Blender Cycles, procedural, frames split across parallel cloud sessions; pilot first). World + Episode 1
+  script for approval: out/monsters/world_and_ep01_script.md ("Cute Things Kill Here", Kai, the pistol-shrimp puffball,
+  bond = survive its power). Blender 4.5.15 LTS and Godot 4.5.1 are in /home/user/tools (not in git); CC0 Quaternius
+  Ultimate Monsters (33 models) in /home/user/tools/assets. Measured here: Godot 2D ~7.5 fps, Godot 3D ~3 fps, Cycles
+  720x1280 32 samples ~30 s/frame (simple scene).
