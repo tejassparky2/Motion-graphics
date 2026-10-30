@@ -560,18 +560,19 @@ def s20():
     _key_pose(sh, 28, jab, -0.25, 0.0)
     _key_pose(sh, 32, jab, -0.25)
     body = sh["body"]
-    body.rotation_euler = (0, math.radians(-14), math.radians(-40))  # where it ends up, to place the claw for that
+    body.rotation_euler = (0, math.radians(-14), math.radians(-20))  # where it ends up, to place the claw for that
     bpy.context.view_layer.update()
-    turned = Vector((math.sin(yaw - math.radians(40)), -math.cos(yaw - math.radians(40)), 0))
-    stare = raise_claw(sh, root + turned * 1.3 + Vector((0, 0, 2.3)), root + Vector((0, 0, 1.3)))
+    side = yaw - math.radians(55)                                  # its right-front: the claw held up there
+    stare = raise_claw(sh, root + Vector((math.sin(side), -math.cos(side), 0)) * 1.3 + Vector((0, 0, 2.2)),
+                       root + Vector((0, 0, 1.3)))
     body.rotation_euler = (0, 0, 0)
     sh["shoulder"].rotation_euler = sh["cock"]
     bpy.context.view_layer.update()
     _key_pose(sh, 36, stare, 0.4)                                 # brings the claw round in front of its face
     anim.key(body, "rotation_euler", 30, (0, 0, 0))
-    anim.key(body, "rotation_euler", 34, (0, 0, math.radians(-40)))  # turns to stare at its claw
-    anim.key(body, "rotation_euler", 40, (0, math.radians(-14), math.radians(-40)))  # ...and tilts its head
-    anim.key(body, "rotation_euler", n, (0, math.radians(-16), math.radians(-40)))
+    anim.key(body, "rotation_euler", 34, (0, 0, math.radians(-20)))  # turns to stare at its claw
+    anim.key(body, "rotation_euler", 40, (0, math.radians(-14), math.radians(-20)))  # ...and tilts its head
+    anim.key(body, "rotation_euler", n, (0, math.radians(-16), math.radians(-20)))
     anim.lids(sh, 36, 0.3)
     anim.lids(sh, 40, 0.0)
     anim.on_twos([sh["shoulder"], sh["hinge"], body], 2)
