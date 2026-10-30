@@ -3,16 +3,20 @@ lighter rim fakes the see-through look), two eye stalks with big glossy eyes, a 
 smile, and a round glass-marble shell with a glowing pastel spiral inside. Its tell: wherever it has crawled, the slime
 trail behind it has burned little smoking holes through the grass.
 
-    rig = build(loc)        ->  dict(root, body, bodymesh, shell, stalks, eyes, trail)
+    rig = build(loc)        ->  dict(root, body, bodymesh, shell, stalks, eyes, mouths, trail)
     root      : moves/turns the whole creature (foot at z=0, facing -Y)
     body      : squash & stretch pivot at the ground
     bodymesh  : the jelly body; its "wave" modifier makes the ripple that runs along the foot
     shell     : the shell's pivot where it sits on the back (small rotations for a wobble)
     stalks    : eye-stalk pivots at the head (rotate X/Z to bob)
     eyes      : eye pivots at the stalk tips (scale z to blink)
+    mouths    : dict(smile, o): swappable mouth shapes (see mouth())
     trail     : dict(root, holes, wisps): the burned slime trail; it stays on the ground (not parented to root)
 
-    idle(rig, f0, f1)      the foot wave, stalk bob and blinks on 2s, the trail smoking on 1s
+    idle(rig, f0, f1)            the foot wave, stalk bob and blinks on 3s, the trail smoking on 1s
+    pose(rig, f, kind)           a held pose keyed at f: "cute" (head tilt, stalks leaning), "delight", "shock"
+    hold(rig, f0, f1, kind)      one held pose with a small bob on 3s (short close shots such as S14a)
+    mouth(rig, f, shape)         switch the mouth to "smile" or "o" at f
 """
 import math
 import random
@@ -24,7 +28,7 @@ from . import anim, look, sdf
 from .puffshrimp import _empty, _parent, _sphere
 from .puffshrimp import _tube as _puff_tube
 
-LILAC, RIM, INK, BLUSH = "#c9a9f5", "#f3eaff", "#1b1830", "#ff9fc4"
+LILAC, RIM, INK, BLUSH, CRESCENT = "#c9a9f5", "#f3eaff", "#1b1830", "#ff9fc4", "#8f6bff"
 GLASS, SWIRL = "#dfe8ff", ("#ffe36e", "#ff8fcf", "#b98cff", "#5fe0c0")
 SLIME, CHAR, HOLE, EMBER, SMOKE = "#efe4ff", "#4b3326", "#191216", "#ff7b3a", "#5d5562"
 
@@ -74,7 +78,8 @@ def jelly(name, base, rim=RIM, threshold=0.45):
 
 def glass(name, tint=GLASS, rim="#ffffff"):
     """See-through marble glass: mostly clear in the middle, a pale opaque rim, and a dark line at the very edge (an
-    inverted-hull outline would show through the glass, so the outline is drawn by the material itself)."""
+    inverted-hull outline would show through the glass, so the outline is drawn by the material itself, in the glass's
+    own darker line colour like look.outline()'s)."""
     if name in bpy.data.materials:
         return bpy.data.materials[name]
     m = bpy.data.materials.new(name)
@@ -89,14 +94,14 @@ def glass(name, tint=GLASS, rim="#ffffff"):
     cr = col.color_ramp
     cr.interpolation = "CONSTANT"
     cr.elements[0].position, cr.elements[0].color = 0.0, look.hexc(tint)
-    cr.elements[1].position, cr.elements[1].color = 0.55, look.hexc(rim)
-    cr.elements.new(0.76).color = look.hexc(look.OUTLINE_RGB)
+    cr.elements[1].position, cr.elements[1].color = 0.5, look.hexc(rim)
+    cr.elements.new(0.67).color = look.line_color(look.hexc(tint))
     alpha = nt.nodes.new("ShaderNodeValToRGB")
     ar = alpha.color_ramp
     ar.interpolation = "CONSTANT"
     ar.elements[0].position, ar.elements[0].color = 0.0, (0.22, 0.22, 0.22, 1)
-    ar.elements[1].position, ar.elements[1].color = 0.55, (0.75, 0.75, 0.75, 1)
-    ar.elements.new(0.76).color = (1, 1, 1, 1)
+    ar.elements[1].position, ar.elements[1].color = 0.5, (0.75, 0.75, 0.75, 1)
+    ar.elements.new(0.67).color = (1, 1, 1, 1)
     em = nt.nodes.new("ShaderNodeEmission")
     tr = nt.nodes.new("ShaderNodeBsdfTransparent")
     mix = nt.nodes.new("ShaderNodeMixShader")
@@ -118,6 +123,15 @@ def _tube(name, pts, radius, mat, line=0.012):
     any selected mesh (it ate the body's wave and outline)."""
     bpy.ops.object.select_all(action="DESELECT")
     return _puff_tube(name, pts, radius, mat, line)
+
+
+def _pivot(name, world, parent):
+    """An empty at a WORLD position, parented without moving (puffshrimp's _empty(name, loc, parent) puts it at
+    parent + loc, which double-counts a pivot given in world space)."""
+    e = _empty(name, world)
+    bpy.context.view_layer.update()
+    _parent(e, parent)
+    return e
 
 
 def _front(body, x, z):
@@ -212,6 +226,7 @@ def build(loc=(0, 0, 0), name="jsnail", trail=True):
     hi_m = look.flat(f"{name}_hi", (1, 1, 1, 1))
     blush_m = look.flat(f"{name}_blush", hx(BLUSH))
     sheen_m = look.flat(f"{name}_sheen", hx(RIM))
+    iris_m = look.flat(f"{name}_iris", hx(CRESCENT))          # the lighter colour low in the eye (anime eyes)
     E = sdf.E
 
     def W(x, y, z):
@@ -226,7 +241,8 @@ def build(loc=(0, 0, 0), name="jsnail", trail=True):
         (E((0, -0.72, 0.62), (0.5, 0.45, 0.6)), lilac.name, 0.22),
         (E((0, 1.35, 0.14), (0.32, 0.5, 0.14)), lilac.name, 0.18),
     ], k=0.12, res=0.03, smooth_iter=16)
-    mouth_l, mouth_c, mouth_r = _front(body, -0.11, 0.69), _front(body, 0, 0.62), _front(body, 0.11, 0.69)
+    mouth_pts = [_front(body, x, z) for x, z in ((-0.13, 0.66), (-0.065, 0.6), (0, 0.635), (0.065, 0.6), (0.13, 0.66))]
+    mouth_c = _front(body, 0, 0.6)
     cheeks = [_front(body, sx * 0.3, 0.74) for sx in (-1, 1)]
     sheen = _front(body, -0.22, 1.0)
     # the ripple that runs forward along the foot: straight up (the marching-cubes normals are too noisy to push along),
@@ -244,11 +260,14 @@ def build(loc=(0, 0, 0), name="jsnail", trail=True):
     look.outline(body, 0.025)
     body.location = W(*body.location)
     _parent(body, body_pivot)
-    # face: a small smile, blush, and a jelly sheen on the head
-    mouth = _tube(f"{name}_mouth", [W(mouth_l[0], mouth_l[1] - 0.012, mouth_l[2]),
-                                    W(mouth_c[0], mouth_c[1] - 0.012, mouth_c[2]),
-                                    W(mouth_r[0], mouth_r[1] - 0.012, mouth_r[2])], 0.018, eye_m, 0)
-    _parent(mouth, body_pivot)
+    # face: a small cat-like "w" smile (a plain curve read as a closed eye from the side, since the real eyes are up
+    # on the stalks) or a surprised "o", blush, and a jelly sheen on the head
+    smile = _tube(f"{name}_mouth", [W(x, y - 0.012, z) for x, y, z in mouth_pts], 0.018, eye_m, 0)
+    mouth_o = _sphere(f"{name}_mouth_o", W(mouth_c[0], mouth_c[1] - 0.01, mouth_c[2] + 0.03), (0.05, 0.025, 0.06),
+                      eye_m, 0, 16)
+    mouth_o.hide_render = mouth_o.hide_viewport = True
+    for o in (smile, mouth_o):
+        _parent(o, body_pivot)
     for sx, c in zip((-1, 1), cheeks):
         b = _sphere(f"{name}_blush{sx}", W(c[0], c[1] - 0.01, c[2]), (0.09, 0.03, 0.05), blush_m, 0, 16)
         _parent(b, body_pivot)
@@ -259,26 +278,24 @@ def build(loc=(0, 0, 0), name="jsnail", trail=True):
     stalks, eyes = [], []
     for sx in (-1, 1):
         base, mid, tip = W(sx * 0.16, -0.8, 1.1), W(sx * 0.24, -0.9, 1.5), W(sx * 0.36, -0.98, 1.82)
-        piv = _empty(f"{name}_stalkpiv{sx}", base, body_pivot)
-        bpy.context.view_layer.update()
+        piv = _pivot(f"{name}_stalkpiv{sx}", base, body_pivot)
         st = _tube(f"{name}_stalk{sx}", [base, mid, tip], 0.05, lilac)
         bulb = _sphere(f"{name}_bulb{sx}", tip, (0.17, 0.16, 0.17), lilac, 0.02, 24)
         for o in (st, bulb):
             _parent(o, piv)
         ec = (tip[0], tip[1] - 0.12, tip[2])
-        epiv = _empty(f"{name}_eyepiv{sx}", ec, piv)
-        bpy.context.view_layer.update()
+        epiv = _pivot(f"{name}_eyepiv{sx}", ec, piv)
         e = _sphere(f"{name}_eye{sx}", ec, (0.12, 0.06, 0.15), eye_m, 0.014, 24)
         h1 = _sphere(f"{name}_hi{sx}", (ec[0] + 0.045, ec[1] - 0.05, ec[2] + 0.06), (0.04, 0.02, 0.045), hi_m, 0, 12)
-        h2 = _sphere(f"{name}_hi2{sx}", (ec[0] - 0.035, ec[1] - 0.055, ec[2] - 0.05), (0.02, 0.01, 0.02), hi_m, 0, 10)
-        for o in (e, h1, h2):
+        cres = _sphere(f"{name}_iris{sx}", (ec[0], ec[1] - 0.042, ec[2] - 0.072), (0.085, 0.025, 0.05), iris_m, 0, 20)
+        h2 = _sphere(f"{name}_hi2{sx}", (ec[0] - 0.04, ec[1] - 0.06, ec[2] - 0.035), (0.02, 0.01, 0.02), hi_m, 0, 10)
+        for o in (e, cres, h1, h2):
             _parent(o, epiv)
         stalks.append(piv)
         eyes.append(epiv)
     # the shell: a glass marble with a glowing pastel spiral inside, sitting in the back
     c = (0.0, 0.32, 0.95)
-    shell = _empty(f"{name}_shell", W(0, 0.32, 0.4), body_pivot)
-    bpy.context.view_layer.update()
+    shell = _pivot(f"{name}_shell", W(0, 0.32, 0.4), body_pivot)
     gl = _sphere(f"{name}_glass", W(*c), (0.62, 0.62, 0.62), glass(f"{name}_glass"), 0, 48)
     _parent(gl, shell)
     turns, segs = 2.3, len(SWIRL) - 1
@@ -302,7 +319,8 @@ def build(loc=(0, 0, 0), name="jsnail", trail=True):
         _parent(g, shell)
     look.blob_shadow(f"{name}_shadow", W(0, 0.15, 0.03), (0.8, 1.55), root)
     tr = burn_trail(loc, name) if trail else None
-    return dict(root=root, body=body_pivot, bodymesh=body, shell=shell, stalks=stalks, eyes=eyes, trail=tr)
+    return dict(root=root, body=body_pivot, bodymesh=body, shell=shell, stalks=stalks, eyes=eyes,
+                mouths=dict(smile=smile, o=mouth_o), trail=tr)
 
 
 def _linear(o, path, frames, values):
@@ -324,9 +342,12 @@ def _cycle(idblock):
 
 
 def smoke(trail, f0, period=40):
-    """Each wisp rises from its hole, swells, drifts and fades, over and over (VFX: on 1s)."""
+    """Each wisp rises from its hole, swells, drifts and fades, over and over (VFX: on 1s). Already-smoking wisps are
+    left alone, so idle() and hold() can share one rig."""
     for w in trail["wisps"]:
         o, (x, y, z), r = w["obj"], w["base"], w["r"]
+        if o.animation_data:
+            continue
         mix = o.data.materials[0].node_tree.nodes["Mix"]
         s = f0 - w["phase"]
         for df, dz, sc, a, dx in ((0, 0.04, 0.4, 0.0, 0.0), (8, 0.22, 0.75, 0.7, 0.2), (24, 0.65, 1.2, 0.45, 0.6),
@@ -341,7 +362,7 @@ def smoke(trail, f0, period=40):
 
 def idle(rig, f0, f1, period=48, seed=2):
     """The foot ripple running forward, a slow breath and shell wobble, eye stalks bobbing out of step, and blinks,
-    all on 2s; the trail keeps smoking on 1s."""
+    all on 3s (anim.on_twos's default step); the trail keeps smoking on 1s."""
     rnd = random.Random(seed)
     wl = 2 * rig["bodymesh"].modifiers["wave"].width
     _linear(rig["bodymesh"], 'modifiers["wave"].start_position_y', (f0, f1),
@@ -366,5 +387,53 @@ def idle(rig, f0, f1, period=48, seed=2):
         anim.blink(rig, f)
         f += rnd.randint(40, 70)
     anim.on_twos([rig["body"], rig["bodymesh"], rig["shell"], *rig["stalks"], *rig["eyes"]])
+    if rig.get("trail"):
+        smoke(rig["trail"], f0)
+
+
+# held poses: stalk (rotation x, rotation z, spread outward? else both lean the same way), eye scale, body squash
+# (+ stretches up), body roll (a head tilt), mouth
+POSES = dict(
+    cute=dict(stalk=(0.06, 0.2, False), eye=1.0, body=0.0, roll=0.08, mouth="smile"),
+    delight=dict(stalk=(-0.12, 0.3, True), eye=1.12, body=0.06, roll=0.0, mouth="smile"),
+    shock=dict(stalk=(-0.32, 0.12, True), eye=1.25, body=0.1, roll=0.0, mouth="o"),
+)
+
+
+def mouth(rig, f, shape="smile"):
+    """Show one mouth shape from frame f on (constant keys)."""
+    for nm, o in rig["mouths"].items():
+        o.hide_render = o.hide_viewport = nm != shape
+        o.keyframe_insert("hide_render", frame=f)
+        o.keyframe_insert("hide_viewport", frame=f)
+
+
+def pose(rig, f, kind="cute"):
+    """Key a held pose at frame f (usable as a freeze frame for a reaction beat). Returns the pose's values."""
+    p = POSES[kind]
+    rx, rz, spread = p["stalk"]
+    for sx, s in zip((-1, 1), rig["stalks"]):
+        anim.key(s, "rotation_euler", f, (rx, 0.0, sx * rz if spread else rz))
+    for e in rig["eyes"]:
+        anim.key(e, "scale", f, p["eye"])
+    anim.squash(rig["body"], f, p["body"])
+    anim.key(rig["body"], "rotation_euler", f, (0.0, p["roll"], 0.0))
+    mouth(rig, f, p["mouth"])
+    return p
+
+
+def hold(rig, f0, f1, kind="cute", bob=0.02, period=12):
+    """One held pose from f0 to f1 with only a small breathing bob and stalk sway on 3s (short close shots, e.g. S14a:
+    about 0.9 s); the trail keeps smoking on 1s."""
+    p = pose(rig, f0, kind)
+    rx, rz, spread = p["stalk"]
+    f, up = f0 + period // 2, True
+    while f <= f1 + period // 2:
+        anim.squash(rig["body"], f, p["body"] + (bob if up else -bob))
+        for sx, s in zip((-1, 1), rig["stalks"]):
+            d = 0.05 if up else -0.03
+            anim.key(s, "rotation_euler", f, (rx + d, 0.0, (sx * rz if spread else rz) + sx * d * 0.5))
+        f, up = f + period // 2, not up
+    anim.on_twos([rig["body"], rig["shell"], *rig["stalks"], *rig["eyes"]])
     if rig.get("trail"):
         smoke(rig["trail"], f0)
