@@ -121,14 +121,69 @@ def _motes(center, f0, f1, spread=(1.6, 1.2, 1.1), n=9, seed=4):
     return out
 
 
-def _ember_flicker(f0, f1, seed=6):
+def _ember_flicker(f0, f1, seed=6, lo=1.0, hi=1.9):
     """The holes' ember edges breathe brighter and dimmer on 1s: the one locally lit sign of danger (LC4)."""
     rnd = random.Random(seed)
     m = bpy.data.materials["jsnail_ember"]
     em = next(n for n in m.node_tree.nodes if n.type == "EMISSION")
+    em.inputs[0].default_value = look.hexc("#ff8a2a")
     for f in range(f0, f1 + 1, 3):
-        em.inputs["Strength"].default_value = rnd.uniform(1.0, 1.9)
+        em.inputs["Strength"].default_value = rnd.uniform(lo, hi)
         em.inputs["Strength"].keyframe_insert("default_value", frame=f)
+
+
+def _hole_glow(trail, k=2.4):
+    """A soft orange glow on the grass round each hole, fading out from the rim (local light, LC4/TP11: no regrade)."""
+    m = bpy.data.materials.new("h4_hole_glow")
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    L = nt.links.new
+    o = nt.nodes.new("ShaderNodeOutputMaterial")
+    mix = nt.nodes.new("ShaderNodeMixShader")
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    e = nt.nodes.new("ShaderNodeEmission")
+    e.inputs[0].default_value = look.hexc("#ff9a3c")
+    g = nt.nodes.new("ShaderNodeTexGradient")
+    g.gradient_type = "SPHERICAL"
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    r = nt.nodes.new("ShaderNodeValToRGB")
+    r.color_ramp.elements[0].position, r.color_ramp.elements[0].color = 0.0, (0, 0, 0, 1)
+    r.color_ramp.elements[1].position, r.color_ramp.elements[1].color = 0.75, (0.55, 0.55, 0.55, 1)
+    L(tc.outputs["Object"], g.inputs[0])
+    L(g.outputs[0], r.inputs[0])
+    L(r.outputs[0], mix.inputs[0])
+    L(tr.outputs[0], mix.inputs[1])
+    L(e.outputs[0], mix.inputs[2])
+    L(mix.outputs[0], o.inputs[0])
+    m.surface_render_method = "BLENDED"
+    out = []
+    for i, (hx, hy, hr) in enumerate(trail["holes"]):
+        bpy.ops.mesh.primitive_circle_add(vertices=32, radius=1.0, fill_type="NGON", location=(hx, hy, 0.01))
+        c = bpy.context.object
+        c.name = f"h4_glow{i}"
+        c.scale = (hr * k, hr * k, 1)
+        c.data.materials.append(m)
+        c.visible_shadow = False
+        c.parent = trail["root"]
+        c.matrix_parent_inverse = trail["root"].matrix_world.inverted()
+        out.append(c)
+    return out
+
+
+def _clear_props(h, center, radius):
+    """Delete the world's small mushrooms near `center` (this scene only): nothing bright may pull the eye off the
+    holes."""
+    for o in h["mushrooms"]:
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        mw = o.matrix_world
+        dead = [v for v in bm.verts if (Vector((*(mw @ v.co).xy, 0)) - Vector((*center, 0))).length < radius
+                and (mw @ v.co).z < 4.0]
+        if dead:
+            bmesh.ops.delete(bm, geom=dead, context="VERTS")
+            bm.to_mesh(o.data)
+        bm.free()
 
 
 def s10a():
@@ -148,15 +203,21 @@ def s10a():
 def s11a():
     frames = 27 + HANDLE                                             # TIMING.md (v7): 27 in the cut
     h, rig = _scene(trail=True)
-    jellysnail.idle(rig, 1, frames)
-    _ember_flicker(1, frames)
     tr = rig["trail"]
     x, y = SPOT
-    mid = tr["holes"][3]
-    cam = _camera((x + 1.8, y + 8.8, 2.1), (x + 0.15, y + 3.9, 0.0), 40, (mid[0], mid[1], 0.05), 0.6)
+    _clear_props(h, (x, y + 6.0), 3.5)                               # the small red mushroom by the camera
+    # the wrong detail must read in 1.1 s (EP4): darker, thicker smoke, brighter embers, a glow on the grass
+    jellysnail.smoke(tr, 1, strength=1.6, color="#3a3340")
+    jellysnail.idle(rig, 1, frames)
+    _ember_flicker(1, frames, lo=1.8, hi=2.8)
+    _hole_glow(tr)
+    far, mid = tr["holes"][-1], tr["holes"][-3]
+    # low and close behind the last holes, looking up the trail: the nearest holes big in the lower middle, the
+    # trail leading the eye up to the snail
+    cam = _camera((far[0] + 0.3, far[1] + 2.6, 1.3), (x, y + 1.8, -0.8), 32, (mid[0], mid[1], 0.02), 0.8)
     check_safe(cam, [(f"hole{k}", (hx, hy, 0.02)) for k, (hx, hy, r) in enumerate(tr["holes"])] +
-               [("shell_top", (x, y + 0.32, 1.57))], "S11a")
-    motes = _motes((x, y + 3.6, 0.8), 1, frames, spread=(1.2, 1.6, 0.7), n=8, seed=11)
+               [("shell_top", (x, y + 0.32, 1.57)), ("bulb", (x, y - 0.98, 2.0))], "S11a")
+    motes = _motes((mid[0], mid[1], 0.7), 1, frames, spread=(1.0, 1.4, 0.6), n=8, seed=11)
     return dict(frames=frames, step=1, subject=[rig["root"], tr["root"], *motes], camera=cam)
 
 

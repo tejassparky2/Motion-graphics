@@ -60,36 +60,37 @@ def _key_points(rig):
     return pts
 
 
-def _camera(rig, view, lens=36, fstop=0.4, window=SAFE):
-    """A locked camera looking along `view` (moth space), as close as it can be with the face and every eye-spot
-    inside `window`, centred there with lens shift. Focus on the face; the open aperture still melts the world."""
+def _camera(rig, view, lens=36, fstop=0.4, span=0.76, eye_v=0.62):
+    """A locked close-up looking along `view` (moth space): as close as puts the wings across `span` of the frame
+    width (the tips may break the frame on the upstroke), with lens shift putting the eyes at `eye_v` (0 bottom, 1
+    top; 0.62 = 38% down) and the wings centred. The eye-spots must stay above the caption band. Focus on the face;
+    the open aperture still melts the world."""
     sc = bpy.context.scene
     bpy.ops.object.camera_add()
     cam = bpy.context.object
     sc.camera = cam
     cam.data.lens = lens
-    pts = _key_points(rig)
-    lo = Vector([min(p[i] for p in pts) for i in range(3)])
-    hi = Vector([max(p[i] for p in pts) for i in range(3)])
-    mid = (lo + hi) / 2
+    bpy.context.view_layer.update()
+    wing = [w.matrix_world @ v.co for w in rig["wings"] for v in list(w.data.vertices)[::6]]
+    eyes = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
+    spots = _key_points(rig)[4:]
     d = -(rig["root"].matrix_world.to_3x3() @ Vector(view)).normalized()
     W, H = sc.render.resolution_x, sc.render.resolution_y
-    tu, tv = (window[0] + window[1]) / 2, (window[2] + window[3]) / 2
-    for dist in np.arange(2.0, 16.0, 0.05):
+    for dist in np.arange(16.0, 2.0, -0.05):
         cam.data.shift_x = cam.data.shift_y = 0.0
-        cam.location = mid + d * dist
+        cam.location = eyes + d * dist
         cam.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
         bpy.context.view_layer.update()
-        for _ in range(3):
-            uv = [world_to_camera_view(sc, cam, p) for p in pts]
-            cam.data.shift_x += ((min(c.x for c in uv) + max(c.x for c in uv)) / 2 - tu) * W / H
-            cam.data.shift_y += (min(c.y for c in uv) + max(c.y for c in uv)) / 2 - tv
-            bpy.context.view_layer.update()
-        uv = [world_to_camera_view(sc, cam, p) for p in pts]
-        if all(window[0] < c.x < window[1] and window[2] < c.y < window[3] for c in uv):
+        uv = [world_to_camera_view(sc, cam, p) for p in wing]
+        if max(c.x for c in uv) - min(c.x for c in uv) >= span:
             break
+    cam.data.shift_x = ((min(c.x for c in uv) + max(c.x for c in uv)) / 2 - 0.5) * W / H
+    cam.data.shift_y = world_to_camera_view(sc, cam, eyes).y - eye_v
+    bpy.context.view_layer.update()
+    low = min(world_to_camera_view(sc, cam, p).y for p in spots)
+    assert low > SAFE[2], f"an eye-spot dips into the caption band (v {low:.3f})"
     cam.data.dof.use_dof = True
-    cam.data.dof.focus_distance = (cam.location - rig["eyes"][0].matrix_world.translation).length
+    cam.data.dof.focus_distance = (cam.location - eyes).length
     cam.data.dof.aperture_fstop = fstop
     world.aim_sparkles(cam)
     return cam
@@ -125,7 +126,7 @@ def _motes(center, f0, f1, n=9, seed=4):
 
 
 def s10b():
-    frames = 34 + HANDLE
+    frames = 23 + HANDLE
     rig = _scene(-24)
     sp = rig["spots"]
     fluffmoth.spot_lid(rig, 1, 1.0, sp, "CONSTANT")              # shut: they read as wing markings
@@ -173,7 +174,7 @@ def s11b():
         fluffmoth.spot_lid(rig, stop + 1 + d, 1.0, [s])
         fluffmoth.spot_lid(rig, stop + 7 + d, 0.0, [s], "CONSTANT")
         fluffmoth.spot_lid(rig, stop + 3 + d, 0.0, [s], prop="glow")
-        fluffmoth.spot_lid(rig, stop + 9 + d, 0.7, [s], "CONSTANT", prop="glow")
+        fluffmoth.spot_lid(rig, stop + 9 + d, 1.0, [s], "CONSTANT", prop="glow")
     anim.on_twos([hov, *sp], 2)
     bpy.context.scene.frame_set(stop + 10)
     cam = _camera(rig, (0.0, 1.0, 0.06))                         # head-on: all four eye-spots face the lens

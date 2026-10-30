@@ -62,6 +62,9 @@ def build(name, parts, k=0.12, res=0.025, pad=0.25, smooth_iter=12):
     bm = bmesh.new()
     bm.from_mesh(me)
     bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=res * 0.2)
+    # face outward whichever way marching cubes wound them: with scikit-image 0.26 the flip above left them inward,
+    # which hid every SDF body's inverted-hull outline (helper 5, 30 Oct)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.to_mesh(me)
     bm.free()
     o = bpy.data.objects.new(name, me)
