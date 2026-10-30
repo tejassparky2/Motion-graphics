@@ -4,9 +4,9 @@
                                                        [--samples 16] [--still N]
 
 The shot builders live in channels/monsters/<EPISODE>/shots.py: SHOTS[SHOT]() builds the scene and returns
-dict(frames=N, subject=[roots]). Frames are written as OUT_DIR/0001.png...; with --subject the character-only RGBA
+dict(frames=N, step=1|2|3, subject=[roots]). Frames are written as OUT_DIR/0001.png...; with --subject the character-only RGBA
 pass goes to OUT_DIR/subject/. --still N renders one frame to OUT_DIR/still_N.png for checking."""
-import importlib
+import importlib  # noqa: I001
 import os
 import sys
 import time
@@ -41,12 +41,23 @@ else:
     frames = list(range(1, n + 1))
 
 
+step = int(info.get("step", 1))
+
+
 def render(frames, folder, still=False):
+    """With step > 1 (locked camera, characters on 2s/3s, no 1s effects) only every step-th frame is rendered; the
+    frames in between are copies (TP13: render only frames that change)."""
+    import shutil
+    last = None
     for f in frames:
+        if not still and step > 1 and last is not None and f % step != 0:
+            shutil.copyfile(last, os.path.join(folder, f"{f:04d}.png"))
+            continue
         sc.frame_set(f)
         sc.render.filepath = os.path.join(folder, f"still_{f}.png" if still else f"{f:04d}.png")
         t = time.time()
         bpy.ops.render.render(write_still=True)
+        last = sc.render.filepath
         print(f"FRAME {f} {time.time() - t:.1f}s", flush=True)
 
 
