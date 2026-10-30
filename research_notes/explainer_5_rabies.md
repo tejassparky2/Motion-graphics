@@ -16,9 +16,9 @@ one-off search; it saves nothing on its side.
 
 | Rule | Here |
 |---|---|
-| Line 1 is a true second-person contradiction | "Imagine you're very thirsty. But the moment you see water, your throat locks up in fear." |
-| Escalate by ~8 s | "...a small scratch from a puppy. Weeks ago. You'd already forgotten it." then "And by now, it's too late." |
-| Reality anchor | "This isn't a zombie movie. It's real." |
+| Line 1 is a true second-person contradiction | "A puppy scratches you. It barely bleeds. So you forget about it." (v2, 30 Oct: the owner said the first hook, "Imagine you're very thirsty...", was not good; the new one opens on the harmless cause and escalates to death) |
+| Escalate by ~8 s | "Two months later, you're very thirsty. But just seeing water makes your throat lock up in fear." then "And by then, it's almost always too late." |
+| Reality anchor | "This isn't a zombie movie. In India, it kills about sixteen people every day." (5,726 a year / 365 = 15.7) |
 | Name after a pause | b5 "It's called rabies." (REVEAL_GAP, tick, music dip) |
 | No number or name in line 1 | the numbers come after the name |
 | Re-hooks | "So how does a tiny scratch reach your brain?" (b8), "But here's the strange part..." / "So why do thousands still die?" (b16-b17, ~55%), bookend (b25) |
@@ -29,10 +29,10 @@ one-off search; it saves nothing on its side.
 
 | id | line |
 |---|---|
-| b1 | Imagine you're very thirsty. But the moment you see water, your throat locks up in fear. |
-| b2 | And it all started with a small scratch from a puppy. Weeks ago. You'd already forgotten it. |
-| b3 | And by now, it's too late. |
-| b4 | This isn't a zombie movie. It's real. |
+| b1 | A puppy scratches you. It barely bleeds. So you forget about it. |
+| b2 | Two months later, you're very thirsty. But just seeing water makes your throat lock up in fear. |
+| b3 | And by then, it's almost always too late. |
+| b4 | This isn't a zombie movie. In India, it kills about sixteen people every day. |
 | b5 | It's called rabies. It's a virus. |
 | b6 | In India, there are about nine million animal bites every year. Three out of four are from dogs. |
 | b7 | And an estimated five thousand seven hundred people die of rabies. Every year. |
@@ -53,7 +53,7 @@ one-off search; it saves nothing on its side.
 | b22 | So, if an animal bites or scratches you, wash the wound with soap and running water, for fifteen minutes. |
 | b23 | Then go to a hospital the same day. Even for a small scratch. Even if it was a puppy. |
 | b24 | And finish every single dose. |
-| b25 | Rabies kills almost everyone it reaches. But the vaccine can stop it, if you don't wait. |
+| b25 | One puppy scratch you forgot about can kill you. But the vaccine can stop it, if you don't wait. |
 | b26 | Has a dog ever bitten or scratched you? Yes or no, tell me in the comments. |
 
 ## Fact check

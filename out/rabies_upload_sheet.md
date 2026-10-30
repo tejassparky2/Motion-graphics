@@ -2,7 +2,7 @@
 
 **Instagram caption**
 ```
-Thirsty, but terrified of water 😳 That's rabies, and it still kills an estimated 5,700 people in India every year.
+A puppy scratch you forgot about can kill you months later 😳 Rabies kills about 16 people in India every day.
 
 If an animal bites or scratches you:
 ✅ Wash the wound with soap and running water for 15 minutes
@@ -27,12 +27,12 @@ Sources: WHO, Rabies fact sheet; CDC, Rabies: how it spreads, symptoms; ICMR-Nat
 
 **YouTube title**
 ```
-Why Rabies Makes You Afraid of Water 😳
+A Puppy Scratch Can Kill You Months Later 😳
 ```
 
 **Alternative titles**
-- A Puppy Scratch Can Kill You Months Later
 - Why Rabies Makes You Afraid of Water
+- Rabies: The Vaccine Works. So Why Do Thousands Still Die?
 - The Disease That Climbs Your Nerves to Your Brain
 
 **YouTube description**
@@ -64,4 +64,4 @@ rabies, dog bite, rabies vaccine, hydrophobia, fear of water, anti rabies vaccin
 Has a dog ever bitten or scratched you? 🐕 YES or NO? 👇
 ```
 
-**Video facts:** 113.4 s, 1080x1920. Made for kids: No. Cover: `rabies_cover.png` (text kept inside the 3:4 grid crop).
+**Video facts:** 116.3 s, 1080x1920. Made for kids: No. Cover: `rabies_cover.png` (text kept inside the 3:4 grid crop).

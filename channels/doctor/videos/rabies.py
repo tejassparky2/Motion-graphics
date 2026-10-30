@@ -7,7 +7,7 @@ import math
 import os
 
 from poster import (CORAL, CREAM, GOLD, GREEN, INK, MARGIN, RED, W, _along, _round, calendar, card, clamp, counter,
-                    cross, draw_text, footnote, gauge, headline, icon_array, magnifier, path, photo, photo_width, prog,
+                    cross, draw_text, erase, footnote, gauge, headline, icon_array, magnifier, path, photo, photo_width, prog,
                     ring, stamp, strike, text_size, tick, yes_no_card)
 
 # the narrator, music and pauses are channel-wide; render_doc reads them from this module
@@ -15,10 +15,11 @@ from channel import ASSETS_ROOT, GAP, REPO, MUSIC, NARRATOR, REVEAL_GAP, TAIL  #
 from shots import T, checklist, draw_frame, pic, starts
 
 SCRIPT = [
-    dict(id="b1", text="Imagine you're very thirsty. But the moment you see water, your throat locks up in fear."),
-    dict(id="b2", text="And it all started with a small scratch from a puppy. Weeks ago. You'd already forgotten it."),
-    dict(id="b3", text="And by now, it's too late."),
-    dict(id="b4", text="This isn't a zombie movie. It's real."),
+    dict(id="b1", text="A puppy scratches you. It barely bleeds. So you forget about it."),
+    dict(id="b2", text="Two months later, you're very thirsty. But just seeing water makes your throat lock up in "
+                       "fear."),
+    dict(id="b3", text="And by then, it's almost always too late."),
+    dict(id="b4", text="This isn't a zombie movie. In India, it kills about sixteen people every day."),
     dict(id="b5", text="It's called rabies. It's a virus.", gap=REVEAL_GAP),
     dict(id="b6", text="In India, there are about nine million animal bites every year. Three out of four are from "
                        "dogs."),
@@ -47,8 +48,8 @@ SCRIPT = [
                         "fifteen minutes."),
     dict(id="b23", text="Then go to a hospital the same day. Even for a small scratch. Even if it was a puppy."),
     dict(id="b24", text="And finish every single dose."),
-    dict(id="b25", text="Rabies kills almost everyone it reaches. But the vaccine can stop it, if you don't wait.",
-         gap=REVEAL_GAP),
+    dict(id="b25", text="One puppy scratch you forgot about can kill you. But the vaccine can stop it, if you don't "
+                        "wait.", gap=REVEAL_GAP),
     dict(id="b26", text="Has a dog ever bitten or scratched you? Yes or no, tell me in the comments."),
 ]
 for _b in SCRIPT:
@@ -59,10 +60,10 @@ for _b in SCRIPT[1:]:
 
 METADATA = dict(
     title="Rabies: The Vaccine Works. So Why Do Thousands Still Die?",
-    alt_titles=["A Puppy Scratch Can Kill You Months Later", "Why Rabies Makes You Afraid of Water",
+    alt_titles=["Why Rabies Makes You Afraid of Water", "Rabies: The Vaccine Works. So Why Do Thousands Still Die?",
                 "The Disease That Climbs Your Nerves to Your Brain"],
-    caption="Thirsty, but terrified of water 😳 That's rabies, and it still kills an estimated 5,700 people in India "
-            "every year.\n\n"
+    caption="A puppy scratch you forgot about can kill you months later 😳 Rabies kills about 16 people in India "
+            "every day.\n\n"
             "If an animal bites or scratches you:\n✅ Wash the wound with soap and running water for 15 minutes\n"
             "✅ Go to a hospital the same day, even for a small scratch, even if it was a puppy\n"
             "✅ Finish every dose of the vaccine\n"
@@ -70,7 +71,7 @@ METADATA = dict(
             "❌ It's not 14 injections in the stomach anymore: today it's a few shots in the arm\n\n"
             "Once the signs start, rabies is almost always fatal. The vaccine works, if you don't wait.\n\n"
             "Has a dog ever bitten or scratched you? Comment YES or NO 👇",
-    yt_title="Why Rabies Makes You Afraid of Water 😳",
+    yt_title="A Puppy Scratch Can Kill You Months Later 😳",
     yt_description="Rabies climbs your nerves to your brain, and once the signs start it's almost always fatal. "
                    "In India there are about 9 million animal bites a year, three in four from dogs, and an estimated "
                    "5,700 rabies deaths. The vaccine works even after the bite, so why do people still die?\n\n"
@@ -267,48 +268,52 @@ def india(cr, x, y, h, alpha=1.0):
 # numbers; slate only for "inside the body". The wooden mannequin is "you"; the red bullet-shaped virus is the one
 # recurring intruder.
 
-def h_thirsty(cr, t, tl, t0):                            # b1 frame 0: "imagine you're very thirsty. But the moment..."
-    tw = T(tl, "b1", "water")
-    run = clamp(t / max(0.5, tw - 0.2))
-    back = prog(t, tw, 0.35)
-    x = 300 + 160 * run - 180 * back                       # walks to the glass, then jumps back from it
-    cut(cr, "mq_run", x, 1150 - 20 * abs(math.sin(t * 8)) * (1 - back), 640, rot=-0.25 * back)
-    X = cut(cr, "glass", 820, 1240, 520)
+def h_puppy(cr, t, tl, t0):                              # b1 frame 0: "a puppy scratches you... so you forget about it"
+    ts = T(tl, "b1", "scratches")
+    tf = T(tl, "b1", "forget")
+    cut(cr, "puppy", 330, 1200 - 14 * abs(math.sin(t * 6)), 780)
+    fade = 1 - 0.8 * prog(t, tf, 0.6)
+    bite_marks(cr, 790, 960, 280, prog(t, max(0.3, ts - 0.1), 0.35), alpha=fade)
+    for i in range(3):                                     # it barely bleeds: three small drops
+        p = prog(t, T(tl, "b1", "bleeds") + 0.1 * i, 0.25)
+        if p > 0:
+            cr.set_source_rgba(*RED, 0.9 * p * fade)
+            cr.arc(735 + 70 * i, 1110 + 12 * i, 9, 0, 2 * math.pi)
+            cr.fill()
+    if t < tf - 0.05:
+        draw_text(cr, "SCRATCH", 790, 1300, 96, RED, prog(t, ts + 0.15, 0.3), anchor="cm")
+    else:                                                  # forgotten: rubbed out, like the reference's FEAR
+        erase(cr, t, tf - 0.05, "SCRATCH", 790, 1300, 96, RED, dur=0.6, anchor="cm")
+        stamp(cr, t, "FORGOTTEN", tf + 0.5, 790, 1500, 60)
+    headline(cr, t, "A PUPPY SCRATCH CAN", "KILL YOU", -1, 1.0, t_ghost=-1)
+
+
+def h_months(cr, t, tl, t0):                             # b2 "two months later, you're very thirsty"
+    calendar(cr, t, t0 + 0.1, 330, 1000, ["WEEK 1", "WEEK 4", "MONTH 2"], "AFTER THE SCRATCH", interval=0.3,
+             w=460, h=480, circle_last=False)
+    th = T(tl, "b2", "thirsty")
+    X = cut(cr, "glass", 820, 1330, 620, alpha=prog(t, th - 0.2, 0.3))
     x0, y0 = X(0.12, 0.40)
     x1, y1 = X(0.88, 0.97)
-    cr.set_source_rgba(*WATER, 0.4)
+    cr.set_source_rgba(*WATER, 0.4 * prog(t, th - 0.2, 0.3))
     _round(cr, x0 + 18, y0, x1 - x0 - 36, y1 - y0, 26)
     cr.fill()
-    if t >= tw:
-        for i in range(4):                                  # shock lines from the head
-            a = -2.6 + 0.45 * i
-            hx, hy = x - 30, 1150 - 290
-            path(cr, [(hx + 70 * math.cos(a), hy + 70 * math.sin(a)), (hx + 120 * math.cos(a), hy + 120 * math.sin(a))],
-                 prog(t, tw + 0.05 * i, 0.2), 8, RED, 0.9)
-    headline(cr, t, "THIRSTY, BUT AFRAID OF", "WATER", -1, 1.0, t_ghost=-1)
+    small, big = ("TWO MONTHS", "LATER") if t < th - 0.1 else ("YOU'RE VERY", "THIRSTY")
+    headline(cr, t, small, big, t0 if big == "LATER" else th - 0.1, t0 + 0.2 if big == "LATER" else th)
 
 
-def h_throat(cr, t, tl, t0):                             # b1 "...your throat locks up in fear"
-    X = cut(cr, "throat", W / 2, 1200, 900)
+def h_water(cr, t, tl, t0):                              # b2 "but just seeing water makes your throat lock up in fear"
+    X = cut(cr, "throat", 620, 1120, 900)
     tx, ty = X(0.5, 0.55)
-    spasm(cr, tx, ty, 90, t, prog(t, T(tl, "b1", "locks"), 0.3))
-    stamp(cr, t, "FEAR", T(tl, "b1", "fear"), 800, 760, 90)
-    headline(cr, t, "YOUR THROAT", "LOCKS UP", t0, T(tl, "b1", "locks"))
-
-
-def h_scratch(cr, t, tl, t0):                            # b2 "it all started with a small scratch from a puppy"
-    _pic(cr, "puppy", 320, 1250, 560, t, t0)
-    _pic(cr, "scratch", 760, 960, 0, t, T(tl, "b2", "scratch") - 0.2, frame=(440, 330), rot=0.04)
-    bite_marks(cr, 760, 960, 110, prog(t, T(tl, "b2", "scratch"), 0.5))
-    headline(cr, t, "IT STARTED WITH A", "SCRATCH", t0, T(tl, "b2", "scratch"))
-
-
-def h_weeks(cr, t, tl, t0):                              # b2 "...weeks ago. You'd already forgotten it."
-    calendar(cr, t, t0 + 0.1, 330, 950, ["WEEK 1", "WEEK 2", "WEEK 3", "WEEK 4", "WEEK 6"], "AFTER THE SCRATCH",
-             interval=0.25, circle_last=False)
-    _pic(cr, "mq_sit", 790, 1300, 600, t, t0 + 0.2)
-    stamp(cr, t, "FORGOTTEN", T(tl, "b2", "forgotten"), 540, 1600, 70)
-    headline(cr, t, "WEEKS", "AGO", t0, t0 + 0.2)
+    spasm(cr, tx, ty, 90, t, prog(t, T(tl, "b2", "lock"), 0.3))
+    G = cut(cr, "glass", 190, 1480, 380)
+    gx0, gy0 = G(0.12, 0.40)
+    gx1, gy1 = G(0.88, 0.97)
+    cr.set_source_rgba(*WATER, 0.4)
+    _round(cr, gx0 + 10, gy0, gx1 - gx0 - 20, gy1 - gy0, 16)
+    cr.fill()
+    stamp(cr, t, "FEAR", T(tl, "b2", "fear"), 830, 760, 90)
+    headline(cr, t, "JUST SEEING", "WATER", t0, T(tl, "b2", "water"))
 
 
 def h_late(cr, t, tl, t0):                               # b3 "and by now, it's too late"
@@ -349,15 +354,24 @@ def _screen(cr, rect, t, on=1.0):
     cr.restore()
 
 
-def h_movie(cr, t, tl, t0):                              # b4 "this isn't a zombie movie. It's real."
-    tr = T(tl, "b4", "real")
+def h_movie(cr, t, tl, t0):                              # b4 "this isn't a zombie movie..."
+    tm = T(tl, "b4", "movie")
     X = cut(cr, "tv", W / 2, 1150, 1050)
     x0, y0 = X(TV_SCREEN[0], TV_SCREEN[1])
     x1, y1 = X(TV_SCREEN[0] + TV_SCREEN[2], TV_SCREEN[1] + TV_SCREEN[3])
-    _screen(cr, (x0, y0, x1 - x0, y1 - y0), t, on=1 - prog(t, tr - 0.1, 0.45))
-    stamp(cr, t, "FICTION?", t0 + 0.6, 790, 1560, 60, rot=0.08)
-    stamp(cr, t, "IT'S REAL", tr + 0.2, 330, 1560, 80, rot=-0.08)
-    headline(cr, t, "THIS ISN'T A", "ZOMBIE MOVIE", t0, t0 + 0.4, strike_at=tr, struck=True)
+    _screen(cr, (x0, y0, x1 - x0, y1 - y0), t, on=1 - prog(t, tm + 0.35, 0.45))
+    stamp(cr, t, "IT'S REAL", tm + 0.5, 330, 1560, 80, rot=-0.08)
+    headline(cr, t, "THIS ISN'T A", "ZOMBIE MOVIE", t0, t0 + 0.3, strike_at=tm + 0.3, struck=True)
+
+
+def h_daily(cr, t, tl, t0):                              # b4 "...in India, it kills about sixteen people every day"
+    india(cr, 330, 1100, 680, prog(t, t0, 0.3))
+    t16 = T(tl, "b4", "sixteen")
+    counter(cr, t, t16 - 0.2, 790, 940, "16", 200, color=RED)
+    draw_text(cr, "DEATHS", 790, 1080, 56, INK, prog(t, t16 + 0.1, 0.3), anchor="ct")
+    draw_text(cr, "EVERY DAY", 790, 1150, 56, RED, prog(t, T(tl, "b4", "every"), 0.3), anchor="ct")
+    footnote(cr, "Estimate, 5,700 a year: ICMR-NIE, Lancet Infect Dis 2025", prog(t, t16, 0.3), y=1560)
+    headline(cr, t, "IN INDIA:", "16 A DAY", t0, t16)
 
 
 def n_name(cr, t, tl, t0):                               # b5 "it's called rabies"
@@ -609,15 +623,12 @@ def d_doses(cr, t, tl, t0):                              # b24 "and finish every
     headline(cr, t, "FINISH EVERY", "DOSE", t0, T(tl, "b24", "dose"), big_color=GREEN)
 
 
-def e_bookend(cr, t, tl, t0):                            # b25 "rabies kills almost everyone it reaches. But the vaccine..."
+def e_bookend(cr, t, tl, t0):                            # b25 "one puppy scratch you forgot about can kill you. But..."
     tb = T(tl, "b25", "But")
     if t < tb - 0.15:
-        X = cut(cr, "mq_head", 420, 1150, 900)
-        hx, hy = X(*MQ_HEAD["mq_head"])
-        for i in range(4):
-            virus(cr, hx - 30 + 30 * i, hy + 10, 46, 0.4 * i, 1.0, t + i)
-        headline(cr, t, "IT KILLS ALMOST", "EVERYONE IT REACHES", t0, T(tl, "b25", "reaches"), t_ghost=t0,
-                 big_size=120)
+        cut(cr, "puppy", 330, 1200 - 14 * abs(math.sin(t * 6)), 780)
+        bite_marks(cr, 790, 960, 280, prog(t, t0 + 0.1, 0.35))
+        headline(cr, t, "ONE FORGOTTEN SCRATCH CAN", "KILL YOU", t0, T(tl, "b25", "kill"), t_ghost=t0)
         return
     _pic(cr, "vaccine", 380, 1150, 640, t, tb - 0.15)
     stamp(cr, t, "DON'T WAIT", T(tl, "b25", "wait"), 760, 1300, 90, color=GREEN)
@@ -631,8 +642,8 @@ def e_question(cr, t, tl, t0):                           # b26 "has a dog ever b
 
 
 SHOTS = [   # (line, cue where the shot starts, draw function, background)
-    ("b1", None, h_thirsty, "paper"), ("b1", "throat", h_throat, "paper"), ("b2", None, h_scratch, "paper"),
-    ("b2", "Weeks", h_weeks, "paper"), ("b3", None, h_late, "paper"), ("b4", None, h_movie, "paper"),
+    ("b1", None, h_puppy, "paper"), ("b2", None, h_months, "paper"), ("b2", "seeing", h_water, "paper"),
+    ("b3", None, h_late, "paper"), ("b4", None, h_movie, "paper"), ("b4", "India", h_daily, "paper"),
     ("b5", None, n_name, "paper"), ("b6", None, n_bites, "paper"), ("b6", "Three", n_dogs, "paper"),
     ("b7", None, n_deaths, "paper"), ("b8", None, m_how, "paper"), ("b9", None, m_saliva, "paper"),
     ("b9", "bite", m_ways, "paper"), ("b10", None, m_climb, "slate"), ("b11", None, m_hide, "paper"),
@@ -653,7 +664,8 @@ def sfx(tl):
     """A whoosh on every cut, thuds on stamps, a tick (and the bed dipping) before the name, each re-hook and the
     closing line, typing under the YES/NO card."""
     ev = [(s, "whoosh", 0.25) for s in starts(tl, SHOTS)[1:]]
-    ev += [(T(tl, "b3", "late"), "thud", 0.0), (T(tl, "b4", "real") + 0.2, "thud", 0.0),
+    ev += [(T(tl, "b3", "late"), "thud", 0.0), (T(tl, "b4", "sixteen"), "thud", 0.0),
+           (T(tl, "b1", "scratches"), "scribble", 0.35), (T(tl, "b1", "forget"), "scribble", 0.6),
            (T(tl, "b14", "seeing"), "thud", 0.0), (T(tl, "b21", "anymore"), "thud", 0.0)]
     for bid in ("b5", "b8", "b17", "b25"):
         ev.append((tl[bid].start - 0.45, "tick", 0.0))
