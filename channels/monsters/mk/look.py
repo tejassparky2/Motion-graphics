@@ -253,6 +253,7 @@ def outline(o, width=0.025, colored=True):
     s = o.modifiers.new("outline", "SOLIDIFY")
     s.thickness = -width
     s.use_flip_normals = True
+    s.use_quality_normals = True          # sliver triangles otherwise throw long dark spikes of line (helper 5)
     s.material_offset = offset
     s.use_rim = False
     return o

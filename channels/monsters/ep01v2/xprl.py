@@ -18,7 +18,7 @@ import math
 import bpy
 from mathutils import Matrix, Vector
 
-from channels.monsters.mk import anim, hero, look, meadow, puffshrimp, tuftwing
+from channels.monsters.mk import anim, butcherbird, hero, look, meadow, puffshrimp, thornbush, tuftwing
 
 TAIL = 12
 CUT_FRAMES = 85                                # ep01v2/TIMING.md: line 24 at 0.30-3.02 s, the cut ~0.5 s after it
@@ -242,6 +242,7 @@ def s24top():
     puddle, wet again and dripping, and watches him."""
     n = _frames()
     meadow.build("after")
+    thornbush.build()                                                     # beside the puddle, as in S22/S23
     shrimp = _shrimp_wet(16, n)
     tip = _claw_tip(shrimp, 28)
     meadow.drips((tip.x, tip.y, tip.z - 0.05), 27, n, every=10, fall=max(0.5, tip.z - 0.05))
@@ -268,31 +269,36 @@ def s24top():
     return dict(frames=n, step=3, subject=[k["arm"]])
 
 
-def _bird_drop(f0, f1, n, at):
-    """The butcher bird (tuftwing) plunges from above the frame toward the shrimp: wings up, on 2s (fast action), its
-    giant shadow sweeping in and swelling on the ground as it comes down."""
-    b = tuftwing.build(at)
-    b["root"].scale = (0.85, 0.85, 0.85)
-    lift, shadow = b["lift"], b["shadow"]
-    for f, z in ((1, 16.0), (f0, 16.0), (f0 + 10, 11.0), (f0 + 20, 6.5), (f1, 2.6), (n, 2.2)):
-        anim.key(lift, "location", f, (0, 0, z), "LINEAR")
-    for f, sc in ((1, 0.55), (f0, 0.55), (f1, 1.0), (n, 1.05)):
-        anim.key(shadow, "scale", f, (sc, sc, 1), "LINEAR")
-    # the giant shadow sweeps in from under Kai (~6.5 units toward +X) to where the bird comes down: the threat in
-    # RUN. (A real cast shadow can't darken him: the painted and toon materials ignore cast shadows, so darkening him
-    # as it passes is left to the comp, through the subject pass.)
-    x0 = shadow.location.x
-    for f, dx in ((1, 7.6), (f0, 7.6), (f0 + 16, 4.0), (f1, 0.0), (n, 0.0)):
-        anim.key(shadow, "location", f, (x0 + dx, shadow.location.y, shadow.location.z), "LINEAR")
-    for i, w in enumerate(b["wings"]):
-        side = -1 if i == 0 else 1
-        for f, ang in ((1, 1.1), (f0, 1.1), (f0 + 4, 0.5), (f0 + 8, 1.2), (f0 + 12, 0.5), (f1, 1.3)):
-            anim.key(w, "rotation_euler", f, (0, -side * ang, 0))
-    for e in b["eyes"]:
-        anim.key(e, "scale", 1, (1, 1, 1), "CONSTANT")
-    anim.on_twos([lift, shadow] + b["wings"], step=2)
-    return b
+def _local(rot, v, scale=1.3):
+    """A world-space offset in the bird root's frame (rotated by `rot`, scaled by `scale`)."""
+    c, sn = math.cos(-rot), math.sin(-rot)
+    return Vector(((v[0] * c - v[1] * sn) / scale, (v[0] * sn + v[1] * c) / scale, v[2] / scale))
 
+
+def _bird_drop(bush, f0, f1, n, kai_at=(5.2, 1.0)):
+    """The butcher bird (the tuftwing, as helper 5 drives it in S23) dives from its perch on the thorn bush onto the
+    shrimp: a glare, a crouch, then the plunge on 2s. Its giant shadow (its tell) sweeps from under Kai to where it
+    strikes: the threat in RUN."""
+    px, py, pz = bush["perch"]
+    rig = tuftwing.build((px, py, 0), shadow_span=10.0)
+    rig["root"].scale = (1.3, 1.3, 1.3)
+    tx, ty = SHRIMP_AT[0] - px, SHRIMP_AT[1] - py
+    rot = math.atan2(tx, -ty)                                             # face the shrimp
+    rig["root"].rotation_euler.z = rot
+    rest = (0.0, 0.0, pz / 1.3)
+    anim.key(rig["lift"], "location", 1, rest, "CONSTANT")
+    butcherbird.stare(rig, 2, down=0.5)
+    target = _local(rot, (tx, ty, 1.6))                                   # onto the shrimp's back
+    butcherbird.dive(rig, f0, f1, target, start=rest)
+    tuftwing.beat(rig, f0 - 4)
+    sh = rig["shadow"]
+    k0 = _local(rot, (kai_at[0] - px, kai_at[1] - py, 0))
+    k1 = _local(rot, (tx, ty, 0))
+    z = sh.location.z
+    for f, p_ in ((1, k0), (f0, k0), (f1, k1), (n, k1)):
+        anim.key(sh, "location", f, (p_.x, p_.y, z), "LINEAR")
+    anim.on_twos(tuftwing._animated(rig) + [sh], step=2)
+    return rig
 
 def s24bot():
     """B, RUN: Kai backs away toward the trees, looking up as the butcher bird drops toward the shrimp, its giant
@@ -309,7 +315,8 @@ def s24bot():
         for nd in w.node_tree.nodes:
             if nd.type == "BACKGROUND":
                 nd.inputs[1].default_value *= 0.6
-    _bird_drop(14, 60, n, (SHRIMP_AT[0] + 1.2, SHRIMP_AT[1] - 0.6, 0.0))
+    bush = thornbush.build()
+    _bird_drop(bush, 22, 46, n)
     k = _hero((3.6, 0.1, 0), -90)
     P = Pose(k)
     start, end = Vector((0, 0, 0)), Vector((-0.35, 0.45, 0))              # back and to his right: toward the trees
