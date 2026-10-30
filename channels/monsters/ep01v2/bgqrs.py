@@ -137,11 +137,18 @@ def _fix_pivots(sh):
     fixes += [(lp, Vector((sx * 0.36, -0.78, 1.2))) for lp, sx in zip(sh["lids"], (-1, 1))]
     bpy.context.view_layer.update()
     for e, want in fixes:
+        # since 1d22a94 puffshrimp._empty puts these pivots in the right place already; setting `location` here as
+        # well moved them a second time (by the parent's offset) and detached the snapping finger (coordinator,
+        # 30 Oct). Only correct a pivot that is actually off, and do it in world space so the parent inverse counts.
+        if (e.matrix_world.translation - want).length < 1e-4:
+            continue
         kids = [(k, k.matrix_world.copy()) for k in e.children]
-        e.location = e.parent.matrix_world.inverted() @ want
+        mw = e.matrix_world.copy()
+        mw.translation = want
+        e.matrix_world = mw
         bpy.context.view_layer.update()
-        for k, mw in kids:
-            k.matrix_world = mw
+        for k, kmw in kids:
+            k.matrix_world = kmw
         bpy.context.view_layer.update()
 
 
@@ -201,6 +208,29 @@ def cock(sh, f=None):
         o.rotation_euler = v
         if f is not None:
             anim.key(o, "rotation_euler", f, v, "CONSTANT")
+
+
+def lock_on(sh, target, f, lids=0.38, slant=0.32, max_turn=25):
+    """The shrimp's "locked on" look (coordinator review): eyes turned toward `target` (Kai's face), the lids dropped
+    ~38% and slanted (inner corners lower) so it reads determined, still cute. Keys at frame f (CONSTANT)."""
+    for piv, lp, hi, sx in zip(sh["eyes"], sh["lids"], sh["hi"], (-1, 1)):
+        bpy.context.view_layer.update()
+        d = piv.parent.matrix_world.inverted().to_3x3() @ (Vector(target) - piv.matrix_world.translation)
+        yaw = max(-max_turn, min(max_turn, math.degrees(math.atan2(-d.x, -d.y))))   # rest gaze is -Y
+        pitch = max(-max_turn, min(max_turn, math.degrees(math.atan2(d.z, math.hypot(d.x, d.y)))))
+        anim.key(piv, "rotation_euler", f, (math.radians(pitch), 0.0, math.radians(-yaw)), "CONSTANT")
+        anim.key(hi, "scale", f, 0.001, "CONSTANT")                 # no upper highlight under a dropped lid
+        anim.key(lp, "scale", f, 1.0, "CONSTANT")
+        anim.key(lp, "rotation_euler", f, ((lids - 0.5) * math.pi, -sx * slant, 0.0), "CONSTANT")
+
+
+def unlock(sh, f, lids=0.0):
+    """Back to the plain wide-eyed look at frame f."""
+    for piv, lp, hi in zip(sh["eyes"], sh["lids"], sh["hi"]):
+        anim.key(piv, "rotation_euler", f, (0.0, 0.0, 0.0), "CONSTANT")
+        anim.key(hi, "scale", f, 1.0, "CONSTANT")
+        anim.key(lp, "scale", f, 0.001 if lids <= 0.01 else 1.0, "CONSTANT")
+        anim.key(lp, "rotation_euler", f, ((lids - 0.5) * math.pi, 0.0, 0.0), "CONSTANT")
 
 
 # ---------------------------------------------------------------- the hero's face
@@ -421,7 +451,7 @@ def s01():
     cock(sh)
     cam = _s01_camera(rig, sh)
     bpy.context.scene.camera = cam
-    anim.lids(sh, 1, 0.0)
+    lock_on(sh, kai_point(rig, "eyes"), 1)
     kai_face(rig, 1, **TERROR)
     whisper(rig, 4, 13, TERROR)                                   # "Don't move." 0.12-0.52 s
     whisper(rig, 26, 51, TERROR, seed=5)                          # "That claw can boil water." 1.04-2.12 s
@@ -440,7 +470,7 @@ def s16():
     wide = _s01_camera(rig, sh, "cam_s16_wide")
     cut = 33                                                      # just before "it was on my chest" (1.38 s)
     _cut([(1, ecu), (cut, wide)])
-    anim.lids(sh, 1, 0.0)
+    lock_on(sh, kai_point(rig, "eyes"), 1)
     kai_face(rig, 1, eye_close=1.0)
     kai_face(rig, 15, eye_close=0.55)                             # a flutter on "opened"
     kai_face(rig, 18, eye_close=1.0)
@@ -448,10 +478,8 @@ def s16():
     kai_face(rig, 24, eye_close=0.0)                              # open, still dazed ("my eyes")
     kai_face(rig, cut, eye_open=0.6)
     kai_face(rig, cut + 9, **TERROR)                              # he sees it ("chest")
-    for f in (cut + 30,):                                         # the shrimp's slow blank blink (on 3s)
-        anim.lids(sh, f, 0.6)
-        anim.lids(sh, f + 3, 1.0)
-        anim.lids(sh, f + 6, 0.0)
+    anim.lids(sh, cut + 30, 1.0)                                  # one slow blink, then locked on again (on 3s)
+    lock_on(sh, kai_point(rig, "eyes"), cut + 33)
     _anchors("S16", wide, {k: (lambda k=k: kai_point(rig, k)) for k in ("eyes", "eye_l", "eye_r")}, n)
     return dict(frames=n, step=3, subject=[sh["root"]])
 
@@ -523,14 +551,13 @@ def s19():
     foc.location = tgt
     cam.data.dof.use_dof, cam.data.dof.focus_object, cam.data.dof.aperture_fstop = True, foc, 0.3
     bpy.context.scene.camera = cam
-    anim.lids(sh, 1, 0.0)
+    lock_on(sh, kai_point(rig, "eyes"), 1)
     set_face = dict(eye_brow_down=0.45, mouth_short=1.0, eye_open=0.2)
     kai_face(rig, 1, **set_face)
     kai_face(rig, 60, **set_face, eye_close=1.0)                  # one slow blink
     kai_face(rig, 63, **set_face)
-    for f in (36,):
-        anim.lids(sh, f, 1.0)
-        anim.lids(sh, f + 3, 0.0)
+    anim.lids(sh, 36, 1.0)                                        # one blink, then locked on again
+    lock_on(sh, kai_point(rig, "eyes"), 39)
     _anchors("S19", cam, {"tip": lambda: tip, **{k: (lambda k=k: kai_point(rig, k))
                                                   for k in ("temple", "eyes", "eye_l", "eye_r")}}, n)
     return dict(frames=n, step=3, subject=[sh["root"]])
@@ -560,18 +587,21 @@ def s20():
     _key_pose(sh, 28, jab, -0.25, 0.0)
     _key_pose(sh, 32, jab, -0.25)
     body = sh["body"]
-    body.rotation_euler = (0, math.radians(-14), math.radians(-40))  # where it ends up, to place the claw for that
+    body.rotation_euler = (0, math.radians(-14), math.radians(-20))  # where it ends up, to place the claw for that
     bpy.context.view_layer.update()
-    turned = Vector((math.sin(yaw - math.radians(40)), -math.cos(yaw - math.radians(40)), 0))
-    stare = raise_claw(sh, root + turned * 1.3 + Vector((0, 0, 2.3)), root + Vector((0, 0, 1.3)))
+    side = yaw - math.radians(55)                                  # its right-front: the claw held up there
+    stare = raise_claw(sh, root + Vector((math.sin(side), -math.cos(side), 0)) * 1.3 + Vector((0, 0, 2.2)),
+                       root + Vector((0, 0, 1.3)))
     body.rotation_euler = (0, 0, 0)
     sh["shoulder"].rotation_euler = sh["cock"]
     bpy.context.view_layer.update()
     _key_pose(sh, 36, stare, 0.4)                                 # brings the claw round in front of its face
     anim.key(body, "rotation_euler", 30, (0, 0, 0))
-    anim.key(body, "rotation_euler", 34, (0, 0, math.radians(-40)))  # turns to stare at its claw
-    anim.key(body, "rotation_euler", 40, (0, math.radians(-14), math.radians(-40)))  # ...and tilts its head
-    anim.key(body, "rotation_euler", n, (0, math.radians(-16), math.radians(-40)))
+    anim.key(body, "rotation_euler", 34, (0, 0, math.radians(-20)))  # turns to stare at its claw
+    anim.key(body, "rotation_euler", 40, (0, math.radians(-14), math.radians(-20)))  # ...and tilts its head
+    anim.key(body, "rotation_euler", n, (0, math.radians(-16), math.radians(-20)))
+    lock_on(sh, kai_point(rig, "eyes"), 1)                        # locked on through the wind-up and the snap
+    unlock(sh, 28)                                                # ...nothing happened: wide, blank eyes
     anim.lids(sh, 36, 0.3)
     anim.lids(sh, 40, 0.0)
     anim.on_twos([sh["shoulder"], sh["hinge"], body], 2)
