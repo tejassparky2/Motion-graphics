@@ -48,9 +48,10 @@ NO_CAPTIONS = {"S15"}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
 CAP_SIZE = 60
 CAP_MAX_W = 560              # clear of the right rail
-CAP_Y_SHOT = {"S07": 700}            # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
+CAP_Y_SHOT = {"S07": 700, "S24": 748}            # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
+S24_FOCUS = [(W / 2, H / 4), (W / 2, H * 3 / 4)]   # the plates are framed as halves: each shows in place
 
 
 # ---------------------------------------------------------------- decoding shots
@@ -148,7 +149,7 @@ def build_s24(shot, animatic, warn, missing):
         cr = cairo.Context(s)
         panels = [surface(p[i]) if p is not None else slate(shot.name + sfx)
                   for p, sfx in zip(plates, ("top · SAVE", "bot · RUN"))]
-        fx2d_anime.split(cr, i / FPS, 0.0, shot.frames / FPS, panels, sound=False)
+        fx2d_anime.split(cr, i / FPS, 0.0, shot.frames / FPS, panels, focus=S24_FOCUS, sound=False)
         out.append(s)
     return out
 
