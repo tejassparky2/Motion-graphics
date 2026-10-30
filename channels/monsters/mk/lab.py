@@ -740,10 +740,12 @@ def _desk(rnd):
                   "#7fd0dc", 0.55, 0.3, shadow=False)
     # the lab's own painted hero tank fills the slot (helper 2's shots stand the 1/40-scale shrimp on its gravel);
     # place_tank() swaps in mk/pistolshrimp.tank() instead
+    before = set(bpy.context.scene.objects)
     hero = _tank("hero", (slot_c.x, slot_c.y, top), (sw, sd, 0.3), "hero", rnd, hero=True)
     _ball("hero_burrow", (slot_c.x + 0.1, slot_c.y + 0.04, top + 0.08), (0.035, 0.008, 0.022),
           _paint("burrow", "#2c2238", noise=0.0), 12)
     hero["leak"] = (slot_c.x - 0.07, slot_c.y - sd / 2 - 0.005, top + 0.004)
+    hero["objects"] = [o for o in bpy.context.scene.objects if o not in before]
     slot = dict(empty=slot_e, center=tuple(slot_c), size=(sw, sd, 0.3), scale=s_,
                 root_loc=(slot_c.x, slot_c.y - 0.5 * s_, top + 0.73 * s_), glow=glow, hood=hero["hood"],
                 leak=hero["leak"], hero=hero)
@@ -905,9 +907,8 @@ def build(seed=7):
         tank, unless dim_on_power_out=False)."""
         root = t["root"]
         root.location, root.scale = slot["root_loc"], (slot["scale"],) * 3
-        for o in bpy.context.scene.objects:          # the lab's own painted hero tank steps aside
-            if o.name.startswith("hero_"):
-                o.hide_render = o.hide_viewport = True
+        for o in slot["hero"]["objects"]:            # the lab's own painted hero tank steps aside
+            o.hide_render = o.hide_viewport = True
         bpy.context.view_layer.update()
         if dim_on_power_out:
             seen, todo = set(), [root]

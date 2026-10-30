@@ -1,5 +1,5 @@
-"""2D pass for the chest scene (S01, S16-S21): the comic-face kit (TP7) and the shot effects, composited with comp.py
-over the Blender frames, then the mp4 and contact sheet for out/monsters/ep01v2/shots/.
+"""2D pass for the chest scene (S01, S16-S21): the shot effects (comic faces from fx2d_anime, TP7) composited with
+comp.py over the Blender frames, then the mp4 and contact sheet for out/monsters/ep01v2/shots/.
 
     FPS=24 python channels/monsters/ep01v2/bgqrs_post.py S19 [S20 ...]
 
@@ -16,11 +16,10 @@ os.environ.setdefault("FPS", "24")
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 sys.path.insert(0, ROOT)
 
-import numpy as np  # noqa: E402
 from PIL import Image  # noqa: E402
 
 from motion.engine import H, W, cairo, clamp01, ease_out  # noqa: E402
-from channels.monsters import comp, fx2d, fx2d_extra  # noqa: E402
+from channels.monsters import comp, fx2d, fx2d_anime, fx2d_extra  # noqa: E402
 
 BUILD = os.path.join(ROOT, "build", "monsters", "ep01v2")
 SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "ep01v2", "shots")
@@ -35,46 +34,23 @@ def anchors(shot):
         return {int(k): v for k, v in json.load(fh).items()}
 
 
+def face_geom(a, t):
+    """(between-the-eyes point, face width px, tilt) from the eye anchors, for fx2d_anime's comic faces."""
+    (lx, ly), (rx, ry) = at(a, t, "eye_l"), at(a, t, "eye_r")
+    d = math.hypot(rx - lx, ry - ly)
+    tilt = math.atan2(ry - ly, rx - lx)
+    if abs(tilt) > math.pi / 2:                                   # keep the face's "up" upward on screen
+        tilt -= math.copysign(math.pi, tilt)
+    return ((lx + rx) / 2, (ly + ry) / 2), d * 2.6, tilt, ((lx, ly), (rx, ry))
+
+
 def at(a, t, name):
     """Anchor `name` at shot time t (frame-accurate, held past the last frame)."""
     f = min(max(1, int(round(t * FPS)) + 1), max(a))
     return a[f][name]
 
 
-# ---------------------------------------------------------------- the comic-face kit (TP7)
-
-def sweat_drop(cr, t, start, x, y, size=30, slide=18, end=None, tilt=0.35):
-    """The anime sweat bead: a fat teardrop (point up) beside the face, light blue with a white glint and a navy
-    outline. It pops in on 2s and slides down `slide` px in steps of 3 frames."""
-    if t < start or (end is not None and t > end):
-        return
-    el = t - start
-    pop = (0.6, 1.15, 1.0)[min(2, int(el * FPS) // 2)]
-    dy = slide * clamp01(math.floor(el * FPS / 3) * 3 / FPS / 1.5)
-    cr.save()
-    cr.translate(x, y + dy)
-    cr.rotate(tilt)
-    cr.scale(size * pop / 30, size * pop / 30)
-    cr.move_to(0, -30)
-    cr.curve_to(6, -14, 16, -2, 16, 10)
-    cr.curve_to(16, 21, 8, 28, 0, 28)
-    cr.curve_to(-8, 28, -16, 21, -16, 10)
-    cr.curve_to(-16, -2, -6, -14, 0, -30)
-    cr.close_path()
-    g = cairo.LinearGradient(0, -30, 0, 28)
-    g.add_color_stop_rgb(0, 0.86, 0.96, 1.0)
-    g.add_color_stop_rgb(1, 0.45, 0.74, 0.98)
-    cr.set_source(g)
-    cr.fill_preserve()
-    cr.set_source_rgb(0.12, 0.2, 0.42)
-    cr.set_line_width(3.2)
-    cr.set_line_join(cairo.LINE_JOIN_ROUND)
-    cr.stroke()
-    cr.arc(-6, 12, 4.2, 0, 2 * math.pi)
-    cr.set_source_rgb(1, 1, 1)
-    cr.fill()
-    cr.restore()
-
+# ---------------------------------------------------------------- shot effects (comic faces: fx2d_anime, TP7)
 
 def sun_glare(cr, t, start, x=610, y=70, strength=1.0):
     """Hot sun glare from the top corner: a warm bloom, slowly turning soft rays and three flare discs on a line
@@ -108,38 +84,6 @@ def sun_glare(cr, t, start, x=610, y=70, strength=1.0):
         cr.set_source_rgba(*col, 0.12 * a)
         cr.fill()
     cr.restore()
-
-
-def realisation_bg(cr, t, start, end, cx=W / 2, cy=H * 0.42):
-    """The realisation background (SU16/IM6): deep navy to indigo, horizontal streaks racing past on 1s, and the
-    classic diagonal white flash for the first two frames."""
-    if t < start or t > end:
-        return
-    g = cairo.LinearGradient(0, 0, W * 0.3, H)
-    g.add_color_stop_rgb(0, 0.06, 0.08, 0.24)
-    g.add_color_stop_rgb(0.55, 0.16, 0.12, 0.42)
-    g.add_color_stop_rgb(1, 0.05, 0.06, 0.2)
-    cr.set_source(g)
-    cr.paint()
-    rng = np.random.default_rng(int(round(t * FPS)))
-    for _ in range(46):
-        yy = rng.uniform(0, H)
-        ln = rng.uniform(200, 700)
-        xx = rng.uniform(-ln, W)
-        th = rng.uniform(1.5, 6)
-        cr.move_to(xx, yy)
-        cr.curve_to(xx + ln * 0.3, yy - th, xx + ln * 0.7, yy - th, xx + ln, yy)
-        cr.curve_to(xx + ln * 0.7, yy + th, xx + ln * 0.3, yy + th, xx, yy)
-        cr.set_source_rgba(0.75, 0.82, 1.0, rng.uniform(0.18, 0.5))
-        cr.fill()
-    if t - start < 2 / FPS:                                       # the "ping": one bright diagonal slash
-        cr.move_to(-40, cy + 260)
-        cr.line_to(W + 40, cy - 330)
-        cr.line_to(W + 40, cy - 300)
-        cr.line_to(-40, cy + 300)
-        cr.close_path()
-        cr.set_source_rgba(1, 1, 1, 0.9)
-        cr.fill()
 
 
 def glint(cr, t, start, x, y, size=26, life=0.3):
@@ -176,26 +120,27 @@ def puff(cr, t, start, x, y, size=1.0, seed=0):
 
 def overlays(shot):
     """Shot-local overlays [(fn, kwargs)] for each shot."""
-    if shot == "S18":
+    if shot == "S18":                                             # the realisation lands on "wet" (frame 30)
         a = anchors("S18")
-        ex, ey = at(a, 15 / FPS, "eyes")
-        return [(comp.backdrop, dict(start=8 / FPS, end=99, fn=realisation_bg, args={})),
-                (glint, dict(start=14 / FPS, x=ex + 60, y=ey - 30))]
+        ex, ey = at(a, 32 / FPS, "eyes")
+        return [(comp.backdrop, dict(start=29 / FPS, end=99, fn=fx2d_anime.emotion_bg,
+                                     args=dict(mood="realisation", cx=ex, cy=ey))),
+                (glint, dict(start=32 / FPS, x=ex + 70, y=ey - 40))]
     if shot == "S19":
         a = anchors("S19")
-        tx, ty = at(a, 0.4, "temple")
-        ex, ey = at(a, 0.4, "eyes")
         n = max(a)
-        return [(sweat_drop, dict(start=0.4, x=tx - 6, y=ty - 10, size=30, slide=22)),
-                (push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.08)),
+        (cx, cy), size, tilt, _ = face_geom(a, 0.4)
+        return [(fx2d_anime.sweat_drop, dict(start=0.4, x=cx, y=cy, size=size, bead=True, tilt=tilt)),
+                (push, dict(start=0.0, end=n / FPS, cx=cx, cy=cy, amount=0.08)),
                 (sun_glare, dict(start=0.0)),
-                (fx2d_extra.ambient, dict(start=0.0, strength=0.8, keep_clear=(ex, ey, 170)))]
-    if shot == "S20":
+                (fx2d_extra.ambient, dict(start=0.0, strength=0.8, keep_clear=(cx, cy, 170)))]
+    if shot == "S20":                                             # snap at 24, deadpan from the cut at 44
         a = anchors("S20")
-        px, py = at(a, 13 / FPS, "tip")
-        tx, ty = at(a, 47 / FPS, "temple")
-        return [(puff, dict(start=13 / FPS, x=px, y=py, size=1.0)),
-                (sweat_drop, dict(start=47 / FPS, x=tx - 4, y=ty - 6, size=34, slide=20))]
+        px, py = at(a, 23 / FPS, "tip")
+        (cx, cy), size, tilt, eyes = face_geom(a, 50 / FPS)
+        return [(puff, dict(start=23 / FPS, x=px, y=py, size=1.0)),
+                (fx2d_anime.dot_eyes, dict(start=43 / FPS, x=cx, y=cy, size=size, eyes=eyes, tilt=tilt)),
+                (fx2d_anime.sweat_drop, dict(start=52 / FPS, x=cx, y=cy, size=size, tilt=tilt))]
     if shot == "S21":
         a = anchors("S21")
         with open(os.path.join(BUILD, "S21_lands.json")) as fh:
