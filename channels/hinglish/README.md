@@ -76,7 +76,7 @@ every line, upload sheet. Sources go with every script, and health claims must b
   `<shorts research>/hinglish_out/`. Both live outside the repo.
 - Keys come from `<shorts research>/.env`, which is git-ignored.
 
-## Status (29 Oct 2026)
+## Status (30 Oct 2026)
 - **Scripts batch 1:** `scripts_batch1.md`. The owner approved all 3 ("Approve all 3").
 - **The three videos:**
   1. Toxoplasma: the parasite that makes rats walk to cats.
@@ -89,7 +89,12 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Visuals rebuilt as 44 shots, about 3 s each. They are photo cut-outs from `hinglish_assets/toxoplasma2/` with
     credits, and FEAR is rubbed out by an eraser as the recurring metaphor (`poster.erase`).
 - **Videos 1-3 are finished, with upload packs** (`<shorts research>/hinglish_out/upload_*`, masters also in
-  the owner's Google Drive): Toxoplasma (2:12), Speaker (2:18, the first tech video) and Krait (1:56).
+  the owner's Google Drive): Toxoplasma (2:12), Speaker (2:18, the first tech video) and Krait (1:54).
+- **Krait hook v3** (owner, 30 Oct 2026: "strength the hook with deadth number first", then "Approve both"): it
+  opens on "160 a day" (58,000 a year), then the one snake that bites while you sleep. The old numbers line is gone.
+- **Video 4, mosquito 3D necroprinting** (owner, 30 Oct 2026: "Approve both"): a dead female mosquito's proboscis
+  as a 3D-printer nozzle (Puma et al., Science Advances; McGill + Drexel). No organs were printed: the script says
+  "not yet, a first step" (~20 µm lines, living cells, ~86% survived).
 - **Music: the `doc` bed** (motion/audio.py; owner, 29 Oct 2026: "Sounds good").
   - It sits ~17 dB under the voice in pauses, as in the reference, and is voiced so phone speakers carry it.
   - It dips before reveals.
@@ -97,7 +102,7 @@ every line, upload sheet. Sources go with every script, and health claims must b
 - **Voice: Aman.**
   - Indic Parler-TTS's named speaker "Aman" is used only as the voice prompt; AI4Bharat IndicF5 speaks every line
     in that synthetic voice.
-  - Processing: one even tempo (×1.13), then the studio chain v3.
+  - Processing: one even tempo (×1.15), then the studio chain v3.
   - Every line gets a Whisper retake (`retake.py`) and a liveliness retake (`lively_retake.py`, keeping the take
     with the widest pitch movement that stays clear).
   - Nobody is cloned.

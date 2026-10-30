@@ -177,7 +177,7 @@ Length: about 440 words, near 2:10.
 | 15 | Scientists ne microscope ke neeche machhar ka munh nikaala, aur use ek syringe ki tip pe chipka diya. | microscope; tweezers lifting the proboscis; a drop of glue; it fixed on a syringe tip |
 | 16 | Phir isse print kiye: ek honeycomb, ek maple leaf, aur grid wale chhote dhaanche. Chawal ke daane se bhi chhote. | the three tiny prints drawn; a rice grain beside them for scale |
 | 17 | Aur in mein zinda cells the: khoon ke laal cells, aur cancer research wale cells. | a red blood cell drawing; a cell culture dish |
-| 18 | Printing ke baad lagbhag 86 percent cells zinda bache. | a gauge or counter **86%**; green tick |
+| 18 | Print hone ke baad lagbhag 86 percent cells zinda bache. *(voiced as "print hone": "printing ke baad" came out "printinting" in 9 of 9 takes)* | a gauge or counter **86%**; green tick |
 | 19 | Toh kya ab machhar se organs banenge? | re-hook: a heart outline plus a mosquito; big red **?** |
 | 20 | Abhi nahi. Ye ek shuruaat hai: tissue ke chhote dhaanche, jin par cells ugaaye ja sakte hain. | `NOT YET.` / **`A FIRST STEP`**; a grid scaffold with cells growing on it |
 | 21 | Aur iski limits bhi hain. Zyada pressure pe nozzle phat jaati hai, aur ek nozzle kuch dinon tak hi chalti hai. | a pressure gauge into the red, a crack line; a calendar of a few days |

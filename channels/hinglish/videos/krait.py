@@ -1,6 +1,6 @@
-"""Video 3: "Ye saanp sote hue kaatta hai" (common krait, snakebite in India). v2 of the script approved on
-29 Oct 2026, approved again as v2 ("Approve both"; scripts_batch2.md, video 3); narration below is that script word
-for word, in Devanagari for the voice, with numbers written as words."""
+"""Video 3: "Ye saanp sote hue kaatta hai" (common krait, snakebite in India). Script v2 approved 29 Oct 2026, hook v3
+(the death number first) approved 30 Oct 2026 ("Approve both"; scripts_batch2.md); narration below is that script
+word for word, in Devanagari for the voice, with numbers written as words."""
 import math
 import os
 
@@ -13,14 +13,14 @@ from channel import ASSETS_ROOT, MUSIC, NARRATOR, NARRATOR_LABEL, REVEAL_GAP, TA
 from shots import T, asset_finder, checklist, draw_frame, pic, screen, starts, tv
 
 SCRIPT = [
-    dict(id="b1", text="सोचो, तुम रात को ज़मीन पर सो रहे हो... एक साँप आता है, काट के चला जाता है... "
-                       "और तुम्हें पता भी नहीं चलता। क्योंकि दर्द होता ही नहीं।"),
+    dict(id="b0", text="भारत में हर दिन लगभग एक सौ साठ लोग साँप के काटने से मर जाते हैं। हर साल अट्ठावन हज़ार। "
+                       "दुनिया में सबसे ज़्यादा।"),
+    dict(id="b1", text="और इनमें एक साँप ऐसा है, जो रात को सोते हुए काटता है... और तुम्हें पता भी नहीं चलता। "
+                       "क्योंकि दर्द होता ही नहीं।"),
     dict(id="b2", text="फिर कुछ घंटों में पलकें भारी होने लगती हैं... और धीरे-धीरे साँस लेने वाली मसल्स काम करना बंद कर देती हैं।"),
     dict(id="b3", text="टीवी सीरियल में नागिन बदला लेती है, और सब उसे देख लेते हैं। पर असली ज़िंदगी में, "
                        "भारत के सबसे ख़तरनाक साँपों में से एक, अक्सर दिखता भी नहीं।", gap=REVEAL_GAP),
     dict(id="b4", text="इसका नाम है कॉमन क्रेट। कई जगह लोग इसे करैत कहते हैं।"),
-    dict(id="b5", text="भारत में हर साल लगभग अट्ठावन हज़ार लोग साँप के काटने से मरते हैं। मतलब हर दिन लगभग एक सौ साठ लोग। "
-                       "दुनिया में सबसे ज़्यादा।"),
     dict(id="b6", text="ज़्यादातर मौत चार साँपों से होती है: कोबरा, क्रेट, रसेल्स वाइपर और सॉ-स्केल्ड वाइपर। "
                        "इन्हें बिग फ़ोर कहते हैं।"),
     dict(id="b7", text="क्रेट रात को निकलता है। बारिश के मौसम में ये घरों में घुस आता है, और ज़मीन पर सोते लोगों को काट लेता है।"),
@@ -45,15 +45,15 @@ SCRIPT = [
 
 METADATA = dict(
     title="Ye saanp sote hue kaatta hai",
-    caption="Ye saanp sote hue kaatta hai aur dard bhi nahi hota... Bharat mein roz ~160 log saanp ke kaatne se "
-            "marte hain 😳\n\n"
+    caption="Bharat mein roz ~160 log saanp ke kaatne se marte hain... aur ek saanp sote hue kaatta hai, dard bhi "
+            "nahi hota 😳\n\n"
             "Saanp kaate toh:\n✅ Ghabraao mat, kaata hua haath ya pair seedha aur sthir rakho\n"
             "✅ Ring, ghadi aur tight kapde nikaalo\n✅ Turant anti-venom wale hospital jao, 108 call karo\n"
             "❌ Kaatna, choosna, rassi se baandhna, jhaad-phoonk: sab galat\n"
             "❌ Dard nahi hai, toh bhi ignore mat karo\n\n"
             "Zameen par sote ho toh machhardaani lagao.\n\n"
             "Tumhare ghar ya gaon ke paas kabhi saanp nikla hai? Comment mein YES ya NO likho 👇",
-    yt_title="Ye Saanp Sote Hue Kaatta Hai, Dard Bhi Nahi Hota 😳 | Krait",
+    yt_title="Roz 160 Maut: Ye Saanp Sote Hue Kaatta Hai 😳 | Krait",
     yt_description="Common krait raat ko zameen par sote logon ko kaatta hai, aur kaata dard bhi nahi deta. Bharat mein "
                    "har saal lagbhag 58,000 log saanp ke kaatne se marte hain. Saanp kaate toh kya karein, aur kya "
                    "bilkul na karein.\n\nSaanp kaate toh:\n✅ Ghabraao mat, kaata hua hissa seedha aur sthir rakho\n"
@@ -141,16 +141,32 @@ def nerve(cr, t, t0, t_block, x0, x1, y, alpha=1.0):
 # Rules (style bible + parasite-reels study): a new picture every ~3-4 s cut on the word, the literal noun on screen,
 # red = threat, green = what to do / reassurance, gold = numbers, dark slate for inside the body.
 
-def h_snake(cr, t, tl, t0):                              # b1 frame 0: "socho, you're asleep on the floor..."
-    _pic(cr, "krait_3", W / 2, 1100, 420, t, -1)
-    headline(cr, t, "IT BITES WHILE YOU", "SLEEP", -1, min(1.2, T(tl, "b1", "रहे")), t_ghost=-1)   # "सो" would match "सोचो"
+def h_deaths(cr, t, tl, t0):                             # b0 frame 0: "160 people a day die of snakebite in India"
+    counter(cr, t, -0.2, W / 2, 900, "160", 300, color=GOLD)
+    draw_text(cr, "DEATHS EVERY DAY", W / 2, 1100, 70, INK, prog(t, 0.3, 0.3), anchor="ct")
+    x = 1300 - 760 * prog(t, 0.6, 1.4)                         # the krait slides in under the number
+    _pic(cr, "krait_2", x, 1440, 150, t, -1, flip=True)
+    headline(cr, t, "SNAKEBITE DEATHS IN INDIA:", "160 A DAY", -1, min(1.5, T(tl, "b0", "साठ")), t_ghost=-1)
+
+
+def h_year(cr, t, tl, t0):                               # b0 "...58,000 a year. The most in the world."
+    _pic(cr, "india_map", 240, 1100, 520, t, t0, tint=INK)
+    counter(cr, t, t0 + 0.1, 760, 980, "58,000", 150, color=GOLD)
+    draw_text(cr, "EVERY YEAR", 740, 1090, 44, INK, prog(t, t0 + 0.4, 0.3), anchor="ct")
+    stamp(cr, t, "MOST IN THE WORLD", T(tl, "b0", "दुनिया"), W / 2, 1420, 60)
+    headline(cr, t, "EVERY YEAR:", "58,000", t0, t0 + 0.2)
+
+
+def h_snake(cr, t, tl, t0):                              # b1 "and one of them is a snake that, at night..."
+    _pic(cr, "krait_3", W / 2, 1100, 420, t, t0)
+    headline(cr, t, "AND ONE OF THEM", "BITES AT NIGHT", t0, T(tl, "b1", "रात"), t_ghost=t0)
 
 
 def h_comes(cr, t, tl, t0):                              # b1 "...a snake comes, bites and leaves"
     sleeper(cr, t, 380, 1200)
     x = 1200 - 520 * prog(t, t0, 1.6)
     _pic(cr, "krait_2", x, 1330, 150, t, -1, flip=True)
-    headline(cr, t, "A SNAKE COMES,", "BITES, LEAVES", t0, T(tl, "b1", "काट"))
+    headline(cr, t, "WHILE YOU", "SLEEP", t0, t0 + 0.2)
 
 
 def h_no_pain(cr, t, tl, t0):                            # b1 "...you don't even know. Because there's no pain."
@@ -221,20 +237,6 @@ def n_name(cr, t, tl, t0):                               # b4 "its name: common 
             draw_text(cr, txt, MARGIN + 25, ty, sz, CREAM, clamp(p * 2 - 1))
     card(cr, t, T(tl, "b4", "करैत"), 640, 620, ["ALSO: KARAIT"], size=40)
     headline(cr, t, "ITS NAME", "", t0, 1e9)
-
-
-def n_58000(cr, t, tl, t0):                              # b5 "58,000 deaths a year in India..."
-    _pic(cr, "india_map", 300, 1100, 560, t, t0, tint=INK)
-    counter(cr, t, T(tl, "b5", "अट्ठावन"), 740, 980, "58,000", 150, color=GOLD)
-    draw_text(cr, "EVERY YEAR", 740, 1090, 44, INK, prog(t, T(tl, "b5", "अट्ठावन") + 0.3, 0.3), anchor="ct")
-    headline(cr, t, "SNAKEBITE DEATHS IN INDIA", "58,000/YEAR", t0, T(tl, "b5", "अट्ठावन"), big_size=140)
-
-
-def n_per_day(cr, t, tl, t0):                            # b5 "...about 160 every day. The most in the world."
-    counter(cr, t, t0 + 0.1, W / 2, 900, "160", 260, color=GOLD)
-    draw_text(cr, "EVERY DAY", W / 2, 1080, 70, INK, prog(t, t0 + 0.4, 0.3), anchor="ct")
-    stamp(cr, t, "MOST IN THE WORLD", T(tl, "b5", "दुनिया"), W / 2, 1360, 60)
-    headline(cr, t, "THAT'S ABOUT", "160 A DAY", t0, t0 + 0.3)
 
 
 def n_big_four(cr, t, tl, t0):                           # b6 "most deaths: cobra, krait, Russell's viper, saw-scaled viper"
@@ -428,10 +430,11 @@ def e_question(cr, t, tl, t0):                           # b20 "a snake near you
 
 
 SHOTS = [   # (line, cue where the shot starts, draw function, background)
-    ("b1", None, h_snake, "paper"), ("b1", "साँप", h_comes, "paper"), ("b1", "पता", h_no_pain, "paper"),
+    ("b0", None, h_deaths, "paper"), ("b0", "साल", h_year, "paper"),
+    ("b1", None, h_snake, "paper"), ("b1", "सोते", h_comes, "paper"), ("b1", "पता", h_no_pain, "paper"),
     ("b2", None, h_eyelids, "paper"), ("b2", "साँस", h_breathing, "paper"),
     ("b3", None, t_tv, "paper"), ("b3", "असली", t_real, "paper"),
-    ("b4", None, n_name, "paper"), ("b5", None, n_58000, "paper"), ("b5", "मतलब", n_per_day, "paper"),
+    ("b4", None, n_name, "paper"),
     ("b6", None, n_big_four, "paper"),
     ("b7", None, w_night, "paper"), ("b7", "ज़मीन", w_floor, "paper"), ("b8", None, w_marks, "paper"),
     ("b9", None, v_nerves, "slate"), ("b9", "दिमाग़", v_blocked, "paper"), ("b10", None, v_steps, "paper"),
@@ -451,7 +454,7 @@ def sfx(tl):
     """A whoosh on every cut, thuds on stamps, scribbles on the myth strikes, a tick before the re-hook and the
     closing line, typing on the card."""
     ev = [(s, "whoosh", 0.25) for s in starts(tl, SHOTS)[1:]]
-    ev += [(T(tl, "b1", "दर्द"), "thud", 0.0), (T(tl, "b5", "दुनिया"), "thud", 0.0),
+    ev += [(T(tl, "b1", "दर्द"), "thud", 0.0), (T(tl, "b0", "दुनिया"), "thud", 0.0),
            (T(tl, "b12", "घर"), "thud", 0.0), (T(tl, "b14", None) + 0.2, "scribble", 0.9),
            (T(tl, "b11", "तो") - 0.35, "tick", 0.0), (T(tl, "b19", None) - 0.35, "tick", 0.0),
            (T(tl, "b20", "यस"), "typing", 1.0)]

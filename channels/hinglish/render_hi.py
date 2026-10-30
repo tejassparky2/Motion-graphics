@@ -134,8 +134,15 @@ def remix(name):
 
 def _site(c):
     u = c.get("page_url", "")
-    return c.get("source") or ("Wikimedia Commons" if "wikimedia" in u else "Pixabay" if "pixabay" in u
-                               else "Unsplash" if "unsplash" in u else "")
+    s = c.get("source") or ("Wikimedia Commons" if "wikimedia" in u else "Pixabay" if "pixabay" in u
+                            else "Unsplash" if "unsplash" in u else "")
+    via = re.match(r"Openverse \(via (\w+)\)", s)                 # Openverse only searches: name the real site
+    return {"wikimedia": "Wikimedia Commons", "flickr": "Flickr"}.get(via[1], via[1]) if via else s
+
+
+def _is_cc_by(lic):
+    """CC BY in any spelling ("CC BY 4.0", "BY 4.0", "cc-by"): the licences that need the author's name."""
+    return re.match(r"(cc[\s-]?)?by\b", lic.strip(), re.I) is not None and not re.search(r"sa|nc|nd", lic, re.I)
 
 
 def _short_source(src):
@@ -157,7 +164,7 @@ def write_sheet(mod, tl, path):
     # the photographer's name, so the second line lists those names.
     sites = sorted({_site(c) for c in credits} - {""})
     by = sorted({c["author"].split(" from ")[0].split(" (")[0].rstrip(". ") for c in credits
-                 if c["license"].startswith("CC BY")})
+                 if _is_cc_by(c["license"])})
     photo = f"Photos: {', '.join(sites)}." + (f"\nCC BY: {', '.join(by)}." if by else "")
     sources = "Sources: " + "; ".join(_short_source(x) for x in m.get("sources", []))
     tags = " ".join(m["hashtags"])

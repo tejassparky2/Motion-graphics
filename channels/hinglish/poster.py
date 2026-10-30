@@ -434,8 +434,9 @@ def headline(cr, t, small, big, t_small, t_big, y=200, x=MARGIN, small_size=64, 
     A big word wider than the frame is shrunk to fit."""
     if big:
         big_size = min(big_size, int(big_size * (W - 2 * x) / max(1, text_size(big, big_size)[0])))
-    if big and t_ghost is not None and t_ghost <= t < t_big:
-        draw_text(cr, big, x, y + small_size * 1.18, big_size, FADED, 0.35 * alpha * prog(t, t_ghost, 0.25))
+    if big and t_ghost is not None and t_ghost <= t < t_big + 0.3:   # cross-fades into the red word, no blank frame
+        draw_text(cr, big, x, y + small_size * 1.18, big_size, FADED,
+                  0.35 * alpha * prog(t, t_ghost, 0.25) * (1 - prog(t, t_big, 0.3)))
     words = small.split()
     cx = x
     gap = small_size * 0.28
