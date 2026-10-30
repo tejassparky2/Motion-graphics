@@ -60,6 +60,12 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v3.1 (full shot-by-shot pass over a TV episode, `ANIME_STUDY.md` "Second pass"):**
+  - 78% of shots have a locked camera; pans are short (1.5-2 s).
+  - A reaction shot follows almost every beat.
+  - Big moments get full-frame energy, speed-line or burst backgrounds, and the character frozen while the effect moves.
+  - Shape wipes mark act changes.
+  - For assets: give every creature and Kai one strong held "reaction pose" (shock, delight) usable as a freeze frame.
 - **30 Oct, v3 (style frame `out/monsters/style_frame_anime_v3.png`).** From measuring a full Pokémon TV episode frame
   by frame (`channels/monsters/ANIME_STUDY.md`):
   - Lines are coloured per colour: `look.outline()` now gives each material its own darker line (`line_color`,
