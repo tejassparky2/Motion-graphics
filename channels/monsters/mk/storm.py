@@ -1,18 +1,20 @@
 """Episode 1's storm and the death / rebirth transitions, built in front of whatever camera you pass, so they work in
-any scene: rain(), lightning(), power_out(), white_out(), birds_and_light(). Nothing here is graphic: the "death" is a
-power cut to black, then a slow fade to white, then a soft pastel sky.
+any scene: rain(), lightning(), flicker(), power_out(), white_out(), shape_wipe(), birds_and_light(). Nothing here is
+graphic: the "death" is a power cut to black, then white, then a soft pastel sky.
 
-Everything is simple geometry with unlit (emission) materials, parented to the camera at a fixed depth and sized to
-fill its view. Screen areas are (x0, y0, x1, y1) in 0..1 with y up (Blender's window coordinates); screen_rect() finds
-the area a window opening covers. Layering, nearest first: flash, white veil, white-out, black, birds, sun rays, sky;
-rain and the lightning bolt sit at a chosen depth inside the scene (e.g. just beyond a window).
+Effects are simple geometry with unlit (emission) materials, parented to the camera at a fixed depth and sized to
+fill its view. Screen areas are (x0, y0, x1, y1) in 0..1 with y up (Blender's window coordinates). Pass the lab's
+window object (helper 1, mk/lab.py) as `window=` and the rain and the bolt are clipped to the area it covers, and the
+lightning lights the room through it; pass the lab's lights as `lights=` to flicker or kill them. Layering, nearest
+first: flash, wipe / veil, white-out, black, birds, sun rays; rain and the bolt sit inside the scene, beyond the window.
 
-Typical use (frames are examples):
-    storm.rain(cam, 1, 120, area=storm.screen_rect(cam, window_corners))
-    storm.lightning(cam, 40, area=...)
-    storm.power_out(cam, 96)
-    storm.white_out(cam, 110, 150)
-    storm.birds_and_light(cam, 150, 190)
+Episode 1 (EP01_SHOTS.md), frames are per shot:
+    S07 (1.36 s, 33 f): storm.rain(cam, 1, 33, window=win); storm.lightning(cam, 9, window=win, lights=lamps)
+                        storm.flicker(lamps, 14, 24)
+    S10 (1.90 s, 46 f): lab spark (helper 1) ~f4; storm.power_out(cam, 7, lights=lamps)   # "And so did I." on black
+                        storm.white_out(cam, 30, 44)
+    S11 (helper 3):     storm.birds_and_light(cam, 1, 14, sky=False)  # the white opens (star wipe) onto the world
+Keep important things above y 845 px and out of the right rail (x > 620, y 640-1180): the birds and sun stay up high.
 """
 import math
 import random
@@ -20,11 +22,11 @@ import random
 import bpy
 from mathutils import Vector
 
-from . import look
+from . import look, paintbg
 
 FULL = (0.0, 0.0, 1.0, 1.0)
 # camera-space depths of the full-screen layers (nearest first); clip_start is raised below them if needed
-D_FLASH, D_VEIL, D_WHITE, D_BLACK, D_BIRDS, D_RAYS, D_SKY = 0.20, 0.21, 0.22, 0.23, 0.26, 0.28, 0.30
+D_FLASH, D_VEIL, D_WHITE, D_BLACK, D_BIRDS, D_RAYS = 0.20, 0.21, 0.22, 0.23, 0.26, 0.28
 _groups = {}   # camera name -> [(kind, empty)], so a later transition can retire an earlier one
 
 
@@ -51,6 +53,33 @@ def screen_rect(cam, points, sc=None):
     sc = sc or bpy.context.scene
     co = [world_to_camera_view(sc, cam, Vector(p)) for p in points]
     return (min(c.x for c in co), min(c.y for c in co), max(c.x for c in co), max(c.y for c in co))
+
+
+def window_rect(cam, window):
+    """The screen area a window object (its bounding box, e.g. the glass or the opening) covers."""
+    return screen_rect(cam, [window.matrix_world @ Vector(c) for c in window.bound_box])
+
+
+def _area(cam, area, window):
+    return window_rect(cam, window) if window is not None else area
+
+
+def _key_energy(light, frame, value, interp="CONSTANT"):
+    d = light.data
+    d.energy = value
+    d.keyframe_insert("energy", frame=frame)
+    _interp(d.animation_data.action, frame, interp)
+
+
+def flicker(lights, f0, f1, seed=5, low=0.15):
+    """Room lights stutter on 1s between f0 and f1 (on / dim / off / on...), back to full after f1."""
+    rnd = random.Random(seed)
+    for lt in lights:
+        base = lt.data.energy
+        _key_energy(lt, f0 - 1, base)
+        for f in range(f0, f1 + 1):
+            _key_energy(lt, f, base * rnd.choice((1.0, low, 0.0, 1.0, low * 2)))
+        _key_energy(lt, f1 + 1, base)
 
 
 def _group(cam, kind, f0=None, f1=None):
@@ -189,11 +218,13 @@ def _alpha(m):
 
 
 # ------------------------------------------------------------------------------------------------------------ rain
-def rain(cam, f0, f1, area=FULL, depth=6.0, angle=14.0, density=1.0, color="#bfe3ff", seed=11):
+def rain(cam, f0, f1, area=FULL, window=None, depth=6.0, angle=14.0, density=1.0, color="#cfeaff", seed=11):
     """Anime rain: thin, angled, light-blue streaks between frames f0 and f1, re-scattered every frame (on 1s), in
-    three layers (near streaks longer and brighter). `area` limits it to a screen rectangle (e.g. a window);
-    `depth` puts it inside the scene (beyond the window glass), `angle` tilts the fall to the left in degrees."""
+    three layers (near streaks longer and brighter). `window` (an object) or `area` limits it to that part of the
+    screen; `depth` puts it inside the scene (beyond the glass), `angle` tilts the fall to the left in degrees. The
+    camera should stay put while it rains (the clip area is fixed at build time)."""
     rnd = random.Random(seed)
+    area = _area(cam, area, window)
     g = _group(cam, "rain", f0, f1)
     a = math.radians(angle)
     dx, dy = math.sin(a), -math.cos(a)                 # fall direction (down and to the left in screen space)
@@ -261,12 +292,14 @@ def _ribbon(pts, w0, w1):
     return verts, faces
 
 
-def lightning(cam, frame, area=FULL, depth=28.0, x=None, flash=True, seed=7, color="#ffffff", glow="#7cc4ff",
-              flash_color="#e4f2ff"):
+def lightning(cam, frame, area=FULL, window=None, lights=None, depth=28.0, x=None, flash=True, seed=7,
+              color="#ffffff", glow="#7cc4ff", flash_color="#e4f2ff", room_light=150.0):
     """An anime lightning bolt in the sky (white core, blue glow, two forks) striking down through `area` at `frame`,
     flickering on-off-on over 4 frames, plus a full-screen blue-white flash. `x` is the strike's screen x (0..1);
-    `depth` should be beyond the window and in front of the far sky."""
+    `depth` should be beyond the window and in front of the far sky. With `window`, the bolt is clipped to it and a
+    blue-white area light at the window throws the strike into the room; `lights` (the room lamps) dip as it hits."""
     rnd = random.Random(seed)
+    area = _area(cam, area, window)
     g = _group(cam, "lightning", frame, frame + 4)
     W, H = view_size(cam, depth)
     x0a, y0a, x1a, y1a = area
@@ -298,16 +331,35 @@ def lightning(cam, frame, area=FULL, depth=28.0, x=None, flash=True, seed=7, col
         fg = _group(cam, "flash", frame, frame + 6)
         fm = _overlay(f"flash_m_{frame}", look.hexc(flash_color), 0.0)
         out["flash"] = _screen_plane(f"flash_{frame}", cam, D_FLASH, fm, fg)
-        for fr, k in ((frame - 1, 0), (frame, 0.85), (frame + 1, 0.12), (frame + 2, 0), (frame + 3, 0.5),
-                      (frame + 4, 0.1), (frame + 5, 0)):
+        for fr, k in ((frame - 1, 0), (frame, 0.8), (frame + 1, 0), (frame + 3, 0.4),
+                      (frame + 4, 0)):                     # a 1-frame pop and a 1-frame echo, on the bolt's beats
             _key_socket(_alpha(fm), fr, k, "CONSTANT")
+    if window is not None and room_light:
+        c = window.matrix_world @ (sum((Vector(v) for v in window.bound_box), Vector()) / 8)
+        bpy.ops.object.light_add(type="AREA", location=c)
+        lt = bpy.context.object
+        lt.name = f"bolt_light_{frame}"
+        dims = window.dimensions
+        lt.data.shape, lt.data.size, lt.data.size_y = "RECTANGLE", max(dims.x, dims.y), max(dims.z, 0.5)
+        lt.data.color = look.hexc(flash_color)[:3]
+        lt.rotation_euler = (cam.matrix_world.translation - c).to_track_quat("Z", "Y").to_euler()
+        for fr, k in ((frame - 1, 0), (frame, 1), (frame + 2, 0), (frame + 3, 0.6), (frame + 4, 0)):
+            _key_energy(lt, fr, room_light * k)
+        out["light"] = lt
+    for lt in lights or ():
+        base = lt.data.energy
+        for fr, k in ((frame - 1, 1), (frame, 0.3), (frame + 2, 1)):
+            _key_energy(lt, fr, base * k)
     return out
 
 
 # ------------------------------------------------------------------------------------------------- the transitions
-def power_out(cam, frame, flicker=True):
+def power_out(cam, frame, flicker=True, lights=None):
     """Everything cuts to black at `frame` (after a one-frame stutter if `flicker`) and stays black until a later
-    white_out() or birds_and_light() takes over."""
+    white_out() or birds_and_light() takes over. `lights` (the room lamps) go out with it."""
+    for lt in lights or ():
+        _key_energy(lt, frame - 1, lt.data.energy)
+        _key_energy(lt, frame, 0.0)
     g = _group(cam, "black")
     m = _overlay(f"black_m_{frame}", (0, 0, 0, 1), 0.0)
     p = _screen_plane(f"black_{frame}", cam, D_BLACK, m, g)
@@ -388,81 +440,82 @@ def white_out(cam, f0, f1, color="#ffffff"):
     return {"group": g, "plane": p}
 
 
-def _sky_mat(name, sun, aspect):
-    """Pastel anime sky in screen space: blue overhead, cream at the sun, pink low down, soft painted cloud bands."""
-    m = bpy.data.materials.new(name)
-    m.use_nodes = True
+def _wipe_metric(x, y, p):
+    return (abs(x) ** p + abs(y) ** p) ** (1 / p)
+
+
+WIPE_SHAPES = {"circle": 2.0, "diamond": 1.0, "star": 0.5}   # superellipse exponent: 0.5 is a 4-point star
+
+
+def shape_wipe(cam, f0, f1, shape="star", color="#ffffff", mode="open", center=(0.5, 0.55), spin=25.0):
+    """An anime shape wipe on a full-screen `color` layer. mode "open": a hole in the shape grows from `center` (0..1
+    screen) until the layer is gone at f1, revealing the scene. mode "close": the colour closes in from the edges until
+    it covers the screen at f1 (and holds). The shape turns by `spin` degrees as it goes. Hard edges, on 1s."""
+    p = WIPE_SHAPES[shape]
+    r = bpy.context.scene.render
+    aspect = r.resolution_x / r.resolution_y
+    g = _group(cam, "wipe", f0, f1 if mode == "open" else None)
+    m = _overlay(f"wipe_m_{f0}", look.hexc(color), 1.0)
     nt = m.node_tree
-    nt.nodes.clear()
     L = nt.links.new
-    out = nt.nodes.new("ShaderNodeOutputMaterial")
-    em = nt.nodes.new("ShaderNodeEmission")
     tc = nt.nodes.new("ShaderNodeTexCoord")
-    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
-    L(tc.outputs["Window"], sep.inputs[0])
-    gr = nt.nodes.new("ShaderNodeValToRGB")
-    cr = gr.color_ramp
-    cr.interpolation = "EASE"
-    cr.elements[0].position, cr.elements[0].color = 0.0, look.hexc("#ffd3e2")
-    cr.elements[1].position, cr.elements[1].color = 1.0, look.hexc("#9fd0ff")
-    e = cr.elements.new(0.42)
-    e.color = look.hexc("#ffe9e4")
-    e = cr.elements.new(0.7)
-    e.color = look.hexc("#cfe6ff")
-    L(sep.outputs[1], gr.inputs[0])
-    # sun glow: distance from the sun in aspect-corrected screen space
-    dx = nt.nodes.new("ShaderNodeMath")
-    dx.operation = "SUBTRACT"
-    L(sep.outputs[0], dx.inputs[0])
-    dx.inputs[1].default_value = sun[0]
-    dxa = nt.nodes.new("ShaderNodeMath")
-    dxa.operation = "MULTIPLY"
-    L(dx.outputs[0], dxa.inputs[0])
-    dxa.inputs[1].default_value = aspect
-    dy = nt.nodes.new("ShaderNodeMath")
-    dy.operation = "SUBTRACT"
-    L(sep.outputs[1], dy.inputs[0])
-    dy.inputs[1].default_value = sun[1]
-    cmb = nt.nodes.new("ShaderNodeCombineXYZ")
-    L(dxa.outputs[0], cmb.inputs[0])
-    L(dy.outputs[0], cmb.inputs[1])
-    ln = nt.nodes.new("ShaderNodeVectorMath")
-    ln.operation = "LENGTH"
-    L(cmb.outputs[0], ln.inputs[0])
-    glow = nt.nodes.new("ShaderNodeValToRGB")
-    g = glow.color_ramp
-    g.interpolation = "EASE"
-    g.elements[0].position, g.elements[0].color = 0.0, (1, 1, 1, 1)
-    g.elements[1].position, g.elements[1].color = 0.34, (0, 0, 0, 1)
-    e = g.elements.new(0.05)
-    e.color = (0.95, 0.95, 0.95, 1)
-    L(ln.outputs[1], glow.inputs[0])
-    mg = nt.nodes.new("ShaderNodeMix")
-    mg.data_type, mg.blend_type = "RGBA", "MIX"
-    L(glow.outputs[0], mg.inputs[0])
-    L(gr.outputs[0], mg.inputs[6])
-    mg.inputs[7].default_value = look.hexc("#fffbea")
-    # painted cloud bands: stretched noise, softly lifted toward white
     mp = nt.nodes.new("ShaderNodeMapping")
-    mp.inputs["Scale"].default_value = (1.6 * aspect, 5.0, 1.0)
+    mp.inputs["Location"].default_value = (-center[0] * aspect, -center[1], 0)
+    mp.inputs["Scale"].default_value = (aspect, 1, 0)
     L(tc.outputs["Window"], mp.inputs[0])
-    nz = nt.nodes.new("ShaderNodeTexNoise")
-    nz.inputs["Scale"].default_value = 2.2
-    nz.inputs["Detail"].default_value = 2.0
-    L(mp.outputs[0], nz.inputs[0])
-    cl = nt.nodes.new("ShaderNodeValToRGB")
-    cl.color_ramp.interpolation = "EASE"
-    cl.color_ramp.elements[0].position, cl.color_ramp.elements[0].color = 0.5, (0, 0, 0, 1)
-    cl.color_ramp.elements[1].position, cl.color_ramp.elements[1].color = 0.68, (0.55, 0.55, 0.55, 1)
-    L(nz.outputs[0], cl.inputs[0])
-    mc = nt.nodes.new("ShaderNodeMix")
-    mc.data_type, mc.blend_type = "RGBA", "SCREEN"
-    L(cl.outputs[0], mc.inputs[0])
-    L(mg.outputs[2], mc.inputs[6])
-    mc.inputs[7].default_value = look.hexc("#ffffff")
-    L(mc.outputs[2], em.inputs[0])
-    L(em.outputs[0], out.inputs[0])
-    return m
+    rot = nt.nodes.new("ShaderNodeVectorRotate")
+    rot.rotation_type = "Z_AXIS"
+    rot.name = "Spin"
+    L(mp.outputs[0], rot.inputs["Vector"])
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    L(rot.outputs[0], sep.inputs[0])
+    acc = None
+    for o in (sep.outputs[0], sep.outputs[1]):
+        ab = nt.nodes.new("ShaderNodeMath")
+        ab.operation = "ABSOLUTE"
+        L(o, ab.inputs[0])
+        pw = nt.nodes.new("ShaderNodeMath")
+        pw.operation = "POWER"
+        L(ab.outputs[0], pw.inputs[0])
+        pw.inputs[1].default_value = p
+        if acc is None:
+            acc = pw.outputs[0]
+        else:
+            ad = nt.nodes.new("ShaderNodeMath")
+            ad.operation = "ADD"
+            L(acc, ad.inputs[0])
+            L(pw.outputs[0], ad.inputs[1])
+            acc = ad.outputs[0]
+    d = nt.nodes.new("ShaderNodeMath")
+    d.operation = "POWER"
+    L(acc, d.inputs[0])
+    d.inputs[1].default_value = 1 / p
+    rad = nt.nodes.new("ShaderNodeValue")
+    rad.name = "Radius"
+    out = nt.nodes.new("ShaderNodeMath")                      # 1 outside the shape (colour), 0 inside (hole)
+    out.operation = "GREATER_THAN"
+    L(d.outputs[0], out.inputs[0])
+    L(rad.outputs[0], out.inputs[1])
+    mix = next(n for n in nt.nodes if n.type == "MIX_SHADER")
+    L(_mul(nt, _alpha(m), out.outputs[0]), mix.inputs[0])
+    plane = _screen_plane(f"wipe_{f0}", cam, D_VEIL, m, g)
+
+    # the radius that clears every corner at any angle of the turn
+    corners = [((cx - center[0]) * aspect, cy - center[1]) for cx in (0, 1) for cy in (0, 1)]
+    rmax = 0.0
+    for i in range(-12, 13):                                   # either direction of turn
+        a = math.radians(spin) * i / 12
+        ca, sa = math.cos(a), math.sin(a)
+        rmax = max(rmax, *(_wipe_metric(x * ca + y * sa, -x * sa + y * ca, p) for x, y in corners))
+    rmax *= 1.02
+    n = max(2, f1 - f0)
+    for i in range(n + 1):
+        t = i / n
+        e = t * t * (3 - 2 * t)
+        k = e if mode == "open" else 1 - e
+        _key_socket(rad.outputs[0], f0 + i, rmax * k, "CONSTANT")
+        _key_socket(rot.inputs["Angle"], f0 + i, math.radians(spin) * e, "CONSTANT")
+    return {"group": g, "plane": plane}
 
 
 def _rays_mat(name, color, alpha, reach):
@@ -494,21 +547,26 @@ def _bird(name, size, mat, parent):
     return _mesh(name, v, f, mat, parent)
 
 
-def birds_and_light(cam, f0, f1, sun=(0.7, 0.74), birds=5, hold=72, seed=21):
-    """Rebirth: the white screen dissolves (f0 to f1) into a soft pastel sky with a hazy sun, slowly turning sun rays
-    and a few small distant birds flapping on 2s. Earlier black / white screens on this camera are retired at f0. The
-    sky stays up (birds drifting, rays turning) for `hold` frames after f1."""
+def birds_and_light(cam, f0, f1, sun=(0.7, 0.76), birds=5, hold=72, seed=21, sky=True, wipe="star"):
+    """Rebirth: the white screen opens (f0 to f1) onto a soft pastel sky with a hazy sun, slowly turning sun rays and a
+    few small distant birds flapping on 2s. `wipe` is the shape that opens from the sun ("star", "circle", "diamond",
+    or None for a plain dissolve). `sky=True` sets the world to a pastel paintbg.sky() (aim the camera up a little);
+    the world is not keyed, so build the reveal as its own shot / scene. `sky=False` keeps the current world, e.g. helper 3's new-world landscape. Earlier black / white screens on this
+    camera are retired at f0. The sun and birds stay up (drifting, rays turning) for `hold` frames after f1."""
     rnd = random.Random(seed)
     _retire(cam, ("black", "white"), f0)
+    if sky:
+        paintbg.sky(top="#94c8f4", mid="#cfe6ff", horizon="#ffdde8", fill="#ffeef3", fill_strength=0.6)
     g = _group(cam, "sky", f0)
-    r = bpy.context.scene.render
-    aspect = r.resolution_x / r.resolution_y
-    sky = _screen_plane(f"sky_{f0}", cam, D_SKY, _sky_mat(f"sky_m_{f0}", sun, aspect), g)
     end = f1 + hold
 
-    # sun rays: a fan of long thin wedges from the sun, slowly turning
+    # hazy sun: a soft glow disc and a fan of long thin rays, slowly turning
     W, H = view_size(cam, D_RAYS)
     sun_local = ((sun[0] - 0.5) * W, (sun[1] - 0.5) * H, -D_RAYS)
+    disc = [(0, 0, 0)] + [(math.cos(a) * H * 0.3, math.sin(a) * H * 0.3, 0)
+                          for a in (i / 48 * 2 * math.pi for i in range(48))]
+    glow = _mesh(f"sun_{f0}", disc, [(0, i, i % 48 + 1) for i in range(1, 49)],
+                 _rays_mat(f"sun_m_{f0}", "#fffbea", 0.85, H * 0.3), g, (sun_local[0], sun_local[1], -D_RAYS + 0.004))
     verts, faces = [(0, 0, 0)], []
     reach = H * 1.2
     n = 14
@@ -519,11 +577,11 @@ def birds_and_light(cam, f0, f1, sun=(0.7, 0.74), birds=5, hold=72, seed=21):
         k = len(verts)
         verts += [(math.cos(a - hw) * rr, math.sin(a - hw) * rr, 0), (math.cos(a + hw) * rr, math.sin(a + hw) * rr, 0)]
         faces.append((0, k, k + 1))
-    rays = _mesh(f"rays_{f0}", verts, faces, _rays_mat(f"rays_m_{f0}", "#fff6e0", 0.26, reach), g, sun_local)
+    rays = _mesh(f"rays_{f0}", verts, faces, _rays_mat(f"rays_m_{f0}", "#fff6e0", 0.18, reach), g, sun_local)
     _key(rays, "rotation_euler", f0, (0, 0, 0), "LINEAR")
     _key(rays, "rotation_euler", end, (0, 0, math.radians(8)), "LINEAR")
 
-    # birds: small, pale-violet (distant), drifting left to right on 2s, each flapping on 2s
+    # birds: small, pale-violet (distant), drifting left to right, each flapping on 2s
     W, H = view_size(cam, D_BIRDS)
     bm = look.flat(f"bird_m_{f0}", look.hexc("#6f6a92"))
     flock = []
@@ -540,12 +598,15 @@ def birds_and_light(cam, f0, f1, sun=(0.7, 0.74), birds=5, hold=72, seed=21):
             _key(b, "scale", f, (1, (1.0, 0.35, -0.7, 0.35)[beat], 1))
         flock.append(b)
 
-    # the white veil that dissolves into the sky
-    vg = _group(cam, "veil", f0, f1)
-    vm = _overlay(f"veil_m_{f0}", (1, 1, 1, 1), 1.0)
-    veil = _screen_plane(f"veil_{f0}", cam, D_VEIL, vm, vg)
-    steps = max(2, (f1 - f0) // 3)
-    for i in range(steps + 1):
-        t = i / steps
-        _key_socket(_alpha(vm), f0 + round((f1 - f0) * i / steps), 1 - t * t * (3 - 2 * t), "LINEAR")
-    return {"group": g, "sky": sky, "rays": rays, "birds": flock, "veil": veil}
+    out = {"group": g, "sun": glow, "rays": rays, "birds": flock}
+    if wipe:
+        out["wipe"] = shape_wipe(cam, f0, f1, shape=wipe, mode="open", center=sun)
+    else:                                                          # a plain dissolve
+        vg = _group(cam, "veil", f0, f1)
+        vm = _overlay(f"veil_m_{f0}", (1, 1, 1, 1), 1.0)
+        out["veil"] = _screen_plane(f"veil_{f0}", cam, D_VEIL, vm, vg)
+        steps = max(2, (f1 - f0) // 3)
+        for i in range(steps + 1):
+            t = i / steps
+            _key_socket(_alpha(vm), f0 + round((f1 - f0) * t), 1 - t * t * (3 - 2 * t), "LINEAR")
+    return out
