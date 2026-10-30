@@ -1,6 +1,6 @@
-# Reel 07 shot list: "One photo → 3D printed figurine in 4 steps"
+# Reel 07 shot list: "How to make a photo into a 3D figurine"
 
-The first learning reel (week 1, posts Mon 2 Nov, 7–9 PM IST). Film **one new figurine** from start to finish. The
+The first learning reel (week 1, posts Mon 2 Nov, 7–9 PM IST). Script: `plan.md`. Film **one new figurine** from start to finish. The
 person in the photo (or the parent, for a child) must agree to the photo and figurine being shown. Keep customer names
 and phone numbers off every screen.
 
@@ -24,8 +24,10 @@ and this one moves to Wednesday.
 
 | # | Script line | Shot | Length |
 |---|---|---|---|
-| 1 | "This figurine started as one phone photo…" | **Hook.** Phone in one hand showing the original photo full screen, figurine in the other, side by side at the same height, close to the camera. Turn the figurine slowly from a side view to the front. Screen brightness at max, tilted so the window doesn't reflect. **3 takes.** | 10 s each |
+| 1 | "How to make a photo into a 3D figurine…" / "This figurine started as one phone photo…" | **Hook.** Phone in one hand showing the original photo full screen, figurine in the other, side by side at the same height, close to the camera. Turn the figurine slowly from a side view to the front. Screen brightness at max, tilted so the window doesn't reflect. **3 takes.** | 10 s each |
 | 1b | (same) | The figurine standing on the table with the phone leaning beside it, showing the photo. | 8 s |
+| 1c | "…for your desktop…" | **On a desk:** the figurine on a work desk beside a laptop or monitor, as if it lives there. A slow slide of the phone past it. | 5 s |
+| 1d | "…or gifting." | **As a gift:** your hands placing the figurine in a gift box, or handing the box to someone. | 5 s |
 | 2 | "Step one. We upload the photo to ChatGPT…" | **Screen recording, ChatGPT:** new chat, attach the photo, type the prompt, send, the design appears. | full run |
 | 3 | "Same face. Same outfit. Same pose. Just cuter." | No filming. Send the **original photo file** and the **design image** (downloaded, not a screenshot). I make the split. | files |
 | 4 | "Step two. We give that design to Tripo 3D…" | **Screen recording, Tripo3D:** upload the design, generate, the model building, then drag to rotate the finished model slowly. **Tell me how long it took.** | full run + 10 s rotate |
