@@ -48,6 +48,8 @@ NO_CAPTIONS = {"S15"}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
 CAP_SIZE = 60
 CAP_MAX_W = 560              # clear of the right rail
+CAP_Y_SHOT = {}              # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
+HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
 
 
@@ -176,7 +178,7 @@ def caption_chunks(lines):
     return out
 
 
-def draw_caption(cr, t, chunks, total):
+def draw_caption(cr, t, chunks, total, y=CAP_Y):
     for i, ch in enumerate(chunks):
         start = ch[0]["start"]
         nxt = chunks[i + 1][0]["start"] if i + 1 < len(chunks) else total
@@ -191,7 +193,7 @@ def draw_caption(cr, t, chunks, total):
         size = CAP_SIZE * k
         pop = 0.9 + 0.1 * min(1.0, (t - start) / 0.08)
         cr.save()
-        cr.translate(W / 2, CAP_Y - size * 0.35)
+        cr.translate(W / 2, y - size * 0.35)
         cr.scale(pop, pop)
         x = -total_w * k / 2
         for w, wd, word in zip(words, widths, ch):
@@ -209,7 +211,7 @@ def draw_hook(cr):
     for j, (line, red) in enumerate(HOOK):
         size = min(HOOK_SIZE, HOOK_SIZE * (W - 70) / text_width(cr, line, HOOK_SIZE, fx2d.ROUND))
         col = fx2d.RED if line in red else fx2d.WHITE
-        fx2d._text(cr, line, W / 2, HOOK_Y + j * HOOK_SIZE * 1.02, size, col, fx2d.ROUND, "center",
+        fx2d._text(cr, line, W / 2, HOOK_Y + HOOK_SHIFT + j * HOOK_SIZE * 1.02, size, col, fx2d.ROUND, "center",
                    outline=(0.05, 0.03, 0.06, 1), ow=size * 0.2, shadow=0.55)
 
 
@@ -261,7 +263,8 @@ def main():
                 s01 = frames
         if a.check:
             print(f"{shot.name:5s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
-                  f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}")
+                  f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}"
+                  f"{f'  captions at y={CAP_Y_SHOT[shot.name]}' if shot.name in CAP_Y_SHOT else ''}")
         sl = slate(shot.name) if frames is None else None
         for i in range(shot.frames):
             src = sl if frames is None else frames[i]
@@ -273,7 +276,7 @@ def main():
             if frame_no <= hook_end:
                 draw_hook(cr)
             if shot.name not in NO_CAPTIONS:
-                draw_caption(cr, t, chunks, tj["total"])
+                draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y))
             s.flush()
             enc.stdin.write(bytes(s.get_data()))
             if a.check and frame_no % 12 == 0:

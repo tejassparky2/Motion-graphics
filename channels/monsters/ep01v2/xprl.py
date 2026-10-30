@@ -276,8 +276,14 @@ def _bird_drop(f0, f1, n, at):
     lift, shadow = b["lift"], b["shadow"]
     for f, z in ((1, 16.0), (f0, 16.0), (f0 + 10, 11.0), (f0 + 20, 6.5), (f1, 2.6), (n, 2.2)):
         anim.key(lift, "location", f, (0, 0, z), "LINEAR")
-    for f, sc in ((1, 0.35), (f0, 0.35), (f1, 1.0), (n, 1.05)):
+    for f, sc in ((1, 0.55), (f0, 0.55), (f1, 1.0), (n, 1.05)):
         anim.key(shadow, "scale", f, (sc, sc, 1), "LINEAR")
+    # the giant shadow sweeps in from under Kai (~6.5 units toward +X) to where the bird comes down: the threat in
+    # RUN. (A real cast shadow can't darken him: the painted and toon materials ignore cast shadows, so darkening him
+    # as it passes is left to the comp, through the subject pass.)
+    x0 = shadow.location.x
+    for f, dx in ((1, 7.6), (f0, 7.6), (f0 + 16, 4.0), (f1, 0.0), (n, 0.0)):
+        anim.key(shadow, "location", f, (x0 + dx, shadow.location.y, shadow.location.z), "LINEAR")
     for i, w in enumerate(b["wings"]):
         side = -1 if i == 0 else 1
         for f, ang in ((1, 1.1), (f0, 1.1), (f0 + 4, 0.5), (f0 + 8, 1.2), (f0 + 12, 0.5), (f1, 1.3)):
