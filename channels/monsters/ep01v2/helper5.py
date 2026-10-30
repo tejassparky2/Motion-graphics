@@ -8,9 +8,10 @@ length plus the 12-frame tail handle.
         1s.
     S23 "A butcher bird hangs its food on thorns." (70 frames, line at 0.30-2.16 s): from the ground beside the
         puddle (the shrimp's eye level), looking up: the bird flaps down onto the top of the bush, settles, then lowers
-        its head and glares down at us (SU4, SU5). Frame 56 cuts to the insert (SG10): the one empty thorn,
-        shrimp-sized, a glint on its tip, and far below it the bird's giant winged shadow spread over the ground at the
-        foot of the bush. Locked cameras, the bird on 2s, so only even frames render (TP13).
+        its head and glares down at us (SU4), and at frame 32 the light turns: a hard top shadow and amber eye glints
+        (SU5, TP11, LC4: cute to deadly on the same model). Frame 56 cuts to the insert (SG10): the one empty thorn,
+        shrimp-sized, a glint on its tip, and far below it the bird's giant winged shadow, dark on the open grass in
+        front of the bush. Locked cameras, the bird on 2s, so only even frames render (TP13).
 
     blender -b -y -P channels/monsters/render_shot.py -- ep01v2 S22 OUTDIR
 """
@@ -26,6 +27,7 @@ TAIL = 12
 BIRD_SCALE = 1.3                     # the tuftwing a little bigger than the 2-unit shrimp it hunts
 CUT = {"S22": 45, "S23": 70}         # ep01v2/TIMING.md
 INSERT_AT = 56                       # S23: the last ~0.6 s of the cut is the empty-thorn insert
+SHADOW_SHIFT = (0.6, -4.6, 0.0)      # S23: the giant shadow lies out on the open grass in front of the bush
 
 
 def _target(name, loc):
@@ -82,6 +84,83 @@ def _glint(loc, cam, f, size=0.28):
     return o
 
 
+def _rage_light(rig, f, cut_z, name="tuft"):
+    """Cute to deadly with light on the same model (SU5, TP11, LC4): from frame f a hard top shadow puts everything of
+    the bird above world height cut_z into a dark, cool shadow tone, and its eye highlights narrow to a sharp amber
+    glint with a little local glow. Nothing else in the frame changes."""
+    def switch(socket, before, after):
+        for fr, v in ((f - 1, before), (f, after)):
+            socket.default_value = v
+            socket.keyframe_insert("default_value", frame=fr)
+        fc = socket.id_data.animation_data.action
+        for c in anim.all_fcurves(fc):
+            for kp in c.keyframe_points:
+                kp.interpolation = "CONSTANT"
+    mats = {m for o in [rig["root"]] + list(rig["root"].children_recursive) if o.type == "MESH"
+            for m in o.data.materials if m and m.name.startswith(name) and not m.name.endswith(("_hi", "_blush"))}
+    for m in mats:
+        nt = m.node_tree
+        em = next(n for n in nt.nodes if n.type == "EMISSION")
+        if not em.inputs[0].links:
+            continue
+        src = em.inputs[0].links[0].from_socket
+        geo = nt.nodes.new("ShaderNodeNewGeometry")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        above = nt.nodes.new("ShaderNodeMath")
+        above.operation = "GREATER_THAN"
+        above.inputs[1].default_value = cut_z
+        on = nt.nodes.new("ShaderNodeMath")
+        on.operation = "MULTIPLY"
+        mix = nt.nodes.new("ShaderNodeMix")
+        mix.data_type, mix.blend_type = "RGBA", "MULTIPLY"
+        mix.inputs[7].default_value = (0.4, 0.33, 0.58, 1)       # the deep, cool top-shadow tone
+        nt.links.new(geo.outputs["Position"], sep.inputs[0])
+        nt.links.new(sep.outputs["Z"], above.inputs[0])
+        nt.links.new(above.outputs[0], on.inputs[0])
+        nt.links.new(on.outputs[0], mix.inputs["Factor"])
+        nt.links.new(src, mix.inputs[6])
+        nt.links.new(mix.outputs[2], em.inputs[0])
+        switch(on.inputs[1], 0.0, 1.0)
+    hi = bpy.data.materials[f"{name}_hi"]
+    em = next(n for n in hi.node_tree.nodes if n.type == "EMISSION")
+    switch(em.inputs[0], (1, 1, 1, 1), look.hexc("#ffb21f"))
+    switch(em.inputs[1], 1.0, 1.6)
+    glow = look.fade("rage_glow", look.hexc("#ff9a1a"), 0.38)
+    for o in list(rig["root"].children_recursive):
+        if o.name.startswith((f"{name}_hi", f"{name}_hi2")) and o.type == "MESH":
+            anim.key(o, "scale", f - 1, tuple(o.scale), "CONSTANT")
+            anim.key(o, "scale", f, (o.scale[0] * 0.8, o.scale[1], o.scale[2] * 0.4), "CONSTANT")   # a sharp slit
+            if o.name.startswith(f"{name}_hi") and not o.name.startswith(f"{name}_hi2"):
+                bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=8, radius=0.1, location=(0, 0, 0))
+                g = bpy.context.object
+                g.name = f"{o.name}_glow"
+                g.data.materials.append(glow)
+                g.parent = o                                   # centred on the highlight
+                g.visible_shadow = False
+                anim.key(g, "scale", f - 1, 0.001, "CONSTANT")
+                anim.key(g, "scale", f, (1.0, 0.3, 1.0), "CONSTANT")
+
+
+def _deep_shadow(rig, offset):
+    """The insert's giant shadow: moved out over the open grass (where a bird that high would cast it) and darker,
+    more opaque, so it is the clearest thing in the frame."""
+    sh = rig["shadow"]
+    bpy.context.view_layer.update()
+    mw = sh.matrix_world.copy()
+    mw.translation += Vector(offset)
+    sh.matrix_world = mw
+    nt = sh.data.materials[0].node_tree
+    tex = next(n for n in nt.nodes if n.type == "TEX_IMAGE")
+    mixs = next(n for n in nt.nodes if n.type == "MIX_SHADER")
+    em = next(n for n in nt.nodes if n.type == "EMISSION")
+    em.inputs[0].default_value = look.hexc("#120d1c")
+    k = nt.nodes.new("ShaderNodeMath")
+    k.operation, k.use_clamp = "MULTIPLY", True
+    k.inputs[1].default_value = 1.45
+    nt.links.new(tex.outputs["Alpha"], k.inputs[0])
+    nt.links.new(k.outputs[0], mixs.inputs[0])
+
+
 def s22():
     """S22: close on the shells, hold a beat, then crane up and back to the whole bush (frames 8-36), hold."""
     m = meadow.build("after")
@@ -114,6 +193,8 @@ def s23():
     butcherbird.land(rig, 20, drop=(0.6, 1.8, 3.2), rest=rest)
     tuftwing.beat(rig, 22)                                       # its shadow answers the landing, slow and heavy
     butcherbird.stare(rig, 32, down=0.5, hold=n - 32)
+    _rage_light(rig, 32, perch.z + (tuftwing.CENTER[2] - 0.1) * BIRD_SCALE)
+    _deep_shadow(rig, SHADOW_SHIFT)
     anim.blink(rig, 29)                                          # shut on frame 30, a held frame on 2s
     anim.on_twos(tuftwing._animated(rig), step=2)
     sc = bpy.context.scene
@@ -121,9 +202,9 @@ def s23():
     base, tip = (Vector(p) for p in h["empty_thorn"])
     mid = (base + tip) / 2
     d = (tip - base).normalized()
-    ground = Vector((perch.x - 0.8, perch.y - 2.2, 0.0))
-    ins, _ = _cam("cam_s23_thorn", tuple(mid + Vector((0.3, -2.8, 3.6))), tuple(mid * 0.3 + ground * 0.7), 22,
-                  fstop=4.0)                                   # above and in front: the thorn over the shadow far below
+    ground = Vector((perch.x + SHADOW_SHIFT[0] - 0.6, perch.y + SHADOW_SHIFT[1] + 0.8, 0.0))
+    ins, _ = _cam("cam_s23_thorn", tuple(mid + Vector((-0.4, -2.2, 3.0))),
+                  tuple(mid * 0.58 + ground * 0.42 + Vector((-0.9, 0, 0))), 18, fstop=6.0)
     ins.data.dof.focus_object = None
     ins.data.dof.focus_distance = (mid - ins.location).length
     _glint(tuple(tip + d * 0.03), ins, INSERT_AT + 6)
