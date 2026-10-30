@@ -374,6 +374,30 @@ def cute_chirp(pitch=1.0, seed=0):
     return _norm(_verb(out, 0.2, 0.5), 0.7)
 
 
+def glitch(dur=1.7, seed=0):
+    """A digital rewind glitch for `dur` seconds: a tape-rewind whirr (band-passed noise and a tone warbling around
+    one pitch, so it never climbs like a riser) under stuttering digital grains (bit-crushed buzzes and square chirps
+    with hard gaps)."""
+    r = _rng("glitch", seed)
+    n = _n(max(0.3, dur))
+    t = _t(n)
+    noise = r.uniform(-1, 1, n)
+    whirr = _bp(noise, 1500, 5000) * 0.35 * (0.7 + 0.3 * np.sin(2 * np.pi * 11 * t))
+    tone = _sweep(900 + 260 * np.sin(2 * np.pi * 3.1 * t) + 60 * np.sin(2 * np.pi * 17 * t)) * 0.12
+    out = whirr + tone
+    at = 0.0
+    while at < dur - 0.03:                                       # the stutter grains
+        m = _n(r.uniform(0.02, 0.09))
+        tt = _t(m)
+        if r.random() < 0.5:
+            g = signal.square(2 * np.pi * r.uniform(180, 2400) * tt)
+        else:
+            g = np.round(_bp(r.uniform(-1, 1, m), 300, 6000) * 4) / 4   # crushed noise
+        _place(out, g * r.uniform(0.25, 0.6) * np.minimum(1, tt / 0.002), at)
+        at += m / SR + (r.uniform(0.0, 0.05) if r.random() < 0.7 else r.uniform(0.08, 0.16))
+    return _norm(_fade(out, 0.01, 0.06), 0.75)
+
+
 def whoosh(seed=0):
     """A fast pass-by: filtered air that sweeps up and back down through the band (short; not a riser)."""
     r = _rng("whoosh", seed)
@@ -507,6 +531,7 @@ def _register():
     for k, f in dict(rain=rain, lab_hum=lab_hum, aquarium_bubbles=aquarium_bubbles, birds=birds).items():
         audio.EXTRA_SFX["m_" + k] = lambda dur, f=f: f(dur).astype(np.float64)
     audio.EXTRA_SFX["m_chirp"] = lambda dur: cute_chirp().astype(np.float64)
+    audio.EXTRA_SFX["m_glitch"] = lambda dur: glitch(dur if dur and dur > 0.2 else 1.7).astype(np.float64)
     for mood in _BEDS:
         audio.EXTRA_BEDS["m_" + mood] = lambda total, seed=None, mood=mood: music_bed(total, mood, zlib.crc32(str(seed).encode())).astype(np.float64)
 
@@ -522,7 +547,7 @@ def demo():
              ("ui_blip", ui_blip()), ("ui_select", ui_select()), ("bond", bond()), ("hit", hit()),
              ("cute_chirp 0.6/1.0/1.6", np.concatenate([np.concatenate([cute_chirp(p, s), np.zeros(_n(0.15))])
                                                          for s, p in enumerate((0.6, 1.0, 1.6))])),
-             ("whoosh", whoosh())]
+             ("whoosh", whoosh()), ("glitch", glitch(1.7))]
     for mood in _BEDS:
         parts.append((f"music_bed {mood}", _norm(music_bed(5, mood), 0.5)))
     gap = np.zeros(_n(0.45), np.float32)
