@@ -265,7 +265,7 @@ def s24top():
     hero.face(k, "neutral", 1)
     hero.face(k, "happy", 52, 0.35)                                       # a small, steady smile as he crouches
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24top", (-6.0, -15.5, 1.5), (0.6, 0.6, 3.4), 30, shift_y=-0.22, fstop=1.2, focus=(0.0, 0.0, 2.0))
+    _cam("cam_s24top", (-1.5, -16.5, 1.5), (1.2, 0.6, 3.4), 30, shift_y=-0.22, fstop=1.2, focus=(0.0, 0.0, 2.0))
     return dict(frames=n, step=3, subject=[k["arm"]])
 
 
@@ -334,7 +334,7 @@ def s24bot():
     hero.face(k, "surprised", 1)
     hero.face(k, "shock", 12)
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24bot", (-6.5, -17.0, 1.3), (0.4, 0.6, 3.6), 30, shift_y=0.3, fstop=1.2, focus=(1.5, 0.0, 2.5))
+    _cam("cam_s24bot", (-2.0, -18.0, 1.3), (1.0, 0.6, 3.6), 30, shift_y=0.3, fstop=1.2, focus=(1.5, 0.0, 2.5))
     return dict(frames=n, step=2, subject=[k["arm"]])
 
 
