@@ -19,6 +19,7 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
+| S03b | helper 1 | **FIX** | 51 / 51 | **0.23** | face washed white, no cyan; shirt bleached toward the world teal |
 | S09 | helper 3 | **FIX** | 67 / 66 | 0.44 | crack gone and frame blurred on "cracked sky"; Kai's wake-up mostly after the 54-frame cut |
 | S06 | helper 9 | PASS | 48 / 41 | 0.37 | double flash on the line, lights cut out on 2s |
 | S10a | helper 4 | PASS (reviewed by its own builder) | 56 / 56 | 0.39 | holds on 3s, one blink |
@@ -26,7 +27,27 @@ Most serious first within each shot. Updated as shots land.
 | S11a | helper 4 | PASS (reviewed by its own builder) | 39 / 39 | 0.52 | on 1s (smoke); 2 NOTEs |
 | S11b | helper 6 | PASS | 38 / 38 | 0.47 | the spots open on "wrong" |
 
-Waiting for: S01-S05b, S07, S08, S12-S24.
+Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24.
+
+## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
+**FIX** (sent to helper 1, 30 Oct).
+1. **Most serious: the tank light washes the frame out instead of lighting it cyan (row: "lit cyan by the tank";
+   LC9, LC1).**
+   - Mean saturation is 0.23, below the 0.34-0.61 band and below even E22's measured minimum of 0.26. S06, the same
+     night lab, measures 0.37.
+   - The skin reads near-white and flat, with no designed shadow tone, and the light on it is white, not cyan.
+   - Fix: lower the tank light's energy and give it a saturated cyan (about #4fd8e8). Let one side of the face fall
+     into the cool shadow tone.
+2. **The shirt reads as the world outfit's teal top (continuity: Earth = "earth" outfit, EP01V2_SHOTS.md "The
+   hero").**
+   - The code loads `outfit="earth"`. The wear_earth texture is dark blue-grey, but the overexposure bleaches it to
+     pale cyan with white trim, which at a glance is the new world's teal tunic.
+   - Fix: the lighting fix above should bring back the charcoal. Check that the shirt reads dark grey next to S03a.
+- **NOTE:** the "small fond smile" barely shows; the mouth is a faint line. The face change lands through the eyes
+  (wide on frame 1, soft half-lidded from about frame 24: SG2 met). A touch of the `happy` mouth shape would make
+  it read at 360 px.
+- **Passes:** the length (51 frames, exactly what TIMING.md asks), the cap and K, the amber eyes, and the locked
+  close framing above the captions (SG4). No text in the frame.
 
 ## S09: white bloom, cracked sky, tilt down to Kai (helper 3)
 **FIX** (sent to helper 3, 30 Oct). The shot was built to the old 2.3 s estimate. v7's TIMING.md gives it **54
