@@ -114,3 +114,88 @@ Length: about 400 words, near 2:00. Photos for it are already in `hinglish_asset
 - Krait is "Bharat ke sabse khatarnaak saanpon mein se ek", not "the most dangerous": by the eLife estimates,
   Russell's viper causes more deaths.
 - The Nepal study's journal is corrected.
+
+## Krait hook v3: the death number first (owner, 30 Oct 2026: "strength the hook with deadth number first the current hook of it is not strong"). Waiting for approval.
+
+**Changes:** the old lines 1 and 5 are replaced by the two lines below. The number moves to the very start, and the
+"bites in your sleep, no pain" contradiction follows by about 4 s, so the hook keeps both. The rest is unchanged.
+
+**Frame 0:** a big gold flip counter **160**. Headline: `SNAKEBITE DEATHS IN INDIA:` / **`160 A DAY`** (red by
+about 1.5 s). The krait slides in under it.
+
+| # | Narration | On screen |
+|---|---|---|
+| 1 (new) | Bharat mein har din lagbhag 160 log saanp ke kaatne se mar jaate hain. Har saal 58,000. Duniya mein sabse zyada. | the counter 160 → 58,000 / YEAR; a dot on an India map; stamp **MOST IN THE WORLD** |
+| 2 (new) | Aur inmein ek saanp aisa hai, jo raat ko sote hue kaatta hai... aur tumhe pata bhi nahi chalta. Kyunki dard hota hi nahi. | the krait slides onto a sleeper's floor mat; `IT BITES WHILE YOU` / **`SLEEP`**, then stamp NO PAIN |
+| 3-19 | (as before: paralysis → naagin → the name → Big Four ... → YES/NO; the old 58,000 line is dropped because it is now the hook) | |
+
+Note from the research: in Mayank's 12 reels, hooks that opened on a number did worse. Putting the "no pain while
+you sleep" contradiction within about 4 s is the safeguard.
+
+---
+
+# Video 4: "Machhar ke munh se 3D printing" (science + tech). Waiting for approval.
+
+Owner, 30 Oct 2026: "Now make video now how organs 3d printed through mosquito mouth".
+
+**Fact check: they did not print organs.**
+- The real study ("3D Necroprinting", *Science Advances*, McGill University with Drexel University) used a dead
+  female mosquito's feeding tube as a 3D-printer nozzle.
+- It printed lines about 20 microns wide: tiny honeycomb, maple-leaf and grid structures.
+- Its inks carried living cells (red blood cells and cancer-research cells), and about 86% of the cells survived.
+- Printing organs is the field's long-term goal. This is a small step toward tissue, and the script says so.
+
+**Built on the study rules:**
+- A "socho" contradiction (the mosquito that sucks your blood now prints living cells).
+- Escalation (it's dead), a "not sci-fi, it's real" anchor, and the name with a pause.
+- An Indian everyday example: **a mehndi cone** explains how a 3D printer works.
+- A precision beat ("sabse hairaani ki baat: 20 microns").
+- A re-hook ("organs?"), then the honest limits.
+- A "socho" bookend and a YES/NO question with a personal stake.
+
+Length: about 440 words, near 2:10.
+
+**Frame 0:** one mosquito, large, on paper; a red ring round its proboscis. Headline: `ITS MOUTH IS A` /
+**`3D PRINTER`** (grey ghost at first, red by about 1.8 s).
+
+| # | Narration (Roman Hinglish) | On screen |
+|---|---|---|
+| 1 | Socho, jo machhar tumhara khoon choosta hai... uska munh ab scientists ke 3D printer ki nozzle ban gaya hai. | the mosquito, its proboscis circled; `ITS MOUTH IS A` / **`3D PRINTER`**; a nozzle drawing snaps onto the proboscis |
+| 2 | Aur ye nozzle zinda cells print karti hai. Wo bhi machhar ke marne ke baad. | dots of cells flowing out; stamp **DEAD**; `IT PRINTS` / **`LIVING CELLS`** |
+| 3 | Ye koi sci-fi movie nahi hai. Canada ki McGill University aur America ki Drexel University ki research hai. | a film clapper with a NOT SCI-FI stamp → two university tags pinned to a map |
+| 4 | Ise naam diya gaya: 3D necroprinting. Necro matlab... maut. | name in red bars **3D NECROPRINTING**; a small tag NECRO = DEAD |
+| 5 | 3D printer samajhna hai? Mehndi cone socho. | a mehndi cone photo; `HOW A 3D PRINTER WORKS?` / **`MEHNDI CONE`** |
+| 6 | Cone dabao, patla paste nikle, aur line pe line design ban jaaye. 3D printer bhi bilkul yahi karta hai. | the cone draws a henna line; then a printer head laying layer on layer (a drawn stack building up) |
+| 7 | Aur jitna patla cone ka chhed, utna bareek design. | a thick line vs a thin line; `THINNER HOLE =` / **`FINER DESIGN`** |
+| 8 | Ab doctors ka ek bada sapna hai: insaan ka tissue, aur ek din poore organs print karna. | a bioprinter or lab photo; a heart and kidney outline with a "SOMEDAY" tag |
+| 9 | Iske liye zinda cells ko bahut hi bareek lines mein rakhna padta hai. | slate: a grid of cell dots laid as fine lines |
+| 10 | Par itni bareek nozzles banana mushkil hai. Glass ki nozzles mehngi hoti hain, aur aasani se toot jaati hain. | a glass pipette that cracks; a price tag; `HARD TO MAKE,` / **`EASY TO BREAK`** |
+| 11 | Toh scientists ne kai keedon ke munh check kiye... aur jeet gaya machhar. | specimen box: a bee, a fly, a mosquito, the mosquito circled; stamp **WINNER** |
+| 12 | Kyunki female machhar ka munh, jisse wo khoon choosti hai, pehle se ek patli, khokhli aur mazboot nali hai. | a magnifier on the proboscis; a cross-section showing a hollow tube; tags THIN, HOLLOW, STRONG |
+| 13 | Aur sabse hairaani ki baat? Iska chhed sirf 20 micron ka hai. Insaan ke baal se kai guna patla. | the strangest-part beat: a hair beside the nozzle line on a scale; counter **20 µm** |
+| 14 | Sabse patli injection ki suui ka chhed bhi isse kai guna bada hota hai. | a syringe needle tip next to the proboscis, to scale; `EVEN A NEEDLE IS` / **`BIGGER`** |
+| 15 | Scientists ne microscope ke neeche machhar ka munh nikaala, aur use ek syringe ki tip pe chipka diya. | microscope; tweezers lifting the proboscis; a drop of glue; it fixed on a syringe tip |
+| 16 | Phir isse print kiye: ek honeycomb, ek maple leaf, aur grid wale chhote dhaanche. Chawal ke daane se bhi chhote. | the three tiny prints drawn; a rice grain beside them for scale |
+| 17 | Aur in mein zinda cells the: khoon ke laal cells, aur cancer research wale cells. | a red blood cell drawing; a cell culture dish |
+| 18 | Printing ke baad lagbhag 86 percent cells zinda bache. | a gauge or counter **86%**; green tick |
+| 19 | Toh kya ab machhar se organs banenge? | re-hook: a heart outline plus a mosquito; big red **?** |
+| 20 | Abhi nahi. Ye ek shuruaat hai: tissue ke chhote dhaanche, jin par cells ugaaye ja sakte hain. | `NOT YET.` / **`A FIRST STEP`**; a grid scaffold with cells growing on it |
+| 21 | Aur iski limits bhi hain. Zyada pressure pe nozzle phat jaati hai, aur ek nozzle kuch dinon tak hi chalti hai. | a pressure gauge into the red, a crack line; a calendar of a few days |
+| 22 | Par ye sasti hai, aasani se mil jaati hai, aur mitti mein ghul jaati hai. | ticks: CHEAP, EASY TO GET, BIODEGRADABLE (green) |
+| 23 | Socho, jo machhar har saal laakhon jaanein leta hai... wahi ek din jaan bachaane wale tissue banane mein madad kar sakta hai. | bookend: the mosquito from frame 0; `FROM TAKING LIVES` / **`TO SAVING THEM?`** |
+| 24 | Agar machhar ke munh se bana tissue kabhi tumhare ilaaj mein lage... tum lagwaoge? YES ya NO, comment mein batao. | YES/NO card |
+
+**Title:** `Machhar Ke Munh Se 3D Printing? 😳 | Necroprinting` (49 characters)
+
+**Sources** (names only in the description):
+- Puma, Creighton, Afify, Li, Cao et al., "3D Necroprinting: Leveraging biotic material as the nozzle for 3D
+  printing", *Science Advances* (McGill University and Drexel University).
+- News coverage: Interesting Engineering (22 Dec 2025), Earth.com (24 Dec 2025), 3D Printing Industry (Jan 2026).
+- Needle sizes: a standard gauge table (the finest common 31G needle has an inner bore of about 130 µm).
+- WHO: malaria and other mosquito-borne diseases cause hundreds of thousands of deaths a year ("laakhon").
+
+**Checked wording:**
+- "Organs" appears only as the field's dream (line 8) and as "abhi nahi" (line 20), never as a done thing.
+- The 20 µm figure is the line width; the proboscis's inner diameter is about 20-25 µm.
+- "Chawal se chhote": the honeycomb is about 0.6 mm and the leaf about 0.9 mm, against a rice grain of about 6 mm.
+- Species is not named in the paper's coverage, so the script just says "female machhar".
