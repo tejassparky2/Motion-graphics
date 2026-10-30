@@ -1,4 +1,4 @@
-# Episode 1 shot list: "I Died Because of a Shrimp"
+# Episode 1 shot list: "I Died Because of a Shrimp" (ON HOLD, 30 Oct: the story is being rewritten, no HUD)
 
 Lengths come from the voiced takes (Kai = Turbo `am_liam`, `assets/voice_cache/monsters_ep01_takes.tar`); with the
 standard pauses the episode runs ~42.6 s. A shot's length is its line plus the pause after it, at 24 fps. Cut every
