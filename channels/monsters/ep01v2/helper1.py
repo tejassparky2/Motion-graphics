@@ -9,8 +9,9 @@ the rules in reports/Pokémon episodes story and animation.md.
     S05b  "But only in water." (second half): Kai's face as the bubble's flash fades on it (light on 1s); then he taps
           the glass once with one finger, the bond gesture to repeat later (BD2). Acting on 3s, the tap on 2s.
 
-Kai is mk/hero.py's hero.blend in his "earth" outfit, 1.75 m, seated at the lab desk facing the window; the tank is
-on his right. Every shot carries a 12-frame tail handle.
+Kai is mk/hero.py's hero.blend in his "earth" outfit (scale 1.1), seated at the lab desk facing the window; the tank
+is on his right. Lengths are TIMING.md's (v7), each with a 12-frame tail handle. Kai narrates over these shots, so
+his mouth stays closed.
 """
 import math
 import os
@@ -21,8 +22,8 @@ from mathutils import Matrix, Vector
 from channels.monsters.mk import anim, hero, lab
 
 TAIL = 12
-LEN = dict(S03a=43, S03b=48, S05b=48)          # EP01V2_SHOTS.md estimates (1.8 s, 2.0 s, 2.0 s) at 24 fps
-H = 1.75 / 1.467                               # hero.blend is 1.467 m tall; Kai is 1.75 m
+LEN = dict(S03a=41, S03b=39, S05b=39)          # frames in the cut (ep01v2/TIMING.md, v7); rendered with +TAIL
+H = 1.1                                        # hero.load scale for metre scenes (HELPERS.md v6)
 SEAT_Y = 1.42                                  # the chair pulled in to the desk (front edge at y = 1.78)
 
 
@@ -231,19 +232,22 @@ def s03b():
     h, sc = _lab()
     rig = _kai(h)
     n = LEN["S03b"] + TAIL
-    _sit(rig, lean=0.22, look=(0.6, 0.25))
+    _sit(rig, lean=0.22, look=(0.6, 0.02))          # head level, so the cap's brim leaves his eyes clear
     _key_pose(rig, 1, BODY)
     head = _head_pos(rig)
     tank = Vector(h["hero_tank"]["floor"])
-    cam_loc = Vector((tank.x + 0.02, tank.y - 0.12, 1.15))       # just over the tank's hood, where he is looking
-    cam = _cam("cam_s03b", tuple(cam_loc), tuple(head + Vector((0, 0, -0.03))), 45, fstop=1.4)
+    # from the tank, a little below his eyes (the cap's brim must not hide them), looking slightly up at his face
+    glass_y = h["hero_tank"]["glass"].location.y
+    cam_loc = Vector((tank.x - 0.05, glass_y - 0.06, head.z - 0.035))     # just in front of the glass
+    cam = _cam("cam_s03b", tuple(cam_loc), tuple(head + Vector((0, 0, -0.035))), 40, fstop=1.4)
     _focus_face(cam, rig)
     _face_light("s03b_tank_on_face", tuple(Vector((tank.x - 0.15, tank.y - 0.17, head.z - 0.05))), tuple(head), 2.5)
     _tint_hero(0.15)
+    hero.line_width(rig, 0.0015)                     # face close-up: ~2-3 px lines
     hero.face(rig, "neutral", 1)
     hero.face(rig, "look_right", 1, 0.4)
-    hero.face(rig, "relaxed", 22, 0.6)               # the fond smile
-    hero.face(rig, "happy", 25, 0.45)
+    hero.face(rig, "relaxed", 19, 0.6)               # the fond smile, mid-line ("...and the pistol shrimp")
+    hero.face(rig, "happy", 22, 0.45)
     return dict(frames=n, step=3, subject=[rig["arm"]])
 
 
@@ -278,6 +282,7 @@ def s05b():
         fl.data.keyframe_insert("energy", frame=f)
     _face_light("s05b_tank_on_face", (fx - 0.15, glass_y - 0.15, head.z - 0.05), tuple(head), 2.5)
     _tint_hero(0.15)
+    hero.line_width(rig, 0.002)
     hero.face(rig, "surprised", 1, 0.7)               # eyes still wide from the flash
     hero.face(rig, "neutral", 13)
     hero.face(rig, "relaxed", 25, 0.5)
