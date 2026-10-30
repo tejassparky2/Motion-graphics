@@ -401,8 +401,8 @@ def build(timing, n, v):
     amb(lambda d, s: bubble_hiss(d, 20 + s), hiss0, collapse_t, -22, 0.4, 0.05)
     hit(bubble_collapse(), collapse_t, -10)
     hit(sfx.thunder(), c.f("S06", 14), -3)                        # the crack lands on the bolt and flash (S06 f14, on "storm")
-    hit(sfx.snap(1), c.t("S07", 0.06), -2)
-    hit(glass_crack(), c.t("S07", 0.12), -8, 0.2)
+    hit(sfx.snap(1), c.f("S07", 9), -2)                          # the snap and its flash (S07 f8-9)
+    hit(glass_crack(), c.f("S07", 10), -8, 0.2)
     amb(lambda d, s: trickle(d, 30 + s), c.t("S08"), spark_t + 0.1, -22, 0.2, 0.1)
     hit(sfx.spark(), spark_t, -6)
     i0, i1, f = int((spark_t + 0.4) * SR), int(c.t("S09") * SR), _n(0.08)
@@ -451,6 +451,7 @@ def build(timing, n, v):
     dip = c.word("l24", "Save") - 0.5                            # SS3: the bed dips ~0.5 s before the A/B line
     music_at(soft_pad(dip - c.t("S22") + 0.3, (50, 57, 62, 63), 0.1, 2), c.t("S22"), dip, -19, 0.4, 0.2)
     hit(flutter(0.6), c.t("S23", 0.2), -14, 0.15)
+    hit(sfx._bell(_midi(96), 0.8, 0.4) + sfx._bell(_midi(103), 0.8, 0.3) * 0.5, c.f("S23", 62), -22, 0.2)   # the glint
     hit(sfx.whoosh(), c.t("S24") + 0.02, -10)
     music_at(sting(total - c.word("l24", "Save")), c.word("l24", "Save"), total, -14, 0.25, 0.01)
     return music, fx, ambience
