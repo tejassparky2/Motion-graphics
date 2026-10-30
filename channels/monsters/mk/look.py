@@ -208,17 +208,52 @@ def outline_mat():
     return _outline
 
 
-def outline(o, width=0.025):
-    """Inverted-hull outline: a flipped, slightly fattened shell that only shows its back faces."""
+def line_color(rgba, k=0.28):
+    """Anime lines are not pure black: each colour gets a darker, slightly desaturated line of its own (dark brown on
+    skin, dark orange on orange hair, dark navy on blue), as measured on Pokémon TV frames."""
+    r, g, b = rgba[:3]
+    m = (r + g + b) / 3
+    return (max(0.004, (r * 0.75 + m * 0.25) * k), max(0.004, (g * 0.75 + m * 0.25) * k),
+            max(0.006, (b * 0.75 + m * 0.25) * k * 1.15), 1)
+
+
+def _base_color(mat):
+    """The base colour a material was built with (for its line colour)."""
+    if mat.get("base") is not None:
+        return tuple(mat["base"])
+    try:
+        for n in mat.node_tree.nodes:
+            if n.type == "MIX" and n.blend_type == "MULTIPLY":
+                return tuple(n.inputs[7].default_value)
+            if n.type == "EMISSION":
+                return tuple(n.inputs[0].default_value)
+    except Exception:
+        pass
+    return hexc(OUTLINE_RGB)
+
+
+def outline(o, width=0.025, colored=True):
+    """Inverted-hull outline: a flipped, slightly fattened shell that only shows its back faces. With `colored`, each
+    material gets its own darker line colour (anime "colour trace"); otherwise one dark navy line."""
     if not width:
         return o
     width *= LINE_SCALE
-    if outline_mat().name not in [m.name for m in o.data.materials if m]:
+    mats = [m for m in o.data.materials if m]
+    n = len(mats)
+    if colored and n:
+        for m in mats:
+            name = f"line_{m.name}"
+            lm = bpy.data.materials.get(name) or flat(name, line_color(_base_color(m)))
+            lm.use_backface_culling = True
+            o.data.materials.append(lm)
+        offset = n
+    else:
         o.data.materials.append(outline_mat())
+        offset = len(o.data.materials) - 1
     s = o.modifiers.new("outline", "SOLIDIFY")
     s.thickness = -width
     s.use_flip_normals = True
-    s.material_offset = len(o.data.materials) - 1
+    s.material_offset = offset
     s.use_rim = False
     return o
 

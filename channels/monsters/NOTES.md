@@ -89,3 +89,7 @@ Reuse the existing helper sessions listed in channels/horror/README.md (owner: d
 | session_01PF511bGqrs1SFn3cpk5NqS | Sound effects + music beds (numpy) | sfx.py |
 | session_01PF511XprLcpVNCdEQUsUFF | Kai's voice (pick of 4 Turbo refs) + Episode 1 takes | assets/voice_cache/monsters_ep01_takes.tar |
 | Coordinator (this session) | Puff-shrimp, crater shots, shot list and timeline, integration, final parallel render | mk/puffshrimp.py, ep01 |
+
+## Standing rule (owner, 30 Oct 2026): "Update all helpers the same whenever we Update anything here"
+Every change to the look, the kit or the rules goes into HELPERS.md under "Latest updates", and a note goes by
+send_message to EVERY helper session in the work-split table (active or waiting).

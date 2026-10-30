@@ -75,6 +75,7 @@ def build(loc=(0, 0, 0), name="puff"):
     look.toon(f"{name}_coral", hx(CORAL))
     eye_m = look.toon(f"{name}_eye", hx(INK), shade=0.8, gloss=True)
     hi_m = look.flat(f"{name}_hi", (1, 1, 1, 1))
+    iris_m = look.flat(f"{name}_iris", hx("#3d6fd6"))           # the lighter colour low in the eye (anime eyes)
     blush_m = look.flat(f"{name}_blush", hx(BLUSH))
     aqua, cream, coral = (bpy.data.materials[f"{name}_{c}"] for c in ("aqua", "cream", "coral"))
     E, C = sdf.E, sdf.C
@@ -112,9 +113,10 @@ def build(loc=(0, 0, 0), name="puff"):
         piv = _empty(f"{name}_eyepiv{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), body_pivot)
         bpy.context.view_layer.update()
         e = _sphere(f"{name}_eye{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), (0.23, 0.12, 0.31), eye_m, 0.02)
+        cres = _sphere(f"{name}_iris{sx}", (loc[0] + ex, loc[1] - 0.86, loc[2] + 1.08), (0.15, 0.05, 0.1), iris_m, 0, 20)
         h1 = _sphere(f"{name}_hi{sx}", (loc[0] + ex + 0.08, loc[1] - 0.89, loc[2] + 1.33), (0.08, 0.03, 0.09), hi_m, 0, 16)
         h2 = _sphere(f"{name}_hi2{sx}", (loc[0] + ex - 0.07, loc[1] - 0.9, loc[2] + 1.1), (0.04, 0.02, 0.04), hi_m, 0, 12)
-        for o in (e, h1, h2):
+        for o in (e, cres, h1, h2):
             _parent(o, piv)
         eyes.append(piv)
         b = _sphere(f"{name}_blush{sx}", (loc[0] + sx * 0.62, loc[1] - 0.7, loc[2] + 0.98), (0.14, 0.04, 0.08), blush_m, 0, 16)

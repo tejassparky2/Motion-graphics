@@ -59,6 +59,23 @@ get blocked.
   (1-2 frames) and dust light.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
+## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v3 (style frame `out/monsters/style_frame_anime_v3.png`).** From measuring a full Pokémon TV episode frame
+  by frame (`channels/monsters/ANIME_STUDY.md`):
+  - Lines are coloured per colour: `look.outline()` now gives each material its own darker line (`line_color`,
+    k=0.28). Don't force a single black outline.
+  - Creature eyes are black, with a lighter coloured crescent low in the eye and two white highlights (see
+    `puffshrimp.py`, `iris_m`).
+  - Character acting is on 3s: `anim.on_twos(objs)` now defaults to step=3. Use step=2 for fast action; the camera
+    and VFX stay on 1s.
+  - Shots cut every 1.5-3 s; hold longer only for big reveals. Keep shading mostly flat, with shadows only in designed
+    spots. Use low camera angles against a deep blue sky, with ambient sparkles and bubbles.
+- **30 Oct, v2 (style frame `out/monsters/style_frame_anime_v2.png`):**
+  - `mk/paintbg.py`: painted backgrounds, cauliflower trees, brush-stroke grass, wispy sky.
+  - Lines ~2-3 px.
+  - Clean colour boundaries.
+  - Background blur at f≈0.15.
+
 ## Hard rules
 - **Original designs only.** Nothing that looks like a Pokémon, Kirby, Digimon or any franchise character: no
   red-and-white ball, no Pokédex-style UI, no pink round puffballs. Cute round bodies; each creature has ONE odd,
