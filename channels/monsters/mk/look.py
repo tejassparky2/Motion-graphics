@@ -350,3 +350,26 @@ def render_setup(w=720, h=1280, samples=16, fps=24):
     sc.view_settings.view_transform = "Standard"
     r.image_settings.file_format = "PNG"
     return sc
+
+
+def subject_only(roots):
+    """Switch the scene to a SUBJECT PASS: only `roots` and everything parented under them render, on a transparent
+    film (RGBA PNG). Render the shot normally first, call this, then render again into a `subject/` folder. The 2D
+    compositor uses the pass to keep the character a clean silhouette in impact frames and over speed-line or burst
+    backgrounds."""
+    keep = set()
+
+    def walk(o):
+        keep.add(o)
+        for c in o.children:
+            walk(c)
+
+    for r in roots:
+        walk(r)
+    sc = bpy.context.scene
+    for o in sc.objects:
+        if o.type not in ("CAMERA", "LIGHT") and o not in keep:
+            o.hide_render = True
+    sc.render.film_transparent = True
+    sc.render.image_settings.color_mode = "RGBA"
+    return sc

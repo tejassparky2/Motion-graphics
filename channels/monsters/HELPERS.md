@@ -60,6 +60,38 @@ get blocked.
 - **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
 
 ## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v3.2 (shot list, voice, 2D kit, subject pass, Kai's design):**
+  - **Shot list:** `channels/monsters/EP01_SHOTS.md` gives every Episode 1 shot, its length, camera and overlay. Build
+    your asset's motion to fit those lengths: lines over 3 s are split into two shots (e.g. the snap line 5 = 4.35 s
+    becomes S05a + S05b).
+  - **Voice:** Kai narrates in Turbo `am_liam`. All 19 lines are voiced and Whisper-checked
+    (`assets/voice_cache/monsters_ep01_takes.tar`). Any change to a line's text or punctuation re-voices it.
+  - **2D kit:**
+    - `channels/monsters/fx2d.py` has the impact frame, speed lines, sparkles, glow, shockwave, dust, "!", status
+      bar, WILD tag, choice menu, BOND!, rule chip, fact card, HUD boot and hook text. Demo stills are
+      `out/monsters/tests/fx2d_*.png`.
+    - `channels/monsters/fx2d_extra.py` has the beam (white core) and bokeh glows.
+    - Don't draw your own HUD or text in Blender; leave room for these.
+  - **Safe areas:**
+    - Captions sit at y 845-930.
+    - Nothing important below y 845, or in the Shorts right rail (x > 620, y 640-1180).
+  - **Subject pass:** shots with an impact frame or a speed-line background (S08, S16) also render the character
+    alone on a transparent film. `look.subject_only([rig["root"]])` switches a scene to that pass; render it into a
+    `subject/` folder next to the normal frames.
+  - **Kai's design (use exactly this wherever Kai appears):**
+    - A 19-year-old, slim, anime-teen proportions (about 6 heads tall).
+    - Messy dark-brown hair (#4a3328) with one tall front cowlick and side tufts. No cap or hat.
+    - Big anime eyes: amber-brown iris (#b5652b), a lighter lower crescent, two white highlights.
+    - Clothes:
+      - an open sage-green zip-up jacket with a hood (#7fae8a; he throws it over the puddle in Episode 2) over a
+        white T-shirt;
+      - dark-navy cargo trousers (#2e3550);
+      - orange-yellow sneakers (#ffb340);
+      - a black digital watch on the RIGHT wrist. The left wrist stays bare: the bond ring appears there in
+        Episode 2.
+    - In the lab, an open white lab coat over the jacket.
+    - Faces are flat anime: the eyes are separate shapes, the nose tiny, and the mouth a swappable shape (neutral,
+      shocked "o", smile, gritted teeth).
 - **30 Oct, v3.1 (full shot-by-shot pass over a TV episode, `ANIME_STUDY.md` "Second pass"):**
   - 78% of shots have a locked camera; pans are short (1.5-2 s).
   - A reaction shot follows almost every beat.
