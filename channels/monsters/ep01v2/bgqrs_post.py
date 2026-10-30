@@ -139,7 +139,8 @@ def overlays(shot):
         px, py = at(a, 23 / FPS, "tip")
         (cx, cy), size, tilt, eyes = face_geom(a, 50 / FPS)
         return [(puff, dict(start=23 / FPS, x=px, y=py, size=1.0)),
-                (fx2d_anime.dot_eyes, dict(start=43 / FPS, x=cx, y=cy, size=size, eyes=eyes, tilt=tilt)),
+                (fx2d_anime.dot_eyes, dict(start=43 / FPS, x=cx, y=cy, size=size, eyes=eyes, tilt=tilt,
+                                           er=size / 2.6 * 0.19)),
                 (fx2d_anime.sweat_drop, dict(start=52 / FPS, x=cx, y=cy, size=size, tilt=tilt))]
     if shot == "S21":
         a = anchors("S21")
