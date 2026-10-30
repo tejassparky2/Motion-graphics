@@ -249,7 +249,8 @@ def s07():
     ps.crack(gc, S07_CRACK, frames=5)
     eye = _eye_cam(rig, "cam_eye")
     _dim_water(tank, [(S07_WIND, 1.0), (S07_SHUT, 0.6)])
-    cam = _cam("cam_tank", _at(tank, (0.07, 1.90, 0.815)), _at(tank, (0.045, 2.08, 0.86)), 28, None)
+    # the shrimp sits mid-frame (y ~600-760, clear of the Shorts UI); the crack runs off the top edge
+    cam = _cam("cam_tank", _at(tank, (0.065, 1.95, 0.83)), _at(tank, (0.045, 2.10, 0.80)), 28, None)
     cam.data.dof.use_dof = True
     cam.data.dof.focus_distance = (Vector((lx, gy, lz + 0.12)) - cam.location).length
     cam.data.dof.aperture_fstop = 8.0          # crack and shrimp both readable

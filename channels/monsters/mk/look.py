@@ -369,6 +369,15 @@ def subject_only(roots):
 
     for r in roots:
         walk(r)
+    # objects held by a constraint (Child Of, Copy Transforms...) to something kept belong to the subject too: Kai's
+    # cap, letter and shoes follow his head/foot bones that way, not by parenting, so they vanished from the pass
+    grew = True
+    while grew:
+        grew = False
+        for o in bpy.context.scene.objects:
+            if o not in keep and any(getattr(c, "target", None) in keep for c in o.constraints):
+                walk(o)
+                grew = True
     sc = bpy.context.scene
     for o in sc.objects:
         if o.type not in ("CAMERA", "LIGHT") and o not in keep:

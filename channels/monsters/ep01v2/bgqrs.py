@@ -350,17 +350,19 @@ def _anchors(shot, cam, points, frames):
 
 # ---------------------------------------------------------------- shared shot pieces
 
-def _ecu_camera(rig, name, dist=2.8, lens=60, lift=0.0, dof=True, fstop=2.0):
-    """A close-up square to Kai's face, rolled so his face is upright in the frame even though he lies down."""
+def _ecu_camera(rig, name, dist=2.8, lens=60, lift=0.0, dof=True, fstop=2.0, under=0.55):
+    """A close-up of Kai's face, rolled so his face is upright in the frame even though he lies down. It sits a
+    little toward his chin (`under`, in units) and looks up under the cap's visor, which otherwise hides his eyes."""
     from mathutils import Matrix
     m = rig["arm"].matrix_world @ rig["bone"]("head").matrix
     up = (m.to_3x3() @ Vector((0, 1, 0))).normalized()
     fwd = (m.to_3x3() @ Vector((0, 0, 1))).normalized()
     e = kai_point(rig, "eyes") + up * lift
-    bpy.ops.object.camera_add(location=e + fwd * dist)
+    loc = e + fwd * dist - up * under
+    bpy.ops.object.camera_add(location=loc)
     cam = bpy.context.object
     cam.name = name
-    z = fwd
+    z = (loc - e).normalized()
     y = (up - z * up.dot(z)).normalized()
     x = y.cross(z)
     cam.rotation_euler = Matrix((x, y, z)).transposed().to_euler()
@@ -466,7 +468,7 @@ def s16():
     n = FRAMES["S16"]
     m, rig, sh = _scene(n, line=0.0025)
     cock(sh)
-    ecu = _ecu_camera(rig, "cam_s16_eyes", dist=2.0, lens=60)
+    ecu = _ecu_camera(rig, "cam_s16_eyes", dist=2.6, lens=60)
     wide = _s01_camera(rig, sh, "cam_s16_wide")
     cut = 33                                                      # just before "it was on my chest" (1.38 s)
     _cut([(1, ecu), (cut, wide)])
@@ -522,14 +524,14 @@ def s18():
     n = FRAMES["S18"]
     m, rig, sh = _scene(n, line=0.0015)
     cock(sh)
-    cam = _ecu_camera(rig, "cam_s18", dist=2.0, lens=60, lift=0.02)
+    cam = _ecu_camera(rig, "cam_s18", dist=3.6, lens=55, under=0.7)   # room around his face for the 2D background
     bpy.context.scene.camera = cam
     kai_face(rig, 1, **TERROR)
     kai_face(rig, 15, eye_open=0.4, eye_brow_up=0.4)             # thinking ("claw only")
     kai_face(rig, 30, eye_zitome=0.5, eye_brow_down=0.3)          # "wet": the thought lands
     kai_face(rig, 33, eye_zitome=0.85, eye_brow_down=0.6)         # narrowed: he gets it
     _anchors("S18", cam, {"eyes": lambda: kai_point(rig, "eyes")}, n)
-    return dict(frames=n, step=3, subject=[rig["arm"]])
+    return dict(frames=n, step=3, subject=[rig["arm"]] + list(rig.get("cap", [])))   # the cap isn't under the armature
 
 
 def s19():
@@ -623,6 +625,9 @@ def s20():
     return dict(frames=n, step=2, subject=[sh["root"]])
 
 
+S21_CAM = ((10.0, -3.2, 3.9), (-0.8, -2.35, 0.2), 30)   # from his feet: the stomp crosses the frame to the puddle
+
+
 def s21():
     """Then it stomped back to the puddle. Low angle, Kai lying across the foreground; the shrimp turns its back in a
     huff and stomps off in three hops to the puddle (squash on every landing, 2D dust puffs), then dips its claw.
@@ -662,8 +667,8 @@ def s21():
     kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
     # raised (coordinator, 30 Oct): from 1.05 his lying body hid the shrimp's stomps and the puddle after frame ~20;
     # from here Kai stays the foreground at the bottom and the whole hop path and the puddle read above him
-    cam_loc = Vector((-0.2, -9.6, 5.2))
-    cam = _camera("cam_s21", cam_loc, Vector((-1.0, -1.3, 0.2)), 26, dof=sh["body"], fstop=0.6)
+    cam_loc = Vector(S21_CAM[0])
+    cam = _camera("cam_s21", cam_loc, Vector(S21_CAM[1]), S21_CAM[2], dof=sh["body"], fstop=0.6)
     bpy.context.scene.camera = cam
     _anchors("S21", cam, {"feet": lambda: r.matrix_world.translation.copy()}, n)
     with open(os.path.join(ANCHORS, "S21_lands.json"), "w") as fh:
