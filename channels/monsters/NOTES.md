@@ -82,10 +82,14 @@ Reuse the existing helper sessions listed in channels/horror/README.md (owner: d
 | DMA helper 4 (session_01PF511YEojWTNPFKxSeURms) | Jelly-snail (tell: smoking holes in its trail) | mk/jellysnail.py |
 | DMA helper 5 (session_01PF511ahSS4W8tEQ9ukoLwF) | Tuftwing bird (tell: a giant shadow) | mk/tuftwing.py |
 | DMA helper 6 (session_01PF511Y382fBtBJa7rzyVDQ) | Fluffmoth (tell: the wing eye-spots blink) | mk/fluffmoth.py |
-| DMA helper 7 (session_01PF511bWPhLFvpRbgd3zffg) | Kai (MPFB2, anime toon, poses, expressions) | mk/kai.py |
-| DMA helper 8 (session_01PF511Yk7bwbspWweS95hGA) | 2D anime FX + original game HUD (pycairo) | fx2d.py |
+| ~~DMA helper 7 (session_01PF511bWPhLFvpRbgd3zffg)~~ | (Kai moved to XprL on 30 Oct: helper 7 was stuck on a permission prompt) | - |
+| DMA helper 8 (session_01PF511Yk7bwbspWweS95hGA) | 2D anime FX + original game HUD (pycairo): DONE (ede50cf) | fx2d.py |
 | DMA helper 9 (session_01PF511ZFaQeq2RigHZ22DrB) | Storm, power-out, white-out, sky reveal | mk/storm.py |
 | DMA helper 10 (session_01PF511YTmbSi3KeLNnX6GyZ) | Forest-erase effect | mk/erase.py |
-| session_01PF511bGqrs1SFn3cpk5NqS | Sound effects + music beds (numpy) | sfx.py |
-| session_01PF511XprLcpVNCdEQUsUFF | Kai's voice (pick of 4 Turbo refs) + Episode 1 takes | assets/voice_cache/monsters_ep01_takes.tar |
+| session_01PF511bGqrs1SFn3cpk5NqS | Sound effects + music beds (numpy): DONE (562896c); beam + bokeh: DONE (ead9ac1); now the 2D compositor | sfx.py, fx2d_extra.py, comp.py |
+| session_01PF511XprLcpVNCdEQUsUFF | Kai's voice (am_liam) + Episode 1 takes: DONE (56cb0bd); now Kai himself (design in HELPERS.md v3.2) | monsters_ep01_takes.tar, mk/kai.py |
 | Coordinator (this session) | Puff-shrimp, crater shots, shot list and timeline, integration, final parallel render | mk/puffshrimp.py, ep01 |
+
+## Standing rule (owner, 30 Oct 2026): "Update all helpers the same whenever we Update anything here"
+Every change to the look, the kit or the rules goes into HELPERS.md under "Latest updates", and a note goes by
+send_message to EVERY helper session in the work-split table (active or waiting).

@@ -75,6 +75,7 @@ def build(loc=(0, 0, 0), name="puff"):
     look.toon(f"{name}_coral", hx(CORAL))
     eye_m = look.toon(f"{name}_eye", hx(INK), shade=0.8, gloss=True)
     hi_m = look.flat(f"{name}_hi", (1, 1, 1, 1))
+    iris_m = look.flat(f"{name}_iris", hx("#3d6fd6"))           # the lighter colour low in the eye (anime eyes)
     blush_m = look.flat(f"{name}_blush", hx(BLUSH))
     aqua, cream, coral = (bpy.data.materials[f"{name}_{c}"] for c in ("aqua", "cream", "coral"))
     E, C = sdf.E, sdf.C
@@ -85,7 +86,6 @@ def build(loc=(0, 0, 0), name="puff"):
     # body: one smooth shape (round body, belly patch, stubby legs, tail fan)
     body = sdf.build(f"{name}_bodymesh", [
         (E((0, 0, 1.0), (1.0, 0.92, 0.95)), aqua.name, None),
-        (E((0, -0.42, 0.82), (0.66, 0.5, 0.62)), cream.name, 0.08),
         (E((-0.5, -0.4, 0.18), (0.2, 0.22, 0.2)), aqua.name, 0.15),
         (E((0.5, -0.4, 0.18), (0.2, 0.22, 0.2)), aqua.name, 0.15),
         (E((-0.45, 0.35, 0.18), (0.2, 0.22, 0.2)), aqua.name, 0.15),
@@ -97,6 +97,9 @@ def build(loc=(0, 0, 0), name="puff"):
     look.outline(body, 0.025)
     body.location = (body.location.x + loc[0], body.location.y + loc[1], body.location.z + loc[2])
     _parent(body, body_pivot)
+    # the belly: its own smooth shape pressed into the front of the body, so its edge is one clean curve
+    bel = _sphere(f"{name}_belly", (loc[0], loc[1] - 0.5, loc[2] + 0.82), (0.62, 0.48, 0.58), cream, 0.0, 48)
+    _parent(bel, body_pivot)
     # fluffy collar
     for i in range(14):
         a = i / 14 * 2 * math.pi
@@ -110,9 +113,10 @@ def build(loc=(0, 0, 0), name="puff"):
         piv = _empty(f"{name}_eyepiv{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), body_pivot)
         bpy.context.view_layer.update()
         e = _sphere(f"{name}_eye{sx}", (loc[0] + ex, loc[1] - 0.78, loc[2] + 1.2), (0.23, 0.12, 0.31), eye_m, 0.02)
+        cres = _sphere(f"{name}_iris{sx}", (loc[0] + ex, loc[1] - 0.86, loc[2] + 1.08), (0.15, 0.05, 0.1), iris_m, 0, 20)
         h1 = _sphere(f"{name}_hi{sx}", (loc[0] + ex + 0.08, loc[1] - 0.89, loc[2] + 1.33), (0.08, 0.03, 0.09), hi_m, 0, 16)
         h2 = _sphere(f"{name}_hi2{sx}", (loc[0] + ex - 0.07, loc[1] - 0.9, loc[2] + 1.1), (0.04, 0.02, 0.04), hi_m, 0, 12)
-        for o in (e, h1, h2):
+        for o in (e, cres, h1, h2):
             _parent(o, piv)
         eyes.append(piv)
         b = _sphere(f"{name}_blush{sx}", (loc[0] + sx * 0.62, loc[1] - 0.7, loc[2] + 0.98), (0.14, 0.04, 0.08), blush_m, 0, 16)
