@@ -235,6 +235,105 @@ def _tint_hero(k=0.35, cool=(0.74, 0.93, 1.0)):
         nt.links.new(mul.outputs[0], em.inputs[0])
 
 
+def _tank_glow(side, cyan=(0.18, 0.82, 0.92), mix=0.5, rim=0.6, warm=0.9):
+    """S03b v3: keep his skin skin-coloured and put the tank's cyan only where the light falls. On each of Kai's toon
+    materials: the lit band (the toon ramp's white) is multiplied toward cyan by `mix`; the shadow band keeps the
+    skin's own lavender shadow tone; a thin hard-edged cyan rim lights the silhouette on the side facing the tank
+    (world direction `side`); `warm` keeps the lit skin's value near 0.8."""
+    for name in ("hair", "huku_bake", "body_bake", "body_nm"):
+        m = bpy.data.materials.get(name)
+        if not m or "tank_glow" in m.node_tree.nodes:
+            continue
+        nt = m.node_tree
+        N, L = nt.nodes.new, nt.links.new
+        em = next(n for n in nt.nodes if n.type == "EMISSION")
+        ramp = next(n for n in nt.nodes if n.type == "VALTORGB")
+        src = em.inputs[0].links[0].from_socket
+        # lit mask from the toon ramp: 1 in the lit band, 0 in the shadow band
+        sep = N("ShaderNodeSeparateColor")
+        L(ramp.outputs[0], sep.inputs[0])
+        lit = N("ShaderNodeMapRange")
+        lit.inputs["From Min"].default_value, lit.inputs["From Max"].default_value = 0.8, 1.0
+        L(sep.outputs[0], lit.inputs["Value"])
+        k = N("ShaderNodeMath")
+        k.operation, k.inputs[1].default_value = "MULTIPLY", mix
+        L(lit.outputs[0], k.inputs[0])
+        tint = N("ShaderNodeMix")
+        tint.data_type, tint.blend_type = "RGBA", "COLOR"            # the cyan's hue over the skin's value
+        L(k.outputs[0], tint.inputs["Factor"])
+        L(src, tint.inputs[6])
+        tint.inputs[7].default_value = (*cyan, 1)
+        # the rim: facing ramp (silhouette) x how much the surface faces the tank
+        lw = N("ShaderNodeLayerWeight")
+        lw.inputs["Blend"].default_value = 0.3
+        edge = N("ShaderNodeMapRange")
+        edge.inputs["From Min"].default_value, edge.inputs["From Max"].default_value = 0.5, 0.54
+        L(lw.outputs["Facing"], edge.inputs["Value"])
+        geo = N("ShaderNodeNewGeometry")
+        dot = N("ShaderNodeVectorMath")
+        dot.operation = "DOT_PRODUCT"
+        dot.inputs[1].default_value = tuple(side.normalized())
+        L(geo.outputs["Normal"], dot.inputs[0])
+        facing = N("ShaderNodeMapRange")
+        facing.inputs["From Min"].default_value, facing.inputs["From Max"].default_value = 0.25, 0.35
+        L(dot.outputs["Value"], facing.inputs["Value"])
+        rk = N("ShaderNodeMath")
+        rk.operation = "MULTIPLY"
+        L(edge.outputs[0], rk.inputs[0])
+        L(facing.outputs[0], rk.inputs[1])
+        rk2 = N("ShaderNodeMath")
+        rk2.operation, rk2.inputs[1].default_value = "MULTIPLY", rim
+        L(rk.outputs[0], rk2.inputs[0])
+        rimc = N("ShaderNodeMix")
+        rimc.data_type, rimc.blend_type = "RGBA", "MIX"
+        L(rk2.outputs[0], rimc.inputs["Factor"])
+        L(tint.outputs[2], rimc.inputs[6])
+        rimc.inputs[7].default_value = (0.55, 0.95, 1.0, 1)
+        val = N("ShaderNodeVectorMath")
+        val.operation, val.name = "SCALE", "tank_glow"
+        val.inputs["Scale"].default_value = warm
+        L(rimc.outputs[2], val.inputs[0])
+        L(val.outputs[0], em.inputs[0])
+
+
+def _catchlights(rig, cam, until, color="#9ff2ff", r=0.0035):
+    """Tiny cyan glints in his eyes (the tank reflected), visible until frame `until` (when the eyes close). The
+    posed head mesh's "eye" faces are split into the two eyes by their position across the camera's view; each glint
+    sits just in front of its eye's centre, toward the camera."""
+    from bpy_extras.object_utils import world_to_camera_view
+    bpy.context.view_layer.update()
+    sc = bpy.context.scene
+    head = bpy.data.objects["head"]
+    eye_idx = {i for i, m in enumerate(head.data.materials) if m and m.name == "eye"}
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = head.evaluated_get(dg)
+    me = ev.to_mesh()
+    camp = cam.matrix_world.translation
+    pts = [head.matrix_world @ poly.center for poly in me.polygons if poly.material_index in eye_idx]
+    ev.to_mesh_clear()
+    if not pts:
+        return
+    sx = sorted((world_to_camera_view(sc, cam, p).x, i) for i, p in enumerate(pts))
+    split = max(range(1, len(sx)), key=lambda k: sx[k][0] - sx[k - 1][0])      # the widest gap: between the eyes
+    eyes = {"A": [pts[i] for _, i in sx[:split]], "B": [pts[i] for _, i in sx[split:]]}
+    m = lab.look.flat("catchlight", lab.hx(color), 2.0)
+    for side, ps in eyes.items():
+        # the eye's on-screen middle (its bounding box, not the face average, which leans to the inner corner)
+        v = [world_to_camera_view(sc, cam, p) for p in ps]
+        mx, my = (min(q.x for q in v) + max(q.x for q in v)) / 2, (min(q.y for q in v) + max(q.y for q in v)) / 2
+        c = min(ps, key=lambda p: (lambda q: (q.x - mx) ** 2 + (q.y - my) ** 2)(world_to_camera_view(sc, cam, p)))
+        p = c + (camp - c).normalized() * 0.01 + Vector((0, 0, 0.004))
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=4, radius=r, location=p)
+        o = bpy.context.object
+        o.name = f"catchlight_{side}"
+        o.data.materials.append(m)
+        o.visible_shadow = False
+        o.hide_render = False
+        o.keyframe_insert("hide_render", frame=1)
+        o.hide_render = True
+        o.keyframe_insert("hide_render", frame=until)
+
+
 def s03a():
     """Back three-quarter at the desk: the camera behind his right shoulder, his face turned to the tank."""
     h, sc = _lab()
@@ -272,7 +371,10 @@ def s03b():
     # from the tank on his right only, so his left cheek falls into the cool shadow tone
     _face_light("s03b_tank_on_face", tuple(Vector((head.x + 0.35, head.y + 0.2, head.z - 0.02))), tuple(head), 0.9,
                 size=0.12)
-    _tint_hero(0.1, cool=(0.54, 0.79, 0.9))           # a close-up: lit skin ~0.8 with the cyan in it
+    # v3 (coordinator): warm skin, not green. The tank's cyan only as coloured light over the lit side (~1/3 mix), the
+    # shadow side in the skin's own lavender shadow tone, a thin cyan rim on the jaw nearest the tank, catchlights.
+    _tank_glow(side=Vector((1.0, 0.0, 0.0)))
+    _catchlights(rig, cam, until=22)
     hero.line_width(rig, 0.0015)                     # face close-up: ~2-3 px lines
     hero.face(rig, "neutral", 1)
     hero.face(rig, "look_right", 1, 0.4)
