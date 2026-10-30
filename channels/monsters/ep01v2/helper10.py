@@ -340,7 +340,7 @@ def s15():
     cam_b.data.dof.aperture_fstop = 1.0
     cam_c = _cam("S15_C_claw", (-3.6, -5.6, 1.15), (-0.55, 0.0, 2.1), 32, C, sc)
     # E: low behind Kai, who kneels small in the foreground; the shrimp; the forest wall towering behind (SG8, SG9)
-    cam_e = _cam("S15_E_result", (loc.x + 3.4, loc.y - 8.0, 1.3), (-0.3, 22.0, 10.0), 22, E, sc)
+    cam_e = _cam("S15_E_result", (loc.x + 4.5, loc.y - 15.0, 1.1), (-0.5, 26.0, 13.0), 22, E, sc)
 
     # ---- E: the ring, the forest wall sliced and erased, held
     fx = erase.erase_trees(m["trees"], origin=tuple(blast), f0=E - 1, cam=cam_e, stumps=stumps)
@@ -372,12 +372,12 @@ def s15():
         u = (f - F) / 10
         _pose(k, BLOWN, (loc.x, y0 - back * 1.6, 1.0 + 7.0 * u * (1 - u) * 1.6), (tilt, 0, 0))
         _key_pose(k, f)
-    hero.face(k, "shock", F)
+    hero.face(k, "surprised", F)
     land = Vector((loc.x + 0.4, y0 - 12.5, 0))
     _pose(k, LYING, tuple(land), (math.pi / 2, 0, 0.12))
     _ground(k)
     _key_pose(k, G)
-    hero.face(k, "shock", G)
+    hero.face(k, "surprised", G)
     hero.face(k, "blink", END - 4, 0.5)                       # his eyes fall shut (into S16's "When I opened my eyes")
     hero.face(k, "blink", END - 2)
     fly = Vector((loc.x, y0 - 4.5, 4.2))
