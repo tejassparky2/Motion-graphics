@@ -323,7 +323,10 @@ def s15():
         _apply_kneel(k, loc, s, reach + (1 - s) * Vector((0.3, -1.6, 1.3)))    # drawn back, then reaching
         _key_pose(k, f)
     hero.face(k, "relaxed", A, 0.6)
-    for o in k["arm"].children_recursive:                      # off screen in the eye and claw shots (B-D)
+    arm = k["arm"]
+    held = [o for o in bpy.data.objects                        # the cap, its K and the shoes follow by constraints
+            if any(getattr(c, "target", None) == arm for c in o.constraints)]
+    for o in set(arm.children_recursive) | set(held) | set(k.get("cap", [])):   # off screen in B-D
         if o.type == "MESH":
             o.hide_render = False
             o.keyframe_insert("hide_render", frame=A)
