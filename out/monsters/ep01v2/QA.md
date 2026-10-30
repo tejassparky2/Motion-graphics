@@ -12,6 +12,13 @@ The checks:
 - **Looked at:** the contact sheet, plus at least 6 full frames (the first, the last, the voice in and out, the
   biggest changes), viewed at full size and at 360 px wide (TP16).
 
+**v8 check (coordinator, 30 Oct):** until `mk/sdf.py` 3b0fc70, every SDF-built mesh faced inward, so SDF bodies
+had no inverted-hull outline and inverted toon light. An SDF creature without its coloured line is a FIX.
+
+**v8b check (coordinator, 30 Oct):** until `mk/puffshrimp.py` 1d22a94, the claw hinge and lid pivots sat at twice
+their offset. In every puff-shrimp shot the snapping finger must stay attached to the claw and the lids must close
+over the eyes. A shrimp shot rendered before 1d22a94 (or, for outlines, before 3b0fc70) is a FIX.
+
 **Verdicts:** PASS (ready for the cut), FIX (a concrete change, sent to the builder), or NOTE (weak but acceptable).
 Most serious first within each shot. Updated as shots land.
 
@@ -19,18 +26,25 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03b | helper 1 | **FIX** | 51 / 51 | **0.23** | face washed white, no cyan; shirt bleached toward the world teal |
+| S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
 | S09 | helper 3 | **FIX** | 67 / 66 | 0.44 | crack gone and frame blurred on "cracked sky"; Kai's wake-up mostly after the 54-frame cut |
 | S06 | helper 9 | PASS | 48 / 41 | 0.37 | double flash on the line, lights cut out on 2s |
-| S10a | helper 4 | PASS (reviewed by its own builder) | 56 / 56 | 0.39 | holds on 3s, one blink |
-| S10b | helper 6 | PASS | 46 / 35 | 0.44 | 1 NOTE |
-| S11a | helper 4 | PASS (reviewed by its own builder) | 39 / 39 | 0.52 | on 1s (smoke); 2 NOTEs |
-| S11b | helper 6 | PASS | 38 / 38 | 0.47 | the spots open on "wrong" |
+| S10a | helper 4 | re-rendering (v8 outline) | 56 / 56 | 0.39 | coordinator's second read: PASS; re-render for the SDF fix |
+| S10b | helper 6 | **FIX** (v8) | 46 / 35 | 0.44 | rendered before the SDF normal fix: body and antennae have no outline |
+| S11a | helper 4 | re-rendering (FIX from the coordinator) | 39 / 39 | 0.52 | the wrong detail too small; reworked |
+| S11b | helper 6 | **FIX** (v8) | 38 / 38 | 0.47 | same: no outline on the SDF body and antennae |
 
-Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24.
+Waiting for: S01-S03a, S04-S05b, S07, S08, S12-S24; re-renders of S09, S10b, S11b (v8) and S10a/S11a (v8).
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
-**FIX** (sent to helper 1, 30 Oct).
+**v2 (9ff69f6): PASS**, with one NOTE.
+- **Fixed:** the tank light is now cyan from one side, so the left of the face falls into a hard, designed cool
+  shadow tone. The shirt reads dark slate again (the earth outfit). The smile lands in two steps: the eyes soften
+  around frame 19, then the closed-eye `happy` smile at about frame 22 (SG2).
+- **NOTE:** mean saturation is 0.28. That is under the 0.34-0.61 band but inside E22's measured 0.26-0.69, and it
+  suits a pale face in a dark lab. Not blocking. S03a and S05b come from the same rig, so check they cut with it.
+
+**v1: FIX** (sent to helper 1, 30 Oct).
 1. **Most serious: the tank light washes the frame out instead of lighting it cyan (row: "lit cyan by the tank";
    LC9, LC1).**
    - Mean saturation is 0.23, below the 0.34-0.61 band and below even E22's measured minimum of 0.26. S06, the same
@@ -86,7 +100,10 @@ frames in the cut** (66 to render), and the picture no longer lands on the words
 - **Picture:** no people, no text. Locked camera (SG4).
 
 ## S10b: the fluffmoth hovers, cute (helper 6)
-**PASS**, with one NOTE.
+**FIX (v8)**, sent to helper 6.
+- **The outline is missing:** rendered at 20:01, before 3b0fc70 (20:14). In the full frames, the fluffy body, the
+  collar and the feathery antennae have no line; only the wings do. Re-render after pulling 3b0fc70.
+- Everything below still stands for the re-render. It was a PASS with one NOTE.
 - **Length and level:** 46 frames (35 needed, so the edit trims). Saturation 0.44. Locked camera, low against the
   sky, the background melts.
 - **Timing:** the wings beat on 1s and the head-tilt pose lands on frame 16, inside the 23-frame cut (SG2). Its
@@ -95,7 +112,8 @@ frames in the cut** (66 to render), and the picture no longer lands on the words
   of the frame with plain grass below, so it could be framed a little lower or wider. Not blocking.
 
 ## S11b: the eye-spots open (helper 6)
-**PASS.**
+**FIX (v8)**, sent to helper 6: as for S10b, the body, collar and antennae have no outline. Re-render after pulling
+3b0fc70. Otherwise it was a PASS:
 - **Length and level:** 38 frames (38 needed). Saturation 0.47.
 - **Timing:** the wings stop dead, then all four eye-spots open on frames 9-17, landing on "wrong" (voice
   0.00-0.48 s). Their irises light up locally (LC4, TP11), and the shot then holds still (IM12: the reveal as a
@@ -104,7 +122,7 @@ frames in the cut** (66 to render), and the picture no longer lands on the words
   captions.
 
 ## S10a: jelly-snail, close, cute held pose (helper 4)
-**PASS** (self-review: a second reader should look too).
+**Second read (coordinator): PASS.** Re-rendering after 3b0fc70 so the body carries its coloured line (v8).
 - **Length and level:** 56 frames, 720x1280, 24 fps. Saturation 0.39, value 0.84 (bright day, LC). No black
   frames.
 - **Timing:** characters on 3s. The frame runs are all 3 or longer; the longer runs are where the bob turns. The
@@ -117,7 +135,16 @@ frames in the cut** (66 to render), and the picture no longer lands on the words
   S10a → S11a cut.
 
 ## S11a: the trail of smoking burnt holes (helper 4)
-**PASS** (self-review), with two NOTEs.
+**Second read (coordinator): FIX.** In 1.12 s the wrong detail must read instantly (EP4), and it didn't: the holes
+were small dark specks in the upper third at 360 px, a sharp red mushroom in the corner was the brightest thing in
+the frame, and the smoke was faint grey on green. Reworked (commit 840944e and the v8 re-render):
+- **Camera:** low and close behind the trail. The nearest holes are big in the lower middle, at y 510-790 above
+  the captions, and the trail leads the eye up to the snail.
+- **Mushroom:** removed in this scene.
+- **Embers:** brighter orange, with a soft local glow on the grass round each hole (LC4/TP11, no regrade).
+- **Smoke:** darker and thicker.
+
+The first version's notes, for the record:
 - **Length and level:** 39 frames, saturation 0.52, value 0.81, no black frames.
 - **Timing:** on 1s, because the smoke and the ember flicker are effects (IM2: the camera and effects stay on
   1s). The snail itself acts on 3s.

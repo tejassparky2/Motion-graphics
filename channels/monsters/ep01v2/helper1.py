@@ -164,7 +164,10 @@ def _cam(name, loc, target, lens, focus=None, fstop=None):
     return o
 
 
-def _face_light(name, loc, target, energy, color="#7fe6ff", size=0.25):
+TANK_CYAN = "#4fd8e8"          # the tank's light on Kai: a saturated cyan (QA, LC9), from one side only
+
+
+def _face_light(name, loc, target, energy, color=TANK_CYAN, size=0.25):
     ld = bpy.data.lights.new(name, "AREA")
     ld.energy, ld.color, ld.size, ld.use_shadow = energy, lab.hx(color)[:3], size, False
     o = bpy.data.objects.new(name, ld)
@@ -186,25 +189,149 @@ def _focus_face(cam, rig):
     cam.data.dof.focus_distance = (_head_pos(rig) - cam.matrix_world.translation).length - 0.085 * H
 
 
-def _tint_hero(k=0.35):
+def _tint_hero(k=0.35, cool=(0.74, 0.93, 1.0)):
     """hero.blend's toon shade turns the light grey before the two-tone ramp, so a coloured light can't tint Kai. Add
-    the coloured light back on top (like the lab grade does for the room), so the tank lights his face cyan."""
-    for name in ("hair", "huku_bake", "body_bake", "body_nm"):
+    the coloured light back on top (like the lab grade does for the room), then multiply by the lab's cool night
+    colour, so the tank lights him cyan and the cap and skin don't read as white (LC1, LC9)."""
+    mats = ["hair", "huku_bake", "body_bake", "body_nm"]
+    mats += [m.name for m in bpy.data.materials if m.name.startswith("cap")]
+    for name in mats:
         m = bpy.data.materials.get(name)
-        if not m or "lab_tint" in m.node_tree.nodes:
+        if not m or not m.use_nodes or "lab_tint" in m.node_tree.nodes:
             continue
         nt = m.node_tree
-        s2r = next(n for n in nt.nodes if n.type == "SHADERTORGB")
-        em = next(n for n in nt.nodes if n.type == "EMISSION")
+        em = next((n for n in nt.nodes if n.type == "EMISSION"), None)
+        if em is None or not em.inputs[0].links:
+            continue
         src = em.inputs[0].links[0].from_socket
-        sc = nt.nodes.new("ShaderNodeVectorMath")
-        sc.operation, sc.inputs["Scale"].default_value = "SCALE", k
-        add = nt.nodes.new("ShaderNodeVectorMath")
-        add.operation, add.name = "ADD", "lab_tint"
-        nt.links.new(s2r.outputs[0], sc.inputs[0])
-        nt.links.new(src, add.inputs[0])
-        nt.links.new(sc.outputs[0], add.inputs[1])
-        nt.links.new(add.outputs[0], em.inputs[0])
+        s2r = next((n for n in nt.nodes if n.type == "SHADERTORGB"), None)
+        if s2r is not None:
+            # the light's hue (normalised) times its strength capped at 1, times k: coloured, never blown out
+            nrm = nt.nodes.new("ShaderNodeVectorMath")
+            nrm.operation = "NORMALIZE"
+            ln = nt.nodes.new("ShaderNodeVectorMath")
+            ln.operation = "LENGTH"
+            cap1 = nt.nodes.new("ShaderNodeMath")
+            cap1.operation, cap1.inputs[1].default_value = "MINIMUM", 1.0
+            kk = nt.nodes.new("ShaderNodeMath")
+            kk.operation, kk.inputs[1].default_value = "MULTIPLY", k
+            sc = nt.nodes.new("ShaderNodeVectorMath")
+            sc.operation = "SCALE"
+            add = nt.nodes.new("ShaderNodeVectorMath")
+            add.operation = "ADD"
+            nt.links.new(s2r.outputs[0], nrm.inputs[0])
+            nt.links.new(s2r.outputs[0], ln.inputs[0])
+            nt.links.new(ln.outputs["Value"], cap1.inputs[0])
+            nt.links.new(cap1.outputs[0], kk.inputs[0])
+            nt.links.new(kk.outputs[0], sc.inputs["Scale"])
+            nt.links.new(nrm.outputs[0], sc.inputs[0])
+            nt.links.new(src, add.inputs[0])
+            nt.links.new(sc.outputs[0], add.inputs[1])
+            src = add.outputs[0]
+        mul = nt.nodes.new("ShaderNodeVectorMath")
+        mul.operation, mul.name = "MULTIPLY", "lab_tint"
+        mul.inputs[1].default_value = cool
+        nt.links.new(src, mul.inputs[0])
+        nt.links.new(mul.outputs[0], em.inputs[0])
+
+
+def _tank_glow(side, cyan=(0.18, 0.82, 0.92), mix=0.5, rim=0.6, warm=0.9):
+    """S03b v3: keep his skin skin-coloured and put the tank's cyan only where the light falls. On each of Kai's toon
+    materials: the lit band (the toon ramp's white) is multiplied toward cyan by `mix`; the shadow band keeps the
+    skin's own lavender shadow tone; a thin hard-edged cyan rim lights the silhouette on the side facing the tank
+    (world direction `side`); `warm` keeps the lit skin's value near 0.8."""
+    for name in ("hair", "huku_bake", "body_bake", "body_nm"):
+        m = bpy.data.materials.get(name)
+        if not m or "tank_glow" in m.node_tree.nodes:
+            continue
+        nt = m.node_tree
+        N, L = nt.nodes.new, nt.links.new
+        em = next(n for n in nt.nodes if n.type == "EMISSION")
+        ramp = next(n for n in nt.nodes if n.type == "VALTORGB")
+        src = em.inputs[0].links[0].from_socket
+        # lit mask from the toon ramp: 1 in the lit band, 0 in the shadow band
+        sep = N("ShaderNodeSeparateColor")
+        L(ramp.outputs[0], sep.inputs[0])
+        lit = N("ShaderNodeMapRange")
+        lit.inputs["From Min"].default_value, lit.inputs["From Max"].default_value = 0.8, 1.0
+        L(sep.outputs[0], lit.inputs["Value"])
+        k = N("ShaderNodeMath")
+        k.operation, k.inputs[1].default_value = "MULTIPLY", mix
+        L(lit.outputs[0], k.inputs[0])
+        tint = N("ShaderNodeMix")
+        tint.data_type, tint.blend_type = "RGBA", "COLOR"            # the cyan's hue over the skin's value
+        L(k.outputs[0], tint.inputs["Factor"])
+        L(src, tint.inputs[6])
+        tint.inputs[7].default_value = (*cyan, 1)
+        # the rim: facing ramp (silhouette) x how much the surface faces the tank
+        lw = N("ShaderNodeLayerWeight")
+        lw.inputs["Blend"].default_value = 0.3
+        edge = N("ShaderNodeMapRange")
+        edge.inputs["From Min"].default_value, edge.inputs["From Max"].default_value = 0.5, 0.54
+        L(lw.outputs["Facing"], edge.inputs["Value"])
+        geo = N("ShaderNodeNewGeometry")
+        dot = N("ShaderNodeVectorMath")
+        dot.operation = "DOT_PRODUCT"
+        dot.inputs[1].default_value = tuple(side.normalized())
+        L(geo.outputs["Normal"], dot.inputs[0])
+        facing = N("ShaderNodeMapRange")
+        facing.inputs["From Min"].default_value, facing.inputs["From Max"].default_value = 0.25, 0.35
+        L(dot.outputs["Value"], facing.inputs["Value"])
+        rk = N("ShaderNodeMath")
+        rk.operation = "MULTIPLY"
+        L(edge.outputs[0], rk.inputs[0])
+        L(facing.outputs[0], rk.inputs[1])
+        rk2 = N("ShaderNodeMath")
+        rk2.operation, rk2.inputs[1].default_value = "MULTIPLY", rim
+        L(rk.outputs[0], rk2.inputs[0])
+        rimc = N("ShaderNodeMix")
+        rimc.data_type, rimc.blend_type = "RGBA", "MIX"
+        L(rk2.outputs[0], rimc.inputs["Factor"])
+        L(tint.outputs[2], rimc.inputs[6])
+        rimc.inputs[7].default_value = (0.55, 0.95, 1.0, 1)
+        val = N("ShaderNodeVectorMath")
+        val.operation, val.name = "SCALE", "tank_glow"
+        val.inputs["Scale"].default_value = warm
+        L(rimc.outputs[2], val.inputs[0])
+        L(val.outputs[0], em.inputs[0])
+
+
+def _catchlights(rig, cam, until, color="#9ff2ff", r=0.0035):
+    """Tiny cyan glints in his eyes (the tank reflected), visible until frame `until` (when the eyes close). The
+    posed head mesh's "eye" faces are split into the two eyes by their position across the camera's view; each glint
+    sits just in front of its eye's centre, toward the camera."""
+    from bpy_extras.object_utils import world_to_camera_view
+    bpy.context.view_layer.update()
+    sc = bpy.context.scene
+    head = bpy.data.objects["head"]
+    eye_idx = {i for i, m in enumerate(head.data.materials) if m and m.name == "eye"}
+    dg = bpy.context.evaluated_depsgraph_get()
+    ev = head.evaluated_get(dg)
+    me = ev.to_mesh()
+    camp = cam.matrix_world.translation
+    pts = [head.matrix_world @ poly.center for poly in me.polygons if poly.material_index in eye_idx]
+    ev.to_mesh_clear()
+    if not pts:
+        return
+    sx = sorted((world_to_camera_view(sc, cam, p).x, i) for i, p in enumerate(pts))
+    split = max(range(1, len(sx)), key=lambda k: sx[k][0] - sx[k - 1][0])      # the widest gap: between the eyes
+    eyes = {"A": [pts[i] for _, i in sx[:split]], "B": [pts[i] for _, i in sx[split:]]}
+    m = lab.look.flat("catchlight", lab.hx(color), 2.0)
+    for side, ps in eyes.items():
+        # the eye's on-screen middle (its bounding box, not the face average, which leans to the inner corner)
+        v = [world_to_camera_view(sc, cam, p) for p in ps]
+        mx, my = (min(q.x for q in v) + max(q.x for q in v)) / 2, (min(q.y for q in v) + max(q.y for q in v)) / 2
+        c = min(ps, key=lambda p: (lambda q: (q.x - mx) ** 2 + (q.y - my) ** 2)(world_to_camera_view(sc, cam, p)))
+        p = c + (camp - c).normalized() * 0.01 + Vector((0, 0, 0.004))
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=4, radius=r, location=p)
+        o = bpy.context.object
+        o.name = f"catchlight_{side}"
+        o.data.materials.append(m)
+        o.visible_shadow = False
+        o.hide_render = False
+        o.keyframe_insert("hide_render", frame=1)
+        o.hide_render = True
+        o.keyframe_insert("hide_render", frame=until)
 
 
 def s03a():
@@ -219,8 +346,8 @@ def s03a():
     _key_pose(rig, 22, BODY)
     head = _head_pos(rig)
     _cam("cam_s03a", (-0.5, 0.62, 1.42), (-0.98, 2.05, 1.06), 30, focus=head, fstop=1.6)
-    _face_light("s03a_tank_on_face", tuple(tank + Vector((-0.2, -0.3, 0.25))), tuple(head), 6)
-    _tint_hero(0.2)
+    _face_light("s03a_tank_on_face", tuple(tank + Vector((-0.2, -0.3, 0.25))), tuple(head), 1.6, size=0.15)
+    _tint_hero(0.12)
     hero.face(rig, "neutral", 1)
     hero.face(rig, "blink", 31)
     hero.face(rig, "neutral", 34)
@@ -241,13 +368,18 @@ def s03b():
     cam_loc = Vector((tank.x - 0.05, glass_y - 0.06, head.z - 0.035))     # just in front of the glass
     cam = _cam("cam_s03b", tuple(cam_loc), tuple(head + Vector((0, 0, -0.035))), 40, fstop=1.4)
     _focus_face(cam, rig)
-    _face_light("s03b_tank_on_face", tuple(Vector((tank.x - 0.15, tank.y - 0.17, head.z - 0.05))), tuple(head), 2.5)
-    _tint_hero(0.15)
+    # from the tank on his right only, so his left cheek falls into the cool shadow tone
+    _face_light("s03b_tank_on_face", tuple(Vector((head.x + 0.35, head.y + 0.2, head.z - 0.02))), tuple(head), 0.9,
+                size=0.12)
+    # v3 (coordinator): warm skin, not green. The tank's cyan only as coloured light over the lit side (~1/3 mix), the
+    # shadow side in the skin's own lavender shadow tone, a thin cyan rim on the jaw nearest the tank, catchlights.
+    _tank_glow(side=Vector((1.0, 0.0, 0.0)))
+    _catchlights(rig, cam, until=22)
     hero.line_width(rig, 0.0015)                     # face close-up: ~2-3 px lines
     hero.face(rig, "neutral", 1)
     hero.face(rig, "look_right", 1, 0.4)
-    hero.face(rig, "relaxed", 19, 0.6)               # the fond smile, mid-line ("...and the pistol shrimp")
-    hero.face(rig, "happy", 22, 0.45)
+    hero.face(rig, "relaxed", 19, 0.7)               # the fond smile in two steps (SG2): the eyes soften...
+    hero.face(rig, "happy", 22, 1.0)                 # ...then the smile ("...and the pistol shrimp")
     return dict(frames=n, step=3, subject=[rig["arm"]])
 
 
@@ -277,16 +409,16 @@ def s05b():
     _focus_face(cam, rig)
     # the bubble's flash on his face, fading on 1s (from S05a's collapse), then the tank's steady cyan
     fl = _face_light("s05b_flash", (fx - 0.12, glass_y - 0.05, fz + 0.12), tuple(head), 0, "#e8fbff", 0.15)
-    for f, e in ((1, 22), (2, 16), (4, 10), (7, 5), (11, 2.5), (16, 0.8), (20, 0)):
+    for f, e in ((1, 8), (2, 6), (4, 4), (7, 2), (11, 1), (16, 0.3), (20, 0)):
         fl.data.energy = e
         fl.data.keyframe_insert("energy", frame=f)
-    _face_light("s05b_tank_on_face", (fx - 0.15, glass_y - 0.15, head.z - 0.05), tuple(head), 2.5)
-    _tint_hero(0.15)
+    _face_light("s05b_tank_on_face", (head.x + 0.35, head.y + 0.2, head.z - 0.02), tuple(head), 0.9, size=0.12)
+    _tint_hero(0.1)
     hero.line_width(rig, 0.002)
     hero.face(rig, "surprised", 1, 0.7)               # eyes still wide from the flash
     hero.face(rig, "neutral", 13)
     hero.face(rig, "relaxed", 25, 0.5)
-    hero.face(rig, "happy", 31, 0.4)                  # the tap lands: a small smile
+    hero.face(rig, "happy", 31, 0.7)                  # the tap lands: a small smile
     return dict(frames=n, step=1, subject=[rig["arm"]])
 
 

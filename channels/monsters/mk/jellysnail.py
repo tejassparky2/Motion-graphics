@@ -126,8 +126,8 @@ def _tube(name, pts, radius, mat, line=0.012):
 
 
 def _pivot(name, world, parent):
-    """An empty at a WORLD position, parented without moving (puffshrimp's _empty(name, loc, parent) puts it at
-    parent + loc, which double-counts a pivot given in world space)."""
+    """An empty at a WORLD position, parented without moving. (puffshrimp's _empty(name, loc, parent) changed meaning
+    on 30 Oct, from parent + loc to world loc; this works either way.)"""
     e = _empty(name, world)
     bpy.context.view_layer.update()
     _parent(e, parent)
@@ -236,7 +236,7 @@ def build(loc=(0, 0, 0), name="jsnail", trail=True):
         return (loc[0] + x, loc[1] + y, loc[2] + z)
 
     root = _empty(f"{name}_root", loc)
-    body_pivot = _empty(f"{name}_body", (0, 0, 0), root)
+    body_pivot = _pivot(f"{name}_body", loc, root)
     bpy.context.view_layer.update()
     # body: a long low foot that rises into a round head at the front and tapers to a tail
     body = sdf.build(f"{name}_bodymesh", [

@@ -3,6 +3,7 @@
     tar xf assets/voice_cache/monsters_ep01v2_takes.tar
     python channels/monsters/ep01v2_sound.py            # mix.wav + stems voice.wav, music.wav, sfx.wav
     python channels/monsters/ep01v2_sound.py --check    # also Whisper medium.en on every line of mix.wav
+    python channels/monsters/ep01v2_sound.py --roughcut # also mux picture.mp4 + mix.wav -> roughcut.mp4
 
 Needs numpy, scipy, pyloudnorm, pycairo and imageio-ffmpeg (motion/), ffmpeg on PATH, openai-whisper for --check.
 
@@ -261,6 +262,16 @@ def lap(seed=0):
     return _bp(_rng("lap", seed).uniform(-1, 1, k), 500, 3000) * _exp(k, 0.012, 0.001)
 
 
+def eerie_sting(seed=0):
+    """A small wrong-feeling glint: two high glassy bells a semitone apart, beating, with a soft breathy swell."""
+    out = np.zeros(_n(1.4))
+    _place(out, sfx._bell(_midi(88), 1.3, 0.7) + sfx._bell(_midi(89), 1.3, 0.7) * 0.8, 0)
+    m = _n(0.9)
+    _place(out, _bp(_rng("eerie", seed).uniform(-1, 1, m), 2500, 7000) * np.sin(np.pi * np.linspace(0, 1, m)) ** 2
+           * 0.15, 0.02)
+    return _verb(out, 0.3, 0.8)
+
+
 # ---------------------------------------------------------------- music cues (original)
 
 def soft_pad(dur, notes=(57, 64, 69, 72), bright=0.15, seed=0):
@@ -389,7 +400,7 @@ def build(timing, n, v):
     collapse_t = c.t("S05a", 1.65)
     amb(lambda d, s: bubble_hiss(d, 20 + s), hiss0, collapse_t, -22, 0.4, 0.05)
     hit(bubble_collapse(), collapse_t, -10)
-    hit(sfx.thunder(), c.t("S06", 0.05), -3)
+    hit(sfx.thunder(), c.f("S06", 14), -3)                        # the crack lands on the bolt and flash (S06 f14, on "storm")
     hit(sfx.snap(1), c.t("S07", 0.06), -2)
     hit(glass_crack(), c.t("S07", 0.12), -8, 0.2)
     amb(lambda d, s: trickle(d, 30 + s), c.t("S08"), spark_t + 0.1, -22, 0.2, 0.1)
@@ -402,11 +413,12 @@ def build(timing, n, v):
     # --- dead silence through the black, then the white bloom on a soft pad
     w0 = c.t("S09")
     music_at(soft_pad(1.8, (60, 67, 72, 76), 0.1), w0, w0 + 1.8, -16, 0.5, 0.6)
-    music_at(bed("wonder", c.t("S15") - w0 + 1.0, 2), w0 + 1.2, c.t("S15"), -15, 0.6, 0.12)
+    music_at(bed("wonder", c.t("S15") - w0 + 1.0, 2), c.f("S09", 30), c.t("S15"), -15, 0.4, 0.12)   # lifts as the crack lands
     amb(lambda d, s: meadow_wind(d, 40 + s), w0 + 0.3, strike - 1.0, -27, 0.6, 0.25)
     amb(lambda d, s: sfx.birds(d, 50 + s), w0 + 0.5, c.t("S12"), -24, 0.5, 0.6)
-    for k, (at, pitch) in enumerate([(c.t("S10a", 1.58), 1.6), (c.t("S10b", 0.74), 1.8), (c.t("S11b", 0.55), 1.2)]):
-        hit(sfx.cute_chirp(pitch, k), at, -16, (-0.3, 0.3, 0.0)[k])
+    for k, (at, pitch) in enumerate([(c.t("S10a", 1.58), 1.6), (c.t("S10b", 0.74), 1.8)]):
+        hit(sfx.cute_chirp(pitch, k), at, -16, (-0.3, 0.3)[k])
+    hit(eerie_sting(), c.f("S11b", 6), -18)                      # the moth's eye-spots open on "wrong" (f6-10)
     for k in range(4):                                           # S13: something lapping at the puddle
         hit(lap(k), c.t("S13", 0.12 + 0.22 * k), -24)
 
@@ -581,7 +593,18 @@ def check(model_name="medium.en"):
     return bad
 
 
+def roughcut():
+    """Mux helper 8's picture.mp4 with mix.wav -> out/monsters/ep01v2/roughcut.mp4 (no re-encode of the picture)."""
+    out = os.path.join(OUT, "roughcut.mp4")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", os.path.join(OUT, "picture.mp4"), "-i", os.path.join(OUT, "mix.wav"),
+                    "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+                    "-map_metadata", "-1", "-fflags", "+bitexact", out], check=True)
+    print(f"{os.path.relpath(out, ROOT)}: {os.path.getsize(out) / 1e6:.1f} MB")
+
+
 if __name__ == "__main__":
     main()
     if "--check" in sys.argv:
         check()
+    if "--roughcut" in sys.argv:
+        roughcut()
