@@ -492,7 +492,11 @@ def load(loc=(0, 0, 0), scale=1.0, rot_z=0.0, outfit="world", line=0.004):
         wear = bpy.data.materials["huku_bake"].node_tree.nodes
         for n in wear:
             if n.type == "TEX_IMAGE" and n.image and n.image.name.startswith("wear"):
-                n.image = bpy.data.images["wear_earth"]
+                img = bpy.data.images.get("wear_earth")
+                if img is None:                         # hero.blend packs only the world outfit (helper 1)
+                    img = bpy.data.images.load(os.path.join(A, "wear_earth.png"))
+                    img.name = "wear_earth"
+                n.image = img
     bones = {b.name: b for b in arm.pose.bones}
     # the VRM humanoid names -> this skeleton's (Rigify-style) bone names
     rigify = {"head": "head 1", "neck": "neck", "spine": "spine", "chest": "chest", "hips": "hips",
