@@ -56,7 +56,7 @@ def _plain_chest(o, bm):
             continue
         f.material_index = tunic
         for lp in f.loops:
-            lp[uv].uv = (0.2, 0.75)                               # a plain spot on the tunic front
+            lp[uv].uv = (0.41, 0.81)                              # the plain spot under the old emblem
     # the hexagon holes cut into the tunic: fill them
     edges = [e for e in bm.edges if len(e.link_faces) == 1 and e.link_faces[0].material_index == tunic
              and (lambda m: 0.02 < m.x < 0.13 and 1.05 < m.z < 1.19 and m.y < -0.03)(
@@ -67,7 +67,7 @@ def _plain_chest(o, bm):
             f.material_index = tunic
             f.smooth = True
             for lp in f.loops:
-                lp[uv].uv = (0.2, 0.75)
+                lp[uv].uv = (0.41, 0.81)
 
 
 def build(loc=(0, 0, 0), scale=1.0, rot_z=0.0):
@@ -93,11 +93,18 @@ def build(loc=(0, 0, 0), scale=1.0, rot_z=0.0):
                 _plain_chest(o, bm)
             bm.to_mesh(o.data)
             bm.free()
+            if o.name == "wear" and o.data.has_custom_normals:
+                bpy.context.view_layer.objects.active = o
+                with bpy.context.temp_override(object=o, active_object=o):
+                    bpy.ops.mesh.customdata_custom_splitnormals_clear()
+                for p in o.data.polygons:
+                    p.use_smooth = True
     _swap_pixels("wear", os.path.join(A, "wear_hero.png"))
     _swap_pixels("hair", os.path.join(A, "hair_hero.png"))
     _swap_pixels("body", os.path.join(A, "body_hero.png"))
     arm.location = loc
     arm.scale = (scale, scale, scale)
+    arm.rotation_mode = "XYZ"           # the VRM import leaves it in QUATERNION mode (helper 10)
     arm.rotation_euler = (0, 0, rot_z)
     hb = arm.data.vrm_addon_extension.vrm1.humanoid.human_bones
 
@@ -128,8 +135,9 @@ def expression(rig, name, value, frame, interp="CONSTANT"):
 # Shader-to-RGB toon with an inverted-hull outline so the hero matches the creatures, and bake everything into
 # assets/monsters/hero/hero.blend so helpers need no VRM add-on (load() below).
 # ---------------------------------------------------------------------------------------------------------------------
-CAP = "#2e3550"            # navy, like his trousers (never a red-and-white cap)
-CAP_LETTER = "#fff3dc"     # cream
+CAP = "#f2f4f7"            # white crown (owner, 30 Oct: "change his dress... Pokémon and modern anime")
+CAP_BRIM = "#1d9f94"       # teal brim and letter, matching the jacket; never a red-and-white cap
+CAP_LETTER = "#1d9f94"
 TOON_MATS = ("hair", "huku_bake", "body_bake", "body_nm")   # eye / eye_trans keep their (textured, alpha) shader
 
 
@@ -226,8 +234,9 @@ def cap(rig, letter="K"):
     hb = rig["bone"]("head")
     top = arm.matrix_world @ hb.tail
     cx, cy = 0.0, 0.012
-    rim_z, dome_r = 1.475, 0.132
-    cap_m = look.toon("cap_navy", look.hexc(CAP))
+    rim_z, dome_r = 1.452, 0.136
+    cap_m = look.toon("cap_crown", look.hexc(CAP))
+    brim_m = look.toon("cap_brim", look.hexc(CAP_BRIM))
     k_m = look.flat("cap_letter", look.hexc(CAP_LETTER))
     # dome: the upper part of a sphere, squashed a little front-to-back
     me = bpy.data.meshes.new("cap_dome")
@@ -235,7 +244,7 @@ def cap(rig, letter="K"):
     bmesh.ops.create_uvsphere(bm, u_segments=32, v_segments=16, radius=1.0)
     bmesh.ops.delete(bm, geom=[v for v in bm.verts if v.co.z < -0.12], context="VERTS")
     for v in bm.verts:
-        v.co.x, v.co.y, v.co.z = v.co.x * dome_r, v.co.y * dome_r * 1.08, v.co.z * dome_r * 0.92
+        v.co.x, v.co.y, v.co.z = v.co.x * dome_r, v.co.y * dome_r * 1.08, v.co.z * dome_r * 0.78
     bm.to_mesh(me)
     bm.free()
     dome = bpy.data.objects.new("cap", me)
@@ -253,9 +262,11 @@ def cap(rig, letter="K"):
     verts = []
     import math
     for i in range(13):
-        a = math.radians(-100 + i * 200 / 12)
+        a = math.radians(-78 + i * 156 / 12)
         inner = bm.verts.new((math.sin(a) * dome_r * 0.98, -math.cos(a) * dome_r * 1.0, 0))
-        outer = bm.verts.new((math.sin(a) * dome_r * 1.25, -math.cos(a) * dome_r * 1.55 - 0.02 * (1 - abs(a / 1.75)), -0.012 * (1 - abs(a / 1.75))))
+        f = math.cos(a) ** 1.5
+        outer = bm.verts.new((math.sin(a) * dome_r * (1.0 + 0.15 * f), -math.cos(a) * dome_r * (1.0 + 0.85 * f),
+                              -0.03 * f))
         verts.append((inner, outer))
     for (i1, o1), (i2, o2) in zip(verts[:-1], verts[1:]):
         bm.faces.new((i1, i2, o2, o1))
@@ -264,7 +275,7 @@ def cap(rig, letter="K"):
     brim = bpy.data.objects.new("cap_brim", me)
     bpy.context.scene.collection.objects.link(brim)
     brim.location = (cx, cy, rim_z - 0.004)
-    brim.data.materials.append(cap_m)
+    brim.data.materials.append(brim_m)
     s = brim.modifiers.new("thick", "SOLIDIFY")
     s.thickness = 0.008
     s.offset = 0
@@ -272,7 +283,7 @@ def cap(rig, letter="K"):
     brim.modifiers["outline"].use_rim = True
     brim.modifiers["outline"].material_offset_rim = brim.modifiers["outline"].material_offset
     # the letter: a text object on the front of the dome, converted to a thin mesh
-    bpy.ops.object.text_add(location=(cx, cy - dome_r * 1.05, rim_z + 0.055))
+    bpy.ops.object.text_add(location=(cx, cy - dome_r * 1.06, rim_z + 0.05))
     t = bpy.context.object
     t.data.body = letter
     t.data.align_x = "CENTER"
@@ -300,7 +311,7 @@ def cap(rig, letter="K"):
         for f in bm.faces:
             c = hair.matrix_world @ f.calc_center_median()
             dx, dy, dz = (c.x - cx) / dome_r, (c.y - cy) / (dome_r * 1.08), (c.z - (rim_z + 0.02)) / (dome_r * 0.92)
-            if dz > 0.05 and dx * dx + dy * dy + dz * dz < 0.98:
+            if dz > 0.05 and dx * dx + dy * dy + dz * dz < 0.98 and (c.y - cy) > -dome_r * 0.55:
                 gone.append(f)
         bmesh.ops.delete(bm, geom=gone, context="FACES")
         bm.to_mesh(hair.data)
@@ -313,6 +324,53 @@ def cap(rig, letter="K"):
         c.inverse_matrix = (arm.matrix_world @ hb.matrix).inverted()
     rig["cap"] = [dome, brim, t]
     return rig["cap"]
+
+
+def shoes(rig):
+    """White sneakers with a yellow toe cap and a dark sole, built as smooth SDF shapes around each foot and fixed to
+    the foot bones. The sample is barefoot; the bare-foot skin under them is removed."""
+    from . import look, sdf
+    import bmesh
+    arm = rig["arm"]
+    white = look.toon("shoe_white", look.hexc("#f4f6f9"))
+    accent = look.toon("shoe_accent", look.hexc("#ffc23a"))
+    sole = look.toon("shoe_sole", look.hexc("#3a3d46"))
+    out = []
+    for side in ("L", "R"):
+        foot = arm.pose.bones[f"foot.{side}"]
+        toe = arm.pose.bones[f"toe.{side}"]
+        ankle = arm.matrix_world @ foot.head
+        tip = arm.matrix_world @ toe.tail
+        heel = (ankle.x, ankle.y + 0.035, 0.045)
+        front = (tip.x, tip.y + 0.012, 0.038)
+        mid = ((heel[0] + front[0]) / 2, (heel[1] + front[1]) / 2, 0.012)
+        length = abs(front[1] - heel[1]) + 0.1
+        parts = [
+            (sdf.C(heel, front, 0.05, 0.042), white.name, None),
+            (sdf.E(heel, (0.046, 0.055, 0.048)), white.name, 0.03),
+            (sdf.C((ankle.x, ankle.y + 0.012, 0.06), (ankle.x, ankle.y + 0.012, 0.1), 0.047, 0.044), white.name, 0.03),
+            (sdf.E((front[0], front[1] - 0.006, front[2]), (0.046, 0.05, 0.036)), accent.name, 0.015),
+            (sdf.E(mid, (0.056, length / 2, 0.015)), sole.name, 0.01),
+        ]
+        o = sdf.build(f"shoe.{side}", parts, k=0.02, res=0.005, pad=0.03, smooth_iter=6)
+        look.outline(o, 0.003)
+        c = o.constraints.new("CHILD_OF")
+        c.target = arm
+        c.subtarget = foot.name
+        c.inverse_matrix = (arm.matrix_world @ foot.matrix).inverted()
+        out.append(o)
+    wear = bpy.data.objects.get("wear")
+    if wear:
+        bm = bmesh.new()
+        bm.from_mesh(wear.data)
+        names = [m.name if m else "" for m in wear.data.materials]
+        gone = [f for f in bm.faces if names[f.material_index] in ("body_bake", "body_nm")
+                and (wear.matrix_world @ f.calc_center_median()).z < 0.085]
+        bmesh.ops.delete(bm, geom=gone, context="FACES")
+        bm.to_mesh(wear.data)
+        bm.free()
+    rig["shoes"] = out
+    return out
 
 
 FACES = {                                                       # shape-key recipes on the head mesh (see hero.blend)
@@ -382,6 +440,7 @@ def save_blend(path=None):
         bpy.data.objects.remove(tail, do_unlink=True)          # a boy with short hair: no ponytail
     toonify(rig)
     cap(rig)
+    shoes(rig)
     _strip_drivers()
     # the imported images are packed copies of the SAMPLE's textures; pixel edits in memory are not what gets saved.
     # Repoint each to our PNG on disk, reload, then pack, so hero.blend carries the restyled textures.
@@ -427,6 +486,7 @@ def load(loc=(0, 0, 0), scale=1.0, rot_z=0.0, outfit="world", line=0.004):
     arm = next(o for o in col.objects if o.type == "ARMATURE")
     arm.location = loc
     arm.scale = (scale, scale, scale)
+    arm.rotation_mode = "XYZ"           # saved in QUATERNION mode by the VRM import; Euler so rot_z works
     arm.rotation_euler = (0, 0, rot_z)
     if outfit == "earth":
         wear = bpy.data.materials["huku_bake"].node_tree.nodes
