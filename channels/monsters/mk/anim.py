@@ -187,3 +187,16 @@ def on_twos(objects, step=3):
             if not any(m.type == "STEPPED" for m in fc.modifiers):
                 m = fc.modifiers.new("STEPPED")
                 m.frame_step = step
+
+
+def lids(rig, f, amount, interp="CONSTANT"):
+    """Upper lids at frame f: amount 0 = eyes wide open (lids hidden), 0.5 = half-shut (smug, sleepy), 1 = shut.
+    The lid rolls down over the eye around its centre."""
+    for h in rig.get("hi", []):
+        key(h, "scale", f, 1.0 if amount < 0.35 else 0.001, "CONSTANT")
+    for lp in rig.get("lids", []):
+        if amount <= 0.01:
+            key(lp, "scale", f, 0.001, interp)
+            continue
+        key(lp, "scale", f, 1.0, interp)
+        key(lp, "rotation_euler", f, ((amount - 0.5) * math.pi, 0.0, 0.0), interp)
