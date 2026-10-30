@@ -601,6 +601,9 @@ def s20():
     return dict(frames=n, step=2, subject=[sh["root"]])
 
 
+S21_CAM = ((10.0, -3.2, 3.9), (-0.8, -2.35, 0.2), 30)   # from his feet: the stomp crosses the frame to the puddle
+
+
 def s21():
     """Then it stomped back to the puddle. Low angle, Kai lying across the foreground; the shrimp turns its back in a
     huff and stomps off in three hops to the puddle (squash on every landing, 2D dust puffs), then dips its claw.
@@ -640,8 +643,8 @@ def s21():
     kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
     # raised (coordinator, 30 Oct): from 1.05 his lying body hid the shrimp's stomps and the puddle after frame ~20;
     # from here Kai stays the foreground at the bottom and the whole hop path and the puddle read above him
-    cam_loc = Vector((-0.2, -9.6, 5.2))
-    cam = _camera("cam_s21", cam_loc, Vector((-1.0, -1.3, 0.2)), 26, dof=sh["body"], fstop=0.6)
+    cam_loc = Vector(S21_CAM[0])
+    cam = _camera("cam_s21", cam_loc, Vector(S21_CAM[1]), S21_CAM[2], dof=sh["body"], fstop=0.6)
     bpy.context.scene.camera = cam
     _anchors("S21", cam, {"feet": lambda: r.matrix_world.translation.copy()}, n)
     with open(os.path.join(ANCHORS, "S21_lands.json"), "w") as fh:
