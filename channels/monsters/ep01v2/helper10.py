@@ -329,7 +329,11 @@ def s15():
             o.keyframe_insert("hide_render", frame=F)
     # A: low, beside his reaching arm: the hand comes in from the top of frame toward the shrimp's face
     _cam("S15_A_reach", (1.7, -3.9, 1.05), (0.0, -0.4, 1.45), 30, A, sc)
-    _cam("S15_B_eyes", (0.0, -2.45, 1.32), (0.0, -0.8, 1.2), 40, B, sc)
+    sc.frame_set(B + 1)
+    bpy.context.view_layer.update()
+    ec = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
+    cam_b = _cam("S15_B_eyes", tuple(ec + Vector((0.0, -1.55, 0.05))), tuple(ec), 30, B, sc)
+    cam_b.data.dof.aperture_fstop = 1.0
     cam_c = _cam("S15_C_claw", (-3.6, -5.6, 1.15), (-0.55, 0.0, 2.1), 32, C, sc)
     cam_e = _cam("S15_E_result", (-6.5, -5.5, 0.9), (1.6, 6.0, 3.0), 24, E, sc)
 
@@ -376,7 +380,7 @@ def s15():
     fly = Vector((loc.x, y0 - 4.5, 4.2))
     _cam("S15_F_blown", (fly.x + 17, fly.y + 0.5, 4.0), tuple(fly), 24, F, sc)
     face = (_world(k, "head") + _world(k, "head", True)) / 2 + Vector((0, 0, 0.35))
-    cam_g = _cam("S15_G_shock", (face.x + 0.25, face.y + 1.3, face.z + 2.4), tuple(face), 45, G, sc)
+    cam_g = _cam("S15_G_shock", (face.x + 0.3, face.y + 1.7, face.z + 3.1), tuple(face), 42, G, sc)
     cam_g.data.dof.aperture_fstop = 1.2
     _shake(cam_g, G, 14)
     _flush_keys(k)
