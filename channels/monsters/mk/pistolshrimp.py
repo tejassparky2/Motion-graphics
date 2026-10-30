@@ -189,8 +189,10 @@ def _mark(name, parts, mat, parent, res=0.015, line=0.0, k=0.04):
     return o
 
 
-def build(loc=(0, 0, 0), turn=0.0, name="pshrimp"):
-    """The shrimp, standing on the gravel at `loc`, turned `turn` radians about Z (0: head toward -X)."""
+def build(loc=(0, 0, 0), turn=0.0, name="pshrimp", scale=1.0):
+    """The shrimp, standing on the gravel at `loc`, turned `turn` radians about Z (0: head toward -X). Its body is
+    about 2.5 units long; `scale` sizes it for a set (0.025 makes a ~6 cm shrimp in lab.py's metre-scale hero tank).
+    The effects below read rig["k"] and scale with it."""
     body_m = _shell(f"{name}_body", BODY, EDGE, 0.8)
     stripe_m = look.toon(f"{name}_stripe", look.hexc(STRIPE))
     fan_m = _shell(f"{name}_fan", FAN, "#ffe6d6", 0.9)
@@ -306,9 +308,10 @@ def build(loc=(0, 0, 0), turn=0.0, name="pshrimp"):
     look.blob_shadow(f"{name}_shadow", (0.0, -0.1, 0.012), (1.9, 0.75), root)
     root.location = loc
     root.rotation_euler = (0, 0, turn)
+    root.scale = (scale, scale, scale)
     bpy.context.view_layer.update()
     return dict(root=root, body=body, shoulder=shoulder, hinge=hinge, tail=tail, eyes=eyes, antennae=antennae,
-                tip=tip, name=name)
+                tip=tip, name=name, k=scale)
 
 
 def reaction(rig, f, hold=6):
@@ -359,32 +362,8 @@ def tank(loc=(0, 0, 0), seed=7, crack_x=-1.6):
     fl.data.materials.append(P("tank_sand", hx("#d9c39a"), noise=0.18, scale=9.0))
 
     # gravel: one mesh of seeded pebbles in four painted colours
-    pebble_m = [P("peb0", hx("#cdb48a"), noise=0.1), P("peb1", hx("#a99a8c"), noise=0.1),
-                P("peb2", hx("#e6dccb"), noise=0.1), P("peb3", hx("#8e7c6c"), noise=0.1)]
-    me = bpy.data.meshes.new("tank_gravel")
-    bm = bmesh.new()
-    mats = []
-    for i in range(520):
-        x, y = rnd.uniform(-TANK_X + 0.2, TANK_X - 0.2), rnd.uniform(TANK_FRONT + 0.1, TANK_BACK - 0.2)
-        if (x / 1.5) ** 2 + (y / 0.6) ** 2 < 1.0 and rnd.random() < 0.85:
-            continue                                   # a little clearing under the shrimp
-        s = rnd.uniform(0.06, 0.15)
-        mtx = Matrix.Translation((x, y, s * 0.25)) @ Matrix.Rotation(rnd.uniform(0, 6.3), 4, "Z") @ \
-            Matrix.Diagonal((s * rnd.uniform(1.0, 1.5), s, s * 0.6, 1))
-        r = bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0, matrix=mtx)
-        k = rnd.randrange(4)
-        faces = {f for v in r["verts"] for f in v.link_faces}
-        mats.append((faces, k))
-    for faces, k in mats:
-        for f in faces:
-            f.material_index = k
-            f.smooth = True
-    bm.to_mesh(me)
-    bm.free()
-    gravel = keep(bpy.data.objects.new("tank_gravel", me))
-    bpy.context.scene.collection.objects.link(gravel)
-    for m in pebble_m:
-        gravel.data.materials.append(m)
+    keep(gravel_bed((-TANK_X + 0.2, TANK_X - 0.2), (TANK_FRONT + 0.1, TANK_BACK - 0.2), 0.0, rnd, n=520,
+                    clear=(0.0, 0.0, 1.5, 0.6)))
 
     # a rock with the shrimp's burrow, and plants (no outlines: painted background)
     rock_m = paintbg.paint3("tank_rock", hx("#6f6488"), hx("#9b8fb0"), hx("#c4bad6"), noise=0.2, scale=4.0)
@@ -481,6 +460,37 @@ def tank(loc=(0, 0, 0), seed=7, crack_x=-1.6):
     root.location = loc
     bpy.context.view_layer.update()
     return dict(root=root, glass=glass, surface=surf, crack=cracks, crack_origin=Vector((crack_x, TANK_FRONT, 0.35)))
+
+
+def gravel_bed(xr, yr, z, rnd, n=520, k=1.0, clear=None, name="tank_gravel"):
+    """One mesh of seeded painted pebbles (four colours) over x in xr, y in yr, resting on height z. Pebbles are
+    0.06-0.15 units across times `k`; `clear` = (cx, cy, rx, ry) keeps a mostly empty oval (under the shrimp)."""
+    P, hx = look.paint, look.hexc
+    pebble_m = [P("peb0", hx("#cdb48a"), noise=0.1), P("peb1", hx("#a99a8c"), noise=0.1),
+                P("peb2", hx("#e6dccb"), noise=0.1), P("peb3", hx("#8e7c6c"), noise=0.1)]
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    mats = []
+    for _ in range(n):
+        x, y = rnd.uniform(*xr), rnd.uniform(*yr)
+        if clear and ((x - clear[0]) / clear[2]) ** 2 + ((y - clear[1]) / clear[3]) ** 2 < 1.0 and rnd.random() < 0.85:
+            continue
+        s = rnd.uniform(0.06, 0.15) * k
+        mtx = Matrix.Translation((x, y, z + s * 0.25)) @ Matrix.Rotation(rnd.uniform(0, 6.3), 4, "Z") @ \
+            Matrix.Diagonal((s * rnd.uniform(1.0, 1.5), s, s * 0.6, 1))
+        r = bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.0, matrix=mtx)
+        mats.append(({f for v in r["verts"] for f in v.link_faces}, rnd.randrange(4)))
+    for faces, mi in mats:
+        for f in faces:
+            f.material_index = mi
+            f.smooth = True
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(o)
+    for m in pebble_m:
+        o.data.materials.append(m)
+    return o
 
 
 def _crack_curve(name, pts, radius, mat):
@@ -610,25 +620,30 @@ def _jet(rig, f):
     return tip, d.normalized()
 
 
-def bubble(rig, f, slow=1.0, size=0.17):
+def bubble(rig, f, slow=1.0, size=0.17, t=None, peak_scale=1.0):
     """The cavitation bubble at the claw tip: a white-hot core in layered white-blue glow. It swells for a frame,
-    shrinks, flashes brightest as it collapses, then pops (a last ring of light and a few micro-bubbles)."""
+    shrinks, flashes brightest as it collapses, then pops (a last ring of light and a few micro-bubbles).
+    `t` overrides the seven key times as frame offsets from f: (born, peak, shrunk, collapse, gone, flash end,
+    micro-bubbles start drifting); `peak_scale` sizes the peak (the IM13 "scale shot" swells it big). Sizes are in
+    rig units (rig["k"])."""
     s = max(1.0, slow)
+    k = rig.get("k", 1.0)
+    size *= k
     pos, d = _jet(rig, f + 1)
     pos = pos + d * size * 1.3
     n = f"bubble_{f}"
     holder = _empty(n, pos, size=0.2)
     core = _sphere(f"{n}_core", pos, (1, 1, 1), look.flat(f"{n}_corem", look.hexc("#ffffff"), 3.0), 0, 24)
     layers = [(1.0, core, None)]
-    for k, (r, col, a) in enumerate(((1.5, "#e6f8ff", 0.6), (2.5, "#94dcff", 0.26), (4.0, "#5ab8ff", 0.1))):
-        m = _glow(f"{n}_g{k}", look.hexc(col), a)
-        o = _sphere(f"{n}_glow{k}", pos, (1, 1, 1), m, 0, 24)
+    for j, (r, col, a) in enumerate(((1.5, "#e6f8ff", 0.6), (2.5, "#94dcff", 0.26), (4.0, "#5ab8ff", 0.1))):
+        m = _glow(f"{n}_g{j}", look.hexc(col), a)
+        o = _sphere(f"{n}_glow{j}", pos, (1, 1, 1), m, 0, 24)
         o.visible_shadow = False
         layers.append((r, o, (m, a)))
-    t = [f + round(x * s) for x in (0, 1, 3, 5, 6, 7, 9)]
+    t = [f + round(x * s) for x in (0, 1, 3, 5, 6, 7, 9)] if t is None else [f + x for x in t]
     t = sorted(set(t))
     t += [t[-1] + 1] * (7 - len(t))
-    peak, shrink, collapse, pop = size, size * 0.72, size * 0.25, size * 1.6
+    peak, shrink, collapse, pop = size * peak_scale, size * 0.72 * peak_scale, size * 0.25, size * 1.6
     for r, o, ma in layers:
         o.visible_shadow = False
         _attach(o, holder)
@@ -657,20 +672,27 @@ def bubble(rig, f, slow=1.0, size=0.17):
     for i in range(7):
         mb = _sphere(f"{n}_mb{i}", pos, (1, 1, 1), bm, 0, 10)
         mb.visible_shadow = False
-        r = rnd.uniform(0.02, 0.05)
+        r = rnd.uniform(0.02, 0.05) * k
         anim.key(mb, "scale", t[4] - 1, 0.001, "CONSTANT")
         anim.key(mb, "scale", t[4], r)
         anim.key(mb, "location", t[4], pos)
         anim.key(mb, "location", t[6] + round(12 * s), pos + Vector((rnd.uniform(-0.4, 0.4), rnd.uniform(-0.3, 0.3),
-                                                                     rnd.uniform(0.5, 1.2))))
+                                                                     rnd.uniform(0.5, 1.2))) * k)
     return holder
 
 
 def shock(rig, f, slow=1.0, radius=1.3, color="#d8f6ff"):
     """A small water shock ring that races out from the claw tip, square to the jet, and fades."""
     s = max(1.0, slow)
+    k = rig.get("k", 1.0)
     pos, d = _jet(rig, f + 1)
-    ring = anim.shockwave(tuple(pos), f, frames=round(7 * s), radius=radius, color=color)
+    ring = anim.shockwave(tuple(pos), f, frames=round(7 * s), radius=radius * k, color=color)
+    for fc in anim.all_fcurves(ring.animation_data.action):
+        if fc.data_path == "scale":
+            for kp in fc.keyframe_points:
+                if kp.co.x <= f:                       # the start sizes (0.01, 0.3) shrink with the rig too
+                    kp.co.y *= k
+                    kp.handle_left.y = kp.handle_right.y = kp.co.y
     ring.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
     ring.visible_shadow = False
     return ring
@@ -703,16 +725,16 @@ def crack(t, f, frames=5):
 
 
 # --------------------------------------------------------------------------- ambient life and the placeholder finger
-def bubbles(origin, f0, f1, n=8, seed=1, rise=4.0, spread=0.5):
+def bubbles(origin, f0, f1, n=8, seed=1, rise=4.0, spread=0.5, size=1.0):
     """Little air bubbles rising from the gravel (ambient life in every tank shot). Seeded; already on their way at
-    f0."""
+    f0. `size` scales the bubbles (0.025 in the metre-scale lab)."""
     rnd = random.Random(seed)
     m = look.fade("amb_bubble", look.hexc("#f4fdff"), 0.6)
     for i in range(n):
         x, y = origin[0] + rnd.uniform(-spread, spread), origin[1] + rnd.uniform(-spread * 0.4, spread * 0.4)
         b = _sphere(f"amb_bub{seed}_{i}", (x, y, origin[2]), (1, 1, 1), m, 0, 12)
         b.visible_shadow = False
-        b.scale = [rnd.uniform(0.03, 0.07)] * 3
+        b.scale = [rnd.uniform(0.03, 0.07) * size] * 3
         dur = rnd.uniform(1.4, 2.2) * (f1 - f0)
         start = f0 - rnd.uniform(0.0, 0.7) * dur
         anim.key(b, "location", start, (x, y, origin[2]), "LINEAR")
@@ -924,3 +946,53 @@ def subject_pass(info):
     sc = look.subject_only(info["subject"])
     bpy.data.objects[f"{info['rig']['name']}_shadow"].hide_render = True
     return sc
+
+
+# --------------------------------------------------------------------------- the crack, for any pane of glass
+def crack_path(seed=17, height=0.3):
+    """The crack's main zigzag as 2D points (x, z) in metres from its start, bottom to top. It is the SAME path as the
+    lab's hero-tank crack (mk/lab.py crack_puddle, seed 17), so the S07 snap, the S08 leak and the cracked sky of S09
+    all show one crack. Scale it for other sets (the sky: multiply by a few hundred)."""
+    r = random.Random(seed)
+    pts, x, z = [(0.0, 0.0)], 0.0, 0.0
+    while z < height:
+        x += r.uniform(-0.03, 0.04)
+        z += r.uniform(0.03, 0.06)
+        pts.append((x, z))
+    return pts
+
+
+def glass_crack(origin, path=None, k=1.0, seed=3):
+    """Build the crack (hidden until crack()) on a pane facing -Y, starting at world `origin`: the main zigzag of
+    `path` (crack_path() by default, in metres), a five-line starburst at the start and branches off the main line,
+    each a bright line over a darker, wider one. `k` scales the line widths and the starburst (k=1: metre-scale set).
+    Returns dict(crack=[curves]) for crack()."""
+    ox, oy, oz = origin
+    rnd = random.Random(seed)
+    path = path or crack_path()
+    main = [(ox + x, oy, oz + z) for x, z in path]
+    lines = [main]
+    for i in range(5):
+        a = -0.3 + i * 0.85 + rnd.uniform(-0.2, 0.2)
+        ln = rnd.uniform(0.012, 0.022) * k
+        lines.append([(ox, oy, oz), (ox + math.cos(a) * ln * 0.55, oy, oz + math.sin(a) * ln * 0.55 + 0.001),
+                      (ox + math.cos(a) * ln, oy, oz + math.sin(a) * ln)])
+    for j in (2, 4, 6):
+        if j >= len(main) - 1:
+            continue
+        bx, _, bz = main[j]
+        side = 1 if j % 4 else -1
+        br = [(bx, oy, bz)]
+        for _ in range(3):
+            bx += side * rnd.uniform(0.012, 0.022) * k
+            bz += rnd.uniform(0.004, 0.014) * k
+            br.append((bx, oy, bz))
+        lines.append(br)
+    lite = look.flat("crack_lite", look.hexc("#ffffff"), 2.0)
+    dark = look.fade("crack_dark", look.hexc("#1d4656"), 0.45)
+    out = []
+    for i, line in enumerate(lines):
+        r = (0.0016 if i == 0 else 0.0009) * k
+        out.append(_crack_curve(f"gcrack_dark{i}", [(p[0], p[1] + 0.0004 * k, p[2]) for p in line], r * 1.9, dark))
+        out.append(_crack_curve(f"gcrack_lite{i}", line, r, lite))
+    return dict(crack=out)

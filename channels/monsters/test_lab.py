@@ -1,6 +1,7 @@
-"""Stills of the Earth LAB set (mk/lab.py), Kai's chair left empty: the wide establishing shot, the over-the-shoulder
-desk shot, the S03 medium (Kai's seat between the glowing tanks), the S07 window during a lightning strike, the
-S09 low floor shot of the water reaching the power strip, and the S10 spark.
+"""Stills of the Earth LAB set (mk/lab.py), with helper 2's tank (pistolshrimp.tank) in the desk slot and Kai's chair
+left empty: the wide establishing shot, the over-the-shoulder desk shot, the S03 medium (Kai's seat between the
+glowing tanks), the S07 window during a lightning strike, the S09 low floor shot of the water reaching the power
+strip, and the S10 spark.
     blender -b -P channels/monsters/test_lab.py -- OUT_DIR [PREVIEW]
 Writes OUT_DIR/lab_wide.png, lab_desk.png, lab_medium.png, lab_window_lightning.png, lab_floor.png,
 lab_floor_spark.png (720x1280, 16 samples; PREVIEW=1 renders 360x640 at 8 samples)."""
@@ -11,7 +12,7 @@ import time
 import bpy
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from channels.monsters.mk import lab, look  # noqa: E402
+from channels.monsters.mk import lab, look, pistolshrimp  # noqa: E402
 
 args = sys.argv[sys.argv.index("--") + 1:]
 out = args[0]
@@ -20,6 +21,8 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = look.render_setup(360, 640, 8) if preview else look.render_setup()
 t = time.time()
 L = lab.build()
+tank = L["place_tank"](pistolshrimp.tank())     # helper 2's tank in the desk slot
+pistolshrimp.crack(tank, 60)
 L["lightning"](30)
 L["flicker"]([40, 43, 47, 52])
 L["crack_puddle"](60, 100)
