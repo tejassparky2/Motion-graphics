@@ -39,6 +39,49 @@ get blocked.
 - **Effects:** 4-point sparkle stars, glows, speed lines, impact frames (2D overlays are a separate job).
 - **Format:** vertical 720x1280 (9:16), 24 fps, EEVEE, 16 samples (`look.render_setup()`).
 
+## Frame-by-frame targets (from studying 140 Horizons screenshots; match these, don't copy designs)
+- **Characters and creatures:**
+  - Clean dark-navy lines ~2-3 px at 720 px wide (`look.LINE_SCALE = 1.5`, the default).
+  - One flat base colour plus one hard, cool shadow tone.
+  - A colour boundary on a character (belly patch, markings) must be ONE clean curve. Build markings as their own
+    smooth shapes pressed into the body, not per-face materials from sdf.py, which come out jagged.
+- **Trees:** "cauliflower" masses of merged leaf clumps, painted in three greens (dark inside and underneath, mid,
+  yellow-green where lit), with no lines: `mk/paintbg.py` `tree()`, `paint3()`, `greens()`. Mostly natural greens;
+  candy colours only as rare accents.
+- **Grass:** painted brush strokes stretched sideways (`paintbg.grass_material()`).
+- **Sky:** gradient with thin, flat-bottomed, wispy clouds with lavender shadows (`paintbg.sky()`).
+- **Depth:** the background is strongly soft behind characters. Use camera DOF with an exaggerated aperture,
+  `aperture_fstop ≈ 0.15` (a real f-stop gives <1 px of blur at these distances). Things far away get paler and bluer
+  (`far=` in paintbg).
+- **Framing:** the character is big in the frame, camera low at its eye level (35-50 mm). Wides are for establishing
+  shots only.
+- **Effects:** glowing beams with white cores and streaks, 4-point sparkles, soft bokeh glows. Keep flashes short
+  (1-2 frames) and dust light.
+- **Reference frame:** `out/monsters/style_frame_anime_v2.png` and `channels/monsters/test_anime_bg.py`.
+
+## Latest updates (newest first). The coordinator sends every change to every helper.
+- **30 Oct, v3.1 (full shot-by-shot pass over a TV episode, `ANIME_STUDY.md` "Second pass"):**
+  - 78% of shots have a locked camera; pans are short (1.5-2 s).
+  - A reaction shot follows almost every beat.
+  - Big moments get full-frame energy, speed-line or burst backgrounds, and the character frozen while the effect moves.
+  - Shape wipes mark act changes.
+  - For assets: give every creature and Kai one strong held "reaction pose" (shock, delight) usable as a freeze frame.
+- **30 Oct, v3 (style frame `out/monsters/style_frame_anime_v3.png`).** From measuring a full Pokémon TV episode frame
+  by frame (`channels/monsters/ANIME_STUDY.md`):
+  - Lines are coloured per colour: `look.outline()` now gives each material its own darker line (`line_color`,
+    k=0.28). Don't force a single black outline.
+  - Creature eyes are black, with a lighter coloured crescent low in the eye and two white highlights (see
+    `puffshrimp.py`, `iris_m`).
+  - Character acting is on 3s: `anim.on_twos(objs)` now defaults to step=3. Use step=2 for fast action; the camera
+    and VFX stay on 1s.
+  - Shots cut every 1.5-3 s; hold longer only for big reveals. Keep shading mostly flat, with shadows only in designed
+    spots. Use low camera angles against a deep blue sky, with ambient sparkles and bubbles.
+- **30 Oct, v2 (style frame `out/monsters/style_frame_anime_v2.png`):**
+  - `mk/paintbg.py`: painted backgrounds, cauliflower trees, brush-stroke grass, wispy sky.
+  - Lines ~2-3 px.
+  - Clean colour boundaries.
+  - Background blur at f≈0.15.
+
 ## Hard rules
 - **Original designs only.** Nothing that looks like a Pokémon, Kirby, Digimon or any franchise character: no
   red-and-white ball, no Pokédex-style UI, no pink round puffballs. Cute round bodies; each creature has ONE odd,
