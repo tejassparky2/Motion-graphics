@@ -240,3 +240,12 @@ both hands, background blur, A/B ending card). About 2-3 min per episode to rend
   now splits into 1-3 word captions (Episodes 1-12 and the Ch1-4 long videos still have ~21 such lines; owner asked).
   Ep16's end card says "EPISODE 17 · GAME FOUR"; no Chapter 6 exists yet in the manga chat. Schedule: Ep13/14 Wed 4 Nov,
   Ep15/16 Thu 5 Nov (4:30/7:30 PM IST), Ch5 long Fri 6 Nov 2:30 PM IST; pack out/packs/dma (rows 17-21).
+- 30 Oct 2026, owner: "For session in future use already exists manga session don't create new there are already 10-11
+  of them". For parallel rendering, REUSE these existing cloud sessions (send_message), never create_session:
+  manga render helpers 1-10 (children of the manga chat session_01PF511aGmcMqQ6PCbPbr6tc):
+  session_01PF511bDdsYwHy141n4jcnn (1), session_01PF511Y13zuEX6TW3egNyxM (2), session_01PF511b6tpL8dByjU7Qp3Tu (3),
+  session_01PF511YEojWTNPFKxSeURms (4), session_01PF511ahSS4W8tEQ9ukoLwF (5), session_01PF511Y382fBtBJa7rzyVDQ (6),
+  session_01PF511bWPhLFvpRbgd3zffg (7), session_01PF511Yk7bwbspWweS95hGA (8), session_01PF511ZFaQeq2RigHZ22DrB (9),
+  session_01PF511YTmbSi3KeLNnX6GyZ (10); and this branch's helpers session_01PF511XprLcpVNCdEQUsUFF and
+  session_01PF511bGqrs1SFn3cpk5NqS. They were made for tejassparky2/Manga, so a job must tell them to clone
+  tejassparky2/Motion-graphics (branch ccr-56282fe5-evehq4-horror) first.
