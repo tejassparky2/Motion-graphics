@@ -12,6 +12,9 @@ from mathutils import Quaternion, Vector
 from channels.monsters.mk import anim, hero, lab, look, meadow, puffshrimp, storm
 
 TAIL = 12
+# frames to render per shot (the cut length + the 12-frame handle), from ep01v2/timing.json (coordinator v7); word
+# cues below are shot-local frames (frame 1 = the shot's first frame)
+RENDER = {"S06": 41, "S08": 85, "S12": 47, "S13": 62, "S14": 80}
 
 
 def _frames(seconds):
@@ -34,31 +37,42 @@ def _cam(name, loc, target, lens, fstop=None, focus=None):
 
 # ------------------------------------------------------------------------------------------------------------ lab
 def s06():
-    """S06 "Then the storm hit." (1.5 s): the lab window, locked. An anime bolt (storm.py, clipped to the window glass)
-    on the lab's two-hit lightning (2-frame flashes of sky and room), then the room lights stutter on 2s."""
+    """S06 "Then the storm hit." (29 frames): the lab window, locked. An anime bolt (storm.py, clipped to the window
+    glass) on the lab's two-hit lightning (2-frame flashes of sky and room) landing on "storm" (frame 14), then the room
+    lights stutter on 2s."""
     h = lab.build()
     cam = h["cams"]["window"]
     bpy.context.scene.camera = cam
     bpy.data.objects["bolt"].hide_render = True          # the lab's simple bolt: storm.py draws the anime one
     win = bpy.data.objects["win_glass"]
-    h["lightning"](8)
-    storm.lightning(cam, 8, window=win, depth=7.5, flash=False, room_light=0, seed=3)
-    h["flicker"]([16, 20, 23, 27])
-    return dict(frames=_frames(1.5), step=1, subject=[])
+    h["lightning"](14)
+    storm.lightning(cam, 14, window=win, depth=7.5, flash=False, room_light=0, seed=3)
+    stutter = [20, 23, 26, 30, 34]
+    h["flicker"](stutter)
+    lv = h["grade"].nodes["level"].outputs[0]               # darker than the lab's default dip: fear is darkness (LC2)
+    for f in stutter:
+        lv.default_value = 0.3
+        lv.keyframe_insert("default_value", frame=f)
+    for fc in anim.all_fcurves(h["grade"].animation_data.action):
+        if '"level"' in fc.data_path:
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
+    return dict(frames=RENDER["S06"], step=1, subject=[])
 
 
 def s08():
-    """S08 "Water. Cables. Me." (2.2 s): floor level, locked. Water runs across the tiles to the power strip (0.8 s),
-    a spark (0.6 s), then black (0.8 s, plus the tail). Nothing graphic: the cut to black is the whole event."""
+    """S08 "Water. Cables. Me." (73 frames): floor level, locked. Water runs across the tiles on "Water." (frame 8) and
+    reaches the power strip on "Cables." (frame 28); the lights stutter; the spark comes just after "Me." (frame 55,
+    matching the sound mix, which keeps the word clear); then black from frame 58, held to the end. Nothing graphic: the cut to black is the whole event."""
     h = lab.build()
     cam = h["cams"]["floor"]
     bpy.context.scene.camera = cam
-    h["crack_puddle"](-8, 19)                              # the leak started off-screen; it reaches the strip at 19
-    h["flicker"]([24, 28])
-    h["spark"](20)
-    h["power_out"](34)
-    storm.power_out(cam, 35, flicker=False)
-    return dict(frames=_frames(2.2), step=1, subject=[])
+    h["crack_puddle"](-1, 28)                              # trickling as the shot opens; it touches the strip at 28
+    h["flicker"]([34, 38, 42])
+    h["spark"](55)                                          # just AFTER "Me." (f47-50), as in the sound mix
+    h["power_out"](57)
+    storm.power_out(cam, 58, flicker=False)
+    return dict(frames=RENDER["S08"], step=1, subject=[])
 
 
 # ------------------------------------------------------------------------------------------------------- meadow
@@ -109,7 +123,7 @@ def s13():
     """S13 "Something else was already drinking." (2.5 s): insert of the clue (SG10, CH3): the puff-shrimp at the
     puddle with its big claw dipped in the water. Low, close, locked; acting on 3s, ripples on 1s."""
     meadow.build("before")
-    n = _frames(2.5)
+    n = RENDER["S13"]
     _dipped_shrimp(1, n)
     tip = (SHRIMP_AT[0] - 1.5, SHRIMP_AT[1] - 1.7, 0.02)
     _ripples(tip, -20, n)
@@ -231,7 +245,7 @@ def s12():
     """S12 "I was so thirsty." (1.5 s): Kai crawls on hands and knees toward the puddle, low side view, locked. Tired
     face (droopy lids, mouth open). Acting on 3s, so only every 3rd frame is rendered."""
     meadow.build("before")
-    n = _frames(1.5)
+    n = RENDER["S12"]
     rig = _crawling_kai((0.6, -11.0, 0.0), math.pi, 1, n, 3.0)
     _face_mix(rig, {"face_sad": 0.6, "eye_zitome": 0.5, "mouse_open": 0.6}, 1)
     _face_mix(rig, {"face_sad": 0.6, "eye_zitome": 0.7, "lip_a": 0.7}, 19)
@@ -241,19 +255,20 @@ def s12():
 
 
 def s14():
-    """S14 "A shrimp. On land. Impossible." (2.5 s): Kai's sceptical face, close and locked, in two steps (SG2): first the
-    eyes narrow (squint), then the brows come down and the head tilts. On 3s."""
+    """S14 "A shrimp. On land. Impossible." (68 frames): Kai's sceptical face, close and locked, in two steps (SG2):
+    the eyes narrow on "On land." (frame 27), then a brow comes down and the head tilts on "Impossible." (frame 48).
+    On 3s (keys on multiples of 3, so the step-3 render holds them)."""
     meadow.build("before")
-    n = _frames(2.5)
+    n = RENDER["S14"]
     rig = _crawling_kai((0.6, -6.2, 0.0), math.pi, 1, n, 0.0, period=10000, look_up=1.0)   # stopped, head up
     arm = rig["arm"]
     hero.line_width(rig, 0.0015)
     _face_mix(rig, {"face_surprise": 0.4}, 1)
-    _face_mix(rig, {"eye_zitome": 1.0, "mouth_short": 0.7}, 16)                       # step 1: flat stare
+    _face_mix(rig, {"eye_zitome": 1.0, "mouth_short": 0.7}, 27)                       # step 1 on "On land."
     _face_mix(rig, {"eye_zitome": 1.0, "eye_brow_down_L": 1.0, "eye_brow_up_R": 0.7, "mouth_short": 0.8,
-                    "lip_down": 0.5, "look_down": 0.15}, 37)                            # step 2: one brow down, pout
+                    "lip_down": 0.5, "look_down": 0.15}, 48)                            # step 2 on "Impossible."
     head = arm.pose.bones["head 1"]
-    for f, tilt in ((1, 0.0), (36, 0.0), (37, 0.16)):          # the head cocks to one side with the second step
+    for f, tilt in ((1, 0.0), (47, 0.0), (48, 0.16)):          # the head cocks to one side with the second step
         bpy.context.scene.frame_set(f)
         head.rotation_quaternion = head.rotation_quaternion.copy() @ Quaternion((0, 1, 0), tilt)
         head.keyframe_insert("rotation_quaternion", frame=f)
