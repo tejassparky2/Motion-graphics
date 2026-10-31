@@ -40,7 +40,7 @@ from channels.ww2.kit.core import (H, LABEL, SLAB, STENCIL, TITLE, W, back_out, 
 from channels.ww2.ep01.timing import Timing, package_span  # noqa: E402
 from channels.ww2.kit import fx, heads, props, setpieces, sets, things  # noqa: E402
 from channels.ww2.kit.maps import SPLIT_1939, Map  # noqa: E402
-from channels.ww2.kit.stick import Figure  # noqa: E402
+from channels.ww2.kit.stick import Figure, crowd  # noqa: E402
 
 T = Timing()
 A, B = package_span("P2", T)
@@ -260,10 +260,19 @@ PL.city("Warsaw", S34A[0] + 0.3)
 PL.label("POLAND", S34A[0], lonlat=(19.6, 51.1), size=46)
 
 # ---------------------------------------------------------------- figures and props (built once)
+def PAPER_WAVE(t):
+    """Chamberlain's paper held up at head height and waved: the elbow stays well bent (STYLE.md: no straight-arm
+    gesture at any angle)."""
+    k = math.sin(t * 2 * math.pi * 1.4)
+    return dict(sh_n=1.75 + 0.12 * k, el_n=1.35 - 0.1 * k, sh_f=-0.1, el_f=0.2, turn=0.5, prop_up=1.0,
+                face={"mouth": "smile"})
+
+
+
 SHRUG_B = Figure(nation="britain", x=780, y=985, scale=1.25, facing=1, seed=4)
 SHRUG_F = Figure(nation="france", x=1150, y=985, scale=1.25, facing=-1, seed=5)
-CHAMBERLAIN = Figure(leader="chamberlain", prop="paper", x=0, y=0, scale=0.95, facing=-1, seed=6)
-PLANE = things.Airliner(x=1250, y=900, scale=1.35, facing=-1, door=1.0)
+CHAMBERLAIN = Figure(leader="chamberlain", prop="paper", x=0, y=0, scale=0.6, facing=-1, seed=6)
+PLANE = things.Airliner(x=640, y=980, scale=3.2, facing=-1, door=1.0)        # big: we see its rear door and steps
 TABLE = things.LongTable(x=W / 2, y=1060, scale=1.0, length=1700, chairs=5)
 ROOM = sets.SigningRoom(kind="office")
 SKY = sets.Sky(mode="day", horizon=820, clouds=4)
@@ -272,7 +281,7 @@ FIGHTERS = [props.Fighter(x=0, y=0, scale=0.55, facing=1, side="germany") for _ 
 STUKA = props.DiveBomber(x=0, y=0, scale=0.8, facing=1, side="germany")
 FIELD_TANK = props.Tank(x=0, y=0, scale=1.25, facing=1, side="germany")
 PAPER = things.Paper(x=W / 2, y=H / 2 - 20, scale=1.6, lines=("PEACE FOR", "OUR TIME"))
-NEWS = things.Newspaper(x=W / 2 + 330, y=H / 2 + 60, scale=1.35, masthead="THE DAILY HERALD",
+NEWS = things.Newspaper(x=W / 2 + 470, y=H / 2 + 90, scale=1.35, masthead="EXTRA!",
                         headline="POLAND INVADED", sub="Tanks and planes strike at dawn", date="SEPT 1939")
 
 
@@ -465,15 +474,15 @@ def shot27(cr, t, t0, t1):
     cr.set_source_rgba(*col("khaki"))
     cr.fill()
     cr.save()
-    push(cr, t, t0, t1, 1.08, cx=PLANE.o["x"] - 200, cy=600)
+    push(cr, t, t0, t1, 1.08, cx=1120, cy=520)
     PLANE.draw(cr, t)
     dx, dy = things.Airliner.door_xy()
     sc = PLANE.o["scale"]
     x, y = PLANE.o["x"] - dx * sc, PLANE.o["y"] + dy * sc                # the door sill (mirrored: facing -1)
-    CHAMBERLAIN.draw(cr, t, track=[(t0, "stand"), (t0 + 0.6, "hold_paper"), (t0 + 1.2, "wave"), (t1, "wave")],
-                     move=[(t0, x, y)])
+    CHAMBERLAIN.draw(cr, t, track=[(t0, "stand"), (t0 + 0.6, PAPER_WAVE), (t1, PAPER_WAVE)], move=[(t0, x, y)])
     cr.restore()
-    setpieces.cheering_crowd(cr, t, 0, W, 900, 1100, n=30, scale=0.42, hats=True)
+    crowd(cr, t, 30, 0, W, 900, 1060, scale=0.42, pose="cheer", seed=3, poses=["cheer", "cheer", "stand"],
+          tone="ink_soft")                                             # both arms up or standing: never one straight arm
     a = ease_out(seg(t, at(27, 0.62), at(27, 0.62) + 0.4))             # PEACE FOR OUR TIME on "peace"
     if a > 0:
         cr.rectangle(0, 70, W * a, 130)
@@ -566,17 +575,17 @@ def shot35(cr, t, t0, t1):
     push(cr, t, t0, t1, 1.05)
     NEWS.draw(cr, t, spin=ease_out(seg(t, t0, t0 + 0.6)))
     cr.restore()
-    slam(cr, t, t0 + 0.55, "BLITZKRIEG", W / 2 - 160, H / 2 - 120, size=170, color="alert", tilt=-0.06)
+    slam(cr, t, t0 + 0.55, "BLITZKRIEG", W / 2 - 300, H / 2 - 190, size=170, color="alert", tilt=-0.06)
     s1 = T.sentence("35", 1).start if len(_sentences(35)) > 1 else at(35, 0.6)
     u = ease_out(seg(t, s1, s1 + 0.45))
     if u > 0:                                                           # "Lightning war.": the underline and a bolt
-        x0, x1, y = W / 2 - 700, W / 2 + 380, H / 2 + 10
+        x0, x1, y = W / 2 - 820, W / 2 + 200, H / 2 - 70
         cr.rectangle(x0, y, (x1 - x0) * u, 22)
         cr.set_source_rgba(*col("ink"))
         cr.fill()
-        text(cr, "LIGHTNING WAR", W / 2 - 160, H / 2 + 120, 84, font=STENCIL, color="ink", alpha=u, outline="cream",
+        text(cr, "LIGHTNING WAR", W / 2 - 300, H / 2 + 50, 84, font=STENCIL, color="ink", alpha=u, outline="cream",
              outline_w=12, spacing=10)
-        bolt(cr, W / 2 + 470, H / 2 - 300, 1.0, u)
+        bolt(cr, W / 2 - 860, H / 2 + 60, 0.8, u)
 
 
 def _sentences(i):
