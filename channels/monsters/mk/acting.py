@@ -4,7 +4,10 @@ shot gets clear key poses, anticipation and overshoot on 2s, blinking and living
 Kai (the hero rig from hero.load; face keys on the "head" mesh):
     lie(rig, hips, head_dir)                 LYING_V3: on his back, a knee bent, an arm flung over his head, grass
                                              tufts and a contact shadow (from above he never reads as standing)
-    expression(rig, name, f0, f1=None)       surprised / fear / angry / joy / neutral / terror / deadpan (snaps on)
+    expression(rig, name, f0, f1=None)       surprised / fear / angry / joy / neutral / terror / deadpan / dazed /
+                                             thinking / realise / realised (snaps on)
+    face_keys(rig, f, **keys)                single face keys, layered
+    lips(rig, f0, f1)                        whispered lips on 3s, layered
     blink(rig, f0, f1)                       a blink every 2-4 s, layered over any expression
     look_at(rig, target, f0, f1)             eyes on a world point, with small darts
 Easing and moves:
@@ -73,7 +76,11 @@ EXPR = {                                      # the line's face, from hero.blend
     "joy": {"face_happy": 1.0},
     "deadpan": {"eye_zitome": 0.7},
     "dazed": {"eye_zitome": 0.4, "eye_brow_up": 0.3, "mouse_open": 0.2},
+    "thinking": {"eye_open": 0.4, "eye_brow_up": 0.4},
+    "realise": {"eye_zitome": 0.5, "eye_brow_down": 0.3},
+    "realised": {"eye_zitome": 0.85, "eye_brow_down": 0.6},
 }
+_LIPS = ("lip_a", "lip_o", "lip_u", "mouth_short")
 _LAYERED = ("eye_close", "look_up", "look_down", "look_left", "look_right")   # blink() and look_at() own these
 
 
@@ -117,6 +124,31 @@ def expression(rig, name, f0, f1=None, value=1.0):
     if f1 is not None:
         for k in keys:
             _key(k, f1, 0.0)
+
+
+def face_keys(rig, f, **keys):
+    """Key just these face keys at frame f (CONSTANT), leaving every other key as it is (layered, unlike
+    kai_face/hero.face which reset the whole face)."""
+    if rig.get("standin"):
+        return
+    for k, v in keys.items():
+        _key(k, f, v)
+
+
+def lips(rig, f0, f1, seed=3, amount=0.45):
+    """Whispered lips on 3s from f0 to f1 (small a/o/u shapes and closed beats), keying only the lip keys, so the
+    expression, blinks and looks underneath stay."""
+    if rig.get("standin"):
+        return
+    rnd = random.Random(seed)
+    f = f0
+    while f < f1:
+        lip = rnd.choice(("lip_a", "lip_o", "lip_u", None))
+        for k in _LIPS:
+            _key(k, f, (amount if k == lip else 0.0) if lip else (1.0 if k == "mouth_short" else 0.0))
+        f += 3
+    for k in _LIPS:
+        _key(k, f1, 1.0 if k == "mouth_short" else 0.0)
 
 
 def blink(rig, f0, f1, every=(48, 96), seed=1, at=()):
