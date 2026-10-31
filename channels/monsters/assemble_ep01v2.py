@@ -1,6 +1,7 @@
 """Episode 1 v2 picture assembler: shot mp4s in, the silent 720x1280 picture out.
 
-    FPS=24 python channels/monsters/assemble_ep01v2.py [--animatic] [--check] [--out PATH]
+    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama] [--animatic] [--check]
+                                                       [--shots DIR] [--out PATH]
 
 - Every shot in channels/monsters/ep01v2/timing.json comes from out/monsters/ep01v2/shots/<SHOT>.mp4, conformed
   to its exact frame count: the tail handle is trimmed, and a short shot holds its last frame (with a warning).
@@ -33,9 +34,13 @@ from motion.engine import FPS, H, W, cairo  # noqa: E402
 from motion.polish import text_width  # noqa: E402
 
 TIMING = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
-SHOTS = os.path.join(ROOT, "out", "monsters", "ep01v2", "shots")
-OUT = os.path.join(ROOT, "out", "monsters", "ep01v2", "picture.mp4")
-SHEET = os.path.join(ROOT, "out", "monsters", "ep01v2", "picture_sheet.jpg")
+# Two cuts of the same episode (same timing, voice, captions and hook): the 3D one and the diorama 2.5D one
+# (channels/monsters/DIORAMA_EP01.md). Each has its own shots folder, output and caption placements.
+VERSIONS = {"ep01v2": os.path.join(ROOT, "out", "monsters", "ep01v2"),
+            "diorama": os.path.join(ROOT, "out", "monsters", "diorama")}
+SHOTS = os.path.join(VERSIONS["ep01v2"], "shots")
+OUT = os.path.join(VERSIONS["ep01v2"], "picture.mp4")
+SHEET = os.path.join(VERSIONS["ep01v2"], "picture_sheet.jpg")
 
 # The repo's output hygiene (render.py CLEAN), video only: no container metadata, no encoder tags, no x264 SEI.
 CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
@@ -49,7 +54,12 @@ NO_CAPTIONS = {"S15"}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
 CAP_SIZE = 60
 CAP_MAX_W = 560              # clear of the right rail
-CAP_Y_SHOT = {"S01": 940, "S02": 940, "S14": 150, "S16": 210, "S18": 145, "S19": 640, "S24": 748}            # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
+# Per-version, per-shot caption baselines where the 71% band would cover a face or the subject.
+CAP_Y_VERSION = {
+    "ep01v2": {"S01": 940, "S02": 940, "S14": 150, "S16": 210, "S18": 145, "S19": 640, "S24": 748},
+    "diorama": {},           # set per shot as the diorama shots land (their framings differ)
+}
+CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
 S02_WHITE = (0.85, 0.60)     # the rewind's closing flash stays dimmer than the snap (the episode's brightest moment)
@@ -230,14 +240,22 @@ def draw_hook(cr):
 
 # ---------------------------------------------------------------- main
 def main():
-    global SHOTS
+    global SHOTS, CAP_Y_SHOT
     ap = argparse.ArgumentParser()
     ap.add_argument("--animatic", action="store_true")
     ap.add_argument("--check", action="store_true")
-    ap.add_argument("--out", default=OUT)
-    ap.add_argument("--shots", default=None, help="folder of shot mp4s (default out/monsters/ep01v2/shots)")
+    ap.add_argument("--version", choices=sorted(VERSIONS), default="ep01v2",
+                    help="which cut: its shots/ folder, picture.mp4 and caption placements")
+    ap.add_argument("--out", default=None, help="default out/monsters/<version>/picture.mp4")
+    ap.add_argument("--shots", default=None, help="default out/monsters/<version>/shots")
     a = ap.parse_args()
-    SHOTS = a.shots or SHOTS
+    if a.version == "ep01v2" and a.shots and os.path.abspath(a.shots).startswith(VERSIONS["diorama"]):
+        a.version = "diorama"                                  # --shots out/monsters/diorama/shots picks the diorama cut
+    SHOTS = a.shots or os.path.join(VERSIONS[a.version], "shots")
+    a.out = a.out or os.path.join(VERSIONS[a.version], "picture.mp4")
+    CAP_Y_SHOT = CAP_Y_VERSION[a.version]
+    if a.check:
+        print(f"version {a.version}: shots {os.path.relpath(SHOTS, ROOT)} -> {os.path.relpath(a.out, ROOT)}")
 
     tj = json.load(open(TIMING))
     assert tj["fps"] == FPS, f"timing.json is {tj['fps']} fps, the canvas is {FPS}"
