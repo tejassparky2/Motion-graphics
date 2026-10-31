@@ -29,7 +29,7 @@ from mathutils import Vector
 from channels.monsters.diorama import bgqrs as d16
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
-from channels.monsters.mk import anim, butcherbird, diorama, hero, meadow, tuftwing
+from channels.monsters.mk import anim, butcherbird, diorama, hero, look, meadow, tuftwing
 
 TAIL = 12
 CUT = {"S22": 45, "S23": 70, "S24": 85}                  # ep01v2/TIMING.md
@@ -136,6 +136,28 @@ def s22():
 
 
 # ------------------------------------------------------------------------------------------------------------- S23
+def _soft_shadow(rig, offset, tone="#24583f", opacity=0.82, soften=7.0):
+    """The bird's giant shadow for the diorama: moved out over the open grass (as helper5's 3D insert does), but in the
+    scene's cool shadow tone (the trees' shadows on this grass) with a soft painted edge, so from above it reads as a
+    shadow and not as a hole in the ground."""
+    from scipy import ndimage
+    sh = rig["shadow"]
+    bpy.context.view_layer.update()
+    mw = sh.matrix_world.copy()
+    mw.translation += Vector(offset)
+    sh.matrix_world = mw
+    nt = sh.data.materials[0].node_tree
+    tex = next(nd for nd in nt.nodes if nd.type == "TEX_IMAGE")
+    em = next(nd for nd in nt.nodes if nd.type == "EMISSION")
+    em.inputs[0].default_value = look.hexc(tone)
+    res = tex.image.size[0]
+    a = ndimage.gaussian_filter(tuftwing.shadow_alpha(res), soften) * opacity / 0.72
+    rgba = np.ones((res, res, 4), np.float32)
+    rgba[..., 3] = np.clip(a, 0, 1)
+    tex.image.pixels.foreach_set(rgba.ravel())
+    tex.image.pack()
+
+
 def s23():
     n = CUT["S23"] + TAIL
     diorama.setup()
@@ -156,7 +178,7 @@ def s23():
     h5._rage_light(bird, 32, perch.z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
     pond = Vector((diorama.MAP["pond"][0], diorama.MAP["pond"][1], 0.0))
     reach = (pond - Vector((perch.x, perch.y, 0))).normalized() * 6.5      # the shadow lies out toward the pond
-    h5._deep_shadow(bird, (reach.x, reach.y, 0.0))
+    _soft_shadow(bird, (reach.x, reach.y, 0.0))
     anim.blink(bird, 29)
     _twos(tuftwing._animated(bird))
     sc = bpy.context.scene
