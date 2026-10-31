@@ -1,0 +1,2176 @@
+{
+ "fps": 24,
+ "total": 825.237,
+ "estimated": true,
+ "chapters": [
+  {
+   "id": "C0",
+   "title": "Cold open",
+   "start": 0.0,
+   "end": 43.961162790697685,
+   "card": null
+  },
+  {
+   "id": "C1",
+   "title": "The broken peace",
+   "start": 43.961162790697685,
+   "end": 193.6346511627908,
+   "card": [
+    43.961162790697685,
+    46.86116279069768
+   ]
+  },
+  {
+   "id": "C2",
+   "title": "Lightning war",
+   "start": 193.6346511627908,
+   "end": 326.1362790697677,
+   "card": [
+    193.6346511627908,
+    196.5346511627908
+   ]
+  },
+  {
+   "id": "C3",
+   "title": "The war goes global",
+   "start": 326.1362790697677,
+   "end": 425.12651162790723,
+   "card": [
+    326.1362790697677,
+    329.03627906976766
+   ]
+  },
+  {
+   "id": "C4",
+   "title": "The turning points",
+   "start": 425.12651162790723,
+   "end": 542.731162790698,
+   "card": [
+    425.12651162790723,
+    428.0265116279072
+   ]
+  },
+  {
+   "id": "C5",
+   "title": "The Holocaust",
+   "start": 542.731162790698,
+   "end": 594.4819069767444,
+   "card": [
+    542.731162790698,
+    545.631162790698
+   ]
+  },
+  {
+   "id": "C6",
+   "title": "Closing in",
+   "start": 594.4819069767444,
+   "end": 689.1512093023257,
+   "card": [
+    594.4819069767444,
+    597.3819069767444
+   ]
+  },
+  {
+   "id": "C7",
+   "title": "The end",
+   "start": 689.1512093023257,
+   "end": 758.351674418605,
+   "card": [
+    689.1512093023257,
+    692.0512093023257
+   ]
+  },
+  {
+   "id": "C8",
+   "title": "After the war",
+   "start": 758.351674418605,
+   "end": 825.2372558139538,
+   "card": [
+    758.351674418605,
+    761.2516744186049
+   ]
+  }
+ ],
+ "lines": [
+  {
+   "id": "1",
+   "text": "September 1st, 1939. 4:45 in the morning.",
+   "chapter": "C0",
+   "spoken": "September first, nineteen thirty-nine. Four forty-five in the morning.",
+   "sentences": [
+    {
+     "text": "September first, nineteen thirty-nine.",
+     "start": 0.6,
+     "end": 3.308139534883721
+    },
+    {
+     "text": "Four forty-five in the morning.",
+     "start": 3.728139534883721,
+     "end": 5.971162790697674
+    }
+   ],
+   "start": 0.6,
+   "end": 5.971162790697674
+  },
+  {
+   "id": "2",
+   "text": "A German battleship, on a so-called friendly visit to the port of Danzig, turns its guns toward a small Polish army post.",
+   "chapter": "C0",
+   "spoken": "A German battleship, on a so-called friendly visit to the port of Danzig, turns its guns toward a small Polish army post.",
+   "sentences": [
+    {
+     "text": "A German battleship, on a so-called friendly visit to the port of Danzig, turns its guns toward a small Polish army post.",
+     "start": 6.591162790697674,
+     "end": 14.415581395348838
+    }
+   ],
+   "start": 6.591162790697674,
+   "end": 14.415581395348838
+  },
+  {
+   "id": "3",
+   "text": "And fires.",
+   "chapter": "C0",
+   "spoken": "And fires.",
+   "sentences": [
+    {
+     "text": "And fires.",
+     "start": 15.385581395348838,
+     "end": 16.23325581395349
+    }
+   ],
+   "start": 15.385581395348838,
+   "end": 16.23325581395349
+  },
+  {
+   "id": "4",
+   "text": "Over the next six years, this war will spread to almost every corner of the world.",
+   "chapter": "C0",
+   "spoken": "Over the next six years, this war will spread to almost every corner of the world.",
+   "sentences": [
+    {
+     "text": "Over the next six years, this war will spread to almost every corner of the world.",
+     "start": 17.95325581395349,
+     "end": 22.986976744186048
+    }
+   ],
+   "start": 17.95325581395349,
+   "end": 22.986976744186048
+  },
+  {
+   "id": "5",
+   "text": "It will kill somewhere between sixty and eighty-five million people.",
+   "chapter": "C0",
+   "spoken": "It will kill somewhere between sixty and eighty-five million people.",
+   "sentences": [
+    {
+     "text": "It will kill somewhere between sixty and eighty-five million people.",
+     "start": 23.60697674418605,
+     "end": 28.408139534883723
+    }
+   ],
+   "start": 23.60697674418605,
+   "end": 28.408139534883723
+  },
+  {
+   "id": "6",
+   "text": "And it will end with a new kind of weapon, so powerful that one bomb can destroy a whole city.",
+   "chapter": "C0",
+   "spoken": "And it will end with a new kind of weapon, so powerful that one bomb can destroy a whole city.",
+   "sentences": [
+    {
+     "text": "And it will end with a new kind of weapon, so powerful that one bomb can destroy a whole city.",
+     "start": 29.028139534883724,
+     "end": 35.45720930232559
+    }
+   ],
+   "start": 29.028139534883724,
+   "end": 35.45720930232559
+  },
+  {
+   "id": "7",
+   "text": "So how did the world get here, just twenty years after the war that was supposed to end all wars?",
+   "chapter": "C0",
+   "spoken": "So how did the world get here, just twenty years after the war that was supposed to end all wars?",
+   "sentences": [
+    {
+     "text": "So how did the world get here, just twenty years after the war that was supposed to end all wars?",
+     "start": 36.97720930232559,
+     "end": 42.94116279069768
+    }
+   ],
+   "start": 36.97720930232559,
+   "end": 42.94116279069768
+  },
+  {
+   "id": "8",
+   "text": "Rewind to 1919.",
+   "chapter": "C1",
+   "spoken": "Rewind to nineteen nineteen.",
+   "sentences": [
+    {
+     "text": "Rewind to nineteen nineteen.",
+     "start": 46.86116279069768,
+     "end": 49.104186046511636
+    }
+   ],
+   "start": 46.86116279069768,
+   "end": 49.104186046511636
+  },
+  {
+   "id": "9",
+   "text": "World War One is over, and Germany has lost.",
+   "chapter": "C1",
+   "spoken": "World War One is over, and Germany has lost.",
+   "sentences": [
+    {
+     "text": "World War One is over, and Germany has lost.",
+     "start": 49.72418604651163,
+     "end": 52.89744186046512
+    }
+   ],
+   "start": 49.72418604651163,
+   "end": 52.89744186046512
+  },
+  {
+   "id": "10",
+   "text": "At the Treaty of Versailles, the winners make Germany accept responsibility for the war, give up land, shrink its army and pay huge sums of money.",
+   "chapter": "C1",
+   "spoken": "At the Treaty of Versailles, the winners make Germany accept responsibility for the war, give up land, shrink its army and pay huge sums of money.",
+   "sentences": [
+    {
+     "text": "At the Treaty of Versailles, the winners make Germany accept responsibility for the war, give up land, shrink its army and pay huge sums of money.",
+     "start": 53.51744186046512,
+     "end": 63.66744186046512
+    }
+   ],
+   "start": 53.51744186046512,
+   "end": 63.66744186046512
+  },
+  {
+   "id": "11",
+   "text": "Many Germans feel humiliated.",
+   "chapter": "C1",
+   "spoken": "Many Germans feel humiliated.",
+   "sentences": [
+    {
+     "text": "Many Germans feel humiliated.",
+     "start": 64.78744186046512,
+     "end": 67.03046511627907
+    }
+   ],
+   "start": 64.78744186046512,
+   "end": 67.03046511627907
+  },
+  {
+   "id": "12",
+   "text": "Then, in 1929, the American stock market crashes, and the Great Depression spreads around the world.",
+   "chapter": "C1",
+   "spoken": "Then, in nineteen twenty-nine, the American stock market crashes, and the Great Depression spreads around the world.",
+   "sentences": [
+    {
+     "text": "Then, in nineteen twenty-nine, the American stock market crashes, and the Great Depression spreads around the world.",
+     "start": 67.65046511627908,
+     "end": 74.77720930232559
+    }
+   ],
+   "start": 67.65046511627908,
+   "end": 74.77720930232559
+  },
+  {
+   "id": "13",
+   "text": "In Germany, millions lose their jobs.",
+   "chapter": "C1",
+   "spoken": "In Germany, millions lose their jobs.",
+   "sentences": [
+    {
+     "text": "In Germany, millions lose their jobs.",
+     "start": 75.39720930232559,
+     "end": 77.87279069767443
+    }
+   ],
+   "start": 75.39720930232559,
+   "end": 77.87279069767443
+  },
+  {
+   "id": "14",
+   "text": "Angry, hungry people start listening to a man who promises to restore Germany's pride, and who blames Jews and other minorities for the country's problems.",
+   "chapter": "C1",
+   "spoken": "Angry, hungry people start listening to a man who promises to restore Germany's pride, and who blames Jews and other minorities for the country's problems.",
+   "sentences": [
+    {
+     "text": "Angry, hungry people start listening to a man who promises to restore Germany's pride, and who blames Jews and other minorities for the country's problems.",
+     "start": 78.49279069767444,
+     "end": 88.87534883720932
+    }
+   ],
+   "start": 78.49279069767444,
+   "end": 88.87534883720932
+  },
+  {
+   "id": "15",
+   "text": "His name is Adolf Hitler.",
+   "chapter": "C1",
+   "spoken": "His name is Adolf Hitler.",
+   "sentences": [
+    {
+     "text": "His name is Adolf Hitler.",
+     "start": 89.49534883720932,
+     "end": 91.50581395348838
+    }
+   ],
+   "start": 89.49534883720932,
+   "end": 91.50581395348838
+  },
+  {
+   "id": "16",
+   "text": "In January 1933, he becomes Germany's chancellor, and within months he turns the country into a dictatorship.",
+   "chapter": "C1",
+   "spoken": "In January nineteen thirty-three, he becomes Germany's chancellor, and within months he turns the country into a dictatorship.",
+   "sentences": [
+    {
+     "text": "In January nineteen thirty-three, he becomes Germany's chancellor, and within months he turns the country into a dictatorship.",
+     "start": 92.92581395348839,
+     "end": 101.4479069767442
+    }
+   ],
+   "start": 92.92581395348839,
+   "end": 101.4479069767442
+  },
+  {
+   "id": "17",
+   "text": "He's not the only one with big ambitions.",
+   "chapter": "C1",
+   "spoken": "He's not the only one with big ambitions.",
+   "sentences": [
+    {
+     "text": "He's not the only one with big ambitions.",
+     "start": 102.06790697674421,
+     "end": 105.00860465116281
+    }
+   ],
+   "start": 102.06790697674421,
+   "end": 105.00860465116281
+  },
+  {
+   "id": "18",
+   "text": "In Italy, the dictator Benito Mussolini dreams of a new Roman Empire, and invades Ethiopia in 1935.",
+   "chapter": "C1",
+   "spoken": "In Italy, the dictator Benito Mussolini dreams of a new Roman Empire, and invades Ethiopia in nineteen thirty-five.",
+   "sentences": [
+    {
+     "text": "In Italy, the dictator Benito Mussolini dreams of a new Roman Empire, and invades Ethiopia in nineteen thirty-five.",
+     "start": 105.62860465116282,
+     "end": 114.84837209302329
+    }
+   ],
+   "start": 105.62860465116282,
+   "end": 114.84837209302329
+  },
+  {
+   "id": "19",
+   "text": "In Asia, Japan's army seizes Manchuria in 1931, then launches a full-scale war on China in 1937.",
+   "chapter": "C1",
+   "spoken": "In Asia, Japan's army seizes Manchuria in nineteen thirty-one, then launches a full-scale war on China in nineteen thirty-seven.",
+   "sentences": [
+    {
+     "text": "In Asia, Japan's army seizes Manchuria in nineteen thirty-one, then launches a full-scale war on China in nineteen thirty-seven.",
+     "start": 115.46837209302329,
+     "end": 124.68813953488376
+    }
+   ],
+   "start": 115.46837209302329,
+   "end": 124.68813953488376
+  },
+  {
+   "id": "20",
+   "text": "Hitler starts small.",
+   "chapter": "C1",
+   "spoken": "Hitler starts small.",
+   "sentences": [
+    {
+     "text": "Hitler starts small.",
+     "start": 125.30813953488376,
+     "end": 126.38837209302329
+    }
+   ],
+   "start": 125.30813953488376,
+   "end": 126.38837209302329
+  },
+  {
+   "id": "21",
+   "text": "He rebuilds the army, far beyond what the treaty allowed.",
+   "chapter": "C1",
+   "spoken": "He rebuilds the army, far beyond what the treaty allowed.",
+   "sentences": [
+    {
+     "text": "He rebuilds the army, far beyond what the treaty allowed.",
+     "start": 127.0083720930233,
+     "end": 130.64674418604656
+    }
+   ],
+   "start": 127.0083720930233,
+   "end": 130.64674418604656
+  },
+  {
+   "id": "22",
+   "text": "In 1936, he sends troops into the Rhineland, a zone that was supposed to stay free of soldiers.",
+   "chapter": "C1",
+   "spoken": "In nineteen thirty-six, he sends troops into the Rhineland, a zone that was supposed to stay free of soldiers.",
+   "sentences": [
+    {
+     "text": "In nineteen thirty-six, he sends troops into the Rhineland, a zone that was supposed to stay free of soldiers.",
+     "start": 131.26674418604657,
+     "end": 138.3934883720931
+    }
+   ],
+   "start": 131.26674418604657,
+   "end": 138.3934883720931
+  },
+  {
+   "id": "23",
+   "text": "Britain and France do nothing.",
+   "chapter": "C1",
+   "spoken": "Britain and France do nothing.",
+   "sentences": [
+    {
+     "text": "Britain and France do nothing.",
+     "start": 139.0134883720931,
+     "end": 141.02395348837217
+    }
+   ],
+   "start": 139.0134883720931,
+   "end": 141.02395348837217
+  },
+  {
+   "id": "24",
+   "text": "In 1938, he takes over Austria.",
+   "chapter": "C1",
+   "spoken": "In nineteen thirty-eight, he takes over Austria.",
+   "sentences": [
+    {
+     "text": "In nineteen thirty-eight, he takes over Austria.",
+     "start": 141.64395348837218,
+     "end": 145.04976744186055
+    }
+   ],
+   "start": 141.64395348837218,
+   "end": 145.04976744186055
+  },
+  {
+   "id": "25",
+   "text": "Then he demands part of Czechoslovakia.",
+   "chapter": "C1",
+   "spoken": "Then he demands part of Czechoslovakia.",
+   "sentences": [
+    {
+     "text": "Then he demands part of Czechoslovakia.",
+     "start": 145.66976744186056,
+     "end": 148.37790697674427
+    }
+   ],
+   "start": 145.66976744186056,
+   "end": 148.37790697674427
+  },
+  {
+   "id": "26",
+   "text": "At a meeting in Munich, Britain and France agree, hoping this will be his last demand.",
+   "chapter": "C1",
+   "spoken": "At a meeting in Munich, Britain and France agree, hoping this will be his last demand.",
+   "sentences": [
+    {
+     "text": "At a meeting in Munich, Britain and France agree, hoping this will be his last demand.",
+     "start": 148.99790697674428,
+     "end": 154.4967441860466
+    }
+   ],
+   "start": 148.99790697674428,
+   "end": 154.4967441860466
+  },
+  {
+   "id": "27",
+   "text": "The British Prime Minister, Neville Chamberlain, flies home and promises \"peace for our time\".",
+   "chapter": "C1",
+   "spoken": "The British Prime Minister, Neville Chamberlain, flies home and promises \"peace for our time\".",
+   "sentences": [
+    {
+     "text": "The British Prime Minister, Neville Chamberlain, flies home and promises \"peace for our time\".",
+     "start": 155.11674418604662,
+     "end": 161.54581395348848
+    }
+   ],
+   "start": 155.11674418604662,
+   "end": 161.54581395348848
+  },
+  {
+   "id": "28",
+   "text": "Less than six months later, Hitler seizes what's left of Czechoslovakia anyway.",
+   "chapter": "C1",
+   "spoken": "Less than six months later, Hitler seizes what's left of Czechoslovakia anyway.",
+   "sentences": [
+    {
+     "text": "Less than six months later, Hitler seizes what's left of Czechoslovakia anyway.",
+     "start": 162.16581395348848,
+     "end": 167.19953488372104
+    }
+   ],
+   "start": 162.16581395348848,
+   "end": 167.19953488372104
+  },
+  {
+   "id": "29",
+   "text": "Then, in August 1939, comes the biggest shock.",
+   "chapter": "C1",
+   "spoken": "Then, in August nineteen thirty-nine, comes the biggest shock.",
+   "sentences": [
+    {
+     "text": "Then, in August nineteen thirty-nine, comes the biggest shock.",
+     "start": 168.51953488372104,
+     "end": 172.62302325581405
+    }
+   ],
+   "start": 168.51953488372104,
+   "end": 172.62302325581405
+  },
+  {
+   "id": "30",
+   "text": "Hitler makes a deal with his sworn enemy, Joseph Stalin, the dictator of the Soviet Union.",
+   "chapter": "C1",
+   "spoken": "Hitler makes a deal with his sworn enemy, Joseph Stalin, the dictator of the Soviet Union.",
+   "sentences": [
+    {
+     "text": "Hitler makes a deal with his sworn enemy, Joseph Stalin, the dictator of the Soviet Union.",
+     "start": 173.24302325581405,
+     "end": 179.43953488372102
+    }
+   ],
+   "start": 173.24302325581405,
+   "end": 179.43953488372102
+  },
+  {
+   "id": "31",
+   "text": "They promise not to attack each other.",
+   "chapter": "C1",
+   "spoken": "They promise not to attack each other.",
+   "sentences": [
+    {
+     "text": "They promise not to attack each other.",
+     "start": 180.05953488372103,
+     "end": 182.76767441860474
+    }
+   ],
+   "start": 180.05953488372103,
+   "end": 182.76767441860474
+  },
+  {
+   "id": "32",
+   "text": "And in secret, they agree to split Poland and Eastern Europe between them.",
+   "chapter": "C1",
+   "spoken": "And in secret, they agree to split Poland and Eastern Europe between them.",
+   "sentences": [
+    {
+     "text": "And in secret, they agree to split Poland and Eastern Europe between them.",
+     "start": 183.38767441860475,
+     "end": 188.18883720930242
+    }
+   ],
+   "start": 183.38767441860475,
+   "end": 188.18883720930242
+  },
+  {
+   "id": "33",
+   "text": "Nine days later, the guns at Danzig open fire.",
+   "chapter": "C1",
+   "spoken": "Nine days later, the guns at Danzig open fire.",
+   "sentences": [
+    {
+     "text": "Nine days later, the guns at Danzig open fire.",
+     "start": 189.6088372093024,
+     "end": 193.01465116279078
+    }
+   ],
+   "start": 189.6088372093024,
+   "end": 193.01465116279078
+  },
+  {
+   "id": "34",
+   "text": "Germany smashes into Poland with tanks, planes and fast-moving troops.",
+   "chapter": "C2",
+   "spoken": "Germany smashes into Poland with tanks, planes and fast-moving troops.",
+   "sentences": [
+    {
+     "text": "Germany smashes into Poland with tanks, planes and fast-moving troops.",
+     "start": 196.5346511627908,
+     "end": 200.8706976744187
+    }
+   ],
+   "start": 196.5346511627908,
+   "end": 200.8706976744187
+  },
+  {
+   "id": "35",
+   "text": "Newspapers call it Blitzkrieg. Lightning war.",
+   "chapter": "C2",
+   "spoken": "Newspapers call it Blitzkrieg. Lightning war.",
+   "sentences": [
+    {
+     "text": "Newspapers call it Blitzkrieg.",
+     "start": 201.4906976744187,
+     "end": 203.2686046511629
+    },
+    {
+     "text": "Lightning war.",
+     "start": 203.68860465116288,
+     "end": 204.53627906976752
+    }
+   ],
+   "start": 201.4906976744187,
+   "end": 204.53627906976752
+  },
+  {
+   "id": "36",
+   "text": "Two days later, Britain and France declare war on Germany.",
+   "chapter": "C2",
+   "spoken": "Two days later, Britain and France declare war on Germany.",
+   "sentences": [
+    {
+     "text": "Two days later, Britain and France declare war on Germany.",
+     "start": 205.8562790697675,
+     "end": 209.95976744186052
+    }
+   ],
+   "start": 205.8562790697675,
+   "end": 209.95976744186052
+  },
+  {
+   "id": "37",
+   "text": "On September 17th, the Soviet Union invades Poland from the east.",
+   "chapter": "C2",
+   "spoken": "On September seventeenth, the Soviet Union invades Poland from the east.",
+   "sentences": [
+    {
+     "text": "On September seventeenth, the Soviet Union invades Poland from the east.",
+     "start": 210.57976744186053,
+     "end": 215.3809302325582
+    }
+   ],
+   "start": 210.57976744186053,
+   "end": 215.3809302325582
+  },
+  {
+   "id": "38",
+   "text": "Within five weeks, Poland is defeated and divided.",
+   "chapter": "C2",
+   "spoken": "Within five weeks, Poland is defeated and divided.",
+   "sentences": [
+    {
+     "text": "Within five weeks, Poland is defeated and divided.",
+     "start": 216.0009302325582,
+     "end": 219.63930232558147
+    }
+   ],
+   "start": 216.0009302325582,
+   "end": 219.63930232558147
+  },
+  {
+   "id": "39",
+   "text": "Then, in the west, almost nothing happens.",
+   "chapter": "C2",
+   "spoken": "Then, in the west, almost nothing happens.",
+   "sentences": [
+    {
+     "text": "Then, in the west, almost nothing happens.",
+     "start": 220.25930232558147,
+     "end": 222.7348837209303
+    }
+   ],
+   "start": 220.25930232558147,
+   "end": 222.7348837209303
+  },
+  {
+   "id": "40",
+   "text": "For months, the armies just sit and wait. People call it the Phoney War.",
+   "chapter": "C2",
+   "spoken": "For months, the armies just sit and wait. People call it the Phoney War.",
+   "sentences": [
+    {
+     "text": "For months, the armies just sit and wait.",
+     "start": 223.3548837209303,
+     "end": 225.59790697674427
+    },
+    {
+     "text": "People call it the Phoney War.",
+     "start": 226.01790697674426,
+     "end": 228.02837209302334
+    }
+   ],
+   "start": 223.3548837209303,
+   "end": 228.02837209302334
+  },
+  {
+   "id": "41",
+   "text": "In April 1940, Hitler strikes again, invading Denmark and Norway.",
+   "chapter": "C2",
+   "spoken": "In April nineteen forty, Hitler strikes again, invading Denmark and Norway.",
+   "sentences": [
+    {
+     "text": "In April nineteen forty, Hitler strikes again, invading Denmark and Norway.",
+     "start": 228.64837209302334,
+     "end": 233.9146511627908
+    }
+   ],
+   "start": 228.64837209302334,
+   "end": 233.9146511627908
+  },
+  {
+   "id": "42",
+   "text": "Then, on May 10th, Germany attacks the Netherlands, Belgium, Luxembourg and France.",
+   "chapter": "C2",
+   "spoken": "Then, on May tenth, Germany attacks the Netherlands, Belgium, Luxembourg and France.",
+   "sentences": [
+    {
+     "text": "Then, on May tenth, Germany attacks the Netherlands, Belgium, Luxembourg and France.",
+     "start": 234.5346511627908,
+     "end": 239.56837209302336
+    }
+   ],
+   "start": 234.5346511627908,
+   "end": 239.56837209302336
+  },
+  {
+   "id": "43",
+   "text": "France has built a giant wall of forts along the German border, called the Maginot Line.",
+   "chapter": "C2",
+   "spoken": "France has built a giant wall of forts along the German border, called the Maginot Line.",
+   "sentences": [
+    {
+     "text": "France has built a giant wall of forts along the German border, called the Maginot Line.",
+     "start": 240.18837209302336,
+     "end": 245.91976744186056
+    }
+   ],
+   "start": 240.18837209302336,
+   "end": 245.91976744186056
+  },
+  {
+   "id": "44",
+   "text": "But the main German tank force goes around it, through the thick Ardennes forest, where the French believed tanks couldn't pass.",
+   "chapter": "C2",
+   "spoken": "But the main German tank force goes around it, through the thick Ardennes forest, where the French believed tanks couldn't pass.",
+   "sentences": [
+    {
+     "text": "But the main German tank force goes around it, through the thick Ardennes forest, where the French believed tanks couldn't pass.",
+     "start": 246.53976744186056,
+     "end": 253.66651162790708
+    }
+   ],
+   "start": 246.53976744186056,
+   "end": 253.66651162790708
+  },
+  {
+   "id": "45",
+   "text": "In just ten days, German tanks reach the English Channel.",
+   "chapter": "C2",
+   "spoken": "In just ten days, German tanks reach the English Channel.",
+   "sentences": [
+    {
+     "text": "In just ten days, German tanks reach the English Channel.",
+     "start": 254.2865116279071,
+     "end": 257.45976744186055
+    }
+   ],
+   "start": 254.2865116279071,
+   "end": 257.45976744186055
+  },
+  {
+   "id": "46",
+   "text": "Hundreds of thousands of British and French soldiers are trapped on the beaches at Dunkirk.",
+   "chapter": "C2",
+   "spoken": "Hundreds of thousands of British and French soldiers are trapped on the beaches at Dunkirk.",
+   "sentences": [
+    {
+     "text": "Hundreds of thousands of British and French soldiers are trapped on the beaches at Dunkirk.",
+     "start": 258.07976744186055,
+     "end": 263.5786046511629
+    }
+   ],
+   "start": 258.07976744186055,
+   "end": 263.5786046511629
+  },
+  {
+   "id": "47",
+   "text": "Britain sends everything that floats. Warships, ferries, fishing boats, even small pleasure yachts.",
+   "chapter": "C2",
+   "spoken": "Britain sends everything that floats. Warships, ferries, fishing boats, even small pleasure yachts.",
+   "sentences": [
+    {
+     "text": "Britain sends everything that floats.",
+     "start": 264.1986046511629,
+     "end": 266.44162790697686
+    },
+    {
+     "text": "Warships, ferries, fishing boats, even small pleasure yachts.",
+     "start": 266.8616279069769,
+     "end": 270.2674418604652
+    }
+   ],
+   "start": 264.1986046511629,
+   "end": 270.2674418604652
+  },
+  {
+   "id": "48",
+   "text": "In about nine days, more than three hundred and thirty thousand soldiers are carried back to Britain.",
+   "chapter": "C2",
+   "spoken": "In about nine days, more than three hundred and thirty thousand soldiers are carried back to Britain.",
+   "sentences": [
+    {
+     "text": "In about nine days, more than three hundred and thirty thousand soldiers are carried back to Britain.",
+     "start": 270.88744186046523,
+     "end": 277.3165116279071
+    }
+   ],
+   "start": 270.88744186046523,
+   "end": 277.3165116279071
+  },
+  {
+   "id": "49",
+   "text": "But France is finished.",
+   "chapter": "C2",
+   "spoken": "But France is finished.",
+   "sentences": [
+    {
+     "text": "But France is finished.",
+     "start": 277.9365116279071,
+     "end": 279.7144186046513
+    }
+   ],
+   "start": 277.9365116279071,
+   "end": 279.7144186046513
+  },
+  {
+   "id": "50",
+   "text": "On June 22nd, France signs an armistice.",
+   "chapter": "C2",
+   "spoken": "On June twenty-second, France signs an armistice.",
+   "sentences": [
+    {
+     "text": "On June twenty-second, France signs an armistice.",
+     "start": 281.13441860465133,
+     "end": 284.77279069767457
+    }
+   ],
+   "start": 281.13441860465133,
+   "end": 284.77279069767457
+  },
+  {
+   "id": "51",
+   "text": "Hitler makes them sign it in the very same railway carriage where Germany signed the armistice in 1918.",
+   "chapter": "C2",
+   "spoken": "Hitler makes them sign it in the very same railway carriage where Germany signed the armistice in nineteen eighteen.",
+   "sentences": [
+    {
+     "text": "Hitler makes them sign it in the very same railway carriage where Germany signed the armistice in nineteen eighteen.",
+     "start": 285.39279069767457,
+     "end": 293.9148837209304
+    }
+   ],
+   "start": 285.39279069767457,
+   "end": 293.9148837209304
+  },
+  {
+   "id": "52",
+   "text": "Now Britain and its Commonwealth stand almost alone.",
+   "chapter": "C2",
+   "spoken": "Now Britain and its Commonwealth stand almost alone.",
+   "sentences": [
+    {
+     "text": "Now Britain and its Commonwealth stand almost alone.",
+     "start": 294.5348837209304,
+     "end": 297.94069767441874
+    }
+   ],
+   "start": 294.5348837209304,
+   "end": 297.94069767441874
+  },
+  {
+   "id": "53",
+   "text": "Its new Prime Minister, Winston Churchill, refuses to make peace.",
+   "chapter": "C2",
+   "spoken": "Its new Prime Minister, Winston Churchill, refuses to make peace.",
+   "sentences": [
+    {
+     "text": "Its new Prime Minister, Winston Churchill, refuses to make peace.",
+     "start": 298.56069767441875,
+     "end": 303.12930232558153
+    }
+   ],
+   "start": 298.56069767441875,
+   "end": 303.12930232558153
+  },
+  {
+   "id": "54",
+   "text": "So the German air force tries to destroy Britain's Royal Air Force, to clear the way for an invasion.",
+   "chapter": "C2",
+   "spoken": "So the German air force tries to destroy Britain's Royal Air Force, to clear the way for an invasion.",
+   "sentences": [
+    {
+     "text": "So the German air force tries to destroy Britain's Royal Air Force, to clear the way for an invasion.",
+     "start": 303.74930232558154,
+     "end": 309.94581395348854
+    }
+   ],
+   "start": 303.74930232558154,
+   "end": 309.94581395348854
+  },
+  {
+   "id": "55",
+   "text": "This is the Battle of Britain.",
+   "chapter": "C2",
+   "spoken": "This is the Battle of Britain.",
+   "sentences": [
+    {
+     "text": "This is the Battle of Britain.",
+     "start": 310.56581395348854,
+     "end": 312.5762790697676
+    }
+   ],
+   "start": 310.56581395348854,
+   "end": 312.5762790697676
+  },
+  {
+   "id": "56",
+   "text": "But Britain has a chain of radar stations that can see German planes coming.",
+   "chapter": "C2",
+   "spoken": "But Britain has a chain of radar stations that can see German planes coming.",
+   "sentences": [
+    {
+     "text": "But Britain has a chain of radar stations that can see German planes coming.",
+     "start": 313.79627906976765,
+     "end": 318.5974418604653
+    }
+   ],
+   "start": 313.79627906976765,
+   "end": 318.5974418604653
+  },
+  {
+   "id": "57",
+   "text": "By autumn, the invasion is called off, and German bombers pound Britain's cities at night.",
+   "chapter": "C2",
+   "spoken": "By autumn, the invasion is called off, and German bombers pound Britain's cities at night.",
+   "sentences": [
+    {
+     "text": "By autumn, the invasion is called off, and German bombers pound Britain's cities at night.",
+     "start": 319.2174418604653,
+     "end": 324.71627906976767
+    }
+   ],
+   "start": 319.2174418604653,
+   "end": 324.71627906976767
+  },
+  {
+   "id": "58",
+   "text": "Then Hitler makes the biggest gamble of the war.",
+   "chapter": "C3",
+   "spoken": "Then Hitler makes the biggest gamble of the war.",
+   "sentences": [
+    {
+     "text": "Then Hitler makes the biggest gamble of the war.",
+     "start": 329.03627906976766,
+     "end": 332.2095348837211
+    }
+   ],
+   "start": 329.03627906976766,
+   "end": 332.2095348837211
+  },
+  {
+   "id": "59",
+   "text": "On June 22nd, 1941, he breaks his deal with Stalin and invades the Soviet Union.",
+   "chapter": "C3",
+   "spoken": "On June twenty-second, nineteen forty-one, he breaks his deal with Stalin and invades the Soviet Union.",
+   "sentences": [
+    {
+     "text": "On June twenty-second, nineteen forty-one, he breaks his deal with Stalin and invades the Soviet Union.",
+     "start": 332.8295348837211,
+     "end": 339.9562790697676
+    }
+   ],
+   "start": 332.8295348837211,
+   "end": 339.9562790697676
+  },
+  {
+   "id": "60",
+   "text": "More than three million soldiers attack, along a front from the Baltic Sea to the Black Sea.",
+   "chapter": "C3",
+   "spoken": "More than three million soldiers attack, along a front from the Baltic Sea to the Black Sea.",
+   "sentences": [
+    {
+     "text": "More than three million soldiers attack, along a front from the Baltic Sea to the Black Sea.",
+     "start": 340.5762790697676,
+     "end": 346.07511627906996
+    }
+   ],
+   "start": 340.5762790697676,
+   "end": 346.07511627906996
+  },
+  {
+   "id": "61",
+   "text": "It's called Operation Barbarossa.",
+   "chapter": "C3",
+   "spoken": "It's called Operation Barbarossa.",
+   "sentences": [
+    {
+     "text": "It's called Operation Barbarossa.",
+     "start": 346.69511627906996,
+     "end": 349.4032558139537
+    }
+   ],
+   "start": 346.69511627906996,
+   "end": 349.4032558139537
+  },
+  {
+   "id": "62",
+   "text": "At first, it works.",
+   "chapter": "C3",
+   "spoken": "At first, it works.",
+   "sentences": [
+    {
+     "text": "At first, it works.",
+     "start": 350.0232558139537,
+     "end": 351.10348837209324
+    }
+   ],
+   "start": 350.0232558139537,
+   "end": 351.10348837209324
+  },
+  {
+   "id": "63",
+   "text": "Millions of Soviet soldiers are killed or captured, and by December, German troops are just outside Moscow.",
+   "chapter": "C3",
+   "spoken": "Millions of Soviet soldiers are killed or captured, and by December, German troops are just outside Moscow.",
+   "sentences": [
+    {
+     "text": "Millions of Soviet soldiers are killed or captured, and by December, German troops are just outside Moscow.",
+     "start": 351.72348837209324,
+     "end": 359.0827906976746
+    }
+   ],
+   "start": 351.72348837209324,
+   "end": 359.0827906976746
+  },
+  {
+   "id": "64",
+   "text": "Exhausted, short of supplies, and slowed by autumn mud, the Germans stall. Then winter arrives.",
+   "chapter": "C3",
+   "spoken": "Exhausted, short of supplies, and slowed by autumn mud, the Germans stall. Then winter arrives.",
+   "sentences": [
+    {
+     "text": "Exhausted, short of supplies, and slowed by autumn mud, the Germans stall.",
+     "start": 359.70279069767463,
+     "end": 364.0388372093025
+    },
+    {
+     "text": "Then winter arrives.",
+     "start": 364.45883720930254,
+     "end": 366.00418604651185
+    }
+   ],
+   "start": 359.70279069767463,
+   "end": 366.00418604651185
+  },
+  {
+   "id": "65",
+   "text": "Temperatures fall below minus thirty, and many German soldiers still don't have winter uniforms.",
+   "chapter": "C3",
+   "spoken": "Temperatures fall below minus thirty, and many German soldiers still don't have winter uniforms.",
+   "sentences": [
+    {
+     "text": "Temperatures fall below minus thirty, and many German soldiers still don't have winter uniforms.",
+     "start": 367.2241860465119,
+     "end": 373.8858139534886
+    }
+   ],
+   "start": 367.2241860465119,
+   "end": 373.8858139534886
+  },
+  {
+   "id": "66",
+   "text": "On December 5th, the Soviets counter-attack, and push the Germans back from Moscow.",
+   "chapter": "C3",
+   "spoken": "On December fifth, the Soviets counter-attack, and push the Germans back from Moscow.",
+   "sentences": [
+    {
+     "text": "On December fifth, the Soviets counter-attack, and push the Germans back from Moscow.",
+     "start": 374.5058139534886,
+     "end": 379.53953488372116
+    }
+   ],
+   "start": 374.5058139534886,
+   "end": 379.53953488372116
+  },
+  {
+   "id": "67",
+   "text": "Two days later, on the other side of the world, Japan attacks the American naval base at Pearl Harbor, in Hawaii.",
+   "chapter": "C3",
+   "spoken": "Two days later, on the other side of the world, Japan attacks the American naval base at Pearl Harbor, in Hawaii.",
+   "sentences": [
+    {
+     "text": "Two days later, on the other side of the world, Japan attacks the American naval base at Pearl Harbor, in Hawaii.",
+     "start": 380.15953488372116,
+     "end": 387.9839534883723
+    }
+   ],
+   "start": 380.15953488372116,
+   "end": 387.9839534883723
+  },
+  {
+   "id": "68",
+   "text": "Japan hopes to knock out the American fleet before America can fight back.",
+   "chapter": "C3",
+   "spoken": "Japan hopes to knock out the American fleet before America can fight back.",
+   "sentences": [
+    {
+     "text": "Japan hopes to knock out the American fleet before America can fight back.",
+     "start": 388.6039534883723,
+     "end": 394.10279069767466
+    }
+   ],
+   "start": 388.6039534883723,
+   "end": 394.10279069767466
+  },
+  {
+   "id": "69",
+   "text": "More than two thousand four hundred Americans are killed.",
+   "chapter": "C3",
+   "spoken": "More than two thousand four hundred Americans are killed.",
+   "sentences": [
+    {
+     "text": "More than two thousand four hundred Americans are killed.",
+     "start": 394.72279069767467,
+     "end": 398.8262790697677
+    }
+   ],
+   "start": 394.72279069767467,
+   "end": 398.8262790697677
+  },
+  {
+   "id": "70",
+   "text": "The next day, the United States declares war on Japan.",
+   "chapter": "C3",
+   "spoken": "The next day, the United States declares war on Japan.",
+   "sentences": [
+    {
+     "text": "The next day, the United States declares war on Japan.",
+     "start": 399.4462790697677,
+     "end": 403.3172093023258
+    }
+   ],
+   "start": 399.4462790697677,
+   "end": 403.3172093023258
+  },
+  {
+   "id": "71",
+   "text": "And on December 11th, Hitler declares war on the United States too.",
+   "chapter": "C3",
+   "spoken": "And on December eleventh, Hitler declares war on the United States too.",
+   "sentences": [
+    {
+     "text": "And on December eleventh, Hitler declares war on the United States too.",
+     "start": 403.9372093023258,
+     "end": 409.20348837209326
+    }
+   ],
+   "start": 403.9372093023258,
+   "end": 409.20348837209326
+  },
+  {
+   "id": "72",
+   "text": "Now it really is a world war.",
+   "chapter": "C3",
+   "spoken": "Now it really is a world war.",
+   "sentences": [
+    {
+     "text": "Now it really is a world war.",
+     "start": 409.82348837209327,
+     "end": 411.83395348837234
+    }
+   ],
+   "start": 409.82348837209327,
+   "end": 411.83395348837234
+  },
+  {
+   "id": "73",
+   "text": "On one side, the Axis: Germany, Italy and Japan.",
+   "chapter": "C3",
+   "spoken": "On one side, the Axis: Germany, Italy and Japan.",
+   "sentences": [
+    {
+     "text": "On one side, the Axis: Germany, Italy and Japan.",
+     "start": 413.3539534883723,
+     "end": 417.45744186046534
+    }
+   ],
+   "start": 413.3539534883723,
+   "end": 417.45744186046534
+  },
+  {
+   "id": "74",
+   "text": "On the other, the Allies: Britain, the Soviet Union, the United States, China and many more.",
+   "chapter": "C3",
+   "spoken": "On the other, the Allies: Britain, the Soviet Union, the United States, China and many more.",
+   "sentences": [
+    {
+     "text": "On the other, the Allies: Britain, the Soviet Union, the United States, China and many more.",
+     "start": 418.07744186046534,
+     "end": 424.50651162790723
+    }
+   ],
+   "start": 418.07744186046534,
+   "end": 424.50651162790723
+  },
+  {
+   "id": "75",
+   "text": "In early 1942, the Axis looks unstoppable.",
+   "chapter": "C4",
+   "spoken": "In early nineteen forty-two, the Axis looks unstoppable.",
+   "sentences": [
+    {
+     "text": "In early nineteen forty-two, the Axis looks unstoppable.",
+     "start": 428.0265116279072,
+     "end": 432.1300000000002
+    }
+   ],
+   "start": 428.0265116279072,
+   "end": 432.1300000000002
+  },
+  {
+   "id": "76",
+   "text": "Japan sweeps across Southeast Asia and the Pacific.",
+   "chapter": "C4",
+   "spoken": "Japan sweeps across Southeast Asia and the Pacific.",
+   "sentences": [
+    {
+     "text": "Japan sweeps across Southeast Asia and the Pacific.",
+     "start": 432.7500000000002,
+     "end": 436.1558139534886
+    }
+   ],
+   "start": 432.7500000000002,
+   "end": 436.1558139534886
+  },
+  {
+   "id": "77",
+   "text": "But American codebreakers have learned where Japan will strike next. A tiny island called Midway.",
+   "chapter": "C4",
+   "spoken": "But American codebreakers have learned where Japan will strike next. A tiny island called Midway.",
+   "sentences": [
+    {
+     "text": "But American codebreakers have learned where Japan will strike next.",
+     "start": 436.7758139534886,
+     "end": 441.80953488372114
+    },
+    {
+     "text": "A tiny island called Midway.",
+     "start": 442.22953488372116,
+     "end": 444.4725581395351
+    }
+   ],
+   "start": 436.7758139534886,
+   "end": 444.4725581395351
+  },
+  {
+   "id": "78",
+   "text": "On June 4th, 1942, American dive bombers find the Japanese aircraft carriers, and in about five minutes, three of them are on fire.",
+   "chapter": "C4",
+   "spoken": "On June fourth, nineteen forty-two, American dive bombers find the Japanese aircraft carriers, and in about five minutes, three of them are on fire.",
+   "sentences": [
+    {
+     "text": "On June fourth, nineteen forty-two, American dive bombers find the Japanese aircraft carriers, and in about five minutes, three of them are on fire.",
+     "start": 445.09255813953513,
+     "end": 455.7076744186049
+    }
+   ],
+   "start": 445.09255813953513,
+   "end": 455.7076744186049
+  },
+  {
+   "id": "79",
+   "text": "By the next morning, Japan has lost four aircraft carriers. And its navy never fully recovers.",
+   "chapter": "C4",
+   "spoken": "By the next morning, Japan has lost four aircraft carriers. And its navy never fully recovers.",
+   "sentences": [
+    {
+     "text": "By the next morning, Japan has lost four aircraft carriers.",
+     "start": 456.3276744186049,
+     "end": 459.73348837209323
+    },
+    {
+     "text": "And its navy never fully recovers.",
+     "start": 460.15348837209325,
+     "end": 462.861627906977
+    }
+   ],
+   "start": 456.3276744186049,
+   "end": 462.861627906977
+  },
+  {
+   "id": "80",
+   "text": "In North Africa, British and Commonwealth troops beat Germany's most famous general, Erwin Rommel, at El Alamein in Egypt.",
+   "chapter": "C4",
+   "spoken": "In North Africa, British and Commonwealth troops beat Germany's most famous general, Erwin Rommel, at El Alamein in Egypt.",
+   "sentences": [
+    {
+     "text": "In North Africa, British and Commonwealth troops beat Germany's most famous general, Erwin Rommel, at El Alamein in Egypt.",
+     "start": 464.181627906977,
+     "end": 472.23860465116303
+    }
+   ],
+   "start": 464.181627906977,
+   "end": 472.23860465116303
+  },
+  {
+   "id": "81",
+   "text": "But the biggest battle of all is in the Soviet Union, at a city named after Stalin himself. Stalingrad.",
+   "chapter": "C4",
+   "spoken": "But the biggest battle of all is in the Soviet Union, at a city named after Stalin himself. Stalingrad.",
+   "sentences": [
+    {
+     "text": "But the biggest battle of all is in the Soviet Union, at a city named after Stalin himself.",
+     "start": 472.85860465116303,
+     "end": 479.2876744186049
+    },
+    {
+     "text": "Stalingrad.",
+     "start": 479.70767441860494,
+     "end": 480.5553488372096
+    }
+   ],
+   "start": 472.85860465116303,
+   "end": 480.5553488372096
+  },
+  {
+   "id": "82",
+   "text": "From August 1942, the two sides fight for every street, every building, even every floor.",
+   "chapter": "C4",
+   "spoken": "From August nineteen forty-two, the two sides fight for every street, every building, even every floor.",
+   "sentences": [
+    {
+     "text": "From August nineteen forty-two, the two sides fight for every street, every building, even every floor.",
+     "start": 481.1753488372096,
+     "end": 488.3020930232561
+    }
+   ],
+   "start": 481.1753488372096,
+   "end": 488.3020930232561
+  },
+  {
+   "id": "83",
+   "text": "In November, the Soviets surround the entire German Sixth Army.",
+   "chapter": "C4",
+   "spoken": "In November, the Soviets surround the entire German Sixth Army.",
+   "sentences": [
+    {
+     "text": "In November, the Soviets surround the entire German Sixth Army.",
+     "start": 488.9220930232561,
+     "end": 493.258139534884
+    }
+   ],
+   "start": 488.9220930232561,
+   "end": 493.258139534884
+  },
+  {
+   "id": "84",
+   "text": "Hitler forbids it to retreat.",
+   "chapter": "C4",
+   "spoken": "Hitler forbids it to retreat.",
+   "sentences": [
+    {
+     "text": "Hitler forbids it to retreat.",
+     "start": 493.878139534884,
+     "end": 495.88860465116306
+    }
+   ],
+   "start": 493.878139534884,
+   "end": 495.88860465116306
+  },
+  {
+   "id": "85",
+   "text": "On February 2nd, 1943, the last German troops surrender.",
+   "chapter": "C4",
+   "spoken": "On February second, nineteen forty-three, the last German troops surrender.",
+   "sentences": [
+    {
+     "text": "On February second, nineteen forty-three, the last German troops surrender.",
+     "start": 496.50860465116307,
+     "end": 501.30976744186074
+    }
+   ],
+   "start": 496.50860465116307,
+   "end": 501.30976744186074
+  },
+  {
+   "id": "86",
+   "text": "Of the hundreds of thousands who were surrounded, only about ninety-one thousand are left to be taken prisoner.",
+   "chapter": "C4",
+   "spoken": "Of the hundreds of thousands who were surrounded, only about ninety-one thousand are left to be taken prisoner.",
+   "sentences": [
+    {
+     "text": "Of the hundreds of thousands who were surrounded, only about ninety-one thousand are left to be taken prisoner.",
+     "start": 502.52976744186077,
+     "end": 510.5867441860468
+    }
+   ],
+   "start": 502.52976744186077,
+   "end": 510.5867441860468
+  },
+  {
+   "id": "87",
+   "text": "From now on, in the east, Germany is mostly retreating.",
+   "chapter": "C4",
+   "spoken": "From now on, in the east, Germany is mostly retreating.",
+   "sentences": [
+    {
+     "text": "From now on, in the east, Germany is mostly retreating.",
+     "start": 511.2067441860468,
+     "end": 514.8451162790701
+    }
+   ],
+   "start": 511.2067441860468,
+   "end": 514.8451162790701
+  },
+  {
+   "id": "88",
+   "text": "That summer, at Kursk, the Soviets win one of the biggest tank battles in history.",
+   "chapter": "C4",
+   "spoken": "That summer, at Kursk, the Soviets win one of the biggest tank battles in history.",
+   "sentences": [
+    {
+     "text": "That summer, at Kursk, the Soviets win one of the biggest tank battles in history.",
+     "start": 515.4651162790701,
+     "end": 520.7313953488375
+    }
+   ],
+   "start": 515.4651162790701,
+   "end": 520.7313953488375
+  },
+  {
+   "id": "89",
+   "text": "At sea, German submarines called U-boats try to starve Britain by sinking its supply ships.",
+   "chapter": "C4",
+   "spoken": "At sea, German submarines called U-boats try to starve Britain by sinking its supply ships.",
+   "sentences": [
+    {
+     "text": "At sea, German submarines called U-boats try to starve Britain by sinking its supply ships.",
+     "start": 521.3513953488375,
+     "end": 527.3153488372096
+    }
+   ],
+   "start": 521.3513953488375,
+   "end": 527.3153488372096
+  },
+  {
+   "id": "90",
+   "text": "But British codebreakers at Bletchley Park, including Alan Turing, building on the work of Polish codebreakers, crack the German Enigma cipher.",
+   "chapter": "C4",
+   "spoken": "But British codebreakers at Bletchley Park, including Alan Turing, building on the work of Polish codebreakers, crack the German Enigma cipher.",
+   "sentences": [
+    {
+     "text": "But British codebreakers at Bletchley Park, including Alan Turing, building on the work of Polish codebreakers, crack the German Enigma cipher.",
+     "start": 527.9353488372096,
+     "end": 537.1551162790701
+    }
+   ],
+   "start": 527.9353488372096,
+   "end": 537.1551162790701
+  },
+  {
+   "id": "91",
+   "text": "By the middle of 1943, the U-boats are losing.",
+   "chapter": "C4",
+   "spoken": "By the middle of nineteen forty-three, the U-boats are losing.",
+   "sentences": [
+    {
+     "text": "By the middle of nineteen forty-three, the U-boats are losing.",
+     "start": 537.7751162790701,
+     "end": 542.111162790698
+    }
+   ],
+   "start": 537.7751162790701,
+   "end": 542.111162790698
+  },
+  {
+   "id": "92",
+   "text": "While armies fight on the battlefields, something far darker is happening behind the front lines.",
+   "chapter": "C5",
+   "spoken": "While armies fight on the battlefields, something far darker is happening behind the front lines.",
+   "sentences": [
+    {
+     "text": "While armies fight on the battlefields, something far darker is happening behind the front lines.",
+     "start": 545.631162790698,
+     "end": 551.8276744186049
+    }
+   ],
+   "start": 545.631162790698,
+   "end": 551.8276744186049
+  },
+  {
+   "id": "93",
+   "text": "Nazi Germany and its collaborators are carrying out the Holocaust. A plan to murder every Jewish person in Europe.",
+   "chapter": "C5",
+   "spoken": "Nazi Germany and its collaborators are carrying out the Holocaust. A plan to murder every Jewish person in Europe.",
+   "sentences": [
+    {
+     "text": "Nazi Germany and its collaborators are carrying out the Holocaust.",
+     "start": 552.8196744186049,
+     "end": 557.8533953488375
+    },
+    {
+     "text": "A plan to murder every Jewish person in Europe.",
+     "start": 558.5253953488375,
+     "end": 562.3963255813957
+    }
+   ],
+   "start": 552.8196744186049,
+   "end": 562.3963255813957
+  },
+  {
+   "id": "94",
+   "text": "Jews are forced into crowded ghettos, shot in mass killings, or sent by train to death camps like Auschwitz.",
+   "chapter": "C5",
+   "spoken": "Jews are forced into crowded ghettos, shot in mass killings, or sent by train to death camps like Auschwitz.",
+   "sentences": [
+    {
+     "text": "Jews are forced into crowded ghettos, shot in mass killings, or sent by train to death camps like Auschwitz.",
+     "start": 563.3883255813956,
+     "end": 569.8173953488375
+    }
+   ],
+   "start": 563.3883255813956,
+   "end": 569.8173953488375
+  },
+  {
+   "id": "95",
+   "text": "Six million Jewish men, women and children are murdered.",
+   "chapter": "C5",
+   "spoken": "Six million Jewish men, women and children are murdered.",
+   "sentences": [
+    {
+     "text": "Six million Jewish men, women and children are murdered.",
+     "start": 570.8093953488375,
+     "end": 574.6803255813957
+    }
+   ],
+   "start": 570.8093953488375,
+   "end": 574.6803255813957
+  },
+  {
+   "id": "96",
+   "text": "Millions of others are killed too, including Roma and Sinti people, disabled people, Polish civilians and Soviet prisoners of war.",
+   "chapter": "C5",
+   "spoken": "Millions of others are killed too, including Roma and Sinti people, disabled people, Polish civilians and Soviet prisoners of war.",
+   "sentences": [
+    {
+     "text": "Millions of others are killed too, including Roma and Sinti people, disabled people, Polish civilians and Soviet prisoners of war.",
+     "start": 577.6723255813956,
+     "end": 586.6595348837212
+    }
+   ],
+   "start": 577.6723255813956,
+   "end": 586.6595348837212
+  },
+  {
+   "id": "97",
+   "text": "It is one of the worst crimes in human history.",
+   "chapter": "C5",
+   "spoken": "It is one of the worst crimes in human history.",
+   "sentences": [
+    {
+     "text": "It is one of the worst crimes in human history.",
+     "start": 587.6515348837212,
+     "end": 591.2899069767444
+    }
+   ],
+   "start": 587.6515348837212,
+   "end": 591.2899069767444
+  },
+  {
+   "id": "98",
+   "text": "In July 1943, the Allies land in Sicily.",
+   "chapter": "C6",
+   "spoken": "In July nineteen forty-three, the Allies land in Sicily.",
+   "sentences": [
+    {
+     "text": "In July nineteen forty-three, the Allies land in Sicily.",
+     "start": 597.3819069767444,
+     "end": 601.4853953488374
+    }
+   ],
+   "start": 597.3819069767444,
+   "end": 601.4853953488374
+  },
+  {
+   "id": "99",
+   "text": "Mussolini is overthrown, and in September, Italy surrenders.",
+   "chapter": "C6",
+   "spoken": "Mussolini is overthrown, and in September, Italy surrenders.",
+   "sentences": [
+    {
+     "text": "Mussolini is overthrown, and in September, Italy surrenders.",
+     "start": 602.1053953488374,
+     "end": 606.6740000000002
+    }
+   ],
+   "start": 602.1053953488374,
+   "end": 606.6740000000002
+  },
+  {
+   "id": "100",
+   "text": "But German troops keep fighting in Italy almost until the very end.",
+   "chapter": "C6",
+   "spoken": "But German troops keep fighting in Italy almost until the very end.",
+   "sentences": [
+    {
+     "text": "But German troops keep fighting in Italy almost until the very end.",
+     "start": 607.2940000000002,
+     "end": 611.862604651163
+    }
+   ],
+   "start": 607.2940000000002,
+   "end": 611.862604651163
+  },
+  {
+   "id": "101",
+   "text": "Then comes the biggest invasion from the sea in history.",
+   "chapter": "C6",
+   "spoken": "Then comes the biggest invasion from the sea in history.",
+   "sentences": [
+    {
+     "text": "Then comes the biggest invasion from the sea in history.",
+     "start": 612.482604651163,
+     "end": 616.3535348837212
+    }
+   ],
+   "start": 612.482604651163,
+   "end": 616.3535348837212
+  },
+  {
+   "id": "102",
+   "text": "June 6th, 1944. D-Day.",
+   "chapter": "C6",
+   "spoken": "June sixth, nineteen forty-four. D-Day.",
+   "sentences": [
+    {
+     "text": "June sixth, nineteen forty-four.",
+     "start": 616.9735348837212,
+     "end": 619.2165581395351
+    },
+    {
+     "text": "D-Day.",
+     "start": 619.636558139535,
+     "end": 620.01911627907
+    }
+   ],
+   "start": 616.9735348837212,
+   "end": 620.01911627907
+  },
+  {
+   "id": "103",
+   "text": "Around one hundred and fifty-six thousand American, British, Canadian and other Allied troops land in Normandy, in France, by sea and by air.",
+   "chapter": "C6",
+   "spoken": "Around one hundred and fifty-six thousand American, British, Canadian and other Allied troops land in Normandy, in France, by sea and by air.",
+   "sentences": [
+    {
+     "text": "Around one hundred and fifty-six thousand American, British, Canadian and other Allied troops land in Normandy, in France, by sea and by air.",
+     "start": 621.53911627907,
+     "end": 630.9914418604653
+    }
+   ],
+   "start": 621.53911627907,
+   "end": 630.9914418604653
+  },
+  {
+   "id": "104",
+   "text": "On Omaha Beach, the fighting is brutal. But by nightfall, the Allies are ashore.",
+   "chapter": "C6",
+   "spoken": "On Omaha Beach, the fighting is brutal. But by nightfall, the Allies are ashore.",
+   "sentences": [
+    {
+     "text": "On Omaha Beach, the fighting is brutal.",
+     "start": 631.6114418604653,
+     "end": 634.319581395349
+    },
+    {
+     "text": "But by nightfall, the Allies are ashore.",
+     "start": 634.739581395349,
+     "end": 637.6802790697676
+    }
+   ],
+   "start": 631.6114418604653,
+   "end": 637.6802790697676
+  },
+  {
+   "id": "105",
+   "text": "Just over two weeks later, the Soviets launch their own giant attack, Operation Bagration, and destroy most of a whole German army group.",
+   "chapter": "C6",
+   "spoken": "Just over two weeks later, the Soviets launch their own giant attack, Operation Bagration, and destroy most of a whole German army group.",
+   "sentences": [
+    {
+     "text": "Just over two weeks later, the Soviets launch their own giant attack, Operation Bagration, and destroy most of a whole German army group.",
+     "start": 638.3002790697676,
+     "end": 646.8223720930234
+    }
+   ],
+   "start": 638.3002790697676,
+   "end": 646.8223720930234
+  },
+  {
+   "id": "106",
+   "text": "In August, Paris is liberated.",
+   "chapter": "C6",
+   "spoken": "In August, Paris is liberated.",
+   "sentences": [
+    {
+     "text": "In August, Paris is liberated.",
+     "start": 647.4423720930234,
+     "end": 649.9179534883723
+    }
+   ],
+   "start": 647.4423720930234,
+   "end": 649.9179534883723
+  },
+  {
+   "id": "107",
+   "text": "In December, Hitler launches his last big attack in the west, back through the Ardennes forest. The Battle of the Bulge.",
+   "chapter": "C6",
+   "spoken": "In December, Hitler launches his last big attack in the west, back through the Ardennes forest. The Battle of the Bulge.",
+   "sentences": [
+    {
+     "text": "In December, Hitler launches his last big attack in the west, back through the Ardennes forest.",
+     "start": 650.5379534883723,
+     "end": 656.2693488372095
+    },
+    {
+     "text": "The Battle of the Bulge.",
+     "start": 656.6893488372094,
+     "end": 658.4672558139536
+    }
+   ],
+   "start": 650.5379534883723,
+   "end": 658.4672558139536
+  },
+  {
+   "id": "108",
+   "text": "It fails.",
+   "chapter": "C6",
+   "spoken": "It fails.",
+   "sentences": [
+    {
+     "text": "It fails.",
+     "start": 659.0872558139536,
+     "end": 659.7023720930233
+    }
+   ],
+   "start": 659.0872558139536,
+   "end": 659.7023720930233
+  },
+  {
+   "id": "109",
+   "text": "In the Pacific, the Americans hop from island to island, closer and closer to Japan.",
+   "chapter": "C6",
+   "spoken": "In the Pacific, the Americans hop from island to island, closer and closer to Japan.",
+   "sentences": [
+    {
+     "text": "In the Pacific, the Americans hop from island to island, closer and closer to Japan.",
+     "start": 660.9223720930233,
+     "end": 666.8863255813955
+    }
+   ],
+   "start": 660.9223720930233,
+   "end": 666.8863255813955
+  },
+  {
+   "id": "109b",
+   "text": "In China, millions of soldiers have held down most of Japan's army since 1937. And in Burma, British and Indian troops drive Japan back.",
+   "chapter": "C6",
+   "spoken": "In China, millions of soldiers have held down most of Japan's army since nineteen thirty-seven. And in Burma, British and Indian troops drive Japan back.",
+   "sentences": [
+    {
+     "text": "In China, millions of soldiers have held down most of Japan's army since nineteen thirty-seven.",
+     "start": 667.5063255813955,
+     "end": 673.9353953488373
+    },
+    {
+     "text": "And in Burma, British and Indian troops drive Japan back.",
+     "start": 674.3553953488373,
+     "end": 677.9937674418605
+    }
+   ],
+   "start": 667.5063255813955,
+   "end": 677.9937674418605
+  },
+  {
+   "id": "110",
+   "text": "At Iwo Jima and Okinawa, the fighting is so fierce that American leaders fear invading Japan itself will cost enormous numbers of lives.",
+   "chapter": "C6",
+   "spoken": "At Iwo Jima and Okinawa, the fighting is so fierce that American leaders fear invading Japan itself will cost enormous numbers of lives.",
+   "sentences": [
+    {
+     "text": "At Iwo Jima and Okinawa, the fighting is so fierce that American leaders fear invading Japan itself will cost enormous numbers of lives.",
+     "start": 678.6137674418605,
+     "end": 688.5312093023257
+    }
+   ],
+   "start": 678.6137674418605,
+   "end": 688.5312093023257
+  },
+  {
+   "id": "111",
+   "text": "By late April 1945, Soviet troops are fighting in the streets of Berlin.",
+   "chapter": "C7",
+   "spoken": "By late April nineteen forty-five, Soviet troops are fighting in the streets of Berlin.",
+   "sentences": [
+    {
+     "text": "By late April nineteen forty-five, Soviet troops are fighting in the streets of Berlin.",
+     "start": 692.0512093023257,
+     "end": 698.0151627906978
+    }
+   ],
+   "start": 692.0512093023257,
+   "end": 698.0151627906978
+  },
+  {
+   "id": "112",
+   "text": "On April 30th, Hitler kills himself in his bunker.",
+   "chapter": "C7",
+   "spoken": "On April thirtieth, Hitler kills himself in his bunker.",
+   "sentences": [
+    {
+     "text": "On April thirtieth, Hitler kills himself in his bunker.",
+     "start": 698.6351627906978,
+     "end": 702.0409767441862
+    }
+   ],
+   "start": 698.6351627906978,
+   "end": 702.0409767441862
+  },
+  {
+   "id": "113",
+   "text": "A week later, Germany surrenders.",
+   "chapter": "C7",
+   "spoken": "A week later, Germany surrenders.",
+   "sentences": [
+    {
+     "text": "A week later, Germany surrenders.",
+     "start": 704.0609767441862,
+     "end": 706.536558139535
+    }
+   ],
+   "start": 704.0609767441862,
+   "end": 706.536558139535
+  },
+  {
+   "id": "114",
+   "text": "May 8th becomes Victory in Europe Day. In Moscow, it's May 9th.",
+   "chapter": "C7",
+   "spoken": "May eighth becomes Victory in Europe Day. In Moscow, it's May ninth.",
+   "sentences": [
+    {
+     "text": "May eighth becomes Victory in Europe Day.",
+     "start": 707.156558139535,
+     "end": 710.3298139534885
+    },
+    {
+     "text": "In Moscow, it's May ninth.",
+     "start": 710.7498139534885,
+     "end": 712.2951627906978
+    }
+   ],
+   "start": 707.156558139535,
+   "end": 712.2951627906978
+  },
+  {
+   "id": "115",
+   "text": "But Japan fights on.",
+   "chapter": "C7",
+   "spoken": "But Japan fights on.",
+   "sentences": [
+    {
+     "text": "But Japan fights on.",
+     "start": 712.9151627906978,
+     "end": 714.2279534883722
+    }
+   ],
+   "start": 712.9151627906978,
+   "end": 714.2279534883722
+  },
+  {
+   "id": "116",
+   "text": "On August 6th, 1945, an American bomber drops an atomic bomb on the city of Hiroshima.",
+   "chapter": "C7",
+   "spoken": "On August sixth, nineteen forty-five, an American bomber drops an atomic bomb on the city of Hiroshima.",
+   "sentences": [
+    {
+     "text": "On August sixth, nineteen forty-five, an American bomber drops an atomic bomb on the city of Hiroshima.",
+     "start": 714.8479534883722,
+     "end": 722.6723720930235
+    }
+   ],
+   "start": 714.8479534883722,
+   "end": 722.6723720930235
+  },
+  {
+   "id": "117",
+   "text": "Two days later, the Soviet Union declares war on Japan.",
+   "chapter": "C7",
+   "spoken": "Two days later, the Soviet Union declares war on Japan.",
+   "sentences": [
+    {
+     "text": "Two days later, the Soviet Union declares war on Japan.",
+     "start": 723.2923720930235,
+     "end": 727.1633023255816
+    }
+   ],
+   "start": 723.2923720930235,
+   "end": 727.1633023255816
+  },
+  {
+   "id": "118",
+   "text": "And the next day, a second atomic bomb destroys Nagasaki.",
+   "chapter": "C7",
+   "spoken": "And the next day, a second atomic bomb destroys Nagasaki.",
+   "sentences": [
+    {
+     "text": "And the next day, a second atomic bomb destroys Nagasaki.",
+     "start": 727.7833023255816,
+     "end": 731.8867906976747
+    }
+   ],
+   "start": 727.7833023255816,
+   "end": 731.8867906976747
+  },
+  {
+   "id": "119",
+   "text": "By the end of the year, the two bombs have killed as many as two hundred thousand people.",
+   "chapter": "C7",
+   "spoken": "By the end of the year, the two bombs have killed as many as two hundred thousand people.",
+   "sentences": [
+    {
+     "text": "By the end of the year, the two bombs have killed as many as two hundred thousand people.",
+     "start": 733.5067906976747,
+     "end": 739.2381860465118
+    }
+   ],
+   "start": 733.5067906976747,
+   "end": 739.2381860465118
+  },
+  {
+   "id": "120",
+   "text": "On August 15th, Emperor Hirohito tells his people on the radio that Japan will surrender.",
+   "chapter": "C7",
+   "spoken": "On August fifteenth, Emperor Hirohito tells his people on the radio that Japan will surrender.",
+   "sentences": [
+    {
+     "text": "On August fifteenth, Emperor Hirohito tells his people on the radio that Japan will surrender.",
+     "start": 741.4581860465119,
+     "end": 747.8872558139537
+    }
+   ],
+   "start": 741.4581860465119,
+   "end": 747.8872558139537
+  },
+  {
+   "id": "121",
+   "text": "And on September 2nd, 1945, aboard the battleship USS Missouri, the war is officially over.",
+   "chapter": "C7",
+   "spoken": "And on September second, nineteen forty-five, aboard the battleship U-S-S Missouri, the war is officially over.",
+   "sentences": [
+    {
+     "text": "And on September second, nineteen forty-five, aboard the battleship U-S-S Missouri, the war is officially over.",
+     "start": 748.5072558139537,
+     "end": 756.331674418605
+    }
+   ],
+   "start": 748.5072558139537,
+   "end": 756.331674418605
+  },
+  {
+   "id": "122",
+   "text": "World War Two is the deadliest war in human history.",
+   "chapter": "C8",
+   "spoken": "World War Two is the deadliest war in human history.",
+   "sentences": [
+    {
+     "text": "World War Two is the deadliest war in human history.",
+     "start": 761.2516744186049,
+     "end": 764.6574883720933
+    }
+   ],
+   "start": 761.2516744186049,
+   "end": 764.6574883720933
+  },
+  {
+   "id": "123",
+   "text": "The Soviet Union alone loses around twenty-seven million people.",
+   "chapter": "C8",
+   "spoken": "The Soviet Union alone loses around twenty-seven million people.",
+   "sentences": [
+    {
+     "text": "The Soviet Union alone loses around twenty-seven million people.",
+     "start": 765.2774883720933,
+     "end": 770.0786511627911
+    }
+   ],
+   "start": 765.2774883720933,
+   "end": 770.0786511627911
+  },
+  {
+   "id": "123b",
+   "text": "China loses more than fifteen million.",
+   "chapter": "C8",
+   "spoken": "China loses more than fifteen million.",
+   "sentences": [
+    {
+     "text": "China loses more than fifteen million.",
+     "start": 770.6986511627911,
+     "end": 773.4067906976748
+    }
+   ],
+   "start": 770.6986511627911,
+   "end": 773.4067906976748
+  },
+  {
+   "id": "124",
+   "text": "In total, somewhere between sixty and eighty-five million people die. Most of them civilians.",
+   "chapter": "C8",
+   "spoken": "In total, somewhere between sixty and eighty-five million people die. Most of them civilians.",
+   "sentences": [
+    {
+     "text": "In total, somewhere between sixty and eighty-five million people die.",
+     "start": 774.0267906976748,
+     "end": 779.0605116279073
+    },
+    {
+     "text": "Most of them civilians.",
+     "start": 779.4805116279073,
+     "end": 781.0258604651166
+    }
+   ],
+   "start": 774.0267906976748,
+   "end": 781.0258604651166
+  },
+  {
+   "id": "125",
+   "text": "Out of the ruins, the winners create the United Nations, to stop it from ever happening again.",
+   "chapter": "C8",
+   "spoken": "Out of the ruins, the winners create the United Nations, to stop it from ever happening again.",
+   "sentences": [
+    {
+     "text": "Out of the ruins, the winners create the United Nations, to stop it from ever happening again.",
+     "start": 782.6458604651166,
+     "end": 788.8423720930235
+    }
+   ],
+   "start": 782.6458604651166,
+   "end": 788.8423720930235
+  },
+  {
+   "id": "126",
+   "text": "Nazi leaders are put on trial at Nuremberg for their crimes, and Japanese leaders in Tokyo.",
+   "chapter": "C8",
+   "spoken": "Nazi leaders are put on trial at Nuremberg for their crimes, and Japanese leaders in Tokyo.",
+   "sentences": [
+    {
+     "text": "Nazi leaders are put on trial at Nuremberg for their crimes, and Japanese leaders in Tokyo.",
+     "start": 789.4623720930235,
+     "end": 795.8914418604654
+    }
+   ],
+   "start": 789.4623720930235,
+   "end": 795.8914418604654
+  },
+  {
+   "id": "127",
+   "text": "And the United States and the Soviet Union, allies just months before, become rivals in a new Cold War.",
+   "chapter": "C8",
+   "spoken": "And the United States and the Soviet Union, allies just months before, become rivals in a new Cold War.",
+   "sentences": [
+    {
+     "text": "And the United States and the Soviet Union, allies just months before, become rivals in a new Cold War.",
+     "start": 796.5114418604654,
+     "end": 803.6381860465119
+    }
+   ],
+   "start": 796.5114418604654,
+   "end": 803.6381860465119
+  },
+  {
+   "id": "128",
+   "text": "So here's the question historians still argue about.",
+   "chapter": "C8",
+   "spoken": "So here's the question historians still argue about.",
+   "sentences": [
+    {
+     "text": "So here's the question historians still argue about.",
+     "start": 804.2581860465119,
+     "end": 807.6640000000003
+    }
+   ],
+   "start": 804.2581860465119,
+   "end": 807.6640000000003
+  },
+  {
+   "id": "129",
+   "text": "When did Germany really lose the war?",
+   "chapter": "C8",
+   "spoken": "When did Germany really lose the war?",
+   "sentences": [
+    {
+     "text": "When did Germany really lose the war?",
+     "start": 808.2840000000003,
+     "end": 810.992139534884
+    }
+   ],
+   "start": 808.2840000000003,
+   "end": 810.992139534884
+  },
+  {
+   "id": "130",
+   "text": "Was it the day Hitler invaded the Soviet Union? The day America joined? Or in the frozen streets of Stalingrad?",
+   "chapter": "C8",
+   "spoken": "Was it the day Hitler invaded the Soviet Union? The day America joined? Or in the frozen streets of Stalingrad?",
+   "sentences": [
+    {
+     "text": "Was it the day Hitler invaded the Soviet Union?",
+     "start": 812.212139534884,
+     "end": 815.6179534883725
+    },
+    {
+     "text": "The day America joined?",
+     "start": 816.0379534883724,
+     "end": 818.0484186046515
+    },
+    {
+     "text": "Or in the frozen streets of Stalingrad?",
+     "start": 818.4684186046514,
+     "end": 820.9440000000003
+    }
+   ],
+   "start": 812.212139534884,
+   "end": 820.9440000000003
+  },
+  {
+   "id": "131",
+   "text": "Tell me your answer, and your reason, in the comments.",
+   "chapter": "C8",
+   "spoken": "Tell me your answer, and your reason, in the comments.",
+   "sentences": [
+    {
+     "text": "Tell me your answer, and your reason, in the comments.",
+     "start": 821.5640000000003,
+     "end": 824.7372558139538
+    }
+   ],
+   "start": 821.5640000000003,
+   "end": 824.7372558139538
+  }
+ ]
+}
