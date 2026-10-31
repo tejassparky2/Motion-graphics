@@ -27,7 +27,7 @@ from channels.monsters.ep01v2 import helper1 as h1               # his seated po
 from channels.monsters.mk import anim, hero, look, storm
 from channels.monsters.mk import pistolshrimp as ps
 
-V2 = {"S06": 41, "S08": 85}                                     # v2 counts: only a fallback until timing.json lands
+V2 = {"S06": 41, "S08": 85, "S12": 47}                                     # v2 counts: only a fallback until timing.json lands
 K = 0.48                                                        # the shrimp, big enough to read in a room shot
 
 
@@ -165,6 +165,8 @@ def s06():
         for f in (15, 17):
             o.hide_render = False
             o.keyframe_insert("hide_render", frame=f)
+        o.hide_render = True                                     # and gone from 18 (the 17 key replaced the off key)
+        o.keyframe_insert("hide_render", frame=18)
     flash = storm._overlay("s06_flash", (0.93, 0.97, 1.0, 1.0), 0.0)      # 2 near-white frames over everything
     fp = storm._screen_plane("s06_flash", cam, storm.D_WHITE, flash, storm._group(cam, "flash"))
     fp.visible_shadow = False
@@ -320,4 +322,12 @@ def s08():
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"], shrimp["root"]] + list(rig.get("cap", [])))
 
 
-SHOTS = {"S06": s06, "S08": s08}
+def s12():
+    """S12 "I was so thirsty." (47 frames, as v2): the v2 crawl to the pond (diorama/helper9.py), on the v3 island
+    (dressing=2 is the default now); an island shot, so it keeps the v1 look."""
+    info = v2.s12()
+    info["frames"] = _n("S12")
+    return info
+
+
+SHOTS = {"S06": s06, "S08": s08, "S12": s12}
