@@ -202,7 +202,12 @@ def blend(a, b, u):
     out = {}
     for k in set(a) | set(b):
         va, vb = a.get(k, REST.get(k)), b.get(k, REST.get(k))
-        if isinstance(va, (int, float)) and isinstance(vb, (int, float)):
+        num = (int, float)
+        if isinstance(va, num) and vb is None:                   # a key only one pose has ("aim", "flash", ...)
+            vb = 0.0                                             # blends from/to its neutral 0, never to None
+        elif isinstance(vb, num) and va is None:
+            va = 0.0
+        if isinstance(va, num) and isinstance(vb, num):
             out[k] = lerp(va, vb, u)
         elif k == "face":
             fa, fb = va or {}, vb or {}
