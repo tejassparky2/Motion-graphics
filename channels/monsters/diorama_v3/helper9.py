@@ -168,6 +168,7 @@ def s06():
     flash = storm._overlay("s06_flash", (0.93, 0.97, 1.0, 1.0), 0.0)      # 2 near-white frames over everything
     fp = storm._screen_plane("s06_flash", cam, storm.D_WHITE, flash, storm._group(cam, "flash"))
     fp.visible_shadow = False
+    fp.scale = (1.8, 1.8, 1.0)                                   # covers the lens-shifted frame edge to edge
     for f, a in ((13, 0.0), (14, 0.72), (15, 0.6), (16, 0.18), (17, 0.0)):
         storm._key_socket(storm._alpha(flash), f, a, "CONSTANT")
     R["flicker"]([20, 23, 26, 30, 34])

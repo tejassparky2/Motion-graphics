@@ -33,7 +33,9 @@ base.OUT = os.path.join(base.ROOT, "out", "monsters", "ep01v3")
 # picture beats (0-based frames in the cut); the shots keep v2's beats unless their owner says otherwise
 S04_SHUT, S05A_FLASH, S05B_TAPS = 19, 51, (29, 33)
 S07_SNAP, S07_CRACK = None, None   # None: on the word "snap" / just after it, until helper 2's v3 render gives frames
-S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN = 41, 43, 49, 79     # helper 10's v2 beats; confirm for the v3 staging
+# helper 10's v3 S15 (106 frames; the aim is held from f0): the finger opens wide f9, the SNAP and white flash f29,
+# impact frames f31-34, Kai thrown back f30-46 while the trees pop to dust from f31, he lands f47, the aftermath f77
+S15_OPEN, S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN, S15_LAND, S15_AFTER = 9, 29, 29, 31, 30, 47, 77
 S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 42, 62
 # the v3 staging pass (coordinator, 31 Oct 12:25; provisional until the shot owners confirm the frames)
 S06_FLASH = 13            # the strong near-white flash, 0-based f13-14 (helper 9; the crack on f13)
@@ -342,16 +344,19 @@ def build(timing, n, v):
     strike = c.f("S15", S15_STRIKE)
     amb(lambda d, s: base.meadow_wind(d, 70 + s), c.t("S15a"), strike, -34, 0.2, 0.0)
     hit(aim(0.9), c.word("l17", "looked"), -18)
+    open_t = c.f("S15", S15_OPEN)                                 # the claw strains open: a low creak to the snap
+    hit(aim(strike - open_t, 5)[: _n(strike - open_t)], open_t, -22)
     for k, d in enumerate((0.75, 0.35)):
-        hit(base.drip(k), strike - d, -22)
+        hit(base.drip(k), strike - d, -24)
     hit(sfx.snap(2), strike, 0)
-    hit(sfx.shockwave(), c.f("S15", S15_FLASH), 0)
+    hit(sfx.shockwave(), c.f("S15", S15_FLASH) + 0.02, 0)
+    hit(sfx.whoosh(1), c.f("S15", S15_BLOWN) - 0.05, -14)
     hit(sfx.erase(), c.f("S15", S15_DUST), -4)
     hit(base.ring_out(3.2), c.f("S15", S15_FLASH) + 0.3, -16)
-    hit(sfx.whoosh(1), c.f("S15", S15_BLOWN) - 0.15, -14)
+    hit(body_fall(1), c.f("S15", S15_LAND), -14)
 
-    # --- S15b: "It missed me by an inch." the smoking stump, dazed stars
-    amb(lambda d, s: base.crackle(d, 80 + s), c.t("S15b"), c.end("S15b"), -26, 0.3, 0.3)
+    # --- the aftermath (S15 f77) and S15b "It missed me by an inch.": smoking stumps, dazed stars
+    amb(lambda d, s: base.crackle(d, 80 + s), c.f("S15", S15_AFTER), c.end("S15b"), -26, 0.3, 0.3)
     hit(dazed(1.4), c.t("S15b", 0.1), -24)
 
     # --- S16-S19: quiet; the realisation; the held tense tone under the drying sun
