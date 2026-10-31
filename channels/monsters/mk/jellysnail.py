@@ -23,6 +23,7 @@ import random
 
 import bpy
 import numpy as np
+from mathutils import Matrix, Vector
 
 from . import anim, look, sdf
 from .puffshrimp import _empty, _parent, _sphere
@@ -168,6 +169,13 @@ def burn_trail(loc=(0, 0, 0), name="jsnail", length=4.2, n=6, seed=7):
     ember_m = look.flat(f"{name}_ember", hx(EMBER), 1.3)
     singed = look.paint(f"{name}_singed", hx("#5a4632"))
     root = _empty(f"{name}_trail", loc)
+    inv = Matrix.Translation(Vector(loc)).inverted()
+
+    def attach(o):
+        """Parent to the trail root, keeping the world position: the root only ever sits at `loc`, so its inverse is
+        known exactly (puffshrimp._parent reads matrix_world, which is stale until the depsgraph updates)."""
+        o.parent = root
+        o.matrix_parent_inverse = inv
     y0 = loc[1] + 1.55
 
     def path(t):
@@ -189,7 +197,7 @@ def burn_trail(loc=(0, 0, 0), name="jsnail", length=4.2, n=6, seed=7):
     me.materials.append(slime)
     rib = bpy.data.objects.new(f"{name}_slime", me)
     bpy.context.scene.collection.objects.link(rib)
-    _parent(rib, root)
+    attach(rib)
 
     holes, wisps = [], []
     for k in range(n):
@@ -201,7 +209,7 @@ def burn_trail(loc=(0, 0, 0), name="jsnail", length=4.2, n=6, seed=7):
         for o in (_disc(f"{name}_char{k}", (x, y), r * 1.6, char_m, z + 0.012, rnd),
                   _disc(f"{name}_ember{k}", (x, y), r * 1.15, ember_m, z + 0.014, rnd, rough=0.18),
                   _disc(f"{name}_hole{k}", (x, y), r, hole_m, z + 0.016, rnd, rough=0.15)):
-            _parent(o, root)
+            attach(o)
         for j in range(3):                                     # singed grass stubs at the rim
             a = rnd.uniform(0, 2 * math.pi)
             bpy.ops.mesh.primitive_cone_add(vertices=5, radius1=0.035, depth=0.12,
@@ -210,12 +218,15 @@ def burn_trail(loc=(0, 0, 0), name="jsnail", length=4.2, n=6, seed=7):
             st = bpy.context.object
             st.name = f"{name}_stub{k}_{j}"
             st.data.materials.append(singed)
-            _parent(st, root)
+            attach(st)
         for j in range(3):                                     # a thin column: puffs a third of a cycle apart
-            w = _sphere(f"{name}_wisp{k}_{j}", (x, y, z + 0.05), (1, 1, 1),
+            # built at the origin, then placed: _sphere's transform_apply also applies location (Blender's default),
+            # which would bake the position into the mesh and double it once smoke() keys the location
+            w = _sphere(f"{name}_wisp{k}_{j}", (0, 0, 0), (1, 1, 1),
                         look.fade(f"{name}_wisp_m{k}_{j}", hx(SMOKE), 0.0), 0, 12)
+            w.location = (x, y, z + 0.05)
             w.visible_shadow = False                           # smoke casts no shadow on the grass
-            _parent(w, root)
+            attach(w)
             wisps.append(dict(obj=w, base=(x, y, z), r=r, phase=(j * 13 + wr.randint(0, 39)) % 40,
                               drift=wr.uniform(-0.15, 0.15)))
         holes.append((x, y, r))
@@ -371,9 +382,9 @@ def smoke(trail, f0, period=40, strength=1.0, color=None, size=1.0, rise=1.0, le
         _cycle(o.data.materials[0].node_tree)
 
 
-def idle(rig, f0, f1, period=48, seed=2):
+def idle(rig, f0, f1, period=48, seed=2, step=3):
     """The foot ripple running forward, a slow breath and shell wobble, eye stalks bobbing out of step, and blinks,
-    all on 3s (anim.on_twos's default step); the trail keeps smoking on 1s."""
+    on `step`s (3 for acting; the diorama uses 2); the trail keeps smoking on 1s."""
     rnd = random.Random(seed)
     wl = 2 * rig["bodymesh"].modifiers["wave"].width
     _linear(rig["bodymesh"], 'modifiers["wave"].start_position_y', (f0, f1),
@@ -397,7 +408,7 @@ def idle(rig, f0, f1, period=48, seed=2):
     while f < f1 - 4:
         anim.blink(rig, f)
         f += rnd.randint(40, 70)
-    anim.on_twos([rig["body"], rig["bodymesh"], rig["shell"], *rig["stalks"], *rig["eyes"]])
+    anim.on_twos([rig["body"], rig["bodymesh"], rig["shell"], *rig["stalks"], *rig["eyes"]], step)
     if rig.get("trail"):
         smoke(rig["trail"], f0)
 
@@ -433,7 +444,7 @@ def pose(rig, f, kind="cute"):
     return p
 
 
-def hold(rig, f0, f1, kind="cute", bob=0.02, period=12):
+def hold(rig, f0, f1, kind="cute", bob=0.02, period=12, step=3):
     """One held pose from f0 to f1 with only a small breathing bob and stalk sway on 3s (short close shots, e.g. S14a:
     about 0.9 s); the trail keeps smoking on 1s."""
     p = pose(rig, f0, kind)
@@ -445,6 +456,6 @@ def hold(rig, f0, f1, kind="cute", bob=0.02, period=12):
             d = 0.05 if up else -0.03
             anim.key(s, "rotation_euler", f, (rx + d, 0.0, (sx * rz if spread else rz) + sx * d * 0.5))
         f, up = f + period // 2, not up
-    anim.on_twos([rig["body"], rig["shell"], *rig["stalks"], *rig["eyes"]])
+    anim.on_twos([rig["body"], rig["shell"], *rig["stalks"], *rig["eyes"]], step)
     if rig.get("trail"):
         smoke(rig["trail"], f0)
