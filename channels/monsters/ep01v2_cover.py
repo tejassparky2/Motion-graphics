@@ -2,6 +2,7 @@
 
     python channels/monsters/ep01v2_cover.py                      # the three candidates + a phone-grid preview
     python channels/monsters/ep01v2_cover.py S15 35 "ONE SNAP." "GONE."    # one cover: shot, frame in the shot, lines
+    python channels/monsters/ep01v2_cover.py --diorama    # the same from out/monsters/diorama/ -> diorama/cover.jpg
 
 The frame comes from the clean shot render out/monsters/ep01v2/shots/<SHOT>.mp4 when it exists (no captions or hook
 text burned in), else from out/monsters/ep01v2/picture.mp4 at the shot's first frame + `frame` (timing.json).
@@ -20,6 +21,7 @@ from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 EP = os.path.join(ROOT, "out", "monsters", "ep01v2")
+PICK_PATH = os.path.join(ROOT, "out", "monsters", "ep01v2_cover.jpg")
 W, H = 1080, 1920
 FONT = os.path.join(ROOT, "assets", "fonts", "LuckiestGuy-Regular.ttf")
 INK = (14, 18, 40)                                               # dark navy, as the anime line colour
@@ -99,11 +101,21 @@ def phone_grid(paths, out, w=160):
 
 
 def main(argv):
+    global EP, PICK_PATH
+    if "--diorama" in argv:                                      # the 2.5D version: same shots, same frames
+        argv = [a for a in argv if a != "--diorama"]
+        EP = os.path.join(ROOT, "out", "monsters", "diorama")
+        PICK_PATH = os.path.join(EP, "cover.jpg")
     if len(argv) >= 3:
         shot, f, words = argv[0], int(argv[1]), argv[2:]
         lines = [(w, HOT if k == len(words) - 1 else WHITE) for k, w in enumerate(words)]
-        p, src = cover(shot, f, lines, os.path.join(ROOT, "out", "monsters", "ep01v2_cover.jpg"))
+        p, src = cover(shot, f, lines, PICK_PATH)
         print(p, "from", os.path.relpath(src, ROOT))
+        return
+    if EP.endswith("diorama"):                                   # only the pick ("hook") for the diorama version
+        shot, f, lines = CANDIDATES[PICK]
+        p, src = cover(shot, f, lines, PICK_PATH)
+        print(f"{PICK} {shot} f{f} from {os.path.relpath(src, ROOT)} -> {os.path.relpath(p, ROOT)}")
         return
     made = []
     for name, (shot, f, lines) in CANDIDATES.items():
@@ -112,8 +124,8 @@ def main(argv):
         made.append((name, p))
     phone_grid(made, os.path.join(EP, "covers", "phone_grid.jpg"))
     shot, f, lines = CANDIDATES[PICK]
-    cover(shot, f, lines, os.path.join(ROOT, "out", "monsters", "ep01v2_cover.jpg"))
-    print("pick:", PICK, "-> out/monsters/ep01v2_cover.jpg")
+    cover(shot, f, lines, PICK_PATH)
+    print("pick:", PICK, "->", os.path.relpath(PICK_PATH, ROOT))
 
 
 if __name__ == "__main__":
