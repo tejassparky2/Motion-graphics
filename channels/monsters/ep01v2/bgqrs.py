@@ -490,7 +490,8 @@ def s17():
     """Then I saw the drops. Insert (CH3, the clue a second time): a drop swells at the claw tip, falls and darkens a
     spot on his tunic; the next drop starts to swell. Drops on 2s (step 2)."""
     n = FRAMES["S17"]
-    m, rig, sh = _scene(n, shrimp_off=(1.7, -0.2, 0.0), shrimp_yaw=-15)   # an insert: the shrimp sits lower
+    m, rig, sh = _scene(n, shrimp_off=(2.1, -0.2, 0.0), shrimp_yaw=-15)   # an insert: the shrimp sits lower,
+    #                                          far enough down his body that the drop lands on the jacket, not his neck
     raise_claw(sh, kai_point(rig, "chest") + Vector((-0.6, 0.2, 0.6)), sh["nose"])  # tip ~13 cm over his jacket
     sh["hinge"].rotation_euler = (0.5, 0, 0)
     bpy.context.view_layer.update()
@@ -501,6 +502,9 @@ def s17():
     wet = look.flat("wet_tunic", look.hexc("#0f5d60"))            # the teal jacket, darkened where it's wet
     bpy.ops.mesh.primitive_circle_add(vertices=32, radius=1.0, fill_type="NGON", location=land + nrm * 0.012)
     spot = bpy.context.object
+    for v in spot.data.vertices:                                   # an uneven splat, not a perfect disc
+        a = math.atan2(v.co.y, v.co.x)
+        v.co *= 1 + 0.16 * math.sin(3 * a + 1.0) + 0.07 * math.sin(7 * a + 2.0)
     spot.rotation_euler = nrm.to_track_quat("Z", "Y").to_euler()
     spot.data.materials.append(wet)
     for f, r in ((22, 0.001), (23, 0.07), (25, 0.12), (29, 0.16), (35, 0.18)):
@@ -543,8 +547,11 @@ def s19():
     cock(sh)
     tip = claw_tip(sh) + Vector((0.0, -0.06, -0.1))
     d = _drop(tip, 1, n + 40, n + 46, tip - Vector((0, 0, 2)), r=0.09)
-    for f, sc_ in ((3, 1.0), (24, 0.85), (45, 0.66), (66, 0.42), (81, 0.18), (90, 0.001)):
+    d.animation_data_clear()                                      # only the drying: no swell, no fall, no regrowth
+    d.location = tip
+    for f, sc_ in ((1, 1.0), (24, 0.85), (45, 0.66), (66, 0.42), (81, 0.18), (90, 0.001)):
         anim.key(d, "scale", f, (sc_, sc_, sc_ * 1.2), "LINEAR")
+    anim.key(d, "scale", n, (0.001, 0.001, 0.001), "CONSTANT")     # stays gone
     face = kai_point(rig, "nose")
     tgt = face.lerp(tip, 0.45) + Vector((0.15, 0, 0.1))
     cam = _camera("cam_s19", tgt + Vector((0.3, -4.2, 2.6)), tgt, 38, dof=None)
