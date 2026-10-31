@@ -6,7 +6,7 @@ camera (mk/diorama.py, island seed 31, the world MAP). Its five beats (D1-D5 fro
                up (13), then its claw rises out of the pond on 2s and is held, dripping (22-41, silence)
     D2  42-49  closer, locked on the shrimp: the strike (42); flash 44-45 and impact frames 46-49 are 2D (composite)
     D3  50-79  the money shot: the fan blast toward +Y, the white ring, the trees in the fan pop into dust in order of
-               distance, glowing stumps on a scorched swath; the camera pulls up and back (dist 160 -> 290) to reveal
+               distance, leaving glowing stumps; the camera pulls up and back (dist 160 -> 290) to reveal
                it, shaken on 2s
     D4  80-93  Kai blown back toward the camera (-Y), tumbling, landing on his back short of the pond (on 2s); the
                camera follows
@@ -82,27 +82,6 @@ def _ease(u):
     return u * u * (3 - 2 * u)
 
 
-def _swath(origin, reach, half_angle, f0, frames=15):
-    """The scorched fan on the ground, growing out from the blast origin with the ring (scaled from its tip)."""
-    from channels.monsters.mk import anim, look, paintbg
-    ox, oy = origin
-    verts, n = [(0, 0, 0)], 24
-    for i in range(n + 1):
-        a = math.radians(-half_angle + 2 * half_angle * i / n)
-        verts.append((math.sin(a) * reach, math.cos(a) * reach, 0))
-    me = bpy.data.meshes.new("scorched_swath")
-    me.from_pydata(verts, [], [(0, i, i + 1) for i in range(1, n + 1)])
-    o = bpy.data.objects.new("scorched_swath", me)
-    bpy.context.scene.collection.objects.link(o)
-    o.location = (ox, oy, 0.02)
-    o.data.materials.append(paintbg.paint3("diorama_scorch", look.hexc("#6b5244"), look.hexc("#86684f"),
-                                           look.hexc("#a3836a"), noise=0.3, scale=0.8))
-    anim.key(o, "scale", f0 - 1, 0.0, "CONSTANT")
-    for f in range(f0, f0 + frames + 1):
-        anim.key(o, "scale", f, min(1.0, (f - f0 + 1) / frames), "CONSTANT")
-    return o
-
-
 def s15_diorama():
     from channels.monsters.mk import anim, diorama, erase, hero, meadow, puffshrimp
     sc = bpy.context.scene
@@ -162,10 +141,17 @@ def s15_diorama():
     for f, back, tilt, spin in ((F, 0.3, 0.15, 0.0), (F + 2, 1.0, 0.35, 0.3), (F + 4, 1.8, 0.6, 1.0),
                                 (F + 6, 2.6, 0.9, 1.8), (F + 8, 3.2, 1.2, 2.6), (F + 10, 3.6, 1.4, 3.1)):
         u = (f - F) / 10                                      # blown back, tumbling with a half twist
-        s15._pose(k, s15.BLOWN, (loc.x + 0.1 * back, y0 - back * 1.6, 1.0 + 7.0 * u * (1 - u) * 1.6), (tilt, 0, spin))
+        s15._pose(k, s15.BLOWN, (loc.x + 0.1 * back, y0 - back * 1.6, 1.0 + 7.0 * u * (1 - u) * 2.6), (tilt, 0, spin))
         s15._key_pose(k, f)
         flight.append((f, s15._world(k, "hips")))
     hero.face(k, "surprised", F)
+    from channels.monsters.mk import look                      # a ground shadow sells his height from above
+    shadow = look.blob_shadow("kai_flight_shadow", (0, 0, 0.03), (2.6, 1.4))
+    anim.key(shadow, "scale", A, 0.0, "CONSTANT")
+    for f, p in flight:
+        anim.key(shadow, "location", f, (p.x, p.y, 0.03), "CONSTANT")
+        anim.key(shadow, "scale", f, (2.6 - 0.12 * p.z, 1.4 - 0.06 * p.z, 1), "CONSTANT")
+    anim.key(shadow, "scale", G, 0.0, "CONSTANT")
     land = Vector((0, 0, 0))                                   # on his back, head toward the pond (D6 continues)
     for _ in range(2):
         s15._pose(k, s15.LYING, tuple(land), (math.pi / 2, 0, math.pi + LAND_YAW))
@@ -217,7 +203,7 @@ def s15_diorama():
         _key(c4, f, pa.lerp(pb, u), 140.0, 70.0)
     _camera("D5_dazed", G, face + Vector((0, -1.8, 0)), 80.0, 74.0)
 
-    # ---- D3: the fan blast toward +Y: ring, streak, the trees in the fan erased, glowing stumps, scorched swath
+    # ---- D3: the fan blast toward +Y: ring, streak, the trees in the fan erased, glowing stumps
     origin = (blast.x, blast.y)
     fan = diorama.blast_spots(isl["spots"], origin)
     spots = [isl["spots"][i] for i in fan]
@@ -226,8 +212,6 @@ def s15_diorama():
                            direction=(0.0, 1.0))
     if fx["flash"] is not None:                                 # the 2D pass has the flash
         bpy.data.objects.remove(fx["flash"], do_unlink=True)
-    reach_r = max(math.hypot(x - origin[0], y - origin[1]) for x, y, *_ in spots) + 12
-    _swath(origin, reach_r, 30.0, E - 1)
     hot = sorted(zip(spots, fx["pop_frames"]), key=lambda s: math.hypot(s[0][0], s[0][1]))[:9]
     s15._puff_smoke([(x, y, diorama.TREE * 0.7, tp) for (x, y, *_), tp in hot], END + 1, size=diorama.TREE * 0.6)
     print("S15 BLAST_ORIGIN", tuple(round(v, 3) for v in blast), "KAI_LYING", tuple(round(v, 3) for v in land),
