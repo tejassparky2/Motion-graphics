@@ -244,13 +244,14 @@ def s15_diorama():
     body.rotation_euler = (0, 0, LAND_YAW)
     anim.key(body, "scale", A, 0.0, "CONSTANT")
     anim.key(body, "scale", G, (1.9, 5.2, 1), "CONSTANT")
-    dm = meadow.smoke_mat()                                    # dust settling around him (greyish: not the cap's white)
+    from channels.monsters.mk import paintbg                   # dust settling around him (grey: not the cap's white)
+    dm = paintbg.paint3("landing_dust", look.hexc("#a99f97"), look.hexc("#c6bdb4"), look.hexc("#ddd5cc"), noise=0.1)
     rnd = random.Random(12)
-    for i in range(6):
+    for i in range(4):
         a = rnd.uniform(0, 2 * math.pi)
         p0 = (hip.x + math.cos(a) * rnd.uniform(2.5, 4.5), hip.y + math.sin(a) * rnd.uniform(3.0, 5.5), 0.6)
         d = erase._sphere(f"landdust{i}", p0, 1.0, dm, 12)
-        r = rnd.uniform(0.6, 1.0)
+        r = rnd.uniform(0.3, 0.5)
         anim.key(d, "scale", G - 1, 0.0, "CONSTANT")
         anim.key(d, "location", G, p0)
         anim.key(d, "scale", G, r)
@@ -291,14 +292,14 @@ def s15_diorama():
                 jit = (rnd.uniform(0.7, 1.0), rnd.uniform(-0.4, 0.4))
             off = (amp * sign * jit[0], 0, amp * jit[1])
         _key(c3, f, t3a.lerp(t3b, u), dist, tilt, off, yaw=15.0)
-    c4 = _camera("D4_blown", F, flight[0][1], 140.0, 70.0)
+    c4 = _camera("D4_blown", F, flight[0][1], 120.0, 42.0, 80.0)  # from the side and low: his arc and height read
     pts = [(f, Vector((p.x, p.y, min(p.z, 4.0)))) for f, p in flight]
     for f in range(F, G):                                      # follow him (smooth, on 1s)
         j = max(i for i in range(len(pts)) if pts[i][0] <= f)
         fa, pa = pts[j]
         fb, pb = pts[min(j + 1, len(pts) - 1)]
         u = 0 if fb == fa else (f - fa) / (fb - fa)
-        _key(c4, f, pa.lerp(pb, u), 140.0, 70.0)
+        _key(c4, f, pa.lerp(pb, u), 120.0, 42.0, yaw=80.0)
     _camera("D5_dazed", G, face + Vector((0, -1.8, 0)), 80.0, 74.0)
 
     # ---- D3: the fan blast toward +Y: ring, streak, the trees in the fan erased, glowing stumps

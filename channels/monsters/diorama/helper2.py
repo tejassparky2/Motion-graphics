@@ -118,22 +118,36 @@ def _stand_in_desk(top):
     bpy.context.object.data.materials.append(look.paint("dio_floor", hx("#2f3a4a"), noise=0.08))
 
 
+def _dress(tank):
+    """Close-up detail inside the dollhouse lab's hero tank: painted pebbles at shrimp scale (its sand box reads as
+    a flat plane this close), and the water-blue inner walls stay helper 1's."""
+    cx, cy, cz = tank["floor"]
+    w, d, _ = tank["size"]
+    ps.gravel_bed((cx - w / 2 + 0.1, cx + w / 2 - 0.1), (cy - d / 2 + 0.1, cy + d / 2 - 0.1), cz, random.Random(5),
+                  n=1600, k=K * 1.6, clear=(cx - 0.15, cy - 0.35, 0.3, 0.18), name="dio_gravel")
+
+
 def _stage():
-    """The diorama set and the shrimp (handles, tank, rig): the dollhouse lab's desk if mk/diorama_lab.py exists,
-    else a stand-in; the tank and its interior are built here either way."""
+    """The diorama set and the shrimp (room, tank, rig): helper 1's dollhouse lab (mk/diorama_lab.py) with my
+    pebbles in its hero tank; a stand-in desk and tank if that module is missing."""
     diorama.setup()
-    room = None
     try:
         from channels.monsters.mk import diorama_lab
-        room = diorama_lab.room()
     except ImportError:
-        pass
-    if room and room.get("tank"):
-        anchor = Vector(room["tank"] if not isinstance(room["tank"], dict) else room["tank"]["floor"])
+        diorama_lab = None
+    if diorama_lab is not None:
+        room = diorama_lab.room()
+        t = room["tank"]
+        tank = dict(floor=t["center"], glass=t["glass"], leak=t["leak"], size=t["size"],
+                    water=[t["water"]] if not isinstance(t["water"], list) else t["water"])
+        _dress(tank)
+        mix = t["surface"].node_tree.nodes.get("Mix") if t.get("surface") else None
+        if mix is not None:                            # we look straight down through it: keep it a faint sheen
+            mix.inputs[0].default_value = 0.14
     else:
+        room = None
         _stand_in_desk(3.75)
-        anchor = Vector((0.0, 0.0, 3.75 + 0.3))
-    tank = _tank(anchor)
+        tank = _tank(Vector((0.0, 0.0, 3.75 + 0.3)))
     fx, fy, fz = tank["floor"]
     rig = ps.build((fx - 0.15, fy - 0.35, fz), turn=TURN, scale=K)
     return room, tank, rig
@@ -151,7 +165,11 @@ def _flash(cam, keys):
 
 
 def _near(cam):
-    cam.data.clip_start = 0.004                       # the flash card sits 1 cm in front
+    """Close tank cameras: the flash card sits 1 cm in front; and the haze (meant for the far edge of a room) starts
+    well past the tank floor, so the water stays clear."""
+    cam.data.clip_start = 0.004
+    ms = bpy.context.scene.world.mist_settings
+    ms.start, ms.depth = max(ms.start, cam.data.dof.focus_distance * 3.0), max(ms.depth, 6.0)
 
 
 def s04():
