@@ -83,22 +83,19 @@ def _sapling(rig, n):
 
 
 def _set(n):
-    """The island after v3's snap, which fired SOUTH at Kai (helper 10): the trees north of the pond stand; the young
-    grove south of where he knelt is cut to glowing stumps (diorama.grove_spots(), once helper 10 pushes it). Returns
-    the stump spots."""
-    isl = diorama.island(seed=31, **({"grove": True} if hasattr(diorama, "grove_spots") else {}))
-    spots = []
+    """The island after v3's snap, which fired at Kai along diorama.BLAST_LINE (helper 10): the north trees stand; the
+    young grove south-east of him and the sapling by his head are cut. island(grove="cut") leaves both unplanted;
+    their glowing, smoking stumps go in their place (the sapling's in _sapling). Before helper 10's API lands: the
+    plain island. Returns the grove's stump spots."""
     if hasattr(diorama, "grove_spots"):
+        diorama.island(seed=31, grove="cut")
         spots = list(diorama.grove_spots())
-        gone = set()
-        for i, sp in enumerate(isl["spots"]):
-            if any(abs(sp[0] - g[0]) < 0.01 and abs(sp[1] - g[1]) < 0.01 for g in spots) and isl["trees"][i]:
-                gone |= {c.name for o in isl["trees"][i] for c in [o] + list(o.children_recursive)}
-        for name in gone:
-            bpy.data.objects.remove(bpy.data.objects[name], do_unlink=True)
         diorama.stumps(spots, diorama.MAP.get("blast", (0.1, 0.4)))
         meadow.smoke([(x, y, diorama.TREE * 0.4) for x, y, *_ in spots[:5]], -50, n + 10, every=16, rise=9.0,
                      size=diorama.TREE * 0.4)
+    else:
+        diorama.island(seed=31)
+        spots = []
     for name, strength in (("stump_hot", 2.2), ("stump_core", 3.0)):
         m = bpy.data.materials.get(name)
         em = next((nd for nd in m.node_tree.nodes if nd.type == "EMISSION"), None) if m and m.use_nodes else None
@@ -253,7 +250,7 @@ def s17():
     spot.data.materials.append(look.flat("wet_tunic", look.hexc("#0f5d60")))
     for df, s in ((-1, 0.001), (0, 0.22), (2, 0.38), (6, 0.5), (12, 0.56)):
         anim.key(spot, "scale", land_f + df, (s, s * 0.8, 1), "LINEAR" if df > 0 else "CONSTANT")
-    tgt = tip.lerp(land, 0.4)
+    tgt = tip.lerp(land, 0.4) - EAST * 0.7 + UP * 0.3              # his whole face in at the top left
     cam = diorama.camera("cam_s17", tgt, dist=v2.S17_DIST, tilt=66.0, lens=120.0, blur=BLUR)
     v2._move(cam, n, [(1, 66.0, v2.S17_DIST, 120.0), (n, 66.0, v2.S17_DIST, 120.0)], lambda f: tgt)
     acting.expression(rig, "fear", 1)

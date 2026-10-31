@@ -26,9 +26,11 @@ from channels.monsters.diorama import helper2 as d2
 from channels.monsters.diorama_v3.shots import v3_frames
 from channels.monsters.ep01v2 import helper2 as h3d
 from channels.monsters.mk import anim, diorama, look
+from channels.monsters.mk import shared_water as sw
 from channels.monsters.mk import pistolshrimp as ps
 
 UNITS = d2.UNITS
+YAW = 20.0                     # the main camera from the south-west: the shrimp faces it, the crack is between them
 _T = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep01v3", "timing.json")
 # word starts (s) from the shot's first frame, for when the v3 timing isn't there yet
 _GUESS = dict(shrimp=0.15, panicked=0.45, its=1.45, snap=1.62, cracked=1.9, tank=2.45)
@@ -136,46 +138,16 @@ def _jet(origin, f, end, floor_z, k=UNITS, seed=11):
     a splash where it lands. Lengths in metres x k."""
     rnd = random.Random(seed)
     o = Vector(origin)
-    v = Vector((0.12, -0.3, 0.10)) * k                 # launch velocity (units per second): out of the glass and
-    #                                                    straight down the frame for the yaw -22 camera
-    g = 2.0 * k
+    v = Vector((-0.3, -0.2, 0.2)) * k                  # launch velocity (units per second): out of the glass, up
+    g = 1.6 * k                                        # and to the left of the yaw -22 frame, so it reads as an arc
 
     def at(t):
         return o + v * t + Vector((0, 0, -0.5 * g * t * t))
 
     t_hit = (v.z + math.sqrt(v.z * v.z + 2 * g * (o.z - floor_z))) / g
     pts = [at(t_hit * i / 10) for i in range(11)]
-    core = look.flat("jet_core", look.hexc("#f4feff"), 2.2)
-    halo = ps._glow("jet_halo", look.hexc("#7fdcf0"), 0.55)
-    arcs = []
-    for name, m, r in (("jet_halo", halo, 0.0065), ("jet_core", core, 0.0028)):
-        cu = bpy.data.curves.new(name, "CURVE")
-        cu.dimensions = "3D"
-        sp = cu.splines.new("POLY")
-        sp.points.add(len(pts) - 1)
-        for p, q in zip(sp.points, pts):
-            p.co = (q.x, q.y, q.z, 1.0)
-            p.radius = 1.0
-        sp.points[0].radius = 1.5                      # wide where it bursts out of the crack
-        cu.bevel_depth = r * k
-        cu.bevel_resolution = 3
-        cu.use_fill_caps = True
-        ob = bpy.data.objects.new(name, cu)
-        bpy.context.scene.collection.objects.link(ob)
-        ob.data.materials.append(m)
-        ob.visible_shadow = False
-        for fr, val in ((f - 1, 0.0), (f, 0.3), (f + 1, 0.65), (f + 2, 1.0)):
-            cu.bevel_factor_end = val
-            cu.keyframe_insert("bevel_factor_end", frame=fr)
-        for fc in anim.all_fcurves(cu.animation_data.action):
-            for kp in fc.keyframe_points:
-                kp.interpolation = "CONSTANT"
-        for n in range(f + 2, end + 1, 2):             # the stream pulses (pressure) on 2s
-            s = 1.0 + (0.18 if (n - f) % 4 == 0 else -0.12)
-            anim.key(ob, "scale", n, (1.0, 1.0, 1.0), "CONSTANT")
-            cu.bevel_depth = r * k * s
-            cu.keyframe_insert("bevel_depth", frame=n)
-        arcs.append(ob)
+    fall = sw.falling_water(pts, f, end, radius=0.0032 * k, grow=3, k=0.22, name="jet", taper=(1.5, 0.8))
+    arcs = [fall["body"], fall["core"]]
     # the burst at the crack: a little star of spray, then it keeps fizzing
     burst = ps._sphere("jet_burst", o, (1, 1, 1), ps._glow("jet_burst_m", look.hexc("#e6fbff"), 0.8), 0, 16)
     burst.visible_shadow = False
@@ -199,27 +171,17 @@ def _jet(origin, f, end, floor_z, k=UNITS, seed=11):
                 anim.key(d, "location", start + j, at(t) + off * (j / (life - 1)), "CONSTANT")
                 anim.key(d, "scale", start + j, r if j < life - 1 else 0.0001, "CONSTANT")
             start += life + rnd.randint(0, 2)
-    # the splash where it lands: a flat ring that keeps blooming, and a glossy puddle spreading on the desk
+    # where it lands: the shared puddle (sw.spill_material, rimmed) spreading on the desk
     hit = at(t_hit)
-    pm = look.fade("jet_puddle", look.hexc("#bff0fa"), 0.55)
     bpy.ops.mesh.primitive_circle_add(vertices=24, radius=1.0, fill_type="NGON", location=(hit.x, hit.y, hit.z + 0.002))
     pud = bpy.context.object
     pud.name = "jet_puddle"
-    pud.data.materials.append(pm)
+    pud.data.materials.append(sw.spill_material())
     pud.visible_shadow = False
-    pud.scale = (0.0001,) * 3
     anim.key(pud, "scale", f + 2, (0.0001,) * 3, "CONSTANT")
     anim.key(pud, "scale", f + 3, (0.02 * k, 0.014 * k, 1), "LINEAR")
     anim.key(pud, "scale", end, (0.07 * k, 0.05 * k, 1), "LINEAR")
-    for i, f0 in enumerate(range(f + 3, end, 6)):
-        ring = anim.shockwave(tuple(hit + Vector((0, 0, 0.003))), f0, frames=6, radius=0.035 * k, color="#e6fbff")
-        ring.visible_shadow = False
-        for fc in anim.all_fcurves(ring.animation_data.action):
-            if fc.data_path == "scale":
-                for kp in fc.keyframe_points:
-                    if kp.co.x <= f0:
-                        kp.co.y *= 0.1
-                        kp.handle_left.y = kp.handle_right.y = kp.co.y
+    sw.rim(pud, width=0.08)
     return arcs
 
 
@@ -273,9 +235,11 @@ def s07():
     _jet((lx + path[j][0], gy - 0.004 * UNITS, lz - 0.005 * UNITS + path[j][1]), jet, n, desk)
     fx, fy, fz = tank["floor"]
     # the claw tip and the crack a third in from the left, the body to the right of them, all left of x 560
-    target = Vector((fx - 0.19, fy - 0.45, fz + 0.3))
-    cam = diorama.camera("dio_cam_s07", target, dist=5.0, tilt=42, yaw=-22, lens=d2.LENS, blur=d2.BLUR, frame=1)
-    eye = d2._eye_cam(rig, "dio_cam_s07_eye", eye0, dist=0.6)
+    target = Vector((fx - 0.28, fy - 0.5, fz + 0.22))
+    cam = diorama.camera("dio_cam_s07", target, dist=3.1, tilt=42, yaw=YAW, lens=d2.LENS, blur=d2.BLUR, frame=1)
+    e = ps._world(rig["eyes"][0], eye0 + 1).translation          # where the eye is after the hop, mid-tremble
+    eye = diorama.camera("dio_cam_s07_eye", e, dist=0.6, tilt=48, yaw=math.degrees(d2.TURN) - 60, lens=d2.LENS,
+                         blur=d2.BLUR, frame=eye0)
     bpy.context.scene.timeline_markers.new("dio_cam_s07_back", frame=wind).camera = cam     # back after the eye cut
     for c in (cam, eye):
         d2._near(c)

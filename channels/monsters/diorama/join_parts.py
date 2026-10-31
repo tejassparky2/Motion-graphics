@@ -1,4 +1,5 @@
-"""Join a diorama shot rendered in pieces (HELPERS.md chunk rule) into out/monsters/diorama/shots/<SHOT>.mp4 + sheet.
+"""Join a diorama shot rendered in pieces (HELPERS.md chunk rule) into out/monsters/diorama/shots/<SHOT>.mp4 + sheet
+(or, with --v3 first, out/monsters/diorama_v3/shots/<SHOT>.mp4 on the ep01v3 timing).
 
 Each piece is either a near-lossless part (out/monsters/diorama/parts/<SHOT>_fAAA-BBB.mp4, frames AAA..BBB) or a folder
 of render_shot.py PNGs (0001.png ...) given as DIR:AAA-BBB. Every frame 1..render_frames must be covered exactly once;
@@ -6,6 +7,8 @@ the result is encoded like every shot (crf 10, no encoder tags) and checked for 
 
     /home/user/.venv-main/bin/python channels/monsters/diorama/join_parts.py S06 /scratch/s06:1-21 \\
         out/monsters/diorama/parts/S06_f022-041.mp4
+    /home/user/.venv-main/bin/python channels/monsters/diorama/join_parts.py --v3 S08 \\
+        out/monsters/diorama_v3/parts/S08_f001-048.mp4 out/monsters/diorama_v3/parts/S08_f049-098.mp4
 """
 import json
 import os
@@ -16,15 +19,18 @@ import sys
 import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-SHOTS = os.path.join(ROOT, "out", "monsters", "diorama", "shots")
+V3 = "--v3" in sys.argv
+SHOTS = os.path.join(ROOT, "out", "monsters", "diorama_v3" if V3 else "diorama", "shots")
+EPDIR = "ep01v3" if V3 else "ep01v2"
 CLEAN = ["-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact", "-bsf:v", "filter_units=remove_types=6"]
 
 
 def main():
     import imageio_ffmpeg
     ff = imageio_ffmpeg.get_ffmpeg_exe()
-    shot, pieces = sys.argv[1], sys.argv[2:]
-    timing = json.load(open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")))
+    args = [a for a in sys.argv[1:] if a != "--v3"]
+    shot, pieces = args[0], args[1:]
+    timing = json.load(open(os.path.join(ROOT, "channels", "monsters", EPDIR, "timing.json")))
     n = {s["shot"]: s["render_frames"] for s in timing["shots"]}[shot]
     tmp = tempfile.mkdtemp(prefix=f"join_{shot}_")
     have = {}
