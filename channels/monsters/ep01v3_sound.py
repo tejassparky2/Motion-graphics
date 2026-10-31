@@ -36,9 +36,10 @@ S07_SNAP, S07_CRACK = None, None   # None: on the word "snap" / just after it, u
 S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN = 41, 43, 49, 79     # helper 10's v2 beats; confirm for the v3 staging
 S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 42, 62
 # the v3 staging pass (coordinator, 31 Oct 12:25; provisional until the shot owners confirm the frames)
-S06_FLASH = 14            # the strong 2-frame near-white flash (helper 9)
+S06_FLASH = 13            # the strong near-white flash, 0-based f13-14 (helper 9; the crack on f13)
 S08A_SPARKS = 28          # small sparks start fizzing at the plugs (helper 1)
-S08B_LAND, S08B_BLACK = 28, 30   # helper 4 plan: limp from 0-based f23, lands ~f28, black f30 (exact frames to come)
+S08B_HIT, S08B_LIGHTS, S08B_LAND, S08B_BLACK = 10, 26, 28, 30   # helper 4: the jolt hits f10, the lights die f26,
+                                                                  # the body lands f28, black from f30 (0-based)
 S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
 
 
@@ -265,7 +266,7 @@ def build(timing, n, v):
 
     # --- the lab (SS7): rain, hum, bubbles, the lab bed; it all stops when the power dies (S08b)
     lab0 = c.t("S03a")
-    power_off = c.f("S08b", S08B_BLACK)                           # the lights die: the black
+    power_off = c.f("S08b", S08B_LIGHTS)                          # the lights die: rain and hum cut
     amb(lambda d, s: sfx.rain(d, s), lab0, power_off, -24, 0.4, 0.05)
     amb(lambda d, s: sfx.lab_hum(d, s), lab0, power_off, -28, 0.4, 0.05)
     amb(lambda d, s: sfx.aquarium_bubbles(d, s), lab0, c.t("S07"), -27, 0.4, 0.3)
@@ -302,15 +303,17 @@ def build(timing, n, v):
     music_at(base.tense_tone(c.end("S08a") - c.t("S08a")), c.t("S08a"), c.end("S08a"), -20, 0.3, 0.2)
 
     # --- S08b: the zap and the falling hum under "That's how I died.", the power dies, black, the flatline
-    zap_t = c.t("S08b", 0.05)
+    zap_t = c.f("S08b", S08B_HIT)                                 # the jolt hits him
     land = c.f("S08b", S08B_LAND)
-    power_off = c.f("S08b", S08B_BLACK)                           # the black
+    black = c.f("S08b", S08B_BLACK)
+    hit(plug_fizz(zap_t - c.t("S08b"), 11), c.t("S08b"), -18, 0.1)   # the spark running through the water to him
     zx = zap(land - zap_t + 0.25)
     zx[-_n(0.25):] *= np.linspace(1, 0.25, _n(0.25))              # the buzz ducks under the fall
     hit(zx, zap_t, -10)
+    hit(sfx.spark(), power_off - 0.05, -16)                      # the lights die
     hit(body_fall(), land, -12)
-    hit(sfx.spark(), power_off - 0.1, -16)
-    hush(power_off, c.t("S09"))
+    hush(black, c.t("S09"))
+    power_off = black
     flat_t = power_off + 0.15
     hit(flatline(c.word("l11", "Then") - flat_t - 0.1), flat_t, -20)
 
