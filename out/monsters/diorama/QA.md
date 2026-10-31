@@ -38,11 +38,16 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S09 | helper 3 | PASS (remuxed clean, e2b1af1) | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
 | S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
-| S04 | helper 2 | PASS (remuxed clean, fb8d031) | 73 / 73 | 0.23 | eye f1-4, claw open, shut on 19, the white-hot bubble swells to "boils"; 1 NOTE (low saturation) |
+| S04 | helper 2 | PASS (remuxed clean, fb8d031) | 73 / 73 | 0.34 | eye f1-4, claw open, shut on 19, the white-hot bubble swells to "boils"; cyan grade 21ee8b4 |
 | S14 | helper 3's builder (+ 2D push-in, 8a3257d) | PASS | 80 / 80 | 0.37 | Kai on all fours looks up: wide eyes, then narrowed and a head tilt (SG2); 1 NOTE |
-| S20 | helper 5's builder | PASS | 103 / 103 | 0.40 | the tiny "pff", the shrimp stares at its claw, cut on 44 to Kai's deadpan held 60 frames |
+| S20 | helper 5's builder (post 0942557) | PASS | 103 / 103 | 0.40 | the tiny "pff", the shrimp stares at its claw, cut on 44 to Kai's deadpan held 60 frames |
 | S24top | XprL | PASS | 97 / 97 | 0.47 | Kai walks down from the thorn tree to the shrimp at the pond, push-in on 1s (57-85); reads in the top half |
 | S08 | helper 9 (joined by the coordinator, 1b30467) | PASS | 85 / 85 | 0.29 | water pours off the tank and runs to the power strip, a spark on 55-57, the lights die, black from 58; rain in the window |
+| S05a | helper 2 (joined, 835b42d) | PASS | 75 / 75 | 0.26 | the bubble glows at its peak, collapses on 52 to micro-bubbles; cyan grade 21ee8b4 |
+| S13 | helper 9 (push-in, ecd03ea) | PASS | 62 / 62 | 0.43 | the shrimp at the pond, claw dipped with ripple rings (the clue), Kai on all fours behind |
+| S16 | bGqrs (540d14c) | PASS | 76 / 76 | 0.39 | push-in on Kai on his back: eyes shut, open by "eyes" (24), comic shock eyes + sweat on 43; 1 NOTE |
+| S18 | bGqrs (7765bd5) | PASS | 60 / 60 | 0.53 | Kai's eyes narrow, cut on 31 to the blue speed-line realisation background (IM6); 1 NOTE |
+| S19 | helper 5 + coordinator post (26c0b61) | PASS | 105 / 105 | 0.36 | sun glare, a sweat bead (25-40), the drop on the claw tip shrinks away by ~55, an 8% push, a squint on 62 |
 | S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
 | S21 | helper 5 (rendered by helper 4) | PASS | 64 / 64 | 0.43 | the shrimp stomps off Kai's chest to the pond, the claw dips in with a ripple ring; clean |
 
@@ -101,7 +106,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S02, S05a, S13, S16, S18, S19; the S03a re-render and the S15 fix.
+Waiting for: S02 and the joined S01; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **FIX** (sent to helper 10, cc the coordinator).
@@ -257,3 +262,51 @@ and the light stutter runs unbroken across the join (off 20-21, on 22, off 23-24
   the tank spills over the desk edge, and the sparkling stream runs down to the power strip by "Cables" (frame 28).
   After "Me" (48) a white spark flares on the strip (55-57) with a ring of light, the room lights die, then black
   from 58. Nothing graphic. The spark and the stream read at 360 px.
+
+## S05a: "Almost as hot as the surface of the sun." (helper 2, joined 835b42d)
+**PASS**, with one NOTE.
+- **Length and level:** 75 frames, a clean file.
+- **Picture:** the toy-aquarium close from S04 continues: the white-hot bubble glows and pulses at its peak through
+  "the surface of the sun" (frames 1-51), then collapses on 52 to a spray of micro-bubbles that drift off, ending on
+  the calm claw before "But only in water". Cuts with S04 without a jump.
+- **NOTE:** saturation 0.16 (grey-green water and gravel), the same note as S04: a cleaner cyan tank tint would lift
+  both. Not blocking.
+
+## S13: "Something else was already drinking." (helper 9, push-in ecd03ea)
+**PASS.**
+- **Length and level:** 62 frames, saturation 0.43, a clean file; the push-in on 1s.
+- **Picture:** from above, the puff-shrimp sits at the pond's edge with its claw dipped in the water and ripple rings
+  round it (the clue, CH3/SG10), while Kai crawls up behind on all fours. The shrimp is about 150 px across at full
+  size, the dipped claw and its rings read at 360 px.
+
+## S16: "When I opened my eyes, it was on my chest." (bGqrs, 540d14c)
+**PASS**, with one NOTE.
+- **Length and level:** 76 frames, saturation 0.39, a clean file; a slow push-in on 1s.
+- **Picture:** S01's framing from above (the SU9 rhyme): Kai on his back below the pond, the shrimp on his chest.
+  His eyes are shut, open by "eyes" (frame 24), and on "on my chest" (43-46) jump to the comic shock eyes with a
+  sweat drop and gloom lines on his cap.
+- **NOTE:** the 3D row opened on an eye close-up; here the push-in carries the eyes opening instead. His face is
+  about 120 px wide, so the opening reads but is small; the shock eyes on 43 read well.
+
+## S18: "Its claw only works wet." (bGqrs, 7765bd5)
+**PASS**, with one NOTE.
+- **Length and level:** 60 frames, saturation 0.53, a clean file.
+- **Picture:** close on Kai's face from above: his eyes go from wide to level to narrowed (frames 1-29), then a cut
+  on 31 to the blue speed-line realisation background (IM6, SU16) with the knowing half-lidded look held to the end.
+- **NOTE:** the row asks for an extreme close-up of the eyes; this is a head-and-shoulders close (face about 130 px
+  wide), so the narrowing is subtle. The realisation background sells the beat.
+
+## S19: "So I didn't move. I let the sun dry it." (helper 5's plate, coordinator post 26c0b61)
+**PASS.**
+- **Length and level:** 105 frames, saturation 0.36, a clean file.
+- **Picture:** one held, quiet shot (SG14): the sun glare and its rays over Kai's shoulder, a sweat bead by his eye
+  (frames 25-40), the blue drop on the claw tip shrinking on "let the sun dry it" and gone by about 55, then a
+  squint on 62. An 8% push, inside the row's 10%.
+
+S20's post (0942557, the eye cover up to the hair) was re-checked: the deadpan dot eyes hold clean, no white sliver.
+
+## The tank grade: S04, S05a, S07 (coordinator, 21ee8b4)
+**Checked, PASS.** The three toy-aquarium shots now share one cyan grade: saturation S04 0.34 (was 0.23; the 3D shot
+was 0.31), S05a 0.26 (was 0.16), S07 0.53 (was 0.42). The water and gravel read as a cool tank rather than grey, the
+red shrimp still pops, and the three cut together without a colour jump. Frame counts unchanged, files clean. The
+S04 and S05a low-saturation NOTES are closed.
