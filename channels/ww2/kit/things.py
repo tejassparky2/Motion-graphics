@@ -610,9 +610,10 @@ class Clock(Prop):
 
 
 class Newspaper(Prop):
-    """A broadsheet front page (centre, ~420 x 560): masthead, headline, columns, a halftone photo.
+    """A broadsheet front page (centre, ~420 x 560): masthead (default a generic red EXTRA! banner; never put an
+    invented headline under a real paper's name), headline, columns, a halftone photo.
     spin 0..1 = the classic spinning-in newspaper (turns and grows to full size)."""
-    defaults = dict(masthead="THE DAILY HERALD", headline="WAR!", sub="", spin=1.0, date="")
+    defaults = dict(masthead="EXTRA!", headline="WAR!", sub="", spin=1.0, date="")
 
     def _draw(self, cr, t, o):
         lw = self.lw * 0.7
@@ -623,7 +624,12 @@ class Newspaper(Prop):
             cr.scale(k, k)
         rrect(cr, -210, -280, 420, 560, 2)
         fill_ink(cr, "#efe5cb", lw, tone=False)
-        text(cr, o["masthead"], 0, -226, 38, font=SLAB, color="ink", bold=False)
+        if o["masthead"] == "EXTRA!":                          # generic banner: never a real paper's name
+            poly(cr, [(-200, -270), (200, -270), (194, -214), (-194, -210)])
+            fill_ink(cr, "alert", lw, tone=False)
+            text(cr, "EXTRA!", 0, -224, 48, font=SLAB, color="cream", bold=False, outline="ink", outline_w=5)
+        else:
+            text(cr, o["masthead"], 0, -226, 38, font=SLAB, color="ink", bold=False)
         line(cr, -190, -212, 190, -212, lw * 0.6)
         line(cr, -190, -204, 190, -204, lw * 0.3)
         if o["date"]:
