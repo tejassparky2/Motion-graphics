@@ -329,7 +329,7 @@ def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=12):
     cmd = [ffmpeg(), "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}", "-r", str(FPS),
            "-i", "-", "-c:v", "libx264", "-crf", str(crf), "-preset", "medium", "-pix_fmt", "yuv420p",
            "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
-           "-bsf:v", "filter_units=remove_types=6", "-movflags", "+faststart", out_mp4]
+           "-bsf:v", "filter_units=remove_types=6", "-movflags", "+faststart", out_mp4 + ".enc.mp4"]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for i in range(a, b + 1):
         cr = cairo.Context(surf)
@@ -342,4 +342,9 @@ def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=12):
         p.stdin.write(bytes(surf.get_data()))
     p.stdin.close()
     p.wait()
+    # a stream-copy remux drops the "Lavc libx264" encoder name the first pass leaves in the track header
+    subprocess.run([ffmpeg(), "-y", "-v", "error", "-i", out_mp4 + ".enc.mp4", "-c", "copy", "-map_metadata", "-1",
+                    "-fflags", "+bitexact", "-flags:v", "+bitexact", "-metadata:s:v", "handler_name=",
+                    "-movflags", "+faststart", out_mp4], check=True)
+    os.remove(out_mp4 + ".enc.mp4")
     return out_mp4
