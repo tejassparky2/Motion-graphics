@@ -38,6 +38,7 @@ S07_SNAP, S07_CRACK = None, None   # None: on the word "snap" / just after it, u
 S15_OPEN, S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN, S15_LAND, S15_AFTER = 9, 29, 29, 31, 30, 47, 77
 S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 42, 62
 # the v3 staging pass (coordinator, 31 Oct 12:25; provisional until the shot owners confirm the frames)
+S08_EDGE, S08_SPLASH, S08_PLUGS, S08_POPS, S08_STUTTER = 14, 24, 67, (69, 83), 71   # helper 9's S08 (0-based)
 S06_FLASH = 13            # the strong near-white flash, 0-based f13-14 (helper 9; the crack on f13)
 S08A_SPARKS, S08A_SWELL = 3, 28   # helper 1: the 2D arcs fizz at the plugs from f3; the swell into the zap from f28
 S08A_WATER, S08A_FEAR, S08A_STUTTER = 4, 19, (29, 32)   # water at his sneakers f4-14, face drops f19, lights stutter
@@ -291,10 +292,17 @@ def build(timing, n, v):
     hit(base.glass_crack(1), crack_t + 0.12, -12, 0.25)           # the crack runs on across the glass
     hit(water_jet(0.9), crack_t + 0.15, -16, 0.2)
 
-    # --- S08: the pour off the desk, the splash, the plugs fizz on "cables"
-    amb(lambda d, s: water_pour(d, 30 + s), c.t("S08"), c.end("S08"), -21, 0.15, 0.3)
-    hit(splash(), c.word("l8", "desk"), -16, -0.1)
-    hit(plug_fizz(1.3), c.word("l8", "cables"), -18, 0.15)
+    # --- S08: the water goes off the desk edge (f14), the waterfall splashes at the foot (f24 on), it reaches the
+    # plugs (f67): fizz to the end, bright pops (f69, f83), a light stutter (f71)
+    edge = c.f("S08", S08_EDGE)
+    amb(lambda d, s: base.trickle(d, 34 + s), c.t("S08"), edge, -26, 0.15, 0.1)
+    amb(lambda d, s: water_pour(d, 30 + s), edge, c.end("S08"), -21, 0.1, 0.3)
+    hit(splash(), c.f("S08", S08_SPLASH), -16, -0.1)
+    plugs = c.f("S08", S08_PLUGS)
+    hit(plug_fizz(c.end("S08") - plugs + 0.05), plugs, -18, 0.15)
+    for k, f in enumerate(S08_POPS):
+        hit(sfx.spark(30 + k)[: _n(0.25)], c.f("S08", f), -14, 0.15)   # a short bright pop
+    hit(sfx.spark(40), c.f("S08", S08_STUTTER), -24, 0.1)
 
     # --- S08a: the puddle under his sneakers, his face drops; the bed thins to a held tense pad
     amb(lambda d, s: base.trickle(d, 40 + s), c.t("S08a"), c.end("S08a"), -24, 0.2, 0.2)
