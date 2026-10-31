@@ -51,9 +51,9 @@ Most serious first within each shot. Updated as shots land.
 | S03a | helper 1 | PASS | 53 / 53 | 0.33 | the night lab, rain, the glowing tank; cuts with S03b |
 | S13 | helper 9 | PASS | 62 / 62 | 0.52 | the claw dipped in the puddle (the clue, CH3) |
 | S20 | bGqrs (coordinator render) | PASS | 103 / 103 | 0.45 | the pff, the stare, the head tilt, Kai's deadpan held 2 s |
-| S14 | helper 9 (helper 5 render) | **FIX** | 80 / 80 | 0.33 | the mouth sits in the caption band; the cap fills the top 40% |
+| S14 | helper 9 (helper 5 render) | PENDING (fix by caption placement) | 80 / 80 | 0.33 | helper 8 moves its caption above the cap (CAP_Y_SHOT); PASS once seen in the animatic |
 | S16 | bGqrs | PASS | 76 / 76 | 0.40 | eyes open on "eyes", then S01's framing (SU9 rhyme) |
-| S24bot | XprL | **FIX** | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
+| S24bot | XprL | **FIX** (restage in progress) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
 | S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
 | S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
 | S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
@@ -364,7 +364,10 @@ The first version's notes, for the record:
   runs on 2s.
 
 ## S14: "A shrimp. On land. Impossible." (helper 9; rendered by helper 5)
-**FIX** (sent to helper 9, cc helper 5, 31 Oct).
+**Resolution (coordinator, 31 Oct):** no re-render. Helper 8 moves S14's caption above the cap (CAP_Y_SHOT), which
+clears the mouth. PASS once that is checked in helper 8's next animatic.
+
+**v1: FIX** (sent to helper 9, cc helper 5, 31 Oct).
 1. **The face is framed too low: the mouth sits in the caption band (HELPERS v3.2 safe areas; TP16).**
    - The white cap fills the top 40% of the frame. Kai's eyes sit at about y 560-640, his mouth at about y 850-880
      and his chin at about y 1000.
