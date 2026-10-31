@@ -1,43 +1,66 @@
-# WW2 Episode 1: style guide (every module and chapter follows this)
+# WW2 Episode 1: style guide, "Animated 1940s posters" (owner's choice, 31 Oct 2026)
+
+The owner said "many done stick man, can we do something unique but with good quality" and picked the animated 1940s posters. Every frame should look like a wartime poster or a printed war map come to life: bold flat shapes, strong silhouettes, halftone dots, few colours, period lettering, on aged paper.
 
 Kit: `channels/ww2/kit/core.py`, imported as `from channels.ww2.kit.core import *`. Venv: `/home/user/.venv-main/bin/python`.
-Canvas: 1920x1080, 24 fps, drawn with pycairo, rendered by `render_clip(draw, dur, out)`. `still=t` writes one PNG.
+Canvas: 1920x1080, 24 fps, pycairo. Render with `render_clip(draw, dur, out)`; `still=t` writes one PNG. Every frame ends with `print_finish(cr, t)` (grain, specks, press wear).
 
 ## Look
-- **Sketchbook documentary.** Every scene sits on parchment paper (`paper(cr)`). Lines are ink (`PAL["ink"]`, #1f1c1a) with round caps and joins. Colour is flat and muted, with no gradients except soft shadows and glows.
-- **Sides are coloured, never shown by symbols:**
+- **Poster composition.**
+  - Low or heroic angles, big diagonals and silhouettes against plain or rayed backgrounds.
+  - Strong foreground/background separation.
+  - Text is part of the design: slab headlines, stencil labels.
+- **Inks.** Flat fills only. Shading is done by:
+  1. a hard-edged shadow shape in a darker tone, or
+  2. halftone dots: `halftone(cr, path, color, density 1-5)`.
 
-  | Side | Palette name | Colour |
-  |---|---|---|
-  | Germany | `axis` | charcoal #4b4b52 |
-  | Italy | `axis_it` | #6c6c72 |
-  | Japan | `axis_jp` | #3a3a42 |
-  | Western Allies (Britain, France, US) | `allies` | blue #3f6fb5 |
-  | Soviet Union | `soviet` | red #b8382e |
-  | China | `china` | gold #cf9f2a |
-  | Neutral / not at war | `land` | #ddd2b6 |
-  | Sea | `sea` | #b8cfd3 |
+  No smooth gradients except the paper's vignette.
+- **Few colours per scene:** paper plus 3-4 inks from `PAL`. Key lines in `ink` (#1c1917), 6-8 px for main figures and 3-4 px for detail. A slight misregistration (a fill offset 2-4 px from its key line) is welcome on big shapes.
+- **Background tools:**
+  - `rays(cr, t, cx, cy, color=...)`, a slow sunburst;
+  - `paper(cr)`, the aged print paper.
+  - **Never red rays from a red or white disc.** That is Japan's Rising Sun flag, which is offensive in Korea and China. Rays are ink, gold, blue or khaki only, and never centred on a red circle.
 
-- **Attack arrows:** the attacker's side colour, with an ink outline and a white inner highlight. They grow along their path, never pop in whole.
-- **No Nazi symbols at all.** No swastika, no SS runes, no Nazi eagle, no flags with symbols. Germany is charcoal plus a label. Generic insignia are fine: plain roundels on Allied planes, a plain white star on US vehicles, a plain red star on Soviet ones, a plain cross-free grey on German ones.
-- **No graphic violence.** No blood, no bodies, no visible deaths. Battles are shown with flashes, smoke, shaking, arrows, and figures diving or ducking. Losses are shown as numbers or as figures fading out on a map.
+## Sides are colours, never symbols
+| Side | Palette name | Colour |
+|---|---|---|
+| Germany | `axis` | charcoal #45434a |
+| Italy | `axis_it` | #6a6770 |
+| Japan | `axis_jp` | #34323a |
+| Western Allies | `allies` | navy-blue #2f5f8f |
+| Soviet Union | `soviet` | poster red #b5322a |
+| China | `china` | mustard #d39b2c |
+| Neutral | `land` | #e3d3ad |
+| Sea | `sea` | grey-green #9db3ad |
+
+- **No Nazi symbols at all:** no swastika, no SS runes, no Nazi eagle, no Nazi or Imperial Japanese flags, and no real propaganda slogans.
+- Generic marks only: a plain roundel, a plain white star (US) or a plain red star (Soviet). German vehicles and uniforms stay plain charcoal.
+- **No graphic violence.** No blood, no bodies, no visible deaths. Battles are flashes, smoke, flat star-burst explosions, arrows and ducking figures. Losses are numbers, or figures fading out on a map.
 
 ## Type
 | Font | Use |
 |---|---|
-| `TITLE` = Anton | Chapter cards, word cards, big numbers, the date tag |
-| `HAND` = Kalam Bold | Map labels, notes and name tags |
+| `SLAB` = Alfa Slab One | Poster headlines, chapter titles, word cards |
+| `STENCIL` = Big Shoulders Stencil (bold) | Military and map unit labels, stamps, "CHAPTER 2" |
+| `TITLE` = Anton | Big numbers, the corner date tag |
+| `LABEL` = Oswald (bold) | Map labels, name tags, notes |
 | `UI` = Inter | Small print only |
 
-Labels sit on the paper colour with a paper-coloured outline (`text(..., outline="paper")`) so they read over maps.
+Labels over maps get a paper-coloured outline (`text(..., outline="paper")`).
 
-## Stick figures (stick.py)
-- **Size:** standard figure height 300 px at zoom 1 (head 64 px across). Limbs are ink lines 7 px wide, the head is a filled paper-coloured circle with a 6 px ink outline. Crowds use the same rig at 0.4-0.6 scale.
+## Characters (stick.py, now poster figures)
+- **Not stick figures.** These are poster people:
+  - simplified, geometric, Art Deco-ish bodies built on the same joint skeleton;
+  - limbs are tapered filled shapes with an ink key line;
+  - a uniform in the side colour, a hard shadow side (darker tone or halftone);
+  - big readable silhouettes.
 - **Faces:**
-  - expressive: dot eyes, brows that tilt for anger or worry, a mouth line or an O;
-  - eyes blink every 2-5 s;
-  - a little sweat drop for fear.
-- **Nation is shown by headgear tinted in its side colour:**
+  - strong simple features, profile or 3/4: jaw, nose, brow;
+  - eyes as small dark shapes that blink;
+  - expressions through brow and mouth shapes;
+  - light side `cream`, shadow side halftone.
+- **Standard figure** is ~420 px tall at zoom 1 for a hero shot, and the same rig at 0.3-0.6 scale for crowds and soldiers. Crowds are silhouettes in one tone with a few highlights.
+- **Headgear and uniforms by nation** (silhouette first):
 
   | Nation | Headgear |
   |---|---|
@@ -47,45 +70,50 @@ Labels sit on the paper colour with a paper-coloured outline (`text(..., outline
   | Soviet | rounded helmet or side cap |
   | French | crested helmet |
   | Japanese | peaked cap with neck flaps |
-  | Italian | helmet with a small feather plume (Bersaglieri) |
+  | Italian | helmet with a feather plume |
 
-  Civilians get flat caps, hats and headscarves in neutral colours.
-- **Leaders** are stick figures with ONE trademark each, drawn respectfully (no mockery beyond the trademark):
+  Civilians get flat caps, fedoras, headscarves and coats in khaki or olive.
+- **Leaders** are poster portraits, with likeness through ONE trademark plus silhouette. Respectful, no grotesque caricature:
 
   | Leader | Trademark |
   |---|---|
   | Hitler | toothbrush moustache, side-swept hair |
   | Stalin | thick moustache, pipe, swept-back hair |
-  | Churchill | bowler hat, cigar, round head |
+  | Churchill | bowler hat, cigar, round build |
   | Roosevelt | pince-nez glasses, cigarette holder |
   | Mussolini | bald head, square jaw |
   | Hirohito | round glasses, small moustache |
   | Chamberlain | moustache, umbrella, homburg hat |
 
-- **Motion:**
-  - poses blend with eased interpolation;
-  - idle figures breathe (a 2 px bob) and shift weight;
-  - nothing ever freezes completely;
-  - figures walk, run, point, shrug, salute, shake hands, cheer, crouch, dive, wave a paper, and aim and fire (with a muzzle flash only).
+- **Motion.** Poster figures move like cut-out animation done well:
+  - eased pose blends with anticipation and overshoot;
+  - an idle breath and weight shift; nothing ever freezes;
+  - walk, run, march, point, shrug, salute, handshake, cheer, crouch, dive, wave a paper, aim and fire (muzzle flash only).
 
 ## Vehicles and props (props.py)
-- Same ink line weight (5-7 px at zoom 1), flat fills in the side colour.
-- Tank, fighter, bomber, dive bomber, battleship, aircraft carrier, destroyer, small boats (fishing boat, yacht, ferry), submarine and periscope, artillery, radar tower, searchlight, sandbags and trench, train.
-- Everything animates: tank tracks roll, propellers spin, ships leave wakes and bob, smoke drifts, and explosions are a flash, a ring and a smoke puff (no debris gore).
+- Poster silhouettes: strong side or 3/4 shapes, flat side colour, a key line, a hard shadow or halftone underside.
+- Tank, fighter, bomber, dive bomber, battleship, carrier, destroyer, small boats, submarine and periscope, artillery, radar tower, searchlight, sandbags, train.
+- Everything animates: tracks roll, propellers blur, ships bob and leave flat wakes, smoke is layered flat puffs, and explosions are flat star bursts with halftone smoke.
 
-## Maps (maps.py)
-- Data: Natural Earth only (public domain). Historical borders (1939 Poland, 1938 Germany plus Austria, and so on) are built from Natural Earth admin-1 provinces where possible.
-- Europe uses a Lambert azimuthal equal-area projection centred near 15°E 52°N. The Pacific gets its own view centred on 160°E; the world uses Robinson or Equal Earth.
-- Countries are filled in side colours on `land`, coastlines are ink 2.5 px, borders are `ink_soft` 1.5 px, the sea is `sea` with faint hatching near the coast, and labels are Kalam.
-- Animation:
-  - colours flood outward from a point (they don't just switch);
+## Maps (maps.py): printed war maps
+- Data: Natural Earth only (public domain). Historical borders are built from admin-1 provinces.
+- Europe uses a Lambert azimuthal equal-area projection at ~15°E 52°N; the Pacific view is centred at ~160°E; the world uses Equal Earth.
+- How it looks:
+  - land in `land`, the sea in `sea` with fine parallel hatching near coasts;
+  - ink coastlines, dashed borders, a light lat/long grid, a compass rose;
+  - sides filled in their colours, with halftone on occupied territory;
+  - labels in Oswald or stencil.
+- How it moves:
+  - colour floods outward from a point;
   - front lines are thick wobbly lines that move;
+  - arrows are fat poster arrows in the side colour with an ink outline, growing along a curved path;
   - city dots pulse when named;
-  - the map camera pans and zooms smoothly.
+  - the camera pans and zooms smoothly.
 
 ## Every shot
-- A slow push-in over the shot (`push_in`).
-- A visual change about every 1-2 seconds.
+- A slow push-in (`push_in`).
+- A visual change every 1-2 seconds.
 - The corner date tag (`date_stamp`).
-- Sound cues are noted with `engine.cue(name, t, start)` for the mix, or listed in the scene's docstring.
-- Clean outputs only: no metadata or encoder tags (`render_clip` already strips them).
+- `print_finish(cr, t)` last.
+- Sound cues listed in the scene docstring.
+- Clean outputs, with no metadata or encoder tags (`render_clip` strips them).
