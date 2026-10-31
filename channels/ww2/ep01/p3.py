@@ -16,7 +16,7 @@ re-times itself when the voiced narration lands. Shots (SHOTLIST.md C2-S05..S23)
     49  MAP         France greys out (the occupied zone floods, Vichy stays pale)               JUNE 1940
     50  CARRIAGE    the railway carriage in the Compiegne clearing                               22 JUNE 1940
     51  CARRIAGE    the same carriage in a sepia 1918 flashback, then a match cut back to 1940   NOV 1918 / JUNE 1940
-    52  WORLD MAP   Britain alone against a grey continent; pull back as the Commonwealth lights up    JUNE 1940
+    52  WORLD MAP   Britain against a grey continent; pull back as Canada, Australia, NZ, South Africa, India light up
     53  CHURCHILL   portrait on blue rays; a firm head shake on "refuses"; NO PEACE stamp       JUNE 1940
 
     /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3 [--sheet | --still T | --frames A-B]
@@ -501,8 +501,10 @@ MAP_UK.side("world:ussr", 0.0, "soviet")
 MAP_UK.side("gbr", 0.0, "allies", occupied=False)
 MAP_UK.camera_key(cut(51, 52), (2.0, 51.0), 6.5)
 MAP_UK.camera_key(L(52).start + 1.2, (2.0, 50.0), 5.6)
-MAP_UK.camera_key(cut(52, 53), (20.0, 20.0), 1.15)
-MAP_UK.side("world:commonwealth", L(52).start + 1.4, "allies", origin=(-2.0, 53.0), dur=1.8, occupied=False)
+MAP_UK.camera_key(cut(52, 53), (45.0, 2.0), 1.0)               # wide enough for Australia, NZ and South Africa
+DOMINIONS = ["can", "aus", "nzl", "zaf", "ind", "pak", "bgd"]   # the Dominions and British India (1940 borders)
+for _k, _c in enumerate(DOMINIONS):
+    MAP_UK.side(_c, L(52).start + 0.5 + 0.2 * min(_k, 4), "allies", occupied=False)
 MAP_UK.label("BRITAIN", cut(51, 52), lonlat=(-6.0, 55.5), size=44, t_out=L(52).start + 1.6)
 
 
@@ -510,7 +512,7 @@ def shot_alone(cr, t, t0, t1):
     MAP_UK.draw(cr, t)
     s = L(52).start + 2.2
     if t >= s:
-        word_card(cr, t, s, "ALMOST ALONE", dur=99, y=H * 0.86, size=110, color="allies")
+        word_card(cr, t, s, "ALMOST ALONE", dur=99, y=H * 0.13, size=110, color="allies")
     date_stamp(cr, t - t0, "JUNE 1940", start=-1)
 
 
