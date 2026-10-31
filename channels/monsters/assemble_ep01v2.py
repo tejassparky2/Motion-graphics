@@ -19,6 +19,7 @@ every shot boundary.
 """
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -77,6 +78,12 @@ CAP_Y_VERSION["diorama_v3"] = {k: v for k, v in CAP_Y_VERSION["diorama"].items()
 CAP_Y_VERSION["diorama_v3"].update({
     "S07": 200,              # v3: over the pebbles above the shrimp, off the claw, the snap and the crack
     "S08a": 620,             # over his shorts: the face, the sneakers in the spill and the sparking strip stay clear
+    "S01": 945,              # the lowest legal line: off the shrimp's eyes, on its fluff (Kai and it fill the middle)
+    "S02": 945,              # the rewind of S01, same layout
+    "S08b": 945,             # below his feet and the skeleton's (text ends ~955, above the Shorts UI line at 960)
+    "S15a": 250,             # above the shrimp's eyes, then the blurred trees above Kai's cap; off the raised claw
+    "S22": [(0.0, CAP_Y), (0.9, 500)],   # the tree close-up keeps the band; after the pull-back, the grass between
+                                         # the tree and Kai at the puddle
 })
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
@@ -252,13 +259,26 @@ def caption_chunks(lines):
     return out
 
 
-def draw_caption(cr, t, chunks, total, y=CAP_Y):
+def cap_y(place, chunk_start, shot_start):
+    """A shot's caption baseline: a number, or [(seconds into the shot, y), ...] when the framing changes inside the
+    shot (each chunk takes the last entry at or before its own start)."""
+    if not isinstance(place, (list, tuple)):
+        return place
+    y = place[0][1]
+    for at, yy in place:
+        if chunk_start - shot_start >= at - 1e-6:
+            y = yy
+    return y
+
+
+def draw_caption(cr, t, chunks, total, y=CAP_Y, shot_start=0.0):
     for i, ch in enumerate(chunks):
         start = ch[0]["start"]
         nxt = chunks[i + 1][0]["start"] if i + 1 < len(chunks) else total
         stop = nxt if nxt - ch[-1]["end"] < 0.5 else ch[-1]["end"] + 0.25
         if not (start - 0.02 <= t < stop):
             continue
+        y = cap_y(y, start, shot_start)
         words = [w["w"] for w in ch]
         space = text_width(cr, " ", CAP_SIZE, fx2d.ROUND) * 1.15
         widths = [text_width(cr, w, CAP_SIZE, fx2d.ROUND) for w in words]
@@ -313,6 +333,11 @@ def main():
     ap.add_argument("--shots", default=None, help="default out/monsters/<version>/shots")
     ap.add_argument("--res", type=int, choices=(720, 1080), default=None,
                     help="output width (default: 1080 for diorama_v3, else 720); 720 is quicker for animatics")
+    ap.add_argument("--crf", type=int, default=14, help="x264 crf (default 14)")
+    ap.add_argument("--max-mb", type=float, default=None,
+                    help="size cap in MB (default 95 above 720 wide, so the file goes through git under GitHub's "
+                         "100 MB limit); an oversized encode is redone from a lossless copy at the lowest crf "
+                         "that fits")
     a = ap.parse_args()
     if a.version == "ep01v2" and a.shots and os.path.abspath(a.shots).startswith(VERSIONS["diorama"]):
         a.version = "diorama"                                  # --shots out/monsters/diorama/shots picks the diorama cut
@@ -348,9 +373,13 @@ def main():
             sys.exit(f"missing shots (use --animatic to slate them): {', '.join(gone)}")
 
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
+    max_mb = a.max_mb if a.max_mb is not None else (95.0 if OW > W else None)
+    lossless = a.out + ".lossless.mkv" if max_mb else None     # yuv420p qp 0: a re-encode from it loses nothing
+    x264 = ["-c:v", "libx264", "-preset", "slow", "-pix_fmt", "yuv420p", *CLEAN]
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{OW}x{OH}",
-                            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-crf", "14", "-preset", "slow",
-                            "-pix_fmt", "yuv420p", *CLEAN, a.out + ".tmp.mp4"], stdin=subprocess.PIPE)
+                            "-r", str(FPS), "-i", "-", "-crf", str(a.crf), *x264, a.out + ".tmp.mp4",
+                            *(["-c:v", "libx264", "-qp", "0", "-preset", "ultrafast", "-pix_fmt", "yuv420p",
+                               lossless] if lossless else [])], stdin=subprocess.PIPE)
     sheet = []
     s01 = None
     frame_no = 0
@@ -387,7 +416,7 @@ def main():
                 t0 = shot.first / FPS
                 fx2d_ab.ab_cards(cr, t - t0, ab[0] - t0, ab[1] - t0, ab[2] - t0)
             if shot.name not in NO_CAPTIONS:
-                draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y))
+                draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y), shot.first / FPS)
             s.flush()
             enc.stdin.write(bytes(s.get_data()))
             if a.check and frame_no % 12 == 0:
@@ -396,6 +425,16 @@ def main():
     enc.stdin.close()
     if enc.wait() != 0:
         sys.exit("ffmpeg failed")
+    crf = a.crf
+    if lossless:
+        while os.path.getsize(a.out + ".tmp.mp4") / 1e6 > max_mb and crf < 30:
+            mb = os.path.getsize(a.out + ".tmp.mp4") / 1e6
+            # x264 shrinks ~15% per crf step on these frames; never jump more than the estimate, so the result is the lowest that fits
+            crf += max(1, int(math.ceil(math.log(mb / max_mb) / -math.log(0.85))))
+            print(f"{mb:.1f} MB > {max_mb:g} MB: re-encoding from the lossless copy at crf {crf}")
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", lossless, "-crf", str(crf), *x264,
+                            a.out + ".tmp.mp4"], check=True)
+        os.remove(lossless)
     # A stream-copy remux clears the "encoder" tag that libx264 writes while encoding, whatever the flags say.
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", a.out + ".tmp.mp4", "-c", "copy", *CLEAN, a.out], check=True)
     os.remove(a.out + ".tmp.mp4")
@@ -403,7 +442,7 @@ def main():
         print("WARNING:", w)
     if missing:
         print(f"missing ({len(missing)}): {', '.join(missing)}")
-    print(f"{a.out}: {frame_no} frames, {frame_no / FPS:.2f} s")
+    print(f"{a.out}: {frame_no} frames, {frame_no / FPS:.2f} s, crf {crf}, {os.path.getsize(a.out) / 1e6:.1f} MB")
     if a.check:
         write_sheet(sheet, os.path.join(os.path.dirname(a.out), os.path.basename(SHEET)))
 
