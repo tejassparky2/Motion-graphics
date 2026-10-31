@@ -1,5 +1,6 @@
-"""Diorama style test (channels/monsters/DIORAMA_TEST.md), helper 10: D1-D5, test frames 1-115. Same window and beats as
-S15 (the same audio), staged for the tilted toy-world camera (mk/diorama.py, island seed 31):
+"""Episode 1 in diorama 2.5D (channels/monsters/DIORAMA_EP01.md), helper 10: S15, THE SNAP: 115 frames + a 12-frame
+handle, the same beats on the same frames as the 3D S15 (the SFX are synced to them), staged for the tilted toy-world
+camera (mk/diorama.py, island seed 31, the world MAP). Its five beats (D1-D5 from the earlier test):
 
     D1  1-41   wide of the clearing, slow push-in: Kai kneels at the pond reaching toward the shrimp; it blinks, looks
                up (13), then its claw rises out of the pond on 2s and is held, dripping (22-41, silence)
@@ -11,9 +12,9 @@ S15 (the same audio), staged for the tilted toy-world camera (mk/diorama.py, isl
                camera follows
     D5  94-115 closer and steeper over him on his back, dazed; the knocked-out stars (composite); eyes close 111-113
 
-    blender -b -y -P channels/monsters/render_shot.py -- diorama D15 OUT [--frames A-B] [--still N --scale 0.5]
-    blender -b -y -P channels/monsters/render_shot.py -- diorama D15 OUT_SUB --frames 46-49 --subject
-    python channels/monsters/diorama/helper10.py OUT OUT_SUB out/monsters/diorama   (flash, impact, stars -> D15.mp4)
+    blender -b -y -P channels/monsters/render_shot.py -- diorama S15 OUT [--frames A-B] [--still N --scale 0.5]
+    blender -b -y -P channels/monsters/render_shot.py -- diorama S15 OUT_SUB --frames 46-49 --subject
+    python channels/monsters/diorama/helper10.py OUT OUT_SUB out/monsters/diorama/shots   (flash, impact, stars)
 
 Characters on 2s/3s; every camera move and the 1s effects sit inside ones=(1, 95); D5 renders on 2s."""
 import math
@@ -30,13 +31,12 @@ except ImportError:                                            # composite() run
 
 from channels.monsters.ep01v2 import helper10 as s15  # noqa: E402  (S15's poses, effects and 2D pass)
 
-A, C, D, E, F, G, END = s15.A, s15.C, s15.D, s15.E, s15.F, s15.G, s15.END
-SHRIMP = (0.0, 0.4, 0.0)                                       # behind the pond (diorama.pond at (0.1, -2.6))
+A, C, D, E, F, G, END, HANDLE = s15.A, s15.C, s15.D, s15.E, s15.F, s15.G, s15.END, s15.HANDLE
 LENS, BLUR = 100.0, 12.0
 HAZE = (0.97, 0.55)                                            # diorama.camera's default haze band
 STAR_PX, CAP_BOX = 30, (60, 120, 600, 900)                     # the D5 stars and where to find the cap in D5
-LAND_HIPS, LAND_YAW = (1.0, -11.5), 0.21                        # Kai's hips where he lands; his head points ~12 deg
-                                                                # west of +Y, toward the pond
+LAND_YAW = 0.21                                                 # where he lands (MAP["kai_down"], his hips) his head
+                                                                # points ~12 deg west of +Y, toward the pond
 
 
 def _pos(target, dist, tilt, yaw=0.0):
@@ -103,11 +103,13 @@ def _swath(origin, reach, half_angle, f0, frames=15):
     return o
 
 
-def d15():
+def s15_diorama():
     from channels.monsters.mk import anim, diorama, erase, hero, meadow, puffshrimp
     sc = bpy.context.scene
     diorama.setup()
     isl = diorama.island(seed=31)
+    SHRIMP = (*diorama.MAP["shrimp"], 0.0)
+    LAND_HIPS = diorama.MAP["kai_down"]
 
     # ---- the shrimp behind the pond, its claw dipped in the water (S15's keys)
     rig = puffshrimp.build(SHRIMP)
@@ -157,8 +159,8 @@ def d15():
     hero.face(k, "relaxed", A, 0.6)
     y0 = loc.y
     flight = []
-    for f, back, tilt, spin in ((F, 0.4, 0.15, 0.0), (F + 2, 1.6, 0.35, 0.3), (F + 4, 3.0, 0.6, 1.0),
-                                (F + 6, 4.2, 0.9, 1.8), (F + 8, 5.0, 1.2, 2.6), (F + 10, 5.6, 1.4, 3.1)):
+    for f, back, tilt, spin in ((F, 0.3, 0.15, 0.0), (F + 2, 1.0, 0.35, 0.3), (F + 4, 1.8, 0.6, 1.0),
+                                (F + 6, 2.6, 0.9, 1.8), (F + 8, 3.2, 1.2, 2.6), (F + 10, 3.6, 1.4, 3.1)):
         u = (f - F) / 10                                      # blown back, tumbling with a half twist
         s15._pose(k, s15.BLOWN, (loc.x + 0.1 * back, y0 - back * 1.6, 1.0 + 7.0 * u * (1 - u) * 1.6), (tilt, 0, spin))
         s15._key_pose(k, f)
@@ -228,17 +230,17 @@ def d15():
     _swath(origin, reach_r, 30.0, E - 1)
     hot = sorted(zip(spots, fx["pop_frames"]), key=lambda s: math.hypot(s[0][0], s[0][1]))[:9]
     s15._puff_smoke([(x, y, diorama.TREE * 0.7, tp) for (x, y, *_), tp in hot], END + 1, size=diorama.TREE * 0.6)
-    print("D15 BLAST_ORIGIN", tuple(round(v, 3) for v in blast), "KAI_LYING", tuple(round(v, 3) for v in land),
+    print("S15 BLAST_ORIGIN", tuple(round(v, 3) for v in blast), "KAI_LYING", tuple(round(v, 3) for v in land),
           "FACE", tuple(round(v, 3) for v in face), "FAN", len(fan), flush=True)
-    return dict(frames=END, step=2, ones=(A, G + 1), subject=[root])
+    return dict(frames=END + HANDLE, step=2, ones=(A, G + 1), subject=[root])
 
 
-SHOTS = {"D15": d15}
+SHOTS = {"S15": s15_diorama}
 
 
 def composite(raw, sub, out_dir):
     """The 2D pass (S15's): flash 44-45, impact frames 46-49 on 2s from the subject pass, knocked-out stars in D5."""
-    return s15.composite(raw, sub, out_dir, name="D15", star_px=STAR_PX, cap_box=CAP_BOX)
+    return s15.composite(raw, sub, out_dir, name="S15", star_px=STAR_PX, cap_box=CAP_BOX)
 
 
 if __name__ == "__main__" and bpy is None:
