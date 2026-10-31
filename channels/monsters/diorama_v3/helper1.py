@@ -496,10 +496,12 @@ def s24bot():
     xv2._twos([arm])
     # low and in front of him (from the south-west, a little off his line): he sprints at the lens and grows to about
     # half the panel; the pond, the shrimp and the bird's plunge stay behind him, soft; a slow drift back on 1s
-    tgt = end.lerp(pond, 0.42)
-    yaw = math.degrees(math.atan2(-run_dir.x, -run_dir.y)) - 14.0
-    a = (tuple(tgt + Vector((0, 0, 2.5))), 60.0, 53.0, yaw, 63.0, 0.1)
-    b = (tuple(tgt + Vector((0, 0, 2.5)) + run_dir * 1.5), 60.0, 53.0, yaw - 3.0, 63.0, 0.1)
+    # (a projection search over tilt/dist/lens/yaw: in the panel's safe band, screen y 640-960 with the bird and the
+    # shrimp inside it too, this is the biggest he gets: ~200 px tall, pushing in to ~230 at the end)
+    tgt = end.lerp(pond, 0.3)
+    yaw = math.degrees(math.atan2(-run_dir.x, -run_dir.y)) + 30.0
+    a = (tuple(tgt + Vector((0, 0, 2.5))), 70.0, 40.0, yaw, 70.0, 0.205)
+    b = (tuple(tgt + Vector((0, 0, 2.5)) + run_dir * 1.0), 64.0, 40.0, yaw - 2.0, 70.0, 0.205)
     cam = xv2._move("cam_s24bot_v3", 1, n, a, b, n)
     keep = {arm, *arm.children_recursive, bird["root"], *bird["root"].children_recursive, sh["root"],
             *sh["root"].children_recursive}
