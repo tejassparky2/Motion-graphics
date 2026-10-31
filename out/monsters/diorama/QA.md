@@ -34,7 +34,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S17 | bGqrs | PASS | 47 / 47 | 0.38 | the drop falls from the claw tip by Kai's face; clean file; 1 NOTE |
 | S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
 | S06 | helper 9 | PASS for the picture; **FIX** no rain in the window | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
-| S07 | helper 2 | PASS for the picture; **FIX** file tags | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
+| S07 | helper 2 | PASS (remuxed clean, 7c99972) | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
 | S09 | helper 3 | PASS for the picture; **FIX** file tags | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
 | S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
@@ -159,12 +159,12 @@ Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-re
 - **Split:** it shows in place in the lower half (S24_FOCUS y 960). Kai is about 240 px tall, clear of the right rail.
 
 ## S07: the strike in the tank (helper 2)
-**PASS for the picture**, with one FIX.
+**PASS** (remuxed clean, 7c99972).
 - **Length and level:** 36 frames, saturation 0.42.
 - **Picture:** the shrimp's eye close-up, the strike and the ring, then the crack runs up the tank glass over the
   shrimp, seen from above. Each beat reads at 360 px and keeps the 3D frame numbers.
-- **FIX (file hygiene):** the mp4 carries 2 encoder tags. A stream-copy remux with deliver_ep01v2.CLEAN clears them;
-  no re-render needed.
+- **FIX (file hygiene), done:** the mp4 carried 2 encoder tags; helper 2's CLEAN remux (7c99972) cleared them
+  (0 tags, 36 frames).
 
 ## S09: waking in the meadow, the cracked sky (helper 3)
 **PASS for the picture**, with one FIX and one NOTE.
