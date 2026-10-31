@@ -631,161 +631,20 @@ class Figure:
 
     def _head(self, cr, t, J, p, face_over, K, kw, flat):
         hx, hy = J["head"]
-        R = HEAD_R * (1.1 if self.leader == "churchill" else 1.0)
-        turn = max(-1.0, min(1.0, p.get("turn", 0.0)))
         face = dict(brow="neutral", mouth="line", sweat=0.0, look=(0.0, 0.0))
         face.update(p.get("face") or {})
         face.update(face_over or {})
+        face["blink"] = _blink(t, self.seed)
+        kind = self.nation or self.civilian or {"churchill": "bowler", "chamberlain": "homburg"}.get(self.leader)
+        spec = dict(R=HEAD_R * (1.1 if self.leader == "churchill" else 1.0), leader=self.leader, nation=self.nation,
+                    civilian=self.civilian, headgear=kind, side=NATION_SIDE.get(self.nation) or
+                    LEADER_SIDE.get(self.leader), turn=max(-1.0, min(1.0, p.get("turn", 0.0))), flat=flat,
+                    tone=self.tone, seed=self.seed, mouth_prop=self.mouth_prop, key_w=kw)
         cr.save()
         cr.translate(hx, hy)
         cr.rotate((p.get("lean", 0.0) + p.get("nod", 0.0) * 0.6) * 0.55)
-        skin = self._fill(col("cream"))
-        jaw = 0.98 if self.leader == "mussolini" else 0.82
-        head = _poly_curve([(-0.98, 0.05), "c", (-1.05, -1.25), (0.85, -1.3), (0.88, -0.42), (0.93, -0.2),
-                            (1.12, 0.12), (0.95, 0.24), (0.97, 0.46), (0.92, 0.58), (0.86, jaw),
-                            (0.12, 0.98 if jaw > 0.9 else 0.94), "c", (-0.3, 0.86), (-0.55, 0.55), (-0.62, 0.42)], R)
-        _printed(cr, head, skin, R * 0.55, K, kw, flat=flat)
-        if flat:                                                    # a silhouette: a rim of light on the face
-            _line(cr, [(0.88 * R, -0.42 * R), (0.95 * R, -0.18 * R), (1.22 * R, 0.14 * R)], 3.0, col("cream", 0.9))
-            for path, c in _headgear_parts(self.nation or self.civilian or {"churchill": "bowler",
-                                           "chamberlain": "homburg"}.get(self.leader, ""), R):
-                _printed(cr, path, self.tone, 0, None, flat=True)
-            cr.restore()
-            return
-        ink = col("ink")
-        # hair
-        hair = HAIR.get(self.leader)
-        if self.leader == "hitler":                                   # side-swept: a fringe down over the brow
-            hp = _poly_curve([(-0.98, 0.1), "c", (-1.08, -1.32), (0.8, -1.38), (0.86, -0.5), (0.72, -0.28),
-                              (0.4, -0.62), (0.05, -0.55), (-0.45, -0.15)], R)
-            _printed(cr, hp, col(hair), 0, K, 3.5)
-        elif self.leader in ("stalin", "roosevelt", "hirohito"):       # swept back / short
-            hl = -0.86 if self.leader == "stalin" else -0.78
-            hp = _poly_curve([(-0.98, 0.15), "c", (-1.1, -1.32), (0.6, -1.4), (0.62, hl), "c", (0.2, -0.75),
-                              (-0.4, -0.45), (-0.72, 0.2)], R)
-            _printed(cr, hp, col(hair), 0, K, 3.5)
-        # ear
-        cr.arc(-0.12 * R, 0.05 * R, 0.2 * R, -1.9, 1.9)
-        cr.set_source_rgba(*ink)
-        cr.set_line_width(3.2)
-        cr.stroke()
-        # eyes and brows (profile; the second eye shows in a 3/4 turn)
-        lx, ly = face["look"]
-        blink = _blink(t, self.seed)
-        eyes = [(0.62 + 0.06 * turn, -0.12)] + ([(0.2 + 0.2 * turn, -0.12)] if turn > 0.35 else [])
-        for i, (ex, ey) in enumerate(eyes):
-            X, Y = ex * R + lx * 0.5, ey * R + ly * 0.5
-            k = 1.0 if i == 0 else 0.8
-            if blink:
-                _line(cr, [(X - 6 * k, Y), (X + 6 * k, Y)], 3.2, ink)
-            else:
-                cr.save()
-                cr.translate(X, Y)
-                cr.scale(3.6 * k, 5.0 * k)
-                cr.arc(0, 0, 1, 0, 2 * math.pi)
-                cr.restore()
-                cr.set_source_rgba(*ink)
-                cr.fill()
-            b = face["brow"]
-            dy0, dy1 = {"angry": (-6, 3), "worried": (3, -7), "sad": (2, -5)}.get(b, (-2, -2))
-            bx, by = ex * R, (ey - 0.36) * R
-            path = _poly([(bx - 10 * k, by + dy0), (bx + 10 * k, by + dy1), (bx + 10 * k, by + dy1 + 4.5),
-                          (bx - 10 * k, by + dy0 + 4.5)])
-            path(cr)
-            cr.set_source_rgba(*ink)
-            cr.fill()
-        if self.leader in ("roosevelt", "hirohito"):                  # pince-nez / round glasses
-            ex = eyes[0][0] * R
-            cr.arc(ex, -0.14 * R, 0.3 * R if self.leader == "hirohito" else 0.24 * R, 0, 2 * math.pi)
-            cr.set_source_rgba(*ink)
-            cr.set_line_width(2.6)
-            cr.stroke()
-            _line(cr, [(ex + 0.27 * R, -0.16 * R), (0.92 * R, -0.12 * R)], 2.4, ink)
-            if self.leader == "hirohito":
-                _line(cr, [(ex - 0.3 * R, -0.16 * R), (-0.1 * R, -0.1 * R)], 2.4, ink)
-        # moustache (under the nose)
-        mo = {"hitler": ((0.84, 0.29), 0.2, 0.13), "stalin": ((0.68, 0.29), 0.48, 0.2),
-              "chamberlain": ((0.72, 0.3), 0.32, 0.12), "hirohito": ((0.8, 0.3), 0.18, 0.08)}.get(self.leader)
-        if mo:
-            (mx, my), w, h = mo
-            if self.leader == "stalin":
-                pth = _poly_curve([(mx, my), "c", (mx + 0.1, my - 0.12), (mx + 0.36, my - 0.12), (mx + w, my + 0.04),
-                                   "c", (mx + 0.36, my + 0.14), (mx + 0.12, my + 0.22), (mx - 0.05, my + 0.2)], R)
-            else:
-                pth = _poly([(mx * R, my * R), ((mx + w) * R, my * R), ((mx + w) * R, (my + h) * R),
-                             (mx * R, (my + h) * R)])
-            _printed(cr, pth, col(HAIR.get(self.leader, "#2b2724")), 0, None)
-        # mouth
-        mx, my = 0.8 * R, 0.55 * R
-        m = face["mouth"]
-        if m == "smile":
-            cr.move_to(mx - 12, my - 4)
-            cr.curve_to(mx - 6, my + 4, mx + 2, my + 4, mx + 8, my - 1)
-            cr.set_source_rgba(*ink)
-            cr.set_line_width(3.4)
-            cr.stroke()
-        elif m == "frown":
-            cr.move_to(mx - 12, my + 4)
-            cr.curve_to(mx - 6, my - 3, mx + 2, my - 3, mx + 7, my + 2)
-            cr.set_source_rgba(*ink)
-            cr.set_line_width(3.4)
-            cr.stroke()
-        elif m == "o":
-            cr.save()
-            cr.translate(mx, my + 2)
-            cr.scale(5, 7)
-            cr.arc(0, 0, 1, 0, 2 * math.pi)
-            cr.restore()
-            cr.set_source_rgba(*col("#4a2420"))
-            cr.fill()
-        elif m == "grit":
-            _printed(cr, _poly([(mx - 12, my - 4), (mx + 7, my - 4), (mx + 7, my + 5), (mx - 12, my + 5)]),
-                     col("white"), 0, ink, 2.4)
-        else:
-            _line(cr, [(mx - 12, my), (mx + 6, my)], 3.4, ink)
-        # mouth props
-        if self.mouth_prop == "pipe":
-            _line(cr, [(mx + 4, my + 1), (mx + 26, my + 9)], 4.4, col("#3b281c"))
-            _printed(cr, _poly([(mx + 22, my + 2), (mx + 36, my + 2), (mx + 34, my + 22), (mx + 24, my + 22)]),
-                     col("#5b3a26"), 3, ink, 2.6, dots=False)
-        elif self.mouth_prop == "cigar":
-            cr.save()
-            cr.translate(mx + 4, my + 1)
-            cr.rotate(0.15)
-            _printed(cr, _poly([(0, -4.5), (34, -4.5), (34, 4.5), (0, 4.5)]), col("#7a4a2a"), 2, ink, 2.4,
-                     dots=False)
-            cr.arc(36, 0, 3.6, 0, 2 * math.pi)
-            cr.set_source_rgba(*col("fire"))
-            cr.fill()
-            cr.restore()
-            self._smoke(cr, t, mx + 46, my - 2)
-        elif self.mouth_prop == "holder":
-            _line(cr, [(mx + 4, my), (mx + 36, my - 20)], 3.0, ink)
-            _line(cr, [(mx + 36, my - 20), (mx + 46, my - 26)], 5.0, col("white"))
-            self._smoke(cr, t, mx + 48, my - 32)
-        # sweat
-        if face.get("sweat", 0) > 0:
-            k = face["sweat"] * 1.3
-            sx, sy = -0.55 * R, -0.75 * R + 4 * math.sin(t * 3)
-            pth = _poly_curve([(sx / R, (sy - 13 * k) / R), "c", ((sx + 7 * k) / R, (sy - 2 * k) / R),
-                               ((sx + 7 * k) / R, (sy + 7 * k) / R), (sx / R, (sy + 7 * k) / R), "c",
-                               ((sx - 7 * k) / R, (sy + 7 * k) / R), ((sx - 7 * k) / R, (sy - 2 * k) / R),
-                               (sx / R, (sy - 13 * k) / R)], R)
-            _printed(cr, pth, col("#9fc6d6"), 0, ink, 2.4)
-        # headgear
-        kind = self.nation or self.civilian or {"churchill": "bowler", "chamberlain": "homburg"}.get(self.leader)
-        if kind:
-            side_c = col(NATION_SIDE.get(self.nation, "axis")) if self.nation else None
-            for path, c in _headgear_parts(kind, R):
-                _printed(cr, path, col(c) if c else side_c, R * 0.6, ink, kw * 0.9)
+        draw_head(cr, spec, face, t)
         cr.restore()
-
-    def _smoke(self, cr, t, x, y):
-        for i in range(3):
-            u = (t * 0.6 + i / 3.0) % 1.0
-            cr.arc(x + 6 * math.sin(u * 5 + i), y - 34 * u, 4 + 7 * u, 0, 2 * math.pi)
-            cr.set_source_rgba(*col("ink_soft", 0.3 * (1 - u)))
-            cr.fill()
 
     def _rifle(self, cr, J, p, t, K):
         """The rifle: aimed level from the shoulder through the front hand, or carried up from the near hand."""
@@ -839,6 +698,189 @@ class Figure:
             cr.set_line_width(4.0)
             cr.set_source_rgba(*ink)
             cr.stroke()
+
+
+# ---------------------------------------------------------------- heads (the hook and the fallback)
+def draw_head(cr, spec, expression, t):
+    """THE HEAD HOOK (helper 2 draws the heads and faces in channels/ww2/kit/heads.py; until that module exists,
+    helper 1's poster head below is used). Called by every Figure in head space:
+
+        origin = the centre of the skull, +x = the way the figure faces (profile front), +y = down, units = px,
+        R = spec["R"] the skull radius (the neck meets the skull around (-0.1R, +0.95R)); the body has already been
+        drawn, so the head paints over the collar. Any rotation (lean, nod) is already applied.
+
+    spec:       {"R": float, "leader": str|None, "nation": str|None, "civilian": str|None,
+                 "headgear": str|None (nation name, "flatcap", "hat", "homburg", "bowler", "scarf"),
+                 "side": palette name|None, "turn": -1..1 (3/4 toward the viewer), "flat": bool (one-tone crowd
+                 silhouette in spec["tone"]), "tone": rgba|None, "seed": int, "mouth_prop": "pipe"|"cigar"|
+                 "holder"|None, "key_w": key-line width}
+    expression: {"brow": "neutral|angry|worried|sad", "mouth": "line|smile|o|grit|frown", "sweat": 0..1,
+                 "look": (dx, dy), "blink": bool}
+    """
+    fn = _HEAD_IMPL.get("fn")
+    if fn is None:
+        try:
+            from channels.ww2.kit import heads
+            fn = heads.draw_head
+        except ImportError:
+            fn = _head_fallback
+        _HEAD_IMPL["fn"] = fn
+    fn(cr, spec, expression, t)
+
+
+_HEAD_IMPL = {}
+
+
+def _head_fallback(cr, s, face, t):
+    """helper 1's poster head (the fallback until channels/ww2/kit/heads.py lands): see draw_head()."""
+    R, turn, flat = s["R"], s["turn"], s["flat"]
+    K, kw = (None if flat else col("ink")), s.get("key_w", 5.0)
+    skin = (s['tone'] if flat else col("cream"))
+    jaw = 0.98 if s['leader'] == "mussolini" else 0.82
+    head = _poly_curve([(-0.98, 0.05), "c", (-1.05, -1.25), (0.85, -1.3), (0.88, -0.42), (0.93, -0.2),
+                        (1.12, 0.12), (0.95, 0.24), (0.97, 0.46), (0.92, 0.58), (0.86, jaw),
+                        (0.12, 0.98 if jaw > 0.9 else 0.94), "c", (-0.3, 0.86), (-0.55, 0.55), (-0.62, 0.42)], R)
+    _printed(cr, head, skin, R * 0.55, K, kw, flat=flat)
+    if flat:                                                    # a silhouette: a rim of light on the face
+        _line(cr, [(0.88 * R, -0.42 * R), (0.95 * R, -0.18 * R), (1.22 * R, 0.14 * R)], 3.0, col("cream", 0.9))
+        for path, c in _headgear_parts(s['nation'] or s['civilian'] or {"churchill": "bowler",
+                                       "chamberlain": "homburg"}.get(s['leader'], ""), R):
+            _printed(cr, path, s['tone'], 0, None, flat=True)
+        return
+    ink = col("ink")
+    # hair
+    hair = HAIR.get(s['leader'])
+    if s['leader'] == "hitler":                                   # side-swept: a fringe down over the brow
+        hp = _poly_curve([(-0.98, 0.1), "c", (-1.08, -1.32), (0.8, -1.38), (0.86, -0.5), (0.72, -0.28),
+                          (0.4, -0.62), (0.05, -0.55), (-0.45, -0.15)], R)
+        _printed(cr, hp, col(hair), 0, K, 3.5)
+    elif s['leader'] in ("stalin", "roosevelt", "hirohito"):       # swept back / short
+        hl = -0.86 if s['leader'] == "stalin" else -0.78
+        hp = _poly_curve([(-0.98, 0.15), "c", (-1.1, -1.32), (0.6, -1.4), (0.62, hl), "c", (0.2, -0.75),
+                          (-0.4, -0.45), (-0.72, 0.2)], R)
+        _printed(cr, hp, col(hair), 0, K, 3.5)
+    # ear
+    cr.arc(-0.12 * R, 0.05 * R, 0.2 * R, -1.9, 1.9)
+    cr.set_source_rgba(*ink)
+    cr.set_line_width(3.2)
+    cr.stroke()
+    # eyes and brows (profile; the second eye shows in a 3/4 turn)
+    lx, ly = face["look"]
+    blink = face.get("blink", False)
+    eyes = [(0.62 + 0.06 * turn, -0.12)] + ([(0.2 + 0.2 * turn, -0.12)] if turn > 0.35 else [])
+    for i, (ex, ey) in enumerate(eyes):
+        X, Y = ex * R + lx * 0.5, ey * R + ly * 0.5
+        k = 1.0 if i == 0 else 0.8
+        if blink:
+            _line(cr, [(X - 6 * k, Y), (X + 6 * k, Y)], 3.2, ink)
+        else:
+            cr.save()
+            cr.translate(X, Y)
+            cr.scale(3.6 * k, 5.0 * k)
+            cr.arc(0, 0, 1, 0, 2 * math.pi)
+            cr.restore()
+            cr.set_source_rgba(*ink)
+            cr.fill()
+        b = face["brow"]
+        dy0, dy1 = {"angry": (-6, 3), "worried": (3, -7), "sad": (2, -5)}.get(b, (-2, -2))
+        bx, by = ex * R, (ey - 0.36) * R
+        path = _poly([(bx - 10 * k, by + dy0), (bx + 10 * k, by + dy1), (bx + 10 * k, by + dy1 + 4.5),
+                      (bx - 10 * k, by + dy0 + 4.5)])
+        path(cr)
+        cr.set_source_rgba(*ink)
+        cr.fill()
+    if s['leader'] in ("roosevelt", "hirohito"):                  # pince-nez / round glasses
+        ex = eyes[0][0] * R
+        cr.arc(ex, -0.14 * R, 0.3 * R if s['leader'] == "hirohito" else 0.24 * R, 0, 2 * math.pi)
+        cr.set_source_rgba(*ink)
+        cr.set_line_width(2.6)
+        cr.stroke()
+        _line(cr, [(ex + 0.27 * R, -0.16 * R), (0.92 * R, -0.12 * R)], 2.4, ink)
+        if s['leader'] == "hirohito":
+            _line(cr, [(ex - 0.3 * R, -0.16 * R), (-0.1 * R, -0.1 * R)], 2.4, ink)
+    # moustache (under the nose)
+    mo = {"hitler": ((0.6, 0.28), 0.3, 0.18), "stalin": ((0.46, 0.29), 0.48, 0.2),
+          "chamberlain": ((0.56, 0.3), 0.36, 0.13), "hirohito": ((0.64, 0.31), 0.26, 0.1)}.get(s['leader'])
+    if mo:
+        (mx, my), w, h = mo
+        if s['leader'] == "stalin":
+            pth = _poly_curve([(mx, my), "c", (mx + 0.1, my - 0.12), (mx + 0.36, my - 0.12), (mx + w, my + 0.04),
+                               "c", (mx + 0.36, my + 0.14), (mx + 0.12, my + 0.22), (mx - 0.05, my + 0.2)], R)
+        else:
+            pth = _poly([(mx * R, my * R), ((mx + w) * R, my * R), ((mx + w) * R, (my + h) * R),
+                         (mx * R, (my + h) * R)])
+        _printed(cr, pth, col(HAIR.get(s['leader'], "#2b2724")), 0, None)
+    # mouth
+    mx, my = 0.8 * R, 0.55 * R
+    m = face["mouth"]
+    if m == "smile":
+        cr.move_to(mx - 12, my - 4)
+        cr.curve_to(mx - 6, my + 4, mx + 2, my + 4, mx + 8, my - 1)
+        cr.set_source_rgba(*ink)
+        cr.set_line_width(3.4)
+        cr.stroke()
+    elif m == "frown":
+        cr.move_to(mx - 12, my + 4)
+        cr.curve_to(mx - 6, my - 3, mx + 2, my - 3, mx + 7, my + 2)
+        cr.set_source_rgba(*ink)
+        cr.set_line_width(3.4)
+        cr.stroke()
+    elif m == "o":
+        cr.save()
+        cr.translate(mx, my + 2)
+        cr.scale(5, 7)
+        cr.arc(0, 0, 1, 0, 2 * math.pi)
+        cr.restore()
+        cr.set_source_rgba(*col("#4a2420"))
+        cr.fill()
+    elif m == "grit":
+        _printed(cr, _poly([(mx - 12, my - 4), (mx + 7, my - 4), (mx + 7, my + 5), (mx - 12, my + 5)]),
+                 col("white"), 0, ink, 2.4)
+    else:
+        _line(cr, [(mx - 12, my), (mx + 6, my)], 3.4, ink)
+    # mouth props
+    if s['mouth_prop'] == "pipe":
+        _line(cr, [(mx + 4, my + 1), (mx + 26, my + 9)], 4.4, col("#3b281c"))
+        _printed(cr, _poly([(mx + 22, my + 2), (mx + 36, my + 2), (mx + 34, my + 22), (mx + 24, my + 22)]),
+                 col("#5b3a26"), 3, ink, 2.6, dots=False)
+    elif s['mouth_prop'] == "cigar":
+        cr.save()
+        cr.translate(mx + 4, my + 1)
+        cr.rotate(0.15)
+        _printed(cr, _poly([(0, -4.5), (34, -4.5), (34, 4.5), (0, 4.5)]), col("#7a4a2a"), 2, ink, 2.4,
+                 dots=False)
+        cr.arc(36, 0, 3.6, 0, 2 * math.pi)
+        cr.set_source_rgba(*col("fire"))
+        cr.fill()
+        cr.restore()
+        _smoke(cr, t, mx + 46, my - 2)
+    elif s['mouth_prop'] == "holder":
+        _line(cr, [(mx + 4, my), (mx + 36, my - 20)], 3.0, ink)
+        _line(cr, [(mx + 36, my - 20), (mx + 46, my - 26)], 5.0, col("white"))
+        _smoke(cr, t, mx + 48, my - 32)
+    # sweat
+    if face.get("sweat", 0) > 0:
+        k = face["sweat"] * 1.3
+        sx, sy = -0.55 * R, -0.75 * R + 4 * math.sin(t * 3)
+        pth = _poly_curve([(sx / R, (sy - 13 * k) / R), "c", ((sx + 7 * k) / R, (sy - 2 * k) / R),
+                           ((sx + 7 * k) / R, (sy + 7 * k) / R), (sx / R, (sy + 7 * k) / R), "c",
+                           ((sx - 7 * k) / R, (sy + 7 * k) / R), ((sx - 7 * k) / R, (sy - 2 * k) / R),
+                           (sx / R, (sy - 13 * k) / R)], R)
+        _printed(cr, pth, col("#9fc6d6"), 0, ink, 2.4)
+    # headgear
+    kind = s['nation'] or s['civilian'] or {"churchill": "bowler", "chamberlain": "homburg"}.get(s['leader'])
+    if kind:
+        side_c = col(NATION_SIDE.get(s['nation'], "axis")) if s['nation'] else None
+        for path, c in _headgear_parts(kind, R):
+            _printed(cr, path, col(c) if c else side_c, R * 0.6, ink, kw * 0.9)
+
+
+def _smoke(cr, t, x, y):
+    for i in range(3):
+        u = (t * 0.6 + i / 3.0) % 1.0
+        cr.arc(x + 6 * math.sin(u * 5 + i), y - 34 * u, 4 + 7 * u, 0, 2 * math.pi)
+        cr.set_source_rgba(*col("ink_soft", 0.3 * (1 - u)))
+        cr.fill()
 
 
 # ---------------------------------------------------------------- crowds
