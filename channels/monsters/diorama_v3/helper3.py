@@ -294,4 +294,77 @@ def s09():
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]])
 
 
-SHOTS = {"S09": s09}
+def s13():
+    """S13 "Something else was already drinking." (v2 diorama S13 on the v3 island and timing): the puff-shrimp drinking
+    at the pond beyond, ripples, and Kai crawling toward us (S12's crawl) to the pond's south bank, seen from the
+    north."""
+    from channels.monsters.diorama import helper9 as d9
+    from channels.monsters.diorama_v3.shots import v3_frames
+    from channels.monsters.ep01v2 import helper9 as h9
+    from channels.monsters.mk import hero
+    diorama.setup()
+    isl = diorama.island(seed=31)
+    n = v3_frames("S13")
+    keep = h9.SHRIMP_AT
+    h9.SHRIMP_AT = d3.SHRIMP
+    try:
+        h9._dipped_shrimp(1, n)
+    finally:
+        h9.SHRIMP_AT = keep
+    h9._ripples((d3.SHRIMP[0] - 1.5, d3.SHRIMP[1] - 1.7, 0.03), -20, n)
+    rig = h9._crawling_kai((d3.KAI_STOP[0], d3.KAI_STOP[1] - 2.0, 0.0), math.pi, 1, 40, 2.0, period=16, look_up=3.0,
+                           step=2)                                 # S12's crawl, stopping at S14's spot
+    hero.line_width(rig, 0.0025)
+    tgt = (0.4, -5.0)
+    cam = diorama.camera("cam_s13", (tgt[0], tgt[1], 1.0), dist=70, tilt=45, yaw=165, lens=100, blur=12)
+    d9._cut_front(isl, cam, tgt)                                   # from the north, as S12: he crawls toward us
+    return dict(frames=n, step=1, subject=[rig["arm"]])
+
+
+def s14():
+    """S14 "A shrimp. On land. Impossible." (v2 diorama S14 on the v3 island and timing): Kai on his belly at the pond,
+    his face tipped up to the lens past the cap's brim, the shrimp drinking beyond him out of focus; a flat stare on
+    "On land.", then a one-brow "Impossible." with a head tilt."""
+    from channels.monsters.diorama_v3.shots import v3_frames
+    from channels.monsters.ep01v2 import helper9 as h9
+    from channels.monsters.mk import hero
+    diorama.setup()
+    diorama.island(seed=31)
+    n = v3_frames("S14")
+    w = _words("S14")
+    f_on, f_imp = w.get("on", 29), w.get("impossible", 50)
+    keep = h9.SHRIMP_AT
+    h9.SHRIMP_AT = d3.SHRIMP
+    try:
+        h9._dipped_shrimp(1, n)                                    # still drinking beyond him (out of focus)
+    finally:
+        h9.SHRIMP_AT = keep
+    rig = h9._crawling_kai((d3.KAI_STOP[0], d3.KAI_STOP[1], 0.0), math.pi, 1, n, 0.0, period=10000, look_up=1.0)
+    arm = rig["arm"]
+    hero.line_width(rig, 0.0015)
+    for f in (1, 5001):                                            # the face tipped up toward the lens
+        bpy.context.scene.frame_set(f)
+        h9._aim(arm, "neck", (0, 0.15, 0.99))
+        h9._aim(arm, "head 1", (0, 0.88, 0.48))                    # looking up past the brim, at the lens
+        for b in ("neck", "head 1"):
+            arm.pose.bones[b].keyframe_insert("rotation_quaternion", frame=f)
+    h9._face_mix(rig, {"face_surprise": 0.4}, 1)
+    h9._face_mix(rig, {"eye_zitome": 1.0, "mouth_short": 0.7}, f_on - 2)                  # "On land."
+    h9._face_mix(rig, {"eye_zitome": 1.0, "eye_brow_down_L": 1.0, "eye_brow_up_R": 0.7, "mouth_short": 0.8,
+                       "lip_down": 0.5, "look_down": 0.15}, f_imp - 2)                     # "Impossible."
+    head = arm.pose.bones["head 1"]
+    for f, tilt in ((1, 0.0), (f_imp - 3, 0.0), (f_imp - 2, 0.16)):
+        bpy.context.scene.frame_set(f)
+        head.rotation_quaternion = head.rotation_quaternion.copy() @ Quaternion((0, 1, 0), tilt)
+        head.keyframe_insert("rotation_quaternion", frame=f)
+    for fc in anim.all_fcurves(arm.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    bpy.context.scene.frame_set(1)
+    bpy.context.view_layer.update()
+    eye = arm.matrix_world @ head.head + Vector((0, 0, 0.7))
+    diorama.camera("cam_s14", eye, dist=38, tilt=42, yaw=180, lens=110, blur=12)
+    return dict(frames=n, step=3, subject=[arm])
+
+
+SHOTS = {"S09": s09, "S13": s13, "S14": s14}
