@@ -27,24 +27,26 @@ SKIN_DK = "#a7825f"             # cast shadows (under the brow, nose, lip, chin)
 LIP = "#a4584a"
 
 # ---------------------------------------------------------------- characters (ONE trademark each + silhouette)
-_BASE = dict(width=1.0, jaw=0.0, chin=0.0, jowl=0.0, nose=1.0, brow=1.0, neck=1.0, hair="short", hair_col="#3b2f27",
+_BASE = dict(width=1.0, jaw=0.0, chin=0.0, jowl=0.0, nose=1.0, nose_drop=0.0, bulb=0.15, brow=1.0, neck=1.0, hair="short", hair_col="#3b2f27",
              vol=1.03, recede=0.0, moustache=None, glasses=None, prop=None, hat=None, scale=1.0, dome=False)
 CHARACTERS = {
     "generic": {},
-    "hitler": dict(hair="fringe", hair_col="#221d1a", moustache="toothbrush", nose=1.08, width=0.97),
-    "stalin": dict(hair="swept", hair_col="#2b2724", vol=1.09, moustache="walrus", prop="pipe", width=1.04, jowl=0.05,
-                   nose=1.05),
-    "churchill": dict(hair="thin", hair_col="#cdc4b2", width=1.2, jowl=0.36, chin=-0.06, nose=0.78, prop="cigar",
-                      hat="bowler", neck=1.35, brow=1.15),   # (stick passes R 1.1x for him; portrait too)
+    "hitler": dict(hair="fringe", hair_col="#1d1917", moustache="toothbrush", nose=1.1, bulb=0.3, nose_drop=0.02,
+                   width=0.95),
+    "stalin": dict(hair="brushback", hair_col="#57524b", vol=1.13, recede=0.06, moustache="walrus", prop="pipe",
+                   width=1.12, jowl=0.08, nose=1.12, bulb=0.45, nose_drop=0.04),
+    "churchill": dict(hair="thin", hair_col="#cdc4b2", width=1.2, jowl=0.36, chin=-0.06, prop="cigar",
+                      hat="bowler", neck=1.35, brow=1.15, nose=0.68, bulb=0.7, nose_drop=-0.02),  # (stick passes R 1.1x)
     "roosevelt": dict(hair="receding", hair_col="#8f8b84", recede=0.18, jaw=0.12, chin=0.08, glasses="pincenez",
-                      prop="holder", nose=1.06),
-    "mussolini": dict(hair=None, dome=True, jaw=0.22, chin=0.1, width=1.05, brow=1.25, neck=1.25),
-    "hirohito": dict(hair="part", hair_col="#1f1c1a", glasses="round", moustache="small", width=0.94),
+                      prop="holder", nose=1.08, bulb=0.0, nose_drop=-0.04),
+    "mussolini": dict(hair=None, dome=True, jaw=0.22, chin=0.1, width=1.05, brow=1.25, neck=1.25, nose=1.02, bulb=0.3),
+    "hirohito": dict(hair="part", hair_col="#1f1c1a", glasses="round", moustache="small", width=0.94, nose=0.8,
+                     bulb=0.1),
     "chamberlain": dict(hair="receding", hair_col="#6f6a62", recede=0.22, moustache="clipped", hat="homburg",
-                        nose=1.16, width=0.92, neck=0.85),
+                        nose=1.32, bulb=0.0, nose_drop=0.09, width=0.92, neck=0.85),
     "daladier": dict(hair="swept", hair_col="#2e2925", vol=1.07, width=1.13, jaw=0.06, neck=1.4, jowl=0.1,
-                     nose=0.95),
-    "chiang": dict(hair=None, dome=True, moustache="thin", width=0.93, chin=0.04, nose=0.95),
+                     nose=0.95, bulb=0.55),
+    "chiang": dict(hair=None, dome=True, moustache="thin", width=0.93, chin=0.04, nose=0.84, bulb=0.1),
 }
 LEADERS = [k for k in CHARACTERS if k != "generic"]
 NAMES = {"hitler": "ADOLF HITLER", "stalin": "JOSEPH STALIN", "churchill": "WINSTON CHURCHILL",
@@ -60,7 +62,7 @@ def character(name, seed=0):
         return c
     r = random.Random(seed * 131 + 7)
     c.update(width=r.uniform(0.93, 1.07), jaw=r.uniform(-0.04, 0.1), chin=r.uniform(-0.03, 0.06),
-             nose=r.uniform(0.88, 1.12), hair_col=r.choice(["#2f2620", "#4a3a2c", "#6b5236", "#2a2622", "#8a6a3e"]),
+             nose=r.uniform(0.85, 1.18), bulb=r.uniform(0.0, 0.5), nose_drop=r.uniform(-0.03, 0.04), hair_col=r.choice(["#2f2620", "#4a3a2c", "#6b5236", "#2a2622", "#8a6a3e"]),
              moustache=r.choice([None, None, None, "clipped", "small"]))
     return c
 
@@ -133,9 +135,9 @@ _ANCH = {  # features: (profile, three-quarter, front)
     "mw_back": (0.13, 0.2, 0.21), "mw_front": (0.08, 0.16, 0.21),
     "ear": ((-0.14, 0.03), (-0.52, 0.03), (-0.9, 0.03)),
     "fringe": (  # hitler's swept lock: part, over, tip on the brow, back
-        [(0.05, -1.02), (0.62, -0.88), (0.9, -0.42), (0.55, -0.62)],
-        [(-0.2, -1.0), (0.45, -0.92), (0.7, -0.46), (0.3, -0.66)],
-        [(-0.36, -1.0), (0.3, -0.98), (0.52, -0.5), (0.05, -0.7)],
+        [(0.0, -1.06), (0.72, -0.86), (0.97, -0.3), (0.48, -0.52)],
+        [(-0.26, -1.04), (0.52, -0.94), (0.8, -0.34), (0.22, -0.58)],
+        [(-0.42, -1.02), (0.36, -1.0), (0.62, -0.36), (-0.02, -0.64)],
     ),
 }
 
@@ -235,6 +237,7 @@ def _silhouette(c, w):
             x += (c["brow"] - 1.0) * 0.08 * (1 - w[2])
         if i == 8:                                          # the nose in profile
             x = 0.86 * c["width"] + (x - 0.86 * c["width"]) * c["nose"]
+            y += c["nose_drop"] * (1 - w[2])
         out.append((x, y))
     return out
 
@@ -248,6 +251,8 @@ def draw_head(cr, spec, expression, t):
     R = spec.get("R", 31.0)
     name = spec.get("leader") or "generic"
     c = character(name, spec.get("seed", 0))
+    if spec.get("nation") == "france" and name == "generic":    # the long French poster nose
+        c.update(nose=1.42, nose_drop=0.07, bulb=0.0)
     turn = abs(spec.get("turn", 0.0) or 0.0)
     w = _w3(turn)
     e = _expression(expression)
@@ -264,7 +269,7 @@ def draw_head(cr, spec, expression, t):
     sil = _silhouette(c, w)
     head = _spline(sil, R)
     nx = -0.12 * w[0] + -0.06 * w[1] + 0.0 * w[2]
-    neck = _st._capsule((nx * R, 0.55 * R), (nx * R, 1.5 * R), 0.44 * R * c["neck"], 0.5 * R * c["neck"])
+    neck = _st._capsule((nx * R, 0.5 * R), (nx * R, 1.12 * R), 0.52 * R * c["neck"], 0.6 * R * c["neck"])
 
     if flat:
         tone = spec.get("tone") or col("ink_soft")
@@ -340,10 +345,31 @@ def draw_head(cr, spec, expression, t):
     # headgear last
     if hat:
         side_c = col(_st.NATION_SIDE.get(spec.get("nation"), "axis")) if spec.get("nation") else None
-        for path, cc in _st._headgear_parts(hat, R):
-            _st._printed(cr, path, col(cc) if cc else side_c, R * 0.5, ink, kw * 0.95)
+        if hat == "homburg":
+            _homburg(cr, R, ink, kw)
+        else:
+            for path, cc in _st._headgear_parts(hat, R):
+                _st._printed(cr, path, col(cc) if cc else side_c, R * 0.5, ink, kw * 0.95)
     if c["scale"] != 1.0:
         cr.restore()
+
+
+def _homburg(cr, R, ink, kw):
+    """Chamberlain's homburg: a crown with a centre dent, a ribbon band and a brim curled up at both sides."""
+    felt = col("#34302c")
+    brim = _spline([(-1.52, -0.9), (-1.3, -0.66), (0.0, -0.57), (1.32, -0.66), (1.56, -0.92), (1.36, -0.79),
+                    (0.0, -0.71), (-1.32, -0.79)], R, tension=0.45)
+    crown = _spline([(-0.82, -0.7), (-0.88, -1.3), (-0.55, -1.56), (-0.12, -1.44), (0.12, -1.44), (0.55, -1.57),
+                     (0.9, -1.32), (0.84, -0.7)], R, tension=0.4)
+    _st._printed(cr, brim, felt, R * 0.3, ink, kw * 0.9)
+    _st._printed(cr, crown, felt, R * 0.45, ink, kw * 0.95)
+    band = _spline([(-0.84, -0.74), (0.84, -0.74), (0.85, -0.92), (-0.85, -0.92)], R, tension=0.1)
+    _fill(cr, band, col("#1d1a18"))
+    cr.move_to(-0.38 * R, -1.5 * R)                               # the dent down the crown
+    cr.curve_to(-0.1 * R, -1.32 * R, 0.15 * R, -1.32 * R, 0.42 * R, -1.5 * R)
+    cr.set_source_rgba(*ink)
+    cr.set_line_width(max(1.5, kw * 0.6))
+    cr.stroke()
 
 
 def _hair(cr, c, sil, w, R, dw, hat, t):
@@ -367,11 +393,28 @@ def _hair(cr, c, sil, w, R, dw, hat, t):
     _polyR(above, R)(cr)
     cr.clip()
     _fill(cr, mass, hc)
-    if c["hair"] in ("swept", "fringe", "part", "short"):        # a highlight streak and comb lines
+    if c["hair"] in ("swept", "fringe", "part", "short", "brushback"):   # a highlight streak and comb lines
         _st._line(cr, [(-0.55 * R, -0.62 * R), (0.0, -0.9 * R), (0.4 * R, -0.86 * R)], max(1.5, R * 0.035),
                   col("white", 0.35))
     _stroke(cr, mass, col("ink"), dw)
     cr.restore()
+    if c["hair"] == "brushback":                                 # stalin: brushed straight back and high
+        crest = _ellipse((0.32 - 0.3 * w[2]) * R, -1.0 * R, 0.62 * R, 0.24 * R, -0.12 + 0.12 * w[2])
+        cr.save()                                                # merged into the hair: only its top edge is inked
+        _polyR([(-2, -3), (2, -3), (2, -0.95), (-2, -0.95)], R)(cr)
+        cr.clip()
+        _fill(cr, crest, hc)
+        _stroke(cr, crest, col("ink"), dw)
+        cr.restore()
+        cr.save()
+        _polyR([(-2, -0.95), (2, -0.95), (2, 1), (-2, 1)], R)(cr)
+        cr.clip()
+        _fill(cr, crest, hc)
+        cr.restore()
+        for k in range(3):                                       # comb lines running back
+            y0 = -1.12 + k * 0.1
+            _st._line(cr, [((0.62 - 0.4 * w[2]) * R, y0 * R), ((-0.1 - 0.3 * w[2]) * R, (y0 - 0.02) * R),
+                           ((-0.62) * R, (y0 + 0.22) * R)], max(1.2, R * 0.025), col("white", 0.3))
     if c["hair"] == "part":                                      # hirohito: a neat side part
         px = (-0.1 - 0.35 * w[2]) * R
         _st._line(cr, [(px, -1.0 * R), (px + 0.2 * R, -0.72 * R)], max(1.5, R * 0.03), col("cream", 0.6))
@@ -451,6 +494,7 @@ def _face(cr, c, w, e, R, dw, kw, t, spec):
     bx, by = _mix3(_ANCH["nose_base"], w)
     rx, tx, bx = rx * W_, tx * W_, bx * W_
     tx = bx + (tx - bx) * c["nose"]
+    ty += c["nose_drop"]
     if w[0] < 0.75:
         # the nose: a skin shape jutting from the bridge (it breaks the cheek's contour in three-quarter), its
         # side plane a thin shadow sliver, a dark nostril; key line on the bridge, the tip and the underside only
@@ -475,6 +519,16 @@ def _face(cr, c, w, e, R, dw, kw, t, spec):
         cr.stroke()
     else:
         _st._line(cr, [((bx - 0.12) * R, (by - 0.04) * R), ((bx - 0.05) * R, (by + 0.01) * R)], dw, ink)
+    if c["bulb"] > 0.25:                                         # a round, fleshy tip (Churchill, Stalin...)
+        sil8 = _silhouette(c, w)[8]
+        bx_, by_ = (sil8 if w[0] >= 0.75 else (tx, ty))
+        br_ = (0.05 + 0.08 * c["bulb"])
+        bulb = _ellipse((bx_ - br_ * 0.6) * R, (by_ + 0.05) * R, br_ * R, br_ * 0.85 * R)
+        _fill(cr, bulb, col(SKIN))
+        cr.arc((bx_ - br_ * 0.6) * R, (by_ + 0.05) * R, br_ * R, -1.4, 1.9)
+        cr.set_source_rgba(*ink)
+        cr.set_line_width(dw)
+        cr.stroke()
     # the cheekbone plane break (three-quarter / front, big heads)
     if R > 60 and w[0] < 0.7:
         cx0 = (-0.05 if w[2] < 0.5 else -0.52) * W_
@@ -542,7 +596,7 @@ def _mouth(cr, c, w, e, R, dw, ink):
 
 
 _MOUST = {   # (half-width, height, droop, gap) in R units
-    "toothbrush": (0.1, 0.1, 0.0, 0.0), "walrus": (0.3, 0.12, 0.09, 0.0), "clipped": (0.19, 0.07, 0.02, 0.0),
+    "toothbrush": (0.1, 0.1, 0.0, 0.0), "walrus": (0.37, 0.15, 0.11, 0.0), "clipped": (0.19, 0.07, 0.02, 0.0),
     "small": (0.13, 0.05, 0.01, 0.02), "thin": (0.17, 0.032, 0.03, 0.015),
 }
 
@@ -552,6 +606,8 @@ def _moustache(cr, c, w, R, dw):
     if not kind:
         return
     hw, h, droop, gap = _MOUST[kind]
+    if R < 60 and kind in ("toothbrush", "walrus"):              # trademarks stay readable at figure size
+        hw, h = hw * 1.3, h * 1.3
     bx, by = _mix3(_ANCH["nose_base"], w)
     mx, my = _mix3(_ANCH["mouth"], w)
     cx = ((bx + mx) / 2) * c["width"] + 0.03 * w[0]
@@ -560,6 +616,11 @@ def _moustache(cr, c, w, R, dw):
     front = hw * (0.3 + 0.45 * w[1] + 0.7 * w[2])
     if kind == "toothbrush":
         back, front = hw * (0.6 + 0.4 * (1 - w[0])), hw * (0.35 + 0.65 * (1 - w[0]))
+    # profile: never thinner than ~0.12 R, sitting under the nose tip (the clip trims only what passes the lip line)
+    cx -= 0.07 * w[0]
+    back = max(back, 0.075 * w[0] + back * (1 - w[0]))
+    front = max(front, 0.09 * w[0] + front * (1 - w[0]))
+    h = max(h, 0.07 * w[0] + h * (1 - w[0]))
     pts = [(cx - back, top + 0.01), (cx - gap, top), (cx + gap, top), (cx + front, top + 0.01),
            (cx + front + 0.02, top + h + droop), (cx + front * 0.4, top + h), (cx - back * 0.4, top + h),
            (cx - back - 0.02, top + h + droop)]
