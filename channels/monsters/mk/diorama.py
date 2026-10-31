@@ -481,8 +481,23 @@ def _keep_clear(x, y, clear_r, fan=40.0):
                    ("wake", 7.0), ("snail", 13.0), ("moth", 6.0)):
         if key in MAP and math.hypot(x - MAP[key][0], y - MAP[key][1]) < r:
             return True
+    if _near_grove(x, y):
+        return True
     d = math.hypot(x, y)
     return d > 4.0 and abs(math.degrees(math.atan2(x, y))) < fan and d < 112.0
+
+
+def _near_grove(x, y, margin=3.5):
+    """True near helper 10's v3 blast grove (grove_spots(): young trees south of the kneel spot, flanking the path's
+    mouth) or the sapling by Kai's head (sapling_spot()), whenever those are defined in this module."""
+    spots = list(globals()["grove_spots"]()) if "grove_spots" in globals() else []
+    if "sapling_spot" in globals():
+        spots.append(globals()["sapling_spot"]())
+    for sp in spots:
+        r = (sp[3] if len(sp) > 3 else 1.5) + margin               # (x, y[, h, r, ...]) like island()'s spots
+        if math.hypot(x - sp[0], y - sp[1]) < r:
+            return True
+    return False
 
 
 def dressing2(seed=31, clear_r=26.0):
@@ -565,6 +580,8 @@ def dressing2(seed=31, clear_r=26.0):
         for side in (-1, 1):
             x = _path_x(y) + side * rnd.uniform(2.9, 3.6)
             s = rnd.uniform(0.28, 0.55)
+            if _near_grove(x, y, 1.0):
+                continue
             B[rnd.choice(("pebble", "pebble2"))].sphere((x, y + rnd.uniform(-0.3, 0.3), s * 0.25),
                                                         (s * 1.25, s, s * 0.5), (0, 0, rnd.uniform(0, 3)), seg=8)
         y -= rnd.uniform(1.1, 1.9)
