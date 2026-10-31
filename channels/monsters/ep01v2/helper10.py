@@ -450,7 +450,8 @@ def composite(raw, sub, out_dir):
         white = (img.min(axis=2) > 225)
         white[img.shape[0] // 2:] = False
         ys, xs = np.nonzero(white)
-        cap[f] = (float(np.median(xs)), float(np.percentile(ys, 10))) if len(xs) > 200 else (W2 * 0.4, 300.0)
+        cap[f] = ((float(np.median(xs)), float(np.percentile(ys, 5)),
+                   float(np.percentile(xs, 97) - np.percentile(xs, 3))) if len(xs) > 200 else (W2 * 0.4, 300.0, 300.0))
 
     def ko_stars(cr, t):
         """3 small yellow cel stars with navy lines circling over his cap on 2s (one orbit per 16 frames, a tilted
@@ -458,18 +459,19 @@ def composite(raw, sub, out_dir):
         f = int(round(t * FPS)) + 1
         if not G <= f <= STARS_END:
             return
-        cx, cy = cap[f]
-        cx = min(cx, 560 - 85 - 18)                            # stay out of the Shorts right rail
+        cx, cy, cw = cap[f]
+        rx = 0.65 * cw                                         # the orbit: ~1.3x the cap's width, clear above it
+        cx = min(cx, 560 - rx - 34)                            # stay out of the Shorts right rail
         a_fade = 1.0 if f < STARS_END - 3 else (STARS_END - f) / 3
         ph = 2 * math.pi * ((f - G) // 2 * 2) / 16
         tilt = math.radians(-10)
         stars = []
         for i in range(3):
             a = ph + i * 2 * math.pi / 3
-            ex, ey = math.cos(a) * 85, math.sin(a) * 24
+            ex, ey = math.cos(a) * rx, math.sin(a) * rx * 0.22
             x = cx + ex * math.cos(tilt) - ey * math.sin(tilt)
-            y = cy - 42 + ex * math.sin(tilt) + ey * math.cos(tilt)
-            stars.append((math.sin(a), x, y, 28 + 6 * (math.sin(a) + 1) / 2))
+            y = cy - 52 + ex * math.sin(tilt) + ey * math.cos(tilt)
+            stars.append((math.sin(a), x, y, 55 + 10 * (math.sin(a) + 1) / 2))
         for _, x, y, r in sorted(stars):                       # back to front
             cr.new_path()
             for j in range(10):
@@ -480,7 +482,7 @@ def composite(raw, sub, out_dir):
             cr.set_source_rgba(1.0, 0.85, 0.25, a_fade)
             cr.fill_preserve()
             cr.set_source_rgba(0.11, 0.1, 0.2, a_fade)
-            cr.set_line_width(3)
+            cr.set_line_width(4)
             cr.set_line_join(1)
             cr.stroke()
 
