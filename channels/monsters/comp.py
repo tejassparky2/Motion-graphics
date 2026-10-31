@@ -288,28 +288,31 @@ def glitch(cr, t, start, end, strength=1.0, seed=0, sound=True):
     if not isinstance(surf, cairo.ImageSurface):
         return
     a = _px(surf)
+    hh, ww = a.shape[:2]                                           # any frame size: sizes and offsets scale with
+    k = ww / W                                                     # the width (k = 1 on the 720x1280 canvas)
     f = int(math.floor((t - start) * FPS + 1e-6))
     r = np.random.default_rng([seed, f, 97])
     el, dur = t - start, max(end - start, 1e-3)
     edge = max(0.0, 1 - min(el, dur - el) / 0.25)
     env = strength * (0.45 + 0.35 * edge + 0.3 * (r.random() < 0.25))
     img = a.copy()
-    dx = max(1, int(r.integers(4, 15) * env))
+    dx = max(1, int(r.integers(4, 15) * env * k))
     img[..., 2] = np.roll(a[..., 2], dx, axis=1)                  # red right
     img[..., 0] = np.roll(a[..., 0], -dx, axis=1)                 # blue left
     for _ in range(int(r.integers(2, 6) + 4 * env)):
-        y0, h = int(r.integers(0, H - 8)), int(r.integers(4, 64))
-        img[y0:y0 + h] = np.roll(img[y0:y0 + h], int(r.integers(-130, 130) * env), axis=1)
+        y0, h = int(r.integers(0, hh - int(8 * k))), int(int(r.integers(4, 64)) * k)
+        img[y0:y0 + h] = np.roll(img[y0:y0 + h], int(r.integers(-130, 130) * env * k), axis=1)
         if r.random() < 0.3:
             img[y0:y0 + h, :, int(r.integers(0, 3))] = 0
     for _ in range(int(r.integers(0, 5) * env)):
-        bx, by, s = int(r.integers(0, W - 48)), int(r.integers(0, H - 48)), int(r.integers(16, 48))
+        bx, by = int(r.integers(0, ww - int(48 * k))), int(r.integers(0, hh - int(48 * k)))
+        s = int(int(r.integers(16, 48)) * k)
         img[by:by + s, bx:bx + s, :3] = img[by:by + s, bx:bx + s, :3].mean(axis=(0, 1)).astype(np.uint8)
     out = img.astype(np.float32)
-    out[(np.arange(H) // 2) % 2 == 0] *= 0.82                     # scanlines
+    out[(np.arange(hh) // max(1, int(round(2 * k)))) % 2 == 0] *= 0.82   # scanlines
     out *= r.uniform(0.9, 1.06)                                    # flicker
-    bar = int((el * 900) % (H + 200)) - 100
-    out[max(0, bar):max(0, bar + 36), :, :3] += 28
+    bar = int((el * 900 * k) % (hh + int(200 * k))) - int(100 * k)
+    out[max(0, bar):max(0, bar + int(36 * k)), :, :3] += 28
     a[..., :3] = np.clip(out[..., :3], 0, 255).astype(np.uint8)
     a[..., 3] = 255
     surf.mark_dirty()
