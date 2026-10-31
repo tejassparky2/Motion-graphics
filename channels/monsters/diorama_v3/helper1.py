@@ -361,9 +361,14 @@ def s08a():
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]] + list(rig.get("cap", [])))
 
 
-KAI_B = (-5.6, -2.2)                 # where he stands in B: just west of the pond, facing the shrimp and the thorn tree
-RUN_TO = 11.0                        # how far west he gets (units)
+AWAY = Vector((-0.85, -0.53, 0.0))   # away from the thorn tree (its bearing from the pond is ~58 deg): south-west
+RUN_TO = 5.5                         # how far he gets (units)
 STEP = 0.12                          # run step (armature units): quick short steps, a scamper at toy scale
+
+
+def _facing(d):
+    """hero rot_z (degrees) that faces Kai along the ground direction d (he faces his own -Y)."""
+    return math.degrees(math.atan2(d.x, -d.y))
 
 
 def s24bot():
@@ -371,12 +376,30 @@ def s24bot():
     n = _frames("S24")
     diorama.setup()
     isl, _ = xv2._set(n, kai_down=False)
-    sh = xv3._shrimp(n)                                             # drinking on the east shore, back to the tree
+    sh = xv3._shrimp(n)                                             # drinking on the north-east shore
     shrimp = Vector(xv3.SHRIMP)
     perch = Vector(isl["thorn"]["perch"])
-    # the bird: dark from frame 1 (as in A), then the dive onto the shrimp, its shadow sweeping over Kai on the way
+    pond = Vector((*diorama.MAP["pond"], 0.0))
+    start = pond + AWAY * 4.8                                       # at the pond's south-west edge
+    # the bird: dark from frame 1 (as in A), then the dive onto the shrimp from the north-east (screen right), its
+    # giant shadow sweeping in ahead of it
     f_dive, f_hit = 58, 84
-    bird = x3._bird_drop(isl["thorn"], f_dive, f_hit, n, kai_at=(shrimp.x + 14.0, shrimp.y + 3.0))   # shadow: in from the east
+    bird = x3._bird_drop(isl["thorn"], f_dive, f_hit, n, kai_at=tuple(shrimp - AWAY * 12.0))
+    # the plunge itself starts just off screen right (the perch is far out of the panel), so the whole swoop reads
+    lift = bird["lift"]
+    p0 = Vector(lift.location)
+    bpy.context.scene.frame_set(f_hit)
+    p1 = Vector(lift.location)
+    bpy.context.scene.frame_set(1)
+    for fc in anim.all_fcurves(lift.animation_data.action):
+        if fc.data_path == "location":
+            for i in reversed([i for i, kp in enumerate(fc.keyframe_points) if f_dive <= kp.co.x <= f_hit]):
+                fc.keyframe_points.remove(fc.keyframe_points[i])
+    near = p0.lerp(p1, 0.62)
+    for t in range(f_hit - f_dive + 1):
+        u = t / (f_hit - f_dive)
+        anim.key(lift, "location", f_dive + t, tuple(near.lerp(p1, u * u * (3 - 2 * u))), "LINEAR")
+    anim.key(lift, "location", f_dive - 1, tuple(p0), "CONSTANT")
     x3._mantle(bird, f_hit - 2, f_hit + 4)
     h5._rage_light(bird, 1, perch.z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
     for e in sh["eyes"]:                                            # it only notices as the claws close
@@ -386,8 +409,10 @@ def s24bot():
         anim.key(h, "scale", f_hit - 1, (1, 1, 1), "CONSTANT")
         anim.key(h, "scale", f_hit + 1, (1.35, 1.35, 1.35), "CONSTANT")
     xv2._twos(tuftwing._animated(bird) + sh["eyes"] + sh["hi"])
-    # Kai: frozen facing east (the bird), a crouch, the snap turn west, then the run
-    k = x3._hero((KAI_B[0], KAI_B[1], 0), 90.0)
+    # Kai: frozen facing the thorn tree (the bird), a crouch, the snap turn, then the run away from the pond
+    face_tree, face_away = _facing(-AWAY), _facing(AWAY)
+    k = x3._hero(tuple(start), face_tree)
+    d1._tilt_cap(k, 30.0)
     hero.line_width(k, 0.0026)
     arm = k["arm"]
     P = x3.Pose(k)
@@ -409,10 +434,10 @@ def s24bot():
 
     def run_upper(P, t):
         ph = math.sin(t * steps * math.pi)
-        P.rot("spine", (24, 0, 0))                                  # leaning into the run
-        P.rot("chest", (6, 0, 8))
-        P.rot("neck", (0, 0, 30))
-        P.rot("head 1", (-18, 0, 50))                               # looking back over his left shoulder (at us)
+        P.rot("spine", (8, 0, 0))                                   # leaning into the run
+        P.rot("chest", (2, 0, 10))
+        P.rot("neck", (-14, 0, 28))
+        P.rot("head 1", (-40, 0, 42))                               # his face turned to us (the camera is on his left)
         P.aim("upper_arm.R", (-0.2, 0.55 * ph, -0.8))               # arms pumping, opposite to the legs
         P.aim("forearm.R", (-0.05, -0.85, 0.45 + 0.2 * ph))
         P.aim("upper_arm.L", (0.2, -0.55 * ph, -0.8))
@@ -420,20 +445,24 @@ def s24bot():
 
     x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, -RUN_TO / x3.SCALE, 0))), f_run, n, STEP, "L", crouch=(0.05, 0.05),
              upper=run_upper, every=2)
-    for f, z in ((1, 90.0), (f_crouch, 90.0), (f_turn, 90.0), (f_turn + 2, -105.0), (f_run, -90.0)):   # snap turn,
-        arm.rotation_euler.z = math.radians(z)                                                         # overshoot
+    for f, z in ((1, face_tree), (f_crouch, face_tree), (f_turn, face_tree), (f_turn + 2, face_away - 14.0),
+                 (f_run, face_away)):                               # the snap turn, overshoot, settle
+        arm.rotation_euler.z = math.radians(z)
         arm.keyframe_insert("rotation_euler", index=2, frame=f)
     acting.expression(k, "fear", 1, value=0.8)
     acting.expression(k, "surprised", f_turn)
     acting.expression(k, "terror", f_run + 4, value=0.9)
-    sky = perch + Vector((0, 0, 3.0))
-    acting.look_at(k, tuple(sky), 1, f_turn - 2)
-    acting.look_at(k, tuple(shrimp + Vector((0, 0, 2.0))), f_run, n)
+    acting.look_at(k, tuple(perch + Vector((0, 0, 3.0))), 1, f_turn - 2)
+    acting.look_at(k, tuple(shrimp + Vector((0, 0, 2.0))), f_run, n)  # glancing back at it as he runs
     acting.blink(k, 1, n, seed=11, at=(14,))
     xv2._twos([arm])
-    # the camera pans west with him on 1s, from the south, high enough to fold his height into the band
-    a = ((KAI_B[0] + 3.5, KAI_B[1] - 0.5, 1.0), 74.0, 58.0, 0.0, 80.0, 0.2)
-    b = ((KAI_B[0] - 1.5, KAI_B[1] - 0.8, 1.0), 70.0, 58.0, -3.0, 80.0, 0.2)
+    # side-on from the south-east (the tree is screen-right, he runs screen-left), high enough to fold everyone into
+    # the panel's band; a slow pan with him on 1s
+    side = Vector((-AWAY.y, AWAY.x, 0))                              # unused helper direction (screen depth)
+    mid = start.lerp(shrimp, 0.42)
+    a = (tuple(mid + Vector((0, 0, 1.0))), 84.0, 58.0, -32.0, 80.0, 0.2)
+    b = (tuple(mid + AWAY * 2.0 + Vector((0, 0, 1.0))), 80.0, 58.0, -34.0, 80.0, 0.2)
+    del side
     xv2._move("cam_s24bot_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[arm])
 
