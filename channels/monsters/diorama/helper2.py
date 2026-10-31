@@ -172,6 +172,53 @@ def _near(cam):
     ms.start, ms.depth = max(ms.start, cam.data.dof.focus_distance * 3.0), max(ms.depth, 6.0)
 
 
+def _grade(teal="#8fdde6", tint=0.33, sat=1.3, vignette=0.38, bloom=0.75):
+    """The in-tank grade (night in a glowing tank, not the room's daytime haze): no mist ramp; a teal multiply over
+    the picture, saturation back up (a rich coral shrimp, cool grey-blue pebbles), a soft vignette darkening toward
+    the glass walls, and bloom so the bubble's white-blue flash pops against the teal."""
+    sc = bpy.context.scene
+    sc.use_nodes = True
+    nt = sc.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    L = nt.links.new
+    rl = nt.nodes.new("CompositorNodeRLayers")
+    mul = nt.nodes.new("CompositorNodeMixRGB")
+    mul.blend_type, mul.inputs[0].default_value = "MULTIPLY", tint
+    mul.inputs[2].default_value = look.hexc(teal)
+    hs = nt.nodes.new("CompositorNodeHueSat")
+    hs.inputs["Saturation"].default_value = sat
+    mask = nt.nodes.new("CompositorNodeEllipseMask")
+    mask.width, mask.height = 0.95, 0.92
+    blur = nt.nodes.new("CompositorNodeBlur")
+    blur.use_relative, blur.factor_x, blur.factor_y = True, 0.22, 0.22
+    inv = nt.nodes.new("CompositorNodeInvert")
+    amt = nt.nodes.new("CompositorNodeMath")
+    amt.operation, amt.inputs[1].default_value = "MULTIPLY", vignette
+    vig = nt.nodes.new("CompositorNodeMixRGB")
+    vig.inputs[2].default_value = look.hexc("#0b1a2a")
+    L(rl.outputs["Image"], mul.inputs[1])
+    L(mul.outputs[0], hs.inputs["Image"])
+    L(mask.outputs[0], blur.inputs[0])
+    L(blur.outputs[0], inv.inputs["Color"])
+    L(inv.outputs[0], amt.inputs[0])
+    L(amt.outputs[0], vig.inputs[0])
+    L(hs.outputs[0], vig.inputs[1])
+    out = vig.outputs[0]
+    if bloom > 0:
+        g = nt.nodes.new("CompositorNodeGlare")
+        g.glare_type = "BLOOM" if "BLOOM" in [i.identifier for i in g.bl_rna.properties["glare_type"].enum_items] \
+            else "FOG_GLOW"
+        g.quality = "MEDIUM"
+        if hasattr(g, "threshold"):
+            g.threshold = 0.9
+        g.mix = -1 + bloom
+        L(out, g.inputs[0])
+        out = g.outputs[0]
+    comp = nt.nodes.new("CompositorNodeComposite")
+    L(out, comp.inputs[0])
+
+
 def s04():
     room, tank, rig, _, F = h3d._snap_sequence(0, stage=_stage, cameras=False)
     tip = rig["tip"].matrix_world.translation
@@ -181,6 +228,7 @@ def s04():
     for c in (eye, claw):
         _near(c)
     _flash(claw, [(19, 0.0), (20, 0.9), (21, 0.55), (22, 0.0)])
+    _grade()
     return dict(frames=h3d.LEN["S04"] + h3d.TAIL, step=1, subject=[rig["root"]])
 
 
@@ -191,6 +239,7 @@ def s05a():
                          blur=BLUR, frame=1)
     _near(cam)
     _flash(cam, [(F(112), 0.0), (F(113), 0.85), (F(114), 0.4), (F(115), 0.0)])
+    _grade()
     return dict(frames=h3d.LEN["S05a"] + h3d.TAIL, step=1, subject=[rig["root"]])
 
 
@@ -206,6 +255,7 @@ def s07():
     anim.key(cam, "location", h3d.S07_CRACK, cam.location.copy(), "LINEAR")      # the final hit drifts (IM5)
     anim.key(cam, "location", h3d.LEN["S07"] + h3d.TAIL, cam.location + Vector((0.0, 0.06, 0.03)), "LINEAR")
     _flash(cam, [(h3d.S07_FLASH - 1, 0.0), (h3d.S07_FLASH, 0.9), (h3d.S07_FLASH + 1, 0.0)])
+    _grade()
     return dict(frames=h3d.LEN["S07"] + h3d.TAIL, step=1, subject=[rig["root"]])
 
 
