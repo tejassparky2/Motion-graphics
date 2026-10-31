@@ -16,7 +16,8 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 ## Summary
 | Shot | Owner | Verdict | Frames (got / want) | Notes |
 |---|---|---|---|---|
-| S03a, S03b, S04, S05a, S05b, S10a, S10b, S11a, S12, S22 | (v2 copies) | PASS (v2 QA) | exact | the same picture and length as v2 |
+| S03a, S03b, S04, S05a, S05b | v2 copies, 2D grade-matched to Q3 (c7b638e) | PASS (interim) | exact | clean files; the lab grade now matches the Q3 renders; superseded when the owners' full v3 renders land |
+| S10a, S10b, S11a, S12, S22 | (v2 copies) | PASS (v2 QA) | exact | the same picture and length as v2; S10a/S11a/S10b/S11b/S12 re-render under the GO |
 | S11b | (v2 copy) | PASS (v2 QA) | 38 / 37 | the assembler trims 1 frame |
 | S13 | (v2 copy) | PASS (v2 QA) | 62 / 63 | the assembler holds 1 frame |
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
@@ -32,3 +33,16 @@ danger-colour hold. It is more than the README's 1-2-frame trim.
 
 This is not blocking: the bird shot hands over to the new S23b ("And it was looking at the shrimp."), which carries
 the threat.
+
+## The lab grade-match (c7b638e, interim)
+The five reused lab shots (S03a, S03b, S04, S05a, S05b) were passed through `tools/grade_match.py`: lift, gamma, gain
+and saturation plus a soft vignette, fitted to the Q3 lab before/after. The result is
+`okstills/lab_grade_match_before_after.jpg`.
+
+**Verdict: PASS as the interim.**
+- The change is subtle but moves the cool night lab onto the Q3 look, with no clipping and no colour shifts on
+  Kai's face.
+- Frame counts are exact (53/51/73/75/51) and the files are clean.
+
+They stay interim until the GO re-renders land: helper 1 (S03a, S03b), helper 2 (S04, S05a) and helper 7 (S05b,
+from helper 1's builder).
