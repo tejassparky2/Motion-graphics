@@ -20,19 +20,7 @@ from channels.monsters import fx2d  # noqa: E402
 from motion.engine import cairo  # noqa: E402
 
 SIZE = 15            # spark size on a 720-wide frame (fx2d's default is 22; the 3D ball is the core)
-TRAIL = 5.0          # frames of comet trail behind it
 LAND = 11            # frames of the landing (0.45 s)
-
-
-def _at(path, f):
-    """The ball's screen point at (fractional) frame f, held at the two ends."""
-    keys = sorted(int(k) for k in path)
-    f = max(keys[0], min(keys[-1], f))
-    a = int(math.floor(f))
-    b = min(keys[-1], a + 1)
-    u = f - a
-    pa, pb = path[str(a)], path[str(b)]
-    return pa[0] + (pb[0] - pa[0]) * u, pa[1] + (pb[1] - pa[1]) * u
 
 
 def draw(cr, f, spark, k=1.0):
@@ -40,34 +28,29 @@ def draw(cr, f, spark, k=1.0):
     size = SIZE * k
     col, white = fx2d.SOUL, fx2d.WHITE
     if f0 - 1 <= f <= f1:                                     # flying: trail, twinkles, a halo round the ball
-        steps = 18
-        for i in range(steps, 0, -1):
-            ff = f - TRAIL * i / steps
-            if ff < f0:
-                continue
-            x, y = (c * k for c in _at(path, ff))
-            q = 1 - i / steps
+        tr = path[str(f)]["trail"]                          # oldest first, as this frame's camera sees it
+        for j, (x, y) in enumerate(tr):
+            x, y = x * k, y * k
+            q = (j + 1) / (len(tr) + 1)
             fx2d._glow(cr, x, y, size * (0.6 + 1.6 * q), col, 0.24 * q)
             cr.set_source_rgba(1, 1, 1, 0.55 * q * q)
             cr.arc(x, y, size * 0.32 * q, 0, 2 * math.pi)
             cr.fill()
         rnd = random.Random(101 + f // 2 * 2)                 # twinkles on 2s
-        for _ in range(4):
-            ff = f - rnd.uniform(0.5, TRAIL * 1.4)
-            if ff < f0:
-                continue
-            x, y = (c * k for c in _at(path, ff))
-            life = 1 - (f - ff) / (TRAIL * 1.4)
+        for _ in range(4 if tr else 0):
+            j = rnd.randrange(len(tr))
+            x, y = tr[j][0] * k, tr[j][1] * k
+            life = 0.3 + 0.7 * (j + 1) / len(tr)
             cr.set_source_rgba(*col[:3], 0.9 * life)
             fx2d._star4(cr, x + rnd.uniform(-18, 18) * k, y + rnd.uniform(-10, 10) * k, size * 0.5 * life + 3 * k,
                         rnd.uniform(0, 0.8))
             cr.fill()
-        x, y = (c * k for c in _at(path, max(f, f0)))
+        x, y = (c * k for c in path[str(f)]["ball"])
         fx2d._glow(cr, x, y, size * 4.0, col, 0.45)
         fx2d._glow(cr, x, y, size * 1.6, white, 0.75)
     elif f1 < f <= f1 + LAND:                                 # landing: flash, a ring on the ground, sparkle pop
         u = (f - f1) / LAND
-        x, y = (c * k for c in _at(path, f1))
+        x, y = (c * k for c in path[str(f1)]["ball"])
         fx2d._glow(cr, x, y, size * (5 + 6 * u), white, (1 - u) * 0.9)
         cr.set_source_rgba(*col[:3], 1 - u)
         cr.set_line_width((4 * (1 - u) + 1) * k)

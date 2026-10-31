@@ -176,17 +176,8 @@ def build_s02(shot, s01, warn):
     for i in range(shot.frames):
         s, cr = blank()
         if i < run:
-            # comp.glitch works on the 720x1280 canvas, so the rewind is glitched there and scaled up (it is
-            # deliberately degraded anyway).
-            g = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-            gc = cairo.Context(g)
-            gc.scale(1 / SCALE, 1 / SCALE)
-            gc.set_source_surface(surface(rev[min(len(rev) - 1, int(i * len(rev) / run))]), 0, 0)
-            gc.paint()
-            comp.glitch(cairo.Context(g), i / FPS, 0.0, run / FPS, strength=1.0, seed=2, sound=False)
-            cr.set_source_surface(g, 0, 0)
-            cr.get_source().set_filter(cairo.FILTER_GOOD)
-            cr.paint()
+            paint_full(cr, surface(rev[min(len(rev) - 1, int(i * len(rev) / run))]))
+            comp.glitch(cr, i / FPS, 0.0, run / FPS, strength=1.0, seed=2, sound=False)
         elif i < run + 2:                                      # static
             noise = np.random.default_rng(i).integers(0, 256, (H // 4, W // 4), np.uint8)
             n = np.repeat(np.repeat(noise, 4, 0), 4, 1)
