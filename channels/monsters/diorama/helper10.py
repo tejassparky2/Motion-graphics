@@ -25,7 +25,7 @@ import sys
 sys.path.insert(0, os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..")))
 try:
     import bpy
-    from mathutils import Vector
+    from mathutils import Matrix, Vector
 except ImportError:                                            # composite() runs outside Blender
     bpy = None
 
@@ -78,12 +78,87 @@ def _camera(name, frame, target, dist, tilt, yaw=0.0):
     return c
 
 
+LYING_RELAXED = [("spine", (0, 0, 1)), ("chest", (0, 0, 1)), ("upper_chest", (0, 0, 1)), ("neck", (0.1, 0.1, 1)),
+                 ("head", (0.45, 0.15, 1)),                    # head tilted to one side
+                 ("right_upper_arm", (0.35, 0.65, -0.7)), ("right_lower_arm", (-1, 0.45, 0.25)),   # over his chest
+                 ("left_upper_arm", (-0.45, 0.1, -1)), ("left_lower_arm", (-0.35, 0.25, -1)),      # loose at his side
+                 ("left_upper_leg", (-0.12, 0.45, -1)), ("right_upper_leg", (0.15, 0.3, -1)),      # knees a little bent
+                 ("left_lower_leg", (-0.1, -0.2, -1)), ("right_lower_leg", (0.15, -0.12, -1)),
+                 ("left_foot", (-0.25, 1, -0.3)), ("right_foot", (0.3, 1, -0.3))]
+"""On his back, in Kai's own frame (+Y forward = up once he lies down, +Z toward his head): relaxed, so it reads as
+lying from above, not as a standing T-pose."""
+
+
+def _burn(origin, reach, f0, frames=15, seed=5):
+    """The erased swath on the grass: a soft, irregular burn (~35% darker, a little warm, noisy edge) growing out from
+    the blast with the ring, with ash and leaf bits scattered between the stumps."""
+    from channels.monsters.mk import anim, look
+    ox, oy = origin
+    m = bpy.data.materials.new("diorama_burn")
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    L, N = nt.links.new, nt.nodes.new
+    out, tc, ln = N("ShaderNodeOutputMaterial"), N("ShaderNodeTexCoord"), N("ShaderNodeVectorMath")
+    ln.operation = "LENGTH"
+    nz = N("ShaderNodeTexNoise")
+    nz.inputs["Scale"].default_value = 3.5
+    nz.inputs["Detail"].default_value = 4.0
+    add = N("ShaderNodeMath")
+    add.operation = "MULTIPLY_ADD"                             # radius + (noise - 0.5) * 0.7: a ragged edge
+    sub = N("ShaderNodeMath")
+    sub.operation = "SUBTRACT"
+    sub.inputs[1].default_value = 0.5
+    add.inputs[1].default_value = 0.7
+    edge = N("ShaderNodeMapRange")
+    edge.inputs["From Min"].default_value, edge.inputs["From Max"].default_value = 0.55, 1.0
+    edge.inputs["To Min"].default_value, edge.inputs["To Max"].default_value = 0.42, 0.0
+    em, tr, mix = N("ShaderNodeEmission"), N("ShaderNodeBsdfTransparent"), N("ShaderNodeMixShader")
+    em.inputs[0].default_value = look.hexc("#3b2a1c")
+    L(tc.outputs["Object"], ln.inputs[0])
+    L(tc.outputs["Object"], nz.inputs[0])
+    L(nz.outputs["Fac"], sub.inputs[0])
+    L(sub.outputs[0], add.inputs[0])
+    L(ln.outputs["Value"], add.inputs[2])
+    L(add.outputs[0], edge.inputs["Value"])
+    L(edge.outputs["Result"], mix.inputs[0])
+    L(tr.outputs[0], mix.inputs[1])
+    L(em.outputs[0], mix.inputs[2])
+    L(mix.outputs[0], out.inputs[0])
+    m.surface_render_method = "BLENDED"
+    bpy.ops.mesh.primitive_circle_add(vertices=64, radius=1.0, fill_type="NGON", location=(0, 0, 0))
+    o = bpy.context.object
+    o.name = "diorama_burn"
+    o.data.materials.append(m)
+    o.data.transform(Matrix.Translation((0, 0.55, 0)))           # the disc's near edge sits at the blast
+    o.location = (ox, oy, 0.025)
+    sx, sy = reach * 0.5, reach * 0.62
+    anim.key(o, "scale", f0 - 1, 0.0, "CONSTANT")
+    for f in range(f0, f0 + frames + 1):
+        u = min(1.0, (f - f0 + 1) / frames)
+        anim.key(o, "scale", f, (sx * u, sy * u, 1), "CONSTANT")
+    ash = look.flat("diorama_ash", look.hexc("#2e2622"))
+    rnd = random.Random(seed)
+    for i in range(70):                                        # ash and charred leaf bits, there as the ring passes
+        a = math.radians(rnd.uniform(-30, 30))
+        d = rnd.uniform(6, reach * 0.95)
+        x, y = ox + math.sin(a) * d, oy + math.cos(a) * d
+        bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=1, radius=rnd.uniform(0.18, 0.45), location=(x, y, 0.05))
+        b = bpy.context.object
+        flat = (1, rnd.uniform(0.4, 0.8), 0.25)
+        b.rotation_euler = (0, 0, rnd.uniform(0, math.pi))
+        b.data.materials.append(ash)
+        anim.key(b, "scale", f0 - 1, 0.0, "CONSTANT")
+        anim.key(b, "scale", f0 + max(1, int(d / reach * frames)), flat, "CONSTANT")
+    return o
+
+
 def _ease(u):
     return u * u * (3 - 2 * u)
 
 
 def s15_diorama():
-    from channels.monsters.mk import anim, diorama, erase, hero, meadow, puffshrimp
+    from channels.monsters.mk import anim, diorama, erase, hero, look, meadow, puffshrimp
     sc = bpy.context.scene
     diorama.setup()
     isl = diorama.island(seed=31)
@@ -145,7 +220,6 @@ def s15_diorama():
         s15._key_pose(k, f)
         flight.append((f, s15._world(k, "hips")))
     hero.face(k, "surprised", F)
-    from channels.monsters.mk import look                      # a ground shadow sells his height from above
     shadow = look.blob_shadow("kai_flight_shadow", (0, 0, 0.03), (2.6, 1.4))
     anim.key(shadow, "scale", A, 0.0, "CONSTANT")
     for f, p in flight:
@@ -154,12 +228,31 @@ def s15_diorama():
     anim.key(shadow, "scale", G, 0.0, "CONSTANT")
     land = Vector((0, 0, 0))                                   # on his back, head toward the pond (D6 continues)
     for _ in range(2):
-        s15._pose(k, s15.LYING, tuple(land), (math.pi / 2, 0, math.pi + LAND_YAW))
+        s15._pose(k, LYING_RELAXED, tuple(land), (math.pi / 2, 0, math.pi + LAND_YAW))
         s15._ground(k)
         hip = s15._world(k, "hips")
         land += Vector((LAND_HIPS[0] - hip.x, LAND_HIPS[1] - hip.y, 0))
-    s15._pose(k, s15.LYING, tuple(land), (math.pi / 2, 0, math.pi + LAND_YAW))
+    s15._pose(k, LYING_RELAXED, tuple(land), (math.pi / 2, 0, math.pi + LAND_YAW))
     s15._ground(k)
+    hip = s15._world(k, "hips")
+    body = look.blob_shadow("kai_down_shadow", (hip.x, hip.y, 0.03), (1.9, 5.2))   # a contact shadow, his length
+    body.rotation_euler = (0, 0, LAND_YAW)
+    anim.key(body, "scale", A, 0.0, "CONSTANT")
+    anim.key(body, "scale", G, (1.9, 5.2, 1), "CONSTANT")
+    dm = meadow.smoke_mat()                                    # dust settling around him (greyish: not the cap's white)
+    rnd = random.Random(12)
+    for i in range(6):
+        a = rnd.uniform(0, 2 * math.pi)
+        p0 = (hip.x + math.cos(a) * rnd.uniform(2.5, 4.5), hip.y + math.sin(a) * rnd.uniform(3.0, 5.5), 0.6)
+        d = erase._sphere(f"landdust{i}", p0, 1.0, dm, 12)
+        r = rnd.uniform(0.6, 1.0)
+        anim.key(d, "scale", G - 1, 0.0, "CONSTANT")
+        anim.key(d, "location", G, p0)
+        anim.key(d, "scale", G, r)
+        anim.key(d, "scale", G + 16, r * 0.6)
+        anim.key(d, "scale", G + 24, 0.0)
+        anim.key(d, "location", G + 24, (p0[0], p0[1], 0.15))
+        erase._twos_from(d, G)
     s15._key_pose(k, G)
     flight.append((G, s15._world(k, "hips")))
     face = (s15._world(k, "head") + s15._world(k, "head", True)) / 2
@@ -212,6 +305,7 @@ def s15_diorama():
                            direction=(0.0, 1.0))
     if fx["flash"] is not None:                                 # the 2D pass has the flash
         bpy.data.objects.remove(fx["flash"], do_unlink=True)
+    _burn(origin, max(math.hypot(x - origin[0], y - origin[1]) for x, y, *_ in spots) + 10, E - 1)
     hot = sorted(zip(spots, fx["pop_frames"]), key=lambda s: math.hypot(s[0][0], s[0][1]))[:9]
     s15._puff_smoke([(x, y, diorama.TREE * 0.7, tp) for (x, y, *_), tp in hot], END + 1, size=diorama.TREE * 0.6)
     print("S15 BLAST_ORIGIN", tuple(round(v, 3) for v in blast), "KAI_LYING", tuple(round(v, 3) for v in land),
