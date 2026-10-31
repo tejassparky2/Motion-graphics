@@ -23,12 +23,43 @@ SIZE = 15            # spark size on a 720-wide frame (fx2d's default is 22; the
 LAND = 11            # frames of the landing (0.45 s)
 
 
+def _streak(ball, trail, length=300.0, n=18):
+    """The trail as a streak behind the ball: walk back along where it was (as this frame's camera sees it) for at most
+    `length` px (the camera swings fast, so the older points fly far off-screen), then resample to n points, oldest
+    first, ending just behind the ball."""
+    pts, total = [tuple(ball)], 0.0
+    for p in reversed(trail):
+        a = pts[-1]
+        d = math.hypot(p[0] - a[0], p[1] - a[1])
+        if total + d >= length:
+            u = (length - total) / d if d else 0
+            pts.append((a[0] + (p[0] - a[0]) * u, a[1] + (p[1] - a[1]) * u))
+            total = length
+            break
+        pts.append(tuple(p))
+        total += d
+    if total < 1:
+        return []
+    out, seg, acc = [], 0, 0.0                                # resample by arc length, from the far end to the ball
+    lens = [math.hypot(pts[i + 1][0] - pts[i][0], pts[i + 1][1] - pts[i][1]) for i in range(len(pts) - 1)]
+    for j in range(n):
+        t = total * (1 - (j + 0.5) / n)                       # distance back from the ball
+        acc, seg = 0.0, 0
+        while seg < len(lens) - 1 and acc + lens[seg] < t:
+            acc += lens[seg]
+            seg += 1
+        u = (t - acc) / lens[seg] if lens[seg] else 0
+        a, b = pts[seg], pts[seg + 1]
+        out.append((a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u))
+    return out
+
+
 def draw(cr, f, spark, k=1.0):
     path, (f0, f1) = spark["path"], spark["fall"]
     size = SIZE * k
     col, white = fx2d.SOUL, fx2d.WHITE
     if f0 - 1 <= f <= f1:                                     # flying: trail, twinkles, a halo round the ball
-        tr = path[str(f)]["trail"]                          # oldest first, as this frame's camera sees it
+        tr = _streak(path[str(f)]["ball"], path[str(f)]["trail"])
         for j, (x, y) in enumerate(tr):
             x, y = x * k, y * k
             q = (j + 1) / (len(tr) + 1)
