@@ -28,10 +28,11 @@ TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))
 # Kai's own frame (+Y forward = up once he lies down, +Z toward his head, +X his right): his loose left hand comes up
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
-HAND_COCK = [("left_upper_arm", (-0.65, 0.35, -0.35)), ("left_lower_arm", (-0.25, 0.75, 0.15))]
-HAND_REACH = [("left_upper_arm", (-0.22, 0.95, 0.5)), ("left_lower_arm", (0.38, 0.5, 0.82))]     # overshoot
-HAND_UP = [("left_upper_arm", (-0.28, 0.88, 0.4)), ("left_lower_arm", (0.35, 0.42, 0.85))]
-HEAD_AWAKE = [("head", (-0.08, 0.5, 1))]                           # rolled face up, off to the side no more
+HAND_COCK = [("left_upper_arm", (-0.7, 0.3, -0.6)), ("left_lower_arm", (-0.3, 0.6, -0.5))]       # anticipation
+HAND_REACH = [("left_upper_arm", (-0.25, 0.97, 0.05)), ("left_lower_arm", (0.5, 0.75, 0.45))]    # overshoot
+HAND_UP = [("left_upper_arm", (-0.3, 0.92, -0.08)), ("left_lower_arm", (0.45, 0.82, 0.32))]      # over his chest
+HEAD_AWAKE = [("neck", (-0.02, 0.45, 1)), ("head", (-0.04, 0.85, 0.55))]   # head lifts, chin in: he looks down at
+                                                                     # his hand (and his face turns to the camera)
 
 
 def _words(shot="S09"):
@@ -80,7 +81,7 @@ def _spark(cam_loc, up, land, f0, f1, radius):
         anim.key(o, "scale", f1 + 1, 0.0, "CONSTANT")
     flash = world_sphere("soul_flash", 1.0, look.fade("soul_flash_m", look.hexc("#fff6d6"), 0.5))
     flash.location = land
-    for f, s in ((f1, 0.0), (f1 + 1, radius * 0.03), (f1 + 3, radius * 0.06), (f1 + 5, 0.0)):
+    for f, s in ((f1, 0.0), (f1 + 1, radius * 0.012), (f1 + 3, radius * 0.022), (f1 + 5, 0.0)):
         anim.key(flash, "scale", f, s, "LINEAR")
     return ball
 

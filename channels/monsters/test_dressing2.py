@@ -26,6 +26,8 @@ else:
     R = diorama_lab.room(dressing=level)
     views = [("lab", R["desk"]["center"], dict(diorama_lab.LAB_CAM))]
 for i, (name, target, kw) in enumerate(views):
+    for m in list(sc.timeline_markers):                      # camera() binds each new camera to frame 1 with a marker
+        sc.timeline_markers.remove(m)
     cam = diorama.camera(f"cam_{name}", target, frame=1, **kw)
     sc.camera = cam
     sc.render.filepath = os.path.join(out, f"{name}_d{level}.png")
