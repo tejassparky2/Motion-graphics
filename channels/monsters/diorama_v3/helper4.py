@@ -502,4 +502,44 @@ def s08b():
     return dict(frames=n, step=1, subject=[arm] + list(rig.get("cap", [])))
 
 
-SHOTS = {"S08b": s08b}
+def _push(cam, n, k=0.08):
+    """A slow push-in on 1s (DIORAMA_EP01_V3.md: a camera move in every shot): the camera eases `k` of the way to its
+    focus point over the shot, the focus following, so the tilt-shift band stays on the subject."""
+    fwd = cam.matrix_world.to_3x3() @ Vector((0, 0, -1))
+    target = cam.location + fwd * cam.data.dof.focus_distance
+    p0, d0 = cam.location.copy(), cam.data.dof.focus_distance
+    for f in range(1, n + 1, 2):
+        u = (f - 1) / max(1, n - 1)
+        e = u * u * (3 - 2 * u)
+        cam.location = p0.lerp(target, k * e)
+        cam.keyframe_insert("location", frame=f)
+        cam.data.dof.focus_distance = d0 * (1 - k * e)
+        cam.data.dof.keyframe_insert("focus_distance", frame=f)
+
+
+def _reused(builder, shot):
+    """A v2 diorama shot of mine re-rendered for v3 (the Q2 dressing and Q3 light come through diorama.setup and the
+    island): the same picture and beats, plus the push-in, so the camera now moves on 1s while the snail holds on 2s."""
+    from channels.monsters.diorama_v3.shots import v3_frames
+    info = builder()
+    n = v3_frames(shot)
+    if n != info["frames"]:
+        print(f"{shot}: v3 wants {n} frames, the v2 builder makes {info['frames']}; rendering {n}", flush=True)
+        info["frames"] = n
+    _push(info["camera"], n)
+    if info.get("step", 1) > 1:
+        info["ones"] = (1, n)                                     # the camera on 1s; the snail keeps its 2s
+    return info
+
+
+def s10a():
+    from channels.monsters.diorama import helper4 as d4
+    return _reused(d4.s10a, "S10a")
+
+
+def s11a():
+    from channels.monsters.diorama import helper4 as d4
+    return _reused(d4.s11a, "S11a")
+
+
+SHOTS = {"S08b": s08b, "S10a": s10a, "S11a": s11a}
