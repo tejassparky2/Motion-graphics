@@ -12,15 +12,23 @@
 
 63 render frames (51 in the cut + 12), from ep01v3/timing.json; the beat frames are in _beats().
 """
+import json
 import math
+import os
 import random
 
-import bpy
-from mathutils import Matrix, Vector
+try:
+    import bpy
+    from mathutils import Matrix, Vector
 
-from channels.monsters.mk import anim, diorama, diorama_lab, hero, look, storm
+    from channels.monsters.mk import anim, diorama, diorama_lab, hero, look, storm
+except ImportError:                                      # helper4_comp.py imports _beats/BUILD outside Blender
+    bpy = None
 
 KAI = 5.8                                       # hero.load scale in diorama units (diorama/helper1.KAI)
+FX3D = os.environ.get("S08B_FX3D") == "1"       # the old 3D arcs and x-ray placeholder; default: the 2D pass (Q5)
+BUILD = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
+                     "build", "monsters", "diorama_v3")
 FALLBACK_FRAMES = 63                            # ep01v3 S08b render_frames (51 + 12), if timing.json is missing
 ARC_GLOW, ARC_CORE, GHOST = "#5fb6ff", "#f2f9ff", "#3d8cff"
 
@@ -36,9 +44,9 @@ def _frames():
 
 def _beats(n):
     """The beat frames, on the v3 line (timing.json: "That's" 8, "how" 13, "I" 15, "died." 18, the line out by 26):
-    the spark cracks at the strip on 4 and runs to his feet by 10; it hits on 11; the x-ray flashes 14-15, 18-20 (on
-    "died.") and 23-24; the lights die on 27, the last arcs by 30, and it is black from 31 to the end (the flatline)."""
-    return dict(spark=4, run=(4, 10), hit=11, xray=[14, 15, 18, 19, 20, 23, 24], out=27, fade=30, black=31)
+    the spark cracks at the strip on 4 and runs to his feet by 10; it hits on 11; the x-ray flashes 14-15, 18-19 (on
+    "died.") and 22-23 (fx2d.xray_flash start 14, beat 2); the lights die on 27, the last arcs by 30, and it is black from 31 to the end (the flatline)."""
+    return dict(spark=4, run=(4, 10), hit=11, xray=[14, 15, 18, 19, 22, 23], out=27, fade=30, black=31)
 
 
 # ----------------------------------------------------------------------------------------------- Kai, standing
@@ -322,6 +330,28 @@ def _xray(rig, frames, n):
     return ghosts, sk
 
 
+def _export_2d(rig, cam, n, water_pts):
+    """For the 2D pass (diorama_v3/helper4_comp.py): Kai's joints per frame (mk/joints) and the spark's path through
+    the water (strip -> strip end -> the spill -> his feet) in full-res pixels per frame (the camera pushes in)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    from channels.monsters.mk import joints
+    os.makedirs(BUILD, exist_ok=True)
+    joints.export(rig, cam, range(1, n + 1), os.path.join(BUILD, "S08b_joints.json"), head_up=KAI * 0.03)
+    sc = bpy.context.scene
+    rx, ry = sc.render.resolution_x, sc.render.resolution_y
+    keep, paths = sc.frame_current, {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        pts = []
+        for p in water_pts:
+            v = world_to_camera_view(sc, cam, p)
+            pts.append((round(v.x * rx, 1), round((1 - v.y) * ry, 1)))
+        paths[str(f)] = pts
+    sc.frame_set(keep)
+    with open(os.path.join(BUILD, "S08b_water.json"), "w") as fh:
+        json.dump(paths, fh)
+
+
 # ----------------------------------------------------------------------------------------------- the shot
 def s08b():
     n = _frames()
@@ -406,13 +436,13 @@ def s08b():
         lt.keyframe_insert("location", frame=f)
         diorama_lab.lab._kprop(lt.data, "energy", f, 900.0 + 500 * rnd.random(), "CONSTANT")
         trail = water_pts[:i + 1] + [pos]
-        for j in range(2):                                                # the arcs crawling over the water behind
+        for j in range(2 if FX3D else 0):                                                # the arcs crawling over the water behind
             pts = []
             for q0, q1 in zip(trail[:-1], trail[1:]):
                 pts += _jag(q0, q1, rnd, 0.35, 4)[:-1]
             pts.append(trail[-1])
             _arc(f"s08b_warc{f}_{j}", pts, cl, [f], n, 0.9 - 0.3 * j, glow, core)
-    _show_on([head], list(range(r0, r1 + 1)), n)
+    _show_on([head], list(range(r0, r1 + 1)) if FX3D else [], n)
     for f in range(r1 + 1, out + 1):                                      # it lights him up from below
         lt.location = chest - Vector((0, 0, KAI * 0.4)) + Vector((0, -1.2, 0))
         lt.keyframe_insert("location", frame=f)
@@ -421,7 +451,7 @@ def s08b():
     diorama_lab.lab._kprop(lt.data, "energy", fade + 1, 0.0, "CONSTANT")
 
     # the arcs over his body, re-drawn every frame of the jolt (fewer and dimmer after the lights die)
-    for f in range(hit, fade + 1):
+    for f in range(hit, fade + 1) if FX3D else ():
         bpy.context.scene.frame_set(f)
         W = lambda nm: arm.matrix_world @ rig["bone"](nm).head                        # noqa: E731
         T = lambda nm: arm.matrix_world @ rig["bone"](nm).tail                        # noqa: E731
@@ -450,13 +480,15 @@ def s08b():
 
     # the x-ray flashes; the room's lights stutter with each one, then everything dies
     xr = B["xray"]
-    _xray(rig, xr, n)
+    if FX3D:
+        _xray(rig, xr, n)
     room, lamp = R["lights"]["room"], R["lights"]["lamp"]
     base = {o.name: o.data.energy for o in (room, lamp)}
     for f in range(hit - 1, out):
         for o in (room, lamp):
             diorama_lab.lab._kprop(o.data, "energy", f, base[o.name] * (0.05 if f in xr else 1.0), "CONSTANT")
     R["power_out"](out)
+    _export_2d(rig, cam, n, water_pts)
     black = storm.power_out(cam, B["black"], flicker=False)
     del black
     dof = cam.data.dof                                                    # no tilt-shift blur on the black plane
