@@ -362,7 +362,8 @@ def s08a():
 
 
 KAI_B = (-5.6, -2.2)                 # where he stands in B: just west of the pond, facing the shrimp and the thorn tree
-RUN_TO = 15.5                        # how far west he gets (units)
+RUN_TO = 11.0                        # how far west he gets (units)
+STEP = 0.12                          # run step (armature units): quick short steps, a scamper at toy scale
 
 
 def s24bot():
@@ -375,7 +376,7 @@ def s24bot():
     perch = Vector(isl["thorn"]["perch"])
     # the bird: dark from frame 1 (as in A), then the dive onto the shrimp, its shadow sweeping over Kai on the way
     f_dive, f_hit = 58, 84
-    bird = x3._bird_drop(isl["thorn"], f_dive, f_hit, n, kai_at=(KAI_B[0] - 5.0, KAI_B[1]))
+    bird = x3._bird_drop(isl["thorn"], f_dive, f_hit, n, kai_at=(shrimp.x + 14.0, shrimp.y + 3.0))   # shadow: in from the east
     x3._mantle(bird, f_hit - 2, f_hit + 4)
     h5._rage_light(bird, 1, perch.z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
     for e in sh["eyes"]:                                            # it only notices as the claws close
@@ -404,7 +405,7 @@ def s24bot():
 
     x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, 0.001, 0))), 1, f_turn, 0.2, "R", crouch=(0.0, 0.1), upper=frozen,
              every=2)
-    steps = RUN_TO / x3.SCALE / 0.3
+    steps = RUN_TO / x3.SCALE / STEP
 
     def run_upper(P, t):
         ph = math.sin(t * steps * math.pi)
@@ -417,7 +418,7 @@ def s24bot():
         P.aim("upper_arm.L", (0.2, -0.55 * ph, -0.8))
         P.aim("forearm.L", (0.05, -0.85, 0.45 - 0.2 * ph))
 
-    x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, -RUN_TO / x3.SCALE, 0))), f_run, n, 0.3, "L", crouch=(0.08, 0.06),
+    x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, -RUN_TO / x3.SCALE, 0))), f_run, n, STEP, "L", crouch=(0.05, 0.05),
              upper=run_upper, every=2)
     for f, z in ((1, 90.0), (f_crouch, 90.0), (f_turn, 90.0), (f_turn + 2, -105.0), (f_run, -90.0)):   # snap turn,
         arm.rotation_euler.z = math.radians(z)                                                         # overshoot
@@ -431,8 +432,8 @@ def s24bot():
     acting.blink(k, 1, n, seed=11, at=(14,))
     xv2._twos([arm])
     # the camera pans west with him on 1s, from the south, high enough to fold his height into the band
-    a = ((KAI_B[0] + 3.0, KAI_B[1] - 0.5, 1.0), 82.0, 60.0, 0.0, 80.0, 0.2)
-    b = ((KAI_B[0] - 6.0, KAI_B[1] - 1.0, 1.0), 80.0, 60.0, -4.0, 80.0, 0.2)
+    a = ((KAI_B[0] + 3.5, KAI_B[1] - 0.5, 1.0), 74.0, 58.0, 0.0, 80.0, 0.2)
+    b = ((KAI_B[0] - 1.5, KAI_B[1] - 0.8, 1.0), 70.0, 58.0, -3.0, 80.0, 0.2)
     xv2._move("cam_s24bot_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[arm])
 
