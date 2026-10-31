@@ -421,9 +421,9 @@ def build(timing, n, v):
     amb(lambda d, s: sfx.lab_hum(d, s), lab0, silence0, -28, 0.4, 0.05)
     amb(lambda d, s: sfx.aquarium_bubbles(d, s), lab0, c.t("S06"), -27, 0.4, 0.5)
     music_at(bed("lab", silence0 - lab0 + 0.5, 0), lab0, spark_t, -17, 0.5, 0.2)
-    hit(slow_snap(), c.word("l4", "snaps"), -6)
-    hiss0 = c.word("l4", "snaps") + 0.35
-    collapse_t = c.t("S05a", 1.65)
+    hit(slow_snap(), c.f("S04", 19), -6)                         # the crack on the shut's flash (S04 f19, in "snaps")
+    hiss0 = c.f("S04", 19) + 0.35
+    collapse_t = c.f("S05a", 51)                                 # the bubble collapses with a flash on "sun" (S05a f51)
     amb(lambda d, s: bubble_hiss(d, 20 + s), hiss0, collapse_t, -22, 0.4, 0.05)
     hit(bubble_collapse(), collapse_t, -10)
     hit(glass_tap(0), c.f("S05b", 29), -14, 0.4)                 # Kai's fingertip taps the glass (right edge), twice:
@@ -465,7 +465,8 @@ def build(timing, n, v):
     amb(lambda d, s: meadow_wind(d, 70 + s), strike + 1.5, c.t("S20"), -29, 1.0, 0.3)
     music_at(soft_pad(c.t("S19") - c.t("S16") + 0.4, (45, 52, 57, 60), 0.05, 1), c.t("S16"), c.t("S19") + 0.3, -21,
              1.0, 0.4)
-    music_at(tense_tone(c.end("S19") - c.t("S19")), c.t("S19"), c.end("S19"), -19, 0.5, 0.25)
+    hit(sfx._bell(_midi(91), 1.2, 0.6) + sfx._bell(_midi(98), 1.2, 0.5) * 0.6, c.f("S18", 29), -20)   # the realisation
+    music_at(tense_tone(c.end("S19") - c.t("S19")), c.t("S19"), c.end("S19"), -19, 0.5, 0.25)  # flash, S18 f29 ("wet")
 
     # --- S20: a tiny "pff", then silence for the deadpan (only the faintest air)
     pff_t = c.word("l20", "anyway") + 0.85
