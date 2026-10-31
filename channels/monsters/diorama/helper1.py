@@ -35,7 +35,7 @@ def _stage():
     return R, rig
 
 
-def _tilt_cap(rig, deg=24.0):
+def _tilt_cap(rig, deg=30.0):
     """Push the cap back on his head (brim up) for the close beats: from a camera 40 deg or more above him (the
     diorama's minimum tilt) the brim would hide his eyes. The dome, brim and letter turn together about the dome's
     centre (their meshes are transformed in the cap's shared rest space, so the head-bone constraints still hold)."""
@@ -93,7 +93,7 @@ def s03b():
     h3d._key_pose(rig, 1, h3d.BODY)
     head = h3d._head_pos(rig)
     face = head + Vector((0.3, 0.15, -0.1))
-    cam = R["cam"]("cam_s03b", tuple(face), dist=38.0, tilt=40.0, yaw=-100.0, lens=120.0, blur=BLUR)
+    cam = R["cam"]("cam_s03b", tuple(face), dist=28.0, tilt=46.0, yaw=-100.0, lens=120.0, blur=BLUR)
     _light("s03b_tank_on_face", tuple(head + Vector((2.2, 1.2, -0.1))), tuple(head), 28, size=0.7)
     h3d._tank_glow(side=Vector((1.0, 0.0, 0.0)))
     hero.line_width(rig, 0.0025)
@@ -128,7 +128,7 @@ def s05b():
     h3d._key_pose(rig, 34, h3d.BODY)
     head = h3d._head_pos(rig)
     # lower, from the south-east: the finger on the front glass and his face in three-quarter
-    R["cam"]("cam_s05b", tuple(head.lerp(tap, 0.5) + Vector((0, 0, -0.2))), dist=44.0, tilt=40.0, yaw=-80.0,
+    R["cam"]("cam_s05b", tuple(head.lerp(tap, 0.5) + Vector((0, 0, -0.2))), dist=32.0, tilt=46.0, yaw=-80.0,
              lens=100.0, blur=BLUR)
     tc = Vector(t["center"])
     fl = _light("s05b_flash", tuple(tc + Vector((-1.0, -0.6, 0.6))), tuple(head), 0, "#e8fbff", 0.6)
