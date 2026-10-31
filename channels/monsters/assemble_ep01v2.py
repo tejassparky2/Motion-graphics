@@ -57,11 +57,12 @@ CAP_MAX_W = 560              # clear of the right rail
 # Per-version, per-shot caption baselines where the 71% band would cover a face or the subject.
 CAP_Y_VERSION = {
     "ep01v2": {"S01": 940, "S02": 940, "S14": 150, "S16": 210, "S18": 145, "S19": 640, "S24": 748},
-    "diorama": {"S05a": 180, "S06": 200, "S07": 560, "S13": 250, "S16": 200, "S18": 380, "S24": 775},   # S05a: over the pebbles at the top, off the glowing bubble;
+    "diorama": {"S05a": 180, "S06": 200, "S07": 560, "S13": 250, "S16": 200, "S17": 250, "S18": 380, "S24": 775},   # S05a: over the pebbles at the top, off the glowing bubble;
                                             # S06: in the dark above the room, off Kai at the desk;
                                             # S07: above the shrimp (tank and impact frame); S13: above Kai's cap, off the
                                             # shrimp at the pond; S16: above the pond, off the shrimp on his chest
-                                            # through the push-in; S18: above Kai's cap, off the shrimp on his chest;
+                                            # through the push-in; S17: in the sky above his cap, off
+                                            # the shrimp's eyes, the drop and the wet patch; S18: above Kai's cap, off the shrimp on his chest;
                                             # S24: RUN panel, between the
                                             # divider and Kai's cap. Shots still changing are checked when they land.
 }
