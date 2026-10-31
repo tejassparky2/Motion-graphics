@@ -58,16 +58,16 @@ Most serious first within each shot. Updated as shots land.
 | S20 | bGqrs (coordinator render) | PASS | 103 / 103 | 0.45 | the pff, the stare, the head tilt, Kai's deadpan held 2 s |
 | S14 | helper 9 (helper 5 render) | PASS (caption placement, picture.mp4 3ad5173) | 80 / 80 | 0.33 | "Impossible." sits above the cap; the mouth is clear |
 | S16 | bGqrs | PASS | 76 / 76 | 0.40 | eyes open on "eyes", then S01's framing (SU9 rhyme) |
-| S24bot | XprL | **FIX** (restage OK in stills 08b6456; waiting for the mp4) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
+| S24bot | XprL (coordinator restage) | PASS (v2, 957f393) | 97 / 97 | 0.46 | Kai at x 90-345, clear of the rail; the bird drops on the shrimp and mantles |
 | S07 | helper 2 | PASS (v2, d978975) | 36 / 36 | 0.29 | re-aimed: the shrimp mid-frame; the hit and the crack land |
 | S05a | helper 2 | PASS | 75 / 75 | 0.30 | the bubble peaks, then collapses to micro-bubbles on "sun" |
 | S17 | bGqrs | PASS | 47 / 47 | 0.51 | a drop falls on "drops." and splats on the jacket (CH3, second showing) |
-| S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
+| S24top | XprL | PASS (v1); v2 re-delivery pending (bGqrs's frames 67-97 fix, ~02:05) | 97 / 97 | 0.53 | the SAVE plate; split-ready |
 | S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: the restaged S24top/S24bot mp4s (XprL, ~02:00).
+Waiting for: S24top v2 (XprL, ~02:05).
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -490,3 +490,16 @@ clears the mouth. PASS once that is checked in helper 8's next animatic.
   - The glitch jitter is small (±0.07 per frame) and a single frame of static is not a sequence.
 - **NOTE:** to keep the strike in S15 the brightest moment of the episode, cap the S02 white at about 85% (or make
   it 1 frame).
+
+## S24bot v2 (RUN; XprL, from the coordinator's restage; 957f393)
+**PASS.** v1's FIX (Kai in the Shorts right rail) is resolved.
+- **Length and level:** 97 frames, saturation 0.46, the action on 2s (with a 48-frame end hold).
+- **Framing:** a higher camera about 22° down. Kai is close, stepping toward the lens with his hands up and his face
+  to camera, at x 90-345. He stays clear of the right rail (x > 620, y 640-1180) on every frame checked (1, 30, 60,
+  97).
+- **Captions:** the face sits at y 790-880. For S24 the assembler sets the caption baseline at y 748 (CAP_Y_SHOT),
+  so the question line sits above his face, not over it. The default 845-930 band does not apply to this shot.
+- **Story:** the bird's giant shadow is over Kai on frames 1-35 (composited; LC8: the riskier option is darker).
+  The butcher bird drops from the top of the thorn tree onto the shrimp at the puddle and mantles over it (wings
+  arched, beak down), and the shrimp's pupils shrink. That is the visible cost of RUN (AB1).
+- On-model. The seams at frames 25/26, 49/50 and 73/74 (stitched parts) match their neighbours.
