@@ -25,14 +25,13 @@ from channels.monsters.mk import anim, diorama, look
 
 MAP = diorama.MAP
 TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep01v3", "timing.json")
-# Kai's own frame (+Y forward = up once he lies down, +Z toward his head, +X his right): both hands up in front of his
-# face, palms toward him, elbows bent: he stares at them
-HANDS_UP = [("right_upper_arm", (0.3, 0.8, 0.45)), ("right_lower_arm", (-0.35, 0.35, 0.87)),
-            ("left_upper_arm", (-0.3, 0.8, 0.45)), ("left_lower_arm", (0.35, 0.35, 0.87))]
-HANDS_REACH = [("right_upper_arm", (0.25, 0.9, 0.55)), ("right_lower_arm", (-0.3, 0.45, 0.85)),   # overshoot
-               ("left_upper_arm", (-0.25, 0.9, 0.55)), ("left_lower_arm", (0.3, 0.45, 0.85))]
-HANDS_COCK = [("right_upper_arm", (0.45, 0.45, 0.2)), ("right_lower_arm", (-0.2, 0.6, 0.5)),     # anticipation
-              ("left_upper_arm", (-0.45, 0.45, 0.2)), ("left_lower_arm", (0.2, 0.6, 0.5))]
+# Kai's own frame (+Y forward = up once he lies down, +Z toward his head, +X his right): his loose left hand comes up
+# in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
+# over his head (acting.LYING_V3).
+HAND_COCK = [("left_upper_arm", (-0.65, 0.35, -0.35)), ("left_lower_arm", (-0.25, 0.75, 0.15))]
+HAND_REACH = [("left_upper_arm", (-0.22, 0.95, 0.5)), ("left_lower_arm", (0.38, 0.5, 0.82))]     # overshoot
+HAND_UP = [("left_upper_arm", (-0.28, 0.88, 0.4)), ("left_lower_arm", (0.35, 0.42, 0.85))]
+HEAD_AWAKE = [("head", (-0.08, 0.5, 1))]                           # rolled face up, off to the side no more
 
 
 def _words(shot="S09"):
@@ -93,10 +92,12 @@ def world_sphere(name, r, mat):
     return b.obj(name, mat, shadow=False)
 
 
-def _key_arms(rig, spec, frame, loc, rot):
-    s15._pose(rig, d3.LYING_RELAXED + spec, loc, rot)
-    for pb in rig["arm"].pose.bones:
-        pb.keyframe_insert("rotation_quaternion" if pb.rotation_mode == "QUATERNION" else "rotation_euler", frame=frame)
+def _key_pose(rig, extra, frame, loc, rot):
+    """LYING_V3 with `extra` bones replaced, remembered for `frame` (helper 10 keys them all at the end)."""
+    from channels.monsters.mk import acting
+    over = dict(extra)
+    s15._pose(rig, [(b, over.pop(b, d)) for b, d in acting.LYING_V3] + list(over.items()), loc, rot)
+    s15._key_pose(rig, frame)
 
 
 def s09():
@@ -110,8 +111,14 @@ def s09():
     f_world_end = min(n - 12, w.get("world", f_in + 12) + 10)
     crack_on = (2, 6)                                              # the crack draws on, then the black opens
     fall = (8, max(10, f_woke - 3))                                # the spark drops into the meadow
-    rig, face = d3._lying_kai(MAP["wake"])
-    d3._nestle(rig)
+    from channels.monsters.mk import acting, hero
+    rig = hero.load((0, 0, 0), scale=d3.KAI, outfit="world")
+    wake = MAP["wake"]
+    acting.lie(rig, (wake[0], wake[1] - 4.4), 0, spec=acting.LYING_V3)      # head toward +Y, at the wake spot
+    bpy.context.view_layer.update()
+    hd, ht = s15._world(rig, "head"), s15._world(rig, "head", tail=True)
+    face = (hd + ht) / 2 + Vector((0, 0, 0.12 * d3.KAI / 1.1))
+    d3._nestle(rig)                                                # the pink flowers crowd his outline
     loc, rot = rig["arm"].location.copy(), (math.pi / 2, 0, math.pi)
     dist, lens = 28.0, 100.0
     cam = diorama.camera("cam_s09", face + Vector((0, -1.6, 0)), dist=dist, tilt=70, yaw=0, lens=lens, blur=12)
@@ -156,19 +163,31 @@ def s09():
         dark.keyframe_insert("hide_render", frame=f)
     chest = s15._world(rig, "chest") + Vector((0, 0, 0.8))
     _spark(cam.location, up, chest, fall[0], fall[1], dist)
-    # Kai: eyes shut, snap open on "woke", hands up and a stare (on 2s), a blink and an eye dart
-    _key_arms(rig, [], 1, loc, rot)
-    _key_arms(rig, [], f_woke, loc, rot)
-    _key_arms(rig, HANDS_COCK, f_woke + 2, loc, rot)
-    _key_arms(rig, HANDS_REACH, f_woke + 6, loc, rot)
-    _key_arms(rig, HANDS_UP, f_woke + 8, loc, rot)
-    for fc in anim.all_fcurves(rig["arm"].animation_data.action):
-        for kp in fc.keyframe_points:
-            kp.interpolation = "CONSTANT"
-    for f, names in ((1, ("blink",)), (f_woke, ("surprised", "brows_up")), (f_woke + 10, ("surprised",)),
-                     (f_woke + 16, ("blink",)), (f_woke + 18, ("surprised", "look_left")),
-                     (f_woke + 22, ("surprised",))):
-        h3d._faces(rig, names, f)
+    # Kai (mk/acting): out cold, head rolled; on "woke" his eyes snap open wide (surprised); his left hand comes up
+    # in front of his face (anticipation, overshoot, settle, on 2s) and he stares at it, dazed; on "In another world."
+    # his eyes go up to the crack in the sky; blinks throughout once he's awake
+    _key_pose(rig, [], 1, loc, rot)
+    _key_pose(rig, HEAD_AWAKE, f_woke, loc, rot)
+    _key_pose(rig, HEAD_AWAKE + HAND_COCK, f_woke + 2, loc, rot)
+    _key_pose(rig, HEAD_AWAKE + HAND_REACH, f_woke + 6, loc, rot)
+    _key_pose(rig, HEAD_AWAKE + HAND_UP, f_woke + 8, loc, rot)
+    s15._flush_keys(rig)
+    bpy.context.scene.frame_set(f_woke + 8)
+    hand = s15._world(rig, "left_hand")
+    sky = Vector(cam.location) + (up @ Vector((0, 0, -1))) * dist * 4
+    bpy.context.scene.frame_set(1)
+    acting.expression(rig, "neutral", 1)
+    acting.expression(rig, "surprised", f_woke)
+    acting.expression(rig, "dazed", f_woke + 10)
+    acting.expression(rig, "surprised", f_in, value=0.75)
+    acting._key("eye_close", 1, 1.0)                               # shut until "woke"
+    acting._key("eye_close", f_woke, 0.0)
+    acting._key("eye_open", 1, 0.0)
+    acting._key("eye_open", f_woke, 0.8)                           # the snap: wide for a beat, then settles
+    acting._key("eye_open", f_woke + 6, 0.0)
+    acting.look_at(rig, hand, f_woke + 8, f_in - 2, seed=9)
+    acting.look_at(rig, sky, f_in, n, darts=True, seed=4)
+    acting.blink(rig, f_woke + 10, n, every=(40, 70), seed=5, at=(f_woke + 16,))
     for o in rig["arm"].users_collection[0].objects:               # nothing ghosts through the black
         for f, hide in ((1, True), (crack_on[1] + 2, False)):
             o.hide_render = hide
