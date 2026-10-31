@@ -63,9 +63,14 @@ def at(shot, word, n=0, end=False):
 
 def _sapling(rig, n):
     """The young tree the snap cut beside his head: a slim stump with a hot, glowing slanted cut and a thread of
-    smoke, an inch from his head on his left (the blast passed there). Stays in every later shot."""
+    smoke, ~0.6 units off his head on his right (west), on the blast line (helper 10's S15). Stays in every later
+    shot. Placeholder position until diorama.sapling_spot() lands."""
     head = s3d.kai_point(rig, "head")
-    p = head + EAST * 1.15 + UP * 0.35
+    if hasattr(diorama, "sapling_spot"):
+        x, y = diorama.sapling_spot()[:2]
+        p = Vector((x, y, 0.0))
+    else:
+        p = head - EAST * 1.3 + UP * 0.2
     bark = bpy.data.materials.get("stump_bark") or diorama.lit_paint("stump_bark", "#3c261c", "#5e3e2c", "#80604a")
     ring = bpy.data.materials.get("stump_hot") or look.flat("stump_hot", look.hexc("#ff7a3d"), 2.2)
     core = bpy.data.materials.get("stump_core") or look.flat("stump_core", look.hexc("#ffe08a"), 3.0)
@@ -77,12 +82,37 @@ def _sapling(rig, n):
     return stump
 
 
+def _set(n):
+    """The island after v3's snap, which fired SOUTH at Kai (helper 10): the trees north of the pond stand; the young
+    grove south of where he knelt is cut to glowing stumps (diorama.grove_spots(), once helper 10 pushes it). Returns
+    the stump spots."""
+    isl = diorama.island(seed=31, **({"grove": True} if hasattr(diorama, "grove_spots") else {}))
+    spots = []
+    if hasattr(diorama, "grove_spots"):
+        spots = list(diorama.grove_spots())
+        gone = set()
+        for i, sp in enumerate(isl["spots"]):
+            if any(abs(sp[0] - g[0]) < 0.01 and abs(sp[1] - g[1]) < 0.01 for g in spots) and isl["trees"][i]:
+                gone |= {c.name for o in isl["trees"][i] for c in [o] + list(o.children_recursive)}
+        for name in gone:
+            bpy.data.objects.remove(bpy.data.objects[name], do_unlink=True)
+        diorama.stumps(spots, diorama.MAP.get("blast", (0.1, 0.4)))
+        meadow.smoke([(x, y, diorama.TREE * 0.4) for x, y, *_ in spots[:5]], -50, n + 10, every=16, rise=9.0,
+                     size=diorama.TREE * 0.4)
+    for name, strength in (("stump_hot", 2.2), ("stump_core", 3.0)):
+        m = bpy.data.materials.get(name)
+        em = next((nd for nd in m.node_tree.nodes if nd.type == "EMISSION"), None) if m and m.use_nodes else None
+        if em is not None:
+            em.inputs["Strength"].default_value = strength
+    return spots
+
+
 def _world(shot, claw="face", shrimp=True, head=None, **shrimp_kw):
     n = frames(shot)
     diorama.setup()
-    stumps = v2._set(n)
+    stumps = _set(n)
     rig = hero.load((0, 0, 0), scale=s3d.KAI_SCALE, outfit="world")
-    acting.lie(rig, HIPS, HEAD_DIR, head=head)
+    acting.lie(rig, HIPS, HEAD_DIR, spec=acting.LYING_V3_L, head=head)   # left arm flung: the sapling is west
     hero.line_width(rig, 0.0025)
     sh = v2._shrimp(rig, n, claw, **shrimp_kw) if shrimp else None
     diorama.sunbeam(s3d.kai_point(rig, "chest"), radius=7.0)

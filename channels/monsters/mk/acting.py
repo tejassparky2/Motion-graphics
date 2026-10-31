@@ -3,7 +3,8 @@ shot gets clear key poses, anticipation and overshoot on 2s, blinking and living
 
 Kai (the hero rig from hero.load; face keys on the "head" mesh):
     lie(rig, hips, head_dir)                 LYING_V3: on his back, a knee bent, an arm flung over his head, grass
-                                             tufts and a contact shadow (from above he never reads as standing)
+                                             tufts and a contact shadow (from above he never reads as standing);
+                                             LYING_V3_L is its mirror (the left arm flung), mirror(spec) any other
     expression(rig, name, f0, f1=None)       surprised / fear / angry / joy / neutral / terror / deadpan / dazed /
                                              thinking / realise / realised (snaps on)
     face_keys(rig, f, **keys)                single face keys, layered
@@ -220,6 +221,22 @@ LYING_V3 = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("upper_chest", (0, 0
             ("left_upper_leg", (-0.12, 0.85, -0.55)), ("left_lower_leg", (-0.05, -0.75, -0.7)),   # knee up
             ("right_upper_leg", (0.2, 0.2, -1)), ("right_lower_leg", (0.12, -0.05, -1)),
             ("left_foot", (-0.1, 0.4, -1)), ("right_foot", (0.35, 1, -0.3))]
+
+
+def mirror(spec):
+    """The same pose mirrored left to right (swap the left_/right_ bones, flip X)."""
+    swap = {"left_": "right_", "right_": "left_"}
+    out = []
+    for b, (x, y, z) in spec:
+        for a, c in swap.items():
+            if b.startswith(a):
+                b = c + b[len(a):]
+                break
+        out.append((b, (-x, y, z)))
+    return out
+
+
+LYING_V3_L = mirror(LYING_V3)     # the LEFT arm flung over his head (east side, clear of v3's sapling to his west)
 
 
 def lie(rig, hips, head_dir, spec=LYING_V3, tufts=True, shadow=True, head=None):
