@@ -22,14 +22,18 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03a | helper 1 | **FIX** | 53 / 53 | 0.45 | the rain is near-invisible specks and does not move (the shot changes once, at frame 22); file tag |
+| S03a | helper 1 | **FIX** (fix in 38c9239; re-render pending) | 53 / 53 | 0.45 | the rain was near-invisible and static; the new rain reads in the OK still |
 | S03b | helper 1 | PASS (remuxed, 175fa92) | 51 / 51 | 0.39 | the smile lands at ~f22; file now clean |
 | S10b | helper 6 | PASS | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
 
 ## S03a: night shift at the marine lab (helper 1)
-**FIX** (sent to helper 1).
+**Fix in progress:** mk/diorama_lab.py 38c9239 has bright 20° streaks (about 0.1 × 1.1 u) falling about 0.6 u per
+frame, plus slow drips. The OK still (okstills/S03a_rain_f2.jpg) reads at 360 px. PASS once the re-rendered,
+CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new rain on their next render.
+
+**v1: FIX** (sent to helper 1).
 1. **The rain does not read and does not move (row: "rain on the window"; LC10: keep calm shots alive with
    ambient motion).**
    - In the window, the rain is a few faint specks, invisible at 360 px.
