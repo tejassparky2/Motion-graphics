@@ -131,21 +131,6 @@ def _over_jacket(sh, rig):
     return pose
 
 
-def _sun_pool(rig):
-    """A warm pool of sunlight through a gap in the canopy onto him (the forest's long shadows cover this side of the
-    clearing in the low sun): a soft spot from the sun's side."""
-    c = s3d.kai_point(rig, "chest")
-    bpy.ops.object.light_add(type="SPOT", location=c + Vector((-14, 10, 30)))
-    sp = bpy.context.object
-    sp.data.energy = 26000
-    sp.data.color = look.hexc(diorama.SUN_WARM)[:3]
-    sp.data.spot_size = math.radians(22)
-    sp.data.spot_blend = 0.6
-    sp.data.shadow_soft_size = 1.5
-    sp.rotation_euler = (c - sp.location).to_track_quat("-Z", "Y").to_euler()
-    return sp
-
-
 def _dust(rig, n, count=46, seed=8):
     """Settling dust: small pale motes sinking slowly through the light, shrinking near the ground (1s)."""
     rnd = random.Random(seed)
@@ -171,7 +156,7 @@ def _world(shot, claw="face"):
     stumps = _set(n)
     rig = _kai()
     sh = _shrimp(rig, n, claw)
-    _sun_pool(rig)
+    diorama.sunbeam(s3d.kai_point(rig, "chest"), radius=7.0)     # shared: the same light on him S15-S21
     _dust(rig, n)
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 1, n
