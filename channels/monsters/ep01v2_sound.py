@@ -48,7 +48,8 @@ FLASH_FRAME = 43         # the 2-frame white flash (Blender 44-45): the shockwav
 DUST_FRAME = 49          # the forest wall pops into dust (Blender 50 on): the erase
 BLOWN_FRAME = 79         # Kai is blown back (Blender 80)
 OUT_SR = 48000
-OUT = os.path.join(ROOT, "out", "monsters", "ep01v2")
+EPISODE = "ep01v2"       # ep01v3_sound.py reuses this module with EPISODE = "ep01v3" and its own build()
+OUT = os.path.join(ROOT, "out", "monsters", EPISODE)
 
 from channels.monsters import sfx                 # noqa: E402
 from channels.monsters.sfx import SR, _bp, _exp, _hp, _lp, _midi, _n, _place, _pluck, _rng, _sweep, _t, _verb  # noqa: E402
@@ -67,7 +68,7 @@ def load_voice():
     """The episode's Timeline built from the cached takes, exactly as ep01v2_timing.py builds it."""
     voice._clone_generate = _no_synth if hasattr(voice, "_clone_generate") else None
     spec = importlib.util.spec_from_file_location("ep01v2_episode", os.path.join(ROOT, "channels", "monsters",
-                                                                                  "ep01v2", "episode.py"))
+                                                                                  EPISODE, "episode.py"))
     ep = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ep)
     voice.configure(**ep.NARRATOR)
@@ -552,7 +553,7 @@ def to_out(x):
 def main():
     import pyloudnorm
     os.makedirs(OUT, exist_ok=True)
-    with open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")) as f:
+    with open(os.path.join(ROOT, "channels", "monsters", EPISODE, "timing.json")) as f:
         timing = json.load(f)
     ep, tl = load_voice()
     if abs(tl.total - timing["total"]) > 0.01:
@@ -610,7 +611,7 @@ def _norm_words(s):
 def check(model_name="medium.en"):
     """Whisper every line out of mix.wav (its own window, the mix as heard) and compare with the script."""
     import whisper
-    with open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")) as f:
+    with open(os.path.join(ROOT, "channels", "monsters", EPISODE, "timing.json")) as f:
         timing = json.load(f)
     model = whisper.load_model(model_name, device="cpu")
     audio = whisper.load_audio(os.path.join(OUT, "mix.wav"))     # 16 kHz mono
