@@ -237,7 +237,7 @@ def s21():
     sc.frame_set(1)
     s3d.kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
     mid = Vector((p0.x, p0.y, 0)).lerp(edge, 0.5) + Vector((0, 0, 1.0))
-    _cam("cam_s21", mid, 15.0, 70.0, tilt=58.0, shift=(0.08, 0.04))
+    _cam("cam_s21", mid, 17.0, 70.0, tilt=58.0, yaw=20.0, shift=(0.089, -0.104))
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
