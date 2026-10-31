@@ -32,7 +32,12 @@ LOOKS = {
 
 FILL = False                   # tested 31 Oct: the cool fill sun lit the pond water into a jagged white patch
 RIM = False                    # tested 31 Oct: no visible rim from the top-down diorama cameras, only cost
-ON_BY_DEFAULT = False          # flipped to True for diorama_v3 once the coordinator approves the before/after
+ON_BY_DEFAULT = True           # approved for diorama_v3 (coordinator, 31 Oct 13:20 UTC): lab only, see ISLAND below
+# The island before/after (S18 f31) came out greyer and hazier, with a pale ghost over Kai's face and a blob at the pond
+# edge, while v1's island already reads clean and bright, so island scenes keep the v1 look unless DIORAMA_ISLAND_Q3=1.
+# (helper 9: the ghost was the vignette's ellipse mask, whose size is a socket in 4.5, and the blob was the fill sun;
+# both are fixed now: see out/monsters/diorama_v3/okstills/Q3_chest_before_after.jpg.)
+ISLAND = os.environ.get("DIORAMA_ISLAND_Q3") == "1"
 
 
 def enabled(ep):
@@ -159,6 +164,8 @@ def _grade(sc, g):
 def finish(info):
     sc = bpy.context.scene
     kind = scene_kind()
+    if kind == "island" and not ISLAND and os.environ.get("DIORAMA_LOOK") != "v2":
+        return "island (v1 look kept)"
     g = LOOKS[kind]
     _view(sc, g["exposure"])
     _render(sc)
