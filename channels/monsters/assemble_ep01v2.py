@@ -74,6 +74,10 @@ CAP_Y_VERSION = {
 # v3 starts from the diorama placements for the shots it keeps; new and re-staged shots are checked as they land.
 CAP_Y_VERSION["diorama_v3"] = {k: v for k, v in CAP_Y_VERSION["diorama"].items()
                                if k in ("S05a", "S06", "S13", "S16", "S17", "S18")}
+CAP_Y_VERSION["diorama_v3"].update({
+    "S07": 200,              # v3: over the pebbles above the shrimp, off the claw, the snap and the crack
+    "S08a": 620,             # over his shorts: the face, the sneakers in the spill and the sparking strip stay clear
+})
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
