@@ -131,7 +131,7 @@ def s22():
     hips = Vector((d16.HIPS[0], d16.HIPS[1], 2.0))
     wide = tree.lerp(hips, 0.6)                                             # the tree at the top, Kai at the bottom
     _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, 34.0, 100.0, 0.0),   # yaw 34: the tree and Kai on one line
-          (tuple(wide), 84.0, 56.0, 34.0, 85.0, 0.1), n)
+          (tuple(wide), 100.0, 56.0, 34.0, 85.0, -0.06), n)
     return dict(frames=n, step=1, subject=[])
 
 
