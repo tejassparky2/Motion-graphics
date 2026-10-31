@@ -84,7 +84,8 @@ CAP_Y_VERSION["diorama_v3"].update({
     "S08b": 945,             # below his feet and the skeleton's (text ends ~955, above the Shorts UI line at 960)
     "S15a": 250,             # above the shrimp's eyes, then the blurred trees above Kai's cap; off the raised claw
     "S22": [(0.0, CAP_Y), (0.9, 500)],
-    "S23c": 860,             # between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in   # the tree close-up keeps the band; after the pull-back, the grass between
+    "S23c": 860,
+    "S24": [(0.0, CAP_Y), (3.3, 945)],   # from "Option B" Kai walks down the B panel: under his head             # between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in   # the tree close-up keeps the band; after the pull-back, the grass between
                                          # the tree and Kai at the puddle
 })
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
@@ -98,6 +99,10 @@ OW, OH = W, H
 SHOTS_HI = None              # the 1080 shots folder, preferred over SHOTS when SCALE > 1
 S02_WHITE = (0.85, 0.60)     # the rewind's closing flash stays dimmer than the snap (the episode's brightest moment)
 S24_FOCUS = [(W / 2, H / 4), (W / 2, H * 3 / 4)]   # the plates are framed as halves: each shows in place
+# v3's B plate: Kai's cap and raised hand start ~20 px under the divider, so the plate drops 100 px instead of 60
+S24_FOCUS_VERSION = {"diorama_v3": [(W / 2, H / 4), (W / 2, 860)]}
+# card centres per version (default fx2d_ab.A_POS / B_POS); v3's B moves right of the bird at the pond's top-left
+AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)}}
 
 
 # ---------------------------------------------------------------- decoding shots
@@ -232,7 +237,7 @@ class _Split:
     def __getitem__(self, i):
         s, cr = blank()
         panels = [surface(p[i]) if p is not None else sl for p, sl in zip(self.plates, self.slates)]
-        fx2d_anime.split(cr, i / FPS, 0.0, self.shot.frames / FPS, panels, focus=S24_FOCUS, sound=False)
+        fx2d_anime.split(cr, i / FPS, 0.0, self.shot.frames / FPS, panels, focus=S24_FOCUS_SHOT, sound=False)
         return s
 
 
@@ -325,7 +330,7 @@ def ab_times(lines):
 
 # ---------------------------------------------------------------- main
 def main():
-    global SHOTS, CAP_Y_SHOT, SCALE, OW, OH, SHOTS_HI
+    global SHOTS, CAP_Y_SHOT, SCALE, OW, OH, SHOTS_HI, S24_FOCUS_SHOT, AB_POS_SHOT
     ap = argparse.ArgumentParser()
     ap.add_argument("--animatic", action="store_true")
     ap.add_argument("--check", action="store_true")
@@ -352,6 +357,8 @@ def main():
     SHOTS_HI = (os.path.join(os.path.dirname(SHOTS), f"shots_{OW}") if SCALE > 1 else None)
     a.out = a.out or os.path.join(VERSIONS[a.version], "picture.mp4")
     CAP_Y_SHOT = CAP_Y_VERSION[a.version]
+    S24_FOCUS_SHOT = S24_FOCUS_VERSION.get(a.version, S24_FOCUS)
+    AB_POS_SHOT = AB_POS_VERSION.get(a.version, {})
     if a.check:
         print(f"version {a.version}: shots {os.path.relpath(SHOTS, ROOT)} -> {os.path.relpath(a.out, ROOT)}"
               f" at {OW}x{OH}" + (f" (prefers {os.path.relpath(SHOTS_HI, ROOT)})" if SHOTS_HI else ""))
@@ -416,7 +423,9 @@ def main():
                 draw_hook(cr)
             if ab and shot.name == "S24":                       # helper 7's vote cards, under the captions
                 t0 = shot.first / FPS
-                fx2d_ab.ab_cards(cr, t - t0, ab[0] - t0, ab[1] - t0, ab[2] - t0)
+                for letter, label, at in (("A", "SAVE", ab[0]), ("B", "RUN", ab[1])):
+                    fx2d_ab.ab_card(cr, t - t0, at - t0, letter, label, pos=AB_POS_SHOT.get(letter),
+                                    pulse_at=ab[2] - t0)
             if shot.name not in NO_CAPTIONS:
                 draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y), shot.first / FPS)
             s.flush()
