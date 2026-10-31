@@ -404,9 +404,10 @@ SHOTS = {"S15": s15}
 
 # ---------------------------------------------------------------- the 2D pass and delivery (outside Blender)
 
-def composite(raw, sub, out_dir):
-    """raw: the Blender frames; sub: a render of frames IMPACT..IMPACT+3 with --subject. Adds the 2-frame flash and
-    the 4 impact frames on 2s, writes S15.mp4 and S15_sheet.jpg to out_dir."""
+def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None):
+    """raw: the Blender frames; sub: a render of frames IMPACT..IMPACT+3 with --subject. Adds the 2-frame flash, the
+    4 impact frames on 2s and the knocked-out stars (star_px: the back stars' size; cap_box: (x0, y0, x1, y1), where
+    to look for the white cap), writes <name>.mp4 and <name>_sheet.jpg to out_dir. The diorama test reuses it."""
     import glob
     import shutil
     import subprocess
@@ -448,7 +449,12 @@ def composite(raw, sub, out_dir):
     for f in range(G, STARS_END + 1):
         img = cv2.imread(os.path.join(work, f"{f:04d}.png"))
         white = (img.min(axis=2) > 225)
-        white[img.shape[0] // 2:] = False
+        if cap_box:
+            keep = np.zeros_like(white)
+            keep[cap_box[1]:cap_box[3], cap_box[0]:cap_box[2]] = True
+            white &= keep
+        else:
+            white[img.shape[0] // 2:] = False
         ys, xs = np.nonzero(white)
         cap[f] = ((float(np.median(xs)), float(np.percentile(ys, 5)),
                    float(np.percentile(xs, 97) - np.percentile(xs, 3))) if len(xs) > 200 else (W2 * 0.4, 300.0, 300.0))
@@ -461,7 +467,7 @@ def composite(raw, sub, out_dir):
             return
         cx, cy, cw = cap[f]
         rx = 0.65 * cw                                         # the orbit: ~1.3x the cap's width, clear above it
-        cx = min(cx, 560 - rx - 34)                            # stay out of the Shorts right rail
+        cx = min(cx, 560 - rx - star_px * 0.62)                # stay out of the Shorts right rail
         a_fade = 1.0 if f < STARS_END - 3 else (STARS_END - f) / 3
         ph = 2 * math.pi * ((f - G) // 2 * 2) / 16
         tilt = math.radians(-10)
@@ -470,8 +476,8 @@ def composite(raw, sub, out_dir):
             a = ph + i * 2 * math.pi / 3
             ex, ey = math.cos(a) * rx, math.sin(a) * rx * 0.22
             x = cx + ex * math.cos(tilt) - ey * math.sin(tilt)
-            y = cy - 52 + ex * math.sin(tilt) + ey * math.cos(tilt)
-            stars.append((math.sin(a), x, y, 55 + 10 * (math.sin(a) + 1) / 2))
+            y = cy - star_px * 0.95 + ex * math.sin(tilt) + ey * math.cos(tilt)
+            stars.append((math.sin(a), x, y, star_px * (1 + 0.18 * (math.sin(a) + 1) / 2)))
         for _, x, y, r in sorted(stars):                       # back to front
             cr.new_path()
             for j in range(10):
@@ -489,20 +495,20 @@ def composite(raw, sub, out_dir):
     src = comp.Source(work)
     shot = comp.Shot(src, src.duration, [(flash, dict(start=(FLASH - 1) / FPS)),
                                          (impact_2s, dict(start=(IMPACT - 1) / FPS)),
-                                         (ko_stars, {})], name="S15")
+                                         (ko_stars, {})], name=name)
     done = os.path.join(work, "out")
     comp.render([shot], done, check=False)
     os.makedirs(out_dir, exist_ok=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i", os.path.join(done, "%05d.png"),
                     "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p",
-                    os.path.join(out_dir, "S15.mp4")], check=True)
+                    os.path.join(out_dir, f"{name}.mp4")], check=True)
     outs = sorted(glob.glob(os.path.join(done, "*.png")))
     picks = outs[::6]
     cols = 6
     th = [cv2.resize(cv2.imread(p), (180, 320)) for p in picks]
     th += [np.zeros_like(th[0])] * (-len(th) % cols)
     rows = [np.hstack(th[i:i + cols]) for i in range(0, len(th), cols)]
-    cv2.imwrite(os.path.join(out_dir, "S15_sheet.jpg"), np.vstack(rows), [cv2.IMWRITE_JPEG_QUALITY, 88])
+    cv2.imwrite(os.path.join(out_dir, f"{name}_sheet.jpg"), np.vstack(rows), [cv2.IMWRITE_JPEG_QUALITY, 88])
     return done
 
 
