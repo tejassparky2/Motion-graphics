@@ -18,7 +18,8 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 |---|---|---|---|---|
 | S03a, S03b, S04, S05a, S05b | v2 copies, 2D grade-matched to Q3 (c7b638e) | PASS (interim) | exact | clean files; the lab grade now matches the Q3 renders; superseded when the owners' full v3 renders land |
 | S10a | helper 4 (v3 re-render) | PASS (self-review) | 56 / 56 | the cute hold and the blink as v2, now with the 8% push-in on 1s; clean |
-| S10b, S11a, S12 | (v2 copies) | PASS (v2 QA) | exact | the same picture and length as v2; S10a/S11a/S10b/S11b/S12 re-render under the GO |
+| S11a | helper 4 (v3 re-render) | PASS (self-review) | 39 / 39 | the trail of smoking ember holes up to the snail, now with the push-in; clean |
+| S10b, S12 | (v2 copies) | PASS (v2 QA) | exact | the same picture and length as v2; S10a/S11a/S10b/S11b/S12 re-render under the GO |
 | S01 | bGqrs (68fb99c) | PASS; 1 NOTE | 69 / 69 | hook frame: the new lying pose (arm over his head), terror eyes + sweat, claw by his face, a cut stump smoking by his head; NOTE no blink in 2.9 s |
 | S06 | helper 9 (bb29d71) | PASS | 41 / 41 | the strong flash on "storm" (14), and in the tank the shrimp jolts awake with comic surprise lines (16-22) |
 | S07 | helper 2 (ee287b1) | PASS | 87 / 87 | the startled shrimp jumps, snaps on "snap" (42) with the flash and ring, the crack zigzags across the glass, the water jet spits out |
@@ -38,7 +39,7 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
 | S08b | helper 4 | PASS (self-review; the coordinator approved the stills) | 63 / 63 | the spark runs through the water, the electrocution jolt and x-ray on "died.", the fall, black from 31; clean |
 
-Waiting for: S03a/S03b/S04/S05a/S05b re-renders, S10b, S11a (rendering), S11b, S12, S13, S14, S15, S15b, S16, S19, S20, S24top, S24bot.
+Waiting for: S03a/S03b/S04/S05a/S05b re-renders, S10b, S11b, S12, S13, S14, S15, S15b, S16, S19, S20, S24top, S24bot.
 
 ## S23: the v2 copy in a shorter v3 slot
 The words land on the same frames as in v2 ("bird" 17, "thorns." 45, the line out by 58), so every spoken beat
