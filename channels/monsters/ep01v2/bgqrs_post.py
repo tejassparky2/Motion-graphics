@@ -190,8 +190,8 @@ def overlays(shot):
         t0 = 0.0 if shot == "S01" else 41 / FPS                   # S16: from his terror on the wide (frame 42)
         (cx, cy), size, tilt, eyes = face_geom(a, t0)
         er = size / 2.6 * 0.26 * 1.08                             # 8% over the 3D eye, so none of it peeks out
-        if shot == "S01":                                         # on the eyes as rendered (QA: a sliver showed)
-            eyes = plate_eyes(os.path.join(BUILD, shot, "0012.png"), eyes, er)
+        if shot in ("S01", "S16"):                                # on the eyes as rendered (QA: a sliver showed)
+            eyes = plate_eyes(os.path.join(BUILD, shot, "0012.png" if shot == "S01" else "0042.png"), eyes, er)
         return [(fx2d_anime.terror_eyes, dict(start=t0, end=99, x=cx, y=cy, size=size, eyes=eyes, er=er, tilt=tilt)),
                 (fx2d_anime.sweat_drop, dict(start=t0 - 0.2, end=99, x=cx, y=cy, size=size, tilt=tilt))]
     if shot == "S18":                                             # the realisation lands on "wet" (frame 30)
