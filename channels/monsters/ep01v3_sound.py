@@ -46,6 +46,7 @@ S08A_WATER, S08A_FEAR, S08A_STUTTER = 4, 19, (29, 32)   # water at his sneakers 
 S08B_HIT, S08B_LIGHTS, S08B_LAND, S08B_BLACK = 10, 26, 28, 30   # helper 4: the jolt hits f10, the lights die f26,
                                                                   # the body lands f28, black from f30 (0-based)
 S09_EYES = 14             # helper 3's final S09 (2a2d3e3): his eyes snap open on "woke"; the world cuts in at f32
+S20_DUD = 53              # S20 final (0a72c30): the claw clacks shut on nothing and the tiny yellow puff, f53
 S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
 
 
@@ -377,7 +378,7 @@ def build(timing, n, v):
     music_at(base.tense_tone(c.end("S19") - c.t("S19")), c.t("S19"), c.end("S19"), -19, 0.5, 0.25)
 
     # --- S20: "It tried to finish me anyway." the wind-up, a tiny pff, the startle, silence for the deadpan
-    pff_t = c.word("l24", "anyway", "end") + 0.55
+    pff_t = c.f("S20", S20_DUD)
     hit(sfx.whoosh(3), pff_t - 0.35, -26)
     hit(base.pff(), pff_t, -14)
     hit(startle(), pff_t + 0.3, -20, 0.2)
