@@ -53,11 +53,45 @@ def _clear_flowers(rig):
             bpy.data.objects.remove(o, do_unlink=True)
 
 
+def _dress(rig, seed, n_flowers=70, n_tufts=40, radius=6.5):
+    """The flower meadow round the snail ("pink grass"): pink, white and yellow flower dots and painted grass tufts,
+    clear of the snail and its trail."""
+    import random
+    from channels.monsters.mk import paintbg
+    x0, y0 = rig["root"].location.x, rig["root"].location.y
+    tr = rig.get("trail")
+    keep = [(x0, y0 + 0.15 * k) for k in range(-9, 12)] + (list(tr["path"]) if tr else [])
+
+    def blocked(x, y):
+        return any(math.hypot(x - px, y - py) < 1.25 for px, py in keep)
+    cols = [bpy.data.materials[n] for n in ("mflower0", "mflower2", "mflower3") if n in bpy.data.materials]
+    rnd = random.Random(seed)
+    for i in range(n_flowers):
+        x, y = x0 + rnd.uniform(-radius, radius), y0 + rnd.uniform(-radius, radius)
+        if blocked(x, y):
+            continue
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=5, location=(x, y, 0.1))
+        o = bpy.context.object
+        o.name = f"h4_flower{i}"
+        sz = rnd.uniform(0.16, 0.3)
+        o.scale = (sz, sz, sz * 0.6)
+        o.data.materials.append(cols[0] if rnd.random() < 0.55 else rnd.choice(cols))
+    paintbg.grass_tufts((x0, y0), radius, n=n_tufts, seed=seed, avoid=blocked)
+
+
+def _faint_slime(alpha=0.12):
+    """The trail's slime ribbon as a barely-there sheen (seen from above, the v3 strength read as pavement)."""
+    m = bpy.data.materials.get("jsnail_slime")
+    if m:
+        m.node_tree.nodes["Mix"].inputs[0].default_value = alpha
+
+
 def s10a():
     from channels.monsters.ep01v2.helper4 import _motes
     from channels.monsters.mk import anim, diorama, jellysnail
     frames = 44 + HANDLE
     rig = _scene(trail=False)
+    _dress(rig, seed=41)
     jellysnail.hold(rig, 1, frames, "cute", bob=0.025, period=36, step=2)
     anim.blink(rig, 23)                                        # the 3D shot's blink frame
     anim.on_twos(rig["eyes"], 2)
@@ -77,6 +111,8 @@ def s11a():
     frames = 27 + HANDLE
     rig = _scene(trail=True)
     tr = rig["trail"]
+    _dress(rig, seed=43, radius=7.5)
+    _faint_slime()
     _cel_smoke(tr)
     # seen from the north (looking -Y) screen-right is world -X, so the smoke leans to +X: up and to the left, away
     # from the shell, as in S11a v3. Bigger and taller than in 3D, so the columns read from above
@@ -96,14 +132,18 @@ SHOTS = {"S10a": s10a, "S11a": s11a}
 
 
 def encode(shot, frames_dir, out_dir):
-    """frames_dir/0001.png... -> out_dir/<shot>.mp4 (x264 crf 12, no metadata or encoder tag) and <shot>_sheet.jpg
-    (every 6th frame)."""
+    """frames_dir/0001.png... -> out_dir/<shot>.mp4 (x264 crf 12, then a clean stream copy: no metadata or encoder
+    tag, as deliver_ep01v2.py) and <shot>_sheet.jpg (every 6th frame)."""
     from PIL import Image
     os.makedirs(out_dir, exist_ok=True)
+    clean = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+             "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name="]   # deliver_ep01v2.CLEAN
+    tmp = os.path.join(out_dir, f"_{shot}_tmp.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i", os.path.join(frames_dir, "%04d.png"),
-                    "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p", "-map_metadata", "-1",
-                    "-fflags", "+bitexact", "-flags:v", "+bitexact", "-x264-params", "no-info=1",
-                    os.path.join(out_dir, f"{shot}.mp4")], check=True)
+                    "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p", *clean, tmp], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *clean,       # a stream copy, so
+                    os.path.join(out_dir, f"{shot}.mp4")], check=True)                          # no encoder tag
+    os.remove(tmp)
     n = len([f for f in os.listdir(frames_dir) if f[:4].isdigit() and f.endswith(".png")])
     ims = [Image.open(os.path.join(frames_dir, f"{f:04d}.png")) for f in range(1, n + 1, 6)]
     w, h = ims[0].size[0] // 3, ims[0].size[1] // 3

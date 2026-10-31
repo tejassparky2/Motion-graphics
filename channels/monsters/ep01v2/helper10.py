@@ -404,7 +404,7 @@ SHOTS = {"S15": s15}
 
 # ---------------------------------------------------------------- the 2D pass and delivery (outside Blender)
 
-def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None):
+def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None, cap_white=225):
     """raw: the Blender frames; sub: a render of frames IMPACT..IMPACT+3 with --subject. Adds the 2-frame flash, the
     4 impact frames on 2s and the knocked-out stars (star_px: the back stars' size; cap_box: (x0, y0, x1, y1), where
     to look for the white cap), writes <name>.mp4 and <name>_sheet.jpg to out_dir. The diorama test reuses it."""
@@ -425,13 +425,13 @@ def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None):
     os.makedirs(os.path.join(work, "subject"))
     blank = np.zeros((1280, 720, 4), np.uint8)
     for f in frames:                                           # the subject pass, blank outside the impact frames
-        name = os.path.basename(f)
-        shutil.copyfile(f, os.path.join(work, name))
-        s = os.path.join(sub, "subject", name)
+        fname = os.path.basename(f)
+        shutil.copyfile(f, os.path.join(work, fname))
+        s = os.path.join(sub, "subject", fname)
         if os.path.exists(s):
-            shutil.copyfile(s, os.path.join(work, "subject", name))
+            shutil.copyfile(s, os.path.join(work, "subject", fname))
         else:
-            cv2.imwrite(os.path.join(work, "subject", name), blank)
+            cv2.imwrite(os.path.join(work, "subject", fname), blank)
 
     def flash(cr, t, start):
         k = int(math.floor((t - start) * FPS + 1e-6))
@@ -448,7 +448,7 @@ def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None):
     cap = {}
     for f in range(G, STARS_END + 1):
         img = cv2.imread(os.path.join(work, f"{f:04d}.png"))
-        white = (img.min(axis=2) > 225)
+        white = (img.min(axis=2) > cap_white)
         if cap_box:
             keep = np.zeros_like(white)
             keep[cap_box[1]:cap_box[3], cap_box[0]:cap_box[2]] = True
@@ -501,6 +501,8 @@ def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None):
     os.makedirs(out_dir, exist_ok=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i", os.path.join(done, "%05d.png"),
                     "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p",
+                    "-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+                    "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name=",   # no encoder tags
                     os.path.join(out_dir, f"{name}.mp4")], check=True)
     outs = sorted(glob.glob(os.path.join(done, "*.png")))
     picks = outs[::6]

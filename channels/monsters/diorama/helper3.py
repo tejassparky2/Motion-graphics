@@ -71,8 +71,8 @@ def _nestle(rig, n=170, seed=21):
             gb[rnd.randrange(3)].add(blade, (x + rnd.uniform(-0.15, 0.15), y + rnd.uniform(-0.15, 0.15), 0.0),
                                      (0.07, 0.07, ht), rot=tilt)
         if rnd.random() < 0.55:
-            r = rnd.uniform(0.16, 0.26)
-            fb[rnd.random() < 0.7 and 0 or 1].add(ball, (x, y, rnd.uniform(0.55, 1.0)), (r, r, r * 0.7))
+            r = rnd.uniform(0.12, 0.2)
+            fb[0 if rnd.random() < 0.7 else 1].add(ball, (x, y, rnd.uniform(0.55, 1.0)), (r, r, r * 0.7))
     return [b.obj(f"wake_blades{i}", m) for i, (b, m) in enumerate(zip(gb, greens))] + \
            [b.obj(f"wake_flowers{i}", m) for i, (b, m) in enumerate(zip(fb, pinks))]
 
