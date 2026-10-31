@@ -27,9 +27,14 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S05b | helper 1 | PASS | 51 / 51 | 0.40 | the flash fades on 1s, the finger rises and taps on 30/34; clean file; 1 NOTE |
 | S10a | helper 4 | PASS (self-review; the coordinator approved the stills) | 56 / 56 | 0.51 | the cute hold, blink on 23, on 2s; flowers round it; clean file |
 | S15 | helper 10 + helper 7 + coordinator | **FIX** | 127 / 127 | 0.48 | the claw's wind-up (22-41) is unreadable: the shrimp is ~40 px and behind Kai; file tags |
+| S11a | helper 4 | PASS (self-review; the coordinator approved the stills) | 39 / 39 | 0.58 | the trail of ember holes leads up to the snail; pale smoke on 1s; clean file |
 | S10b | helper 6 | PASS (remuxed clean, 8672c25) | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS (remuxed clean, 8672c25) | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
+| S17 | bGqrs | PASS | 47 / 47 | 0.38 | the drop falls from the claw tip by Kai's face; clean file; 1 NOTE |
+| S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
+| S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
+| S21 | helper 5 | rendering (helper 4) | 64 | - | - |
 
 ## S03a: night shift at the marine lab (helper 1)
 **Fix in progress:** mk/diorama_lab.py 38c9239 has bright 20° streaks (about 0.1 × 1.1 u) falling about 0.6 u per
@@ -83,7 +88,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S01, S02, S04, S05a, S06-S09, S11a (mine, rendering), S13, S14, S16-S24; the S03a re-render.
+Waiting for: S02, S04, S05a, S06-S09, S13, S14, S16, S18-S20, S22, S23, S24top; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **FIX** (sent to helper 10, cc the coordinator).
@@ -122,3 +127,25 @@ Waiting for: S01, S02, S04, S05a, S06-S09, S11a (mine, rendering), S13, S14, S16
   23 (as in 3D), and pollen motes.
 - **Diorama read:** a close toy view from the south, with the snail's face turned up to the lens. The pink and white
   flower dots melt in the tilt-shift above and below it.
+
+## S11a: "And every one of..." (helper 4)
+**PASS** (self-review; the coordinator approved the OK stills and asked for the two fixes, which are in).
+- **Length and level:** 39 frames, saturation 0.58, a clean file, 24-42 s per frame.
+- **Picture:** from above and behind, the trail of six burnt, ember-rimmed holes runs up the frame to the snail.
+  The pale cel smoke rises off every hole on 1s, leaning up-left, clear of the shell. The slime ribbon is now a
+  faint sheen, so the holes sit in the grass, with flower dots around.
+
+## S17: "Then I saw the drops." (bGqrs, rendered 0319933)
+**PASS**, with one NOTE.
+- **Length and level:** 47 frames, saturation 0.38, a clean file.
+- **Picture:** from above, Kai lies on his back below the pond with the shrimp on his chest. A drop swells on the
+  claw tip by his face and falls (the clue's second showing, CH3), with the 2D glint pass on it.
+- **NOTE:** the drop is small and lands by his face rather than on the jacket, as the 3D insert did. It reads at
+  360 px as a blue blip against the claw. A brighter splat would help.
+
+## S24bot: RUN (XprL, f423ff4)
+**PASS.**
+- **Length and level:** 97 frames, saturation 0.49, a clean file, on 2s.
+- **Picture:** from above, the butcher bird's giant shadow sweeps across Kai (frames 1-35). The bird then drops onto
+  the shrimp at the pond and mantles over it, with Kai beside it.
+- **Split:** it shows in place in the lower half (S24_FOCUS y 960). Kai is about 240 px tall, clear of the right rail.

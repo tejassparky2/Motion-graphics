@@ -280,7 +280,7 @@ def s15_diorama():
     sc.frame_set(B + 1)
     bpy.context.view_layer.update()
     ec = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
-    _camera("D1b_shrimp", B, ec + Vector((-0.45, 0.1, 0.75)), 30.0, 55.0, 30.0)
+    _camera("D1b_shrimp", B, ec + Vector((-0.3, -1.1, 0.6)), 28.0, 42.0, 82.0)   # from the west: clear of Kai
     t2 = Vector((SHRIMP[0] - 0.6, SHRIMP[1] - 0.6, 2.0))
     _camera("D2_strike", D, t2, 80.0, 48.0, 40.0)
     t3a, t3b = Vector((0.0, -1.5, 2.0)), Vector((0.0, 14.0, 0.0))
