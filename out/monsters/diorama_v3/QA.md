@@ -37,6 +37,7 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 | S15b | bGqrs + helper 2 (c192795) | PASS | 62 / 62 | Kai on his back, dazed, KO stars circling his cap, a smoking stump with a glowing cut by his head ("an inch"); no seam at the f31/32 join (max frame change 0.011) |
 | S24top (A) | XprL + coordinator + helper 2 (c0d0d40) | PASS; 1 NOTE | 180 / 180 | Kai walks down to the shrimp at the pond and stands over it as the bird's shadow sweeps in over both (f90+); he blinks; seams invisible (max change 0.014); the shrimp sits just above the split line at y 640; NOTE: he stands over it rather than reaching for it (the brief's "reaching") |
 | S16 | bGqrs; parts helper 6 + coordinator (0dd4fbf) | PASS | 77 / 77 | close on Kai's shut eyes, they open by "eyes" (24) and jump to the 2D terror eyes + sweat; the reveal pulls back on "chest" (45-47) to the shrimp on his chest (S01's framing); seams at 39/40 and 57/58 invisible |
+| S19 | helper 5 (2033d7b) | PASS; 1 NOTE | 105 / 105 | the held quiet shot in the v3 lying pose: the blue drop on the claw tip shrinks on "let the sun dry it" and is gone by ~70, a sweat bead at his temple; NOTE a big foreground smoke plume from the stump billows over his feet on the right the whole shot, drawing the eye from the small (~40 px) drop |
 | S11b | (v2 copy) | PASS (v2 QA) | 38 / 37 | the assembler trims 1 frame |
 | S13 | (v2 copy) | PASS (v2 QA) | 62 / 63 | the assembler holds 1 frame |
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
