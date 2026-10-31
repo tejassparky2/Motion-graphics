@@ -35,11 +35,11 @@ TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
 HAND_COCK = [("left_upper_arm", (-0.5, 0.2, -0.85)), ("left_lower_arm", (-0.15, 0.45, -0.88))]   # anticipation
-HAND_REACH = [("left_upper_arm", (0.1, 1.0, -0.12)), ("left_lower_arm", (0.3, 1.0, -0.05)),      # overshoot
-              ("left_hand", (0.25, 1.0, 0.0))]
-HAND_UP = [("left_upper_arm", (0.15, 1.0, -0.05)), ("left_lower_arm", (0.35, 0.95, 0.0)),         # straight up from
-           ("left_hand", (0.3, 0.95, 0.1))]   # the shoulder: from the lens it hangs between his eyes and us, fingers
-                                              # spread, one clear silhouette
+HAND_REACH = [("left_upper_arm", (0.12, 1.0, 0.02)), ("left_lower_arm", (0.25, 0.9, 0.35)),       # overshoot
+              ("left_hand", (0.2, 0.5, 0.85))]
+HAND_UP = [("left_upper_arm", (0.15, 1.0, 0.1)), ("left_lower_arm", (0.3, 0.8, 0.5)),            # held up above his
+           ("left_hand", (0.25, 0.4, 0.9))]   # face, just past the brim, fingers spread: one clear silhouette, his
+                                              # eyes on it below (picked from a 4-way test)
 HEAD_AWAKE = [("neck", (0, 0.15, 1)), ("head", (-0.03, 0.35, 1))]   # the roll comes out, chin in a touch: his face
                                                                     # (wide eyes) turns to the camera
 

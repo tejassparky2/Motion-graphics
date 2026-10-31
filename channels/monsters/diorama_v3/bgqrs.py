@@ -263,8 +263,9 @@ def _beats(shot, **beats):
         json.dump(beats, fh)
 
 
-S16_CLOSE = (72.0, 17.0, 110.0)       # tilt, dist, lens: close on his face from his feet side (under the cap's brim);
-#                                       tight enough that the shrimp on his chest starts below the frame's UI band
+S16_CLOSE = (72.0, 11.0, 120.0, 0.0)   # tilt, dist, lens, yaw: close on his face from his feet side (under the cap's
+#                                        brim), tight enough that the shrimp on his chest and its claw stay out of
+#                                        frame (projection-checked: no shrimp pixel until the pull back on "chest")
 
 
 def s16():
@@ -275,21 +276,21 @@ def s16():
     n, rig, sh, _ = _world("S16")
     eyes = s3d.kai_point(rig, "eyes")
     pair = eyes.lerp(sh["root"].matrix_world.translation, 0.5)
-    t1, d1, lens = S16_CLOSE
+    t1, d1, lens, yaw1 = S16_CLOSE
     t2, d2, lens2, yaw, up, far = v2.S01_CAM
     fwd = Vector((math.sin(math.radians(yaw)), math.cos(math.radians(yaw)), 0))
-    a1, a2 = eyes - UP * 0.4, pair + UP * up + fwd * far           # his face big in the upper half; S01's aim
+    a1, a2 = eyes - UP * 0.2 - EAST * 0.2, pair + UP * up + fwd * far   # his face big in the upper half; S01's aim
     f_open, f_eyes, f_it, f_chest = at("S16", "opened"), at("S16", "eyes"), at("S16", "it"), at("S16", "chest")
     b0, b1 = f_chest - 2, f_chest + 12                             # the pull back
-    cam = diorama.camera("cam_s16", a1, dist=d1, tilt=t1, lens=lens, blur=BLUR)
+    cam = diorama.camera("cam_s16", a1, dist=d1, tilt=t1, yaw=yaw1, lens=lens, blur=BLUR)
     for f in range(1, n + 1):
         if f < b0:                                                 # a slow push on his face
             u = (f - 1) / max(1, b0 - 1)
-            _keycam(cam, f, a1, t1, d1 - 1.5 * u, lens)
+            _keycam(cam, f, a1, t1, d1 - 1.5 * u, lens, yaw1)
         elif f <= b1:                                              # back and tilt to the two of them
             e = acting.ease((f - b0) / (b1 - b0), "overshoot", 0.08)
             _keycam(cam, f, a1.lerp(a2, e), t1 + (t2 - t1) * e, (d1 - 1.5) + (d2 - d1 + 1.5) * e,
-                    lens + (lens2 - lens) * e, yaw * e)
+                    lens + (lens2 - lens) * e, yaw1 + (yaw - yaw1) * e)   # rolls upright as it pulls back
         else:                                                      # settle, a slight drift
             u = (f - b1) / max(1, n - b1)
             _keycam(cam, f, a2, t2, d2 - 0.8 * u, lens2, yaw)
