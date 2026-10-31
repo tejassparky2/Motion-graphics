@@ -1,4 +1,4 @@
-"""WW2 channel kit, core: the 1920x1080 canvas, palette, fonts, paper, text, cards, camera and the frame loop.
+"""WW2 channel kit, core (1940s poster look): the 1920x1080 canvas, palette, fonts, paper, text, cards, camera and the frame loop.
 
 Every chapter and every helper module (maps.py, stick.py, props.py) draws through these, so the whole video shares
 one look. Style rules: channels/ww2/STYLE.md.
@@ -20,25 +20,29 @@ from motion.engine import (back_out, cairo, clamp01, ease_in, ease_out, hexc, le
 W, H, FPS = 1920, 1080, 24
 
 # ---------------------------------------------------------------- palette (STYLE.md)
-PAL = {
-    "paper": "#efe6d2",       # parchment background
-    "paper_dk": "#e2d6bb",
-    "ink": "#1f1c1a",         # every outline and stick figure
-    "ink_soft": "#5b544c",    # secondary lines, labels
-    "sea": "#b8cfd3",
-    "sea_dk": "#9fbcc2",
-    "land": "#ddd2b6",        # neutral / not in the war yet
-    "axis": "#4b4b52",        # Germany (charcoal)
-    "axis_it": "#6c6c72",     # Italy (lighter charcoal)
-    "axis_jp": "#3a3a42",     # Japan (darker charcoal)
-    "allies": "#3f6fb5",      # Britain, France, the US and the other Western Allies (blue)
-    "soviet": "#b8382e",      # the Soviet Union (red)
-    "china": "#cf9f2a",       # China (gold)
-    "alert": "#d8452f",       # arrows of attack, explosions' core
-    "fire": "#f2a33a",
-    "snow": "#f7f5ef",
-    "white": "#fbf8ef",
-    "gold": "#e0b84a",
+PAL = {                         # 1940s poster inks (STYLE.md): few colours, printed on aged paper
+    "paper": "#ecdfc1",       # aged poster paper
+    "paper_dk": "#dccba4",
+    "ink": "#1c1917",         # key line and solid black
+    "ink_soft": "#4f4740",
+    "cream": "#f4ead2",       # highlights, light side of faces
+    "sea": "#9db3ad",         # grey-green printed sea
+    "sea_dk": "#7f9893",
+    "land": "#e3d3ad",        # neutral / not at war yet
+    "axis": "#45434a",        # Germany (charcoal)
+    "axis_it": "#6a6770",     # Italy
+    "axis_jp": "#34323a",     # Japan
+    "allies": "#2f5f8f",      # Britain, France, the US and the other Western Allies (poster navy-blue)
+    "soviet": "#b5322a",      # the Soviet Union (poster red)
+    "china": "#d39b2c",       # China (mustard gold)
+    "alert": "#c8372d",       # attack arrows' core, explosions
+    "fire": "#ec9a2c",
+    "snow": "#f6f1e4",
+    "white": "#f8f2e2",
+    "gold": "#d9a63a",
+    "olive": "#6f6a3c",       # uniforms, ground
+    "khaki": "#a89566",
+    "sky": "#c9c3a8",
 }
 SIDE = {"axis": PAL["axis"], "germany": PAL["axis"], "italy": PAL["axis_it"], "japan": PAL["axis_jp"],
         "allies": PAL["allies"], "britain": PAL["allies"], "france": PAL["allies"], "usa": PAL["allies"],
@@ -52,12 +56,15 @@ def col(name, a=1.0):
 
 
 # ---------------------------------------------------------------- fonts
-TITLE = "Anton"           # chapter cards, big numbers, stamps (condensed, documentary)
-HAND = "Kalam"            # map labels, notes (hand-lettered sketchbook)
-UI = "Inter"              # small captions, sources
+TITLE = "Anton"                  # big condensed headlines, numbers, the date tag
+SLAB = "Alfa Slab One"           # poster headlines and chapter titles (period slab serif)
+STENCIL = "Big Shoulders Stencil"  # military labels, map unit names, stamps
+LABEL = "Oswald"                 # map labels, name tags, small notes
+HAND = LABEL                     # (old name, kept so early modules still import)
+UI = "Inter"                     # small print only
 
 
-def text(cr, s, x, y, size, font=HAND, color="ink", align="center", bold=True, outline=None, outline_w=0.0,
+def text(cr, s, x, y, size, font=LABEL, color="ink", align="center", bold=True, outline=None, outline_w=0.0,
          alpha=1.0, spacing=0.0):
     """One line of text; (x, y) is the baseline point given by align ("left", "center", "right")."""
     cr.save()
@@ -173,19 +180,23 @@ def date_stamp(cr, t, label, start=0.0, x=70, y=86):
     cr.restore()
 
 
-def chapter_card(cr, t, start, number, title, dur=2.6):
-    """Full-screen chapter title: 'CHAPTER 2' small, the title big, wiping in and out."""
+def chapter_card(cr, t, start, number, title, dur=2.6, color="alert"):
+    """Full-screen poster chapter title: a red band with rays, 'CHAPTER 2' in stencil, the title in slab serif."""
     u_in, u_out = ease_out(seg(t, start, start + 0.35)), ease_in(seg(t, start + dur - 0.3, start + dur))
     if u_in <= 0 or u_out >= 1:
         return
+    a = 1 - u_out
     cr.save()
-    cr.set_source_rgba(*col("ink", 0.94 * (1 - u_out)))
-    cr.rectangle(0, H / 2 - 150 * u_in, W, 300 * u_in)
-    cr.fill()
-    a = u_in * (1 - u_out)
-    text(cr, f"CHAPTER {number}", W / 2, H / 2 - 52, 44, font=TITLE, color="gold", bold=False, alpha=a, spacing=6)
-    text(cr, title.upper(), W / 2, H / 2 + 62, 110, font=TITLE, color="paper", bold=False, alpha=a, spacing=2)
+    cr.rectangle(0, H / 2 - 170 * u_in, W, 340 * u_in)
+    cr.clip()
+    cr.set_source_rgba(*col(color, a))
+    cr.paint()
+    rays(cr, t, W / 2, H / 2, n=28, color="ink", alpha=0.10 * a, spin=0.02)
+    halftone(cr, lambda c: c.rectangle(0, H / 2 + 60, W, 120), "ink", density=2, alpha=0.25 * a)
     cr.restore()
+    text(cr, f"CHAPTER {number}", W / 2, H / 2 - 62, 52, font=STENCIL, color="cream", alpha=a * u_in, spacing=8)
+    text(cr, title.upper(), W / 2, H / 2 + 70, 112, font=SLAB, color="cream", bold=False, alpha=a * u_in,
+         outline="ink", outline_w=10, spacing=2)
 
 
 def word_card(cr, t, start, word, dur=1.4, y=H * 0.2, size=120, color="ink", tilt=-0.04):
@@ -198,7 +209,7 @@ def word_card(cr, t, start, word, dur=1.4, y=H * 0.2, size=120, color="ink", til
     cr.translate(W / 2, y)
     cr.rotate(tilt)
     cr.scale(1.6 - 0.6 * u, 1.6 - 0.6 * u)
-    text(cr, word, 0, size * 0.35, size, font=TITLE, color=color, bold=False, alpha=fade * min(1, u * 2),
+    text(cr, word, 0, size * 0.35, size, font=SLAB, color=color, bold=False, alpha=fade * min(1, u * 2),
          outline="paper", outline_w=size * 0.10, spacing=3)
     cr.restore()
 
@@ -210,7 +221,90 @@ def counter(cr, t, start, end, value, x, y, size=110, fmt="{:,.0f}", color="ink"
     v = value * ease_out(seg(t, start, end))
     text(cr, fmt.format(v), x, y, size, font=TITLE, color=color, bold=False, outline="paper", outline_w=size * 0.08)
     if label:
-        text(cr, label, x, y + size * 0.48, size * 0.3, font=HAND, color="ink_soft")
+        text(cr, label, x, y + size * 0.48, size * 0.3, font=LABEL, color="ink_soft")
+
+
+# ---------------------------------------------------------------- poster print tools
+_DOTS = {}
+
+
+def _dot_tile(density, cell=12, angle=0.785):
+    """An alpha tile of round halftone dots (density 1..5 = dot size), rotated 45 degrees like a print screen."""
+    key = (density, cell, angle)
+    if key in _DOTS:
+        return _DOTS[key]
+    n = 48 * cell // 12 * 4
+    surf = cairo.ImageSurface(cairo.FORMAT_A8, n, n)
+    c = cairo.Context(surf)
+    r = cell * (0.16 + 0.085 * density)
+    c.set_source_rgba(0, 0, 0, 1)
+    for i in range(-2, n // cell + 3):
+        for j in range(-2, n // cell + 3):
+            c.arc(i * cell + (cell / 2 if j % 2 else 0), j * cell * 0.866, r, 0, 2 * math.pi)
+            c.fill()
+    pat = cairo.SurfacePattern(surf)
+    pat.set_extend(cairo.EXTEND_REPEAT)
+    m = cairo.Matrix()
+    m.rotate(angle)
+    pat.set_matrix(m)
+    _DOTS[key] = pat
+    return pat
+
+
+def halftone(cr, path, color="ink", density=3, alpha=1.0, cell=12):
+    """Fill the area traced by path(cr) with halftone dots (the printed shadow / mid-tone of the poster look)."""
+    cr.save()
+    path(cr)
+    cr.clip()
+    cr.set_source_rgba(*col(color, alpha))
+    cr.mask(_dot_tile(max(1, min(5, int(density))), cell))
+    cr.restore()
+
+
+def rays(cr, t, cx, cy, n=24, color="ink", alpha=0.12, spin=0.03, r=2600):
+    """Poster sunburst: alternating wedges radiating from (cx, cy), turning slowly."""
+    cr.save()
+    cr.set_source_rgba(*col(color, alpha))
+    a0 = t * spin
+    for k in range(n):
+        a = a0 + k * 2 * math.pi / n
+        cr.move_to(cx, cy)
+        cr.arc(cx, cy, r, a, a + math.pi / n)
+        cr.close_path()
+    cr.fill()
+    cr.restore()
+
+
+_FINISH = {}
+
+
+def print_finish(cr, t=0.0, strength=1.0):
+    """Last call of every frame: printed-paper grain, specks and a slight ink-wear, multiplied over the frame."""
+    if "s" not in _FINISH:
+        import numpy as np
+        cache = os.path.join(ROOT, "build", "ww2", "finish.png")
+        if os.path.exists(cache):
+            _FINISH["s"] = cairo.ImageSurface.create_from_png(cache)
+        else:
+            rng = np.random.default_rng(11)
+            g = 255 - np.abs(rng.normal(0, 9, (H, W))).astype(np.float32)          # grain
+            sp = rng.random((H, W)) < 0.0009
+            g[sp] -= rng.uniform(30, 90, sp.sum())                                     # ink specks
+            lines = rng.random((H, 1)) < 0.004
+            g -= np.where(lines, 6.0, 0.0)                                             # faint press streaks
+            g = np.clip(g, 0, 255).astype(np.uint8)
+            argb = np.dstack([g, g, g, np.full_like(g, 255)])
+            surf = cairo.ImageSurface.create_for_data(bytearray(argb.tobytes()), cairo.FORMAT_ARGB32, W, H, W * 4)
+            os.makedirs(os.path.dirname(cache), exist_ok=True)
+            surf.write_to_png(cache)
+            _FINISH["s"] = surf
+    cr.save()
+    cr.identity_matrix()
+    cr.set_operator(cairo.OPERATOR_MULTIPLY)
+    dx = (int(t * FPS) * 37) % 9 - 4                     # the grain shifts a little each frame, like film/print
+    cr.set_source_surface(_FINISH["s"], dx, 0)
+    cr.paint_with_alpha(strength)
+    cr.restore()
 
 
 # ---------------------------------------------------------------- frame loop
@@ -235,7 +329,7 @@ def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=12):
     cmd = [ffmpeg(), "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}", "-r", str(FPS),
            "-i", "-", "-c:v", "libx264", "-crf", str(crf), "-preset", "medium", "-pix_fmt", "yuv420p",
            "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
-           "-bsf:v", "filter_units=remove_types=6", "-movflags", "+faststart", out_mp4]
+           "-bsf:v", "filter_units=remove_types=6", "-movflags", "+faststart", out_mp4 + ".enc.mp4"]
     p = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     for i in range(a, b + 1):
         cr = cairo.Context(surf)
@@ -248,4 +342,9 @@ def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=12):
         p.stdin.write(bytes(surf.get_data()))
     p.stdin.close()
     p.wait()
+    # a stream-copy remux drops the "Lavc libx264" encoder name the first pass leaves in the track header
+    subprocess.run([ffmpeg(), "-y", "-v", "error", "-i", out_mp4 + ".enc.mp4", "-c", "copy", "-map_metadata", "-1",
+                    "-fflags", "+bitexact", "-flags:v", "+bitexact", "-metadata:s:v", "handler_name=",
+                    "-movflags", "+faststart", out_mp4], check=True)
+    os.remove(out_mp4 + ".enc.mp4")
     return out_mp4
