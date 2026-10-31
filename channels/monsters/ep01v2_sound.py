@@ -415,8 +415,9 @@ def build(timing, n, v):
     hit(sfx.snap(1), c.f("S07", 9), -2)                          # the snap and its flash (S07 f8-9)
     hit(glass_crack(), c.f("S07", 10), -8, 0.2)
     amb(lambda d, s: trickle(d, 30 + s), c.t("S08"), spark_t + 0.1, -22, 0.2, 0.1)
-    hit(sfx.spark(), spark_t, -6)
-    i0, i1, f = int((spark_t + 0.4) * SR), int(c.t("S09") * SR), _n(0.08)
+    hit(sfx.spark(1), c.f("S08", 32), -22)                       # the lights stutter as the water reaches the strip (f32-43)
+    hit(sfx.spark(), spark_t, -6)                                # the spark on the flash (S08 f54-56)
+    i0, i1, f = int(c.f("S08", 57) * SR), int(c.t("S09") * SR), _n(0.06)   # the black from f57
     for tr in (music, *fx, *ambience):                             # dead silence through the black
         tr[i0:i0 + f] *= np.linspace(1, 0, f)
         tr[i0 + f:i1] = 0

@@ -37,28 +37,32 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
+| S03b | helper 1 | PASS (v3, 93da447) | 51 / 51 | 0.24 | warm skin, cyan on the lit side; 1 NOTE (saturation, a hard split down the face) |
 | S09 | helper 3 | PASS (v2, 6d95527) | 66 / 66 | 0.47 | v1 FIX resolved: eyes open on "woke up", crack held through "cracked sky" |
 | S06 | helper 9 | PASS (v2, bb8f476) | 41 / 41 | 0.37 | the bolt on frame 14, the stutter on 2s, the black opaque |
 | S10a | helper 4 | PASS (coordinator's second read of v2) | 56 / 56 | 0.38 | outline and lit side; known minor issue: outline slivers |
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
 | S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
-| S01 | bGqrs | PASS | 69 / 69 | 0.46 | frame 0 reads at 360 px; 2 NOTEs |
+| S01 | bGqrs | PASS (v2, c8a0958) | 69 / 69 | 0.46 | the terror-eye sliver is fixed; 1 NOTE (chin at the caption line) |
 | S04 | helper 2 | PASS | 73 / 73 | 0.31 | claw held open, shuts, white-hot on "boils"; 1 NOTE |
-| S18 | bGqrs (helper 5 render) | PASS | 60 / 60 | 0.42 | eyes narrow; realisation background on "wet"; 1 NOTE |
-| S19 | bGqrs | PASS | 105 / 105 | 0.49 | the drop dries on "dry it"; 1 NOTE (shrimp's eyes not in frame) |
+| S18 | bGqrs (helper 5 render) | PASS (v2, b172892) | 60 / 60 | 0.38 | a 2D snap-zoom into the eyes on "wet" (resolves the NOTE) |
+| S19 | bGqrs | PASS (v2, b0aa7eb) | 105 / 105 | 0.49 | the last drop dries by frame 90 and stays gone; 1 NOTE (shrimp's eyes not in frame) |
+| S08 | helper 9 | PASS | 85 / 85 | 0.23* | water to the strip, spark on frame 55 after "Me.", then black; *black frames pull the mean down |
+| S12 | helper 9 | PASS | 47 / 47 | 0.61 | the whole crawl in a low side view, on 3s; 1 NOTE (Kai small) |
 | S03a | helper 1 | PASS | 53 / 53 | 0.33 | the night lab, rain, the glowing tank; cuts with S03b |
 | S13 | helper 9 | PASS | 62 / 62 | 0.52 | the claw dipped in the puddle (the clue, CH3) |
 | S20 | bGqrs (coordinator render) | PASS | 103 / 103 | 0.45 | the pff, the stare, the head tilt, Kai's deadpan held 2 s |
-| S24bot | XprL | **FIX** | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
+| S14 | helper 9 (helper 5 render) | PASS (caption placement, picture.mp4 3ad5173) | 80 / 80 | 0.33 | "Impossible." sits above the cap; the mouth is clear |
+| S16 | bGqrs | PASS | 76 / 76 | 0.40 | eyes open on "eyes", then S01's framing (SU9 rhyme) |
+| S24bot | XprL | **FIX** (restage OK in stills 08b6456; waiting for the mp4) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
 | S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
 | S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
 | S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S02, S05a, S05b, S08, S12, S14-S17.
+Waiting for: S02, S05a, S05b, S15, S17; the S24bot re-delivery.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -360,3 +364,59 @@ The first version's notes, for the record:
 - **S21 v2: PASS.** 64 frames, saturation 0.49. It is now seen from Kai's feet: his boots are in the foreground, and
   the shrimp hops off him and stomps to the puddle in a huff (SU12). The finger stays on the claw, and the action
   runs on 2s.
+
+## S14: "A shrimp. On land. Impossible." (helper 9; rendered by helper 5)
+**Resolution (coordinator, 31 Oct):** no re-render. Helper 8 moves S14's caption above the cap (CAP_Y_SHOT), which
+clears the mouth. PASS once that is checked in helper 8's next animatic.
+
+**v1: FIX** (sent to helper 9, cc helper 5, 31 Oct).
+1. **The face is framed too low: the mouth sits in the caption band (HELPERS v3.2 safe areas; TP16).**
+   - The white cap fills the top 40% of the frame. Kai's eyes sit at about y 560-640, his mouth at about y 850-880
+     and his chin at about y 1000.
+   - The caption line ("Impossible.") will cover the mouth, and the mouth is half of this shot's two-step expression
+     change (SG2).
+   - Fix: tilt or raise the camera so the face sits at about y 300-800, with the cap cropped at the top.
+2. **NOTE:** the two face changes (around frames 22 and 48, close to "On land" and "Impossible") are subtle at
+   360 px: a slight squint and a head tilt. A stronger second step, such as brows down with a flat mouth or the
+   `squint` and `brows_down` keys at 1.0, would sell "sceptical".
+- **Passes:** 80 frames, saturation 0.33, holds of 21, 26 and 33 frames (acting held between pose snaps).
+  On-model.
+
+## S16: eyes open, then S01's framing (bGqrs)
+**PASS.**
+- **Length and level:** 76 frames (76 needed), saturation 0.40.
+- **Picture:** an eye close-up with the eyes closed, opening on "eyes" (frame 24). Then a cut to S01's exact
+  framing (SU9: the scary composition rhymes), with the terror-eye sprites and the shrimp on his chest. The shrimp's
+  narrow, dark, locked-on eyes show (key check). Acting on 3s.
+- **Note:** the S01 half shares S01's NOTE (the chin at the caption line).
+
+## S01 v2 (c8a0958) and S18 v2 (b172892): re-deliveries
+- **S01 v2: PASS.** The terror eyes are 8% bigger and centred on the rendered eyes, so the sliver of 3D eye is gone
+  (frame 12 checked at full size).
+- **S18 v2: PASS.** A 2D snap-zoom into the eyes on the realisation (1.0 to 1.18 over frames 30-32, held), so the
+  narrowing now reads at 360 px.
+
+## Round 8 (31 Oct, 00:45 UTC)
+- **S14: PASS** (fixed by placement). In the animatic (picture.mp4 at 3ad5173), "Impossible." sits at y ≈ 150,
+  above the cap, and the mouth is clear.
+- **S24bot:** XprL's restage stills (okstills, 08b6456) put Kai in the centre-left of the RUN plate (about x
+  240-500) with the bird dropping to his right, clear of the rail. PASS once the restaged mp4 lands.
+- **S08: PASS** (helper 9). 85 frames.
+  - Floor level, the lab after the strike: water pours from the hero tank to the floor and runs to the power strip.
+    The spark lands on frame 55, right after "Me." (frame 48), then cut to black from frame 58 with no rain showing
+    through. Nothing graphic (EP1).
+  - The words line up: "Water." frame 8 (the pour), "Cables." frame 28 (the strip), "Me." frame 48.
+  - **NOTE (continuity):** at this framing the tank's crack is too small to compare with S07 and S09. The water
+    comes from the front of the tank, which is consistent. Code-wise it is the same lab tank.
+- **S12: PASS** (helper 9). 47 frames, Kai on 3s.
+  - A low side view: Kai crawls on hands and knees across the meadow toward flowers and the puddle (off frame
+    right, where S13 picks up). On-model.
+  - **NOTE:** Kai is small (about a quarter of the frame width, in the upper middle). Saturation 0.61 sits at the
+    top of the band because of the deep sky. Thirst would read more at a tighter, lower angle. Not blocking.
+- **S03b v3: PASS** (helper 1).
+  - Warm skin, with the tank's cyan on the lit side only, a jaw rim light, and catchlights until the smile at
+    frame 22.
+  - **NOTE:** the cyan half reads teal-grey against the warm half, as a hard split down the middle of the face.
+    Mean saturation fell to 0.24, below even E22's 0.26. It is a designed shadow tone, so not blocking, but it may
+    look odd next to S03a.
+- **S19 v2: PASS.** The last drop is full at frame 1, gone at frame 90, and stays gone.

@@ -241,17 +241,53 @@ def _crawling_kai(start, heading, f0, f1, dist, period=24, look_up=0.0):
     return rig
 
 
+def _glint(loc, cam, f0, f1, size=0.35, every=8, seed=4):
+    """A small 4-point white star that twinkles on 1s (pops up, shrinks away, turns a little), facing the camera."""
+    r = 0.18
+    verts = [(0, 0, 0)]
+    for k in range(8):
+        a = k * math.pi / 4
+        d = 1.0 if k % 2 == 0 else r
+        verts.append((d * math.cos(a), d * math.sin(a), 0))
+    faces = [(0, 1 + k, 1 + (k + 1) % 8) for k in range(8)]
+    me = bpy.data.meshes.new("puddle_glint")
+    me.from_pydata(verts, [], faces)
+    me.materials.append(look.flat("glint_white", look.hexc("#ffffff"), 4.0))
+    o = bpy.data.objects.new("puddle_glint", me)
+    bpy.context.scene.collection.objects.link(o)
+    o.location = loc
+    o.visible_shadow = False
+    c = o.constraints.new("TRACK_TO")
+    c.target, c.track_axis, c.up_axis = cam, "TRACK_Z", "UP_Y"
+    o.scale = (0.001,) * 3
+    o.keyframe_insert("scale", frame=f0)
+    f = f0 + 2
+    while f < f1:
+        for df, sc in ((0, 0.001), (1, 1.0), (2, 0.75), (3, 0.4), (4, 0.001)):
+            o.scale = (size * sc,) * 3
+            o.keyframe_insert("scale", frame=f + df)
+        f += every
+    for fc in anim.all_fcurves(o.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    return o
+
+
 def s12():
-    """S12 "I was so thirsty." (1.5 s): Kai crawls on hands and knees toward the puddle, low side view, locked. Tired
-    face (droopy lids, mouth open). Acting on 3s, so only every 3rd frame is rendered."""
+    """S12 "I was so thirsty." (1.5 s): Kai crawls slowly on hands and knees toward the puddle. Close and low, beside
+    him and a little ahead, so his tired face reads in three-quarter (half-lidded eyes, mouth open, panting on 3s); the
+    puddle twinkles at the right edge ahead of him. Locked camera; acting on 3s, the glint on 1s. He ends where S14 finds him."""
     meadow.build("before")
     n = RENDER["S12"]
-    rig = _crawling_kai((0.6, -11.0, 0.0), math.pi, 1, n, 3.0)
-    _face_mix(rig, {"face_sad": 0.6, "eye_zitome": 0.5, "mouse_open": 0.6}, 1)
-    _face_mix(rig, {"face_sad": 0.6, "eye_zitome": 0.7, "lip_a": 0.7}, 19)
-    c = _cam("cam_s12", (13.5, -9.4, 1.4), (0.6, -9.4, 2.2), 26)
+    rig = _crawling_kai((0.6, -7.6, 0.0), math.pi, 1, n, 1.0, look_up=0.35)
+    for f in range(1, n + 3, 3):                              # panting: open / half-open every 3 frames
+        wide = (f // 3) % 2 == 0
+        _face_mix(rig, {"face_sad": 0.7, "eye_zitome": 0.75, "mouse_open": 1.0 if wide else 0.55,
+                        "lip_a": 0.6 if wide else 0.3}, f)
+    c = _cam("cam_s12", (10.2, 2.6, 0.75), (0.5, -4.4, 2.0), 30)
     c.data.clip_end = 2000
-    return dict(frames=n, step=3, subject=[rig["arm"]])
+    _glint((1.2, -1.85, 0.12), c, 1, n)
+    return dict(frames=n, step=1, subject=[rig["arm"]])          # step 1 for the glint; Kai holds his 3s anyway
 
 
 def s14():
