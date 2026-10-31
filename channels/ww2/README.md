@@ -18,3 +18,4 @@ This is a separate channel from Interestingly Strange (owner, 31 Oct 2026: "long
 
 **Files:**
 - `ep01_script.md`: Episode 1 script, for approval.
+- `sound.py`: the sound palette (original, synthesized in numpy): score cues (tension, march, somber, low tone, triumph, drum-hit stinger), 20 effects, and `Mix` (narration duck, hard cuts, -14 LUFS / -1 dBTP master). `python channels/ww2/sound.py` writes `out/ww2/style/sound_demo.wav` and an effects reel; `test_sound.py` checks it.
