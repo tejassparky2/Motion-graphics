@@ -21,9 +21,10 @@ import bpy
 from mathutils import Vector
 
 from channels.monsters.diorama import xprl as v2
+from channels.monsters.diorama_v3 import bgqrs as b3
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
-from channels.monsters.mk import acting, anim, diorama, hero, tuftwing
+from channels.monsters.mk import acting, anim, butcherbird, diorama, hero, tuftwing
 
 SHRIMP = (*diorama.MAP["shrimp_drink"], 0.0)  # the pond's east edge, its back to the thorn tree (coordinator, v3)
 SHRIMP_YAW = diorama.SHRIMP_DRINK_YAW
@@ -38,6 +39,29 @@ def _frames(shot, fallback):
         return fallback
 
 
+def _set(n, kai_down=True):
+    """The island after v3's snap exactly as bgqrs's v3 shots build it (diorama_v3/bgqrs._set: the grove's stumps
+    once helper 10's grove_spots() lands), keeping the island dict for the thorn tree; with `kai_down`, Kai knocked
+    flat in LYING_V3_L at his landing spot with the cut sapling smoking by his head (bgqrs v3's S15b-S18)."""
+    got, real = {}, diorama.island
+
+    def keep(*a, **kw):
+        got["isl"] = real(*a, **kw)
+        return got["isl"]
+    diorama.island = keep
+    try:
+        b3._set(n)
+    finally:
+        diorama.island = real
+    rig = None
+    if kai_down:
+        rig = hero.load((0, 0, 0), scale=b3.s3d.KAI_SCALE, outfit="world")
+        acting.lie(rig, b3.HIPS, b3.HEAD_DIR, spec=acting.LYING_V3_L)
+        hero.line_width(rig, 0.0025)
+        b3._sapling(rig, n)
+    return got["isl"], rig
+
+
 def _shrimp(n, f_lift=None):
     """The puff-shrimp drinking at the pond's east edge, back to the thorn tree (x3._shrimp_wet, re-placed)."""
     x3.SHRIMP_AT = SHRIMP
@@ -50,8 +74,8 @@ def _shrimp(n, f_lift=None):
 
 def _bird_on_perch(perch, face_to, cut=0.1, fold=False):
     """The butcher bird sitting on the top thorn, already dark (S23's rage light from frame 1: everything above `cut`
-    below the ball's centre in the deep top-shadow tone, amber eye glints), facing `face_to`. `fold`: the wings
-    folded back along its sides, small, so they never cross its face in a close shot."""
+    below the ball's centre in the deep top-shadow tone, amber eye glints), facing `face_to`. `fold`: the little
+    wings tucked away (hidden), so they never cross its face in a close shot (the head turns, the wings don't)."""
     rig = tuftwing.build((perch.x, perch.y, 0.0), shadow_span=10.0)
     rig["root"].scale = (BIRD_SCALE,) * 3
     d = Vector(face_to) - perch
@@ -60,9 +84,43 @@ def _bird_on_perch(perch, face_to, cut=0.1, fold=False):
     h5._rage_light(rig, 1, perch.z + (tuftwing.CENTER[2] - cut) * BIRD_SCALE)
     if fold:
         for sx, w in zip((-1, 1), rig["wings"]):
-            anim.key(w, "rotation_euler", 1, (0.35, 0, sx * 0.55), "CONSTANT")   # swept back along the flank
-            anim.key(w, "scale", 1, (0.8, 0.8, 0.8), "CONSTANT")
+            anim.key(w, "scale", 1, (0.001, 0.001, 0.001), "CONSTANT")   # tucked away: never across its face
     return rig
+
+
+# -------------------------------------------------------------------------------------------------------- S22, S23
+def _to_s23_lens():
+    """The way S23's bird faces at its end (it turns to S23's camera, which looks at the tree from the clearing)."""
+    az = math.radians(v2.YAW_THORN)
+    return Vector((-math.sin(az), -math.cos(az), 0.0))
+
+
+def _v2_on_v3(builder, shot):
+    """Run a v2 diorama builder (diorama/xprl.py) on v3's set, the v3 shrimp spot and the v3 frame count."""
+    patches = {"_set": lambda n, kai_down=True: _set(n, kai_down), "_drinking": lambda n: _shrimp(n)}
+    saved = {k: getattr(v2, k) for k in patches}
+    cut = dict(v2.CUT)
+    try:
+        for k, f in patches.items():
+            setattr(v2, k, f)
+        v2.CUT[shot] = _frames(shot, cut[shot] + v2.TAIL) - v2.TAIL
+        return builder()
+    finally:
+        for k, f in saved.items():
+            setattr(v2, k, f)
+        v2.CUT.clear()
+        v2.CUT.update(cut)
+
+
+def s22():
+    """S22 as in v2 (the larder close-up craning back to the tree, the pond and Kai flat), on v3's world."""
+    return _v2_on_v3(v2.s22, "S22")
+
+
+def s23():
+    """S23 as in v2 (the bird lands, glares at the lens, the empty-thorn insert), on v3's world. Its bird at the end
+    is S23b's opening bird: same facing (to this camera), the same rage light and glare."""
+    return _v2_on_v3(v2.s23, "S23")
 
 
 # ------------------------------------------------------------------------------------------------------------ S23b
@@ -99,7 +157,7 @@ LOCK = 20                           # the lock-on, on "looking" (and the sting):
 def s23b():
     n = _frames("S23b", 60)
     diorama.setup()
-    isl, _ = v2._set(n, kai_down=False)
+    isl, _ = _set(n, kai_down=False)
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     prey = Vector(SHRIMP) + Vector((0, 0, 1.0))
@@ -111,8 +169,8 @@ def s23b():
         c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
         return Vector((v.x * c - v.y * s_, v.x * s_ + v.y * c, 0)).normalized()
     side = turned(to_prey.xy.to_3d(), 25)
-    bird = _bird_on_perch(perch, perch + turned(to_prey.xy.to_3d(), -70) * 10 - Vector((0, 0, 3)),
-                          cut=0.3, fold=True)                               # S23's last look: dark head, white chin
+    bird = _bird_on_perch(perch, perch + _to_s23_lens() * 10, cut=0.1, fold=True)   # S23's last frame: same
+    butcherbird.stare(bird, -8, down=-0.25)                                 # facing, dark, the glare, head up
     acting.tilt(bird, 8, angle=0.42, hold=8)                                 # a curious tilt: one eye to the ground
     acting.lock_on(bird, prey, LOCK)                                        # snap onto the shrimp, head down at it
     # ... and make it predatory (overriding lock_on's cute stare): a half-lid squint, the pupil shrunk to a hard dot
@@ -160,7 +218,7 @@ def s23b():
 def s24top():
     n = _frames("S24", 162)
     diorama.setup()
-    isl, _ = v2._set(n, kai_down=False)
+    isl, _ = _set(n, kai_down=False)
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     bird = _bird_on_perch(perch, Vector(SHRIMP))
@@ -169,8 +227,8 @@ def s24top():
     over = Vector((SHRIMP[0] + 1.6, SHRIMP[1] + 0.1, 0.0))
     back = (Vector((perch.x, perch.y, 0)) - over).normalized() * 4.0
     v2._soft_shadow(bird, tuple(over + back - Vector((perch.x, perch.y, 0))), tuple(-back), 1, n,
-                    tone="#1d2440", opacity=0.68, soften=1.0, shrink=0.42)
-    for f, sc_ in ((1, 1.0), (n, 1.55)):
+                    tone="#1d2440", opacity=0.78, soften=1.0, shrink=0.8)
+    for f, sc_ in ((1, 1.0), (n, 1.35)):
         anim.key(bird["shadow"], "scale", f, (sc_, sc_, 1), "BEZIER")
     # Kai runs in from the east, skids, crouches at its side and reaches over it (facing west, three-quarter to us)
     reach_at = Vector((SHRIMP[0] + 3.6, SHRIMP[1] + 0.2, 0))
@@ -193,10 +251,10 @@ def s24top():
         P.aim("forearm.L", (0.1, -0.6, 0.4))
 
     def reach_upper(P, t):
-        P.rot("spine", (20 + 8 * t, 0, 0))
-        P.rot("chest", (6 + 2 * t, 0, 0))
-        P.rot("neck", (-18 * t, 0, 0))
-        P.rot("head 1", (-40 * t, 0, 0))                                    # chin up to the lens (and the sky)
+        P.rot("spine", (14 + 4 * t, 0, 0))
+        P.rot("chest", (4 + 2 * t, 0, 0))
+        P.rot("neck", (-24 * t, 0, 0))
+        P.rot("head 1", (-52 * t, 0, 0))                                    # chin up: his face to the lens (and sky)
         x3._arms_down(P, 12)
         P.aim("upper_arm.R", (-0.1, -0.85 - 0.1 * t, -0.35))                # reaching out over the shrimp
         P.aim("forearm.R", (-0.03, -0.98, -0.1))
@@ -220,10 +278,10 @@ def s24top():
     acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 1.8, SHRIMP[1], 2.4))
-    a = (tuple(mid + Vector((0.6, 0, 0.3))), 46.0, 48.0, 72.0, 85.0, -0.23)   # low and close, from the west-south-
-    b = (tuple(mid), 38.0, 48.0, 72.0, 85.0, -0.23)                           # west: his face, the shrimp in front
+    a = (tuple(mid + Vector((0.6, 0, 0.3))), 52.0, 42.0, 72.0, 85.0, -0.25)   # low and close, from the west-south-
+    b = (tuple(mid), 43.0, 42.0, 72.0, 85.0, -0.25)                           # west: his face, the shrimp in front
     v2._move("cam_s24top_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"]])
 
 
-SHOTS = {"S23b": s23b, "S24top": s24top}
+SHOTS = {"S22": s22, "S23": s23, "S23b": s23b, "S24top": s24top}

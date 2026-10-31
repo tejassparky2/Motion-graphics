@@ -326,6 +326,9 @@ def diorama_overlays(shot):
         return [(ko_stars, dict(a=a, f0=1, f1=n - 8))]
     if shot in ("S01", "S16"):                                    # the pin-prick terror rhyme, as in 3D
         t0 = 0.0 if shot == "S01" else 41 / FPS
+        bj = os.path.join(BUILD, f"{shot}_beats.json")             # v3: the builder writes its beat frames
+        if os.path.exists(bj) and "terror" in json.load(open(bj)):
+            t0 = (json.load(open(bj))["terror"] - 1) / FPS
         size0, corr = _terror_on_plate(shot, a, t0 if shot == "S16" else 11 / FPS)
         out = [(tracked_terror, dict(a=a, start=t0, size0=size0, corr=corr))]
         if shot == "S01":

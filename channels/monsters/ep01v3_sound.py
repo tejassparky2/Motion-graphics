@@ -31,10 +31,16 @@ base.EPISODE = "ep01v3"
 base.OUT = os.path.join(base.ROOT, "out", "monsters", "ep01v3")
 
 # picture beats (0-based frames in the cut); the shots keep v2's beats unless their owner says otherwise
-S04_SHUT, S05A_FLASH, S05B_TAPS, S06_FLASH = 19, 51, (29, 33), 13
+S04_SHUT, S05A_FLASH, S05B_TAPS = 19, 51, (29, 33)
 S07_SNAP, S07_CRACK = None, None   # None: on the word "snap" / just after it, until helper 2's v3 render gives frames
 S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN = 41, 43, 49, 79     # helper 10's v2 beats; confirm for the v3 staging
 S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 42, 62
+# the v3 staging pass (coordinator, 31 Oct 12:25; provisional until the shot owners confirm the frames)
+S06_FLASH = 13            # the strong near-white flash, 0-based f13-14 (helper 9; the crack on f13)
+S08A_SPARKS, S08A_SWELL = 4, 28   # helper 1's tiny 2D arcs fizz at the plugs from f4; the swell into the zap from f28
+S08B_HIT, S08B_LIGHTS, S08B_LAND, S08B_BLACK = 10, 26, 28, 30   # helper 4: the jolt hits f10, the lights die f26,
+                                                                  # the body lands f28, black from f30 (0-based)
+S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
 
 
 # ---------------------------------------------------------------- v3 effects (original, seeded)
@@ -143,6 +149,19 @@ def soul_chime(dur=1.4, seed=0):
     return _verb(out, 0.35, 1.0)
 
 
+def body_fall(seed=0):
+    """Kai crumpling onto the wet floor: a soft heavy thud, a cloth rustle and a small splash."""
+    r = _rng("body_fall", seed)
+    out = np.zeros(_n(0.8))
+    m = _n(0.35)
+    t = _t(m)
+    _place(out, np.tanh(_sweep(110 * np.exp(-t * 9) + 45) * 1.5) * np.exp(-t / 0.09), 0)
+    k = _n(0.25)
+    _place(out, _bp(r.uniform(-1, 1, k), 800, 5000) * _exp(k, 0.06, 0.004) * 0.35, 0.0)
+    _place(out, splash(seed + 3) * 0.3, 0.01)
+    return out
+
+
 def eyes_open(seed=0):
     """His eyes snap open: a tiny bright 'ting'."""
     return sfx._bell(_midi(100), 0.5, 0.3) * 0.8
@@ -247,8 +266,7 @@ def build(timing, n, v):
 
     # --- the lab (SS7): rain, hum, bubbles, the lab bed; it all stops when the power dies (S08b)
     lab0 = c.t("S03a")
-    died = c.word("l10", "died", "end")
-    power_off = died + 0.25                                       # the lights die after "That's how I died."
+    power_off = c.f("S08b", S08B_LIGHTS)                          # the lights die: rain and hum cut
     amb(lambda d, s: sfx.rain(d, s), lab0, power_off, -24, 0.4, 0.05)
     amb(lambda d, s: sfx.lab_hum(d, s), lab0, power_off, -28, 0.4, 0.05)
     amb(lambda d, s: sfx.aquarium_bubbles(d, s), lab0, c.t("S07"), -27, 0.4, 0.3)
@@ -278,13 +296,26 @@ def build(timing, n, v):
     # --- S08a: the puddle under his sneakers, his face drops; the bed thins to a held tense pad
     amb(lambda d, s: base.trickle(d, 40 + s), c.t("S08a"), c.end("S08a"), -24, 0.2, 0.2)
     hit(puddle_creep(1.0), c.t("S08a", 0.1), -18)
+    sp0, sw = c.f("S08a", S08A_SPARKS), c.f("S08a", S08A_SWELL)  # the plugs fizz quietly under the line, then swell
+    sp1 = c.t("S08b", 0.05)                                      # into the zap
+    n_ = _n(sp1 - sp0 + 0.2)
+    tt = np.arange(n_) / SR + sp0
+    env = np.where(tt < sw, 0.18, 0.18 + 0.82 * np.clip((tt - sw) / max(sp1 - sw, 0.1), 0, 1))
+    hit(plug_fizz(sp1 - sp0 + 0.2, 9) * env, sp0, -22, 0.2)
     music_at(base.tense_tone(c.end("S08a") - c.t("S08a")), c.t("S08a"), c.end("S08a"), -20, 0.3, 0.2)
 
     # --- S08b: the zap and the falling hum under "That's how I died.", the power dies, black, the flatline
-    zap_t = c.t("S08b", 0.05)
-    hit(zap(died - zap_t + 0.4), zap_t, -10)
-    hit(sfx.spark(), power_off - 0.15, -10)
-    hush(power_off, c.t("S09"))
+    zap_t = c.f("S08b", S08B_HIT)                                 # the jolt hits him
+    land = c.f("S08b", S08B_LAND)
+    black = c.f("S08b", S08B_BLACK)
+    hit(plug_fizz(zap_t - c.t("S08b"), 11), c.t("S08b"), -18, 0.1)   # the spark running through the water to him
+    zx = zap(land - zap_t + 0.25)
+    zx[-_n(0.25):] *= np.linspace(1, 0.25, _n(0.25))              # the buzz ducks under the fall
+    hit(zx, zap_t, -10)
+    hit(sfx.spark(), power_off - 0.05, -16)                      # the lights die
+    hit(body_fall(), land, -12)
+    hush(black, c.t("S09"))
+    power_off = black
     flat_t = power_off + 0.15
     hit(flatline(c.word("l11", "Then") - flat_t - 0.1), flat_t, -20)
 
@@ -346,7 +377,7 @@ def build(timing, n, v):
     hit(sfx._bell(_midi(96), 0.8, 0.4) + sfx._bell(_midi(103), 0.8, 0.3) * 0.5, c.f("S23", S23_GLINT), -22, 0.2)
 
     # --- S23b/S23c: it locks on to the shrimp; the shadow slides over; the shrimp keeps drinking
-    hit(lock_on(), c.word("l28", "looking"), -12)
+    hit(lock_on(), c.f("S23b", S23B_LOCK), -12)                # on the 2D snap-zoom
     music_at(base.bed("danger", c.t("S24") - c.t("S23b") + 0.5, 4), c.t("S23b"), c.t("S24"), -20, 0.3, 0.3)
     hit(shadow_whoosh(1.4), c.t("S23c", 0.1), -14, -0.2)
     for k in range(3):

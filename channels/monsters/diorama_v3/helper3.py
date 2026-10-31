@@ -25,13 +25,16 @@ from channels.monsters.mk import anim, diorama, look
 
 MAP = diorama.MAP
 SPARK = {}
+RIFT_H = 0.144                       # the crack's height in the sky (radians): ~40% of the frame at lens 100
+POV_SIZE = 2.0                       # ... and from his POV, opened up
+POV_LENS, POV_ELEV = 30.0, 18.0      # his POV: lens, and how far above the horizon he looks
 SPARK_JSON = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
                           "out", "monsters", "diorama_v3", "shots", "S09_spark.json")
 TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep01v3", "timing.json")
 # Kai's own frame (+Y forward = up once he lies down, +Z toward his head, +X his right): his loose left hand comes up
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
-HAND_COCK = [("left_upper_arm", (-0.7, 0.3, -0.6)), ("left_lower_arm", (-0.3, 0.6, -0.5))]       # anticipation
+HAND_COCK = [("left_upper_arm", (-0.5, 0.2, -0.85)), ("left_lower_arm", (-0.15, 0.45, -0.88))]   # anticipation
 HAND_REACH = [("left_upper_arm", (-0.28, 0.82, -0.5)), ("left_lower_arm", (0.3, 0.95, 0.12))]    # overshoot
 HAND_UP = [("left_upper_arm", (-0.35, 0.72, -0.6)), ("left_lower_arm", (0.35, 0.93, 0.02))]      # held up over his
                                                                                                  # chest, to the sky
@@ -58,7 +61,6 @@ def _spark(cam_loc, up, land, f0, f1, radius):
     `up`) to `land` between f0 and f1, eased; it stays in the scene's depth and blur. Its comet trail, twinkles and the
     landing flash and ring are drawn in 2D on top (spark_fx(), from the ball's screen path in S09_spark.json)."""
     core = look.flat("soul_core", look.hexc("#fffdf2"), 3.0)
-    halo = look.fade("soul_halo", look.hexc("#ffe7a8"), 0.35)
     start = (up @ Vector((0, 0, -1))).normalized()
     end = (Vector(land) - Vector(cam_loc))
     dist_end = end.length
@@ -70,26 +72,66 @@ def _spark(cam_loc, up, land, f0, f1, radius):
         r = radius + (dist_end - radius) * u
         return Vector(cam_loc) + d * r
 
-    ball = world_sphere("soul", radius * 0.012, core)
-    glow = world_sphere("soul_glow", radius * 0.03, halo)
-    glow.parent = ball
+    ball = world_sphere("soul", radius * 0.012, core)                # its halo is the 2D pass's glow
     for f in range(f0 - 1, f1 + 1):
         anim.key(ball, "location", f, pos(max(0.0, min(1.0, (f - f0) / max(1, f1 - f0)))), "LINEAR")
     anim.key(ball, "scale", f0 - 2, 0.0, "CONSTANT")                # out of sight before the crack, gone on landing
     anim.key(ball, "scale", f0 - 1, 1.0, "CONSTANT")
     anim.key(ball, "scale", f1 + 1, 0.0, "CONSTANT")
-    return ball
+    return ball, lambda f: pos(max(0.0, min(1.0, (f - f0) / max(1, f1 - f0))))
 
 
-def _screen_path(cam, ball, f0, f1):
-    """{frame: [x, y]} of the ball on a 720x1280 frame (the camera moves, so frame by frame)."""
+def _crack_norm():
+    """The S07/S08 tank crack's zigzag (h3d._crack_lines), centred, 1 unit tall (x right, y up)."""
+    import numpy as np
+    pts = np.array(h3d._crack_lines()[0], float)
+    lo, hi = pts.min(axis=0), pts.max(axis=0)
+    pts = (pts - (lo + hi) / 2) / (hi[1] - lo[1])
+    return [[round(x, 4), round(y, 4)] for x, y in pts]
+
+
+def _rift_path(cam_at, cam_loc, up, n, f_in):
+    """Per frame: where the rift sits on a 720x1280 frame and its two axes in px per crack-height unit (c, ex, ey). The
+    rift hangs at infinity in the direction the shot opens on (the camera's `up` view): RIFT_H radians tall, POV_SIZE x
+    that from his POV (a wider lens, and it has opened). Points behind the camera are dropped (None)."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
+    fwd, rt, upv = up @ Vector((0, 0, -1)), up @ Vector((1, 0, 0)), up @ Vector((0, 1, 0))
     out = {}
-    for f in range(f0, f1 + 1):
+    for f in range(1, n + 1):
         sc.frame_set(f)
-        v = world_to_camera_view(sc, cam, ball.matrix_world.translation)
-        out[f] = [round(v.x * 720, 1), round((1 - v.y) * 1280, 1)]
+        c = cam_at(f)
+        h = RIFT_H * (POV_SIZE if f >= f_in else 1.0)
+
+        def px(x, y):
+            d = (fwd + rt * x * h + upv * y * h).normalized()
+            v = world_to_camera_view(sc, c, c.matrix_world.translation + d * 4000)
+            return None if v.z <= 0 else (v.x * 720, (1 - v.y) * 1280)
+        p0, px_, py_ = px(0, 0), px(0.05, 0), px(0, 0.05)
+        if p0 is None or px_ is None or py_ is None:
+            out[f] = None
+            continue
+        out[f] = dict(c=[round(p0[0], 1), round(p0[1], 1)],
+                      ex=[round((px_[0] - p0[0]) / 0.05, 2), round((px_[1] - p0[1]) / 0.05, 2)],
+                      ey=[round((py_[0] - p0[0]) / 0.05, 2), round((py_[1] - p0[1]) / 0.05, 2)])
+    sc.frame_set(1)
+    return out
+
+
+def _screen_path(cam, at, f0, f1, trail=5.0, steps=18):
+    """Per frame, on a 720x1280 frame: the ball, and its trail (where it was over the last `trail` frames, oldest
+    first) as this frame's camera sees it, so the trail streaks behind it in the world while the camera follows."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene
+
+    def px(p):
+        v = world_to_camera_view(sc, cam, p)
+        return [round(v.x * 720, 1), round((1 - v.y) * 1280, 1)]
+    out = {}
+    for f in range(f0 - 1, f1 + 1):
+        sc.frame_set(f)
+        out[f] = dict(ball=px(at(f)), trail=[px(at(f - trail * i / steps)) for i in range(steps, 0, -1)
+                                             if f - trail * i / steps >= f0])
     sc.frame_set(1)
     return out
 
@@ -117,7 +159,6 @@ def s09():
     w = _words()
     f_woke = w.get("woke", 14)
     f_in = w.get("in", f_woke + 14)
-    f_world_end = min(n - 12, w.get("world", f_in + 12) + 10)
     crack_on = (2, 5)                                              # the crack draws on, then the black opens
     fall = (5, max(9, f_woke - 3))                                 # the spark drops into the meadow
     from channels.monsters.mk import acting, hero
@@ -134,17 +175,12 @@ def s09():
     cam.data.clip_end = 5000
     down = cam.rotation_euler.to_quaternion()
     up = Quaternion(Euler((math.radians(90 + 36), 0, 0)))
-    crack = h3d._sky_crack(cam.location, up, dist=dist, height=0.4 * dist * 36 / lens, width=3.0)
-    for o in crack.children:
-        for node in o.data.materials[0].node_tree.nodes:
-            if node.type == "EMISSION":
-                node.inputs["Strength"].default_value = min(node.inputs["Strength"].default_value, 0.85)
-                if "glow" in o.data.materials[0].name:
-                    node.inputs["Color"].default_value = look.hexc("#dff1ff")
-    for f, s in ((1, (1, 0.0, 1)), (crack_on[0], (1, 0.0, 1)), (crack_on[1], (1, 1, 1))):
-        anim.key(crack, "scale", f, s, "LINEAR")                   # the crack runs open along its length
-    # camera: on the crack, tilt down after the spark, hold on Kai, tilt back up on "In another world.", push
-    rots = ((1, up), (fall[0] + 1, up), (fall[1] + 2, down), (f_in, down), (f_world_end, up))
+    # camera: on the crack, follows the spark down (same eased arc, so it stays in frame), holds on Kai, tilts back
+    # up on "In another world.", and a slow push throughout
+    def follow(f):
+        u = max(0.0, min(1.0, (f - fall[0]) / max(1, fall[1] - fall[0])))
+        return up.slerp(down, u * u * (3 - 2 * u))
+    rots = [(1, up)] + [(f, follow(f)) for f in range(fall[0], fall[1] + 1)]
     for f, q in rots:
         cam.rotation_euler = q.to_euler("XYZ", cam.rotation_euler)
         cam.keyframe_insert("rotation_euler", frame=f)
@@ -156,23 +192,36 @@ def s09():
             kp.interpolation = "LINEAR"
     ramp = next(nd for nd in bpy.context.scene.node_tree.nodes if nd.type == "VALTORGB")
     el = ramp.color_ramp.elements[1]
-    for f, hz in ((1, 0.18), (fall[0] + 2, 0.18), (fall[1] + 2, 0.55), (f_in, 0.55), (f_world_end, 0.18)):
+    for f, hz in ((1, 0.18), (fall[0] + 2, 0.18), (fall[1] + 2, 0.55), (f_in - 1, 0.55), (f_in, 0.18)):
         el.color = (hz, hz, hz, 1)
         el.keyframe_insert("color", frame=f)
-    # black all round, just behind the crack, so the crack glows in the dark; then the dark fades and the sky shows
-    dark_m = look.fade("s09_dark_m", (0, 0, 0, 1), 1.0)
-    dark = world_sphere("s09_dark", dist * 1.4, dark_m)
-    dark.location = cam.location
-    mix = dark_m.node_tree.nodes["Mix"].inputs[0]
-    for f, a in ((1, 1.0), (crack_on[1], 1.0), (crack_on[1] + 6, 0.0)):
-        mix.default_value = a
-        mix.keyframe_insert("default_value", frame=f)
-    for f, hide in ((1, False), (crack_on[1] + 7, True)):
-        dark.hide_render = hide
-        dark.keyframe_insert("hide_render", frame=f)
+    # "In another world.": cut to his POV (an eyeline match on his look up): low by his head, looking north up past
+    # the treetops to the rift, pink flowers out of focus along the bottom, a slow push
+    pov = diorama.camera("cam_s09_pov", face + Vector((0, 60, 0)), dist=60, tilt=0, yaw=0, lens=POV_LENS, blur=10,
+                         frame=f_in)
+    pov.location = face + Vector((0, 1.2, 0.9))
+    pov.rotation_euler = (math.radians(90 + POV_ELEV), 0, 0)
+    pov.data.clip_start, pov.data.clip_end = 0.1, 5000
+    pov.data.dof.focus_distance = 80
+    pov.data.dof.aperture_fstop = diorama.fstop_for(80, POV_LENS, 10)
+    for f, ln in ((f_in, POV_LENS), (n, POV_LENS * 1.1)):
+        pov.data.lens = ln
+        pov.data.keyframe_insert("lens", frame=f)
+    for fc in anim.all_fcurves(pov.data.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "LINEAR"
+    mist = bpy.context.scene.world.mist_settings
+    for f, st, dp in ((1, dist * 0.97, dist * 0.55), (f_in - 1, dist * 0.97, dist * 0.55), (f_in, 120.0, 400.0)):
+        mist.start, mist.depth = st, dp
+        mist.keyframe_insert("start", frame=f)
+        mist.keyframe_insert("depth", frame=f)
+    for fc in anim.all_fcurves(bpy.context.scene.world.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
     chest = s15._world(rig, "chest") + Vector((0, 0, 0.8))
-    ball = _spark(cam.location, up, chest, fall[0], fall[1], dist)
-    SPARK.update(fall=list(fall), path=_screen_path(cam, ball, fall[0], fall[1]))
+    ball, at = _spark(cam.location, up, chest, fall[0], fall[1], dist)
+    SPARK.update(fall=list(fall), path=_screen_path(cam, at, fall[0], fall[1]), crack_on=list(crack_on), f_in=f_in,
+                 crack=_crack_norm(), rift=_rift_path(lambda f: pov if f >= f_in else cam, cam.location, up, n, f_in))
     os.makedirs(os.path.dirname(SPARK_JSON), exist_ok=True)
     with open(SPARK_JSON, "w") as fh:
         json.dump(SPARK, fh)
@@ -192,14 +241,14 @@ def s09():
     acting.expression(rig, "neutral", 1)
     acting.expression(rig, "surprised", f_woke)
     acting.expression(rig, "dazed", f_woke + 10)
-    acting.expression(rig, "surprised", f_in, value=0.75)
+    acting.expression(rig, "surprised", f_in - 4, value=0.75)     # his eyes flick up to the sky: the cut to his POV
     acting._key("eye_close", 1, 1.0)                               # shut until "woke"
     acting._key("eye_close", f_woke, 0.0)
     acting._key("eye_open", 1, 0.0)
     acting._key("eye_open", f_woke, 0.8)                           # the snap: wide for a beat, then settles
     acting._key("eye_open", f_woke + 6, 0.0)
-    acting.look_at(rig, hand, f_woke + 8, f_in - 2, seed=9)
-    acting.look_at(rig, sky, f_in, n, darts=True, seed=4)
+    acting.look_at(rig, hand, f_woke + 8, f_in - 5, seed=9)
+    acting.look_at(rig, sky, f_in - 4, f_in - 4, darts=False)
     acting.blink(rig, f_woke + 10, n, every=(40, 70), seed=5, at=(f_woke + 16,))
     for o in rig["arm"].users_collection[0].objects:               # nothing ghosts through the black
         for f, hide in ((1, True), (crack_on[1] + 2, False)):
