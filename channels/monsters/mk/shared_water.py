@@ -366,26 +366,37 @@ def falling_water(points, f0, f1=None, radius=0.07, grow=3, k=1.0, drops=True, r
     return out
 
 
-def _copy_strength(old, new):
-    """Carry an old material's Emission-strength keys (power_out, flickers, dimming) over to the new material,
-    relative to each one's base strength."""
-    eo, en = _em(old), _em(new)
-    if eo is None or en is None or not (old.node_tree.animation_data and old.node_tree.animation_data.action):
-        return
+def _strength_keys(old):
+    """An old material's Emission-strength keys (power_out, flickers, dimming) as (frame, level, interpolation),
+    level relative to its full ("on") strength: the highest key, not the current value (after power_out() keyed it,
+    the current value may be the "off" one)."""
+    eo = _em(old)
+    if eo is None or not (old.node_tree.animation_data and old.node_tree.animation_data.action):
+        return []
     path = eo.inputs[1].path_from_id("default_value")
-    base_o, base_n = eo.inputs[1].default_value or 1.0, en.inputs[1].default_value
     for fc in anim.all_fcurves(old.node_tree.animation_data.action):
-        if fc.data_path != path:
-            continue
-        for kp in fc.keyframe_points:
-            en.inputs[1].default_value = base_n * kp.co.y / base_o
-            en.inputs[1].keyframe_insert("default_value", frame=kp.co.x)
-        for nfc in anim.all_fcurves(new.node_tree.animation_data.action):
-            if nfc.data_path == en.inputs[1].path_from_id("default_value"):
-                for a, b in zip(nfc.keyframe_points, fc.keyframe_points):
-                    a.interpolation = b.interpolation
-        en.inputs[1].default_value = base_n
-        break
+        if fc.data_path == path and len(fc.keyframe_points):
+            top = max(kp.co.y for kp in fc.keyframe_points) or 1.0
+            return [(kp.co.x, kp.co.y / top, kp.interpolation) for kp in fc.keyframe_points]
+    return []
+
+
+def _apply_strength(m, keys):
+    """Key material m's Emission strength to its own base x each relative level in `keys`."""
+    en = _em(m)
+    if en is None or not keys:
+        return
+    sock = en.inputs[1]
+    base = sock.default_value
+    for f, lv, _ in keys:
+        sock.default_value = base * lv
+        sock.keyframe_insert("default_value", frame=f)
+    sock.default_value = base
+    interp = {f: it for f, _, it in keys}
+    for fc in anim.all_fcurves(m.node_tree.animation_data.action):
+        if fc.data_path == sock.path_from_id("default_value"):
+            for kp in fc.keyframe_points:
+                kp.interpolation = interp.get(kp.co.x, kp.interpolation)
 
 
 def _em(m):
@@ -404,7 +415,7 @@ def adopt(R=None, rims=True, stream=True, old=("lab_spill",)):
         if lamp is not None:
             glint = (lamp.location.x, lamp.location.y - 1.0)
     new = spill_material(glint=glint)
-    swapped = set()
+    swapped, keys = set(), []
     for o in list(bpy.data.objects):
         if o.type != "MESH" or o.name.endswith("_rim"):
             continue
@@ -412,7 +423,7 @@ def adopt(R=None, rims=True, stream=True, old=("lab_spill",)):
         for i, m in enumerate(o.data.materials):
             if m is not None and m.name.startswith(old) and m is not new:
                 if m.name not in swapped:
-                    _copy_strength(m, new)
+                    keys = keys or _strength_keys(m)
                     swapped.add(m.name)
                 o.data.materials[i] = new
                 hit = True
@@ -424,6 +435,10 @@ def adopt(R=None, rims=True, stream=True, old=("lab_spill",)):
             continue
         if rims and (o.dimensions.z < 0.02 or o.name.startswith("dl_spill")):
             rim(o)
+    # the lights going out (power_out, flickers) dim every part of the water alike: the sheet, its rims, the fall
+    for name in (new.name, "shared_water_rim", "shared_fall", "shared_fall_core", "shared_drop"):
+        if name in bpy.data.materials:
+            _apply_strength(bpy.data.materials[name], keys)
     return new
 
 
@@ -437,4 +452,4 @@ def _restream(quad):
     pts = [top + Vector((0, -0.02, 0)), top + Vector((0, -0.12, -top.z * 0.35)), top + Vector((0, -0.2, -top.z * 0.75)),
            Vector((top.x, top.y - 0.24, 0.02))]
     quad.hide_render = True
-    falling_water(pts, f0, grow=max(2, f_floor - f0), radius=0.09, k=1.0, name="dl_fall")
+    falling_water(pts, f0, grow=max(2, f_floor - f0), radius=0.09, k=1.0, name="dl_fall", taper=(2.3, 0.95))
