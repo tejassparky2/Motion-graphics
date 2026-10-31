@@ -27,6 +27,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S05b | helper 1 | PASS | 51 / 51 | 0.40 | the flash fades on 1s, the finger rises and taps on 30/34; clean file; 1 NOTE |
 | S10a | helper 4 | PASS (self-review; the coordinator approved the stills) | 56 / 56 | 0.51 | the cute hold, blink on 23, on 2s; flowers round it; clean file |
 | S15 | helper 10 + helper 7 + coordinator | **FIX** | 127 / 127 | 0.48 | the claw's wind-up (22-41) is unreadable: the shrimp is ~40 px and behind Kai; file tags |
+| S11a | helper 4 | PASS (self-review; the coordinator approved the stills) | 39 / 39 | 0.58 | the trail of ember holes leads up to the snail; pale smoke on 1s; clean file |
 | S10b | helper 6 | PASS (remuxed clean, 8672c25) | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS (remuxed clean, 8672c25) | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
@@ -83,7 +84,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S01, S02, S04, S05a, S06-S09, S11a (mine, rendering), S13, S14, S16-S24; the S03a re-render.
+Waiting for: S01, S02, S04, S05a, S06-S09, S13, S14, S16-S24; the S03a re-render.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **FIX** (sent to helper 10, cc the coordinator).
@@ -122,3 +123,10 @@ Waiting for: S01, S02, S04, S05a, S06-S09, S11a (mine, rendering), S13, S14, S16
   23 (as in 3D), and pollen motes.
 - **Diorama read:** a close toy view from the south, with the snail's face turned up to the lens. The pink and white
   flower dots melt in the tilt-shift above and below it.
+
+## S11a: "And every one of..." (helper 4)
+**PASS** (self-review; the coordinator approved the OK stills and asked for the two fixes, which are in).
+- **Length and level:** 39 frames, saturation 0.58, a clean file, 24-42 s per frame.
+- **Picture:** from above and behind, the trail of six burnt, ember-rimmed holes runs up the frame to the snail.
+  The pale cel smoke rises off every hole on 1s, leaning up-left, clear of the shell. The slime ribbon is now a
+  faint sheen, so the holes sit in the grass, with flower dots around.
