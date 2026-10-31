@@ -131,8 +131,10 @@ def _box(name, loc, size, mat, rot=(0, 0, 0), bevel=0.0):
     return lab._box(name, loc, size, mat, rot=rot, bevel=bevel)
 
 
-def room(seed=7):
-    """Build the lab dollhouse into the current scene (call diorama.setup() first). Returns the anchors."""
+def room(seed=7, dressing=1):
+    """Build the lab dollhouse into the current scene (call diorama.setup() first). Returns the anchors.
+    `dressing=2` adds the v3 lived-in detail (dressing2(): a rug, a potted plant, a book stack, a backpack, a bin, a
+    picture), all off the water's path from the desk to the power strip."""
     rnd = random.Random(seed)
     moon = _night()
     # ---------------------------------------------------------------- shell: floor, two walls, skirting
@@ -413,6 +415,9 @@ def room(seed=7):
         c = diorama.camera(name, target, frame=frame, **{**LAB_CAM, **kw})
         return c
 
+    if dressing >= 2:
+        dressing2(seed)
+
     return dict(
         tank=dict(center=(tcx, tcy, TOP + 0.33), glass=tglass, glass_y=tcy - td / 2, size=(tw, td, th),
                   leak=(tcx - 0.6, tcy - td / 2, TOP + 0.05), water=water, surface=surf, light=tank_light),
@@ -425,3 +430,42 @@ def room(seed=7):
         lights=dict(room=room_l, lamp=lamp, tank=tank_light, moon=moon, strike=strike),
         lightning=lightning, flicker=flicker, power_out=power_out, puddle=puddle, spark=spark, cam=cam,
     )
+
+
+def dressing2(seed=7):
+    """The v3 lived-in detail for the lab (helper 6, Episode 1 v3 Q2; procedural): a round rug in front of the shelf,
+    a potted plant and a waste bin beside the desk's end, a stack of books and a backpack by the shelf and a framed
+    picture on the left wall above the shelf. Nothing sits on the water's path (desk front -> power strip),
+    under the chair or in front of the tank."""
+    rnd = random.Random(seed + 41)
+    B = diorama._Batch
+    rug = B("dl2_rug", _p("rug", "#26304e", "#34426a", "#48598a"))
+    rug.cone((-4.6, -2.0, 0.03), 2.5, 2.5, 0.06, seg=40)
+    rug2 = B("dl2_rug_ring", _p("rug_ring", "#34406a", "#46568a", "#5e70a8"))
+    rug2.cone((-4.6, -2.0, 0.065), 1.8, 1.8, 0.02, seg=40)
+    pot = B("dl2_pot", _p("pot", "#7a3e2c", "#a8573c", "#cf7a58"))
+    px, py = 5.2, 8.8                                       # beside the desk's end, against the back wall
+    pot.cone((px, py, 0.7), 0.8, 1.05, 1.4, seg=16)
+    leaves = B("dl2_leaves", _p("leaves", "#1f5a34", "#2f7d48", "#4fa866"))
+    for _ in range(9):
+        a, r = rnd.uniform(0, 2 * math.pi), rnd.uniform(0.2, 0.9)
+        leaves.sphere((px + math.cos(a) * r, py + math.sin(a) * r, rnd.uniform(1.8, 3.4)),
+                      (rnd.uniform(0.5, 0.8), rnd.uniform(0.3, 0.5), rnd.uniform(0.6, 0.9)), (0, 0, a), seg=10)
+    books = [B(f"dl2_book{i}", _p(f"book{i}", *c)) for i, c in enumerate((
+        ("#5a2a3a", "#7c3a50", "#a05068"), ("#2a4a5a", "#3a6a7c", "#5088a0"), ("#5a4a2a", "#7c6a3a", "#a08a50")))]
+    z = 0.0
+    for i in range(5):
+        h = rnd.uniform(0.25, 0.4)
+        b = books[i % 3]
+        b.box((-6.6, 1.2, z + h / 2), (1.8, 1.3, h), (0, 0, rnd.uniform(-0.25, 0.25)))
+        z += h
+    bag = B("dl2_bag", _p("bag", "#2a4a3a", "#3a6a52", "#52906e"))
+    bag.sphere((-6.4, 3.4, 0.9), (0.95, 0.6, 0.95), (0, 0, 0.3), seg=14)
+    bag.sphere((-6.4, 2.85, 0.6), (0.6, 0.25, 0.4), (0, 0, 0.3), seg=10)
+    binm = B("dl2_bin", _p("bin", "#3a4256", "#4e5870", "#6a768e"))
+    binm.cone((3.3, 8.4, 0.65), 0.65, 0.5, 1.3, seg=14)
+    frame = B("dl2_frame", _p("frame", "#6a5236", "#8c6c48", "#b08a5e"), smooth=False)
+    frame.box((X0 + 0.12, 2.6, 9.6), (0.24, 3.0, 2.3))
+    art = B("dl2_art", _p("art", "#3a6a8c", "#5a9ac0", "#9ad0ea"), smooth=False)
+    art.box((X0 + 0.26, 2.6, 9.6), (0.06, 2.4, 1.8))
+    return [b.done() for b in (rug, rug2, pot, leaves, *books, bag, binm, frame, art)]
