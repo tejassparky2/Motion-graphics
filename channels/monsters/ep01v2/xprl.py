@@ -414,7 +414,13 @@ def s24bot():
     hero.face(k, "surprised", 1, 0.6)
     hero.face(k, "run_up", 10)                                            # eyes up at the bird (irises showing), mouth open
     hero.face(k, "run_wide", 46)                                          # it lands: wide eyes, small pupils
-    anim.on_twos([k["arm"]], step=3)
+    anim.on_twos([k["arm"]], step=2)
+    for o in [k["arm"], shrimp["shoulder"], shrimp["body"], shrimp["hinge"]] + shrimp["eyes"]:
+        ad = o.animation_data                                             # all on 2s: RUN renders every 2nd frame
+        for fc in (anim.all_fcurves(ad.action) if ad and ad.action else []):
+            for m in fc.modifiers:
+                if m.type == "STEPPED":
+                    m.frame_step = 2
     _cam("cam_s24bot", (22.94, -2.19, 14.21), (0.34, -0.96, 5.27), 28.9, shift_y=0.146, fstop=2.8,
          focus=(7.6, -3.9, 7.5))                                          # above and in front of him: the shrimp behind, all above the UI
     return dict(frames=n, step=2, subject=[k["arm"]])
