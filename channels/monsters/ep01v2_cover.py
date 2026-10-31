@@ -3,6 +3,7 @@
     python channels/monsters/ep01v2_cover.py                      # the three candidates + a phone-grid preview
     python channels/monsters/ep01v2_cover.py S15 35 "ONE SNAP." "GONE."    # one cover: shot, frame in the shot, lines
     python channels/monsters/ep01v2_cover.py --diorama    # the same from out/monsters/diorama/ -> diorama/cover.jpg
+    python channels/monsters/ep01v2_cover.py --v3         # v3: the full hook on S01 -> diorama_v3/cover.jpg
 
 The frame comes from the clean shot render out/monsters/ep01v2/shots/<SHOT>.mp4 when it exists (no captions or hook
 text burned in), else from out/monsters/ep01v2/picture.mp4 at the shot's first frame + `frame` (timing.json).
@@ -34,11 +35,15 @@ CANDIDATES = {
     "deadpan": ("S20", 70, [("IT TRIED", WHITE), ("AGAIN.", HOT)]),
 }
 PICK = "hook"
+# v3 (coordinator, 31 Oct): the frame-0 hook text in full; three shorter lines so they stay above Kai's face
+V3 = ("S01", 24, [("THIS SHRIMP", WHITE), ("ERASED", HOT), ("A FOREST", WHITE)])
 
 
 def frame(shot, f):
     """One RGB frame (numpy, H x W x 3) of `shot` at frame `f` of the shot."""
-    clean = os.path.join(EP, "shots", f"{shot}.mp4")
+    clean = os.path.join(EP, "shots_1080", f"{shot}.mp4")      # helper 8's ESRGAN 1080 version when it exists
+    if not os.path.exists(clean):
+        clean = os.path.join(EP, "shots", f"{shot}.mp4")
     if os.path.exists(clean):
         src, t = clean, f / 24
     else:
@@ -64,7 +69,7 @@ def _fit(draw, text, max_w, size):
     return ImageFont.truetype(FONT, size)
 
 
-def cover(shot, f, lines, path):
+def cover(shot, f, lines, path, size=230, top=190):
     arr, src = frame(shot, f)
     img = Image.fromarray(arr).convert("RGB")
     # a soft dark band behind the words (top third, clear of the Shorts UI at the bottom and of faces mid-frame)
@@ -72,9 +77,8 @@ def cover(shot, f, lines, path):
     shade = np.clip(1 - np.abs(y - 420) / 520, 0, 1) ** 1.5 * 0.55
     img = Image.fromarray((np.asarray(img, np.float32) * (1 - shade[..., None] * np.ones(3))).astype(np.uint8))
     draw = ImageDraw.Draw(img)
-    top = 190
     for text, colour in lines:
-        font = _fit(draw, text, W - 110, 230)
+        font = _fit(draw, text, W - 110, size)
         box = draw.textbbox((0, 0), text, font=font, stroke_width=16)
         x = (W - (box[2] - box[0])) // 2 - box[0]
         layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))           # drop shadow, then the stroked word
@@ -102,6 +106,12 @@ def phone_grid(paths, out, w=160):
 
 def main(argv):
     global EP, PICK_PATH
+    if "--v3" in argv:
+        EP = os.path.join(ROOT, "out", "monsters", "diorama_v3")
+        shot, f, lines = V3
+        p, src = cover(shot, f, lines, os.path.join(EP, "cover.jpg"), size=180, top=150)
+        print(f"v3 {shot} f{f} from {os.path.relpath(src, ROOT)} -> {os.path.relpath(p, ROOT)}")
+        return
     if "--diorama" in argv:                                      # the 2.5D version: same shots, same frames
         argv = [a for a in argv if a != "--diorama"]
         EP = os.path.join(ROOT, "out", "monsters", "diorama")
