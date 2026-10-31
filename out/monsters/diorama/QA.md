@@ -22,12 +22,28 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03b | helper 1 | PASS, 1 FIX (file tags) | 51 / 51 | 0.39 | the smile lands at ~f22; the file carries Lavf/Lavc encoder tags |
+| S03a | helper 1 | **FIX** | 53 / 53 | 0.45 | the rain is near-invisible specks and does not move (the shot changes once, at frame 22); file tag |
+| S03b | helper 1 | PASS (remuxed, 175fa92) | 51 / 51 | 0.39 | the smile lands at ~f22; file now clean |
 | S10b | helper 6 | PASS | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
 
-## S03b: Kai's face lit by the tank, a fond smile (helper 1, ae19397)
+## S03a: night shift at the marine lab (helper 1)
+**FIX** (sent to helper 1).
+1. **The rain does not read and does not move (row: "rain on the window"; LC10: keep calm shots alive with
+   ambient motion).**
+   - In the window, the rain is a few faint specks, invisible at 360 px.
+   - The whole shot changes only once, at frame 22 (frame runs of 21 and 32). In the 3D S03a the rain ran on 1s.
+   - Fix: bigger, brighter diagonal streaks on the glass, animated on 1s (or 2s). A few drips running down would
+     also help.
+2. **File tag:** the file still carries `encoder=Lavc libx264`. Apply the same CLEAN remux as S03b.
+- **Passes:**
+  - The dollhouse cutaway lab from above, cold blue (LC1), saturation 0.45.
+  - Kai at the desk in a back three-quarter view, in the earth outfit, with the hero tank glowing cyan beside him.
+  - The power strip and its cable are planted on the floor for S08 (a nice setup).
+  - 53 frames; a toy-world read.
+
+## S03b: Kai's face lit by the tank, a fond smile (helper 1, ae19397; remuxed clean, 175fa92)
 **PASS for the picture**, with one small FIX.
 - **Length and level:** 51 frames, saturation 0.39 (inside the band, where the 3D version was 0.24).
 - **Diorama read:** the dollhouse lab from above. Kai sits at the desk with his face turned up to the lens and lit
@@ -60,4 +76,4 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S01-S03a, S04-S09, S10a/S11a (mine, waiting for the coordinator's OK), S13-S24.
+Waiting for: S01, S02, S04-S09, S10a/S11a (mine, waiting for the coordinator's OK), S13-S24.
