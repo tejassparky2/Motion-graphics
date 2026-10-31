@@ -179,9 +179,9 @@ ZONES = {
 
 # ---------------------------------------------------------------- pin sets: [label, lon, lat]
 PINS = {
-    "normandy_beaches": ("europe", [["UTAH", -1.17, 49.42, -78, -16], ["OMAHA", -0.88, 49.37, -40, 44],
-                                    ["GOLD", -0.57, 49.34, -30, -18], ["JUNO", -0.41, 49.33, -6, 46],
-                                    ["SWORD", -0.28, 49.30, 14, -18]]),          # [label, lon, lat, dx, dy]
+    "normandy_beaches": ("europe", [["UTAH", -1.17, 49.42, -34, -20], ["OMAHA", -0.88, 49.37, -42, 46],
+                                    ["GOLD", -0.57, 49.34, -28, -20], ["JUNO", -0.41, 49.33, -26, 46],
+                                    ["SWORD", -0.28, 49.30, -14, -20]]),      # [label, lon, lat, dx, dy]: up / down
     "normandy_airborne": ("europe", [["US AIRBORNE", -1.35, 49.38], ["BRITISH AIRBORNE", -0.22, 49.24]]),
     "camps": ("europe", [["AUSCHWITZ", 19.2, 50.03], ["TREBLINKA", 22.05, 52.63], ["SOBIBOR", 23.64, 51.45],
                          ["BELZEC", 23.46, 50.38], ["MAJDANEK", 22.6, 51.22], ["CHELMNO", 18.73, 52.15]]),
@@ -197,6 +197,7 @@ PINS = {
 
 # ---------------------------------------------------------------- camera presets: (view, (lon, lat), zoom)
 VIEWS = {
+    "normandy_detail": ("normandy", (-0.74, 49.36), 20.0), "omaha": ("normandy", (-0.88, 49.37), 30.0),
     "europe": ("europe", (15.0, 52.0), 1.0), "poland": ("europe", (20.6, 52.1), 2.55),
     "rhineland": ("europe", (7.5, 50.3), 4.0), "central_europe": ("europe", (15.5, 49.5), 2.6),
     "scandinavia": ("europe", (12.0, 61.5), 1.5), "west_1940": ("europe", (4.5, 50.0), 3.0),
@@ -265,13 +266,13 @@ _e39s = {**_EU_BASE_SIDE, "austria": "germany", "sudeten": "germany", "czech": "
 _e39o = {**_EU_BASE_OWNER, "austria": "germany", "sudeten": "germany", "czech": "germany", "slovakia": "slovakia",
          "carpatho": "hungary", "poland_w": "poland", "poland_e": "poland", "albania": "italy", "ethiopia": "italy"}
 _e39x = {"austria", "sudeten", "czech", "albania", "ethiopia"}
-_e40s = {**_e39s, "poland_w": "germany", "poland_e": "soviet", "lithuania": "soviet", "latvia": "soviet",
+_e40s = {**_e39s, "channel_islands": "germany", "poland_w": "germany", "poland_e": "soviet", "lithuania": "soviet", "latvia": "soviet",
          "estonia": "soviet", "bessarabia": "soviet", "bukovina": "soviet", "fin_karelia": "soviet",
          "denmark": "germany", "norway": "germany", "netherlands": "germany", "belgium": "germany",
          "luxembourg": "germany", "france_occ": "germany", "france_vichy": "neutral"}
 _e40o = {**_e39o, "poland_e": "ussr", "lithuania": "ussr", "latvia": "ussr", "estonia": "ussr", "bessarabia": "ussr",
          "bukovina": "ussr", "fin_karelia": "ussr", "luxembourg": "germany", "france_vichy": "vichy"}
-_e40x = _e39x | {"poland_w", "poland_e", "lithuania", "latvia", "estonia", "bessarabia", "bukovina", "fin_karelia",
+_e40x = _e39x | {"channel_islands", "poland_w", "poland_e", "lithuania", "latvia", "estonia", "bessarabia", "bukovina", "fin_karelia",
                  "denmark", "norway", "netherlands", "belgium", "luxembourg", "france_occ"}
 _e41s = {**_e40s, "yugoslavia": "germany", "greece": "germany", "hungary": "italy", "romania": "italy",
          "bulgaria": "italy", "carpatho": "italy", "ethiopia": "allies"}
@@ -282,14 +283,54 @@ _P37s = {"japan": "japan", "korea": "japan", "taiwan": "japan", "manchukuo": "ja
 _P41s = {**_P37s, "china_occ": "japan", "indochina": "japan", "dei": "allies"}
 _P42s = {**_P41s, "thailand": "japan", "burma": "japan", "malaya": "japan", "dei": "japan", "philippines": "japan",
          "png": "japan", "solomons": "japan"}
+_e40ms = {**_e39s, "poland_w": "germany", "poland_e": "soviet", "fin_karelia": "soviet", "denmark": "germany",
+          "norway": "germany"}                                     # 10 May 1940: France and the Low Countries free
+_e40mo = {**_e39o, "poland_e": "ussr", "fin_karelia": "ussr"}
+_e40mx = _e39x | {"poland_w", "poland_e", "fin_karelia", "denmark", "norway"}
 ERAS = {
-    "europe": {"1936": _era(_e36s, _e36o, set()), "1939": _era(_e39s, _e39o, _e39x), "1940": _era(_e40s, _e40o, _e40x),
+    "europe": {"1936": _era(_e36s, _e36o, set()), "1939": _era(_e39s, _e39o, _e39x),
+               "1940_may": _era(_e40ms, _e40mo, _e40mx), "1940": _era(_e40s, _e40o, _e40x),
                "1941": _era(_e41s, _e40o, _e41x)},
     "pacific": {"1937": _era(_P37s, {}, {"korea", "taiwan", "manchukuo"}),
                 "1941": _era(_P41s, {}, {"korea", "taiwan", "manchukuo", "china_occ", "indochina"}),
                 "1942": _era(_P42s, {}, {"korea", "taiwan", "manchukuo", "china_occ", "indochina", "burma", "malaya",
                                          "dei", "philippines", "png", "solomons"})},
 }
+
+
+# ---------------------------------------------------------------- campaigns: keyed floods/annexations over 0 -> 1
+# (u, region or group, side or None, flood origin (lon, lat) or None, flood duration (fraction), occupied, new owner)
+CAMPAIGNS = {
+    "poland_1939": [(0.0, "poland_w", "germany", (16.4, 52.0), 0.45, True, None),
+                    (0.55, "poland_e", "soviet", (27.0, 51.6), 0.4, True, "ussr")],
+    "scandinavia_1940": [(0.0, "denmark", "germany", (9.3, 54.9), 0.3, True, None),
+                         (0.2, "norway", "germany", (10.7, 59.5), 0.7, True, None)],
+    # 10 May -> 22 June 1940 (u = days / 43): the Low Countries, the sickle to the coast by 21 May (u 0.26), the
+    # Dunkirk pocket 26 May - 4 June (u 0.37-0.58, a zone the scene adds), Fall Rot from 5 June, the armistice
+    "fall_of_france": [(0.0, "netherlands", "germany", (6.9, 52.2), 0.12, True, None),
+                       (0.0, "luxembourg", "germany", (6.3, 49.8), 0.03, True, "germany"),
+                       (0.0, "belgium", "germany", (6.2, 50.6), 0.4, True, None),
+                       (0.07, "france_north", "germany", (4.9, 49.7), 0.19, True, None),
+                       (0.6, "france_occ", "germany", (2.5, 49.4), 0.35, True, None),
+                       (0.98, "france_vichy", "neutral", None, 0.0, False, "vichy"),
+                       (0.98, "channel_islands", "germany", None, 0.0, True, None)],
+    "soviet_1940": [(0.0, "baltics", "soviet", (27.6, 56.5), 0.5, True, "ussr"),
+                    (0.4, "bessarabia", "soviet", (29.5, 47.0), 0.4, True, "ussr"),
+                    (0.4, "bukovina", "soviet", (26.5, 48.4), 0.4, True, "ussr")],
+    "balkans_1941": [(0.0, "yugoslavia", "germany", (16.0, 46.2), 0.6, True, None),
+                     (0.3, "greece", "germany", (22.5, 41.2), 0.6, True, None)],
+    "italy_1943": [(0.0, "sicily", "allies", (14.0, 37.1), 0.35, True, None),
+                   (0.5, "italy_south", "allies", (15.8, 39.0), 0.5, True, None)],
+}
+
+
+for _eras in ERAS.values():                                     # northern France follows the occupied zone
+    for _e in _eras.values():
+        for _k in ("side", "owner"):
+            if "france_occ" in _e[_k]:
+                _e[_k]["france_north"] = _e[_k]["france_occ"]
+        if "france_occ" in _e["occupied"]:
+            _e["occupied"] = sorted(set(_e["occupied"]) | {"france_north"})
 
 
 def content():
@@ -306,4 +347,6 @@ def content():
                for k, (v, kind, side, geom) in ZONES.items()},
         pins={k: dict(view=v, pins=p) for k, (v, p) in PINS.items()},
         views={k: dict(view=v, at=list(at), zoom=z) for k, (v, at, z) in VIEWS.items()},
-        groups=GROUPS, eras=ERAS)
+        groups=GROUPS, eras=ERAS,
+        campaigns={k: [[u, r, sd, list(o) if o else None, d, oc, ow] for u, r, sd, o, d, oc, ow in evs]
+                   for k, evs in CAMPAIGNS.items()})

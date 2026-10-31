@@ -13,7 +13,13 @@ m.pins("normandy_beaches", 1.0)              # named dots in turn
 m.side("rhineland", 1, "germany", origin=(8.6, 50.0), dur=1.5, occupied=False)   # flood a region or group
 ```
 
-**Eras:** `europe 1936`, `europe 1939`, `europe 1940`, `europe 1941`, `pacific 1937`, `pacific 1941`, `pacific 1942`
+**Campaigns** (keyed floods/annexations, `m.campaign(name, t0, t1)`): `poland_1939`, `scandinavia_1940`, `fall_of_france` (10 May -> 22 June on the real chronology: Low Countries, northern France to the coast by 21 May, the Dunkirk window u 0.37-0.58 for the pocket zone, Fall Rot from 5 June, Vichy at the armistice), `soviet_1940`, `balkans_1941`, `italy_1943`
+
+**D-Day detail:** `Map("normandy", era="1941")` is Natural Earth 10m in the Europe projection (all Europe content lines up); presets `normandy_detail` (zoom 20, all five beaches) and `omaha` (zoom 30).
+
+**City labels** nudge themselves off other labels and dots (sticky per label, so nothing hops mid-shot).
+
+**Eras:** `europe 1936`, `europe 1939`, `europe 1940_may`, `europe 1940`, `europe 1941`, `pacific 1937`, `pacific 1941`, `pacific 1942`
 
 **Fronts:** `barbarossa`, `moscow_1941`, `case_blue_1942`, `kursk_1943`, `bagration`, `bulge`, `bulge_collapse`, `alamein`, `china`, `japan_1942_perimeter`
 
@@ -31,8 +37,8 @@ m.side("rhineland", 1, "germany", origin=(8.6, 50.0), dur=1.5, occupied=False)  
 
 **Flood groups (Pacific / world):** `pacific:japan_1942_extent`, `pacific:empire_1937`, `world:ussr`, `world:axis_1942_home`, `world:axis_1942_occupied`, `world:axis_minors`, `world:allies_1942`, `world:commonwealth`, `world:nato_1949`, `world:warsaw_pact`
 
-**Europe regions:** germany, rhineland, g37east, east_prussia, austria, sudeten, czech, slovakia, carpatho, poland_w, poland_e, lithuania, latvia, estonia, finland, fin_karelia, fin_petsamo, ussr, bessarabia, bukovina, romania, hungary, bulgaria, yugoslavia, albania, greece, turkey, italy, italy_south, sicily, france_occ, france_vichy, belgium, netherlands, luxembourg, denmark, norway, sweden, uk, ireland, iceland, spain, portugal, switzerland, morocco, algeria, tunisia, libya, egypt, ethiopia, eritrea, somalia, sudan, and the Middle East.
+**Europe regions:** germany, rhineland, g37east, east_prussia, austria, sudeten, czech, slovakia, carpatho, poland_w, poland_e, lithuania, latvia, estonia, finland, fin_karelia, fin_petsamo, ussr, bessarabia, bukovina, romania, hungary, bulgaria, yugoslavia, albania, greece, turkey, italy, italy_south, sicily, france_occ, france_vichy, belgium, netherlands, luxembourg, france_north (taken by 21 May 1940), denmark, norway, sweden, uk, ireland, iceland, spain, portugal, switzerland, morocco, algeria, tunisia, libya, egypt, ethiopia, eritrea, somalia, sudan, and the Middle East.
 
 **Pacific regions:** japan, korea, taiwan, manchukuo, china_occ, china, mongolia, ussr, philippines, indochina, thailand, burma, malaya, dei, png, solomons, australia, nz, india, usa, canada, mexico. **World regions:** ISO-style codes (deu, gbr, usa, ...).
 
-Notes: the world view's seam is at 180 deg, so the 'globe spins to the Pacific' move cuts to the pacific view. The coastline is Natural Earth 50m: fine to about zoom 8; Normandy at zoom 10 reads but is soft.
+Notes: the world view's seam is at 180 deg, so the 'globe spins to the Pacific' move cuts to the pacific view. The Europe coastline is Natural Earth 50m (fine to about zoom 8); for D-Day close-ups use the normandy view (10m).

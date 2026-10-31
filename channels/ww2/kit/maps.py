@@ -40,6 +40,10 @@ Q = 4                               # stored coordinates are map pixels x Q, as 
 VIEWS = {
     "europe": dict(proj="laea", lon0=15.0, lat0=52.0, center=(15.0, 52.0), width_km=5200,
                    clip=[(-32, 0, 72, 76)], grid=5, grid_lon=(-40, 80), grid_lat=(0, 80)),
+    # D-Day detail: Natural Earth 10m, the Europe projection and pixel scale (all Europe content lines up), the
+    # Channel only; use it for shots zoomed in past ~zoom 6 on Normandy
+    "normandy": dict(proj="laea", lon0=15.0, lat0=52.0, center=(15.0, 52.0), width_km=5200, source="10m", tol=0.03,
+                     clip=[(-6.5, 47.8, 4.5, 52.2)], grid=1, grid_lon=(-7, 5), grid_lat=(47, 53), eras="europe"),
     "pacific": dict(proj="eqearth", lon0=160.0, lat0=0.0, center=(145.0, 15.0), width_km=17000,
                     clip=[(25, -52, 180, 72), (-180, -52, -25, 72)], grid=15, grid_lon=(-335, -25),
                     grid_lat=(-60, 75)),
@@ -68,6 +72,8 @@ FIN_KARELIA = [(27.7, 60.55), (29.95, 60.15), (31.2, 60.6), (32.9, 61.4), (31.6,
 FIN_PETSAMO = [(28.4, 69.0), (31.8, 69.9), (31.8, 70.3), (28.4, 70.3)]
 VICHY = [(-1.25, 42.0), (-1.25, 43.0), (-0.6, 43.6), (-0.25, 44.55), (0.15, 45.65), (0.34, 46.58), (1.0, 47.15),
          (2.07, 47.22), (3.33, 46.57), (4.85, 46.78), (5.5, 47.1), (6.1, 46.45), (10.0, 46.0), (10.0, 41.0)]
+FRANCE_NORTH = [(-1.0, 51.5), (1.6, 50.15), (2.3, 49.9), (3.0, 49.55), (3.6, 49.38), (4.5, 49.45), (5.8, 49.55),
+                (8.5, 49.0), (8.5, 51.5)]                              # north of the Somme-Aisne: taken by 21 May 1940
 RHINELAND = [(5.8, 51.95), (7.2, 52.1), (7.6, 51.5), (8.2, 50.9), (8.7, 50.2), (8.6, 49.6), (8.4, 49.0),
              (8.0, 48.5), (7.9, 47.6), (5.8, 47.6)]                            # west of the Rhine plus its strip
 ITALY_SOUTH = [(12.0, 41.25), (13.75, 41.22), (14.0, 41.7), (14.45, 42.35), (19.5, 42.35), (19.5, 35.5),
@@ -108,7 +114,7 @@ CUT = [("rhineland", "germany"), ("sicily", "italy_south"), ("italy_south", "ita
 GROUPS = {"germany_1937": ["germany", "g37east", "east_prussia"],
           "greater_germany": ["germany", "g37east", "east_prussia", "austria", "sudeten", "czech"],
           "czechoslovakia": ["sudeten", "czech", "slovakia", "carpatho"], "poland": ["poland_w", "poland_e"],
-          "france": ["france_occ", "france_vichy"], "low_countries": ["belgium", "netherlands", "luxembourg"],
+          "france": ["france_north", "france_occ", "france_vichy"], "low_countries": ["belgium", "netherlands", "luxembourg"],
           "baltics": ["lithuania", "latvia", "estonia"], "romania_1939": ["romania", "bessarabia", "bukovina"],
           "finland_1939": ["finland", "fin_karelia", "fin_petsamo"],
           "germany_1936": ["germany", "g37east", "east_prussia", "rhineland"],
@@ -123,6 +129,8 @@ PACIFIC = {
     "australia": ["AUS"], "nz": ["NZL"], "india": ["IND", "PAK", "BGD", "LKA", "NPL", "BTN"], "usa": ["USA"],
     "canada": ["CAN"], "mexico": ["MEX"], "solomons": ["SLB"],
 }
+NORMANDY = {"france": ["FRA"], "uk": ["GBR", "IMN"], "channel_islands": ["GGY", "JEY"], "belgium": ["BEL"],
+            "netherlands": ["NLD"]}
 PACIFIC_CUT = [("manchukuo", "china"), ("china_occ", "china"), ("manchukuo", "china_occ")]
 CITIES = {   # (lon, lat)
     "Berlin": (13.40, 52.52), "Warsaw": (21.01, 52.23), "Danzig": (18.65, 54.35), "Krakow": (19.94, 50.06),
@@ -189,11 +197,19 @@ def _fetch(name):
 def build_data(views=("europe", "pacific", "world")):
     from shapely.geometry import LineString, Polygon, box, shape
     from shapely.ops import linemerge, transform, unary_union
-    countries = {}
-    for ft in _fetch("ne_50m_admin_0_countries")["features"]:
-        g = shape(ft["geometry"]).buffer(0)
-        a3 = ft["properties"]["ADM0_A3"]
-        countries[a3] = countries[a3].union(g) if a3 in countries else g
+    sources = {}
+
+    def load(res):
+        if res not in sources:
+            cs = {}
+            for ft in _fetch(f"ne_{res}_admin_0_countries")["features"]:
+                g = shape(ft["geometry"]).buffer(0)
+                a3 = ft["properties"]["ADM0_A3"]
+                cs[a3] = cs[a3].union(g) if a3 in cs else g
+            sources[res] = cs
+        return sources[res]
+
+    countries = load("50m")
     lakes = [shape(ft["geometry"]).buffer(0) for ft in _fetch("ne_50m_lakes")["features"]
              if (ft["properties"].get("scalerank") or 9) <= 4]
 
@@ -214,10 +230,14 @@ def build_data(views=("europe", "pacific", "world")):
         return unary_union(parts).buffer(0)
 
     os.makedirs(DATA, exist_ok=True)
+    base = countries
     for view in views:
         v = VIEWS[view]
+        countries = load(v.get("source", "50m")) if v.get("source") else base
         clip = unary_union([box(*b) for b in v["clip"]])
-        if view == "europe":
+        if view == "normandy":
+            recipes, cuts = NORMANDY, []
+        elif view == "europe":
             recipes, cuts = EUROPE, CUT
         elif view == "pacific":
             recipes, cuts = PACIFIC, PACIFIC_CUT
@@ -235,9 +255,12 @@ def build_data(views=("europe", "pacific", "world")):
             pol = pol.union(geo.pop("kresy")).buffer(0)
             west = Polygon(SPLIT_1939 + [(14.0, 48.5), (14.0, 55.5), (23.5, 55.5)])
             geo["poland_w"], geo["poland_e"] = pol.intersection(west).buffer(0), pol.difference(west).buffer(0)
+        if "france" in geo:                                            # the 1940 demarcation line
             fr = geo.pop("france")
             geo["france_vichy"] = fr.intersection(Polygon(VICHY)).buffer(0)
             geo["france_occ"] = fr.difference(Polygon(VICHY)).buffer(0)
+            geo["france_north"] = geo["france_occ"].intersection(Polygon(FRANCE_NORTH)).buffer(0)
+            geo["france_occ"] = geo["france_occ"].difference(Polygon(FRANCE_NORTH)).buffer(0)
         land_all = unary_union(list(countries.values())).buffer(0)
         s = W / (v["width_km"] * 1000.0)
         cx, cy = _proj_m(v, *v["center"])
@@ -260,7 +283,7 @@ def build_data(views=("europe", "pacific", "world")):
             pg["sudeten"] = cz.intersection(band).buffer(0)
             pg["czech"] = cz.difference(band).buffer(0)
         land = prj(land_all)
-        tol = 0.22 if view == "europe" else 0.35
+        tol = v.get("tol") or (0.22 if view == "europe" else 0.35)
         out = dict(meta=dict(view=view, **{k: v[k] for k in ("proj", "lon0", "lat0", "center", "width_km")}, q=Q),
                    regions={}, labels={}, edges={}, land=_rings(land.simplify(tol), Q),
                    lakes=_rings(unary_union([prj(lk) for lk in lakes]).simplify(tol), Q),
@@ -445,7 +468,8 @@ class Map:
         self.bands = [_path(b) for b in d["bands"]]
         self.edges = {k: _path(r, closed=False) for k, r in d["edges"].items()}
         self.bbox = {k: self._bbox(r) for k, r in d["regions"].items()}
-        e = content().get("eras", {}).get(view, {}).get(era or DEFAULT_ERA.get(view, ""), {})
+        ev = VIEWS[view].get("eras", view)
+        e = content().get("eras", {}).get(ev, {}).get(era or DEFAULT_ERA.get(ev, ""), {})
         sd, ow, oc = dict(e.get("side", {})), dict(e.get("owner", {})), set(e.get("occupied", []))
         sd.update(sides or {})
         ow.update(owners or {})
@@ -481,6 +505,18 @@ class Map:
 
     def regions(self, name):
         return GROUPS.get(name) or content().get("groups", {}).get(self.name, {}).get(name) or [name]
+
+    def campaign(self, name, t0, t1):
+        """A named, keyed sequence of floods and annexations from fronts.json ("fall_of_france", "poland_1939",
+        "scandinavia_1940", "soviet_1940", "balkans_1941", "italy_1943"), its timeline stretched over t0 -> t1."""
+        span = t1 - t0
+        for ev in content()["campaigns"][name]:
+            u, region, side, origin, dur, occ, own = ev
+            t = t0 + span * u
+            if side is not None:
+                self.side(region, t, side, origin=tuple(origin) if origin else None, dur=dur * span, occupied=occ)
+            if own:
+                self.owner(region, t + dur * span, own)
 
     # ------------------------------------------------------------ setup
     def side(self, name, t, side, origin=None, dur=1.0, occupied=True):
@@ -680,8 +716,13 @@ class Map:
         cr.restore()
         for lb in self.labels:                                       # screen-space type: crisp at any zoom
             self._draw_label(cr, lb, t)
+        placed = []                                                  # every visible dot first, then the labels
         for c in self.cities:
-            self._draw_city(cr, c, t)
+            if c["t0"] <= t and (c["t_out"] is None or t <= c["t_out"] + 0.4):
+                x, y = self.screen(c["at"])
+                placed.append((x - 12, y - 12, x + 12, y + 12))
+        for c in self.cities:
+            self._draw_city(cr, c, t, placed)
         for s in self.stamps:
             self._draw_stamp(cr, s, t)
         if self.compass:
@@ -1033,7 +1074,33 @@ class Map:
              outline="cream", outline_w=lb["size"] * 0.17, spacing=lb["sp"])
         cr.restore()
 
-    def _draw_city(self, cr, c, t):
+    def _place(self, cr, c, x, y, placed):
+        """The label offset for city c: its own (dx, dy) unless that box hits a label or dot already placed this
+        frame; then the first free spot of right-below, left-above, left-below, above, below. The choice sticks while
+        it stays free, so labels don't hop as the camera moves."""
+        cr.save()
+        cr.select_font_face(LABEL, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        cr.set_font_size(c["size"])
+        w = cr.text_extents(c["name"].upper()).x_advance + c["size"] * 0.05 * len(c["name"])
+        cr.restore()
+        h = c["size"]
+        cands = [(c["dx"], c["dy"]), (16, h + 12), (-16 - w, -14), (-16 - w, h + 12), (-w / 2, -24), (-w / 2, h + 26)]
+        prev = c.get("_choice")
+        order = ([prev] if prev is not None else []) + [i for i in range(len(cands)) if i != prev]
+
+        def box(i):
+            dx, dy = cands[i]
+            return (x + dx - 4, y + dy - h * 0.82, x + dx + w + 4, y + dy + h * 0.18)
+
+        def free(b):
+            return all(b[2] < o[0] or o[2] < b[0] or b[3] < o[1] or o[3] < b[1] for o in placed)
+
+        pick = next((i for i in order if free(box(i))), order[0])
+        c["_choice"] = pick
+        placed.append(box(pick))
+        return cands[pick]
+
+    def _draw_city(self, cr, c, t, placed=None):
         if t < c["t0"] or (c["t_out"] is not None and t > c["t_out"] + 0.4):
             return
         a = 1 - (ease_in(seg(t, c["t_out"], c["t_out"] + 0.4)) if c["t_out"] is not None else 0)
@@ -1058,8 +1125,9 @@ class Map:
         cr.arc(x, y, 4 * pop, 0, 2 * math.pi)
         cr.fill()
         if c["label"]:
+            dx, dy = self._place(cr, c, x, y, placed) if placed is not None else (c["dx"], c["dy"])
             la = a * ease_out(seg(t, c["t0"] + 0.1, c["t0"] + 0.45))
-            text(cr, c["name"].upper(), x + c["dx"], y + c["dy"], c["size"], font=LABEL, color="ink", align="left",
+            text(cr, c["name"].upper(), x + dx, y + dy, c["size"], font=LABEL, color="ink", align="left",
                  alpha=la, outline="cream", outline_w=c["size"] * 0.2, spacing=c["size"] * 0.05)
 
     def _draw_stamp(self, cr, s, t):

@@ -44,8 +44,8 @@ import random
 from channels.ww2.kit.core import PAL, SIDE, cairo, col, lerp, smooth  # noqa: F401
 
 # ---------------------------------------------------------------- proportions (scale 1: a ~420 px hero figure)
-HEAD_R = 36.0
-NECK = 12.0
+HEAD_R = 42.0
+NECK = -8.0
 TORSO = 136.0
 SH_DROP = 20.0
 UPPER, FORE = 72.0, 66.0
