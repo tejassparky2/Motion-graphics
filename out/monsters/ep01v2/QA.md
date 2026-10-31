@@ -37,6 +37,7 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
+| S02 | assembler (helper 8), from S01 | PASS (picture.mp4 2a8c1f7) | 49 in the cut | - | the glitch rewind reads; captions clear; 1 NOTE (the white ends as bright as the strike) |
 | S03b | helper 1 | PASS (v3, 93da447) | 51 / 51 | 0.24 | warm skin, cyan on the lit side; 1 NOTE (saturation, a hard split down the face) |
 | S09 | helper 3 | PASS (v2, 6d95527) | 66 / 66 | 0.47 | v1 FIX resolved: eyes open on "woke up", crack held through "cracked sky" |
 | S06 | helper 9 | PASS (v2, bb8f476) | 41 / 41 | 0.37 | the bolt on frame 14, the stutter on 2s, the black opaque |
@@ -49,7 +50,9 @@ Most serious first within each shot. Updated as shots land.
 | S18 | bGqrs (helper 5 render) | PASS (v2, b172892) | 60 / 60 | 0.38 | a 2D snap-zoom into the eyes on "wet" (resolves the NOTE) |
 | S19 | bGqrs | PASS (v2, b0aa7eb) | 105 / 105 | 0.49 | the last drop dries by frame 90 and stays gone; 1 NOTE (shrimp's eyes not in frame) |
 | S08 | helper 9 | PASS | 85 / 85 | 0.23* | water to the strip, spark on frame 55 after "Me.", then black; *black frames pull the mean down |
-| S12 | helper 9 | PASS | 47 / 47 | 0.61 | the whole crawl in a low side view, on 3s; 1 NOTE (Kai small) |
+| S12 | helper 9 | PASS (v2, 055a865) | 47 / 47 | 0.55 | restaged close and low: a tired panting face, a glint at the puddle ahead |
+| S15 | helper 10 | PASS (v3, 318b92d) | 127 / 127 | 0.50 | the full nine-step hit, every step inside the report's ranges |
+| S05b | helper 1 (frames 40-51 by helper 6) | PASS | 51 / 51 | 0.32 | the flash fades on his face; he taps the glass (BD2) |
 | S03a | helper 1 | PASS | 53 / 53 | 0.33 | the night lab, rain, the glowing tank; cuts with S03b |
 | S13 | helper 9 | PASS | 62 / 62 | 0.52 | the claw dipped in the puddle (the clue, CH3) |
 | S20 | bGqrs (coordinator render) | PASS | 103 / 103 | 0.45 | the pff, the stare, the head tilt, Kai's deadpan held 2 s |
@@ -64,7 +67,7 @@ Most serious first within each shot. Updated as shots land.
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S02, S05b, S15; the S24bot re-delivery.
+Waiting for: the restaged S24top/S24bot mp4s (XprL, ~02:00).
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -445,3 +448,45 @@ clears the mouth. PASS once that is checked in helper 8's next animatic.
   - The camera is re-aimed, so the shrimp sits mid-frame. The impact frames are composited from the subject pass.
   - The crack runs up the glass in 5 frames beside the shrimp (crack_path, as before).
   - NOTE: saturation 0.29, the tank. Round 4's notes still apply (short wind-up, impact frames on 1s).
+
+## Round 10 (31 Oct, 01:35 UTC)
+- **S15, THE SNAP (helper 10, v3 318b92d): PASS.** 127 frames (127 needed), saturation 0.50, no black frames. The
+  nine-step hit (IM1), measured frame by frame:
+  1. **Observation (frames 1-18):** POV, Kai's gloved hand reaches toward the shrimp drinking at the puddle; Kai on
+     3s.
+  2. **Eye close-up (frames 19-21, 3 frames; SG6):** the shrimp's eyes narrow.
+  3. **Wind-up (frames 22-41, 20 frames; IM1 asks 12-29):** the claw rises out of the puddle and is held, dripping;
+     only the drops move (IM2). Near-silence (SS2).
+  4. **Strike (frames 42-43, 2 frames):** the claw snaps shut.
+  5. **Flash (frames 44-45):** white, then a fade (IM3).
+  6. **Impact frames (46-49):** inverted radial bursts with the shrimp in silhouette, on 2s (IM4), from the subject
+     pass.
+  7. **Result (frames 50-79, 30 frames; asks 24-48):** from behind Kai, small under the forest (SG8, SG9), the white
+     ring and the forest wall erased into rising dust, the sliced stumps glowing. The camera is locked.
+  8. **Reaction (frames 80-93, 14 frames; asks 12-20):** Kai blown backwards on 2s.
+  9. **Observer shake (frames 94-110):** Kai on his back. The frame difference decays 41 → 49 → 45 → 39 → 30 → 23
+     → 17 → 9 on 2s, so it settles in about 0.7 s (IM5). Knocked-out stars circle above the cap, his eyes close
+     (into S16), and it holds to the end.
+  - On-model; the shrimp has its outline and the finger stays on the claw. No text.
+  - **Note:** the erased forest becomes big cream dust balls rather than fine dust; it reads as "gone" at 360 px.
+- **S05b (helper 1; frames 40-51 by helper 6): PASS.** 51 frames, saturation 0.32 (the night lab). Kai in the earth
+  outfit; the flash light fades off his face, and he lifts a gloved hand and taps the tank glass with one finger
+  (around frame 24; BD2 seed). Acting on 3s, with a 1-frame tap. It cuts with S03a and S03b.
+- **S12 v2 (helper 9, 055a865): PASS.** Restaged close and low: a three-quarter view of Kai crawling, panting,
+  tired, with a glint at the puddle ahead, on 3s. This resolves round 8's NOTE (Kai small). Saturation 0.55.
+
+## S02: "Ten minutes ago, I was alive." (built by the assembler from S01; reviewed in picture.mp4 2a8c1f7)
+**PASS**, with one NOTE. Episode frames 57-105 (49 frames, timing.json), viewed at full size.
+- **The rewind and glitch read:** every frame carries RGB split, sliced row offsets, colour bars (magenta, yellow,
+  cyan) and chroma shift over S01's image. Frame 103 is one frame of full-screen static, and frames 104-105 are
+  white, then the cut to S03a's dark lab.
+- **Captions:** "Ten minutes ago," (frames ~64-80) and "I was alive." are readable in the band, and no glitch bar
+  crosses the caption on any frame checked.
+- **Flash safety (WCAG 2.3.1):**
+  - The white end is one flash: frame 103 to 104 swings +0.51 in mean luminance, and 105 to 106 swings -0.55.
+    That is one flash in the second, under the 3-per-second limit.
+  - The S15 strike, measured in the same picture, peaks at a swing of 0.54. So S02's white is as bright as the
+    strike but no harder.
+  - The glitch jitter is small (±0.07 per frame) and a single frame of static is not a sequence.
+- **NOTE:** to keep the strike in S15 the brightest moment of the episode, cap the S02 white at about 85% (or make
+  it 1 frame).

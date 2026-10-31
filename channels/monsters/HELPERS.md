@@ -139,9 +139,11 @@ get blocked.
   - **Subject pass:** shots with an impact frame or a speed-line background (S08, S16) also render the character
     alone on a transparent film. `look.subject_only([rig["root"]])` switches a scene to that pass; render it into a
     `subject/` folder next to the normal frames.
-  - **Kai's design (use exactly this wherever Kai appears):**
+  - **Kai's design.** Superseded for Episode 1 v2: Kai is `hero.load()` (assets/monsters/hero/hero.blend), with the
+    owner's white cap with a teal brim and a teal "K" (owner, 30 Oct), a teal zip jacket in the other world and the
+    earth outfit in the lab. The v3.2 notes below are kept for history only:
     - A 19-year-old, slim, anime-teen proportions (about 6 heads tall).
-    - Messy dark-brown hair (#4a3328) with one tall front cowlick and side tufts. No cap or hat.
+    - Messy dark-brown hair (#4a3328) with one tall front cowlick and side tufts. (v3.2: no cap; v2 has the owner's K cap.)
     - Big anime eyes: amber-brown iris (#b5652b), a lighter lower crescent, two white highlights.
     - Clothes:
       - an open sage-green zip-up jacket with a hood (#7fae8a; he throws it over the puddle in Episode 2) over a
