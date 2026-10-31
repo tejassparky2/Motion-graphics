@@ -114,6 +114,8 @@ def tick(cr, t, start, x, y, scale=1.0):
     if t < start:
         return
     u = back_out(seg(t, start, start + 0.25))
+    if u <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(scale * u, scale * u)
