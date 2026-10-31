@@ -314,8 +314,9 @@ def _drift(n, box, seed=13, travel=4.0):
         o.data.materials.append(ember)
         x, y, z = rnd.uniform(x0, x1), rnd.uniform(y0, y1), rnd.uniform(z0, z1)
         f0 = rnd.randint(-60, n - 10)
-        anim.key(o, "location", f0, (x, y + 4, z), "LINEAR")
-        anim.key(o, "location", f0 + 70, (x + rnd.uniform(0.5, 2.5), y - 5, z + rnd.uniform(-1, 1.5)), "LINEAR")
+        anim.key(o, "location", f0, (x, y + travel, z), "LINEAR")
+        anim.key(o, "location", f0 + 70, (x + rnd.uniform(0.5, 2.5), y - travel * 1.25, z + rnd.uniform(-1, 1.5)),
+                 "LINEAR")
         for f in range(f0, f0 + 71, 6):                            # a slow flicker
             anim.key(o, "scale", f, rnd.uniform(0.6, 1.2), "LINEAR")
         objs.append(o)
