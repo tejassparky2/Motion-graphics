@@ -5,7 +5,12 @@
           and runs under his sneakers (ripples ring out from each shoe as it arrives); he glances down, a small lift
           first, then his head drops to his feet, and his face drops with it (fear). The camera rises on 1s from his
           sneakers to his face.
-    S24bot  "Option B: run while I can."  See s24bot().
+    S24bot  (B) "Option B: run while I can." (the bottom panel all through the 3-sentence S24 line): Kai stands west
+          of the pond, frozen, eyes up at the butcher bird on the thorn tree; a crouch (anticipation), a snap turn,
+          and he runs west, arms pumping, looking back over his shoulder in fear. The bird dives (its giant shadow
+          sweeps over him on the way) and mantles over the shrimp, which keeps drinking until the last moment. The
+          action stays in a horizontal band in the plate's lower half (in-place split); the camera pans with him on
+          1s. The assembler adds the big B.
 
 Frame counts come from ep01v3/timing.json (render_frames = frames + 12).
     blender -b -y -P channels/monsters/render_shot.py -- diorama_v3 S08a OUT [--frames A-B] [--still N --scale 0.5]
@@ -17,11 +22,14 @@ import bpy
 from mathutils import Vector
 
 from channels.monsters.diorama import helper1 as d1
+from channels.monsters.diorama import xprl as xv2
 from channels.monsters.ep01v2 import helper1 as h3d
-from channels.monsters.mk import acting, anim, diorama, hero, lab, look
+from channels.monsters.ep01v2 import helper5 as h5
+from channels.monsters.ep01v2 import xprl as x3
+from channels.monsters.mk import acting, anim, diorama, diorama_lab, hero, lab, look, tuftwing
 
 BLUR = 10.0
-GUESS = {"S08a": 54, "S24bot": 156}          # until ep01v3/timing.json lands
+GUESS = {"S08a": 54, "S24": 162}          # until ep01v3/timing.json lands
 
 
 def _frames(shot):
@@ -129,65 +137,209 @@ def _smooth_water(n):
     return m
 
 
-def s08a():
-    R, rig = d1._stage()
-    n = _frames("S08a")
-    # he has swivelled his chair right round, away from the desk, toward the open front of the dollhouse (south):
-    # feet flat on the tiles in front of him, his face to the lens; the spill comes from the desk behind him
-    turn = 2.75
-    d1._tilt_cap(rig, 36.0)
-    rig["arm"].rotation_euler.z = math.pi - turn
-    R["desk"]["chair"].rotation_euler.z = -turn
-    bpy.context.view_layer.update()
-    k = h3d._key_pose
-    h3d._sit(rig, lean=0.02, look=(-0.35, -0.12))                  # looking back over his shoulder at the tank
-    k(rig, 1, h3d.BODY)
-    k(rig, 10, h3d.BODY)
-    h3d._sit(rig, lean=-0.02, look=(-0.2, -0.25))                  # anticipation: a small lift as he hears it
-    k(rig, 14, h3d.BODY)
-    h3d._sit(rig, lean=0.16, look=(0.0, 0.12))                     # head dips to his sneakers (overshoot)...
-    k(rig, 20, h3d.BODY)
-    h3d._sit(rig, lean=0.12, look=(0.0, -0.02))                    # ...and settles, eyes doing the rest
-    k(rig, 24, h3d.BODY)
-    h3d._sit(rig, lean=0.14, look=(0.03, 0.0))
-    k(rig, n, h3d.BODY)
+def _stand_look(rig, look_yaw=0.0, lift=0.0):
+    """Standing in the spill before he sees it (helper 4's standing rig conventions): legs straight, arms loose, the
+    head turned `look_yaw` toward his right (the tank) and lifted by `lift` (anticipation)."""
+    h4._reset(rig)
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4._aim(rig, f"{s_}_upper_leg", (sx * 0.08, -0.04, -1.0))
+        h4._aim(rig, f"{s_}_lower_leg", (sx * 0.04, 0.05, -1.0))
+        h4._aim(rig, f"{s_}_foot", (sx * 0.1, -1.0, -0.35))
+    h4._aim(rig, "spine", (0.0, 0.02 + lift * 0.5, 1.0))
+    h4._aim(rig, "chest", (0.0, 0.0 + lift, 1.0))
+    h4._aim(rig, "neck", (-look_yaw * 0.4, 0.0, 1.0))
+    h4._aim(rig, "head", (-look_yaw, -0.04 + lift * 0.5, 1.0))
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4._aim(rig, f"{s_}_upper_arm", (sx * 0.28, 0.02, -1.0))
+        h4._aim(rig, f"{s_}_lower_arm", (sx * 0.12, -0.25, -1.0))
+        h4._aim(rig, f"{s_}_hand", (sx * 0.1, -0.2, -1.0))
+
+
+def _anchors(shot, cam, rig, n):
+    """Kai's eye anchors per frame (720x1280, top-left origin) for the 2D pass (bgqrs_post's format)."""
+    import json
+    import os
+    from bpy_extras.object_utils import world_to_camera_view
+    from channels.monsters.ep01v2 import bgqrs as s3d
     sc = bpy.context.scene
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        row = {}
+        for k_ in ("eyes", "eye_l", "eye_r", "nose", "temple"):
+            v = world_to_camera_view(sc, cam, s3d.kai_point(rig, k_))
+            row[k_] = (round(v.x * 720, 1), round((1 - v.y) * 1280, 1))
+        out[f] = row
+    d = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
+                     "build", "monsters", "diorama_v3")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, f"{shot}_anchors.json"), "w") as fh:
+        json.dump(out, fh)
     sc.frame_set(1)
-    feet = [_bone_world(rig, f"{s}_foot", tail=True) for s in ("left", "right")]
-    mid = (feet[0] + feet[1]) / 2
-    sc.frame_set(24)
-    head = h3d._head_pos(rig)
-    sc.frame_set(1)
-    # the S08 spill is already on the tiles (desk to the power strip); its front now slides under the chair to his
-    # sneakers and on past them
+
+
+def s08a():
+    from channels.monsters.diorama_v3 import helper4 as h4_
+    global h4
+    h4 = h4_
+    n = _frames("S08a")
+    diorama.setup()
+    R = diorama_lab.room()
+    # S08b's staging (helper 4): he has stood up and pushed the chair back; he stands in the spill's path between the
+    # desk front and the power strip, facing the front of the room, turned a little toward the camera
+    leak, end = Vector(R["tank"]["leak"]), Vector(R["strip"]["end"])
+    pa, pb = Vector((leak.x, R["desk"]["front_y"] - 0.4, 0)), Vector((end.x + 0.2, end.y + 0.2, 0))
+
+    def path(u):
+        return pa.lerp(pb, u) + Vector((-0.6, -0.4, 0)) * math.sin(u * math.pi)
+
+    feet = path(0.5)
+    feet.z = 0.0
+    chair = R["desk"]["chair"]
+    chair.location.y -= 1.6
+    chair.rotation_euler.z = math.radians(25)
+    rig = hero.load((feet.x, feet.y, 0.0), scale=d1.KAI, outfit="earth")
+    d1._tilt_cap(rig, 40.0)
+    rig["arm"].rotation_mode = "XYZ"
+    rig["arm"].rotation_euler = (0, 0, math.radians(18))
+    bpy.context.view_layer.update()
+    # the spill (S08) is on the tiles from the desk to the strip, except round his feet: there it is still arriving,
+    # and slides under his sneakers from the desk side (f4-15)
     R["puddle"](-60, -12)
     _smooth_water(n)
-    a = Vector((R["tank"]["leak"][0] - 1.2, R["desk"]["front_y"] - 0.5, 0))
-    beyond = mid + (mid - a).normalized() * 1.6
-    _spill_front(a, beyond, 2, 15)
-    for i, ft in enumerate(feet):
+    for o in bpy.data.objects:
+        if o.name.startswith("dl_spill") and o.name[8:].isdigit():
+            d = (Vector((o.location.x, o.location.y, 0)) - feet).length
+            if d < 2.2:
+                ts = 5 + int(d * 4)
+                o.animation_data_clear()
+                anim.key(o, "scale", 1, 0.001, "CONSTANT")
+                anim.key(o, "scale", ts, 0.001, "CONSTANT")
+                anim.key(o, "scale", ts + 4, 1.0)
+    _spill_front(path(0.3), feet + (feet - path(0.3)).normalized() * 1.2, 3, 15, width=1.0)
+    toes = []
+    for s_ in ("left", "right"):
+        toes.append(_bone_world(rig, f"{s_}_foot", tail=True))
+    for i, ft in enumerate(toes):
         _ripples(ft, 11 + i * 2, n)
+    # acting on 2s: looking back at the tank, a small lift as he hears the water (anticipation), his head drops to
+    # the water (overshoot: hunched), then S08b's frozen fear pose (helper 4's _fear) with a tremble
+    k = h4._key
+    h4._fingers(rig, 0.3)
+    _stand_look(rig, look_yaw=0.45)
+    k(rig, 1)
+    _stand_look(rig, look_yaw=0.4)
+    k(rig, 9)
+    _stand_look(rig, look_yaw=0.15, lift=0.12)
+    k(rig, 14)
+    h4._fear(rig, 0.0)
+    for nm, v in (("chest", (0.0, -0.3, 1.0)),):                    # overshoot: hunched a touch past it
+        h4._aim(rig, nm, v)
+    k(rig, 20)
+    for f, sway in ((24, 0.0), (30, 0.025), (36, 0.0), (42, -0.02), (48, 0.0), (54, 0.02), (n, 0.0)):
+        h4._fear(rig, sway)
+        k(rig, f)
+    h4._fingers(rig, 0.45)
     # face (mk/acting): a blank look back at the tank, a blink, then his eyes drop to his shoes (with small darts)
-    # and the face drops with them: surprised, then fear
+    # and the face drops with them: surprised, then fear (S08b opens on this face)
     acting.expression(rig, "neutral", 1)
     acting.expression(rig, "surprised", 19, value=0.8)
     acting.expression(rig, "fear", 25)
     acting.look_at(rig, R["tank"]["center"], 1, 12)
-    acting.look_at(rig, tuple(mid), 15, n)
+    acting.look_at(rig, tuple(feet), 15, n)
     acting.blink(rig, 1, n, at=(7,))
     hero.line_width(rig, 0.0028)
+    sc = bpy.context.scene
+    sc.frame_set(30)
+    face = Vector(__import__("channels.monsters.ep01v2.bgqrs", fromlist=["x"]).kai_point(rig, "eyes"))
+    sc.frame_set(1)
+    mid = feet + Vector((0, 0, 0.3))
     # from the open front, low: the camera rises on 1s from his sneakers in the water to his face
-    face = head + Vector((0.0, 0.0, -0.4))
-    cam = R["cam"]("cam_s08a", tuple(mid), dist=27.0, tilt=42.0, yaw=-18.0, lens=100.0, blur=BLUR)
+    cam = R["cam"]("cam_s08a", tuple(mid), dist=27.0, tilt=42.0, yaw=-22.0, lens=100.0, blur=BLUR)
 
-    def path(u):
-        return mid.lerp(face, 0.08 + 0.7 * u), 27.0 - 4.0 * u, 42.0 - 1.0 * u, -18.0 - 4.0 * u
+    def path_cam(u):
+        return mid.lerp(face + Vector((0, 0, -1.6)), 0.08 + 0.8 * u), 27.0 - 3.0 * u, 42.0, -22.0 - 6.0 * u
 
-    _move(cam, 1, n - 6, path, n)
-    _light_face = h3d._tank_glow(side=Vector((0.6, 0.8, 0.0)))
-    h3d._tint_hero(0.1)
+    _move(cam, 1, n - 6, path_cam, n)
     R["flicker"]([30, 33])                                         # the lights stutter: the plugs are fizzing
+    _anchors("S08a", cam, rig, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]] + list(rig.get("cap", [])))
 
 
-SHOTS = {"S08a": s08a}
+KAI_B = (-5.6, -2.2)                 # where he stands in B: just west of the pond, facing the shrimp and the thorn tree
+RUN_TO = 15.5                        # how far west he gets (units)
+
+
+def s24bot():
+    from channels.monsters.diorama_v3 import xprl as xv3            # (lazy: shots.py imports both modules)
+    n = _frames("S24")
+    diorama.setup()
+    isl, _ = xv2._set(n, kai_down=False)
+    sh = xv3._shrimp(n)                                             # drinking on the east shore, back to the tree
+    shrimp = Vector(xv3.SHRIMP)
+    perch = Vector(isl["thorn"]["perch"])
+    # the bird: dark from frame 1 (as in A), then the dive onto the shrimp, its shadow sweeping over Kai on the way
+    f_dive, f_hit = 58, 84
+    bird = x3._bird_drop(isl["thorn"], f_dive, f_hit, n, kai_at=(KAI_B[0] - 5.0, KAI_B[1]))
+    x3._mantle(bird, f_hit - 2, f_hit + 4)
+    h5._rage_light(bird, 1, perch.z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
+    for e in sh["eyes"]:                                            # it only notices as the claws close
+        anim.key(e, "scale", f_hit - 1, (1, 1, 1), "CONSTANT")
+        anim.key(e, "scale", f_hit + 1, (0.78, 1, 0.78), "CONSTANT")
+    for h in sh["hi"]:
+        anim.key(h, "scale", f_hit - 1, (1, 1, 1), "CONSTANT")
+        anim.key(h, "scale", f_hit + 1, (1.35, 1.35, 1.35), "CONSTANT")
+    xv2._twos(tuftwing._animated(bird) + sh["eyes"] + sh["hi"])
+    # Kai: frozen facing east (the bird), a crouch, the snap turn west, then the run
+    k = x3._hero((KAI_B[0], KAI_B[1], 0), 90.0)
+    hero.line_width(k, 0.0026)
+    arm = k["arm"]
+    P = x3.Pose(k)
+    f_crouch, f_turn, f_run = 26, 34, 38
+
+    def frozen(P, t):
+        P.rot("spine", (-6, 0, 0))                                  # leaning back from it
+        P.rot("neck", (-12, 0, 0))
+        P.rot("head 1", (-26, 0, 0))                                # eyes up at the bird on the tree
+        x3._arms_down(P, 14)
+        P.aim("upper_arm.R", (-0.35, -0.55, -0.6))                  # hands up by his chest
+        P.aim("forearm.R", (0.1, -0.45, 0.9))
+        P.aim("upper_arm.L", (0.35, -0.55, -0.6))
+        P.aim("forearm.L", (-0.1, -0.45, 0.9))
+
+    x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, 0.001, 0))), 1, f_turn, 0.2, "R", crouch=(0.0, 0.1), upper=frozen,
+             every=2)
+    steps = RUN_TO / x3.SCALE / 0.3
+
+    def run_upper(P, t):
+        ph = math.sin(t * steps * math.pi)
+        P.rot("spine", (24, 0, 0))                                  # leaning into the run
+        P.rot("chest", (6, 0, 8))
+        P.rot("neck", (0, 0, 30))
+        P.rot("head 1", (-18, 0, 50))                               # looking back over his left shoulder (at us)
+        P.aim("upper_arm.R", (-0.2, 0.55 * ph, -0.8))               # arms pumping, opposite to the legs
+        P.aim("forearm.R", (-0.05, -0.85, 0.45 + 0.2 * ph))
+        P.aim("upper_arm.L", (0.2, -0.55 * ph, -0.8))
+        P.aim("forearm.L", (0.05, -0.85, 0.45 - 0.2 * ph))
+
+    x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, -RUN_TO / x3.SCALE, 0))), f_run, n, 0.3, "L", crouch=(0.08, 0.06),
+             upper=run_upper, every=2)
+    for f, z in ((1, 90.0), (f_crouch, 90.0), (f_turn, 90.0), (f_turn + 2, -105.0), (f_run, -90.0)):   # snap turn,
+        arm.rotation_euler.z = math.radians(z)                                                         # overshoot
+        arm.keyframe_insert("rotation_euler", index=2, frame=f)
+    acting.expression(k, "fear", 1, value=0.8)
+    acting.expression(k, "surprised", f_turn)
+    acting.expression(k, "terror", f_run + 4, value=0.9)
+    sky = perch + Vector((0, 0, 3.0))
+    acting.look_at(k, tuple(sky), 1, f_turn - 2)
+    acting.look_at(k, tuple(shrimp + Vector((0, 0, 2.0))), f_run, n)
+    acting.blink(k, 1, n, seed=11, at=(14,))
+    xv2._twos([arm])
+    # the camera pans west with him on 1s, from the south, high enough to fold his height into the band
+    a = ((KAI_B[0] + 3.0, KAI_B[1] - 0.5, 1.0), 82.0, 60.0, 0.0, 80.0, 0.2)
+    b = ((KAI_B[0] - 6.0, KAI_B[1] - 1.0, 1.0), 80.0, 60.0, -4.0, 80.0, 0.2)
+    xv2._move("cam_s24bot_v3", 1, n, a, b, n)
+    return dict(frames=n, step=2, ones=(1, n), subject=[arm])
+
+
+SHOTS = {"S08a": s08a, "S24bot": s24bot}

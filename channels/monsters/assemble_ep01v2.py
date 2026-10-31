@@ -77,23 +77,48 @@ CAP_Y_VERSION["diorama_v3"] = {k: v for k, v in CAP_Y_VERSION["diorama"].items()
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
+# Output resolution: the overlays are designed on the 720x1280 canvas (W, H) and drawn under cr.scale(SCALE), so the
+# text stays sharp at 1080x1920. v3 is delivered at 1080 (Q4: shots_1080/ from esrgan_shot.py, else lanczos).
+RES = {"diorama_v3": 1.5}
+SCALE = 1.0
+OW, OH = W, H
+SHOTS_HI = None              # the 1080 shots folder, preferred over SHOTS when SCALE > 1
 S02_WHITE = (0.85, 0.60)     # the rewind's closing flash stays dimmer than the snap (the episode's brightest moment)
 S24_FOCUS = [(W / 2, H / 4), (W / 2, H * 3 / 4)]   # the plates are framed as halves: each shows in place
 
 
 # ---------------------------------------------------------------- decoding shots
-def decode(path):
-    """All frames of an mp4 as BGRA arrays (cairo's ARGB32 layout), scaled to the canvas."""
-    cmd = ["ffmpeg", "-v", "error", "-i", path, "-vf", f"scale={W}:{H}:flags=lanczos", "-f", "rawvideo",
+def decode(path, w=None, h=None):
+    """All frames of an mp4 as BGRA arrays (cairo's ARGB32 layout), scaled (lanczos) to the output size."""
+    w, h = w or OW, h or OH
+    cmd = ["ffmpeg", "-v", "error", "-i", path, "-vf", f"scale={w}:{h}:flags=lanczos", "-f", "rawvideo",
            "-pix_fmt", "bgra", "-"]
     raw = subprocess.run(cmd, check=True, capture_output=True).stdout
-    n = len(raw) // (W * H * 4)
-    return [np.frombuffer(raw, np.uint8, W * H * 4, i * W * H * 4).reshape(H, W, 4).copy() for i in range(n)]
+    n = len(raw) // (w * h * 4)
+    return [np.frombuffer(raw, np.uint8, w * h * 4, i * w * h * 4).reshape(h, w, 4).copy() for i in range(n)]
 
 
 def surface(arr):
     """A cairo view of a contiguous BGRA array (the caller keeps the array alive while the surface is used)."""
-    return cairo.ImageSurface.create_for_data(memoryview(arr), cairo.FORMAT_ARGB32, W, H, W * 4)
+    h, w = arr.shape[:2]
+    return cairo.ImageSurface.create_for_data(memoryview(arr), cairo.FORMAT_ARGB32, w, h, w * 4)
+
+
+def blank():
+    """An output-size surface and a context drawing in canvas units."""
+    s = cairo.ImageSurface(cairo.FORMAT_ARGB32, OW, OH)
+    cr = cairo.Context(s)
+    cr.scale(SCALE, SCALE)
+    return s, cr
+
+
+def paint_full(cr, src):
+    """Paint an output-size surface over the whole frame from a canvas-unit context."""
+    cr.save()
+    cr.scale(1 / SCALE, 1 / SCALE)
+    cr.set_source_surface(src, 0, 0)
+    cr.paint()
+    cr.restore()
 
 
 def conform(frames, need, name, warn):
@@ -105,8 +130,7 @@ def conform(frames, need, name, warn):
 
 
 def slate(name):
-    s = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-    cr = cairo.Context(s)
+    s, cr = blank()
     cr.set_source_rgb(*SLATE)
     cr.paint()
     fx2d._text(cr, name, W / 2, H * 0.42, 26, (0.55, 0.56, 0.6, 1), fx2d.ROUND, "center")
@@ -129,7 +153,11 @@ class Shot:
         self.frames = info["frames"]
 
     def path(self, suffix=""):
-        return os.path.join(SHOTS, f"{self.name}{suffix}.mp4")
+        """The shot file: the 1080 upscale when the cut is at 1080 and it exists, else the 720 render."""
+        name = f"{self.name}{suffix}.mp4"
+        if SHOTS_HI and os.path.exists(os.path.join(SHOTS_HI, name)):
+            return os.path.join(SHOTS_HI, name)
+        return os.path.join(SHOTS, name)
 
 
 def build_plain(shot, animatic, warn, missing):
@@ -146,21 +174,27 @@ def build_s02(shot, s01, warn):
     rev = s01[::-1]
     out = []
     for i in range(shot.frames):
-        s = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-        cr = cairo.Context(s)
+        s, cr = blank()
         if i < run:
-            cr.set_source_surface(surface(rev[min(len(rev) - 1, int(i * len(rev) / run))]), 0, 0)
+            # comp.glitch works on the 720x1280 canvas, so the rewind is glitched there and scaled up (it is
+            # deliberately degraded anyway).
+            g = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+            gc = cairo.Context(g)
+            gc.scale(1 / SCALE, 1 / SCALE)
+            gc.set_source_surface(surface(rev[min(len(rev) - 1, int(i * len(rev) / run))]), 0, 0)
+            gc.paint()
+            comp.glitch(cairo.Context(g), i / FPS, 0.0, run / FPS, strength=1.0, seed=2, sound=False)
+            cr.set_source_surface(g, 0, 0)
+            cr.get_source().set_filter(cairo.FILTER_GOOD)
             cr.paint()
-            comp.glitch(cr, i / FPS, 0.0, run / FPS, strength=1.0, seed=2, sound=False)
         elif i < run + 2:                                      # static
             noise = np.random.default_rng(i).integers(0, 256, (H // 4, W // 4), np.uint8)
             n = np.repeat(np.repeat(noise, 4, 0), 4, 1)
-            a = np.dstack([n, n, n, np.full_like(n, 255)])
+            a = np.ascontiguousarray(np.dstack([n, n, n, np.full_like(n, 255)]))
             cr.set_source_surface(surface(a), 0, 0)
             cr.paint()
         else:                                                  # white flash into S03a, below the S15 snap's
-            cr.set_source_surface(surface(rev[-1]), 0, 0)      # peak: 85% then 60% white over S01's first frame
-            cr.paint()
+            paint_full(cr, surface(rev[-1]))                   # peak: 85% then 60% white over S01's first frame
             cr.set_source_rgba(1, 1, 1, S02_WHITE[i - run - 2])
             cr.paint()
         out.append(s)
@@ -180,15 +214,22 @@ def build_s24(shot, animatic, warn, missing):
         return None
     if not animatic and None in plates:
         return None
-    out = []
-    for i in range(shot.frames):
-        s = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-        cr = cairo.Context(s)
-        panels = [surface(p[i]) if p is not None else slate(shot.name + sfx)
-                  for p, sfx in zip(plates, ("top · SAVE", "bot · RUN"))]
-        fx2d_anime.split(cr, i / FPS, 0.0, shot.frames / FPS, panels, focus=S24_FOCUS, sound=False)
-        out.append(s)
-    return out
+    return _Split(shot, plates)
+
+
+class _Split:
+    """S24's frames, composed one at a time as they are written (holding them all at 1080 would cost ~1.4 GB)."""
+
+    def __init__(self, shot, plates):
+        self.shot, self.plates = shot, plates
+        self.slates = [slate(shot.name + sfx) if p is None else None
+                       for p, sfx in zip(plates, ("top · SAVE", "bot · RUN"))]
+
+    def __getitem__(self, i):
+        s, cr = blank()
+        panels = [surface(p[i]) if p is not None else sl for p, sl in zip(self.plates, self.slates)]
+        fx2d_anime.split(cr, i / FPS, 0.0, self.shot.frames / FPS, panels, focus=S24_FOCUS, sound=False)
+        return s
 
 
 # ---------------------------------------------------------------- captions and the hook
@@ -267,7 +308,7 @@ def ab_times(lines):
 
 # ---------------------------------------------------------------- main
 def main():
-    global SHOTS, CAP_Y_SHOT
+    global SHOTS, CAP_Y_SHOT, SCALE, OW, OH, SHOTS_HI
     ap = argparse.ArgumentParser()
     ap.add_argument("--animatic", action="store_true")
     ap.add_argument("--check", action="store_true")
@@ -275,14 +316,23 @@ def main():
                     help="which cut: its shots/ folder, picture.mp4 and caption placements")
     ap.add_argument("--out", default=None, help="default out/monsters/<version>/picture.mp4")
     ap.add_argument("--shots", default=None, help="default out/monsters/<version>/shots")
+    ap.add_argument("--res", type=int, choices=(720, 1080), default=None,
+                    help="output width (default: 1080 for diorama_v3, else 720); 720 is quicker for animatics")
     a = ap.parse_args()
     if a.version == "ep01v2" and a.shots and os.path.abspath(a.shots).startswith(VERSIONS["diorama"]):
         a.version = "diorama"                                  # --shots out/monsters/diorama/shots picks the diorama cut
     SHOTS = a.shots or os.path.join(VERSIONS[a.version], "shots")
+    if a.res:
+        SCALE = a.res / 720
+    else:
+        SCALE = RES.get(a.version, 1.0)
+    OW, OH = int(round(W * SCALE)), int(round(H * SCALE))
+    SHOTS_HI = (os.path.join(os.path.dirname(SHOTS), f"shots_{OW}") if SCALE > 1 else None)
     a.out = a.out or os.path.join(VERSIONS[a.version], "picture.mp4")
     CAP_Y_SHOT = CAP_Y_VERSION[a.version]
     if a.check:
-        print(f"version {a.version}: shots {os.path.relpath(SHOTS, ROOT)} -> {os.path.relpath(a.out, ROOT)}")
+        print(f"version {a.version}: shots {os.path.relpath(SHOTS, ROOT)} -> {os.path.relpath(a.out, ROOT)}"
+              f" at {OW}x{OH}" + (f" (prefers {os.path.relpath(SHOTS_HI, ROOT)})" if SHOTS_HI else ""))
 
     tj = json.load(open(TIMINGS[a.version]))
     ab = ab_times(tj["lines"]) if a.version in AB_VERSIONS else None
@@ -303,7 +353,7 @@ def main():
             sys.exit(f"missing shots (use --animatic to slate them): {', '.join(gone)}")
 
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
-    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
+    enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{OW}x{OH}",
                             "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-crf", "14", "-preset", "slow",
                             "-pix_fmt", "yuv420p", *CLEAN, a.out + ".tmp.mp4"], stdin=subprocess.PIPE)
     sheet = []
@@ -322,17 +372,19 @@ def main():
                 s01 = frames
         if a.check:
             srcs = [shot.path(x) for x in (("top", "bot") if shot.name == "S24" else ("",))]
-            ids = " ".join(_sha(p) for p in srcs if os.path.exists(p))
+            have = [p for p in srcs if os.path.exists(p)]
+            ids = " ".join(_sha(p) for p in have)
+            if SCALE > 1 and have:                         # which source each shot used at 1080
+                ids += " [" + ",".join("1080" if SHOTS_HI and p.startswith(SHOTS_HI) else f"{W}->{OW} lanczos"
+                                       for p in have) + "]"
             print(f"{shot.name:5s} {ids or '-':17s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
                   f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}"
                   f"{f'  captions at y={CAP_Y_SHOT[shot.name]}' if shot.name in CAP_Y_SHOT else ''}")
         sl = slate(shot.name) if frames is None else None
         for i in range(shot.frames):
             src = sl if frames is None else frames[i]
-            s = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-            cr = cairo.Context(s)
-            cr.set_source_surface(src if isinstance(src, cairo.ImageSurface) else surface(src), 0, 0)
-            cr.paint()
+            s, cr = blank()
+            paint_full(cr, src if isinstance(src, cairo.ImageSurface) else surface(src))
             t = frame_no / FPS
             if frame_no <= hook_end:
                 draw_hook(cr)
@@ -344,7 +396,7 @@ def main():
             s.flush()
             enc.stdin.write(bytes(s.get_data()))
             if a.check and frame_no % 12 == 0:
-                sheet.append((frame_no, shot.name, s))
+                sheet.append((frame_no, shot.name, _thumb(s)))
             frame_no += 1
     enc.stdin.close()
     if enc.wait() != 0:
@@ -361,6 +413,16 @@ def main():
         write_sheet(sheet, os.path.join(os.path.dirname(a.out), os.path.basename(SHEET)))
 
 
+def _thumb(s, tw=144, th=256):
+    t = cairo.ImageSurface(cairo.FORMAT_ARGB32, tw, th)
+    c = cairo.Context(t)
+    c.scale(tw / s.get_width(), th / s.get_height())
+    c.set_source_surface(s, 0, 0)
+    c.get_source().set_filter(cairo.FILTER_GOOD)
+    c.paint()
+    return t
+
+
 def write_sheet(sheet, path, cols=10, tw=144, th=256):
     from PIL import Image
     rows = (len(sheet) + cols - 1) // cols
@@ -371,7 +433,7 @@ def write_sheet(sheet, path, cols=10, tw=144, th=256):
     for k, (n, name, s) in enumerate(sheet):
         cr.save()
         cr.translate((k % cols) * tw, (k // cols) * th)
-        cr.scale(tw / W, th / H)
+        cr.scale(tw / s.get_width(), th / s.get_height())
         cr.set_source_surface(s, 0, 0)
         cr.paint()
         cr.restore()
