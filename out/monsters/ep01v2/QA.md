@@ -62,12 +62,12 @@ Most serious first within each shot. Updated as shots land.
 | S07 | helper 2 | PASS (v2, d978975) | 36 / 36 | 0.29 | re-aimed: the shrimp mid-frame; the hit and the crack land |
 | S05a | helper 2 | PASS | 75 / 75 | 0.30 | the bubble peaks, then collapses to micro-bubbles on "sun" |
 | S17 | bGqrs | PASS | 47 / 47 | 0.51 | a drop falls on "drops." and splats on the jacket (CH3, second showing) |
-| S24top | XprL | PASS (v1); v2 re-delivery pending (bGqrs's frames 67-97 fix, ~02:05) | 97 / 97 | 0.53 | the SAVE plate; split-ready |
+| S24top | XprL | PASS (v2, 9663179) | 97 / 97 | 0.53 | SAVE: the wet claw raised and dripping; Kai's hand stops just short; push-in on frames 57-85 |
 | S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S24top v2 (XprL, ~02:05).
+**All shots PASS (31 Oct, 02:22 UTC).** Nothing is waiting. The notes worth a later look are under "Final summary" at the end.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -503,3 +503,36 @@ clears the mouth. PASS once that is checked in helper 8's next animatic.
   The butcher bird drops from the top of the thorn tree onto the shrimp at the puddle and mantles over it (wings
   arched, beak down), and the shrimp's pupils shrink. That is the visible cost of RUN (AB1).
 - On-model. The seams at frames 25/26, 49/50 and 73/74 (stitched parts) match their neighbours.
+
+## S24top v2 (SAVE; XprL, 9663179)
+**PASS.** 97 frames, saturation 0.53.
+- **Framing:** the action sits in the upper half (y ~100-600; it shows in place in the split). The cap stays clear
+  of the top edge.
+- **Story:** Kai walks in and crouches toward the puff-shrimp at the puddle; its claw is raised and wet, with drips
+  falling. From frame 67 his gloved hand stops just short of the claw. The camera pushes in on 1s over frames 57-85
+  (SG4: a push for a decision); the acting runs on 3s.
+- The finger is on the claw. The seams at 33/34 and 66/67 match their neighbours. On-model.
+- **NOTE:** a thorn branch crosses in front of the claw. That is fine for the thorn-tree setting, and the claw still
+  reads.
+
+## Final summary (31 Oct, 02:22 UTC)
+Every Episode 1 v2 shot passes: S01-S24, including S02 (built in the assembly) and both S24 plates. That covers 29
+deliverables. 7 FIXes were raised and all resolved: S03b, S09, S10b/S11b (outlines), S14 (caption placement),
+S24bot, plus the coordinator's S11a FIX.
+
+**Worth a later look (NOTEs, none blocking):**
+- **Saturation outside 0.34-0.61** but inside E22's measured 0.26-0.69:
+  - S03b v3 at 0.24 (a hard cyan/warm split down the face; the lowest);
+  - S04 at 0.31, S05a at 0.30, S07 at 0.29 (the cool tank);
+  - S23 at 0.63 (the deep sky).
+- **S01:** Kai's chin reaches the caption band (y ~870); the S01 caption is moved to y 940, so check it in the final
+  picture.
+- **S02:** the closing white is now dimmed to 0.85 (assembler S02_WHITE), so the S15 strike stays the brightest
+  moment.
+- **S07:** a 5-frame wind-up and 1-frame impact frames (forced by the 24-frame cut).
+- **S19:** the shrimp's face is out of frame, so its locked-on eyes do not show there.
+- **S22:** the skewered shells read as beans at 360 px.
+- **S15:** the erased forest becomes big cream dust balls rather than fine dust.
+
+**Known minor issue (shared code, revisit after Episode 1):** look.outline slivers inside SDF bodies at full size
+(barely visible at 360 px).
