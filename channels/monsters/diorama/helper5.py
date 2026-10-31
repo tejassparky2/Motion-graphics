@@ -167,6 +167,7 @@ def s19():
     face = s3d.kai_point(rig, "nose")
     cam = _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 10.0, 70.0)
     _center(cam, [eyes, tip, _seye(sh), sh["root"].matrix_world.translation.copy()], (0.42, 0.3))
+    d16._anchors("S19", cam, rig, sh)                              # for the 2D pass (bgqrs_post: sweat, push, glare)
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
@@ -215,6 +216,7 @@ def s20():
     cam = _cam("cam_s20_kai", eyes + up * 0.15, 3.4, 70.0, frame=44)
     _center(cam, [eyes], (0.42, 0.33))
     sc.camera = bpy.data.objects["cam_s20_shrimp"]
+    d16._anchors("S20", None, rig, sh)                             # through each frame's camera (the cut at 44)
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 

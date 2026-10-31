@@ -194,9 +194,69 @@ def drop_glint(cr, t, a, f0, f1, size=22):
         fx2d_extra._sparkle(cr, x + 6, y - 8, size * (0.6 + 0.4 * math.sin(math.pi * u)), (1, 1, 1), 1.0, rot=0.3)
 
 
+def brim_safe_mask(frame_png, eyes, rx, ry):
+    """An A8 mask for painting over Kai's eyes in the diorama close-up: soft ellipses (rx, ry) on the eyes, as
+    fx2d_anime._cover_eye draws them, minus the cap's teal brim, which there sits on his eyes and must stay, and the
+    hair strands beside them."""
+    import numpy as np
+    from scipy.ndimage import gaussian_filter
+    im = np.asarray(Image.open(frame_png).convert("RGB")).astype(int)
+    r, g, b = im[..., 0], im[..., 1], im[..., 2]
+    brim = (g - r > 40) & (b - r > 40)
+    hair = (r - b > 30) & (r + g + b < 420)                       # brown hair (the iris is only spared off the eye)
+    yy, xx = np.mgrid[0:im.shape[0], 0:im.shape[1]]
+    m = np.zeros(im.shape[:2])
+    core = np.zeros(im.shape[:2], bool)
+    for ex, ey in eyes:
+        d = np.sqrt(((xx - ex) / rx) ** 2 + ((yy - ey) / ry) ** 2)
+        m = np.maximum(m, np.clip((1.0 - d) / 0.18, 0.0, 1.0))
+        core |= (np.abs(xx - ex) <= rx * 0.72) & (d < 1.0)
+    m *= 1.0 - gaussian_filter((brim | (hair & ~core)).astype(float), 1.2)
+    surf = cairo.ImageSurface(cairo.FORMAT_A8, im.shape[1], im.shape[0])
+    stride = surf.get_stride()
+    buf = np.zeros((im.shape[0], stride), np.uint8)
+    buf[:, :im.shape[1]] = np.round(np.clip(m, 0, 1) * 255).astype(np.uint8)
+    surf.get_data()[:] = buf.tobytes()
+    surf.mark_dirty()
+    return surf
+
+
+def masked_dot_eyes(cr, t, start, eyes, r, skin, mask, end=None):
+    """fx2d_anime.dot_eyes (same 1.5 s window) with the skin painted through `mask` (brim_safe_mask)."""
+    if not fx2d_anime._on(t, start, end, 1.5):
+        return
+    cr.set_source_rgba(*skin[:3], 1.0)
+    cr.mask_surface(mask, 0, 0)
+    for ex, ey in eyes:
+        cr.arc(ex, ey, r, 0, 2 * math.pi)
+        cr.set_source_rgba(*fx2d.INK)
+        cr.fill()
+
+
+def diorama_s20():
+    """S20's deadpan in the diorama: the dot eyes on his eyes as rendered (the bone anchors sit ~25 px inside them in
+    this close-up) and a cover that spares the brim, then the sweat drop, as in 3D; the "pff" is in the plate."""
+    a = anchors("S20")
+    _, _, tilt, eyes = face_geom(a, 50 / FPS)
+    plate = os.path.join(BUILD, "S20", "0050.png")
+    eyes = plate_eyes(plate, eyes, math.dist(*eyes) * 0.23)
+    d = math.dist(*eyes)
+    (lx, ly), (rx, ry) = eyes
+    cx, cy, size, er = (lx + rx) / 2, (ly + ry) / 2, d * 2.6, d * 0.23
+    skin = skin_near_eyes(os.path.join(BUILD, "S20", "0070.png"), eyes, er)
+    mask = brim_safe_mask(plate, eyes, d * 0.31, d * 0.19)
+    return [(masked_dot_eyes, dict(start=43 / FPS, eyes=eyes, r=er * 0.24, skin=skin, mask=mask)),
+            (fx2d_anime.sweat_drop, dict(start=52 / FPS, end=99, x=cx, y=cy, size=size, tilt=tilt))]
+
+
 def diorama_overlays(shot):
     """The diorama cut's 2D (coordinator, 31 Oct): the slow push-ins of the locked shots (TP13), S17's drop glint and
-    S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D."""
+    S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D. S19 and S20 get the 3D cut's
+    comic marks (coordinator, 31 Oct); S20's "pff" is already in the diorama plate (3D puffs)."""
+    if shot == "S19":
+        return cut_overlays(shot)
+    if shot == "S20":
+        return diorama_s20()
     a = anchors(shot)
     n = max(a)
     ex, ey = at(a, 0.0, "eyes")
@@ -218,8 +278,11 @@ def diorama_overlays(shot):
 
 def overlays(shot):
     """Shot-local overlays [(fn, kwargs)] for each shot."""
-    if DIORAMA:
-        return diorama_overlays(shot)
+    return diorama_overlays(shot) if DIORAMA else cut_overlays(shot)
+
+
+def cut_overlays(shot):
+    """The 3D cut's overlays."""
     if shot in ("S01", "S16"):                                    # frame 0 (and its rhyme): pin-prick terror + sweat
         a = anchors(shot)
         t0 = 0.0 if shot == "S01" else 41 / FPS                   # S16: from his terror on the wide (frame 42)
