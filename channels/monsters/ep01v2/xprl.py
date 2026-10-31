@@ -260,6 +260,9 @@ def _claw_tip(rig, frame):
 
 
 # ------------------------------------------------------------------------------------------------------- plates
+HAND_LIFT = 0.48      # S24top: as he squats past f66, his offered hand stays up, short of the wet claw (0 = lands on it)
+
+
 def s24top():
     """A, SAVE: Kai steps toward the shrimp, crouching, an open hand held out low; the shrimp lifts its claw out of the
     puddle, wet again and dripping, and watches him."""
@@ -290,8 +293,9 @@ def s24top():
         P.rot("neck", (-12 * t, 0, 0))
         P.rot("head 1", (-18 * t, 0, 8 * t))                               # chin up: his face over his hand
         _arms_down(P, 10)
-        P.aim("upper_arm.R", (-0.12, -0.75 - 0.15 * t, -0.55 - 0.15 * t))  # reaching low to the shrimp
-        P.aim("forearm.R", (-0.04, -0.9, -0.3 - 0.15 * t))
+        r = HAND_LIFT * (max(0.0, t - 0.5) / 0.5) ** 0.6                # from f67 his hand stays up, short of the claw
+        P.aim("upper_arm.R", (-0.12, -0.75 - 0.15 * t, -0.55 - 0.15 * t + r))  # reaching low to the shrimp
+        P.aim("forearm.R", (-0.04, -0.9, -0.3 - 0.15 * t + r))
         P.aim("hand.R", (-0.02, -1, -0.2))
         P.twist("upper_arm.R", -90 * t)                                  # an open hand, offered
         P.aim("upper_arm.L", (0.3, 0.05, -1))
