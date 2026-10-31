@@ -64,39 +64,62 @@ def _night():
 
 
 def _rain_material():
-    """Painted rain: thin slanted streaks (stretched Voronoi) on a see-through card, scrolling down without end, so
-    the window always shows falling rain without anything outside the wall."""
+    """Painted rain on a see-through card: bright diagonal streaks (~0.1 u wide, ~1.2 u long, a few px wide even in the
+    wide shots) falling ~0.6 u a frame, plus a few fat drips sliding slowly down the glass. Two stretched Voronoi
+    layers in the card's own units (the box's scale is applied), scrolling without end, so the window shows rain
+    moving on every rendered frame without anything outside the wall."""
     m = bpy.data.materials.new("dl_rain_m")
     m.use_nodes = True
     nt = m.node_tree
     nt.nodes.clear()
     N, L = nt.nodes.new, nt.links.new
-    tc, mp, vor = N("ShaderNodeTexCoord"), N("ShaderNodeMapping"), N("ShaderNodeTexVoronoi")
-    mp.inputs["Scale"].default_value = (5.0, 1.0, 0.35)
-    mp.inputs["Rotation"].default_value = (0, math.radians(12), 0)
-    vor.feature = "F1"
-    vor.inputs["Scale"].default_value = 3.0
-    ramp = N("ShaderNodeValToRGB")
-    ramp.color_ramp.elements[0].position, ramp.color_ramp.elements[0].color = 0.0, (1, 1, 1, 1)
-    ramp.color_ramp.elements[1].position, ramp.color_ramp.elements[1].color = 0.07, (0, 0, 0, 1)
+    tc, rot = N("ShaderNodeTexCoord"), N("ShaderNodeVectorRotate")
+    rot.rotation_type, rot.inputs["Angle"].default_value = "Y_AXIS", math.radians(20)    # slanted by the wind
+    L(tc.outputs["Object"], rot.inputs["Vector"])
+
+    def layer(scale, d, speed, sparse=0.0):
+        """One stretched Voronoi layer: features d (mapped units) round, falling `speed` card units a frame."""
+        mp, vor = N("ShaderNodeMapping"), N("ShaderNodeTexVoronoi")
+        mp.inputs["Scale"].default_value = (scale[0], 1.0, scale[1])
+        vor.feature, vor.inputs["Scale"].default_value = "F1", 1.0
+        L(rot.outputs[0], mp.inputs[0])
+        L(mp.outputs[0], vor.inputs["Vector"])
+        ramp = N("ShaderNodeValToRGB")
+        ramp.color_ramp.elements[0].position, ramp.color_ramp.elements[0].color = 0.0, (1, 1, 1, 1)
+        ramp.color_ramp.elements[1].position, ramp.color_ramp.elements[1].color = d, (0, 0, 0, 1)
+        L(vor.outputs["Distance"], ramp.inputs[0])
+        mask = ramp.outputs[0]
+        if sparse:                                  # keep only some cells (by the cell's random colour)
+            keep, mul = N("ShaderNodeMath"), N("ShaderNodeMath")
+            keep.operation, keep.inputs[1].default_value = "GREATER_THAN", sparse
+            mul.operation = "MULTIPLY"
+            L(vor.outputs["Color"], keep.inputs[0])
+            L(mask, mul.inputs[0])
+            L(keep.outputs[0], mul.inputs[1])
+            mask = mul.outputs[0]
+        loc = mp.inputs["Location"]
+        for f in (0, 1):
+            loc.default_value = (0, 0, f * speed * scale[1])
+            loc.keyframe_insert("default_value", frame=f)
+        return mask
+
+    streaks = layer((4.0, 0.4), 0.22, 0.6)
+    drips = layer((1.4, 0.7), 0.2, 0.05, sparse=0.6)
+    both = N("ShaderNodeMath")
+    both.operation = "MAXIMUM"
+    L(streaks, both.inputs[0])
+    L(drips, both.inputs[1])
+    sc = N("ShaderNodeMath")
+    sc.operation, sc.inputs[1].default_value, sc.use_clamp = "MULTIPLY", 0.9, True
+    L(both.outputs[0], sc.inputs[0])
     em, tr, mix, out = N("ShaderNodeEmission"), N("ShaderNodeBsdfTransparent"), N("ShaderNodeMixShader"), \
         N("ShaderNodeOutputMaterial")
-    em.inputs[0].default_value, em.inputs[1].default_value = hx("#c4dcff"), 1.4
-    sc = N("ShaderNodeMath")
-    sc.operation, sc.inputs[1].default_value = "MULTIPLY", 0.7
-    L(tc.outputs["Object"], mp.inputs[0])
-    L(mp.outputs[0], vor.inputs["Vector"])
-    L(vor.outputs["Distance"], ramp.inputs[0])
-    L(ramp.outputs[0], sc.inputs[0])
+    em.inputs[0].default_value, em.inputs[1].default_value = hx("#d6e6ff"), 2.6
     L(sc.outputs[0], mix.inputs[0])
     L(tr.outputs[0], mix.inputs[1])
     L(em.outputs[0], mix.inputs[2])
     L(mix.outputs[0], out.inputs[0])
     m.surface_render_method = "BLENDED"
-    loc = mp.inputs["Location"]
-    for f, z in ((0, 0.0), (1, 0.26)):               # the pattern slides down a window height in ~8 frames
-        loc.default_value = (0, 0, z)
-        loc.keyframe_insert("default_value", frame=f)
     for fc in anim.all_fcurves(nt.animation_data.action):
         for kp in fc.keyframe_points:
             kp.interpolation = "LINEAR"
