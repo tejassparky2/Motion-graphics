@@ -50,7 +50,7 @@ def s23c():
     shrimp = Vector((diorama.MAP["shrimp_drink"][0], diorama.MAP["shrimp_drink"][1], 0.0))
     thorn = Vector((diorama.MAP["thorn"][0], diorama.MAP["thorn"][1], 0.0))
     away = (shrimp - thorn).normalized()                       # the shadow travels from the thorn tree past the shrimp
-    start = shrimp - away * 9.0                                # behind the camera, on the thorn tree's side
+    start = shrimp - away * 7.0                                # behind the camera; it reaches the shrimp ~f30
     bird = tuftwing.build((start.x, start.y, 0.0), shadow_span=10.0)
     bird["root"].scale = (h5.BIRD_SCALE,) * 3
     bird["root"].rotation_euler = (0, 0, math.atan2(away.x, -away.y))    # it heads (-Y local) toward the shrimp
