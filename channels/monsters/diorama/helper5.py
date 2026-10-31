@@ -27,6 +27,7 @@ from channels.monsters.mk import anim, diorama, look
 
 FRAMES = {"S19": 105, "S20": 103, "S21": 64}                       # = ep01v2/bgqrs.py FRAMES (cut + 12-frame handle)
 TILT, BLUR = 78.0, 12.0
+LAST = {}                                                          # the last built rig and shrimp (for framing checks)
 
 
 def _base(n, breathe=True):
@@ -48,6 +49,7 @@ def _base(n, breathe=True):
     anim.on_twos([o for o in bpy.data.objects if o.name.startswith("d16_dust")], step=2)
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 1, n
+    LAST.update(rig=rig, sh=sh)
     return rig, sh
 
 
@@ -115,7 +117,7 @@ def s19():
     n = FRAMES["S19"]
     rig, sh = _base(n)
     tip = s3d.claw_tip(sh) + Vector((0.0, 0.0, -0.08))
-    d = s3d._drop(tip, 1, n + 40, n + 46, tip - Vector((0, 0, 2)), r=0.11)
+    d = s3d._drop(tip, 1, n + 40, n + 46, tip - Vector((0, 0, 2)), r=0.22)
     d.animation_data_clear()                                       # only the drying: no swell, no fall, no regrowth
     d.location = tip
     for f, k in ((1, 1.0), (24, 0.85), (45, 0.66), (66, 0.42), (81, 0.18), (90, 0.001)):
@@ -131,7 +133,7 @@ def s19():
     anim.lids(sh, 36, 1.0)                                         # the shrimp blinks once, then locks on again
     s3d.lock_on(sh, eyes, 39)
     face = s3d.kai_point(rig, "nose")
-    _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 7.0, 70.0, shift=(-0.06, -0.04))
+    _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 8.75, 70.0, shift=(0.055, -0.295))
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
@@ -174,9 +176,9 @@ def s20():
     sc.frame_set(1)
     s3d.kai_face(rig, 1, **s3d.TERROR)
     s3d.kai_face(rig, 44, eye_zitome=0.75, mouth_short=1.0)       # deadpan
-    _cam("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.2)), 7.2, 72.0, tilt=70.0, yaw=-18.0,
-         shift=(0.1, 0.0))
-    _cam("cam_s20_kai", eyes + up * 0.15, 3.4, 70.0, frame=44, shift=(0.1, 0.0))
+    _cam("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.2)), 9.0, 72.0, tilt=70.0, yaw=-18.0,
+         shift=(0.178, -0.172))
+    _cam("cam_s20_kai", eyes + up * 0.15, 3.4, 70.0, frame=44, shift=(0.051, -0.204))
     sc.camera = bpy.data.objects["cam_s20_shrimp"]
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
@@ -190,9 +192,10 @@ def s21():
     p0 = r.location.copy()
     pond = Vector((diorama.MAP["pond"][0], diorama.MAP["pond"][1], 0.0))
     head = s3d.kai_point(rig, "head")
-    side = Vector((head.x, head.y, 0)) + east * 2.6                 # off his chest on its claw side, past his head
-    edge = pond - up * 2.9 + east * 0.6                             # the pond's near (south) edge
-    path = [p0, side - up * 1.6, side.lerp(edge, 0.55), edge]
+    a = math.radians(-40)                                           # the pond's south-east shore, clear of his head
+    edge = pond + Vector((4.2 * math.cos(a), 2.3 * math.sin(a), 0)) * 1.12   # (diorama.pond is 4.2 x 2.3)
+    side = Vector((head.x, head.y, 0)) + east * 2.4 - up * 2.2      # off his chest on its claw side
+    path = [p0, side, side.lerp(edge, 0.5), edge]
     lean0 = tuple(r.rotation_euler)
 
     def yaw_to(a, b):
@@ -234,7 +237,7 @@ def s21():
     sc.frame_set(1)
     s3d.kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
     mid = Vector((p0.x, p0.y, 0)).lerp(edge, 0.5) + Vector((0, 0, 1.0))
-    _cam("cam_s21", mid, 15.0, 70.0, tilt=58.0, shift=(0.08, 0.04))
+    _cam("cam_s21", mid, 17.0, 70.0, tilt=58.0, yaw=20.0, shift=(0.089, -0.104))
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
