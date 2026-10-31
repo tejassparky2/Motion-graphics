@@ -182,9 +182,9 @@ def s01_harbour(cr, t, t0, t1):
     cr.restore()
     # the hook: big type over the frame
     s1 = S(1, 0) if len(T._lines["1"]["sentences"]) > 1 else L(1)
-    _hook(cr, t, t0 + 0.0, "1 SEPTEMBER 1939", W * 0.62, 190, 108)
+    _hook(cr, t, t0 + 0.0, "1 SEPTEMBER 1939", W * 0.6, 190, 104)
     _hook(cr, t, S(1, 1).start - 0.1 if len(T._lines["1"]["sentences"]) > 1 else s1.start + 2.5, "4:45 AM",
-          W * 0.62, 320, 128, color="fire")
+          W * 0.6, 335, 120, color="fire")
 
 
 def _hook(cr, t, start, s, x, y, size, color="cream"):
@@ -194,7 +194,13 @@ def _hook(cr, t, start, s, x, y, size, color="cream"):
     cr.save()
     cr.translate(x, y)
     cr.scale(u, u)
-    text(cr, s, 0, 0, size, font=TITLE, color=color, bold=False, outline="ink", outline_w=size * 0.1)
+    cr.select_font_face(TITLE, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
+    cr.set_font_size(size)
+    w = cr.text_extents(s).x_advance
+    cr.rectangle(-w / 2 - 34, -size * 0.92, w + 68, size * 1.12)       # the ink plate (clear of the mast)
+    cr.set_source_rgba(*col("ink", 0.92))
+    cr.fill()
+    text(cr, s, 0, 0, size, font=TITLE, color=color, bold=False)
     cr.restore()
 
 
@@ -358,7 +364,8 @@ def s09_soldier(cr, t, t0, t1):
 
 def s10_signing(cr, t, t0, t1):
     """The Hall of Mirrors as a long signing table: the winners in silhouette, the German delegate alone, signing."""
-    _frame(cr, t, t0, t1, 1.0, 1.06, W / 2, H * 0.55)
+    u = smooth(seg(t, t0, t1))
+    _frame(cr, t, t0, t1, 1.12, 1.55, lerp(W * 0.55, W * 0.76, u), lerp(H * 0.62, H * 0.74, u))
     ROOM.draw(cr, t)
     TABLE.draw(cr, t, x=W * 0.5, y=880, scale=1.0)
     for i, (x, who) in enumerate(((W * 0.24, "churchill"), (W * 0.36, None), (W * 0.5, None), (W * 0.64, None))):
@@ -416,33 +423,53 @@ def s13_chart(cr, t, t0, t1, crash_t):
     follow = smooth(seg(t, crash_t, t1))
     _frame(cr, t, t0, t1, 1.05, 1.25, W / 2, lerp(H * 0.48, H * 0.66, follow))
     paper(cr)
-    prog = lerp(0.35, 0.6, seg(t, t0, crash_t)) if t < crash_t else lerp(0.6, 1.0, ease_in(seg(t, crash_t,
-                                                                                               crash_t + 1.0)))
+    prog = lerp(0.3, 0.62, seg(t, t0, crash_t)) if t < crash_t else lerp(0.62, 1.0, ease_out(seg(t, crash_t,
+                                                                                                 crash_t + 0.45)))
     CHART.draw(cr, t, x=W / 2, y=H / 2, scale=1.5, progress=prog, crash=0.62, label="1929")
     cr.restore()
     if t > crash_t:
         _stamp(cr, t, crash_t + 0.25, "CRASH!", W * 0.7, H * 0.25, size=120, tilt=-0.1)
 
 
+NYC = (-74.0, 40.7)
+
+
+def _depression_map(t0):
+    if "d" in _MAPS and _MAPS["d"][1] == round(t0, 3):
+        return _MAPS["d"][0]
+    from channels.ww2.kit.maps import Map
+    m = Map("world", era="1939")
+    m.camera_key(t0, (-40.0, 38.0), 2.2)
+    m.camera_key(t0 + 3.2, (10.0, 25.0), 1.12)
+    for r in sorted(m._side):                                     # grey spreads out from the US
+        m.side(r, t0 + 0.35, "#9b968b", origin=NYC, dur=2.6, occupied=False)
+    m.city("WALL STREET", t0 + 0.1, lonlat=NYC, size=40)
+    _MAPS["d"] = (m, round(t0, 3))
+    return m
+
+
 def s14_drain(cr, t, t0, t1):
-    """Coins drain off the world map toward a hole in its middle (the Depression spreads)."""
-    m = _world_map()
+    """The Depression spreads: the world greys out from a Wall Street pin while coins spill out of it and drain away
+    off the map's edges."""
+    m = _depression_map(t0)
     m.draw(cr, t)
-    cr.save()
-    cr.rectangle(0, 0, W, H)
-    cr.set_source_rgba(*col("ink", 0.25))
+    nx, ny = m.screen(m.xy(NYC))
+    r = random.Random(4)
+    for i in range(46):
+        st = t0 + 0.2 + r.uniform(0, 2.4)
+        age = t - st
+        if age < 0:
+            continue
+        ang = r.uniform(-1.1, 1.3) if r.random() < 0.7 else r.uniform(1.6, 2.6)   # mostly east, over the Atlantic
+        spd = r.uniform(420, 760)
+        x = nx + math.cos(ang) * spd * age
+        y = ny + math.sin(ang) * spd * age * 0.6 + 380 * age * age            # arcs, then falls off the edge
+        if y > H + 40 or x > W + 40 or x < -40:
+            continue
+        things.coin(cr, x, y, 15, t * 9 + i)
+    cr.arc(nx, ny, 14 + 6 * math.sin(t * 6), 0, 2 * math.pi)
+    cr.set_source_rgba(*col("alert"))
     cr.fill()
-    cr.restore()
-    cx, cy = W / 2, H * 0.55
-    r = 120 * smooth(seg(t, t0, t0 + 0.8))
-    cr.save()
-    cr.translate(cx, cy)
-    cr.scale(1.0, 0.45)
-    cr.arc(0, 0, r, 0, 2 * math.pi)
-    cr.restore()
-    cr.set_source_rgba(*col("ink"))
-    cr.fill()
-    things.coin_stream(cr, t, 0, 0, W, H * 0.7, cx, cy, n=60, start=t0 + 0.3, dur=2.4, r=18.0, seed=4)
 
 
 def s15_queue(cr, t, t0, t1):
@@ -479,24 +506,114 @@ def s16_podium(cr, t, t0, t1):
                       color="#a9997a")                            # his shadow on the wall, growing
     cr.save()
     cr.translate(0, -H * 0.04 * grow)
-    sh.draw(cr, t, [(0.0, "point"), (t0 + 1.6, "slam"), (t0 + 3.0, "point")])
+    sh.draw(cr, t, [(0.0, "slam_down"), (t0 + 1.6, "slam"), (t0 + 3.0, "slam_down")])
     cr.restore()
     PODIUM.draw(cr, t, x=W * 0.5, y=H * 0.98, scale=1.45)
     sp = stick.Figure(leader="hitler", x=W * 0.5, y=H * 0.98 + PODIUM.top_y * 1.45 + 6, scale=0.95, facing=-1,
                       seed=81)
-    sp.draw(cr, t, [(0.0, "point"), (t0 + 1.6, "slam"), (t0 + 3.0, "point")])
+    sp.draw(cr, t, [(0.0, "slam_down"), (t0 + 1.6, "slam"), (t0 + 3.0, "slam_down")])
+    cr.restore()
+
+
+def _poster_crowd(cr, t, rows=7, y0=560.0, y1=1120.0, seed=31):
+    """A dense poster crowd filling the lower frame: rows of heads and shoulders packed shoulder to shoulder, looking
+    up at the speaker, back rows smaller and paler; a few raised fists and hats (no straight-arm gestures)."""
+    for row in range(rows):
+        k = row / (rows - 1)                                      # 0 = back, 1 = front
+        y = lerp(y0, y1, k)
+        sz = lerp(22, 74, k)
+        tone = stick._mix(col("ink_soft"), col("paper"), 0.55 * (1 - k))
+        r = random.Random(seed * 100 + row)
+        x = -sz * r.uniform(0.2, 1.2)
+        while x < W + sz:
+            bob = 3 * k * math.sin(t * 2.2 + x * 0.05)
+            cr.save()
+            cr.translate(x, y + bob)
+            cr.move_to(-sz * 1.25, sz * 2.6)                      # shoulders
+            cr.curve_to(-sz * 1.2, sz * 0.9, -sz * 0.7, sz * 0.75, 0, sz * 0.72)
+            cr.curve_to(sz * 0.7, sz * 0.75, sz * 1.2, sz * 0.9, sz * 1.25, sz * 2.6)
+            cr.close_path()
+            cr.arc(0, -sz * 0.05, sz * 0.62, 0, 2 * math.pi)        # the head, tipped up
+            cr.set_source_rgba(*tone)
+            cr.fill()
+            u = r.random()
+            if u < 0.12:                                          # a raised fist (arm up, bent)
+                cr.move_to(sz * 0.7, sz * 1.0)
+                cr.line_to(sz * 0.95, -sz * 1.3)
+                cr.set_line_width(sz * 0.36)
+                cr.set_line_cap(cairo.LINE_CAP_ROUND)
+                cr.set_source_rgba(*tone)
+                cr.stroke()
+                cr.arc(sz * 0.97, -sz * 1.45, sz * 0.3, 0, 2 * math.pi)
+                cr.fill()
+            elif u < 0.22:                                        # a hat
+                cr.rectangle(-sz * 0.85, -sz * 0.55, sz * 1.7, sz * 0.16)
+                cr.rectangle(-sz * 0.5, -sz * 1.05, sz * 1.0, sz * 0.55)
+                cr.set_source_rgba(*stick._shade(tone, 0.25))
+                cr.fill()
+            cr.restore()
+            x += sz * r.uniform(1.55, 1.95)
+
+
+def _speaker_back(cr, t, x, y, s, raise_t):
+    """Over the shoulder: the speaker's back of head and ear, collar, broad shoulders, one fist raised to the side."""
+    ink, tone = col("#1f1c1b"), col("#1f1c1b")
+    up = smooth(seg(t, raise_t, raise_t + 0.35)) - 0.6 * smooth(seg(t, raise_t + 1.6, raise_t + 2.0))
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(s, s)
+    ang = lerp(-0.25, -1.25, up)                                  # the raised arm swings up to the side (bent)
+    ex, ey = 230 + 120 * math.cos(ang), -260 + 160 * math.sin(ang)
+    cr.move_to(170, -230)
+    cr.line_to(ex, ey)
+    cr.line_to(ex + 40, ey - 150 * (0.4 + up))
+    cr.set_line_width(70)
+    cr.set_line_join(cairo.LINE_JOIN_ROUND)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    cr.set_source_rgba(*tone)
+    cr.stroke()
+    cr.arc(ex + 44, ey - 150 * (0.4 + up) - 30, 48, 0, 2 * math.pi)      # the fist
+    cr.fill()
+    cr.move_to(-330, 260)                                         # broad shoulders and back
+    cr.curve_to(-330, -120, -260, -230, -110, -250)
+    cr.line_to(110, -250)
+    cr.curve_to(260, -230, 330, -120, 330, 260)
+    cr.close_path()
+    cr.fill()
+    cr.rectangle(-70, -330, 140, 110)                              # the neck in the collar
+    cr.fill()
+    cr.save()                                                     # the back of the head: hair mass and an ear
+    cr.translate(0, -440)
+    cr.scale(1.0, 1.12)
+    cr.arc(0, 0, 118, 0, 2 * math.pi)
+    cr.restore()
+    cr.fill()
+    cr.save()
+    cr.translate(118, -440)
+    cr.scale(0.45, 0.75)
+    cr.arc(0, 0, 50, 0, 2 * math.pi)
+    cr.restore()
+    cr.fill()
+    cr.move_to(-150, -262)                                        # the collar's rim light
+    cr.curve_to(-60, -236, 60, -236, 150, -262)
+    cr.set_source_rgba(*col("cream", 0.55))
+    cr.set_line_width(6)
+    cr.stroke()
+    cr.arc(0, -440, 121, math.pi * 1.15, math.pi * 1.65)         # a rim of light on the hair
+    cr.set_source_rgba(*col("cream", 0.4))
+    cr.set_line_width(5)
+    cr.stroke()
     cr.restore()
 
 
 def s17_rally(cr, t, t0, t1):
-    """The rally crowd seen over the speaker's shoulder; poster rays (ink, never red) behind."""
+    """The rally seen over the speaker's shoulder: a packed poster crowd fills the lower half, looking up; ink rays
+    (never red) behind."""
     _frame(cr, t, t0, t1, 1.0, 1.06)
     paper(cr)
     rays(cr, t, W * 0.55, H * 0.2, n=30, color="ink", alpha=0.14)
-    stick.crowd(cr, t, 70, 0, W, 520, 1000, scale=0.48, pose="cheer", seed=31, tone="ink_soft",
-                poses=["cheer", "cheer", "stand", "point"])
-    sp = stick.Figure(leader="hitler", x=W * 0.12, y=H * 1.25, scale=2.3, facing=1, seed=81, color="#1f1c1b")
-    sp.draw(cr, t, [(0.0, "point"), (t0 + 1.5, "slam")])
+    _poster_crowd(cr, t)
+    _speaker_back(cr, t, W * 0.14, H * 1.12, 0.9, t0 + 1.2)
     cr.restore()
 
 
@@ -556,9 +673,9 @@ def _shots():
                                                        ("ARMY", word_t(10, "army", 0.6)),
                                                        ("MONEY", word_t(10, "money", 0.6))])),
         (L(11).start - 0.2, L(12).start - 0.2, s12_crowd),
-        (L(12).start - 0.2, word_t(12, "Great Depression") - 0.2,
+        (L(12).start - 0.2, max(word_t(12, "Great Depression") - 0.2, word_t(12, "crashes", 0.3) + 1.9),
          lambda cr, t, a, b: s13_chart(cr, t, a, b, word_t(12, "crashes", 0.3))),
-        (word_t(12, "Great Depression") - 0.2, L(13).start - 0.2, s14_drain),
+        (max(word_t(12, "Great Depression") - 0.2, word_t(12, "crashes", 0.3) + 1.9), L(13).start - 0.2, s14_drain),
         (L(13).start - 0.2, L(14).start - 0.2, s15_queue),
         (L(14).start - 0.2, word_t(14, "and who blames"), s16_podium),
         (word_t(14, "and who blames"), L(15).start - 0.2, s17_rally),
@@ -607,7 +724,7 @@ def cues(T=T):
          (L(10).start + 1.0, "typewriter", -20, 0.3)]
     for w in ("responsibility", "land", "army", "money"):
         c.append((word_t(10, w, 0.6), "stamp", -4, 0.0))
-    c += [(word_t(12, "crashes", 0.3), "door_slam", -8, 0.0), (L(13).start, "train", -26, -0.4),
+    c += [(word_t(12, "crashes", 0.3), "door_slam", -4, 0.0), (word_t(12, "crashes", 0.3) + 0.25, "stamp", -6, 0.2), (L(13).start, "train", -26, -0.4),
           (L(14).start + 0.5, "crowd_cheer", -14, 0.0), (word_t(14, "and who blames"), "crowd_cheer", -10, 0.0),
           (L(15).start, "gun_boom", -16, 0.0),
           (word_t(16, "dictatorship", 0.2), "door_slam", -2, 0.0)]
