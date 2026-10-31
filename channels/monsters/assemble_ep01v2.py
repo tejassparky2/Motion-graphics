@@ -86,6 +86,14 @@ def slate(name):
     return s
 
 
+def _sha(path):
+    """The first 8 hex digits of a shot file's SHA-1, printed by --check so every run shows exactly which version
+    of each shot went into the cut (shots are decoded fresh on every run; nothing is cached)."""
+    import hashlib
+    with open(path, "rb") as f:
+        return hashlib.sha1(f.read()).hexdigest()[:8]
+
+
 # ---------------------------------------------------------------- shots
 class Shot:
     def __init__(self, info):
@@ -263,7 +271,9 @@ def main():
             if shot.name == "S01" and frames is not None:
                 s01 = frames
         if a.check:
-            print(f"{shot.name:5s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
+            srcs = [shot.path(x) for x in (("top", "bot") if shot.name == "S24" else ("",))]
+            ids = " ".join(_sha(p) for p in srcs if os.path.exists(p))
+            print(f"{shot.name:5s} {ids or '-':17s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
                   f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}"
                   f"{f'  captions at y={CAP_Y_SHOT[shot.name]}' if shot.name in CAP_Y_SHOT else ''}")
         sl = slate(shot.name) if frames is None else None
