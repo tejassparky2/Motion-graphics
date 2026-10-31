@@ -129,9 +129,9 @@ def s22():
     near = shells[np.argsort(np.abs(shells[:, 2] - 2.4))[:4]].mean(axis=0)
     tree = Vector((diorama.MAP["thorn"][0], diorama.MAP["thorn"][1], 4.0))
     hips = Vector((d16.HIPS[0], d16.HIPS[1], 2.0))
-    wide = tree.lerp(hips, 0.5)                                             # the tree at the top, Kai at the bottom
-    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, 40.0, 100.0, 0.0),   # yaw 40: the tree and Kai on one line
-          (tuple(wide), 72.0, 56.0, 40.0, 85.0, 0.0), n)
+    wide = tree.lerp(hips, 0.6)                                             # the tree at the top, Kai at the bottom
+    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, 34.0, 100.0, 0.0),   # yaw 34: the tree and Kai on one line
+          (tuple(wide), 84.0, 56.0, 34.0, 85.0, 0.1), n)
     return dict(frames=n, step=1, subject=[])
 
 
