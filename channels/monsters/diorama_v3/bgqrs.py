@@ -83,22 +83,19 @@ def _sapling(rig, n):
 
 
 def _set(n):
-    """The island after v3's snap, which fired SOUTH at Kai (helper 10): the trees north of the pond stand; the young
-    grove south of where he knelt is cut to glowing stumps (diorama.grove_spots(), once helper 10 pushes it). Returns
-    the stump spots."""
-    isl = diorama.island(seed=31, **({"grove": True} if hasattr(diorama, "grove_spots") else {}))
-    spots = []
+    """The island after v3's snap, which fired at Kai along diorama.BLAST_LINE (helper 10): the north trees stand; the
+    young grove south-east of him and the sapling by his head are cut. island(grove="cut") leaves both unplanted;
+    their glowing, smoking stumps go in their place (the sapling's in _sapling). Before helper 10's API lands: the
+    plain island. Returns the grove's stump spots."""
     if hasattr(diorama, "grove_spots"):
+        diorama.island(seed=31, grove="cut")
         spots = list(diorama.grove_spots())
-        gone = set()
-        for i, sp in enumerate(isl["spots"]):
-            if any(abs(sp[0] - g[0]) < 0.01 and abs(sp[1] - g[1]) < 0.01 for g in spots) and isl["trees"][i]:
-                gone |= {c.name for o in isl["trees"][i] for c in [o] + list(o.children_recursive)}
-        for name in gone:
-            bpy.data.objects.remove(bpy.data.objects[name], do_unlink=True)
         diorama.stumps(spots, diorama.MAP.get("blast", (0.1, 0.4)))
         meadow.smoke([(x, y, diorama.TREE * 0.4) for x, y, *_ in spots[:5]], -50, n + 10, every=16, rise=9.0,
                      size=diorama.TREE * 0.4)
+    else:
+        diorama.island(seed=31)
+        spots = []
     for name, strength in (("stump_hot", 2.2), ("stump_core", 3.0)):
         m = bpy.data.materials.get(name)
         em = next((nd for nd in m.node_tree.nodes if nd.type == "EMISSION"), None) if m and m.use_nodes else None
