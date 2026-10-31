@@ -175,8 +175,8 @@ def s24top():
     acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 2.0, SHRIMP[1], 2.4))
-    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.225)    # from the south-south-west
-    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.245)
+    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.21)     # from the south-south-west
+    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.23)
     v2._move("cam_s24top_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"]])
 
