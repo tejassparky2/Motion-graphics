@@ -83,7 +83,8 @@ CAP_Y_VERSION["diorama_v3"].update({
     "S02": 945,              # the rewind of S01, same layout
     "S08b": 945,             # below his feet and the skeleton's (text ends ~955, above the Shorts UI line at 960)
     "S15a": 250,             # above the shrimp's eyes, then the blurred trees above Kai's cap; off the raised claw
-    "S22": [(0.0, CAP_Y), (0.9, 500)],   # the tree close-up keeps the band; after the pull-back, the grass between
+    "S22": [(0.0, CAP_Y), (0.9, 500)],
+    "S23c": 860,             # between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in   # the tree close-up keeps the band; after the pull-back, the grass between
                                          # the tree and Kai at the puddle
 })
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
