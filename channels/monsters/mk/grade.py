@@ -7,10 +7,10 @@ it off for a before/after). Nothing in the builders changes.
 What it adds on top of diorama.setup() and the sets' own lights:
 - The view: Standard by default (tested 31 Oct: AgX, even Punchy with +0.6 exposure and extra saturation, greys the
   painted whites and muddies the pinks and greens); DIORAMA_AGX=1 switches to AgX Punchy for comparison.
-- Screen-space AO and bounce (EEVEE horizon scan): contact darkening where things meet the ground or each other.
-- Island: a cool, shadowless fill sun opposite the warm key sun, so the shadow side reads blue, not grey.
-- A character-only rim light (light linking): a sun from behind the characters, relative to the camera, warm on the
-  island, cyan in the lab (the tank's colour), so Kai, the shrimp and the bird separate from the ground.
+- AO and contact shadows: GTAO on, and the screen-space bounce (fast GI) off, so the sun's shadow under Kai and the
+  creatures reads and they sit on the ground instead of floating (fast GI also mirrored the laptop into the tank hood).
+- Off after testing (FILL, RIM): a cool fill sun opposite the key (it lit the pond into a jagged white patch) and a
+  character-only rim light via light linking (invisible from the top-down cameras).
 - The per-scene grade (compositor, after the haze and bloom): lift/gamma/gain split-toning (night lab: teal shadows,
   cool highlights; day island: cool shadows, warm highlights), a little saturation, a soft vignette.
 """
@@ -30,6 +30,8 @@ LOOKS = {
 }
 
 
+FILL = False                   # tested 31 Oct: the cool fill sun lit the pond water into a jagged white patch
+RIM = False                    # tested 31 Oct: no visible rim from the top-down diorama cameras, only cost
 ON_BY_DEFAULT = False          # flipped to True for diorama_v3 once the coordinator approves the before/after
 
 
@@ -127,18 +129,18 @@ def _grade(sc, g):
     out = hs.outputs[0]
     if g["vignette"] > 0:                                                # a soft elliptical vignette
         el = nt.nodes.new("CompositorNodeEllipseMask")
-        for a, v in (("width", 0.95), ("height", 0.85)):
-            if hasattr(el, a):
-                setattr(el, a, v)
-            elif a.capitalize() in el.inputs:
-                el.inputs[a.capitalize()].default_value = v
+        if "Size" in el.inputs:                                          # 4.5: the mask size is a socket
+            el.inputs["Size"].default_value = (0.98, 0.9)
+            el.inputs["Position"].default_value = (0.5, 0.5)
+        else:
+            el.width, el.height = 0.98, 0.9
         bl = nt.nodes.new("CompositorNodeBlur")
         bl.filter_type = "GAUSS"
-        if hasattr(bl, "use_relative"):
-            bl.use_relative = True
-            bl.factor_x = bl.factor_y = 30.0
+        px = int(0.22 * sc.render.resolution_x)
+        if "Size" in bl.inputs:
+            bl.inputs["Size"].default_value = (px, px) if hasattr(bl.inputs["Size"].default_value, "__len__") else px
         else:
-            bl.size_x = bl.size_y = int(0.3 * sc.render.resolution_x)
+            bl.size_x = bl.size_y = px
         nt.links.new(el.outputs[0], bl.inputs[0])
         inv = nt.nodes.new("CompositorNodeMath")
         inv.operation = "MULTIPLY_ADD"
@@ -160,12 +162,13 @@ def finish(info):
     g = LOOKS[kind]
     _view(sc, g["exposure"])
     _render(sc)
-    if kind == "island":
+    if kind == "island" and FILL:
         key = next((o for o in sc.objects if o.type == "LIGHT" and o.data.type == "SUN"), None)
         if key is not None:
             d = key.matrix_world.to_3x3() @ Vector((0, 0, -1))
             _sun("q3_fill", (-d.x, -d.y, d.z * 0.6), g["fill_energy"], g["fill"], False)
-    _rim(sc, _characters(info), g["rim"], g["rim_energy"])
+    if RIM:
+        _rim(sc, _characters(info), g["rim"], g["rim_energy"])
     if sc.use_nodes and sc.node_tree:
         _grade(sc, g)
     return kind
