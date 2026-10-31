@@ -3,7 +3,8 @@ shot gets clear key poses, anticipation and overshoot on 2s, blinking and living
 
 Kai (the hero rig from hero.load; face keys on the "head" mesh):
     lie(rig, hips, head_dir)                 LYING_V3: on his back, a knee bent, an arm flung over his head, grass
-                                             tufts and a contact shadow (from above he never reads as standing)
+                                             tufts and a contact shadow (from above he never reads as standing);
+                                             LYING_V3_L is its mirror (the left arm flung), mirror(spec) any other
     expression(rig, name, f0, f1=None)       surprised / fear / angry / joy / neutral / terror / deadpan / dazed /
                                              thinking / realise / realised (snaps on)
     face_keys(rig, f, **keys)                single face keys, layered
@@ -222,6 +223,22 @@ LYING_V3 = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("upper_chest", (0, 0
             ("left_foot", (-0.1, 0.4, -1)), ("right_foot", (0.35, 1, -0.3))]
 
 
+def mirror(spec):
+    """The same pose mirrored left to right (swap the left_/right_ bones, flip X)."""
+    swap = {"left_": "right_", "right_": "left_"}
+    out = []
+    for b, (x, y, z) in spec:
+        for a, c in swap.items():
+            if b.startswith(a):
+                b = c + b[len(a):]
+                break
+        out.append((b, (-x, y, z)))
+    return out
+
+
+LYING_V3_L = mirror(LYING_V3)     # the LEFT arm flung over his head (east side, clear of v3's sapling to his west)
+
+
 def lie(rig, hips, head_dir, spec=LYING_V3, tufts=True, shadow=True, head=None):
     """Lay Kai on his back with his hips at `hips` (x, y), his head pointing at compass `head_dir` degrees (0 = +Y,
     positive toward -X), in `spec` (LYING_V3); `head` replaces the head direction. Grounds him on the grass and adds
@@ -336,7 +353,7 @@ def lock_on(rig, target, f, down=0.35):
     h = rig["head"].matrix_world.translation
     d = Vector(target) - h
     root_yaw = rig["root"].matrix_world.to_euler().z
-    turn = math.atan2(-d.x, -d.y) - root_yaw                       # the rig faces -Y at rest
+    turn = math.atan2(d.x, -d.y) - root_yaw                        # facing d at rest -Y: z = atan2(d.x, -d.y)
     turn = (turn + math.pi) % (2 * math.pi) - math.pi
     butcherbird.stare(rig, f, down=down, turn=turn * 1.12)          # overshoot ...
     anim.key(rig["head"], "rotation_euler", f + 9, (down, 0, turn), "CONSTANT")   # ... and settle
