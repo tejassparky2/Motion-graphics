@@ -17,7 +17,8 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 | Shot | Owner | Verdict | Frames (got / want) | Notes |
 |---|---|---|---|---|
 | S03a, S03b, S04, S05a, S05b | v2 copies, 2D grade-matched to Q3 (c7b638e) | PASS (interim) | exact | clean files; the lab grade now matches the Q3 renders; superseded when the owners' full v3 renders land |
-| S10a, S10b, S11a, S12, S22 | (v2 copies) | PASS (v2 QA) | exact | the same picture and length as v2; S10a/S11a/S10b/S11b/S12 re-render under the GO |
+| S10a | helper 4 (v3 re-render) | PASS (self-review) | 56 / 56 | the cute hold and the blink as v2, now with the 8% push-in on 1s; clean |
+| S10b, S11a, S12, S22 | (v2 copies) | PASS (v2 QA) | exact | the same picture and length as v2; S10a/S11a/S10b/S11b/S12 re-render under the GO |
 | S11b | (v2 copy) | PASS (v2 QA) | 38 / 37 | the assembler trims 1 frame |
 | S13 | (v2 copy) | PASS (v2 QA) | 62 / 63 | the assembler holds 1 frame |
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
