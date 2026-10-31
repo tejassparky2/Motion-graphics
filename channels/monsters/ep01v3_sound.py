@@ -32,7 +32,8 @@ base.OUT = os.path.join(base.ROOT, "out", "monsters", "ep01v3")
 
 # picture beats (0-based frames in the cut); the shots keep v2's beats unless their owner says otherwise
 S04_SHUT, S05A_FLASH, S05B_TAPS = 19, 51, (29, 33)
-S07_SNAP, S07_CRACK = None, None   # None: on the word "snap" / just after it, until helper 2's v3 render gives frames
+S07_HOP, S07_SNAP = 14, 43   # helper 2's final S07 (ee287b1): the fright hop from f14, the snap flash f43 (impact 44-46);
+                              # the glass breaks on "cracked" and the jet spits on "tank" (word anchors)
 # helper 10's v3 S15 (106 frames; the aim is held from f0): the finger opens wide f9, the SNAP and white flash f29,
 # impact frames f31-34, Kai thrown back f30-46 while the trees pop to dust from f31, he lands f47, the aftermath f77
 S15_OPEN, S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN, S15_LAND, S15_AFTER = 9, 29, 29, 31, 30, 47, 77
@@ -44,6 +45,7 @@ S08A_SPARKS, S08A_SWELL = 3, 28   # helper 1: the 2D arcs fizz at the plugs from
 S08A_WATER, S08A_FEAR, S08A_STUTTER = 4, 19, (29, 32)   # water at his sneakers f4-14, face drops f19, lights stutter
 S08B_HIT, S08B_LIGHTS, S08B_LAND, S08B_BLACK = 10, 26, 28, 30   # helper 4: the jolt hits f10, the lights die f26,
                                                                   # the body lands f28, black from f30 (0-based)
+S09_EYES = 14             # helper 3's final S09 (2a2d3e3): his eyes snap open on "woke"; the world cuts in at f32
 S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
 
 
@@ -284,13 +286,13 @@ def build(timing, n, v):
     hit(sfx.thunder(), c.f("S06", S06_FLASH), -3)
 
     # --- S07: the panicked snap cracks the tank, a jet of water
-    snap_t = c.f("S07", S07_SNAP) if S07_SNAP is not None else c.word("l7", "snap")
-    crack_t = c.f("S07", S07_CRACK) if S07_CRACK is not None else snap_t + 0.08
-    hit(startle(3), c.t("S07", 0.05), -22, -0.2)                  # it jolts at the start of "The shrimp panicked."
+    snap_t = c.f("S07", S07_SNAP)
+    crack_t = c.word("l7", "cracked")
+    hit(startle(3), c.f("S07", S07_HOP), -22, -0.2)              # the fright hop on "panicked"
     hit(sfx.snap(1), snap_t, -4)
     hit(base.glass_crack(), crack_t, -6, 0.2)
     hit(base.glass_crack(1), crack_t + 0.12, -12, 0.25)           # the crack runs on across the glass
-    hit(water_jet(0.9), crack_t + 0.15, -16, 0.2)
+    hit(water_jet(0.9), c.word("l7", "tank"), -16, 0.2)
 
     # --- S08: the water goes off the desk edge (f14), the waterfall splashes at the foot (f24 on), it reaches the
     # plugs (f67): fizz to the end, bright pops (f69, f83), a light stutter (f71)
@@ -338,7 +340,7 @@ def build(timing, n, v):
     hit(soul_chime(1.4), w0 + 0.05, -16)
     music_at(base.soft_pad(2.4, (60, 67, 72, 76), 0.1), w0, w0 + 2.4, -16, 0.5, 0.6)
     another = c.word("l11", "In")
-    hit(eyes_open(), another - 0.25, -22)
+    hit(eyes_open(), c.f("S09", S09_EYES), -22)
     music_at(base.bed("wonder", c.t("S15a") - another + 1.0, 2), another, c.t("S15a"), -15, 0.4, 0.15)
     amb(lambda d, s: base.meadow_wind(d, 50 + s), w0 + 0.6, c.t("S15a"), -27, 0.6, 0.25)
     amb(lambda d, s: sfx.birds(d, 60 + s), another, c.t("S12"), -24, 0.5, 0.6)
