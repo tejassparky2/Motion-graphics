@@ -36,7 +36,7 @@ S07_SNAP, S07_CRACK = None, None   # None: on the word "snap" / just after it, u
 S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN = 41, 43, 49, 79     # helper 10's v2 beats; confirm for the v3 staging
 S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 42, 62
 # the v3 staging pass (coordinator, 31 Oct 12:25; provisional until the shot owners confirm the frames)
-S06_FLASH = 14            # the strong 2-frame near-white flash (helper 9)
+S06_FLASH = 13            # the strong near-white flash, 0-based f13-14 (helper 9; the crack on f13)
 S08A_SPARKS = 28          # small sparks start fizzing at the plugs (helper 1)
 S08B_LAND, S08B_BLACK = 28, 30   # helper 4 plan: limp from 0-based f23, lands ~f28, black f30 (exact frames to come)
 S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
