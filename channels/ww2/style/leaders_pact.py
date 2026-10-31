@@ -15,14 +15,15 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
-from channels.ww2.kit.core import (H, PAL, ROOT, TITLE, W, back_out, cairo, camera, col, date_stamp, ease_in,  # noqa
-                                   ease_out, lerp, paper, push_in, render_clip, seg, shake, smooth, text)
+from channels.ww2.kit.core import (H, LABEL, PAL, ROOT, SLAB, STENCIL, TITLE, W, back_out, cairo, camera,  # noqa
+                                   col, date_stamp, ease_in, ease_out, halftone, lerp, paper, print_finish, push_in,
+                                   rays, render_clip, seg, shake, smooth, text)
 from channels.ww2.kit import stick
 from channels.ww2.kit.stick import Figure
 
 DUR = 8.0
-S = 1.45                                  # figure scale (a ~435 px tall pair: the style frame is a close two-shot)
-GROUND = 930
+S = 1.42                                  # a ~600 px tall pair: a low, heroic poster two-shot
+GROUND = 965
 T_STOP, T_SHAKE, T_STAMP, T_FOLDER = 2.1, 2.5, 5.0, 6.0
 
 
@@ -57,7 +58,25 @@ def track(face_down=False):
 
 
 def backdrop(cr, t):
-    """The sides' colours washing in from the two edges, a floor line and soft contact shadows."""
+    """The poster ground: khaki rays turning slowly from behind the handshake (never red), each side's colour as a
+    halftone field on its own half, and a dark printed floor band."""
+    paper(cr)
+    rays(cr, t, W / 2, 640, n=28, color="khaki", alpha=0.38, spin=0.025)
+    for side, x0, x1 in (("axis", -40, W * 0.47), ("soviet", W * 0.53, W + 40)):
+        a = ease_out(seg(t, 0.0, 1.0))
+        halftone(cr, lambda c, x0=x0, x1=x1: c.rectangle(x0, 0, x1 - x0, H), side, density=2, alpha=0.32 * a)
+    cr.rectangle(0, GROUND + 4, W, H - GROUND)
+    cr.set_source_rgba(*col("olive", 0.85))
+    cr.fill()
+    halftone(cr, lambda c: c.rectangle(0, GROUND + 4, W, H - GROUND), "ink", density=2, alpha=0.35)
+    cr.move_to(0, GROUND + 4)
+    cr.line_to(W, GROUND + 4)
+    cr.set_source_rgba(*col("ink"))
+    cr.set_line_width(5)
+    cr.stroke()
+
+
+def _old_backdrop(cr, t):
     paper(cr)
     for side, x0, x1 in (("axis", 0, W * 0.55), ("soviet", W, W * 0.45)):
         g = cairo.LinearGradient(x0, 0, x1, 0)
@@ -113,7 +132,7 @@ def tick(cr, t, start, x, y, scale=1.0):
     cr.restore()
 
 
-def stamp(cr, t, start, label, x, y, size=118, tilt=-0.09, color="alert"):
+def stamp(cr, t, start, label, x, y, size=118, tilt=-0.09, color="alert", font=SLAB):
     """A rubber stamp slamming onto the page: a double border, the word in Anton, worn ink."""
     if t < start:
         return
@@ -125,7 +144,7 @@ def stamp(cr, t, start, label, x, y, size=118, tilt=-0.09, color="alert"):
     cr.translate(x, y)
     cr.rotate(tilt)
     cr.scale(sc, sc)
-    cr.select_font_face(TITLE)
+    cr.select_font_face(font)
     cr.set_font_size(size)
     w = cr.text_extents(label).x_advance + 6 * (len(label) - 1)
     pad = 28
@@ -136,7 +155,7 @@ def stamp(cr, t, start, label, x, y, size=118, tilt=-0.09, color="alert"):
         cr.rectangle(-w / 2 - pad + inset, -size * 0.62 - pad * 0.8 + inset, w + 2 * pad - 2 * inset,
                      size * 1.24 + pad * 1.6 - 2 * inset)
         cr.stroke()
-    text(cr, label, 0, size * 0.36, size, font=TITLE, color=color, bold=False, alpha=0.9 * a, spacing=6)
+    text(cr, label, 0, size * 0.36, size, font=font, color=color, bold=False, alpha=0.9 * a, spacing=6)
     cr.set_operator(cairo.OPERATOR_DEST_OUT)                        # worn ink: tiny gaps in the stamp
     import random
     rnd = random.Random(5)
@@ -177,7 +196,7 @@ def folder(cr, t, start, cx, y_end, k=1.0):
         cr.save()
         cr.translate(cx, y)
         cr.scale(k, k)
-        stamp(cr, t, start + 0.45, "SECRET", 0, -4, size=78, tilt=-0.12)
+        stamp(cr, t, start + 0.45, "SECRET", 0, -4, size=92, tilt=-0.12, font=STENCIL)
         cr.restore()
 
 
@@ -187,7 +206,7 @@ def draw(cr, t):
     # the camera: wide, then down to the hands behind their backs (3.0-4.5), then back up to the pair
     d = smooth(seg(t, 3.0, 3.8)) * (1 - smooth(seg(t, 4.3, 4.9)))
     cx = W / 2
-    cy = lerp(H / 2 - 40, GROUND - 200, d)
+    cy = lerp(H / 2 - 20, GROUND - 270, d)
     zz = z * lerp(1.0, 1.7, d)
     sx, sy = shake(t, T_STAMP + 0.12, amp=10)
     cr.save()
@@ -203,13 +222,14 @@ def draw(cr, t):
         tick(cr, t, 3.55 if fig is HITLER else 3.8, hx, hy, 0.9)
     if t > T_STOP:
         a = ease_out(seg(t, T_STOP + 0.1, T_STOP + 0.5)) * (1 - ease_in(seg(t, 4.7, 5.0)))
-        for name, x in (("Hitler", X_H - 40), ("Stalin", X_S + 40)):
-            text(cr, name, x, GROUND + 64, 46, color="ink", outline="paper", outline_w=8, alpha=a)
-    folder(cr, t, T_FOLDER, W / 2, GROUND - 120, 0.62)
+        for name, x in (("HITLER", X_H - 60), ("STALIN", X_S + 60)):
+            text(cr, name, x, GROUND + 74, 46, font=STENCIL, color="cream", alpha=a, spacing=4)
+    folder(cr, t, T_FOLDER, W / 2, GROUND - 150, 0.66)
     cr.restore()
-    stamp(cr, t, T_STAMP, "NON-AGGRESSION PACT", W / 2, 205, size=96, tilt=-0.06)
+    stamp(cr, t, T_STAMP, "NON-AGGRESSION PACT", W / 2, 190, size=88, tilt=-0.05)
     cr.restore()
     date_stamp(cr, t, "AUG 1939", start=0.2)
+    print_finish(cr, t)
 
 
 if __name__ == "__main__":
