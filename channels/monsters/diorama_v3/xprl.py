@@ -60,18 +60,6 @@ def _bird_on_perch(perch, face_to):
 
 
 # ------------------------------------------------------------------------------------------------------------ S23b
-def _lock_on(rig, target, f, down=0.35):
-    """acting.lock_on with the head's yaw sign fixed: a rig facing -Y at rest faces direction d at rotation z =
-    atan2(d.x, -d.y) (acting.py has atan2(-d.x, -d.y), which turns the head the mirrored way; reported to bGqrs)."""
-    from channels.monsters.mk import butcherbird
-    bpy.context.view_layer.update()
-    d = Vector(target) - rig["head"].matrix_world.translation
-    turn = math.atan2(d.x, -d.y) - rig["root"].matrix_world.to_euler().z
-    turn = (turn + math.pi) % (2 * math.pi) - math.pi
-    butcherbird.stare(rig, f, down=down, turn=turn * 1.12)
-    anim.key(rig["head"], "rotation_euler", f + 9, (down, 0, turn), "CONSTANT")
-
-
 CUT_POV = 30                        # the cut to the bird's view (about where "looking" lands)
 
 
@@ -92,7 +80,7 @@ def s23b():
     side = turned(to_prey.xy.to_3d(), 25)
     bird = _bird_on_perch(perch, perch + turned(to_prey.xy.to_3d(), -70) * 10 - Vector((0, 0, 3)))
     acting.tilt(bird, 8, angle=0.42, hold=8)                                 # a curious tilt: one eye to the ground
-    _lock_on(bird, prey, 20)                                                # snap onto the shrimp: glare, crest up
+    acting.lock_on(bird, prey, 20)                                          # snap onto the shrimp: glare, crest up
     anim.blink(bird, 4)
     anim.squash(bird["body"], 18, -0.06)                                    # a hunch into the lock
     anim.squash(bird["body"], 22, 0.03)
@@ -187,8 +175,8 @@ def s24top():
     acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 2.0, SHRIMP[1], 2.4))
-    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.225)    # from the south-south-west
-    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.245)
+    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.21)     # from the south-south-west
+    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.23)
     v2._move("cam_s24top_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"]])
 
