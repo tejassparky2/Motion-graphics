@@ -40,6 +40,7 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 | S19 | helper 5 (2033d7b) | PASS; 1 NOTE | 105 / 105 | the held quiet shot in the v3 lying pose: the blue drop on the claw tip shrinks on "let the sun dry it" and is gone by ~70, a sweat bead at his temple; NOTE a big foreground smoke plume from the stump billows over his feet on the right the whole shot, drawing the eye from the small (~40 px) drop |
 | S15 | helper 10 + helper 3 (b2ae4ad) | PASS | 118 / 118 | close on Kai and the raised claw, the white flash (30-31), impact frames (32-35), he's thrown back as the trees behind him burst into dust, then the smoking stumps round him lying by the pond; no seam at 59/60 |
 | S20 | helper 5 + helpers 9, 6, bGqrs (0a72c30) | PASS | 117 / 117 | the claw winds up at his face, snaps: only a small dust puff (32-36), the shrimp stares; cut on 70 to Kai's deadpan dot eyes + sweat drop, held; seams invisible |
+| S24bot (B) | helper 1 + helpers 7, 2 (18d71f2) | PASS; 1 NOTE | 180 / 180 | Kai turns and runs from the pond toward the lens and out to the right, while the dark bird drops onto the shrimp behind him and mantles (wings out, shadow over the pond); seams invisible (max change 0.006); NOTE the bird sits outside the tilt-shift band, so it is soft and small at the top of the B panel |
 | S11b | (v2 copy) | PASS (v2 QA) | 38 / 37 | the assembler trims 1 frame |
 | S13 | (v2 copy) | PASS (v2 QA) | 62 / 63 | the assembler holds 1 frame |
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
