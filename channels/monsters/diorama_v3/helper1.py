@@ -30,7 +30,7 @@ from channels.monsters.mk import acting, anim, diorama, diorama_lab, hero, lab, 
 from channels.monsters.mk import shared_water as sw
 
 BLUR = 10.0
-GUESS = {"S08a": 54, "S24": 162}          # until ep01v3/timing.json lands
+GUESS = {"S08a": 60, "S24": 180, "S03a": 53, "S03b": 51, "S05b": 51}          # until ep01v3/timing.json lands
 
 
 def _frames(shot):
@@ -467,4 +467,15 @@ def s24bot():
     return dict(frames=n, step=2, ones=(1, n), subject=[arm])
 
 
-SHOTS = {"S08a": s08a, "S24bot": s24bot}
+def _v2(fn, shot):
+    """A v2 diorama builder (diorama/helper1.py) reused in v3: same staging, the v3 set (dressing=2, Q3 lab grade,
+    shared water are the defaults now) and the v3 frame count."""
+    def build():
+        r = fn()
+        r["frames"] = _frames(shot)
+        return r
+    return build
+
+
+SHOTS = {"S08a": s08a, "S24bot": s24bot,
+         "S03a": _v2(d1.s03a, "S03a"), "S03b": _v2(d1.s03b, "S03b"), "S05b": _v2(d1.s05b, "S05b")}

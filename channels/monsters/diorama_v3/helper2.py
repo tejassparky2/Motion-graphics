@@ -390,4 +390,14 @@ def s07():
                                                                      jet=jet))
 
 
-SHOTS = {"S07": s07}
+def _reuse(build, shot):
+    """A v2 diorama tank shot in the v3 set (dressing, Q3 lighting, shared water are applied by the shared modules
+    and render_shot), with its v3 frame count. S04/S05a keep v2's lines, so every beat stays on its frame."""
+    def b():
+        info = build()
+        info["frames"] = v3_frames(shot) if os.path.exists(_T) else info["frames"]
+        return info
+    return b
+
+
+SHOTS = {"S07": s07, "S04": _reuse(d2.s04, "S04"), "S05a": _reuse(d2.s05a, "S05a")}
