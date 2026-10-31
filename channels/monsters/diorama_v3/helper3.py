@@ -143,11 +143,15 @@ def world_sphere(name, r, mat):
     return b.obj(name, mat, shadow=False)
 
 
-def _key_pose(rig, extra, frame, loc, rot):
-    """LYING_V3 with `extra` bones replaced, remembered for `frame` (helper 10 keys them all at the end)."""
+def _key_pose(rig, extra, frame, loc, rot, roll=0.0):
+    """LYING_V3 with `extra` bones replaced, the left hand rolled about its own length by `roll` (the wrist turn),
+    remembered for `frame` (helper 10 keys them all at the end)."""
     from channels.monsters.mk import acting
     over = dict(extra)
     s15._pose(rig, [(b, over.pop(b, d)) for b, d in acting.LYING_V3] + list(over.items()), loc, rot)
+    if roll:
+        pb = rig["bone"]("left_hand")
+        pb.rotation_quaternion = pb.rotation_quaternion @ Quaternion((0, 1, 0), roll)
     s15._key_pose(rig, frame)
 
 
