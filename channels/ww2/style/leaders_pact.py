@@ -2,7 +2,9 @@
 
     0.0-2.1  Hitler walks in from the left, Stalin from the right (the sides' colours wash the two halves)
     2.1-2.5  they stop and reach out; 2.5- the handshake, both smiling, pumping
-    3.0-4.5  the camera drifts down to their backs: each hides crossed fingers (a tick and a twinkle on each hand)
+    3.0-4.5  insert: cut to Hitler's hand behind his back, big, crossed fingers (tick, 3.25), a quick pan to
+             Stalin's (tick, 4.05), cut back out
+    sound: footsteps 0-2.1, a soft clasp 2.5, "tick" 3.25 and 4.05, the stamp thump 5.0, a paper slide 6.0
     4.6      back up; 5.0 the NON-AGGRESSION PACT stamp slams in (a little shake)
     6.0      a SECRET folder slides up between them; both glance down at it
     the AUG 1939 date tag sits in the corner throughout; a slow push-in over the shot
@@ -25,6 +27,7 @@ DUR = 8.0
 S = 1.42                                  # a ~600 px tall pair: a low, heroic poster two-shot
 GROUND = 965
 T_STOP, T_SHAKE, T_STAMP, T_FOLDER = 2.1, 2.5, 5.0, 6.0
+INSERT = (3.0, 4.5)                  # the crossed-fingers insert (cut in, pan, cut out)
 
 
 def walk_in(t):
@@ -57,17 +60,18 @@ def track(face_down=False):
     return tr
 
 
-def backdrop(cr, t):
-    """The poster ground: khaki rays turning slowly from behind the handshake (never red), each side's colour as a
-    halftone field on its own half, and a dark printed floor band."""
+def backdrop(cr, t, floor=True):
+    """The poster ground: neutral khaki rays turning slowly from behind the handshake (never red) and the floor
+    band printed in each side's colour under its man."""
     paper(cr)
-    rays(cr, t, W / 2, 640, n=28, color="khaki", alpha=0.38, spin=0.025)
-    for side, x0, x1 in (("axis", -40, W * 0.47), ("soviet", W * 0.53, W + 40)):
-        a = ease_out(seg(t, 0.0, 1.0))
-        halftone(cr, lambda c, x0=x0, x1=x1: c.rectangle(x0, 0, x1 - x0, H), side, density=2, alpha=0.32 * a)
-    cr.rectangle(0, GROUND + 4, W, H - GROUND)
-    cr.set_source_rgba(*col("olive", 0.85))
-    cr.fill()
+    rays(cr, t, W / 2, 640, n=28, color="khaki", alpha=0.42, spin=0.025)       # neutral on both halves
+    halftone(cr, lambda c: c.rectangle(0, 0, W, H), "ink", density=1, alpha=0.08)
+    if not floor:                                                                 # (the insert: no floor)
+        return
+    for side, x0, x1 in (("axis", 0, W / 2), ("soviet", W / 2, W)):              # each side's colour: the floor
+        cr.rectangle(x0, GROUND + 4, x1 - x0, H - GROUND)
+        cr.set_source_rgba(*col(side, 0.92))
+        cr.fill()
     halftone(cr, lambda c: c.rectangle(0, GROUND + 4, W, H - GROUND), "ink", density=2, alpha=0.35)
     cr.move_to(0, GROUND + 4)
     cr.line_to(W, GROUND + 4)
@@ -110,6 +114,8 @@ def tick(cr, t, start, x, y, scale=1.0):
     if t < start:
         return
     u = back_out(seg(t, start, start + 0.25))
+    if u <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(scale * u, scale * u)
@@ -201,31 +207,41 @@ def folder(cr, t, start, cx, y_end, k=1.0):
 
 
 def draw(cr, t):
-    backdrop(cr, t)
+    backdrop(cr, t, floor=not (INSERT[0] <= t < INSERT[1]))
     z = push_in(t, 0, DUR, 1.0, 1.06)
-    # the camera: wide, then down to the hands behind their backs (3.0-4.5), then back up to the pair
-    d = smooth(seg(t, 3.0, 3.8)) * (1 - smooth(seg(t, 4.3, 4.9)))
-    cx = W / 2
-    cy = lerp(H / 2 - 20, GROUND - 270, d)
-    zz = z * lerp(1.0, 1.7, d)
+    mvH, mvS = [(0.0, -260), (T_STOP, X_H)], [(0.0, W + 260), (T_STOP, X_S)]
+    hH = HITLER.joints(t, track(), mvH)["hand_f"]
+    hS = STALIN.joints(t, track(), mvS)["hand_f"]
+    insert = INSERT[0] <= t < INSERT[1]
+    if insert:                       # the insert: cut to Hitler's hand behind his back, pan across to Stalin's
+        u = smooth(seg(t, 3.65, 3.85))
+        cx, cy = lerp(hH[0], hS[0], u), lerp(hH[1], hS[1], u) - 10
+        zz = lerp(4.4, 4.75, seg(t, INSERT[0], INSERT[1]))
+    else:
+        cx, cy, zz = W / 2, H / 2 - 20, z
     sx, sy = shake(t, T_STAMP + 0.12, amp=10)
     cr.save()
     cr.translate(sx, sy)
     cr.save()
     camera(cr, zz, cx, cy)
-    for fig, mv in ((HITLER, [(0.0, -260), (T_STOP, X_H)]), (STALIN, [(0.0, W + 260), (T_STOP, X_S)])):
+    for fig, mv in ((HITLER, mvH), (STALIN, mvS)):
         shadow(cr, fig._pos(t, mv)[0])
-    HITLER.draw(cr, t, track(face_down=True), move=[(0.0, -260), (T_STOP, X_H)])
-    STALIN.draw(cr, t, track(face_down=True), move=[(0.0, W + 260), (T_STOP, X_S)])
-    for fig, mv in ((HITLER, [(0.0, -260), (T_STOP, X_H)]), (STALIN, [(0.0, W + 260), (T_STOP, X_S)])):
-        hx, hy = fig.joints(t, track(), mv)["hand_f"]
-        tick(cr, t, 3.55 if fig is HITLER else 3.8, hx, hy, 0.9)
+    HITLER.draw(cr, t, track(face_down=True), move=mvH)
+    STALIN.draw(cr, t, track(face_down=True), move=mvS)
+    if insert:
+        tick(cr, t, 3.25, hH[0] + 6, hH[1] - 4, 0.32)
+        tick(cr, t, 4.05, hS[0] - 6, hS[1] - 4, 0.32)
     if t > T_STOP:
         a = ease_out(seg(t, T_STOP + 0.1, T_STOP + 0.5)) * (1 - ease_in(seg(t, 4.7, 5.0)))
         for name, x in (("HITLER", X_H - 60), ("STALIN", X_S + 60)):
             text(cr, name, x, GROUND + 74, 46, font=STENCIL, color="cream", alpha=a, spacing=4)
     folder(cr, t, T_FOLDER, W / 2, GROUND - 150, 0.66)
     cr.restore()
+    if insert:                                                       # the insert's printed panel edge
+        cr.rectangle(14, 14, W - 28, H - 28)
+        cr.set_source_rgba(*col("ink"))
+        cr.set_line_width(12)
+        cr.stroke()
     stamp(cr, t, T_STAMP, "NON-AGGRESSION PACT", W / 2, 190, size=88, tilt=-0.05)
     cr.restore()
     date_stamp(cr, t, "AUG 1939", start=0.2)
