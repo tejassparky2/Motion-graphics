@@ -1808,6 +1808,25 @@ class Snow:
 __all__ = [n for n in dir() if not n.startswith("_") and n not in ("math", "random")]
 
 
+def _extend():
+    """Re-export the SHOTLIST extras (things.py, fx.py, sets.py) so `from channels.ww2.kit.props import *` has all."""
+    import importlib
+    for mod in ("things", "fx", "sets"):
+        try:
+            m = importlib.import_module("channels.ww2.kit." + mod)
+        except ModuleNotFoundError as e:
+            if e.name != "channels.ww2.kit." + mod:
+                raise
+            continue
+        for n in getattr(m, "__all__", ()):
+            if n not in globals():
+                globals()[n] = getattr(m, n)
+                __all__.append(n)
+
+
+_extend()
+
+
 # ================================================================ contact sheet
 def _sheet(t=1.3, out=None):
     import os
