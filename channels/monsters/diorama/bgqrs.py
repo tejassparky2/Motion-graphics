@@ -39,6 +39,7 @@ BLUR = 12.0
 # shrimp's lean back (deg).
 S01_CAM = (70.0, 36.0, 110.0, 0.0, 1.5, -1.0)   # close for frame 0: face under the hook, its eyes over the captions
 S01_LEAN = 50.0
+S17_DIST = 26.0                       # S17 is the close-up of the drop (coordinator: vary the S16-S21 shot sizes)
 
 
 # ---------------------------------------------------------------- the world after the snap
@@ -248,12 +249,14 @@ def _move(cam, n, keys, look_at, yaw=0.0):
 
 def _anchors(shot, cam, rig, sh=None, extra=None):
     """Screen positions (720x1280, top-left origin) of his eyes and the claw tip per frame (plus `extra`: name ->
-    fn() -> world point), for the 2D pass."""
+    fn() -> world point), for the 2D pass. cam=None projects through the scene camera of each frame (a shot that
+    cuts between marker-bound cameras, e.g. helper 5's S20)."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
     out = {}
-    for f in range(1, FRAMES[shot] + 1):
+    for f in range(1, (FRAMES.get(shot) or s3d.FRAMES[shot]) + 1):
         sc.frame_set(f)
+        c = cam or sc.camera
         pts = {k: s3d.kai_point(rig, k) for k in ("eyes", "eye_l", "eye_r", "nose", "temple")}
         if sh is not None:
             pts["tip"] = s3d.claw_tip(sh)
@@ -261,7 +264,7 @@ def _anchors(shot, cam, rig, sh=None, extra=None):
             pts[k] = fn()
         row = {}
         for k, p in pts.items():
-            v = world_to_camera_view(sc, cam, p)
+            v = world_to_camera_view(sc, c, p)
             row[k] = (round(v.x * 720, 1), round((1 - v.y) * 1280, 1))
         out[f] = row
     os.makedirs(ANCHORS, exist_ok=True)
@@ -275,9 +278,10 @@ def _ret(n, subject, moving=True):
     return dict(frames=n, step=2, ones=(1, n), subject=subject) if moving else dict(frames=n, step=2, subject=subject)
 
 
-def _drift(n, box, seed=13):
+def _drift(n, box, seed=13, travel=4.0):
     """Smoke wisps and glowing embers drifting through `box` ((x0, x1), (y0, y1), (z0, z1)) from the north (from the
-    stumps beyond the frame), on 2s: S01's top third, under the hook text."""
+    stumps beyond the frame), on 2s: S01's top third, under the hook text. Each puff travels `travel` either side of
+    its spot toward the lens (keep it short on a close camera, or the puffs reach his face)."""
     rnd = random.Random(seed)
     (x0, x1), (y0, y1), (z0, z1) = box
     m = meadow.smoke_mat()
@@ -296,8 +300,8 @@ def _drift(n, box, seed=13):
         x, y, z = rnd.uniform(x0, x1), rnd.uniform(y0, y1), rnd.uniform(z0, z1)
         f0 = rnd.randint(-70, n - 40)                              # pre-rolled: some are mid-drift on frame 1
         s = rnd.uniform(0.8, 1.3)
-        anim.key(p, "location", f0, (x, y + 4, z), "LINEAR")
-        anim.key(p, "location", f0 + 90, (x + rnd.uniform(1, 3), y - 4, z + 1), "LINEAR")
+        anim.key(p, "location", f0, (x, y + travel, z), "LINEAR")
+        anim.key(p, "location", f0 + 90, (x + rnd.uniform(1, 3), y - travel, z + 1), "LINEAR")
         anim.key(p, "scale", f0 - 1, 0.001, "CONSTANT")
         anim.key(p, "scale", f0, s * 0.5)
         anim.key(p, "scale", f0 + 45, s)
@@ -310,8 +314,9 @@ def _drift(n, box, seed=13):
         o.data.materials.append(ember)
         x, y, z = rnd.uniform(x0, x1), rnd.uniform(y0, y1), rnd.uniform(z0, z1)
         f0 = rnd.randint(-60, n - 10)
-        anim.key(o, "location", f0, (x, y + 4, z), "LINEAR")
-        anim.key(o, "location", f0 + 70, (x + rnd.uniform(0.5, 2.5), y - 5, z + rnd.uniform(-1, 1.5)), "LINEAR")
+        anim.key(o, "location", f0, (x, y + travel, z), "LINEAR")
+        anim.key(o, "location", f0 + 70, (x + rnd.uniform(0.5, 2.5), y - travel * 1.25, z + rnd.uniform(-1, 1.5)),
+                 "LINEAR")
         for f in range(f0, f0 + 71, 6):                            # a slow flicker
             anim.key(o, "scale", f, rnd.uniform(0.6, 1.2), "LINEAR")
         objs.append(o)
@@ -333,8 +338,8 @@ def s01():
     aim = pair + UP * up + fwd * far                               # the two of them below the middle, the top free
     cam = diorama.camera("cam_s01", aim, dist=d, tilt=t, yaw=yaw, lens=lens, blur=BLUR)
     _move(cam, n, [(1, t, d, lens), (n, t, d, lens)], lambda f: aim, yaw=yaw)   # locked: the push-in is 2D
-    c = pair + fwd * 8                                             # the top third: beyond them, away from the lens
-    _drift(n, ((c.x - 6, c.x + 6), (c.y - 9, c.y + 9), (2.0, 6.0)))
+    c = pair + fwd * 5.5                                           # the top third: beyond them, away from the lens
+    _drift(n, ((c.x - 6, c.x + 6), (c.y - 1.5, c.y + 1.5), (2.0, 6.0)), travel=1.5)   # close camera: never over his face
     s3d.kai_face(rig, 1, **s3d.TERROR)
     s3d.whisper(rig, 4, 13, s3d.TERROR)                            # "Don't move." 0.12-0.52 s
     s3d.whisper(rig, 26, 51, s3d.TERROR, seed=5)                   # "That claw can boil water." 1.04-2.12 s
@@ -368,13 +373,15 @@ def s16():
 
 
 def s17():
-    """Then I saw the drops. Close, locked and looking down (tilt 70) on his chest: the claw reaches down over his
-    jacket beside the shrimp, clear of his face; a drop swells at its tip (diorama scale, so it reads from up here),
+    """Then I saw the drops. A close-up of the drop (dist 26, tilt 66, locked; his chin at the top edge, the shrimp's
+    eye at the side): the claw reaches down over his jacket beside the shrimp, clear of his face; a drop swells at its
+    tip (~90 px at full res),
     lets go at f17, lands on the jacket at f23 ("drops") and leaves a dark wet splat; the next drop swells from f34.
     Same frames as the 3D S17."""
     n, rig, sh, _ = _world("S17", claw="jacket", lean=S01_LEAN)       # leaning back: its eyes show, as in S01
-    r = 0.3
-    tip = s3d.claw_tip(sh) - Vector((0, 0, r * 0.9))
+    r = 0.28
+    tip = s3d.claw_tip(sh) + Vector((0, -0.2, -r * 0.9))           # just on the lens side of the tip, so the claw
+    #                                                                doesn't hide the drop from the camera
     land, nrm, mat = _hit(tip)
     drop_m = look.flat("drip", look.hexc("#9fd8ff"))
     d1 = s3d._drop(tip, 1, 17, 23, land + nrm * r * 0.6, r=r, mat=drop_m)
@@ -388,9 +395,9 @@ def s17():
     spot.data.materials.append(look.flat("wet_tunic", look.hexc("#0f5d60")))
     for f, s in ((22, 0.001), (23, 0.22), (25, 0.38), (29, 0.5), (35, 0.56)):
         anim.key(spot, "scale", f, (s, s * 0.8, 1), "LINEAR" if f > 23 else "CONSTANT")
-    tgt = tip.lerp(land, 0.5)
-    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=70.0, lens=120.0, blur=BLUR)
-    _move(cam, n, [(1, 70.0, 50.0, 120.0), (n, 70.0, 50.0, 120.0)], lambda f: tgt)   # locked: the push-in is 2D
+    tgt = tip.lerp(land, 0.4)
+    cam = diorama.camera("cam_s17", tgt, dist=S17_DIST, tilt=66.0, lens=120.0, blur=BLUR)
+    _move(cam, n, [(1, 66.0, S17_DIST, 120.0), (n, 66.0, S17_DIST, 120.0)], lambda f: tgt)   # locked: push-in in 2D
     s3d.kai_face(rig, 1, **s3d.TERROR)
     _anchors("S17", cam, rig, sh, extra={"drop": lambda: d1.matrix_world.translation.copy()})
     print("S17 drop lands on", mat, flush=True)

@@ -33,11 +33,16 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
 | S17 | bGqrs | PASS | 47 / 47 | 0.38 | the drop falls from the claw tip by Kai's face; clean file; 1 NOTE |
 | S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
-| S06 | helper 9 | PASS for the picture; **FIX** no rain in the window | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
+| S06 | helper 9 + coordinator | PASS (v2 with the rain, 72be357) | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
 | S07 | helper 2 | PASS (remuxed clean, 7c99972) | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
 | S09 | helper 3 | PASS (remuxed clean, e2b1af1) | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
 | S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
+| S04 | helper 2 | PASS (remuxed clean, fb8d031) | 73 / 73 | 0.23 | eye f1-4, claw open, shut on 19, the white-hot bubble swells to "boils"; 1 NOTE (low saturation) |
+| S14 | helper 3's builder (+ 2D push-in, 8a3257d) | PASS | 80 / 80 | 0.37 | Kai on all fours looks up: wide eyes, then narrowed and a head tilt (SG2); 1 NOTE |
+| S20 | helper 5's builder | PASS | 103 / 103 | 0.40 | the tiny "pff", the shrimp stares at its claw, cut on 44 to Kai's deadpan held 60 frames |
+| S24top | XprL | PASS | 97 / 97 | 0.47 | Kai walks down from the thorn tree to the shrimp at the pond, push-in on 1s (57-85); reads in the top half |
+| S08 | helper 9 (joined by the coordinator, 1b30467) | PASS | 85 / 85 | 0.29 | water pours off the tank and runs to the power strip, a spark on 55-57, the lights die, black from 58; rain in the window |
 | S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
 | S21 | helper 5 (rendered by helper 4) | PASS | 64 / 64 | 0.43 | the shrimp stomps off Kai's chest to the pond, the claw dips in with a ripple ring; clean |
 
@@ -96,7 +101,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-render and the S15 fix.
+Waiting for: S02, S05a, S13, S16, S18, S19; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **FIX** (sent to helper 10, cc the coordinator).
@@ -191,7 +196,11 @@ Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-re
   set up for S24.
 
 ## S06: "Then the storm hit." (helper 9, 8158785)
-**PASS for the picture**, with one FIX.
+**v2 (72be357, joined from the coordinator's f1-21 and helper 9's f22-41): PASS.** 41 frames, saturation 0.47, a
+clean file. S03a's rain streaks now fall in the window on every frame, the bolt and its flashes land on 14 and 16,
+and the light stutter runs unbroken across the join (off 20-21, on 22, off 23-24...), so the seam does not show.
+
+**v1: PASS for the picture**, with one FIX.
 - **Length and level:** 41 frames, saturation 0.47, a clean file.
 - **Picture:** the same dollhouse lab from above as S03a. The bolt forks across the window on "storm" (frame 14) with
   2-frame flashes (14, 16), Kai turns his head up to the window on 16, and the lamp and room lights stutter on and off
@@ -207,3 +216,44 @@ Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-re
   stomps on 2s round his head to the pond edge ("back to the puddle", frames 25-36), and dips its claw in from
   about frame 42, with a ripple ring on the water by frame 49. Kai is about 450 px tall, the action inside x < 560
   and y < 960.
+
+## S04: "Its claw snaps so fast, the water boils." (helper 2, 7e437df; remuxed clean, fb8d031)
+**PASS**, with one NOTE.
+- **Length and level:** 73 frames, a clean file.
+- **Picture:** the same cut points as the 3D shot: the eye close-up on frames 1-4, then the extreme close on the
+  claw in the toy aquarium. The claw is held open (frames 5-18), shuts on 19, the shock line and the white-hot bubble
+  burst on 22 and swell through "boils" (frame 45) to the end, on 1s. IM13 scale reads.
+- **NOTE:** saturation 0.23, under the 0.34-0.61 band and below the 3D shot's 0.31: the water and gravel are a grey
+  green, so the red shrimp is the only colour. A cooler, cleaner cyan tint on the tank water (as in 3D) would lift it.
+  Not blocking: the beat reads.
+
+## S14: "A shrimp. On land. Impossible." (helper 3's builder, rendered 736826b; 2D push-in 8a3257d)
+**PASS**, with one NOTE.
+- **Length and level:** 80 frames, saturation 0.37, a clean file.
+- **Picture:** from above, Kai on all fours at the pond looks up at the lens (at the shrimp). The two-step change
+  (SG2) reads: wide eyes on "A shrimp" (frames 1-11), narrowed by "On land" (about 30), then the sceptical head tilt
+  on "Impossible" (about 50), held. The 20% 2D push-in toward his face runs on 1s.
+- **NOTE:** even with the push-in his face is about 110 px wide at full size (about 55 px at 360 px). The change
+  reads, but only just; the eyes carry it.
+
+## S20: "It tried anyway." (helper 5's builder, 558f03b)
+**PASS.**
+- **Length and level:** 103 frames, saturation 0.40, a clean file, on 2s.
+- **Picture:** from above, the shrimp on Kai's chest lifts its claw, snaps on "tried" and gets only a tiny "pff" puff
+  (about frame 26), stares at the claw and tilts its head (CH14, frames 34-40). Cut on 44 to Kai's deadpan face,
+  close, with the claw in the foreground, held 60 frames (SU11).
+
+## S24top: SAVE (XprL, efb1871)
+**PASS.**
+- **Length and level:** 97 frames, saturation 0.47, a clean file; step 2 with the push-in on 1s (frames 57-85).
+- **Picture:** from above, Kai walks down from the thorn tree to the shrimp at the pond's edge; the push-in ends on
+  him standing over it, his face readable. Everything sits in the top half (S24_FOCUS y 320), clear of the split line.
+
+## S08: "Water. Cables. Me." (helper 9's builder, joined by the coordinator, 1b30467)
+**PASS.**
+- **Length and level:** 85 frames, a clean file. Saturation 0.29 is under the band only because frames 58-85 are the
+  black (the row asks for 0.8 s of black); the lit part sits near 0.4.
+- **Picture:** the same dollhouse lab from above, now with S03a's rain in the window (continuity holds). On "Water"
+  the tank spills over the desk edge, and the sparkling stream runs down to the power strip by "Cables" (frame 28).
+  After "Me" (48) a white spark flares on the strip (55-57) with a ring of light, the room lights die, then black
+  from 58. Nothing graphic. The spark and the stream read at 360 px.
