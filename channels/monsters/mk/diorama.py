@@ -29,7 +29,10 @@ SUN_WARM = "#ffdcae"      # low golden sun
 def setup(samples=24, sun_elev=34, sun_azim=-50, haze=0.55, bloom=0.6):
     """EEVEE scene for the diorama: Standard view (painted colours stay true), warm low sun with soft shadows, a pale
     sky fill so shadows stay blue, mist pass -> haze toward the far edge, bloom on glows (stump cuts, the flash)."""
-    sc = look.render_setup(samples=samples)
+    sc0 = bpy.context.scene
+    w, h = sc0.render.resolution_x, sc0.render.resolution_y     # keep render_shot.py's --scale
+    sc = look.render_setup(w if w > 8 else 720, h if h > 8 else 1280,
+                           samples=max(samples, getattr(sc0.eevee, "taa_render_samples", 0)))
     look.world(sky="#7cc3f0", horizon="#e4f3fb", fill="#c4e2ff", fill_strength=0.65)
     s = look.sun(elev=sun_elev, azim=sun_azim, energy=4.2, color=SUN_WARM)
     s.data.angle = math.radians(5)                              # soft, long shadows: the toy-table look
@@ -103,7 +106,7 @@ def camera(name, target, dist=200.0, tilt=48.0, yaw=0.0, lens=85.0, blur=14.0, f
     cam_data.clip_end = dist * 6
     cam_data.dof.use_dof = True
     cam_data.dof.focus_distance = dist
-    cam_data.dof.aperture_fstop = fstop_for(dist, lens, blur, sc.render.resolution_y)
+    cam_data.dof.aperture_fstop = fstop_for(dist, lens, blur)      # blur is in full-res (1280) pixels
     sc.world.mist_settings.start = dist * haze[0]
     sc.world.mist_settings.depth = dist * haze[1]
     sc.world.mist_settings.falloff = "LINEAR"
