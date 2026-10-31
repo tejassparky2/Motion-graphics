@@ -96,14 +96,18 @@ SHOTS = {"S10a": s10a, "S11a": s11a}
 
 
 def encode(shot, frames_dir, out_dir):
-    """frames_dir/0001.png... -> out_dir/<shot>.mp4 (x264 crf 12, no metadata or encoder tag) and <shot>_sheet.jpg
-    (every 6th frame)."""
+    """frames_dir/0001.png... -> out_dir/<shot>.mp4 (x264 crf 12, then a clean stream copy: no metadata or encoder
+    tag, as deliver_ep01v2.py) and <shot>_sheet.jpg (every 6th frame)."""
     from PIL import Image
     os.makedirs(out_dir, exist_ok=True)
+    clean = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+             "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name="]   # deliver_ep01v2.CLEAN
+    tmp = os.path.join(out_dir, f"_{shot}_tmp.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i", os.path.join(frames_dir, "%04d.png"),
-                    "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p", "-map_metadata", "-1",
-                    "-fflags", "+bitexact", "-flags:v", "+bitexact", "-x264-params", "no-info=1",
-                    os.path.join(out_dir, f"{shot}.mp4")], check=True)
+                    "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p", *clean, tmp], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *clean,       # a stream copy, so
+                    os.path.join(out_dir, f"{shot}.mp4")], check=True)                          # no encoder tag
+    os.remove(tmp)
     n = len([f for f in os.listdir(frames_dir) if f[:4].isdigit() and f.endswith(".png")])
     ims = [Image.open(os.path.join(frames_dir, f"{f:04d}.png")) for f in range(1, n + 1, 6)]
     w, h = ims[0].size[0] // 3, ims[0].size[1] // 3
