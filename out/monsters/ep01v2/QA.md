@@ -37,6 +37,7 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
+| S02 | assembler (helper 8), from S01 | PASS (picture.mp4 2a8c1f7) | 49 in the cut | - | the glitch rewind reads; captions clear; 1 NOTE (the white ends as bright as the strike) |
 | S03b | helper 1 | PASS (v3, 93da447) | 51 / 51 | 0.24 | warm skin, cyan on the lit side; 1 NOTE (saturation, a hard split down the face) |
 | S09 | helper 3 | PASS (v2, 6d95527) | 66 / 66 | 0.47 | v1 FIX resolved: eyes open on "woke up", crack held through "cracked sky" |
 | S06 | helper 9 | PASS (v2, bb8f476) | 41 / 41 | 0.37 | the bolt on frame 14, the stutter on 2s, the black opaque |
@@ -66,7 +67,7 @@ Most serious first within each shot. Updated as shots land.
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S02 (the coordinator's glitch rewind of S01); the restaged S24bot mp4.
+Waiting for: the restaged S24top/S24bot mp4s (XprL, ~02:00).
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -473,3 +474,19 @@ clears the mouth. PASS once that is checked in helper 8's next animatic.
   (around frame 24; BD2 seed). Acting on 3s, with a 1-frame tap. It cuts with S03a and S03b.
 - **S12 v2 (helper 9, 055a865): PASS.** Restaged close and low: a three-quarter view of Kai crawling, panting,
   tired, with a glint at the puddle ahead, on 3s. This resolves round 8's NOTE (Kai small). Saturation 0.55.
+
+## S02: "Ten minutes ago, I was alive." (built by the assembler from S01; reviewed in picture.mp4 2a8c1f7)
+**PASS**, with one NOTE. Episode frames 57-105 (49 frames, timing.json), viewed at full size.
+- **The rewind and glitch read:** every frame carries RGB split, sliced row offsets, colour bars (magenta, yellow,
+  cyan) and chroma shift over S01's image. Frame 103 is one frame of full-screen static, and frames 104-105 are
+  white, then the cut to S03a's dark lab.
+- **Captions:** "Ten minutes ago," (frames ~64-80) and "I was alive." are readable in the band, and no glitch bar
+  crosses the caption on any frame checked.
+- **Flash safety (WCAG 2.3.1):**
+  - The white end is one flash: frame 103 to 104 swings +0.51 in mean luminance, and 105 to 106 swings -0.55.
+    That is one flash in the second, under the 3-per-second limit.
+  - The S15 strike, measured in the same picture, peaks at a swing of 0.54. So S02's white is as bright as the
+    strike but no harder.
+  - The glitch jitter is small (±0.07 per frame) and a single frame of static is not a sequence.
+- **NOTE:** to keep the strike in S15 the brightest moment of the episode, cap the S02 white at about 85% (or make
+  it 1 frame).
