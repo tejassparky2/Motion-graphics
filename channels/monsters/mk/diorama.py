@@ -39,7 +39,7 @@ MAP = dict(
     snail=(-16.0, -132.0),     # S10a/S11a: the jelly-snail and its burnt-hole trail
     moth=(20.0, -128.0),       # S10b/S11b: the fluffmoth
     kai_kneel=(1.0, -6.4),     # v3 S15a-S15: Kai on his knees at the pond's south edge (his hips), facing the shrimp
-    blast=(-1.3, -0.3),        # v3 S15: the claw's muzzle at the snap (helper 10); the shot passes his left ear
+    blast=(-0.72, -0.71),      # v3 S15: the claw's muzzle at the snap (helper 10, measured); the shot passes his left ear
 )
 SHRIMP_DRINK_YAW = 0.0     # degrees (root rotation z): facing south (-Y), its back to the thorn tree, so the bird's
                            # view from the perch sees its back; its dipped claw (the drinking pose of ep01v2/xprl.
@@ -454,17 +454,133 @@ def blast_spots(spots, origin=(0.0, 0.0), half_angle=34.0, reach=None):
     return out
 
 
-def stumps(spots, origin=(0.0, 0.0)):
-    """Hot-cut stumps where `spots` stood (the "after" state): the slanted cut faces the blast origin and glows."""
-    bark = paintbg.paint3("stump_bark", look.hexc("#3c261c"), look.hexc("#5e3e2c"), look.hexc("#80604a"), noise=0.12)
-    ring = look.flat("stump_hot", look.hexc("#ff7a3d"))
-    core = look.flat("stump_core", look.hexc("#ffe08a"))
+def _ember_mat(phase=0):
+    """The stump's cut face: charred black with thin orange ember cracks (a Voronoi crack net, broken up by noise)
+    that flicker on 2s (frames -60..400; three phases so neighbouring stumps don't pulse together)."""
+    name = f"stump_ember{phase}"
+    m = bpy.data.materials.get(name)
+    if m:
+        return m
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    N, L = nt.nodes.new, nt.links.new
+    tc, vor, nz = N("ShaderNodeTexCoord"), N("ShaderNodeTexVoronoi"), N("ShaderNodeTexNoise")
+    vor.feature = "DISTANCE_TO_EDGE"
+    vor.inputs["Scale"].default_value = 3.2
+    nz.inputs["Scale"].default_value = 2.5
+    crack = N("ShaderNodeMapRange")                            # distance to a cell edge < 0.05: a crack
+    crack.inputs["From Min"].default_value, crack.inputs["From Max"].default_value = 0.0, 0.035
+    crack.inputs["To Min"].default_value, crack.inputs["To Max"].default_value = 1.0, 0.0
+    gate = N("ShaderNodeMapRange")                             # only some cracks are lit
+    gate.inputs["From Min"].default_value, gate.inputs["From Max"].default_value = 0.47, 0.58
+    mul = N("ShaderNodeMath")
+    mul.operation = "MULTIPLY"
+    char, ember, mix, out = N("ShaderNodeEmission"), N("ShaderNodeEmission"), N("ShaderNodeMixShader"), \
+        N("ShaderNodeOutputMaterial")
+    char.inputs["Color"].default_value = look.hexc("#1b1411")
+    char.inputs["Strength"].default_value = 1.0
+    ember.inputs["Color"].default_value = look.hexc("#ff7426")
+    L(tc.outputs["Object"], vor.inputs["Vector"])
+    L(tc.outputs["Object"], nz.inputs["Vector"])
+    L(vor.outputs["Distance"], crack.inputs["Value"])
+    L(nz.outputs["Fac"], gate.inputs["Value"])
+    L(crack.outputs["Result"], mul.inputs[0])
+    L(gate.outputs["Result"], mul.inputs[1])
+    L(mul.outputs[0], mix.inputs["Fac"])
+    L(char.outputs[0], mix.inputs[1])
+    L(ember.outputs[0], mix.inputs[2])
+    L(mix.outputs[0], out.inputs["Surface"])
+    rnd = random.Random(400 + phase)
+    st = ember.inputs["Strength"]
+    for f in range(-60, 401, 2):                               # the glow breathes on 2s
+        st.default_value = rnd.uniform(2.2, 4.6)
+        st.keyframe_insert("default_value", frame=f)
+    for fc in nt.animation_data.action.fcurves:
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    return m
+
+
+def splinter_stump(loc, radius, height, blast_from=(0.0, 0.0), seed=0, smoke=None):
+    """ONE shared stump for every tree the snap cut (grove, sapling; S15 on): bark below a charred band, a jagged
+    splintered top (5-7 uneven spikes, bent away from `blast_from`), a sunken cut face of char with flickering ember
+    cracks; smoke=(f0, f1) adds a thin smoke wisp (its first puff no earlier than f0). Returns the stump object."""
+    import bmesh
+    rnd = random.Random(1000 + seed)
+    x, y, z = loc
+    ax, ay = x - blast_from[0], y - blast_from[1]
+    al = math.hypot(ax, ay) or 1.0
+    ax, ay = ax / al, ay / al                                  # away from the blast
+    seg, h, r = 20, height, radius
+    spikes = [(rnd.uniform(0, 2 * math.pi), rnd.uniform(0.22, 0.75) * h, rnd.uniform(0.35, 0.7))
+              for _ in range(rnd.randint(5, 7))]
+    bm = bmesh.new()
+    rings = []
+    for zr, rr in ((0.0, 1.14), (0.3, 1.04), (0.5, 1.0), (0.7, 0.98)):
+        rings.append([bm.verts.new((math.cos(2 * math.pi * i / seg) * r * rr * rnd.uniform(0.97, 1.03),
+                                    math.sin(2 * math.pi * i / seg) * r * rr * rnd.uniform(0.97, 1.03), zr * h))
+                      for i in range(seg)])
+    top = []
+    for i in range(seg):
+        th = 2 * math.pi * i / seg
+        up = 0.0
+        for a, amp, w in spikes:
+            d = abs((th - a + math.pi) % (2 * math.pi) - math.pi)
+            up = max(up, amp * max(0.0, 1 - d / w) ** 1.6)
+        zt = h * 0.78 + up + rnd.uniform(-0.04, 0.04) * h
+        rr = r * rnd.uniform(0.84, 0.98)
+        bend = 0.55 * up * rnd.uniform(0.4, 1.0)              # tall splinters lean away from the blast
+        top.append(bm.verts.new((math.cos(th) * rr + ax * bend, math.sin(th) * rr + ay * bend, zt)))
+    rings.append(top)
+    inner = [bm.verts.new((math.cos(2 * math.pi * (i + 0.5) / seg) * r * 0.55 * rnd.uniform(0.8, 1.1),
+                           math.sin(2 * math.pi * (i + 0.5) / seg) * r * 0.55 * rnd.uniform(0.8, 1.1),
+                           h * rnd.uniform(0.74, 0.8))) for i in range(seg)]
+    centre = bm.verts.new((0, 0, h * 0.72))
+    faces = []
+    for k, (lo, hi) in enumerate(zip(rings, rings[1:])):
+        for i in range(seg):
+            j = (i + 1) % seg
+            faces.append((bm.faces.new((lo[i], lo[j], hi[j], hi[i])), k))
+    for i in range(seg):                                       # the cut face: rim -> inner ring -> centre
+        j = (i + 1) % seg
+        faces.append((bm.faces.new((top[i], top[j], inner[i])), 4))
+        faces.append((bm.faces.new((inner[i], top[j], inner[j])), 4))
+        faces.append((bm.faces.new((inner[i], inner[j], centre)), 4))
+    for f, mi in faces:                                        # bark, scorched bark, charred band, char, cut face
+        f.material_index = mi
+        f.smooth = mi < 3
+    bm.normal_update()
+    me = bpy.data.meshes.new(f"splinter_stump{seed}")
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(f"splinter_stump{seed}", me)
+    bpy.context.scene.collection.objects.link(o)
+    o.location = (x, y, z)
+    bark = bpy.data.materials.get("stump_bark") or paintbg.paint3(
+        "stump_bark", look.hexc("#3c261c"), look.hexc("#5e3e2c"), look.hexc("#80604a"), noise=0.12)
+    scorch = bpy.data.materials.get("stump_scorch") or lit_paint("stump_scorch", "#2c1c14", "#45301f", "#5e4430")
+    band = bpy.data.materials.get("stump_charband") or lit_paint("stump_charband", "#1c120d", "#2e1f16", "#45301f")
+    char = bpy.data.materials.get("stump_char") or lit_paint("stump_char", "#0b0807", "#16100d", "#241a14")
+    for m in (bark, scorch, band, char, _ember_mat(seed % 3)):
+        me.materials.append(m)
+    look.outline(o, 0.02)
+    if smoke:
+        f0, f1 = smoke
+        meadow.smoke([(x, y, z + h * 0.85)], f0 + 27, f1, every=9, rise=max(3.0, h * 2.5),
+                     size=max(0.25, r * 0.45), seed=seed + 3)  # (smoke() buds up to 3 x every before its f0)
+    return o
+
+
+def stumps(spots, origin=(0.0, 0.0), smoke=None):
+    """Splintered, smouldering stumps where `spots` stood (the "after" state): splinter_stump() per spot, its
+    splinters bent away from the blast `origin`. smoke=(f0, f1) gives each a smoke wisp."""
     rnd = random.Random(77)
     out = []
-    for (x, y, h, r, v) in spots:
+    for i, (x, y, h, r, v) in enumerate(spots):
         sh = rnd.uniform(0.6, 1.5) * TREE * 0.6
-        yaw = math.atan2(y - origin[1], x - origin[0]) - math.pi / 2
-        out.append(meadow._slice((x, y, 0), r * 0.17, sh, math.radians(rnd.uniform(28, 40)), yaw, bark, ring, core))
+        out.append(splinter_stump((x, y, 0), r * 0.17, sh, blast_from=origin, seed=i, smoke=smoke))
     return out
 
 

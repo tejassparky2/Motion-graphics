@@ -214,9 +214,10 @@ def s15a():
 
 # ---------------------------------------------------------------- S15: the snap, fired at Kai
 
-COCK, SNAP, CUT2, LAND, CUT3 = 6, 18, 24, 36, 70
-"""S15 beats: the claw cocks (6-17, the snapping finger opens wide, the claw draws back), the SNAP (18; the 2D pass
-has the flash 18-19 and impact frames 20-23), the cut to the blast line (24), Kai lands (36), the aftermath (70)."""
+COCK, SNAP, CUT2, LAND, CUT3 = 10, 30, 36, 48, 78
+"""S15 beats (1-based; helper 7's mix has them): the claw cocks (10-29, the snapping finger opens wide, the claw
+draws back, straining), the SNAP (30; the 2D pass has the flash 30-31 and impact frames 32-35), the cut to the blast
+line (36), Kai thrown back 31-47 and landing (48), the aftermath (78)."""
 
 
 def _key_cam(c, f, pos, target, blur=None):
@@ -228,47 +229,41 @@ def _key_cam(c, f, pos, target, blur=None):
     dv2._key(c, f, Vector(target), dist, tilt, yaw=yaw)
 
 
-def _hide_occluders(cam, f0, f1, trees, near=0.8):
-    """Hide (hide_render, keyed) the painted trees that would sit between `cam` and its subject over f0..f1 (a blurred
-    canopy across the frame from a high diorama camera): inside the frame and nearer than `near` x its focus
-    distance. The other cameras never see them, so they come back after f1. Returns how many were hidden."""
+def _hide_occluders(cam, f0, f1, keep, near=0.85):
+    """Hide (hide_render, keyed) the set pieces that would sit between `cam` and its subject over f0..f1 (a blurred
+    canopy or bush across the frame from a high diorama camera): any mesh smaller than 40 units and taller than 1,
+    in frame and nearer than `near` x the focus distance, except `keep` (objects and their children: the characters,
+    the grove, the stumps). The other cameras never see them, so they come back after f1. Returns their names."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
-    hidden = 0
-    for t in trees:
-        objs = list(t) if isinstance(t, (tuple, list)) else [t]
-        hits = 0
-        for f in (f0, (f0 + f1) // 2, f1):
-            sc.frame_set(f)
-            focus = cam.data.dof.focus_distance
-            for o in objs:
-                lo, hi = [Vector(c) for c in (o.bound_box[0], o.bound_box[6])]
-                for c in (o.matrix_world @ ((lo + hi) / 2), o.matrix_world @ Vector((lo.x, lo.y, hi.z))):
-                    v = world_to_camera_view(sc, cam, c)
-                    if 0 < v.z < near * focus and -0.15 < v.x < 1.15 and -0.15 < v.y < 1.15:
-                        hits += 1
-        if hits:
-            hidden += 1
-            for o in objs:
-                for c in [o] + list(o.children_recursive):
-                    for fr, v in ((1, False), (f0, True), (f1 + 1, False)):
-                        c.hide_render = v
-                        c.keyframe_insert("hide_render", frame=fr)
-                    c.hide_render = False
-    return hidden
-
-
-def _sapling_stump(origin):
-    """The sapling's stump as bGqrs builds it in S15b on (diorama_v3/bgqrs._sapling), revealed when it is cut."""
-    x, y = diorama.sapling_spot()[:2]
-    bark = bpy.data.materials.get("stump_bark") or diorama.lit_paint("stump_bark", "#3c261c", "#5e3e2c", "#80604a")
-    ring = bpy.data.materials.get("stump_hot") or look.flat("stump_hot", look.hexc("#ff7a3d"), 2.2)
-    core = bpy.data.materials.get("stump_core") or look.flat("stump_core", look.hexc("#ffe08a"), 3.0)
-    to = Vector(diorama.MAP["shrimp"]) - Vector((x, y))
-    yaw = math.atan2(to.y, to.x) - math.pi / 2
-    st = meadow._slice((x, y, 0.0), 0.32, 1.25, math.radians(34), yaw, bark, ring, core)
-    st.name = "sapling_stump"
-    return st
+    skip = set()
+    for o in keep:
+        skip |= {o.name} | {c.name for c in o.children_recursive}
+    cands = [o for o in sc.objects if o.type == "MESH" and o.name not in skip
+             and (o.parent is None or o.parent.name not in skip)]
+    hide = []
+    for f in (f0, (f0 + f1) // 2, f1):
+        sc.frame_set(f)
+        focus = cam.data.dof.focus_distance
+        for o in cands:
+            if o in hide:
+                continue
+            bb = [o.matrix_world @ Vector(c) for c in o.bound_box]
+            size = max((max(p[i] for p in bb) - min(p[i] for p in bb)) for i in range(3))
+            if size > 40 or max(p.z for p in bb) < 1.0:
+                continue
+            for c in bb + [sum(bb, Vector()) / 8]:
+                v = world_to_camera_view(sc, cam, c)
+                if 0 < v.z < near * focus and -0.1 < v.x < 1.1 and -0.1 < v.y < 1.1:
+                    hide.append(o)
+                    break
+    for o in hide:
+        for c in [o] + list(o.children_recursive):
+            for fr, v in ((1, False), (f0, True), (f1 + 1, False)):
+                c.hide_render = v
+                c.keyframe_insert("hide_render", frame=fr)
+            c.hide_render = False
+    return [o.name for o in hide]
 
 
 def s15_snap():
@@ -372,8 +367,10 @@ def s15_snap():
     # ---- the blast: the streak along the shot, the ring, the sapling and the grove pop in order, glowing stumps
     grove = isl["trees"][-len(diorama.grove_spots()):]
     trees = [isl["sapling"]] + list(grove)
-    sts = [None] + list(diorama.stumps(diorama.grove_spots(), (muzzle.x, muzzle.y)))
-    sts[0] = _sapling_stump(muzzle)
+    sx, sy = diorama.sapling_spot()[:2]
+    sts = [diorama.splinter_stump((sx, sy, 0.0), 0.3, 1.2, blast_from=diorama.MAP["blast"], seed=1,
+                                  smoke=(SNAP + 4, n + 10))]          # as bGqrs places it in S15b on
+    sts += diorama.stumps(diorama.grove_spots(), diorama.MAP["blast"], smoke=(SNAP + 10, n + 10))
     d = Vector((diorama.BLAST_LINE[0], diorama.BLAST_LINE[1], 0))
     t2 = Vector((loc.x, loc.y, 2.0)) + d * 6.0
     yaw2 = math.degrees(math.atan2(d.x, d.y))                  # the camera behind the line, looking down it
@@ -385,12 +382,6 @@ def s15_snap():
     pitch = math.atan2(shot_dir.z, math.hypot(shot_dir.x, shot_dir.y))
     for o in fx["streak"]:                                     # the streak climbs with the shot (past his ear)
         o.rotation_euler = (o.rotation_euler.x, -pitch, o.rotation_euler.z)
-    spots = [diorama.sapling_spot()] + list(diorama.grove_spots())
-    sx, sy = spots[0][:2]                                      # the same smoke as S15b on (bGqrs): a thread off the
-    # (smoke() buds puffs up to 3 x `every` before f0: start late enough that none is there before its stump)
-    meadow.smoke([(sx, sy, 1.45)], fx["pop_frames"][0] + 2 + 27, n + 10, every=9, rise=4.5, size=0.55, seed=7)
-    meadow.smoke([(x, y, diorama.TREE * 0.4) for x, y, *_ in spots[1:6]], max(fx["pop_frames"]) + 2 + 48, n + 10,
-                 every=16, rise=9.0, size=diorama.TREE * 0.4)
     print("S15 MUZZLE", tuple(round(v, 3) for v in muzzle), "SHOT_DIR", tuple(round(v, 3) for v in shot_dir),
           "AIM_ERR", round(err, 2), "POPS", fx["pop_frames"], "HIP", tuple(round(v, 2) for v in hip), flush=True)
 
@@ -430,8 +421,10 @@ def s15_snap():
     for f in range(CUT3, n + 1):
         u = acting.ease((f - CUT3) / (n - CUT3), "inout")
         dv2._key(c3, f, t3a.lerp(t3b, u), 70.0 - 22.0 * u, 50.0, yaw=-28.0 + 6.0 * u)
-    rim = [t for t in isl["trees"][:len(isl["trees"]) - len(diorama.grove_spots())] if t]
-    hid = _hide_occluders(c2, CUT2, CUT3 - 1, rim) + _hide_occluders(c3, CUT3, n, rim)
+    keep = [k["arm"], root] + sts + [o for t in trees for o in (t if isinstance(t, (tuple, list)) else [t])]
+    keep += [o for o in sc.objects if o.name.startswith(("puff", "erase", "splinter", "kai_down", "grass"))
+             or any(getattr(c, "target", None) == k["arm"] for c in o.constraints)]   # (his cap and shoes)
+    hid = _hide_occluders(c2, CUT2, CUT3 - 1, keep) + _hide_occluders(c3, CUT3, n, keep)
     print("S15 HIDDEN_OCCLUDERS", hid, flush=True)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], root] + list(k.get("cap", [])))
