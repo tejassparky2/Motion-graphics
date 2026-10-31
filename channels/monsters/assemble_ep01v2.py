@@ -5,7 +5,7 @@
 - Every shot in channels/monsters/ep01v2/timing.json comes from out/monsters/ep01v2/shots/<SHOT>.mp4, conformed
   to its exact frame count: the tail handle is trimmed, and a short shot holds its last frame (with a warning).
 - S02 is built here: S01 played backwards under comp.glitch, landing on two frames of static and two of white
-  into S03a.
+  (85% then 60%, so the S15 snap stays the brightest moment) into S03a.
 - S24 is the A/B split (AB13): S24top.mp4 (SAVE) above, S24bot.mp4 (RUN) below, cut by fx2d_anime.split's jagged
   divider; the panels slide in at the shot's start.
 - Captions are word-timed from timing.json in the 71% band (2-4 words, the spoken word highlighted); none in
@@ -51,6 +51,7 @@ CAP_MAX_W = 560              # clear of the right rail
 CAP_Y_SHOT = {"S01": 940, "S02": 940, "S14": 150, "S16": 210, "S18": 145, "S19": 640, "S24": 748}            # per-shot baseline where the 71% band would cover a face, e.g. {"S14": 1010}
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
+S02_WHITE = (0.85, 0.60)     # the rewind's closing flash stays dimmer than the snap (the episode's brightest moment)
 S24_FOCUS = [(W / 2, H / 4), (W / 2, H * 3 / 4)]   # the plates are framed as halves: each shows in place
 
 
@@ -131,8 +132,10 @@ def build_s02(shot, s01, warn):
             a = np.dstack([n, n, n, np.full_like(n, 255)])
             cr.set_source_surface(surface(a), 0, 0)
             cr.paint()
-        else:                                                  # white flash into S03a
-            cr.set_source_rgb(1, 1, 1)
+        else:                                                  # white flash into S03a, below the S15 snap's
+            cr.set_source_surface(surface(rev[-1]), 0, 0)      # peak: 85% then 60% white over S01's first frame
+            cr.paint()
+            cr.set_source_rgba(1, 1, 1, S02_WHITE[i - run - 2])
             cr.paint()
         out.append(s)
     return out
