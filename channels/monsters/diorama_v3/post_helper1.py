@@ -85,12 +85,32 @@ def fizz(cr, t, start, a, end=None):
                            rough=0.35, flicker=0.45, glow=True, sound=False, seed=11 + j)
 
 
+def push(cr, t, start, end, cx, cy, amount=0.1):
+    """A gentle 2D push-in on everything drawn so far (the plate and the marks), eased (bgqrs_post.push)."""
+    u = min(max((t - start) / max(end - start, 1e-3), 0.0), 1.0)
+    k = 1 + amount * (u * u * (3 - 2 * u))
+    snap = cairo.ImageSurface(cairo.FORMAT_ARGB32, 720, 1280)
+    c2 = cairo.Context(snap)
+    c2.set_source_surface(cr.get_target(), 0, 0)
+    c2.paint()
+    cr.save()
+    cr.translate(cx, cy)
+    cr.scale(k, k)
+    cr.translate(-cx, -cy)
+    cr.set_source_surface(snap, 0, 0)
+    cr.paint()
+    cr.restore()
+
+
 def overlays(shot):
     a = anchors(shot)
     if shot == "S08a":
+        n = max(a)
+        ex, ey = at(a, (n - 7) / FPS, "eyes")
         return [(fizz, dict(start=3 / FPS, a=a)),
                 (tracked(gloom_lines, a, ()), dict(start=(DROP - 1) / FPS)),
-                (tracked(fx2d_anime.sweat_drop, a, ()), dict(start=(DROP + 1) / FPS, end=99))]
+                (tracked(fx2d_anime.sweat_drop, a, ()), dict(start=(DROP + 1) / FPS, end=99)),
+                (push, dict(start=19 / FPS, end=53 / FPS, cx=ex, cy=ey, amount=0.1))]   # the dropped face reads
     return []
 
 
