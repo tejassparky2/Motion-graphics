@@ -176,17 +176,8 @@ def build_s02(shot, s01, warn):
     for i in range(shot.frames):
         s, cr = blank()
         if i < run:
-            # comp.glitch works on the 720x1280 canvas, so the rewind is glitched there and scaled up (it is
-            # deliberately degraded anyway).
-            g = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
-            gc = cairo.Context(g)
-            gc.scale(1 / SCALE, 1 / SCALE)
-            gc.set_source_surface(surface(rev[min(len(rev) - 1, int(i * len(rev) / run))]), 0, 0)
-            gc.paint()
-            comp.glitch(cairo.Context(g), i / FPS, 0.0, run / FPS, strength=1.0, seed=2, sound=False)
-            cr.set_source_surface(g, 0, 0)
-            cr.get_source().set_filter(cairo.FILTER_GOOD)
-            cr.paint()
+            paint_full(cr, surface(rev[min(len(rev) - 1, int(i * len(rev) / run))]))
+            comp.glitch(cr, i / FPS, 0.0, run / FPS, strength=1.0, seed=2, sound=False)
         elif i < run + 2:                                      # static
             noise = np.random.default_rng(i).integers(0, 256, (H // 4, W // 4), np.uint8)
             n = np.repeat(np.repeat(noise, 4, 0), 4, 1)
@@ -372,8 +363,11 @@ def main():
                 s01 = frames
         if a.check:
             srcs = [shot.path(x) for x in (("top", "bot") if shot.name == "S24" else ("",))]
-            ids = " ".join(_sha(p) + ("^" if SHOTS_HI and p.startswith(SHOTS_HI) else "")
-                           for p in srcs if os.path.exists(p))
+            have = [p for p in srcs if os.path.exists(p)]
+            ids = " ".join(_sha(p) for p in have)
+            if SCALE > 1 and have:                         # which source each shot used at 1080
+                ids += " [" + ",".join("1080" if SHOTS_HI and p.startswith(SHOTS_HI) else f"{W}->{OW} lanczos"
+                                       for p in have) + "]"
             print(f"{shot.name:5s} {ids or '-':17s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
                   f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}"
                   f"{f'  captions at y={CAP_Y_SHOT[shot.name]}' if shot.name in CAP_Y_SHOT else ''}")

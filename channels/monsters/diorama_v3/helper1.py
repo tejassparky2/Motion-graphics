@@ -45,11 +45,15 @@ def _ease(u):
     return u * u * (3 - 2 * u)
 
 
-def _move(cam, f0, f1, path, n):
+def _move(cam, f0, f1, path, n, extend=None):
     """Key `cam` on every frame 1..n along `path(u)` -> (target, dist, tilt, yaw), u eased from f0 to f1: the slow
-    1s move (DOF focus and the miniature f-stop follow the distance)."""
+    1s move (DOF focus and the miniature f-stop follow the distance). extend=(fa, fb, du): after the move, u keeps
+    going linearly from 1 to 1 + du over fa..fb (a slow drift to the end)."""
     for f in range(1, n + 1):
-        t, dist, tilt, yaw = path(_ease((f - f0) / max(1, f1 - f0)))
+        u = _ease((f - f0) / max(1, f1 - f0))
+        if extend and f > extend[0]:
+            u = 1.0 + extend[2] * min(1.0, (f - extend[0]) / max(1, extend[1] - extend[0]))
+        t, dist, tilt, yaw = path(u)
         t = Vector(t)
         el, az = math.radians(tilt), math.radians(yaw)
         cam.location = t + dist * Vector((-math.sin(az) * math.cos(el), -math.cos(az) * math.cos(el), math.sin(el)))
@@ -141,6 +145,7 @@ def _stand_look(rig, look_yaw=0.0, lift=0.0):
     """Standing in the spill before he sees it (helper 4's standing rig conventions): legs straight, arms loose, the
     head turned `look_yaw` toward his right (the tank) and lifted by `lift` (anticipation)."""
     h4._reset(rig)
+    _shoulders(rig, reset=True)
     for s_, sx in (("left", 1.0), ("right", -1.0)):
         h4._aim(rig, f"{s_}_upper_leg", (sx * 0.08, -0.04, -1.0))
         h4._aim(rig, f"{s_}_lower_leg", (sx * 0.04, 0.05, -1.0))
@@ -155,8 +160,77 @@ def _stand_look(rig, look_yaw=0.0, lift=0.0):
         h4._aim(rig, f"{s_}_hand", (sx * 0.1, -0.2, -1.0))
 
 
-def _anchors(shot, cam, rig, n):
-    """Kai's eye anchors per frame (720x1280, top-left origin) for the 2D pass (bgqrs_post's format)."""
+FEAR_FACE = {"eye_open": 1.0, "eye_black_small": 1.0, "eye_brow_up": 1.0, "eye_brow_down": 0.15, "lip_o": 0.7,
+             "mouse_open": 0.25}                    # wide eyes (whites showing), tiny pupils, brows up and pinched, "o"
+
+
+SHOULDERS = ("left_shoulder", "right_shoulder")
+
+
+def _shoulders(rig, f=None, reset=False):
+    """helper 4's BODY keys leave the shoulders out: reset and/or key them here."""
+    for nm in SHOULDERS:
+        pb = rig["bone"](nm)
+        pb.rotation_mode = "QUATERNION"
+        if reset:
+            pb.rotation_quaternion = (1, 0, 0, 0)
+        if f is not None:
+            pb.keyframe_insert("rotation_quaternion", frame=f)
+            for fc in anim.all_fcurves(rig["arm"].animation_data.action):
+                if pb.name in fc.data_path:
+                    for kp in fc.keyframe_points:
+                        if abs(kp.co.x - f) < 0.01:
+                            kp.interpolation = "CONSTANT"
+    bpy.context.view_layer.update()
+
+
+def fear_stand(rig, f=None, sway=0.0):
+    """FEAR_STAND, S08a's last pose and S08b's first (import it from here): frozen in the water, knees bent and the
+    weight back, a small hunch with the shoulders up, hands lifted to his waist, fingers spread, head only a little
+    down (face to a camera above him: the eyes do the looking down). `sway` (+-0.03) is the tremble on 2s. The rig
+    is lowered so the bent legs keep his soles on the floor. With `f`, keys the pose (and the rig's height) there.
+    Uses helper 4's standing conventions (_aim: x = his left, y = his back, z = up)."""
+    from channels.monsters.diorama_v3 import helper4 as h4_
+    arm = rig["arm"]
+    h4_._reset(rig)
+    _shoulders(rig, reset=True)
+    base = arm.get("stand_z", arm.location.z)
+    arm["stand_z"] = base
+    arm.location.z = base
+    bpy.context.view_layer.update()
+    ank0 = (arm.matrix_world @ rig["bone"]("left_foot").head).z
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4_._aim(rig, f"{s_}_upper_leg", (sx * 0.1, -0.32, -1.0))          # knees bent forward...
+        h4_._aim(rig, f"{s_}_lower_leg", (sx * 0.05, 0.3, -1.0))           # ...shins back
+        h4_._aim(rig, f"{s_}_foot", (sx * 0.1, -1.0, -0.35))
+    h4_._aim(rig, "spine", (sway, 0.14, 1.0))                              # weight back
+    h4_._aim(rig, "chest", (sway * 0.5, -0.06, 1.0))                       # a small hunch over it
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4_._aim(rig, f"{s_}_shoulder", (sx * 1.0, 0.05, 0.42))            # shoulders up
+    h4_._aim(rig, "neck", (0.0, 0.02, 1.0))
+    h4_._aim(rig, "head", (-sway, 0.14, 1.0))                              # face up to a camera above
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4_._aim(rig, f"{s_}_upper_arm", (sx * 0.5, -0.32, -0.8))          # elbows out and forward
+        h4_._aim(rig, f"{s_}_lower_arm", (sx * 0.1, -0.95, 0.38))          # hands up to his waist...
+        h4_._aim(rig, f"{s_}_hand", (sx * 0.35, -0.6, 0.72))               # ...palms out
+    h4_._fingers(rig, -0.12)                                               # fingers spread stiff
+    bpy.context.view_layer.update()
+    arm.location.z = base + ank0 - (arm.matrix_world @ rig["bone"]("left_foot").head).z
+    bpy.context.view_layer.update()
+    if f is not None:
+        h4_._key(rig, f)
+        _shoulders(rig, f)
+        arm.keyframe_insert("location", frame=f)
+        for fc in anim.all_fcurves(arm.animation_data.action):
+            if fc.data_path == "location":
+                for kp in fc.keyframe_points:
+                    if abs(kp.co.x - f) < 0.01:
+                        kp.interpolation = "CONSTANT"
+
+
+def _anchors(shot, cam, rig, n, extra=None):
+    """Kai's eye anchors per frame (720x1280, top-left origin) for the 2D pass (bgqrs_post's format), plus `extra`
+    (name -> world point)."""
     import json
     import os
     from bpy_extras.object_utils import world_to_camera_view
@@ -166,8 +240,10 @@ def _anchors(shot, cam, rig, n):
     for f in range(1, n + 1):
         sc.frame_set(f)
         row = {}
-        for k_ in ("eyes", "eye_l", "eye_r", "nose", "temple"):
-            v = world_to_camera_view(sc, cam, s3d.kai_point(rig, k_))
+        pts = {k_: s3d.kai_point(rig, k_) for k_ in ("eyes", "eye_l", "eye_r", "nose", "temple")}
+        pts.update(extra or {})
+        for k_, p_ in pts.items():
+            v = world_to_camera_view(sc, cam, p_)
             row[k_] = (round(v.x * 720, 1), round((1 - v.y) * 1280, 1))
         out[f] = row
     d = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
@@ -222,47 +298,66 @@ def s08a():
         toes.append(_bone_world(rig, f"{s_}_foot", tail=True))
     for i, ft in enumerate(toes):
         _ripples(ft, 11 + i * 2, n)
-    # acting on 2s: looking back at the tank, a small lift as he hears the water (anticipation), his head drops to
-    # the water (overshoot: hunched), then S08b's frozen fear pose (helper 4's _fear) with a tremble
+    # acting on 2s: looking back at the tank, a small lift as he hears the water (anticipation), he drops into
+    # FEAR_STAND past it (overshoot: lower, hands higher), settles, then trembles (S08b opens on fear_stand(rig))
+    arm = rig["arm"]
     k = h4._key
-    h4._fingers(rig, 0.3)
-    _stand_look(rig, look_yaw=0.45)
-    k(rig, 1)
-    _stand_look(rig, look_yaw=0.4)
-    k(rig, 9)
-    _stand_look(rig, look_yaw=0.15, lift=0.12)
-    k(rig, 14)
-    h4._fear(rig, 0.0)
-    for nm, v in (("chest", (0.0, -0.3, 1.0)),):                    # overshoot: hunched a touch past it
-        h4._aim(rig, nm, v)
-    k(rig, 20)
-    for f, sway in ((24, 0.0), (30, 0.025), (36, 0.0), (42, -0.02), (48, 0.0), (54, 0.02), (n, 0.0)):
-        h4._fear(rig, sway)
+    for f, yaw, lift in ((1, 0.45, 0.0), (9, 0.4, 0.0), (14, 0.15, 0.12)):
+        _stand_look(rig, look_yaw=yaw, lift=lift)
+        h4._fingers(rig, 0.3)
+        arm.location.z = arm.get("stand_z", arm.location.z)
         k(rig, f)
-    h4._fingers(rig, 0.45)
-    # face (mk/acting): a blank look back at the tank, a blink, then his eyes drop to his shoes (with small darts)
-    # and the face drops with them: surprised, then fear (S08b opens on this face)
+        _shoulders(rig, f)
+        arm.keyframe_insert("location", frame=f)
+    fear_stand(rig, None, 0.0)
+    h4._aim(rig, "chest", (0.0, -0.16, 1.0))                       # overshoot: hunched a touch past it
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4._aim(rig, f"{s_}_lower_arm", (sx * 0.1, -0.85, 0.55))
+    k(rig, 20)
+    _shoulders(rig, 20)
+    arm.keyframe_insert("location", frame=20)
+    for f, sway in ((24, 0.0), (28, 0.03), (32, 0.0), (36, -0.025), (40, 0.0), (44, 0.03), (48, 0.0), (52, -0.025),
+                    (56, 0.0), (n, 0.0)):
+        fear_stand(rig, f, sway)
+    for fc in anim.all_fcurves(arm.animation_data.action):
+        if fc.data_path == "location":
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
+    # face (mk/acting): a blank look back at the tank, a blink, then it drops: wide eyes, tiny pupils, brows up and
+    # pinched, a small "o"; the eyes (not the head) go down to his shoes, lightly, so the lids stay open
+    acting.EXPR.setdefault("fear_wide", FEAR_FACE)
     acting.expression(rig, "neutral", 1)
-    acting.expression(rig, "surprised", 19, value=0.8)
-    acting.expression(rig, "fear", 25)
+    acting.expression(rig, "surprised", 17, value=0.8)
+    acting.expression(rig, "fear_wide", 20)
     acting.look_at(rig, R["tank"]["center"], 1, 12)
-    acting.look_at(rig, tuple(feet), 15, n)
-    acting.blink(rig, 1, n, at=(7,))
+    acting.look_at(rig, tuple(feet), 15, n, strength=0.15)
+    acting.blink(rig, 1, n, at=(7,), every=(40, 60))
     hero.line_width(rig, 0.0028)
     sc = bpy.context.scene
     sc.frame_set(30)
     face = Vector(__import__("channels.monsters.ep01v2.bgqrs", fromlist=["x"]).kai_point(rig, "eyes"))
     sc.frame_set(1)
     mid = feet + Vector((0, 0, 0.3))
-    # from the open front, low: the camera rises on 1s from his sneakers in the water to his face
+    plug = Vector(R["strip"]["spark_at"])
+    end_t = face.lerp(plug, 0.42) + Vector((0, 0, -0.6))
+    # from the open front, low: the camera rises on 1s from his sneakers in the water to his face, and pulls back
+    # just enough at the end to keep the cause in a lower corner: the strip, the wet cable running to his feet
     cam = R["cam"]("cam_s08a", tuple(mid), dist=27.0, tilt=42.0, yaw=-22.0, lens=100.0, blur=BLUR)
 
     def path_cam(u):
-        return mid.lerp(face + Vector((0, 0, -1.6)), 0.08 + 0.8 * u), 27.0 - 3.0 * u, 42.0, -22.0 - 6.0 * u
+        # u 0..1: the rise (f3-22, so his face is in frame as it drops at f20); 1..1.1: a slow push-in to the end
+        r, p_ = min(u, 1.0), max(0.0, u - 1.0)
+        return (mid.lerp(end_t, 0.08 + 0.92 * r), 27.0 + 7.0 * r - 18.0 * p_, 42.0 + 2.0 * r, -22.0 - 8.0 * r - 10 * p_)
 
-    _move(cam, 1, n - 6, path_cam, n)
+    _move(cam, 3, 22, lambda u: path_cam(u), n, extend=(22, n, 0.1))
+    # the plugs fizz: a cold flicker on his legs and the water (on 1s), with 2D sparks over them in the post pass
+    fl = lab._light("s08a_fizz", "POINT", tuple(plug + Vector((0.0, -0.4, 0.6))), (0, 0, 0), 0.0, "#bfe6ff", 0.3)
+    rnd = random.Random(5)
+    for f in range(1, n + 1):
+        on = f >= 4 and rnd.random() < 0.55
+        lab._kprop(fl.data, "energy", f, (rnd.uniform(120, 320) if on else 8.0), "CONSTANT")
     R["flicker"]([30, 33])                                         # the lights stutter: the plugs are fizzing
-    _anchors("S08a", cam, rig, n)
+    _anchors("S08a", cam, rig, n, extra={"plug": plug, "feet": feet.copy()})
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]] + list(rig.get("cap", [])))
 
 

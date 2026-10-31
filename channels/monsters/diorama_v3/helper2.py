@@ -29,6 +29,7 @@ from channels.monsters.mk import anim, diorama, look
 from channels.monsters.mk import pistolshrimp as ps
 
 UNITS = d2.UNITS
+YAW = 20.0                     # the main camera from the south-west: the shrimp faces it, the crack is between them
 _T = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep01v3", "timing.json")
 # word starts (s) from the shot's first frame, for when the v3 timing isn't there yet
 _GUESS = dict(shrimp=0.15, panicked=0.45, its=1.45, snap=1.62, cracked=1.9, tank=2.45)
@@ -136,9 +137,8 @@ def _jet(origin, f, end, floor_z, k=UNITS, seed=11):
     a splash where it lands. Lengths in metres x k."""
     rnd = random.Random(seed)
     o = Vector(origin)
-    v = Vector((0.12, -0.3, 0.10)) * k                 # launch velocity (units per second): out of the glass and
-    #                                                    straight down the frame for the yaw -22 camera
-    g = 2.0 * k
+    v = Vector((-0.3, -0.2, 0.2)) * k                  # launch velocity (units per second): out of the glass, up
+    g = 1.6 * k                                        # and to the left of the yaw -22 frame, so it reads as an arc
 
     def at(t):
         return o + v * t + Vector((0, 0, -0.5 * g * t * t))
@@ -148,7 +148,7 @@ def _jet(origin, f, end, floor_z, k=UNITS, seed=11):
     core = look.flat("jet_core", look.hexc("#f4feff"), 2.2)
     halo = ps._glow("jet_halo", look.hexc("#7fdcf0"), 0.55)
     arcs = []
-    for name, m, r in (("jet_halo", halo, 0.0065), ("jet_core", core, 0.0028)):
+    for name, m, r in (("jet_halo", halo, 0.0038), ("jet_core", core, 0.0015)):
         cu = bpy.data.curves.new(name, "CURVE")
         cu.dimensions = "3D"
         sp = cu.splines.new("POLY")
@@ -273,9 +273,11 @@ def s07():
     _jet((lx + path[j][0], gy - 0.004 * UNITS, lz - 0.005 * UNITS + path[j][1]), jet, n, desk)
     fx, fy, fz = tank["floor"]
     # the claw tip and the crack a third in from the left, the body to the right of them, all left of x 560
-    target = Vector((fx - 0.19, fy - 0.45, fz + 0.3))
-    cam = diorama.camera("dio_cam_s07", target, dist=5.0, tilt=42, yaw=-22, lens=d2.LENS, blur=d2.BLUR, frame=1)
-    eye = d2._eye_cam(rig, "dio_cam_s07_eye", eye0, dist=0.6)
+    target = Vector((fx - 0.28, fy - 0.5, fz + 0.22))
+    cam = diorama.camera("dio_cam_s07", target, dist=3.1, tilt=42, yaw=YAW, lens=d2.LENS, blur=d2.BLUR, frame=1)
+    e = ps._world(rig["eyes"][0], eye0 + 1).translation          # where the eye is after the hop, mid-tremble
+    eye = diorama.camera("dio_cam_s07_eye", e, dist=0.6, tilt=48, yaw=math.degrees(d2.TURN) - 60, lens=d2.LENS,
+                         blur=d2.BLUR, frame=eye0)
     bpy.context.scene.timeline_markers.new("dio_cam_s07_back", frame=wind).camera = cam     # back after the eye cut
     for c in (cam, eye):
         d2._near(c)
