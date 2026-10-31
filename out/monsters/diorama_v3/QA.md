@@ -37,6 +37,9 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 | S15b | bGqrs + helper 2 (c192795) | PASS | 62 / 62 | Kai on his back, dazed, KO stars circling his cap, a smoking stump with a glowing cut by his head ("an inch"); no seam at the f31/32 join (max frame change 0.011) |
 | S24top (A) | XprL + coordinator + helper 2 (c0d0d40) | PASS; 1 NOTE | 180 / 180 | Kai walks down to the shrimp at the pond and stands over it as the bird's shadow sweeps in over both (f90+); he blinks; seams invisible (max change 0.014); the shrimp sits just above the split line at y 640; NOTE: he stands over it rather than reaching for it (the brief's "reaching") |
 | S16 | bGqrs; parts helper 6 + coordinator (0dd4fbf) | PASS | 77 / 77 | close on Kai's shut eyes, they open by "eyes" (24) and jump to the 2D terror eyes + sweat; the reveal pulls back on "chest" (45-47) to the shrimp on his chest (S01's framing); seams at 39/40 and 57/58 invisible |
+| S19 | helper 5 (2033d7b) | PASS; 1 NOTE | 105 / 105 | the held quiet shot in the v3 lying pose: the blue drop on the claw tip shrinks on "let the sun dry it" and is gone by ~70, a sweat bead at his temple; NOTE a big foreground smoke plume from the stump billows over his feet on the right the whole shot, drawing the eye from the small (~40 px) drop |
+| S15 | helper 10 + helper 3 (b2ae4ad) | PASS | 118 / 118 | close on Kai and the raised claw, the white flash (30-31), impact frames (32-35), he's thrown back as the trees behind him burst into dust, then the smoking stumps round him lying by the pond; no seam at 59/60 |
+| S20 | helper 5 + helpers 9, 6, bGqrs (0a72c30) | PASS | 117 / 117 | the claw winds up at his face, snaps: only a small dust puff (32-36), the shrimp stares; cut on 70 to Kai's deadpan dot eyes + sweat drop, held; seams invisible |
 | S11b | (v2 copy) | PASS (v2 QA) | 38 / 37 | the assembler trims 1 frame |
 | S13 | (v2 copy) | PASS (v2 QA) | 62 / 63 | the assembler holds 1 frame |
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
@@ -84,3 +87,21 @@ sheets plus crops of the tank (S06) and of Kai's face (S18). Three NOTES, none b
   spill in S08a. The cut reads as a jump, since we never see him get up. It is covered by S08a opening close on
   his feet.
 - **S18:** the narrowing eyes sit half under the cap brim. Tilting the cap back, as in S08b and S08a, would help.
+
+## Full episode (interim picture.mp4 at 4cfd13a; S24's B half still a slate)
+- **Format:** 1080x1920, 24 fps, 1929 frames (80.375 s), the same as timing.json total_frames.
+- **Shot boundaries:** checked at all 33 cuts (the last frame of each shot against the first of the next, at the
+  timing.json first_frame): every shot starts with its own picture, with no frame from a neighbour and no stray
+  black.
+  - S08b to S09 is black into black, by design.
+  - S01 to S02 has the glitch rewind.
+- **Captions:** one per line at its midpoint, 30 lines. Each is placed per shot, readable, and clear of the faces
+  and the subject of the line:
+  - S16 sits at the top over the cap.
+  - S23b's "at the shrimp." sits under the tiny shrimp in the bird's view.
+  - S23c's caption sits between the shrimp's antennae.
+  - The hook text sits over the pond on frame 1.
+- **The bird:** cute as it lands in S23, then its dark grey form with orange eyes from the danger switch; dark
+  through S23b and S23c.
+- **The A/B split:** the A card ("A SAVE") pops on the top half; the B half is still a slate. Re-check when S24bot
+  lands.
