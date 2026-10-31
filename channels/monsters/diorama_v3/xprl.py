@@ -26,8 +26,8 @@ from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
 from channels.monsters.mk import anim, diorama, hero, tuftwing
 
-SHRIMP = (5.2, -2.6, 0.0)          # the pond's east edge (pond at MAP["pond"], radius 4.2 x 2.3)
-SHRIMP_YAW = 0.0                    # facing south (-Y): its back to the thorn tree (MAP["thorn"], north-east)
+SHRIMP = (*diorama.MAP["shrimp_drink"], 0.0)  # the pond's east edge, its back to the thorn tree (coordinator, v3)
+SHRIMP_YAW = diorama.SHRIMP_DRINK_YAW
 BIRD_SCALE = h5.BIRD_SCALE
 
 

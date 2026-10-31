@@ -31,6 +31,7 @@ SUN_WARM = "#ffdcae"      # low golden sun
 MAP = dict(
     pond=(0.1, -2.6),          # the puddle at diorama scale (diorama.pond)
     shrimp=(0.1, 0.4),         # where the puff-shrimp drinks (north edge of the pond)
+    shrimp_drink=(5.2, -2.6),  # v3, S21's end to S24: drinking at the pond's EAST edge, facing SHRIMP_DRINK_YAW
     kai_down=(1.5, -9.0),      # where the blast throws Kai on his back (S15 D4 -> S16-S21)
     thorn=(19.0, 9.0),         # the thorn tree at the clearing's north-east edge (S22-S24)
     path=((0.0, -24.0), (-6.0, -60.0), (4.0, -95.0), (0.0, -118.0)),   # clearing -> meadow (a gap in the trees)
@@ -38,6 +39,8 @@ MAP = dict(
     snail=(-16.0, -132.0),     # S10a/S11a: the jelly-snail and its burnt-hole trail
     moth=(20.0, -128.0),       # S10b/S11b: the fluffmoth
 )
+SHRIMP_DRINK_YAW = 0.0     # degrees (root rotation z): facing south (-Y), its back to the thorn tree, its claw (right
+                           # side) dipping west into the pond, so the bird's view from the perch sees its back
 
 
 def setup(samples=24, sun_elev=34, sun_azim=-50, haze=0.55, bloom=0.6):
