@@ -1,7 +1,7 @@
 """Render one WW2 Episode 1 package to a clip, or a still / contact sheet for review.
 
-    /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3                 # out/ww2/ep01/parts/P3.mp4
-    /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3 --frames 0-599  # a chunk -> P3_f00000-00599.mp4
+    /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3                 # P3_f00000-00599.mp4, P3_f00600-...
+    /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3 --frames 0-599  # one range only (re-renders, splits)
     /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3 --still 230.5   # one PNG at episode time 230.5 s
     /home/user/.venv-main/bin/python channels/ww2/ep01/render_pkg.py P3 --sheet         # 1 frame per 2 s -> P3_sheet.jpg
 
@@ -19,6 +19,8 @@ from channels.ww2.ep01.timing import Timing, package_span  # noqa: E402
 from channels.ww2.kit import core  # noqa: E402
 
 OUT = os.path.join(ROOT, "out", "ww2", "ep01", "parts")
+CHUNK = 600       # frames per piece (25 s): keeps every file under GitHub's 100 MB limit at crf 18
+CRF = 18          # visually clean on the poster look; YouTube re-encodes anyway
 
 
 def main():
@@ -57,19 +59,22 @@ def main():
         print(png)
         return
     n = round((b - a) * T.fps)
-    f0, f1 = 0, n - 1
-    if "--frames" in sys.argv:
-        f0, f1 = map(int, sys.argv[sys.argv.index("--frames") + 1].split("-"))
-        f1 = min(f1, n - 1)
-        out = os.path.join(OUT, f"{name}_f{f0:05d}-{f1:05d}.mp4")
-    else:
-        out = os.path.join(OUT, f"{name}.mp4")
 
     def draw(cr, t_local):
         mod.draw(cr, a + t_local)
 
-    core.render_clip(draw, (b - a), out, frames=(f0, f1))
-    print(out, f"{f1 - f0 + 1} frames")
+    if "--frames" in sys.argv:
+        f0, f1 = map(int, sys.argv[sys.argv.index("--frames") + 1].split("-"))
+        ranges = [(f0, min(f1, n - 1))]
+    else:                                    # default: CHUNK-frame pieces, each well under GitHub's 100 MB limit
+        ranges = [(k, min(k + CHUNK - 1, n - 1)) for k in range(0, n, CHUNK)]
+    for f0, f1 in ranges:
+        out = os.path.join(OUT, f"{name}_f{f0:05d}-{f1:05d}.mp4")
+        core.render_clip(draw, (b - a), out, frames=(f0, f1), crf=CRF)
+        mb = os.path.getsize(out) / 1e6
+        print(out, f"{f1 - f0 + 1} frames, {mb:.1f} MB")
+        if mb > 95:
+            print(f"  WARNING: {mb:.0f} MB > 95 MB; re-render this range in two halves with --frames")
 
 
 if __name__ == "__main__":
