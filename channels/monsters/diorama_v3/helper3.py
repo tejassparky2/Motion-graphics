@@ -24,15 +24,19 @@ from channels.monsters.ep01v2 import helper10 as s15
 from channels.monsters.mk import anim, diorama, look
 
 MAP = diorama.MAP
+SPARK = {}
+SPARK_JSON = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
+                          "out", "monsters", "diorama_v3", "shots", "S09_spark.json")
 TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep01v3", "timing.json")
 # Kai's own frame (+Y forward = up once he lies down, +Z toward his head, +X his right): his loose left hand comes up
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
-HAND_COCK = [("left_upper_arm", (-0.7, 0.3, -0.6)), ("left_lower_arm", (-0.3, 0.6, -0.5))]       # anticipation
-HAND_REACH = [("left_upper_arm", (-0.25, 0.97, 0.05)), ("left_lower_arm", (0.5, 0.75, 0.45))]    # overshoot
-HAND_UP = [("left_upper_arm", (-0.3, 0.92, -0.08)), ("left_lower_arm", (0.45, 0.82, 0.32))]      # over his chest
-HEAD_AWAKE = [("neck", (-0.02, 0.45, 1)), ("head", (-0.04, 0.85, 0.55))]   # head lifts, chin in: he looks down at
-                                                                     # his hand (and his face turns to the camera)
+HAND_COCK = [("left_upper_arm", (-0.5, 0.2, -0.85)), ("left_lower_arm", (-0.15, 0.45, -0.88))]   # anticipation
+HAND_REACH = [("left_upper_arm", (-0.28, 0.82, -0.5)), ("left_lower_arm", (0.3, 0.95, 0.12))]    # overshoot
+HAND_UP = [("left_upper_arm", (-0.35, 0.72, -0.6)), ("left_lower_arm", (0.35, 0.93, 0.02))]      # held up over his
+                                                                                                 # chest, to the sky
+HEAD_AWAKE = [("neck", (0, 0.15, 1)), ("head", (-0.03, 0.35, 1))]   # the roll comes out, chin in a touch: his face
+                                                                    # (wide eyes) turns to the camera
 
 
 def _words(shot="S09"):
@@ -50,10 +54,10 @@ def _words(shot="S09"):
 
 
 def _spark(cam_loc, up, land, f0, f1, radius):
-    """The soul: a bright little ball with a fading trail of ghosts, falling on an arc around the camera from the crack
-    (straight ahead at `up`) to `land` between f0 and f1, eased in; a soft flash where it lands."""
+    """The soul: a bright little ball (core + halo) falling on an arc around the camera from the crack (straight ahead at
+    `up`) to `land` between f0 and f1, eased; it stays in the scene's depth and blur. Its comet trail, twinkles and the
+    landing flash and ring are drawn in 2D on top (spark_fx(), from the ball's screen path in S09_spark.json)."""
     core = look.flat("soul_core", look.hexc("#fffdf2"), 3.0)
-    halo = look.fade("soul_halo", look.hexc("#ffe7a8"), 0.35)
     start = (up @ Vector((0, 0, -1))).normalized()
     end = (Vector(land) - Vector(cam_loc))
     dist_end = end.length
@@ -65,25 +69,31 @@ def _spark(cam_loc, up, land, f0, f1, radius):
         r = radius + (dist_end - radius) * u
         return Vector(cam_loc) + d * r
 
-    ball = world_sphere("soul", radius * 0.012, core)
-    glow = world_sphere("soul_glow", radius * 0.03, halo)
-    glow.parent = ball
-    trail = [world_sphere(f"soul_trail{i}", radius * 0.012 * (1 - i / 7), halo) for i in range(6)]
+    ball = world_sphere("soul", radius * 0.012, core)                # its halo is the 2D pass's glow
     for f in range(f0 - 1, f1 + 1):
-        u = max(0.0, min(1.0, (f - f0) / max(1, f1 - f0)))
-        anim.key(ball, "location", f, pos(u), "LINEAR")
-        for i, t in enumerate(trail):
-            ut = max(0.0, min(1.0, (f - 1.2 * (i + 1) - f0) / max(1, f1 - f0)))
-            anim.key(t, "location", f, pos(ut), "LINEAR")
-    for o in [ball] + trail:                                       # out of sight before the crack, gone after landing
-        anim.key(o, "scale", f0 - 2, 0.0, "CONSTANT")
-        anim.key(o, "scale", f0 - 1, 1.0, "CONSTANT")
-        anim.key(o, "scale", f1 + 1, 0.0, "CONSTANT")
-    flash = world_sphere("soul_flash", 1.0, look.fade("soul_flash_m", look.hexc("#fff6d6"), 0.5))
-    flash.location = land
-    for f, s in ((f1, 0.0), (f1 + 1, radius * 0.012), (f1 + 3, radius * 0.022), (f1 + 5, 0.0)):
-        anim.key(flash, "scale", f, s, "LINEAR")
-    return ball
+        anim.key(ball, "location", f, pos(max(0.0, min(1.0, (f - f0) / max(1, f1 - f0)))), "LINEAR")
+    anim.key(ball, "scale", f0 - 2, 0.0, "CONSTANT")                # out of sight before the crack, gone on landing
+    anim.key(ball, "scale", f0 - 1, 1.0, "CONSTANT")
+    anim.key(ball, "scale", f1 + 1, 0.0, "CONSTANT")
+    return ball, lambda f: pos(max(0.0, min(1.0, (f - f0) / max(1, f1 - f0))))
+
+
+def _screen_path(cam, at, f0, f1, trail=5.0, steps=18):
+    """Per frame, on a 720x1280 frame: the ball, and its trail (where it was over the last `trail` frames, oldest
+    first) as this frame's camera sees it, so the trail streaks behind it in the world while the camera follows."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene
+
+    def px(p):
+        v = world_to_camera_view(sc, cam, p)
+        return [round(v.x * 720, 1), round((1 - v.y) * 1280, 1)]
+    out = {}
+    for f in range(f0 - 1, f1 + 1):
+        sc.frame_set(f)
+        out[f] = dict(ball=px(at(f)), trail=[px(at(f - trail * i / steps)) for i in range(steps, 0, -1)
+                                             if f - trail * i / steps >= f0])
+    sc.frame_set(1)
+    return out
 
 
 def world_sphere(name, r, mat):
@@ -110,8 +120,8 @@ def s09():
     f_woke = w.get("woke", 14)
     f_in = w.get("in", f_woke + 14)
     f_world_end = min(n - 12, w.get("world", f_in + 12) + 10)
-    crack_on = (2, 6)                                              # the crack draws on, then the black opens
-    fall = (8, max(10, f_woke - 3))                                # the spark drops into the meadow
+    crack_on = (2, 5)                                              # the crack draws on, then the black opens
+    fall = (5, max(9, f_woke - 3))                                 # the spark drops into the meadow
     from channels.monsters.mk import acting, hero
     rig = hero.load((0, 0, 0), scale=d3.KAI, outfit="world")
     wake = MAP["wake"]
@@ -135,8 +145,12 @@ def s09():
                     node.inputs["Color"].default_value = look.hexc("#dff1ff")
     for f, s in ((1, (1, 0.0, 1)), (crack_on[0], (1, 0.0, 1)), (crack_on[1], (1, 1, 1))):
         anim.key(crack, "scale", f, s, "LINEAR")                   # the crack runs open along its length
-    # camera: on the crack, tilt down after the spark, hold on Kai, tilt back up on "In another world.", push
-    rots = ((1, up), (fall[0] + 1, up), (fall[1] + 2, down), (f_in, down), (f_world_end, up))
+    # camera: on the crack, follows the spark down (same eased arc, so it stays in frame), holds on Kai, tilts back
+    # up on "In another world.", and a slow push throughout
+    def follow(f):
+        u = max(0.0, min(1.0, (f - fall[0]) / max(1, fall[1] - fall[0])))
+        return up.slerp(down, u * u * (3 - 2 * u))
+    rots = [(1, up)] + [(f, follow(f)) for f in range(fall[0], fall[1] + 1)] + [(f_in, down), (f_world_end, up)]
     for f, q in rots:
         cam.rotation_euler = q.to_euler("XYZ", cam.rotation_euler)
         cam.keyframe_insert("rotation_euler", frame=f)
@@ -163,7 +177,11 @@ def s09():
         dark.hide_render = hide
         dark.keyframe_insert("hide_render", frame=f)
     chest = s15._world(rig, "chest") + Vector((0, 0, 0.8))
-    _spark(cam.location, up, chest, fall[0], fall[1], dist)
+    ball, at = _spark(cam.location, up, chest, fall[0], fall[1], dist)
+    SPARK.update(fall=list(fall), path=_screen_path(cam, at, fall[0], fall[1]))
+    os.makedirs(os.path.dirname(SPARK_JSON), exist_ok=True)
+    with open(SPARK_JSON, "w") as fh:
+        json.dump(SPARK, fh)
     # Kai (mk/acting): out cold, head rolled; on "woke" his eyes snap open wide (surprised); his left hand comes up
     # in front of his face (anticipation, overshoot, settle, on 2s) and he stares at it, dazed; on "In another world."
     # his eyes go up to the crack in the sky; blinks throughout once he's awake
