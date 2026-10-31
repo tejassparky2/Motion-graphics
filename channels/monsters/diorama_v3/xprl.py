@@ -224,7 +224,7 @@ def s24top():
     bird = _bird_on_perch(perch, Vector(SHRIMP))
     # its giant shadow on the ground: a clear bird silhouette (sharp edge, wings spread) sliding in from the tree's side
     # over the shrimp and Kai, and growing as the bird comes (the dive itself is in panel B)
-    over = Vector((SHRIMP[0] + 1.6, SHRIMP[1] + 0.1, 0.0))
+    over = Vector((SHRIMP[0] - 0.3, SHRIMP[1] - 0.2, 0.0))                  # body under the shrimp, wings across
     back = (Vector((perch.x, perch.y, 0)) - over).normalized() * 4.0
     v2._soft_shadow(bird, tuple(over + back - Vector((perch.x, perch.y, 0))), tuple(-back), 1, n,
                     tone="#1d2440", opacity=0.78, soften=1.0, shrink=0.57)   # wingspan ~6.5 -> ~8.8 units
