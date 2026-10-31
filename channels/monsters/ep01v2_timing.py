@@ -2,6 +2,7 @@
 
     tar xf assets/voice_cache/monsters_ep01v2_takes.tar
     /home/user/.venv-main/bin/python channels/monsters/ep01v2_timing.py
+    EP=ep01v3 /home/user/.venv-main/bin/python channels/monsters/ep01v2_timing.py    (v3, the 2.5D re-cut)
 
 Lays out channels/monsters/ep01v2/episode.py with the stories pipeline's pauses (sentence 0.36 s, question 0.45 s,
 line gap 0.4 s minimum, the same as channels/horror/make_2d.py) and writes
@@ -22,6 +23,7 @@ os.environ.setdefault("CLONE_RATE", "5.0")
 FPS = 24
 HANDLE = 12
 LEAD = 0.3
+EP = os.environ.get("EP", "ep01v2")                # ep01v3: the owner-approved v3 script (story_v3_diorama.md)
 
 from motion import timeline, voice   # noqa: E402
 
@@ -32,8 +34,10 @@ def _no_synth(*a, **k):
     raise SystemExit(f"missing voice take (would synthesise): {a[:1]}")
 
 
-voice._clone_generate = _no_synth if hasattr(voice, "_clone_generate") else None
-spec = importlib.util.spec_from_file_location("ep01v2_episode", os.path.join(ROOT, "channels", "monsters", "ep01v2",
+SYNTH = os.environ.get("SYNTH") == "1"            # v3: voice the new lines (Turbo am_liam); cached takes are reused
+if not SYNTH:
+    voice._clone_generate = _no_synth if hasattr(voice, "_clone_generate") else None
+spec = importlib.util.spec_from_file_location("ep01v2_episode", os.path.join(ROOT, "channels", "monsters", EP,
                                                                               "episode.py"))
 ep = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ep)
@@ -47,7 +51,8 @@ def guarded(cmd, *a, **k):
     return real_run(cmd, *a, **k)
 
 
-voice.subprocess.run = guarded
+if not SYNTH:
+    voice.subprocess.run = guarded
 tl = timeline.Timeline(ep.SCRIPT, tail=ep.TAIL)
 
 
@@ -79,7 +84,7 @@ lines = [dict(id=b.id, scene=b.scene, text=b.text, start=round(b.start, 3), end=
               words=[dict(w=u.shown, start=round(u.start, 3), end=round(u.end, 3)) for u in b.units])
          for b in tl.beats]
 out = dict(fps=FPS, total=round(tl.total, 3), total_frames=f_total, handle=HANDLE, lines=lines, shots=shots)
-with open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json"), "w") as f:
+with open(os.path.join(ROOT, "channels", "monsters", EP, "timing.json"), "w") as f:
     json.dump(out, f, indent=1)
 
 line_of = {}
@@ -108,6 +113,6 @@ for k, s in enumerate(shots):
         said = "(no words)" if b is not None else ""
     md.append(f"| {s['shot']} | {s['first_frame']} | {s['frames']} | {s['seconds']:.2f} | {s['render_frames']} | "
               f"{vin} | {vout} | {said} |")
-with open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "TIMING.md"), "w") as f:
+with open(os.path.join(ROOT, "channels", "monsters", EP, "TIMING.md"), "w") as f:
     f.write("\n".join(md) + "\n")
 print("\n".join(md))
