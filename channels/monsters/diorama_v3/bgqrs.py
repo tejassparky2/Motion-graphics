@@ -62,24 +62,58 @@ def at(shot, word, n=0, end=False):
 # ---------------------------------------------------------------- the world after the snap, v3
 
 def _sapling(rig, n):
-    """The young tree the snap cut beside his head: a slim stump with a hot, glowing slanted cut and a thread of
-    smoke, ~0.6 units off his head on his right (west), on the blast line (helper 10's S15). Stays in every later
-    shot. Placeholder position until diorama.sapling_spot() lands."""
+    """The young tree the snap cut beside his head (helper 10's sapling_spot(), on the blast line west of his head):
+    the shared splintered stump (diorama.splinter_stump) once it lands, with a thin smoke wisp that drifts AWAY from
+    his head (west and north), so no puff ever crosses his face or cap. Stays in every later shot."""
     head = s3d.kai_point(rig, "head")
     if hasattr(diorama, "sapling_spot"):
         x, y = diorama.sapling_spot()[:2]
         p = Vector((x, y, 0.0))
     else:
         p = head - EAST * 1.3 + UP * 0.2
-    bark = bpy.data.materials.get("stump_bark") or diorama.lit_paint("stump_bark", "#3c261c", "#5e3e2c", "#80604a")
-    ring = bpy.data.materials.get("stump_hot") or look.flat("stump_hot", look.hexc("#ff7a3d"), 2.2)
-    core = bpy.data.materials.get("stump_core") or look.flat("stump_core", look.hexc("#ffe08a"), 3.0)
-    to_shrimp = Vector(diorama.MAP["shrimp"]) - Vector((p.x, p.y))
-    yaw = math.atan2(to_shrimp.y, to_shrimp.x) - math.pi / 2
-    stump = meadow._slice((p.x, p.y, 0.0), 0.32, 1.25, math.radians(34), yaw, bark, ring, core)
+    blast = diorama.MAP.get("blast", diorama.MAP["shrimp"])
+    if hasattr(diorama, "splinter_stump"):
+        stump = diorama.splinter_stump((p.x, p.y, 0.0), 0.3, 1.2, blast_from=blast, seed=1, smoke=None)
+    else:
+        bark = bpy.data.materials.get("stump_bark") or diorama.lit_paint("stump_bark", "#3c261c", "#5e3e2c",
+                                                                         "#80604a")
+        ring = bpy.data.materials.get("stump_hot") or look.flat("stump_hot", look.hexc("#ff7a3d"), 2.2)
+        core = bpy.data.materials.get("stump_core") or look.flat("stump_core", look.hexc("#ffe08a"), 3.0)
+        to_blast = Vector(blast) - Vector((p.x, p.y))
+        stump = meadow._slice((p.x, p.y, 0.0), 0.32, 1.25, math.radians(34),
+                              math.atan2(to_blast.y, to_blast.x) - math.pi / 2, bark, ring, core)
     stump.name = "sapling_stump"
-    meadow.smoke([(p.x, p.y, 1.45)], -40, n + 10, every=9, rise=4.5, size=0.55, seed=7)
+    _wisp(p + Vector((0, 0, 1.3)), -EAST * 1.6 + UP * 0.8, n)
     return stump
+
+
+def _wisp(src, drift, n, every=9, rise=3.5, size=0.45, seed=7):
+    """A thin smoke wisp from `src`: small painted puffs that bud, rise and drift along `drift` (world units over a
+    puff's life) as they swell and break up (1s, VFX)."""
+    import random
+    rnd = random.Random(seed)
+    m = meadow.smoke_mat()
+    f = -40
+    while f < n + 10:
+        life = rnd.randint(30, 42)
+        pp = bpy.data.objects.new("puff_wisp", None)
+        bpy.context.scene.collection.objects.link(pp)
+        for _ in range(3):
+            bpy.ops.mesh.primitive_uv_sphere_add(segments=12, ring_count=6, radius=rnd.uniform(0.4, 0.7),
+                                                 location=(rnd.uniform(-0.3, 0.3), rnd.uniform(-0.2, 0.2),
+                                                           rnd.uniform(-0.1, 0.3)))
+            lobe = bpy.context.object
+            lobe.data.materials.append(m)
+            lobe.parent = pp
+        sz = size * rnd.uniform(0.75, 1.2)
+        anim.key(pp, "scale", f - 1, 0.001, "CONSTANT")
+        anim.key(pp, "scale", f, sz * 0.3, "LINEAR")
+        anim.key(pp, "location", f, tuple(src), "LINEAR")
+        anim.key(pp, "scale", f + life * 0.6, sz)
+        anim.key(pp, "scale", f + life, 0.001)
+        anim.key(pp, "location", f + life, tuple(src + drift * rnd.uniform(0.8, 1.2) +
+                                                 Vector((0, 0, rise * rnd.uniform(0.8, 1.2)))), "LINEAR")
+        f += every + rnd.randint(-2, 2)
 
 
 def _set(n):
@@ -188,8 +222,8 @@ def s01():
     aim = pair + UP * up + fwd * far
     cam = diorama.camera("cam_s01", aim, dist=d, tilt=t, yaw=yaw, lens=lens, blur=BLUR)
     v2._move(cam, n, [(1, t, d, lens), (n, t, d, lens)], lambda f: aim, yaw=yaw)
-    c = pair + fwd * 8
-    v2._drift(n, ((c.x - 6, c.x + 6), (c.y - 9, c.y + 9), (2.0, 6.0)))
+    crown = _crown(rig)                                            # the top third, kept well past his cap: a puff
+    v2._drift(n, ((crown.x - 6, crown.x + 6), (crown.y + 6.5, crown.y + 16), (2.0, 6.0)))   # drifts 4 units south
     acting.expression(rig, "terror", 1)
     w = words("S01")
     if w:                                                          # whispered lips over the held terror face
@@ -202,29 +236,76 @@ def s01():
     return dict(frames=n, step=2, subject=_subject(rig, sh))
 
 
+def _keycam(cam, f, aim, tilt, dist, lens, yaw=0.0):
+    """Key the diorama camera at frame f: `dist` from `aim` at `tilt`/`yaw`, the lens, the tilt-shift focus and
+    f-stop, and the haze (1s)."""
+    el, az = math.radians(tilt), math.radians(yaw)
+    back = Vector((-math.sin(az) * math.cos(el), -math.cos(az) * math.cos(el), math.sin(el)))
+    cam.location = Vector(aim) + back * dist
+    cam.rotation_euler = (-back).to_track_quat("-Z", "Y").to_euler()
+    cam.data.lens = lens
+    cam.data.dof.focus_distance = dist
+    cam.data.dof.aperture_fstop = diorama.fstop_for(dist, lens, BLUR)
+    for path in ("location", "rotation_euler"):
+        cam.keyframe_insert(path, frame=f)
+    cam.data.keyframe_insert("lens", frame=f)
+    cam.data.dof.keyframe_insert("focus_distance", frame=f)
+    cam.data.dof.keyframe_insert("aperture_fstop", frame=f)
+    ms = bpy.context.scene.world.mist_settings
+    ms.start, ms.depth = dist * 0.97, dist * 0.55
+    ms.keyframe_insert("start", frame=f)
+    ms.keyframe_insert("depth", frame=f)
+
+
+def _beats(shot, **beats):
+    os.makedirs(ANCHORS, exist_ok=True)
+    with open(os.path.join(ANCHORS, f"{shot}_beats.json"), "w") as fh:
+        json.dump(beats, fh)
+
+
+S16_CLOSE = (72.0, 17.0, 110.0)       # tilt, dist, lens: close on his face from his feet side (under the cap's brim);
+#                                       tight enough that the shrimp on his chest starts below the frame's UI band
+
+
 def s16():
-    """When I opened my eyes, it was on my chest. Near top-down push-in (v2), LYING_V3: eyes shut, a flutter on
-    "opened", open and dazed on "eyes", his look finds the shrimp on "it", pin-prick terror on "chest" (the 2D
-    terror marks follow); the shrimp blinks once near the end and locks on again."""
+    """When I opened my eyes, it was on my chest. A reveal (coordinator): close on his face, eyes shut, a slow push;
+    the eyes flutter open on "opened" and go to pin-prick terror on "eyes" (the 2D terror marks from there), his look
+    dropping to his chest; on "chest" the camera eases back and tilts (on 1s, overshoot and settle) to show the
+    shrimp sitting on his chest, ending on S01's framing. The shrimp blinks once near the end and locks on again."""
     n, rig, sh, _ = _world("S16")
     eyes = s3d.kai_point(rig, "eyes")
     pair = eyes.lerp(sh["root"].matrix_world.translation, 0.5)
-    cam = diorama.camera("cam_s16", pair, dist=70.0, tilt=78.0, lens=110.0, blur=BLUR)
-    v2._move(cam, n, [(1, 78.0, 70.0, 110.0), (n, 78.0, 48.0, 120.0)],
-             lambda f: pair.lerp(eyes.lerp(pair, 0.35), (f - 1) / (n - 1)))
+    t1, d1, lens = S16_CLOSE
+    t2, d2, lens2, yaw, up, far = v2.S01_CAM
+    fwd = Vector((math.sin(math.radians(yaw)), math.cos(math.radians(yaw)), 0))
+    a1, a2 = eyes - UP * 0.4, pair + UP * up + fwd * far           # his face big in the upper half; S01's aim
     f_open, f_eyes, f_it, f_chest = at("S16", "opened"), at("S16", "eyes"), at("S16", "it"), at("S16", "chest")
+    b0, b1 = f_chest - 2, f_chest + 12                             # the pull back
+    cam = diorama.camera("cam_s16", a1, dist=d1, tilt=t1, lens=lens, blur=BLUR)
+    for f in range(1, n + 1):
+        if f < b0:                                                 # a slow push on his face
+            u = (f - 1) / max(1, b0 - 1)
+            _keycam(cam, f, a1, t1, d1 - 1.5 * u, lens)
+        elif f <= b1:                                              # back and tilt to the two of them
+            e = acting.ease((f - b0) / (b1 - b0), "overshoot", 0.08)
+            _keycam(cam, f, a1.lerp(a2, e), t1 + (t2 - t1) * e, (d1 - 1.5) + (d2 - d1 + 1.5) * e,
+                    lens + (lens2 - lens) * e, yaw * e)
+        else:                                                      # settle, a slight drift
+            u = (f - b1) / max(1, n - b1)
+            _keycam(cam, f, a2, t2, d2 - 0.8 * u, lens2, yaw)
+    bpy.context.scene.camera = cam
     k = acting.face_keys
     k(rig, 1, eye_close=1.0, eye_open=0.0)
-    k(rig, f_open + 1, eye_close=0.55)
-    k(rig, f_open + 3, eye_close=1.0)
-    k(rig, f_open + 7, eye_close=0.3)
-    k(rig, f_eyes, eye_close=0.0)
-    k(rig, f_it, eye_open=0.6)
-    acting.expression(rig, "terror", f_chest)
-    acting.look_at(rig, eyes + UP * 6 + Vector((0, 0, 8)), f_eyes, f_it - 1, darts=True, seed=9)   # blank, upward
-    acting.look_at(rig, sh["root"].matrix_world.translation + Vector((0, 0, 1.2)), f_it, n, darts=True, seed=10)
+    k(rig, f_open, eye_close=0.55)                                 # the flutter on "opened"
+    k(rig, f_open + 2, eye_close=1.0)
+    k(rig, f_open + 4, eye_close=0.25)
+    k(rig, f_open + 6, eye_close=0.0)
+    acting.look_at(rig, eyes + UP * 6 + Vector((0, 0, 8)), f_open + 6, f_eyes - 1, darts=True, seed=9)   # blank
+    acting.expression(rig, "terror", f_eyes)                       # he sees it: terror on "eyes"
+    acting.look_at(rig, sh["root"].matrix_world.translation + Vector((0, 0, 1.2)), f_eyes, n, darts=True, seed=10)
     anim.lids(sh, n - 16, 1.0)
     s3d.lock_on(sh, eyes, n - 12)
+    _beats("S16", terror=f_eyes, reveal=b0)
     _anchors("S16", n, cam, rig, sh)
     return dict(frames=n, step=2, ones=(1, n), subject=_subject(rig, sh))
 
