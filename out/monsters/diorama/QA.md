@@ -42,6 +42,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S14 | helper 3's builder (+ 2D push-in, 8a3257d) | PASS | 80 / 80 | 0.37 | Kai on all fours looks up: wide eyes, then narrowed and a head tilt (SG2); 1 NOTE |
 | S20 | helper 5's builder | PASS | 103 / 103 | 0.40 | the tiny "pff", the shrimp stares at its claw, cut on 44 to Kai's deadpan held 60 frames |
 | S24top | XprL | PASS | 97 / 97 | 0.47 | Kai walks down from the thorn tree to the shrimp at the pond, push-in on 1s (57-85); reads in the top half |
+| S08 | helper 9 (joined by the coordinator, 1b30467) | PASS | 85 / 85 | 0.29 | water pours off the tank and runs to the power strip, a spark on 55-57, the lights die, black from 58; rain in the window |
 | S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
 | S21 | helper 5 (rendered by helper 4) | PASS | 64 / 64 | 0.43 | the shrimp stomps off Kai's chest to the pond, the claw dips in with a ripple ring; clean |
 
@@ -100,7 +101,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S02, S05a, S08, S13, S16, S18, S19; the S03a re-render and the S15 fix.
+Waiting for: S02, S05a, S13, S16, S18, S19; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **FIX** (sent to helper 10, cc the coordinator).
@@ -243,3 +244,12 @@ Waiting for: S02, S05a, S08, S13, S16, S18, S19; the S03a re-render and the S15 
 - **Length and level:** 97 frames, saturation 0.47, a clean file; step 2 with the push-in on 1s (frames 57-85).
 - **Picture:** from above, Kai walks down from the thorn tree to the shrimp at the pond's edge; the push-in ends on
   him standing over it, his face readable. Everything sits in the top half (S24_FOCUS y 320), clear of the split line.
+
+## S08: "Water. Cables. Me." (helper 9's builder, joined by the coordinator, 1b30467)
+**PASS.**
+- **Length and level:** 85 frames, a clean file. Saturation 0.29 is under the band only because frames 58-85 are the
+  black (the row asks for 0.8 s of black); the lit part sits near 0.4.
+- **Picture:** the same dollhouse lab from above, now with S03a's rain in the window (continuity holds). On "Water"
+  the tank spills over the desk edge, and the sparkling stream runs down to the power strip by "Cables" (frame 28).
+  After "Me" (48) a white spark flares on the strip (55-57) with a ring of light, the room lights die, then black
+  from 58. Nothing graphic. The spark and the stream read at 360 px.
