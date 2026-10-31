@@ -42,7 +42,7 @@ Most serious first within each shot. Updated as shots land.
 | S06 | helper 9 | PASS (v2, bb8f476) | 41 / 41 | 0.37 | the bolt on frame 14, the stutter on 2s, the black opaque |
 | S10a | helper 4 | PASS (coordinator's second read of v2) | 56 / 56 | 0.38 | outline and lit side; known minor issue: outline slivers |
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
-| S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
+| S11a | helper 4 | v3 delivered (pale anime smoke), awaiting the coordinator's read | 39 / 39 | 0.52 | the holes clear; the smoke leans off the snail |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
 | S01 | bGqrs | PASS (v2, c8a0958) | 69 / 69 | 0.46 | the terror-eye sliver is fixed; 1 NOTE (chin at the caption line) |
 | S04 | helper 2 | PASS | 73 / 73 | 0.31 | claw held open, shuts, white-hot on "boils"; 1 NOTE |
@@ -420,3 +420,11 @@ clears the mouth. PASS once that is checked in helper 8's next animatic.
     Mean saturation fell to 0.24, below even E22's 0.26. It is a designed shadow tone, so not blocking, but it may
     look odd next to S03a.
 - **S19 v2: PASS.** The last drop is full at frame 1, gone at frame 90, and stays gone.
+
+## S11a v3: pale anime smoke (helper 4, from the coordinator's polish note, 31 Oct)
+Self-review; the coordinator's read is pending. 39 frames, saturation 0.52, value 0.79, 13-24 s per frame.
+- **Smoke:** pale lavender-grey (#cfc8d8) with a cel step to a darker underside (#9a93ab) and a soft see-through
+  rim, peaking at about 60-70% opacity. Thin columns of three small puffs per hole lean up and to screen-left.
+- **Clearances:** no puff crosses the shell or the eye stalks in any of the 7 sheet frames. The six burnt holes and
+  their orange rims are fully readable.
+- **Readability:** the smoke reads at 360 px without becoming a smear.
