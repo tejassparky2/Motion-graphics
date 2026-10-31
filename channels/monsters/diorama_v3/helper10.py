@@ -97,6 +97,15 @@ def _kneeling_kai():
     return k, loc, reach
 
 
+def _kai_objects(k):
+    """Every object that draws Kai: the armature's meshes and the constraint-held cap and shoes."""
+    arm = k["arm"]
+    objs = [c for c in arm.children_recursive if c.type == "MESH"]
+    objs += [o for o in bpy.context.scene.objects if o not in objs
+             and any(getattr(c, "target", None) == arm for c in o.constraints)]
+    return objs + [o for o in k.get("cap", []) if o not in objs]
+
+
 def face_point(k):
     """Between his eyes: 55% up the head bone, nudged forward (toward -Y... his facing) by a little."""
     bpy.context.view_layer.update()
@@ -153,6 +162,12 @@ def s15a():
     s15._key_pose(k, FLINCH + 2)
     s15._flush_keys(k)
     acting.expression(k, "neutral", 1)
+    # shot A (1..CUT-1) is the shrimp's close-up: Kai is out of it (from that low camera his reaching arm would
+    # come down in front of the shrimp's head), so he is hidden there and appears from the cut to shot B
+    for o in _kai_objects(k):
+        for fr, v in ((1, True), (CUT, False)):
+            o.hide_render = v
+            o.keyframe_insert("hide_render", frame=fr)
     acting.expression(k, "surprised", FLINCH)
     acting.expression(k, "fear", FLINCH + 10)
     acting.blink(k, 1, n, at=(6,))
@@ -229,7 +244,7 @@ def _key_cam(c, f, pos, target, blur=None):
     dv2._key(c, f, Vector(target), dist, tilt, yaw=yaw)
 
 
-def _hide_occluders(cam, f0, f1, keep, near=0.85):
+def _hide_occluders(cam, f0, f1, keep, near=0.85, pairs=None):
     """Hide (hide_render, keyed) the set pieces that would sit between `cam` and its subject over f0..f1 (a blurred
     canopy or bush across the frame from a high diorama camera): any mesh smaller than 40 units and taller than 1,
     in frame and nearer than `near` x the focus distance, except `keep` (objects and their children: the characters,
@@ -257,6 +272,10 @@ def _hide_occluders(cam, f0, f1, keep, near=0.85):
                 if 0 < v.z < near * focus and -0.1 < v.x < 1.1 and -0.1 < v.y < 1.1:
                     hide.append(o)
                     break
+    for o in list(hide):                                       # a tree goes whole (pairs: canopy name -> trunk)
+        t = (pairs or {}).get(o.name)
+        if t is not None and t not in hide:
+            hide.append(t)
     for o in hide:
         for c in [o] + list(o.children_recursive):
             for fr, v in ((1, False), (f0, True), (f1 + 1, False)):
@@ -422,9 +441,10 @@ def s15_snap():
         u = acting.ease((f - CUT3) / (n - CUT3), "inout")
         dv2._key(c3, f, t3a.lerp(t3b, u), 70.0 - 22.0 * u, 50.0, yaw=-28.0 + 6.0 * u)
     keep = [k["arm"], root] + sts + [o for t in trees for o in (t if isinstance(t, (tuple, list)) else [t])]
-    keep += [o for o in sc.objects if o.name.startswith(("puff", "erase", "splinter", "kai_down", "grass"))
+    keep += [o for o in sc.objects if o.name.startswith(("puff", "erase", "splinter", "kai_down", "grass", "wisp", "stump", "landdust"))
              or any(getattr(c, "target", None) == k["arm"] for c in o.constraints)]   # (his cap and shoes)
-    hid = _hide_occluders(c2, CUT2, CUT3 - 1, keep) + _hide_occluders(c3, CUT3, n, keep)
+    pairs = {c.name: t for t, c in (tr for tr in isl["trees"] if tr)}
+    hid = _hide_occluders(c2, CUT2, CUT3 - 1, keep, pairs=pairs) + _hide_occluders(c3, CUT3, n, keep, pairs=pairs)
     print("S15 HIDDEN_OCCLUDERS", hid, flush=True)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], root] + list(k.get("cap", [])))
