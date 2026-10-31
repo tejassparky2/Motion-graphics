@@ -370,8 +370,12 @@ S_P = 1.32
 G_P = 975
 SHAKE_POSE = lambda t: dict(stick._shake(t), sh_f=-0.45, el_f=0.22, hand_f="crossed",   # noqa: E731
                             face={"name": "smiling"})
-POINT_POSE = dict(sh_n=0.75, el_n=-1.9, sh_f=-0.75, el_f=1.9, turn=0.6, lean=-0.04,   # hands on hips, no arm out
+POINT_POSE = dict(sh_n=0.35, el_n=1.6, sh_f=0.3, el_f=1.7, turn=0.5, lean=-0.03, hand_n="fist", hand_f="fist",   # fists low, elbows bent
                   face={"name": "angry"})
+HOLD_POSE = dict(sh_n=0.55, el_n=1.75, sh_f=0.45, el_f=1.85, turn=0.5, lean=0.02, hand_n="fist", hand_f="fist",
+                 face={"name": "determined"})                      # both hands close to the chest, elbows bent
+RIP_POSE = dict(sh_n=0.7, el_n=1.3, sh_f=-0.35, el_f=1.6, turn=0.5, lean=-0.04, hand_n="fist", hand_f="fist",
+                face={"name": "angry"})                            # the rip: fists pulled apart, still bent
 BACK_POSE = dict(sh_n=0.75, el_n=1.6, sh_f=0.6, el_f=1.7, lean=-0.1, nod=-0.1, turn=0.6, hand_n="splay",
                  hand_f="splay", face={"name": "shocked"})
 
@@ -411,12 +415,31 @@ def sh_pact(cr, t, a, b):
         P.poly(cr, [(x0, y - 22), (x1 - 40, y - 22), (x1 - 40, y - 46), (x1 + 30, y), (x1 - 40, y + 46),
                     (x1 - 40, y + 22), (x0, y + 22)])
         P.fill_ink(cr, "axis", 5, tone=False)
-    h_tr = [(0, SHAKE_POSE), (tear + 0.02, POINT_POSE)]
-    s_tr = [(0, SHAKE_POSE), (tear + 0.02, BACK_POSE)]
+    grab = tear - 0.95                                              # he lets go of the handshake, takes the pact
+    h_tr = [(0, SHAKE_POSE), (grab + 0.3, HOLD_POSE), (tear + 0.05, RIP_POSE), (tear + 0.9, POINT_POSE)]
+    s_tr = [(0, SHAKE_POSE), (grab + 0.3, dict(face={"name": "worried"})), (tear + 0.02, BACK_POSE)]
     STALIN.draw(cr, u, s_tr, move=[(tear, STALIN.x), (tear + 0.5, STALIN.x + 150)])
     HITLER.draw(cr, u, h_tr)
-    tr = ease_out(seg(u, tear, tear + 0.55))
-    things.Pact(x=W / 2, y=250, scale=0.5, tear=tr, title="PACT", seed=2).draw(cr, t)
+    J = HITLER.joints(u, h_tr)
+    hx = (J["hand_n"][0] + J["hand_f"][0]) / 2
+    hy = (J["hand_n"][1] + J["hand_f"][1]) / 2 - 40
+    g = smooth(seg(u, grab, grab + 0.45))                           # the pact comes down into both hands
+    cx, cy, sc = lerp(W / 2, hx, g), lerp(250, hy, g), lerp(0.5, 0.3, g)
+    if u < tear:
+        things.Pact(x=cx, y=cy, scale=sc, title="PACT", seed=2).draw(cr, t)
+    else:                                                           # the two-handed rip: halves fly apart
+        e = ease_out(seg(u, tear, tear + 0.9))
+        fade = 1 - seg(u, tear + 1.6, tear + 2.2)
+        for side in (-1, 1):
+            if fade <= 0:
+                break
+            cr.save()
+            cr.translate(cx + side * 330 * e, cy - 200 * e + 260 * e * e)
+            cr.rotate(side * 0.9 * e)
+            cr.rectangle(0 if side > 0 else -400, -400, 400, 800)
+            cr.clip()
+            things.Pact(x=0, y=0, scale=sc, tear=min(1.0, e * 3), title="PACT", seed=2, alpha=fade).draw(cr, t)
+            cr.restore()
     cr.restore()
 
 

@@ -139,7 +139,7 @@ def cheering_crowd(cr, t, x0=0.0, x1=W, y0=640.0, y1=1000.0, n=46, scale=0.5, fr
     """V-E Day: a dense crowd cheering (silhouettes behind, a front row of full poster civilians and soldiers),
     hats tossed up and spinning, confetti drifting down. Sound: cheering, bells, a band in the distance."""
     crowd(cr, t, n, x0, x1, y0, y1 - 40, scale=scale * 0.8, pose="cheer", seed=seed,
-          poses=["cheer", "cheer", "wave", "stand"], tone="ink_soft")
+          poses=["cheer", "cheer", "fist_pump", "stand"], tone="ink_soft")   # no "wave" (STYLE: no raised straight arms)
     r = random.Random(seed)
     kinds = [dict(civilian="flatcap"), dict(civilian="hat"), dict(nation="britain"), dict(civilian="scarf"),
              dict(nation="usa"), dict(nation="soviet")]
@@ -147,7 +147,7 @@ def cheering_crowd(cr, t, x0=0.0, x1=W, y0=640.0, y1=1000.0, n=46, scale=0.5, fr
         x = lerp(x0 + 120, x1 - 120, (i + 0.5) / front) + r.uniform(-40, 40)
         k = kinds[i % len(kinds)] if nation is None else dict(nation=nation)
         f = Figure(x=x, y=y1, scale=scale * 1.25, facing=r.choice((1, -1)), seed=seed * 20 + i, **k)
-        f.draw(cr, t + r.uniform(0, 2), [(0.0, r.choice(["cheer", "wave", "cheer"]))])
+        f.draw(cr, t + r.uniform(0, 2), [(0.0, r.choice(["cheer", "fist_pump", "cheer"]))])
     if hats:
         for i in range(10):
             rr = random.Random(seed * 99 + i)

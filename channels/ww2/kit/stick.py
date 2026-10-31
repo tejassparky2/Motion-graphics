@@ -98,7 +98,7 @@ def _idle(t, seed=0):
 
 
 def _wave(t):
-    return dict(sh_n=2.3, el_n=1.15 + 0.4 * math.sin(t * 2 * math.pi * 1.6), sh_f=-0.08, el_f=0.15, turn=0.4,
+    return dict(sh_n=2.3, el_n=1.35 + 0.4 * math.sin(t * 2 * math.pi * 1.6),            # hand-up wave, elbow >= 0.95 sh_f=-0.08, el_f=0.15, turn=0.4,
                 face={"mouth": "smile"})
 
 
@@ -106,6 +106,13 @@ def _cheer(t):
     k = 0.5 + 0.5 * math.sin(t * 2 * math.pi * 1.4)
     return dict(sh_n=2.7 + 0.25 * k, sh_f=-2.7 - 0.25 * k + 0.0, el_n=0.25, el_f=-0.25, nod=-0.25, turn=0.6,
                 bob=-10.0 * k, hand_n="fist", hand_f="fist", face={"mouth": "o", "brow": "neutral"})
+
+
+def _fist_pump(t):
+    """A cheering fist pumped above the head, elbow always bent (never a straight raised arm)."""
+    k = abs(math.sin(t * 2 * math.pi * 1.3))
+    return dict(sh_n=2.55 + 0.15 * k, el_n=1.1 - 0.15 * k, hand_n="fist", sh_f=-0.15, el_f=0.5, nod=-0.15, turn=0.5,
+                face={"mouth": "smile"})
 
 
 def _shiver(t):
@@ -147,6 +154,7 @@ POSES = {
     "wave": _wave,
     "salute": dict(sh_n=1.75, el_n=2.6, lean=-0.03, nod=-0.05, hand_n="open", face={"mouth": "line"}),
     "cheer": _cheer,
+    "fist_pump": _fist_pump,
     "hips": dict(sh_n=0.75, el_n=-1.9, sh_f=-0.75, el_f=1.9, turn=0.7, face={"brow": "angry", "mouth": "grit"}),
     "arms_crossed": dict(sh_n=0.25, el_n=2.0, sh_f=0.15, el_f=2.15, turn=0.7, face={"brow": "angry"}),
     "head_down": dict(lean=0.18, nod=0.5, sh_n=0.05, sh_f=-0.05, el_n=0.1, el_f=0.1, turn=0.3,
