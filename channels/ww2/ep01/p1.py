@@ -69,7 +69,7 @@ LOCK = things.Padlock()
 TABLE = things.LongTable(length=1500.0, chairs=9)
 ROOM = sets.SigningRoom(kind="hall", horizon=640)
 SKYLINE = sets.Skyline(city="generic", ground=860, seed=21)
-NEWS = things.Newspaper(masthead="THE DAILY HERALD", headline="PEACE SIGNED", sub="GERMANY ACCEPTS THE TERMS",
+NEWS = things.Newspaper(masthead="EXTRA!", headline="PEACE SIGNED", sub="GERMANY ACCEPTS THE TERMS",
                         date="29 JUNE 1919")
 _MAPS = {}
 
