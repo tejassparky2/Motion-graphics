@@ -2,8 +2,10 @@
 handle, the same beats on the same frames as the 3D S15 (the SFX are synced to them), staged for the tilted toy-world
 camera (mk/diorama.py, island seed 31, the world MAP). Its five beats (D1-D5 from the earlier test):
 
-    D1  1-41   wide of the clearing, slow push-in: Kai kneels at the pond reaching toward the shrimp; it blinks, looks
-               up (13), then its claw rises out of the pond on 2s and is held, dripping (22-41, silence)
+    D1  1-18   wide of the clearing, slow push-in: Kai kneels at the pond reaching toward the shrimp; it blinks, looks
+               up (13)
+    D1b 19-41  close and steep on the shrimp: its eyes narrow (19-21), then its claw rises out of the pond past Kai's
+               hand on 2s and is held, dripping (22-41, silence)
     D2  42-49  closer, locked on the shrimp: the strike (42); flash 44-45 and impact frames 46-49 are 2D (composite)
     D3  50-79  the money shot: the fan blast toward +Y, the white ring, the trees in the fan pop into dust in order of
                distance, leaving glowing stumps; the camera pulls up and back (dist 160 -> 290) to reveal
@@ -31,7 +33,7 @@ except ImportError:                                            # composite() run
 
 from channels.monsters.ep01v2 import helper10 as s15  # noqa: E402  (S15's poses, effects and 2D pass)
 
-A, C, D, E, F, G, END, HANDLE = s15.A, s15.C, s15.D, s15.E, s15.F, s15.G, s15.END, s15.HANDLE
+A, B, C, D, E, F, G, END, HANDLE = s15.A, s15.B, s15.C, s15.D, s15.E, s15.F, s15.G, s15.END, s15.HANDLE
 LENS, BLUR = 100.0, 12.0
 HAZE = (0.97, 0.55)                                            # diorama.camera's default haze band
 STAR_PX, CAP_BOX = 32, (280, 495, 420, 580)                     # the D5 stars and where his cap is in D5
@@ -270,9 +272,15 @@ def s15_diorama():
     # ---- cameras (every move keyed on every frame, inside ones)
     t1a, t1b = Vector((0.0, -3.4, 2.0)), Vector((0.0, -2.6, 2.2))
     c1 = _camera("D1_wide", A, t1a, 150.0, 58.0, 40.0)        # from the south-west: Kai and the shrimp side by side
-    for f in range(A, D):                                       # slow push-in
-        u = _ease((f - A) / (D - 1 - A))
-        _key(c1, f, t1a.lerp(t1b, u), 150.0 - 18.0 * u, 58.0, yaw=40.0)
+    for f in range(A, B):                                       # slow push-in
+        u = _ease((f - A) / (B - 1 - A))
+        _key(c1, f, t1a.lerp(t1b, u), 150.0 - 10.0 * u, 58.0, yaw=40.0)
+    # 19-41: close and steep on the shrimp, its face up to the lens: the eyes narrow (19-21, SG6), then the claw rises
+    # past Kai's hand, dripping (IM2)
+    sc.frame_set(B + 1)
+    bpy.context.view_layer.update()
+    ec = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
+    _camera("D1b_shrimp", B, ec + Vector((-0.45, 0.1, 0.75)), 30.0, 55.0, 30.0)
     t2 = Vector((SHRIMP[0] - 0.6, SHRIMP[1] - 0.6, 2.0))
     _camera("D2_strike", D, t2, 80.0, 48.0, 40.0)
     t3a, t3b = Vector((0.0, -1.5, 2.0)), Vector((0.0, 14.0, 0.0))
