@@ -29,6 +29,14 @@ This shot list covers `channels/ww2/ep01_script.md` (after the fact-check, 5bf6d
   - a poster wipe into each chapter card;
   - a slow fade in and out of chapter 5 only.
 
+## Production and encoding notes (coordinator, 31 Oct 2026)
+- **Grain is static.** `core.print_finish` now uses a fixed grain plate. Per-frame grain made an 8 s clip 89 MB and
+  would turn to mush in YouTube's re-encode.
+- **No full-screen noise.** Package animators must not add per-frame full-screen noise, flicker or "boil". Any boil
+  goes on small elements only: a line wobble on one figure, a flag, a flame.
+- **Encode.** `render_clip` defaults to **crf 16**, about 10 Mbps, so the whole episode is about 800 MB. Keep that
+  default and don't lower the crf per package.
+
 ## Reusable set-pieces
 Build each set-piece once, as a module with parameters, then reuse it across shots.
 
