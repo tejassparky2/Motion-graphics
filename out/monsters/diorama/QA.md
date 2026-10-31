@@ -31,7 +31,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S10b | helper 6 | PASS (remuxed clean, 8672c25) | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS (remuxed clean, 8672c25) | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
-| S17 | bGqrs | PASS | 47 / 47 | 0.38 | the drop falls from the claw tip by Kai's face; clean file; 1 NOTE |
+| S17 | bGqrs + helper 3 (close-up, d7bc26c) | PASS | 47 / 47 | 0.38 | the drop swells on the claw tip and falls onto his collar with a 2D glint (17-23), 10% push; clean; 1 NOTE |
 | S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
 | S06 | helper 9 + coordinator | PASS (v2 with the rain, 72be357) | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
 | S07 | helper 2 | PASS (remuxed clean, 7c99972) | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
@@ -48,7 +48,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S16 | bGqrs (540d14c) | PASS | 76 / 76 | 0.39 | push-in on Kai on his back: eyes shut, open by "eyes" (24), comic shock eyes + sweat on 43; 1 NOTE |
 | S18 | bGqrs (7765bd5) | PASS | 60 / 60 | 0.53 | Kai's eyes narrow, cut on 31 to the blue speed-line realisation background (IM6); 1 NOTE |
 | S19 | helper 5 + coordinator post (26c0b61) | PASS | 105 / 105 | 0.36 | sun glare, a sweat bead (25-40), the drop on the claw tip shrinks away by ~55, an 8% push, a squint on 62 |
-| S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
+| S01 | bGqrs + helper 4 + XprL parts, coordinator join (42a48bc) | PASS | 69 / 69 | 0.37 | the close hook frame: terror eyes and sweat from frame 1, the claw by his face, smoke kept over the pond; clean; 1 NOTE |
 | S21 | helper 5 (rendered by helper 4) | PASS | 64 / 64 | 0.43 | the shrimp stomps off Kai's chest to the pond, the claw dips in with a ripple ring; clean |
 
 ## S03a: night shift at the marine lab (helper 1)
@@ -106,7 +106,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S02 and the joined S01; the S03a re-render and the S15 fix.
+Waiting for: S02; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **v2 (helper 10, 50369c7): PASS**, with one NOTE.
@@ -321,3 +321,24 @@ S20's post (0942557, the eye cover up to the hair) was re-checked: the deadpan d
 was 0.31), S05a 0.26 (was 0.16), S07 0.53 (was 0.42). The water and gravel read as a cool tank rather than grey, the
 red shrimp still pops, and the three cut together without a colour jump. Frame counts unchanged, files clean. The
 S04 and S05a low-saturation NOTES are closed.
+
+## S01: "Don't move. That claw can boil water." FRAME 0 (final, coordinator join 42a48bc)
+**PASS**, with one NOTE.
+- **Length and level:** 69 frames, saturation 0.37, a clean file; joined from four parts on bcbecef with no visible seam
+  (largest frame-to-frame change 0.0065).
+- **Frame 0 / hook (research rules):** a close view from above, already moving: Kai on his back below the pond with the
+  comic terror eyes and a sweat drop from frame 1 (rhymes with S16), the puff-shrimp on his chest with its claw cocked
+  beside his face. The smoke puff and embers stay in the top third over the pond and never cross his face (the v1
+  problem at f33-46 is gone). The shrimp's eyes sit just above the caption band (about y 815-840), Kai's face well
+  clear of it, nothing on the right rail.
+- **NOTE:** the row's sliced trees with glowing orange cuts at the top of frame are not in this framing (the pond fills
+  the top); the drifting smoke stands in for the aftermath. The close framing was the coordinator's call for frame 0.
+
+## S17: "Then I saw the drops." (close-up re-delivery, d7bc26c)
+**PASS**, with one NOTE. (Supersedes the v1 entry below.)
+- **Length and level:** 47 frames, saturation 0.38, a clean file; on 2s with a 10% push.
+- **Picture:** close on Kai and the shrimp from above. A big drop swells on the claw tip and falls onto his collar
+  with the 2D glint on "drops" (frames 17-23), the clue's second showing (CH3). The v1 NOTE (a small drop by the face)
+  is fixed: it now reads clearly at 360 px.
+- **NOTE:** the shrimp's eyes fall inside the caption band (about y 860); the drop and claw, the subject, stay clear
+  above it.
