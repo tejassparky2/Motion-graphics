@@ -253,8 +253,9 @@ def s_hitler_atlantic(cr, t, t0, t1):
     lt = t - t0
     paper(cr)
     m.draw(cr, lt)
-    track = [(0.0, "stand"), (0.35, dict(turn=0.5, face={"brow": "angry"})), (w - 0.4, "point"),
-             (w + 1.8, dict(sh_n=1.45, el_n=0.1, turn=0.35, hand_n="fist", face={"brow": "angry", "mouth": "grit"}))]
+    track = [(0.0, "stand"), (0.35, dict(turn=0.5, face={"brow": "angry"})), (w - 0.4, "point"),   # a short bent-arm
+             (w + 1.8, dict(sh_n=1.15, el_n=0.95, turn=0.35, hand_n="fist",                         # point (no straight
+                            face={"brow": "angry", "mouth": "grit"}))]                              # arms: STYLE.md)
     z = push_in(t, t0, t1, 1.0, 1.05)
     cr.save()
     camera(cr, z, W / 2, H / 2)
@@ -540,8 +541,8 @@ def s_codebreakers(cr, t, t0, t1):
     hx, hy = j["head"]
     things.Headphones(x=hx, y=hy - 4, scale=0.36).draw(cr, t)
     cr.restore()
-    BREAKER_B.draw(cr, t, [(t0, dict(lean=0.42, nod=0.45, sh_n=1.25, el_n=0.6, turn=0.3, face={"brow": "angry"})),
-                           (c0, dict(lean=0.45, nod=0.5, sh_n=1.35, el_n=0.45, turn=0.3,
+    BREAKER_B.draw(cr, t, [(t0, dict(lean=0.42, nod=0.45, sh_n=0.95, el_n=1.15, turn=0.3, face={"brow": "angry"})),
+                           (c0, dict(lean=0.45, nod=0.5, sh_n=1.0, el_n=1.0, turn=0.3,
                                      face={"brow": "angry", "mouth": "o"}))])
     cr.rectangle(-300, 860, W + 600, 400)                       # the desk
     cr.set_source_rgba(*col("#6b4a2f"))
@@ -989,8 +990,11 @@ def s_slam(cr, t, t0, t1):
     cr.translate(sx, sy)
     camera(cr, push_in(t, t0, t1, 1.0, 1.06), W / 2, H / 2 + 30)
     rays(cr, t, 820, 420, n=28, color="ink", alpha=0.13, spin=0.02)
-    track = [(t0, dict(turn=0.45, face={"brow": "angry", "mouth": "grit"})), (hit - 0.3, "slam"),
-             (hit, "slam_down")]
+    windup = dict(lean=0.2, nod=0.1, sh_n=2.3, el_n=1.6, hand_n="fist", turn=0.4,   # fist up by the head, elbow bent
+                  face={"brow": "angry", "mouth": "grit"})
+    down = dict(lean=0.38, nod=0.22, sh_n=0.75, el_n=0.95, hand_n="fist", turn=0.4,   # fist on the table, elbow bent
+                face={"brow": "angry", "mouth": "grit"})
+    track = [(t0, dict(turn=0.45, face={"brow": "angry", "mouth": "grit"})), (hit - 0.3, windup), (hit, down)]
     HITLER_SLAM.draw(cr, t, track)
     cr.rectangle(-300, 860, W + 600, 400)                       # the map table
     cr.set_source_rgba(*col("#5a3f29"))
