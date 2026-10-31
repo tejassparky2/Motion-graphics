@@ -87,3 +87,21 @@ sheets plus crops of the tank (S06) and of Kai's face (S18). Three NOTES, none b
   spill in S08a. The cut reads as a jump, since we never see him get up. It is covered by S08a opening close on
   his feet.
 - **S18:** the narrowing eyes sit half under the cap brim. Tilting the cap back, as in S08b and S08a, would help.
+
+## Full episode (interim picture.mp4 at 4cfd13a; S24's B half still a slate)
+- **Format:** 1080x1920, 24 fps, 1929 frames (80.375 s), the same as timing.json total_frames.
+- **Shot boundaries:** checked at all 33 cuts (the last frame of each shot against the first of the next, at the
+  timing.json first_frame): every shot starts with its own picture, with no frame from a neighbour and no stray
+  black.
+  - S08b to S09 is black into black, by design.
+  - S01 to S02 has the glitch rewind.
+- **Captions:** one per line at its midpoint, 30 lines. Each is placed per shot, readable, and clear of the faces
+  and the subject of the line:
+  - S16 sits at the top over the cap.
+  - S23b's "at the shrimp." sits under the tiny shrimp in the bird's view.
+  - S23c's caption sits between the shrimp's antennae.
+  - The hook text sits over the pond on frame 1.
+- **The bird:** cute as it lands in S23, then its dark grey form with orange eyes from the danger switch; dark
+  through S23b and S23c.
+- **The A/B split:** the A card ("A SAVE") pops on the top half; the B half is still a slate. Re-check when S24bot
+  lands.
