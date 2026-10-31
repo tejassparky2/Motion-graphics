@@ -18,13 +18,13 @@ back to the thorn tree), its claw (right side) dipped west into the water.
 import math
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 from channels.monsters.diorama import xprl as v2
 from channels.monsters.diorama_v3 import bgqrs as b3
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
-from channels.monsters.mk import acting, anim, butcherbird, diorama, hero, tuftwing
+from channels.monsters.mk import acting, anim, butcherbird, diorama, hero, look, tuftwing
 
 SHRIMP = (*diorama.MAP["shrimp_drink"], 0.0)  # the pond's east edge, its back to the thorn tree (coordinator, v3)
 SHRIMP_YAW = diorama.SHRIMP_DRINK_YAW
@@ -88,6 +88,124 @@ def _bird_on_perch(perch, face_to, cut=0.1, fold=False):
     return rig
 
 
+# ------------------------------------------------------------------------------------------------------- dark form
+def _show(o, f, on):
+    """Pop an object in (on=True) or out at frame f (scale keys, CONSTANT), keeping its scale otherwise."""
+    s = tuple(o.scale)
+    hide = tuple(v * 0.001 for v in s)
+    before, after = (hide, s) if on else (s, hide)
+    if f > 0:
+        anim.key(o, "scale", f - 1, before, "CONSTANT")
+    anim.key(o, "scale", f, after, "CONSTANT")
+
+
+def _head_child(name, mesh, mat, head):
+    """A mesh in the bird's rest coordinates, parented to its head the way tuftwing parents its parts."""
+    o = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(o)
+    mesh.materials.append(mat)
+    o.parent = head
+    o.matrix_parent_inverse = Matrix.Translation(-Vector(tuftwing.CENTER))
+    o.visible_shadow = False
+    return o
+
+
+def dark_form(f, name="tuft", lids_down=None):
+    """The butcher bird's villain face from frame f (the end of S23, S23b, the dive in S24 B): the shrike's black mask
+    through both eyes to the beak, amber eyes, hard angular lids slanting down to the beak and cutting the top of each
+    eye (dropped to leave only an amber slit at `lids_down`, the lock-on), no blush, the belly a dull cream, and a
+    small dark hooked beak. Works on any tuftwing rig by its object names (`name` as given to tuftwing.build)."""
+    head = bpy.data.objects[f"{name}_head"]
+    c = Vector(tuftwing.CENTER)
+    rx, ry, rz = tuftwing.BALL
+    ink = look.flat(f"{name}_mask", look.hexc("#17121a"))
+    amber = look.flat(f"{name}_amber", look.hexc("#ffae1a"), 1.25)
+
+    def surf(a, e, k=1.02):                                   # a point on the ball: azimuth a (0 = front), elevation e
+        a, e = math.radians(a), math.radians(e)
+        return c + Vector((rx * math.sin(a) * math.cos(e), -ry * math.cos(a) * math.cos(e), rz * math.sin(e))) * k
+
+    # 1. the mask: a band through both eyes, dipping to the beak at the front, tapering off round the sides
+    verts, faces, cols = [], [], 0
+    for i, a in enumerate(range(-78, 79, 3)):
+        t = min(1.0, abs(a) / 24.0)
+        mid = 3.0 + 8.0 * t
+        hh = (4.0 + 7.0 * t) * (1.0 if abs(a) <= 40 else max(0.1, 1 - (abs(a) - 40) / 38.0))
+        verts += [tuple(surf(a, mid - hh)), tuple(surf(a, mid + hh))]
+        if i:
+            faces.append((2 * i - 2, 2 * i, 2 * i + 1, 2 * i - 1))
+    me = bpy.data.meshes.new(f"{name}_mask")
+    me.from_pydata(verts, [], faces)
+    for p in me.polygons:
+        p.use_smooth = True
+    mask = _head_child(f"{name}_mask", me, ink, head)
+    _show(mask, f, True)
+    # 2. amber eyes (the ink eyes swapped for amber copies), the white glints kept small; no blush
+    for sx in (-1, 1):
+        eye = bpy.data.objects[f"{name}_eye{sx}"]
+        am = eye.copy()
+        am.data = eye.data.copy()
+        am.data.materials.clear()
+        am.data.materials.append(amber)
+        am.name = f"{name}_eye_amber{sx}"
+        bpy.context.scene.collection.objects.link(am)
+        _show(am, f, True)
+        _show(eye, f, False)
+        for o in (bpy.data.objects.get(f"{name}_blush{sx}"),):
+            if o:
+                _show(o, f, False)
+    # 3. the lids: angular dark slabs in front of each eye, slanting down toward the beak; half down, then a slit
+    for sx in (-1, 1):
+        ec = Vector((sx * 0.25, -0.515, 0.86))
+        n = (ec - c).normalized()
+        up = (Vector((0, 0, 1)) - n * n.z).normalized()
+        right = up.cross(n).normalized()
+        roll = math.radians(28) * (1 if right.x * sx > 0 else -1)          # the inner end (toward the beak) lower
+        r2 = right * math.cos(roll) + up * math.sin(roll)
+        u2 = up * math.cos(roll) - right * math.sin(roll)
+        w, h, d = 0.17, 0.055, 0.012
+        base = ec + n * 0.075
+        lm = bpy.data.meshes.new(f"{name}_lid{sx}")
+        corners = [(-w, -h, -d), (w, -h, -d), (w, h, -d), (-w, h, -d), (-w, -h, d), (w, -h, d), (w, h, d), (-w, h, d)]
+        lm.from_pydata([tuple(r2 * x + u2 * y + n * z) for x, y, z in corners], [],
+                       [(0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)])
+        lid = _head_child(f"{name}_lid{sx}", lm, ink, head)
+        half, slit = base + u2 * (h + 0.06), base + u2 * (h - 0.05)    # lower edge cuts the eye's top / leaves a slit
+        for fr, p in ((f, half),) + (((lids_down, slit),) if lids_down else ()):
+            anim.key(lid, "location", fr, tuple(p - Vector((0, 0, 0))), "CONSTANT")
+        _show(lid, f, True)
+    # 4. a small dark hooked beak
+    beak = bpy.data.objects[f"{name}_beak"]
+    hook = beak.copy()
+    hook.data = beak.data.copy()
+    hook.data.materials.clear()
+    hook.data.materials.append(look.flat(f"{name}_beak_dark", look.hexc("#2b1f1c")))
+    hook.name = f"{name}_beak_hook"
+    bpy.context.scene.collection.objects.link(hook)
+    hook.scale = (1.15, 1.15, 1.5)
+    hook.rotation_euler = (math.radians(118), 0, 0)
+    _show(hook, f, True)
+    _show(beak, f, False)
+    # the belly a dull cream: desaturate the butter and cream from f
+    for mname in (f"{name}_butter", f"{name}_cream"):
+        m = bpy.data.materials.get(mname)
+        em = next((nd for nd in m.node_tree.nodes if nd.type == "EMISSION"), None) if m and m.use_nodes else None
+        if em is None or not em.inputs[0].links:
+            continue
+        src = em.inputs[0].links[0].from_socket
+        hsv = m.node_tree.nodes.new("ShaderNodeHueSaturation")
+        m.node_tree.links.new(src, hsv.inputs["Color"])
+        m.node_tree.links.new(hsv.outputs[0], em.inputs[0])
+        for fr, sat, val in ((f - 1, 1.0, 1.0), (f, 0.3, 0.88)):
+            hsv.inputs["Saturation"].default_value = sat
+            hsv.inputs["Value"].default_value = val
+            hsv.inputs["Saturation"].keyframe_insert("default_value", frame=fr)
+            hsv.inputs["Value"].keyframe_insert("default_value", frame=fr)
+        for fc in anim.all_fcurves(m.node_tree.animation_data.action):
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
+
+
 # -------------------------------------------------------------------------------------------------------- S22, S23
 def _to_s23_lens():
     """The way S23's bird faces at its end (it turns to S23's camera, which looks at the tree from the clearing)."""
@@ -120,7 +238,9 @@ def s22():
 def s23():
     """S23 as in v2 (the bird lands, glares at the lens, the empty-thorn insert), on v3's world. Its bird at the end
     is S23b's opening bird: same facing (to this camera), the same rage light and glare."""
-    return _v2_on_v3(v2.s23, "S23")
+    info = _v2_on_v3(v2.s23, "S23")
+    dark_form(32, lids_down=None)                                           # it turns dark on the rage light (f32)
+    return info
 
 
 # ------------------------------------------------------------------------------------------------------------ S23b
@@ -171,13 +291,14 @@ def s23b():
     side = turned(to_prey.xy.to_3d(), 25)
     bird = _bird_on_perch(perch, perch + _to_s23_lens() * 10, cut=0.1, fold=True)   # S23's last frame: same
     butcherbird.stare(bird, -8, down=-0.25)                                 # facing, dark, the glare, head up
+    dark_form(1, lids_down=LOCK)                                            # the shrike's mask, lids, hooked beak
     acting.tilt(bird, 8, angle=0.42, hold=8)                                 # a curious tilt: one eye to the ground
     acting.lock_on(bird, prey, LOCK)                                        # snap onto the shrimp, head down at it
     # ... and make it predatory (overriding lock_on's cute stare): a half-lid squint, the pupil shrunk to a hard dot
     # with the amber glint, the crest flattened BACK, a slow forward lean
     for f in (LOCK, LOCK + 2, LOCK + 6, LOCK + 9):
         for sx, e in zip((-1, 1), bird["eyes"]):
-            anim.key(e, "scale", f, (0.72, 1, 0.4), "CONSTANT")
+            anim.key(e, "scale", f, (0.85, 1, 0.62), "CONSTANT")
             anim.key(e, "rotation_euler", f, (0, sx * 0.42, 0), "CONSTANT")
         anim.key(bird["crest"], "rotation_euler", f, (-1.0, 0, 0), "CONSTANT")
     anim.key(bird["body"], "rotation_euler", LOCK, (0, 0, 0), "BEZIER")
