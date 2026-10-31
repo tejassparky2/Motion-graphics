@@ -141,6 +141,9 @@ def _stage():
         tank = dict(floor=t["center"], glass=t["glass"], leak=t["leak"], size=t["size"],
                     water=[t["water"]] if not isinstance(t["water"], list) else t["water"])
         _dress(tank)
+        mix = t["surface"].node_tree.nodes.get("Mix") if t.get("surface") else None
+        if mix is not None:                            # we look straight down through it: keep it a faint sheen
+            mix.inputs[0].default_value = 0.14
     else:
         room = None
         _stand_in_desk(3.75)
