@@ -32,7 +32,13 @@ UP = Vector((-math.sin(math.radians(HEAD_DIR)), math.cos(math.radians(HEAD_DIR))
 EAST = Vector((UP.y, -UP.x, 0))       # his left side (screen right from the south), where the shrimp's claw is
 LEAN = 40.0                           # the shrimp leans back on his chest, so its face tips up toward the camera
 BLUR = 12.0
-S01_CAM = (45.0, 60.0, 110.0, 0.0, 3.0)   # S01: tilt, dist, lens, yaw, aim past his eyes toward his head (units)
+# S01 (the hook: the shrimp's big eyes against the cocked claw must read). The puff-shrimp's face sits under its
+# cream ruff, so it shows from above only when the shrimp faces his face and leans back (as in S16); his face shows
+# only from his chin side (lying face up, his cap's brim points at the sky). So: from the south, steep (tilt 70), the
+# shrimp leaning back 50. tilt, dist, lens, yaw, aim offsets toward his head and away from the camera (units); the
+# shrimp's lean back (deg).
+S01_CAM = (70.0, 36.0, 110.0, 0.0, 1.5, -1.0)   # close for frame 0: face under the hook, its eyes over the captions
+S01_LEAN = 50.0
 
 
 # ---------------------------------------------------------------- the world after the snap
@@ -70,13 +76,14 @@ LYING = [("spine", (0, 0, 1)), ("chest", (0, 0, 1)), ("upper_chest", (0, 0, 1)),
          ("left_foot", (-0.25, 1, -0.3)), ("right_foot", (0.3, 1, -0.3))]
 
 
-def _kai():
+def _kai(head=None):
     """Kai on his back at MAP["kai_down"], relaxed (LYING), head toward the pond; a soft contact shadow under him and
-    grass tufts over his outline, so he lies IN the grass."""
+    grass tufts over his outline, so he lies IN the grass. `head`: another head direction (his own frame)."""
     from channels.monsters.ep01v2 import helper10 as s15
     rig = hero.load((0, 0, 0), scale=s3d.KAI_SCALE, outfit="world")
     rot = (math.pi / 2, 0, math.pi + math.radians(HEAD_DIR))
-    s15._pose(rig, LYING, (HIPS[0], HIPS[1], 0.5), rot)
+    spec = [(b, head if (b == "head" and head) else d) for b, d in LYING]
+    s15._pose(rig, spec, (HIPS[0], HIPS[1], 0.5), rot)
     hip = s15._world(rig, "hips")
     rig["arm"].location += Vector((HIPS[0] - hip.x, HIPS[1] - hip.y, 0))
     s15._ground(rig)
@@ -110,15 +117,16 @@ def _tufts(hip, seed=21):
             bpy.context.object.data.materials.append(rnd.choice(petals))
 
 
-def _shrimp(rig, n, claw="face"):
+def _shrimp(rig, n, claw="face", yaw=None, lean=LEAN, side=1):
     """Low on his chest, facing his face, leaning back. claw="face": cocked beside his face, pointing at it (S01's
     threat); "jacket": held out over his chest so its drops land on the jacket (S17). Breathes on 2s."""
-    sh = s3d._shrimp(rig, yaw=180 + HEAD_DIR, chest_offset=tuple(-UP * 0.55 + Vector((0, 0, 0.15))))
-    sh["root"].rotation_euler = (math.radians(-LEAN), 0, math.radians(180 + HEAD_DIR))
+    yaw = 180 + HEAD_DIR if yaw is None else yaw
+    sh = s3d._shrimp(rig, yaw=yaw, chest_offset=tuple(-UP * 0.55 + Vector((0, 0, 0.15))))
+    sh["root"].rotation_euler = (math.radians(-lean), 0, math.radians(yaw))
     bpy.context.view_layer.update()
     nose = s3d.kai_point(rig, "nose")
     if claw == "face":
-        sh["cock"] = s3d.raise_claw(sh, nose + EAST * 1.3 - UP * 0.4 + Vector((0, 0, 1.6)), nose)
+        sh["cock"] = s3d.raise_claw(sh, nose + EAST * 1.3 * side - UP * 0.4 + Vector((0, 0, 1.6)), nose)
         s3d.cock(sh, 1)
     else:
         sh["cock"] = _over_jacket(sh, rig)
@@ -150,18 +158,21 @@ def _hit(p):
 
 
 def _over_jacket(sh, rig):
-    """Raise the claw so its tip hangs over his jacket (the clothes material, not the bare neck): try aim points over
-    his chest, nearest the shoulder first, and keep the first whose tip is above cloth. Returns the shoulder pose."""
+    """Raise the claw so it reaches down over his jacket BESIDE the shrimp (his left chest and arm), well clear of his
+    face: try cloth spots there, nearest the shrimp first, and keep the first whose claw tip hangs over cloth at least
+    2 units from his eyes. Returns the shoulder pose."""
     chest = s3d.kai_point(rig, "chest")
+    eyes = s3d.kai_point(rig, "eyes")
     pose = None
-    for k in (0.9, 1.2, 0.6, 1.5):                                 # the arm reaches down toward a spot on his jacket,
-        for u in (0.5, 0.2, 0.8):                                  # so the tip is its lowest point, over the cloth
+    for k in (1.0, 1.3, 0.7, 1.6):
+        for u in (-0.3, -0.7, 0.0, -1.1):                          # level with the shrimp or toward his belly
             spot = _hit(chest + EAST * k + UP * u + Vector((0, 0, 3)))
             if not spot or "huku" not in spot[2]:
                 continue
             pose = s3d.raise_claw(sh, spot[0] + Vector((0, 0, 1.4)), spot[0])
-            h = _hit(s3d.claw_tip(sh))
-            if h and "huku" in h[2]:
+            tip = s3d.claw_tip(sh)
+            h = _hit(tip)
+            if h and "huku" in h[2] and (tip - eyes).length > 2.0:
                 return pose
     return pose
 
@@ -185,12 +196,12 @@ def _dust(rig, n, count=46, seed=8):
         anim.key(o, "scale", f1, 0.2, "LINEAR")
 
 
-def _world(shot, claw="face"):
+def _world(shot, claw="face", head=None, **shrimp):
     n = FRAMES[shot]
     diorama.setup()
     stumps = _set(n)
-    rig = _kai()
-    sh = _shrimp(rig, n, claw)
+    rig = _kai(head)
+    sh = _shrimp(rig, n, claw, **shrimp)
     diorama.sunbeam(s3d.kai_point(rig, "chest"), radius=7.0)     # shared: the same light on him S15-S21
     _dust(rig, n)
     sc = bpy.context.scene
@@ -311,17 +322,19 @@ def _drift(n, box, seed=13):
 # ---------------------------------------------------------------- the shots
 
 def s01():
-    """FRAME 0, the hook: from the south and above, Kai on his back with the shrimp on his chest (its claw cocked at his
-    face, eyes locked on), the erased forest's glowing, smoking stumps mid-frame behind them; the big hook text sits
-    over the far forest at the top, with smoke wisps and embers drifting across the top third (on 2s). Kai whispers
+    """FRAME 0, the hook: from his feet and high above, Kai on his back, the shrimp on his chest leaning back so its big
+    locked-on eyes show (on his face), its claw cocked by his cheek. The big hook text sits at the top, over smoke wisps and embers drifting across the top third from
+    the stumps beyond the frame (on 2s). Kai whispers
     (lips on 3s), terror face. Locked camera (step 2); the slow push-in is added in 2D."""
-    n, rig, sh, _ = _world("S01")
-    t, d, lens, yaw, up = S01_CAM
-    aim = s3d.kai_point(rig, "eyes") + UP * up                    # his face mid-frame, the pond above his head
+    n, rig, sh, _ = _world("S01", lean=S01_LEAN)
+    t, d, lens, yaw, up, far = S01_CAM
+    fwd = Vector((math.sin(math.radians(yaw)), math.cos(math.radians(yaw)), 0))   # away from the camera
+    pair = s3d.kai_point(rig, "eyes").lerp(sh["root"].matrix_world.translation, 0.5)
+    aim = pair + UP * up + fwd * far                               # the two of them below the middle, the top free
     cam = diorama.camera("cam_s01", aim, dist=d, tilt=t, yaw=yaw, lens=lens, blur=BLUR)
     _move(cam, n, [(1, t, d, lens), (n, t, d, lens)], lambda f: aim, yaw=yaw)   # locked: the push-in is 2D
-    pond = diorama.MAP["pond"]
-    _drift(n, ((pond[0] - 9, pond[0] + 11), (pond[1] - 1, pond[1] + 9), (2.0, 6.0)))   # the top third
+    c = pair + fwd * 8                                             # the top third: beyond them, away from the lens
+    _drift(n, ((c.x - 6, c.x + 6), (c.y - 9, c.y + 9), (2.0, 6.0)))
     s3d.kai_face(rig, 1, **s3d.TERROR)
     s3d.whisper(rig, 4, 13, s3d.TERROR)                            # "Don't move." 0.12-0.52 s
     s3d.whisper(rig, 26, 51, s3d.TERROR, seed=5)                   # "That claw can boil water." 1.04-2.12 s
@@ -355,10 +368,11 @@ def s16():
 
 
 def s17():
-    """Then I saw the drops. Close, locked and looking down (tilt 62) on his chest: the claw reaches down over his jacket, a
-    drop swells at its tip (diorama scale, so it reads from up here), lets go at f17, lands on the jacket at f23
-    ("drops") and leaves a dark wet splat; the next drop swells from f34. Same frames as the 3D S17."""
-    n, rig, sh, _ = _world("S17", claw="jacket")
+    """Then I saw the drops. Close, locked and looking down (tilt 70) on his chest: the claw reaches down over his
+    jacket beside the shrimp, clear of his face; a drop swells at its tip (diorama scale, so it reads from up here),
+    lets go at f17, lands on the jacket at f23 ("drops") and leaves a dark wet splat; the next drop swells from f34.
+    Same frames as the 3D S17."""
+    n, rig, sh, _ = _world("S17", claw="jacket", lean=S01_LEAN)       # leaning back: its eyes show, as in S01
     r = 0.3
     tip = s3d.claw_tip(sh) - Vector((0, 0, r * 0.9))
     land, nrm, mat = _hit(tip)
@@ -375,8 +389,8 @@ def s17():
     for f, s in ((22, 0.001), (23, 0.22), (25, 0.38), (29, 0.5), (35, 0.56)):
         anim.key(spot, "scale", f, (s, s * 0.8, 1), "LINEAR" if f > 23 else "CONSTANT")
     tgt = tip.lerp(land, 0.5)
-    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=62.0, lens=120.0, blur=BLUR)
-    _move(cam, n, [(1, 62.0, 50.0, 120.0), (n, 62.0, 50.0, 120.0)], lambda f: tgt)   # locked: the push-in is 2D
+    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=70.0, lens=120.0, blur=BLUR)
+    _move(cam, n, [(1, 70.0, 50.0, 120.0), (n, 70.0, 50.0, 120.0)], lambda f: tgt)   # locked: the push-in is 2D
     s3d.kai_face(rig, 1, **s3d.TERROR)
     _anchors("S17", cam, rig, sh, extra={"drop": lambda: d1.matrix_world.translation.copy()})
     print("S17 drop lands on", mat, flush=True)
