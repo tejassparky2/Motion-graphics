@@ -1,6 +1,6 @@
 """Episode 1 v2 picture assembler: shot mp4s in, the silent 720x1280 picture out.
 
-    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama] [--animatic] [--check]
+    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama|diorama_v3] [--animatic] [--check]
                                                        [--shots DIR] [--out PATH]
 
 - Every shot in channels/monsters/ep01v2/timing.json comes from out/monsters/ep01v2/shots/<SHOT>.mp4, conformed
@@ -18,6 +18,7 @@ error. --check: also writes a contact sheet of every 12th frame (out/monsters/ep
 every shot boundary.
 """
 import argparse
+import math
 import json
 import os
 import subprocess
@@ -30,14 +31,20 @@ os.environ.setdefault("FPS", "24")
 import numpy as np  # noqa: E402
 
 from channels.monsters import comp, fx2d, fx2d_anime  # noqa: E402
-from motion.engine import FPS, H, W, cairo  # noqa: E402
+from motion.engine import FPS, H, W, back_out, cairo, clamp01  # noqa: E402
+from motion.engine import hexc as hexc_  # noqa: E402
 from motion.polish import text_width  # noqa: E402
 
 TIMING = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 # Two cuts of the same episode (same timing, voice, captions and hook): the 3D one and the diorama 2.5D one
 # (channels/monsters/DIORAMA_EP01.md). Each has its own shots folder, output and caption placements.
 VERSIONS = {"ep01v2": os.path.join(ROOT, "out", "monsters", "ep01v2"),
-            "diorama": os.path.join(ROOT, "out", "monsters", "diorama")}
+            "diorama": os.path.join(ROOT, "out", "monsters", "diorama"),
+            "diorama_v3": os.path.join(ROOT, "out", "monsters", "diorama_v3")}
+# v3 (channels/monsters/DIORAMA_EP01_V3.md) has its own script and timing; the first two share ep01v2's.
+TIMINGS = {"ep01v2": TIMING, "diorama": TIMING,
+           "diorama_v3": os.path.join(ROOT, "channels", "monsters", "ep01v3", "timing.json")}
+AB_VERSIONS = {"diorama_v3"}     # S24 carries the big A / B letters timed to "Option A", "Option B", "Comment"
 SHOTS = os.path.join(VERSIONS["ep01v2"], "shots")
 OUT = os.path.join(VERSIONS["ep01v2"], "picture.mp4")
 SHEET = os.path.join(VERSIONS["ep01v2"], "picture_sheet.jpg")
@@ -66,7 +73,14 @@ CAP_Y_VERSION = {
                                             # S24: RUN panel, between the
                                             # divider and Kai's cap. Shots still changing are checked when they land.
 }
+# v3 starts from the diorama placements for the shots it keeps; new and re-staged shots are checked as they land.
+CAP_Y_VERSION["diorama_v3"] = {k: v for k, v in CAP_Y_VERSION["diorama"].items()
+                               if k in ("S05a", "S06", "S13", "S16", "S17", "S18")}
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
+AB_POS = {"A": (100, 190), "B": (100, 745)}   # badge centres, top-left of each panel; the label sits to the right,
+                                              # so both cards end above y 820, clear of the caption band (845-930)
+AB_COL = {"A": hexc_("#ffd23f"), "B": hexc_("#4fc3ff")}
+AB_LABEL = {"A": "SAVE", "B": "RUN"}
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
 S02_WHITE = (0.85, 0.60)     # the rewind's closing flash stays dimmer than the snap (the episode's brightest moment)
@@ -245,6 +259,54 @@ def draw_hook(cr):
                    outline=(0.05, 0.03, 0.06, 1), ow=size * 0.2, shadow=0.55)
 
 
+# ---------------------------------------------------------------- the A/B letters (v3)
+def ab_times(lines):
+    """Episode times of "Option" (A), the second "Option" (B) and "Comment" in S24's line."""
+    words = [w for ln in lines if ln["scene"] == "S24" for w in ln["words"]]
+    opt = [w["start"] for w in words if w["w"].lower().startswith("option")]
+    com = [w["start"] for w in words if w["w"].lower().startswith("comment")]
+    if len(opt) < 2 or not com:
+        raise SystemExit("S24's line needs two 'Option' words and a 'Comment' word for the A/B letters")
+    return opt[0], opt[1], com[0]
+
+
+def draw_ab(cr, t, times):
+    """Placeholder letter cards (helper 7's style replaces them): A pops on "Option A" in the top panel, B on
+    "Option B" in the bottom one, and both give one more pulse on "Comment A or B" and stay to the end."""
+    t_a, t_b, t_c = times
+    for letter, t0 in (("A", t_a), ("B", t_b)):
+        if t < t0:
+            continue
+        x, y = AB_POS[letter]
+        s = back_out((t - t0) / 0.25, 2.6)
+        if t >= t_c:
+            s *= 1 + 0.14 * math.sin(math.pi * clamp01((t - t_c) / 0.3))
+        if s <= 0.01:
+            continue
+        col = AB_COL[letter]
+        cr.save()
+        cr.translate(x, y)
+        cr.scale(s, s)
+        r = 74
+        cr.arc(0, 6, r, 0, 2 * math.pi)                         # drop shadow
+        cr.set_source_rgba(0, 0, 0, 0.35)
+        cr.fill()
+        cr.arc(0, 0, r, 0, 2 * math.pi)
+        cr.set_source_rgba(*col)
+        cr.fill_preserve()
+        cr.set_source_rgba(1, 1, 1, 1)
+        cr.set_line_width(9)
+        cr.stroke_preserve()
+        cr.set_source_rgba(0.05, 0.03, 0.06, 1)
+        cr.set_line_width(3)
+        cr.stroke()
+        fx2d._text(cr, letter, 0, 38, 108, (1, 1, 1, 1), "Luckiest Guy", "center", outline=(0.05, 0.03, 0.06, 1),
+                   ow=16, shadow=0.0)
+        fx2d._text(cr, AB_LABEL[letter], r + 18, 15, 44, (1, 1, 1, 1), fx2d.ROUND, "left",
+                   outline=(0.05, 0.03, 0.06, 1), ow=10, shadow=0.4)
+        cr.restore()
+
+
 # ---------------------------------------------------------------- main
 def main():
     global SHOTS, CAP_Y_SHOT
@@ -264,7 +326,8 @@ def main():
     if a.check:
         print(f"version {a.version}: shots {os.path.relpath(SHOTS, ROOT)} -> {os.path.relpath(a.out, ROOT)}")
 
-    tj = json.load(open(TIMING))
+    tj = json.load(open(TIMINGS[a.version]))
+    ab = ab_times(tj["lines"]) if a.version in AB_VERSIONS else None
     assert tj["fps"] == FPS, f"timing.json is {tj['fps']} fps, the canvas is {FPS}"
     shots = [Shot(s) for s in tj["shots"]]
     total = tj["total_frames"]
@@ -317,6 +380,8 @@ def main():
                 draw_hook(cr)
             if shot.name not in NO_CAPTIONS:
                 draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y))
+            if ab and shot.name == "S24":
+                draw_ab(cr, t, ab)
             s.flush()
             enc.stdin.write(bytes(s.get_data()))
             if a.check and frame_no % 12 == 0:
