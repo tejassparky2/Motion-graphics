@@ -4,3 +4,5 @@ Fonts (all SIL Open Font License 1.1, from Google Fonts):
 - Luckiest Guy (Astigmatic), https://fonts.google.com/specimen/Luckiest+Guy
 - Anton (Vernon Adams), SIL OFL 1.1, https://fonts.google.com/specimen/Anton (thriller hook text and captions)
 - Permanent Marker (Font Diner), Apache License 2.0, https://fonts.google.com/specimen/Permanent+Marker (handwritten notes)
+
+Added 31 Oct 2026 for the WW2 channel (all SIL Open Font License 1.1, from github.com/google/fonts): AlfaSlabOne-Regular.ttf, BigShouldersStencil-Variable.ttf, Oswald-Variable.ttf.
