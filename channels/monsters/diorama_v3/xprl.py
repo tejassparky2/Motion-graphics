@@ -21,7 +21,6 @@ import bpy
 from mathutils import Vector
 
 from channels.monsters.diorama import xprl as v2
-from channels.monsters.diorama_v3.shots import v3_frames
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
 from channels.monsters.mk import acting, anim, diorama, hero, tuftwing
@@ -32,6 +31,7 @@ BIRD_SCALE = h5.BIRD_SCALE
 
 
 def _frames(shot, fallback):
+    from channels.monsters.diorama_v3.shots import v3_frames           # (lazy: shots.py imports this module)
     try:
         return v3_frames(shot)
     except (OSError, KeyError):                                            # timing.json not in yet
