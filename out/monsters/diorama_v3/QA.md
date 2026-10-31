@@ -22,7 +22,7 @@ bar), and the script, `out/monsters/story_v3_diorama.md`. The checks are the sam
 | S13 | (v2 copy) | PASS (v2 QA) | 62 / 63 | the assembler holds 1 frame |
 | S14 | (v2 copy) | PASS (v2 QA) | 80 / 82 | the assembler holds 2 frames |
 | S23 | (v2 copy) | PASS (v2 QA); **NOTE** | 82 / 74 | 8 frames shorter in v3 (62 in the cut, was 70); see below |
-| S08b | helper 4 | rendering | - / 63 | OK stills in okstills/S08b_f*.jpg |
+| S08b | helper 4 | PASS (self-review; the coordinator approved the stills) | 63 / 63 | the spark runs through the water, the electrocution jolt and x-ray on "died.", the fall, black from 31; clean |
 
 Waiting for: S01, S06, S07, S08, S08a, S09, S15a, S15, S15b, S16-S21, S23b, S23c, S24top, S24bot.
 
@@ -46,3 +46,14 @@ and saturation plus a soft vignette, fitted to the Q3 lab before/after. The resu
 
 They stay interim until the GO re-renders land: helper 1 (S03a, S03b), helper 2 (S04, S05a) and helper 7 (S05b,
 from helper 1's builder).
+
+## S08b: "That's how I died." (helper 4)
+**PASS** (self-review; the coordinator approved the OK stills). 63 frames, clean file (0 encoder strings).
+- **f1-10:** helper 1's FEAR_STAND (S08a's last pose), trembling on 2s, the shared water round his sneakers.
+- **f4-10:** the spark at the strip; the current runs through the water to his feet (fx2d.electric_arcs with travel).
+- **f11-23:** the overshoot into the electrocution pose (bent elbows, clawed hands by his head, arched back, head back,
+  one knee buckling), shaking on 1s, arcs crawling over his joints.
+- **x-ray:** the strobe on 14-15, 18-19 (on "died.") and 22-23, with the skeleton on his exported joints.
+- **f24-30:** limp at 24; the lights die at 27 and he falls back with a short camera follow; he lands at 29.
+- **f31:** black to the end. One fix after the first encode: the 2D arcs faded past their end onto frame 31, and
+  now stop at the black.

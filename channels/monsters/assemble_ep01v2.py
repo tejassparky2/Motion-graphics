@@ -77,6 +77,10 @@ CAP_Y_VERSION["diorama_v3"] = {k: v for k, v in CAP_Y_VERSION["diorama"].items()
 CAP_Y_VERSION["diorama_v3"].update({
     "S07": 200,              # v3: over the pebbles above the shrimp, off the claw, the snap and the crack
     "S08a": 620,             # over his shorts: the face, the sneakers in the spill and the sparking strip stay clear
+    "S08b": 945,             # below his feet and the skeleton's (text ends ~955, above the Shorts UI line at 960)
+    "S15a": 250,             # above the shrimp's eyes, then the blurred trees above Kai's cap; off the raised claw
+    "S22": [(0.0, CAP_Y), (0.9, 500)],   # the tree close-up keeps the band; after the pull-back, the grass between
+                                         # the tree and Kai at the puddle
 })
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
@@ -252,13 +256,26 @@ def caption_chunks(lines):
     return out
 
 
-def draw_caption(cr, t, chunks, total, y=CAP_Y):
+def cap_y(place, chunk_start, shot_start):
+    """A shot's caption baseline: a number, or [(seconds into the shot, y), ...] when the framing changes inside the
+    shot (each chunk takes the last entry at or before its own start)."""
+    if not isinstance(place, (list, tuple)):
+        return place
+    y = place[0][1]
+    for at, yy in place:
+        if chunk_start - shot_start >= at - 1e-6:
+            y = yy
+    return y
+
+
+def draw_caption(cr, t, chunks, total, y=CAP_Y, shot_start=0.0):
     for i, ch in enumerate(chunks):
         start = ch[0]["start"]
         nxt = chunks[i + 1][0]["start"] if i + 1 < len(chunks) else total
         stop = nxt if nxt - ch[-1]["end"] < 0.5 else ch[-1]["end"] + 0.25
         if not (start - 0.02 <= t < stop):
             continue
+        y = cap_y(y, start, shot_start)
         words = [w["w"] for w in ch]
         space = text_width(cr, " ", CAP_SIZE, fx2d.ROUND) * 1.15
         widths = [text_width(cr, w, CAP_SIZE, fx2d.ROUND) for w in words]
@@ -387,7 +404,7 @@ def main():
                 t0 = shot.first / FPS
                 fx2d_ab.ab_cards(cr, t - t0, ab[0] - t0, ab[1] - t0, ab[2] - t0)
             if shot.name not in NO_CAPTIONS:
-                draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y))
+                draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y), shot.first / FPS)
             s.flush()
             enc.stdin.write(bytes(s.get_data()))
             if a.check and frame_no % 12 == 0:
