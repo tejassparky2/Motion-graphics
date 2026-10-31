@@ -231,9 +231,9 @@ def ripple_rings(where, f0, n=2, every=4, radius=0.45, frames=8, k=1.0, color=RI
     return out
 
 
-def fall_material(name="shared_fall"):
+def fall_material(name="shared_fall", opacity=(0.55, 0.95)):
     """The falling water's glassy body: translucent cyan, brighter at its silhouette (a glass tube), with faint
-    lighter bands sliding down it."""
+    lighter bands sliding down it. `opacity` = its opacity facing the camera and at the silhouette."""
     if name in bpy.data.materials:
         return bpy.data.materials[name]
     m = bpy.data.materials.new(name)
@@ -273,7 +273,7 @@ def fall_material(name="shared_fall"):
     em.inputs[1].default_value = 1.15
     L(col.outputs[2], em.inputs[0])
     alpha = N("ShaderNodeMapRange")                                              # see-through in the middle
-    alpha.inputs[3].default_value, alpha.inputs[4].default_value = 0.55, 0.95
+    alpha.inputs[3].default_value, alpha.inputs[4].default_value = opacity
     L(lw.outputs["Facing"], alpha.inputs[0])
     tp = N("ShaderNodeBsdfTransparent")
     mix = N("ShaderNodeMixShader")
@@ -309,15 +309,22 @@ def _tube(name, pts, radius, mat):
 
 
 def falling_water(points, f0, f1=None, radius=0.07, grow=3, k=1.0, drops=True, rings=True, name="fall", seed=5,
-                  taper=(1.15, 0.85)):
+                  taper=(1.15, 0.85), glassy=False, jitter=0.0):
     """Water falling along `points` (world, top to bottom: the desk-edge waterfall, the tank jet's arc) from f0:
     a glassy ribbon (fall_material) round a thin white core, reaching the foot in `grow` frames (on 1s), its
     thickness pulsing on 2s; at the foot, splash drops hopping on 2s and ripple rings (k scales them). `taper`
-    = the radius at the top and at the foot. Returns dict(body, core, drops, rings)."""
+    = the radius at the top and at the foot. `glassy`: a see-through body (fall_material "shared_fall_glass") for
+    water close to the camera; `jitter` > 0: the edges go irregular, each point's radius flickering on 2s by up to
+    that fraction. Returns dict(body, core, drops, rings)."""
     pts = [Vector(p) for p in points]
     f1 = f1 if f1 is not None else f0 + 96
-    body = _tube(f"{name}_body", pts, radius, fall_material())
-    core = _tube(f"{name}_core", pts, radius * 0.32, look.flat("shared_fall_core", _hex(RIM), 1.6))
+    if glassy:
+        gm = fall_material("shared_fall_glass", (0.12, 0.8))
+        gm.use_backface_culling = True                 # only the near surface: see-through in the middle
+        if hasattr(gm, "use_transparency_overlap"):
+            gm.use_transparency_overlap = False
+    body = _tube(f"{name}_body", pts, radius, gm if glassy else fall_material())
+    core = _tube(f"{name}_core", pts, radius * (0.2 if glassy else 0.32), look.flat("shared_fall_core", _hex(RIM), 1.6))
     for o in (body, core):
         sp = o.data.splines[0]
         for i, bp in enumerate(sp.bezier_points):
@@ -331,6 +338,15 @@ def falling_water(points, f0, f1=None, radius=0.07, grow=3, k=1.0, drops=True, r
         for n in range(f0 + grow, f1 + 1, 2):
             cu.bevel_depth = r0 * (1.1 if (n - f0) % 4 == 0 else 0.92)
             cu.keyframe_insert("bevel_depth", frame=n)
+        if jitter > 0:                                 # irregular, flickering edges on 2s
+            rj = random.Random(seed + len(o.name))
+            base = [bp.radius for bp in sp.bezier_points]
+            for n in range(f0 - 1, f1 + 1, 2):
+                for bp, b0 in zip(sp.bezier_points, base):
+                    bp.radius = b0 * (1 + rj.uniform(-jitter, jitter))
+                    bp.keyframe_insert("radius", frame=n)
+            for bp, b0 in zip(sp.bezier_points, base):
+                bp.radius = b0
         for fc in anim.all_fcurves(cu.animation_data.action):
             for kp in fc.keyframe_points:
                 kp.interpolation = "CONSTANT"
