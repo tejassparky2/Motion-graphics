@@ -39,7 +39,7 @@ Q = 4                               # stored coordinates are map pixels x Q, as 
 # map pixels: at zoom 1 the view's centre sits mid-frame and `width_km` spans the 1920 px width
 VIEWS = {
     "europe": dict(proj="laea", lon0=15.0, lat0=52.0, center=(15.0, 52.0), width_km=5200,
-                   clip=[(-32, 18, 72, 76)], grid=5, grid_lon=(-40, 80), grid_lat=(25, 80)),
+                   clip=[(-32, 0, 72, 76)], grid=5, grid_lon=(-40, 80), grid_lat=(0, 80)),
     "pacific": dict(proj="eqearth", lon0=160.0, lat0=0.0, center=(145.0, 15.0), width_km=17000,
                     clip=[(25, -52, 180, 72), (-180, -52, -25, 72)], grid=15, grid_lon=(-335, -25),
                     grid_lat=(-60, 75)),
@@ -68,6 +68,11 @@ FIN_KARELIA = [(27.7, 60.55), (29.95, 60.15), (31.2, 60.6), (32.9, 61.4), (31.6,
 FIN_PETSAMO = [(28.4, 69.0), (31.8, 69.9), (31.8, 70.3), (28.4, 70.3)]
 VICHY = [(-1.25, 42.0), (-1.25, 43.0), (-0.6, 43.6), (-0.25, 44.55), (0.15, 45.65), (0.34, 46.58), (1.0, 47.15),
          (2.07, 47.22), (3.33, 46.57), (4.85, 46.78), (5.5, 47.1), (6.1, 46.45), (10.0, 46.0), (10.0, 41.0)]
+RHINELAND = [(5.8, 51.95), (7.2, 52.1), (7.6, 51.5), (8.2, 50.9), (8.7, 50.2), (8.6, 49.6), (8.4, 49.0),
+             (8.0, 48.5), (7.9, 47.6), (5.8, 47.6)]                            # west of the Rhine plus its strip
+ITALY_SOUTH = [(12.0, 41.25), (13.75, 41.22), (14.0, 41.7), (14.45, 42.35), (19.5, 42.35), (19.5, 35.5),
+               (12.0, 35.5)]                                                   # south of the Gustav line
+SICILY = [(12.2, 36.5), (15.8, 36.5), (15.8, 38.4), (12.2, 38.4)]
 MANCHUKUO = [(116.5, 40.5), (121.5, 39.0), (124.3, 39.8), (131.0, 42.5), (135.2, 48.5), (127.5, 53.6), (120.0, 53.3),
              (119.5, 50.0), (116.5, 46.5)]
 CHINA_OCC = [(110.5, 41.0), (117.5, 41.0), (122.0, 37.5), (122.3, 31.0), (120.5, 28.0), (117.0, 23.5), (114.5, 22.2),
@@ -75,7 +80,10 @@ CHINA_OCC = [(110.5, 41.0), (117.5, 41.0), (122.0, 37.5), (122.3, 31.0), (120.5,
 
 # region name -> recipe: ADM0_A3 codes to union, then optional ("&", poly, codes) cuts. Built in that order.
 EUROPE = {
-    "germany": ["DEU"], "austria": ["AUT"], "slovakia": ["SVK"],
+    "germany": ["DEU"], "rhineland": [("&", RHINELAND, ["DEU"])], "austria": ["AUT"], "slovakia": ["SVK"],
+    "sicily": [("&", SICILY, ["ITA"])], "italy_south": [("&", ITALY_SOUTH, ["ITA"])],
+    "ethiopia": ["ETH"], "eritrea": ["ERI"], "somalia": ["SOM", "SOL"], "djibouti": ["DJI"], "sudan": ["SDN", "SSD"],
+    "kenya": ["KEN"], "yemen": ["YEM"],
     "g37east": [("&", G37_EAST, ["POL"])],
     "east_prussia": [("kaliningrad",), ("&", EAST_PRUSSIA_PL, ["POL"])],
     "kresy": [("&", KRESY, ["BLR", "UKR", "LTU"])],
@@ -94,25 +102,18 @@ EUROPE = {
     "ussr": ["RUS", "BLR", "UKR", "GEO", "ARM", "AZE", "KAZ", "UZB", "TKM", "KGZ", "TJK"],
 }
 # carved out of their modern hosts (in this order), then split further below
-CUT = [("east_prussia", "ussr"), ("kresy", "ussr"), ("kresy", "lithuania"), ("bessarabia", "ussr"),
+CUT = [("rhineland", "germany"), ("sicily", "italy_south"), ("italy_south", "italy"), ("sicily", "italy"),
+       ("east_prussia", "ussr"), ("kresy", "ussr"), ("kresy", "lithuania"), ("bessarabia", "ussr"),
        ("bukovina", "ussr"), ("carpatho", "ussr"), ("fin_karelia", "ussr"), ("fin_petsamo", "ussr")]
-# Aug 1939: owners (borders show only between different owners), sides, and annexed/occupied land (halftoned)
-OWNER_1939 = {"germany": "germany", "g37east": "germany", "east_prussia": "germany", "austria": "germany",
-              "sudeten": "germany", "czech": "germany", "slovakia": "slovakia", "poland_w": "poland",
-              "poland_e": "poland", "kresy": "poland", "bessarabia": "romania", "bukovina": "romania",
-              "romania": "romania", "carpatho": "hungary", "fin_karelia": "finland", "fin_petsamo": "finland",
-              "france_occ": "france", "france_vichy": "france", "albania": "italy"}
-SIDE_1939 = {"germany": "germany", "g37east": "germany", "east_prussia": "germany", "austria": "germany",
-             "sudeten": "germany", "czech": "germany", "slovakia": "italy", "italy": "italy", "albania": "italy",
-             "libya": "italy", "poland_w": "allies", "poland_e": "allies", "uk": "allies", "france_occ": "allies",
-             "france_vichy": "allies", "ussr": "soviet"}
-OCCUPIED_1939 = {"austria", "sudeten", "czech", "albania"}
 GROUPS = {"germany_1937": ["germany", "g37east", "east_prussia"],
           "greater_germany": ["germany", "g37east", "east_prussia", "austria", "sudeten", "czech"],
           "czechoslovakia": ["sudeten", "czech", "slovakia", "carpatho"], "poland": ["poland_w", "poland_e"],
           "france": ["france_occ", "france_vichy"], "low_countries": ["belgium", "netherlands", "luxembourg"],
           "baltics": ["lithuania", "latvia", "estonia"], "romania_1939": ["romania", "bessarabia", "bukovina"],
-          "finland_1939": ["finland", "fin_karelia", "fin_petsamo"]}
+          "finland_1939": ["finland", "fin_karelia", "fin_petsamo"],
+          "germany_1936": ["germany", "g37east", "east_prussia", "rhineland"],
+          "italy_all": ["italy", "italy_south", "sicily"], "east_africa": ["ethiopia", "eritrea", "somalia"]}
+DEFAULT_ERA = {"europe": "1939", "pacific": "1941"}
 
 PACIFIC = {
     "japan": ["JPN"], "korea": ["KOR", "PRK"], "taiwan": ["TWN"],
@@ -123,11 +124,6 @@ PACIFIC = {
     "canada": ["CAN"], "mexico": ["MEX"], "solomons": ["SLB"],
 }
 PACIFIC_CUT = [("manchukuo", "china"), ("china_occ", "china"), ("manchukuo", "china_occ")]
-PACIFIC_SIDE = {"japan": "japan", "korea": "japan", "taiwan": "japan", "manchukuo": "japan", "china_occ": "japan",
-                "china": "china", "ussr": "soviet", "usa": "allies", "australia": "allies", "nz": "allies",
-                "india": "allies", "burma": "allies", "malaya": "allies", "philippines": "allies"}
-PACIFIC_OCCUPIED = {"korea", "taiwan", "manchukuo", "china_occ"}
-
 CITIES = {   # (lon, lat)
     "Berlin": (13.40, 52.52), "Warsaw": (21.01, 52.23), "Danzig": (18.65, 54.35), "Krakow": (19.94, 50.06),
     "Lwow": (24.03, 49.84), "Brest": (23.69, 52.10), "Moscow": (37.62, 55.75), "Leningrad": (30.32, 59.94),
@@ -143,7 +139,12 @@ CITIES = {   # (lon, lat)
     "Manila": (120.98, 14.60), "Singapore": (103.82, 1.35), "Guadalcanal": (160.0, -9.6), "Iwo Jima": (141.32, 24.78),
     "Okinawa": (127.80, 26.33), "Hiroshima": (132.46, 34.39), "Nagasaki": (129.87, 32.75),
     "Shanghai": (121.47, 31.23), "Nanjing": (118.80, 32.06), "Beijing": (116.40, 39.90), "Hong Kong": (114.17, 22.32),
-    "Rangoon": (96.16, 16.80), "Darwin": (130.84, -12.46), "Port Moresby": (147.18, -9.44), "Mukden": (123.43, 41.80),
+    "Auschwitz": (19.20, 50.03), "Treblinka": (22.05, 52.63), "Addis Ababa": (38.75, 9.03), "Voronezh": (39.20, 51.67),
+    "Bastogne": (5.72, 50.00), "Kharkov": (36.25, 49.99), "Rostov": (39.72, 47.24), "Benghazi": (20.07, 32.12),
+    "Tripoli": (13.18, 32.89), "Salerno": (14.77, 40.68), "Monte Cassino": (13.81, 41.49), "Arnhem": (5.90, 51.98),
+    "Torgau": (13.00, 51.56), "Wake": (166.60, 19.30), "Guam": (144.79, 13.44), "Saipan": (145.75, 15.18),
+    "Tarawa": (172.97, 1.42), "Leyte": (125.00, 10.90), "Imphal": (93.94, 24.81), "Mandalay": (96.08, 21.96),
+    "Harbin": (126.63, 45.75), "Rangoon": (96.16, 16.80), "Darwin": (130.84, -12.46), "Port Moresby": (147.18, -9.44), "Mukden": (123.43, 41.80),
 }
 
 
@@ -291,6 +292,26 @@ def build_data(views=("europe", "pacific", "world")):
               os.path.getsize(os.path.join(DATA, view + ".json")) // 1024, "KB")
 
 
+def build_content():
+    """Write channels/ww2/data/fronts.json from map_content.py (fronts, arrows, lines, zones, pins, views, eras)."""
+    from channels.ww2.kit import map_content
+    os.makedirs(DATA, exist_ok=True)
+    p = os.path.join(DATA, "fronts.json")
+    with open(p, "w") as f:
+        json.dump(map_content.content(), f, separators=(",", ":"))
+    print("fronts.json", os.path.getsize(p) // 1024, "KB")
+
+
+_CONTENT = {}
+
+
+def content():
+    if not _CONTENT:
+        with open(os.path.join(DATA, "fronts.json")) as f:
+            _CONTENT.update(json.load(f))
+    return _CONTENT
+
+
 def _vec(v, lon, lat):
     import numpy as np
     lon, lat = np.asarray(lon, float), np.asarray(lat, float)
@@ -410,8 +431,12 @@ class Map:
     """One map view. Set it up once (sides, owners, arrows, fronts, cities, labels, camera keys), then call
     draw(cr, t) every frame. All times are seconds in the scene; places are (lon, lat)."""
 
-    def __init__(self, view="europe", sides=None, owners=None, occupied=None, compass=True, grid=True):
-        self.view = view
+    def __init__(self, view="europe", era=None, sides=None, owners=None, occupied=None, compass=True, grid=True,
+                 muted=0.0):
+        """era: a preset from map_content.ERAS ("1936", "1939", "1940", "1941" in Europe; "1937", "1941", "1942" in
+        the Pacific), overridden per region by sides / owners / occupied. muted (0-1): drain the colour (the Holocaust
+        chapter's grey map)."""
+        self.name = view
         d = _load(view)
         self.d = d
         self.paths = {k: _path(r) for k, r in d["regions"].items()}
@@ -420,15 +445,19 @@ class Map:
         self.bands = [_path(b) for b in d["bands"]]
         self.edges = {k: _path(r, closed=False) for k, r in d["edges"].items()}
         self.bbox = {k: self._bbox(r) for k, r in d["regions"].items()}
-        default = SIDE_1939 if view == "europe" else PACIFIC_SIDE if view == "pacific" else {}
-        occ = OCCUPIED_1939 if view == "europe" else PACIFIC_OCCUPIED if view == "pacific" else set()
-        occ = occupied if occupied is not None else occ
-        self._side = {k: [(-1e9, (sides or default).get(k, "neutral"), None, 0.0, k in occ)] for k in self.paths}
-        own = OWNER_1939 if view == "europe" else {}
-        self._owner = {k: [(-1e9, (owners or own).get(k, k))] for k in self.paths}
-        self.arrows, self.fronts, self.secrets, self.cities, self.labels, self.stamps = [], [], [], [], [], []
+        e = content().get("eras", {}).get(view, {}).get(era or DEFAULT_ERA.get(view, ""), {})
+        sd, ow, oc = dict(e.get("side", {})), dict(e.get("owner", {})), set(e.get("occupied", []))
+        sd.update(sides or {})
+        ow.update(owners or {})
+        if occupied is not None:
+            oc = set(occupied)
+        self._side = {k: [(-1e9, sd.get(k, "neutral"), None, 0.0, k in oc)] for k in self.paths}
+        self._owner = {k: [(-1e9, ow.get(k, k))] for k in self.paths}
+        self.arrows_, self.fronts, self.secrets, self.cities, self.labels, self.stamps = [], [], [], [], [], []
+        self.lines, self.zones = [], []
         self.cam = []
         self.compass = compass
+        self.muted = muted
         self.grid = self._graticule() if grid else None
 
     @staticmethod
@@ -438,7 +467,7 @@ class Map:
         return min(xs), min(ys), max(xs), max(ys)
 
     def _graticule(self):
-        v = VIEWS[self.view]
+        v = VIEWS[self.name]
         step, (lo0, lo1), (la0, la1) = v["grid"], v["grid_lon"], v["grid_lat"]
         lines = []
         for lon in range(lo0 - lo0 % step, lo1 + 1, step):
@@ -448,10 +477,10 @@ class Map:
         return _poly_path(lines)
 
     def xy(self, lonlat):
-        return project(self.view, *lonlat)
+        return project(self.name, *lonlat)
 
     def regions(self, name):
-        return GROUPS.get(name, [name])
+        return GROUPS.get(name) or content().get("groups", {}).get(self.name, {}).get(name) or [name]
 
     # ------------------------------------------------------------ setup
     def side(self, name, t, side, origin=None, dur=1.0, occupied=True):
@@ -473,13 +502,63 @@ class Map:
     def arrow(self, lonlats, side, t0, t1, width=70.0, hold=None):
         """A fat poster arrow along a smooth path through `lonlats`, growing from t0 to t1: side colour, ink outline,
         a hard drop shadow. width is in screen pixels across the head; `hold` ends it (fades) at that time."""
-        self.arrows.append(dict(pts=_catmull([self.xy(p) for p in lonlats]), side=side, t0=t0, t1=t1, w=width,
-                                hold=hold))
+        self.arrows_.append(dict(pts=_catmull([self.xy(p) for p in lonlats]), side=side, t0=t0, t1=t1, w=width,
+                                 hold=hold))
 
-    def front(self, keys, width=7.0, side=None, t_in=None, t_out=None):
-        """A front line moving between keyframed polylines: keys = [(t, [(lon, lat), ...]), ...]."""
+    def front(self, keys, t0=None, t1=None, width=7.0, side=None, t_in=None, t_out=None):
+        """A front line moving between keyframed polylines. keys: a name from fronts.json ("barbarossa", "bulge",
+        ...; its keyframes span t0 -> t1), or [(t, [(lon, lat), ...]), ...] in scene seconds."""
+        if isinstance(keys, str):
+            f = content()["fronts"][keys]
+            side = side or None
+            keys = [(t0 + (t1 - t0) * u, [tuple(p) for p in pts]) for u, pts in f["keys"]]
         self.fronts.append(dict(keys=[(t, _resample(_catmull([self.xy(p) for p in pts], 6), 64)) for t, pts in keys],
                                 w=width, side=side, t_in=t_in if t_in is not None else keys[0][0], t_out=t_out))
+
+    def arrows(self, name, t0, t1, stagger=0.25, hold=None, width=None, side=None):
+        """A named arrow set from fronts.json ("barbarossa", "sickle_1940", "island_hop", ...), each growing over
+        t1 - t0 seconds, started `stagger` apart."""
+        a = content()["arrows"][name]
+        for i, path in enumerate(a["paths"]):
+            self.arrow([tuple(p) for p in path], side or a["side"], t0 + i * stagger, t1 + i * stagger,
+                       width or a.get("width") or 70.0, hold)
+
+    def line(self, name, t0, t1=None, t_out=None):
+        """A named line from fronts.json, drawn along from t0 to t1 (or faded in at t0): "maginot"/"gustav" (a fort
+        chain that glows as it lands), "iron_curtain", the rail lines ("rail_paris", ... or the group
+        "rails_holocaust"), "secret_1939" (dashed)."""
+        c = content()
+        for n in c.get("line_groups", {}).get(name, [name]):
+            ln = c["lines"][n]
+            self.lines.append(dict(pts=_catmull([self.xy(tuple(p)) for p in ln["pts"]], 8), style=ln["style"], t0=t0,
+                                   t1=t1 if t1 is not None else t0 + 0.4, t_out=t_out))
+
+    def zone(self, name, t0, t1=None, t_out=None, side=None):
+        """A named zone from fronts.json: pockets (Dunkirk), hatched areas (the Battle of Britain), occupied bands
+        (ussr_occupied_1941/1942) and rings that close between t0 and t1 (Stalingrad, Berlin)."""
+        zn = content()["zones"][name]
+        if zn["kind"] == "ring":
+            (lon, lat), km = zn["geom"]
+            c = self.xy((lon, lat))
+            s = W / (VIEWS[self.name]["width_km"] * 1000.0) * 1000.0 * km
+            geom = (c, s)
+        else:
+            geom = [self.xy(tuple(p)) for p in zn["geom"]]
+        self.zones.append(dict(kind=zn["kind"], side=side or zn["side"], geom=geom, t0=t0,
+                               t1=t1 if t1 is not None else t0 + 0.6, t_out=t_out,
+                               path=None if zn["kind"] == "ring" else _poly_path([geom + [geom[0]]])))
+
+    def pins(self, name, t0, stagger=0.3, t_out=None, **kw):
+        """A named pin set (the five Normandy beaches, the island hops, the camps): dots with labels, in turn."""
+        for i, pin in enumerate(content()["pins"][name]["pins"]):
+            lab, lon, lat = pin[:3]
+            off = dict(dx=pin[3], dy=pin[4]) if len(pin) >= 5 else {}
+            self.city(lab, t0 + i * stagger, t_out=t_out, lonlat=(lon, lat), **{**off, **kw})
+
+    def view(self, name, t, zoom=None):
+        """A camera key at a named preset ("stalingrad", "normandy", "midway", ...)."""
+        v = content()["views"][name]
+        self.camera_key(t, tuple(v["at"]), zoom or v["zoom"])
 
     def secret_line(self, lonlats, t0, t1, color="alert", width=6.0, t_out=None):
         """A dashed line drawn along `lonlats` from t0 to t1 (the secret protocol), gone at t_out."""
@@ -588,11 +667,15 @@ class Map:
         cr.set_source_rgba(*col("ink"))
         cr.set_line_width(2.6 / z)
         cr.stroke()
+        for zn in self.zones:                                        # zones under the fronts and arrows
+            self._draw_zone(cr, zn, t, z)
         for f in self.fronts:
             self._draw_front(cr, f, t, z)
         for s in self.secrets:
             self._draw_secret(cr, s, t, z)
-        for a in self.arrows:
+        for ln in self.lines:
+            self._draw_line(cr, ln, t, z)
+        for a in self.arrows_:
             self._draw_arrow(cr, a, t, z)
         cr.restore()
         for lb in self.labels:                                       # screen-space type: crisp at any zoom
@@ -603,6 +686,12 @@ class Map:
             self._draw_stamp(cr, s, t)
         if self.compass:
             self._draw_compass(cr, t)
+        if self.muted > 0:                                           # drain the colour (HOLO chapter)
+            cr.save()
+            cr.set_operator(cairo.OPERATOR_HSL_SATURATION)
+            cr.set_source_rgba(0.5, 0.5, 0.5, self.muted)
+            cr.paint()
+            cr.restore()
 
     def screen(self, p):
         """Map pixels -> screen pixels with the camera of the last draw()."""
@@ -744,6 +833,143 @@ class Map:
         cr.set_source_rgba(*col("ink", fade))
         cr.set_line_width(4.0 / z)
         cr.stroke()
+
+    def _draw_line(self, cr, ln, t, z):
+        u = smooth(seg(t, ln["t0"], ln["t1"]))
+        if u <= 0 or (ln["t_out"] is not None and t > ln["t_out"] + 0.4):
+            return
+        a = 1 - (ease_in(seg(t, ln["t_out"], ln["t_out"] + 0.4)) if ln["t_out"] is not None else 0)
+        pts = _cut(ln["pts"], _length(ln["pts"]) * u)
+        if len(pts) < 2:
+            return
+
+        def trace():
+            cr.new_path()
+            for i, p in enumerate(pts):
+                (cr.move_to if i == 0 else cr.line_to)(*p)
+
+        st = ln["style"]
+        if st == "forts":                                            # a fort chain: glow, cream rim, ink, blocks
+            glow = 1 - seg(t, ln["t1"], ln["t1"] + 1.2)
+            if glow > 0:
+                trace()
+                cr.set_source_rgba(*col("fire", 0.45 * glow * a))
+                cr.set_line_width(30 / z)
+                cr.stroke()
+            trace()
+            cr.set_source_rgba(*col("cream", 0.9 * a))
+            cr.set_line_width(13 / z)
+            cr.stroke()
+            trace()
+            cr.set_source_rgba(*col("ink", a))
+            cr.set_line_width(6 / z)
+            cr.stroke()
+            L = _length(pts)
+            step = 26 / z
+            k = step / 2
+            while k < L:                                             # square fort blocks along it
+                p = _cut(pts, k)[-1]
+                h = 6.5 / z
+                cr.rectangle(p[0] - h, p[1] - h, 2 * h, 2 * h)
+                cr.set_source_rgba(*col("ink", a))
+                cr.fill_preserve()
+                cr.set_source_rgba(*col("cream", a))
+                cr.set_line_width(2 / z)
+                cr.stroke()
+                k += step
+        elif st == "rail":                                           # rails: cross ties, then the line
+            trace()
+            cr.set_source_rgba(*col("ink", 0.85 * a))
+            cr.set_line_width(10 / z)
+            cr.set_dash([2.5 / z, 9 / z])
+            cr.set_line_cap(cairo.LINE_CAP_BUTT)
+            cr.stroke()
+            cr.set_dash([])
+            cr.set_line_cap(cairo.LINE_CAP_ROUND)
+            trace()
+            cr.set_line_width(2.6 / z)
+            cr.stroke()
+        elif st == "curtain":                                        # the Iron Curtain: a heavy black dash
+            trace()
+            cr.set_source_rgba(*col("cream", 0.9 * a))
+            cr.set_line_width(14 / z)
+            cr.stroke()
+            trace()
+            cr.set_source_rgba(*col("ink", a))
+            cr.set_line_width(9 / z)
+            cr.set_dash([22 / z, 8 / z])
+            cr.stroke()
+            cr.set_dash([])
+        else:                                                        # dash (the secret line style)
+            trace()
+            cr.set_dash([18 / z, 11 / z])
+            cr.set_source_rgba(*col("cream", 0.9 * a))
+            cr.set_line_width(11 / z)
+            cr.stroke_preserve()
+            cr.set_source_rgba(*col("alert", a))
+            cr.set_line_width(6 / z)
+            cr.stroke()
+            cr.set_dash([])
+
+    def _draw_zone(self, cr, zn, t, z):
+        if t < zn["t0"] or (zn["t_out"] is not None and t > zn["t_out"] + 0.4):
+            return
+        u = ease_out(seg(t, zn["t0"], zn["t1"]))
+        a = 1 - (ease_in(seg(t, zn["t_out"], zn["t_out"] + 0.4)) if zn["t_out"] is not None else 0)
+        kind = zn["kind"]
+        if kind == "ring":                                           # two arcs close the ring from the east
+            (cx, cy), r = zn["geom"]
+            sweep = math.pi * u
+            for lw, c in ((16 / z, "cream"), (10 / z, zn["side"])):
+                cr.new_path()
+                cr.arc(cx, cy, r, -sweep, sweep)
+                cr.set_source_rgba(*col(c, a))
+                cr.set_line_width(lw)
+                cr.stroke()
+            cr.new_path()
+            cr.arc(cx, cy, r + 5 / z, -sweep, sweep)
+            cr.arc_negative(cx, cy, r - 5 / z, sweep, -sweep)
+            cr.close_path()
+            cr.set_source_rgba(*col("ink", a))
+            cr.set_line_width(2.5 / z)
+            cr.stroke()
+            return
+        cr.save()
+        cr.new_path()
+        cr.append_path(zn["path"])
+        if kind == "occupied":                                       # only on land
+            cr.clip()
+            cr.new_path()
+            cr.append_path(self.land)
+            cr.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
+        cr.clip()
+        cr.paint_with_alpha(0)                                       # (keeps the clip; nothing drawn)
+        cr.push_group()
+        if kind in ("pocket", "occupied"):
+            cr.set_source_rgba(*_tint(zn["side"]))
+            cr.paint()
+            self._halftone_here(cr, zn["side"])
+        else:                                                        # area: hatched in its colour
+            cr.identity_matrix()
+            cr.set_source_rgba(*col(zn["side"], 0.75))
+            cr.set_line_width(3.0)
+            k = -H
+            while k < W:
+                cr.move_to(k, H)
+                cr.line_to(k + H * 0.6, 0)
+                k += 16
+            cr.stroke()
+        cr.pop_group_to_source()
+        cr.paint_with_alpha(u * a * (0.9 if kind != "area" else 1.0))
+        cr.restore()
+        if kind != "occupied":                                       # a dashed edge
+            cr.new_path()
+            cr.append_path(zn["path"])
+            cr.set_dash([10 / z, 6 / z])
+            cr.set_source_rgba(*col("ink", u * a))
+            cr.set_line_width(3 / z)
+            cr.stroke()
+            cr.set_dash([])
 
     def _draw_front(self, cr, f, t, z):
         if t < f["t_in"] or (f["t_out"] is not None and t > f["t_out"]):
@@ -893,3 +1119,6 @@ class Map:
 
 if __name__ == "__main__" and sys.argv[1:2] == ["build"]:
     build_data(tuple(sys.argv[2:]) or ("europe", "pacific", "world"))
+    build_content()
+elif __name__ == "__main__" and sys.argv[1:2] == ["content"]:
+    build_content()
