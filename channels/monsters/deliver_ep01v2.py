@@ -137,7 +137,7 @@ with open(OUT[:-4] + "_metadata.md", "w") as f:
     f.write(f"**Video facts:** {timing['total']:.1f} s. Narrated with Chatterbox Turbo (synthetic voice; nobody real "
             "is cloned). Music and sound effects are original. Made for kids: **No** (comments stay on for the vote). "
             "Altered or synthetic content: **No** (fully animated fantasy). "
-            f"Cover: {os.path.basename(cover)} (S01 with \"IT ERASED A FOREST\"); where the app can't take a custom "
+            f"Cover: {os.path.basename(cover)} (S01 with \"{'THIS SHRIMP ERASED A FOREST' if V3 else 'IT ERASED A FOREST'}\"); where the app can't take a custom "
             "Shorts cover, pick frame 0, the hook frame.\n")
 say(f"- wrote {os.path.relpath(OUT[:-4] + '_metadata.md', ROOT)}")
 
