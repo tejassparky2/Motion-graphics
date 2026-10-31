@@ -65,7 +65,7 @@ def _ribbon(lines, width, scale, origin):
     return np.array(verts), faces
 
 
-def _sky_crack(cam_loc, look_q, dist=900.0, height=400.0):
+def _sky_crack(cam_loc, look_q, dist=900.0, height=400.0, width=1.0):
     """The hairline crack hung in the sky, facing the camera: a white core ~2 px wide at 720x1280 with a soft stepped
     glow, `height` tall on a plane `dist` off along the camera's opening direction (S09: 900 m and 400 m, ~40% of the
     frame with a 35 mm lens). Line widths scale with `height`."""
@@ -74,7 +74,7 @@ def _sky_crack(cam_loc, look_q, dist=900.0, height=400.0):
     lo, hi = allp.min(axis=0), allp.max(axis=0)
     origin = (lo + hi) / 2
     scale = height / (hi[1] - lo[1])
-    k = height / 400.0
+    wk = height / 400.0 * width                      # line widths scale with the crack (x `width`)
     root = bpy.data.objects.new("s09_crack", None)
     bpy.context.scene.collection.objects.link(root)
     fwd = look_q @ Vector((0, 0, -1))
@@ -84,8 +84,8 @@ def _sky_crack(cam_loc, look_q, dist=900.0, height=400.0):
     for k, (w, a) in enumerate(((4.0, 0.42), (9.0, 0.22), (17.0, 0.1))):
         layers.append((w, look.fade(f"s09_crack_glow{k}", look.hexc("#fff4fb"), a)))
     for i, (w, m) in enumerate(layers):
-        v, f = _ribbon(lines, w * k, scale, origin)
-        o = world._obj(f"s09_crack{i}", v + (0, 0, -0.05 * i * k), f, m, smooth=False, shadow=False)
+        v, f = _ribbon(lines, w * wk, scale, origin)
+        o = world._obj(f"s09_crack{i}", v + (0, 0, -0.05 * i * wk), f, m, smooth=False, shadow=False)
         o.parent = root
     return root
 

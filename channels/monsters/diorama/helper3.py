@@ -59,7 +59,7 @@ def s09():
     cam.data.clip_end = 5000
     down = cam.rotation_euler.to_quaternion()
     up = Quaternion(Euler((math.radians(90 + 36), 0, 0)))          # 36 deg above the horizon, looking north
-    crack = h3d._sky_crack(cam.location, up, dist=dist, height=0.4 * dist * 36 / lens)   # at the focus: sharp
+    crack = h3d._sky_crack(cam.location, up, dist=dist, height=0.4 * dist * 36 / lens, width=1.6)
     for o in crack.children:                                       # below the bloom threshold: a hairline, no smear
         for node in o.data.materials[0].node_tree.nodes:
             if node.type == "EMISSION":
