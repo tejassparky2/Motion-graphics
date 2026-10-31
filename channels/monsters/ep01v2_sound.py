@@ -193,6 +193,21 @@ def glass_crack(seed=0):
     return _verb(out, 0.15, 0.4)
 
 
+def glass_tap(seed=0):
+    """A fingertip on thick tank glass: a dry little "tik" with a short glassy ring, and a dull water-muffled thump
+    answering from inside the tank."""
+    r = _rng("glass_tap", seed)
+    out = np.zeros(_n(0.35))
+    m = _n(0.006)
+    _place(out, _bp(r.uniform(-1, 1, m), 2500, 9000) * _exp(m, 0.0012, 0.0002), 0)
+    m = _n(0.12)
+    _place(out, sum(a * np.sin(2 * np.pi * f * _t(m)) for f, a in ((3380, 0.12), (5210, 0.06))) * _exp(m, 0.025), 0)
+    m = _n(0.2)
+    thump = _sweep(np.linspace(260, 140, m)) * _exp(m, 0.04, 0.003)
+    _place(out, _lp(thump, 500) * 0.35, 0.004)
+    return out
+
+
 def trickle(dur, seed=0):
     """Water running across a floor: a soft wash with little bubbling plinks."""
     r = _rng("trickle", seed)
@@ -411,6 +426,8 @@ def build(timing, n, v):
     collapse_t = c.t("S05a", 1.65)
     amb(lambda d, s: bubble_hiss(d, 20 + s), hiss0, collapse_t, -22, 0.4, 0.05)
     hit(bubble_collapse(), collapse_t, -10)
+    hit(glass_tap(0), c.f("S05b", 29), -14, 0.4)                 # Kai's fingertip taps the glass (right edge), twice:
+    hit(glass_tap(1), c.f("S05b", 33), -19, 0.4)                 # S05b frames 30 and 34 (1-based), the second softer
     hit(sfx.thunder(), c.f("S06", 13), -3)                        # the crack lands on the bolt and flash (S06 v2 f13, on "storm")
     hit(sfx.snap(1), c.f("S07", 9), -2)                          # the snap and its flash (S07 f8-9)
     hit(glass_crack(), c.f("S07", 10), -8, 0.2)
