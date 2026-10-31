@@ -38,12 +38,12 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S09 | helper 3 | PASS (remuxed clean, e2b1af1) | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
 | S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
-| S04 | helper 2 | PASS (remuxed clean, fb8d031) | 73 / 73 | 0.23 | eye f1-4, claw open, shut on 19, the white-hot bubble swells to "boils"; 1 NOTE (low saturation) |
+| S04 | helper 2 | PASS (remuxed clean, fb8d031) | 73 / 73 | 0.34 | eye f1-4, claw open, shut on 19, the white-hot bubble swells to "boils"; cyan grade 21ee8b4 |
 | S14 | helper 3's builder (+ 2D push-in, 8a3257d) | PASS | 80 / 80 | 0.37 | Kai on all fours looks up: wide eyes, then narrowed and a head tilt (SG2); 1 NOTE |
 | S20 | helper 5's builder (post 0942557) | PASS | 103 / 103 | 0.40 | the tiny "pff", the shrimp stares at its claw, cut on 44 to Kai's deadpan held 60 frames |
 | S24top | XprL | PASS | 97 / 97 | 0.47 | Kai walks down from the thorn tree to the shrimp at the pond, push-in on 1s (57-85); reads in the top half |
 | S08 | helper 9 (joined by the coordinator, 1b30467) | PASS | 85 / 85 | 0.29 | water pours off the tank and runs to the power strip, a spark on 55-57, the lights die, black from 58; rain in the window |
-| S05a | helper 2 (joined, 835b42d) | PASS | 75 / 75 | 0.16 | the bubble glows at its peak, collapses on 52 to micro-bubbles; 1 NOTE (grey tank, as S04) |
+| S05a | helper 2 (joined, 835b42d) | PASS | 75 / 75 | 0.26 | the bubble glows at its peak, collapses on 52 to micro-bubbles; cyan grade 21ee8b4 |
 | S13 | helper 9 (push-in, ecd03ea) | PASS | 62 / 62 | 0.43 | the shrimp at the pond, claw dipped with ripple rings (the clue), Kai on all fours behind |
 | S16 | bGqrs (540d14c) | PASS | 76 / 76 | 0.39 | push-in on Kai on his back: eyes shut, open by "eyes" (24), comic shock eyes + sweat on 43; 1 NOTE |
 | S18 | bGqrs (7765bd5) | PASS | 60 / 60 | 0.53 | Kai's eyes narrow, cut on 31 to the blue speed-line realisation background (IM6); 1 NOTE |
@@ -304,3 +304,9 @@ and the light stutter runs unbroken across the join (off 20-21, on 22, off 23-24
   squint on 62. An 8% push, inside the row's 10%.
 
 S20's post (0942557, the eye cover up to the hair) was re-checked: the deadpan dot eyes hold clean, no white sliver.
+
+## The tank grade: S04, S05a, S07 (coordinator, 21ee8b4)
+**Checked, PASS.** The three toy-aquarium shots now share one cyan grade: saturation S04 0.34 (was 0.23; the 3D shot
+was 0.31), S05a 0.26 (was 0.16), S07 0.53 (was 0.42). The water and gravel read as a cool tank rather than grey, the
+red shrimp still pops, and the three cut together without a colour jump. Frame counts unchanged, files clean. The
+S04 and S05a low-saturation NOTES are closed.
