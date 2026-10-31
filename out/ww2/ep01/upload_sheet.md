@@ -25,7 +25,7 @@ Chapters
 7:05 The turning points, 1942-1943
 9:02 The Holocaust
 9:54 Closing in, 1943-1945
-11:29 The end
+11:29 Endgame
 12:38 After the war
 
 Sources

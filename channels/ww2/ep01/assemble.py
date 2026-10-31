@@ -321,13 +321,15 @@ def clock(t):
 
 def chapters(T):
     """[(seconds, title)] validated against YouTube's rules: first at 0:00, at least 3, each at least 10 s,
-    ascending. Titles from the script headings, falling back to timing.json's."""
+    ascending. Titles from timing.json (as on the chapter cards), with the script heading's years when it agrees."""
     d = json.load(open(os.path.join(HERE, "timing.json")))
     titles = script_chapter_titles()
     out = []
     for c in d["chapters"]:
         start = 0.0 if c["card"] is None and c["start"] == 0 else (c["card"] or [c["start"]])[0]
-        title = COLD_OPEN_TITLE if c["id"] == "C0" else titles.get(c["id"], c["title"])
+        script = titles.get(c["id"], "")                         # timing.json's title wins (the card); the script
+        title = (COLD_OPEN_TITLE if c["id"] == "C0" else         # heading adds its years when it agrees
+                 script if script.lower().startswith(c["title"].lower()) else c["title"])
         out.append((int(start), title))
     problems = []
     if not out or out[0][0] != 0:
