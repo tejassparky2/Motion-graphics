@@ -52,8 +52,8 @@ UPPER, FORE = 72.0, 66.0
 THIGH, SHIN = 92.0, 88.0
 BLEND = 0.28                     # seconds a pose takes to blend in before its key
 
-REST = dict(lean=0.0, nod=0.0, turn=0.0, sh_n=0.12, sh_f=-0.10, el_n=0.12, el_f=0.10, hip_n=0.06, hip_f=-0.06,
-            kn_n=0.04, kn_f=0.04, drop=0.0, bob=0.0, sway=0.0, hand_n="open", hand_f="open", ground="feet",
+REST = dict(lean=-0.035, nod=0.03, turn=0.0, sh_n=0.12, sh_f=-0.10, el_n=0.16, el_f=0.12, hip_n=0.1,
+            hip_f=-0.04, kn_n=0.12, kn_f=0.02, drop=0.0, bob=0.0, sway=0.0, hand_n="open", hand_f="open", ground="feet",
             air=0.0, prop_up=0.0)
 
 NATION_SIDE = {"germany": "axis", "britain": "allies", "usa": "allies", "soviet": "soviet", "france": "allies",
@@ -431,6 +431,26 @@ def _limb(a, b, c, wa, wb, wc, round_top=True):
     return path, inner, bend, nb
 
 
+def _closed_smooth(pts, sharp=()):
+    """A closed outline through pts, curved (Catmull-Rom) except at the indexes in `sharp` (hem corners)."""
+    n = len(pts)
+
+    def path(cr):
+        cr.new_sub_path()
+        cr.move_to(*pts[0])
+        for i in range(n):
+            p1, p2 = pts[i], pts[(i + 1) % n]
+            if i in sharp or (i + 1) % n in sharp:
+                cr.line_to(*p2)
+                continue
+            p0, p3 = pts[(i - 1) % n], pts[(i + 2) % n]
+            c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+            c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+            cr.curve_to(c1[0], c1[1], c2[0], c2[1], p2[0], p2[1])
+        cr.close_path()
+    return path
+
+
 def _folds(cr, inner, nb, bend, w, color):
     """One or two fold creases on the inside of a bend."""
     if abs(bend) < 0.22:
@@ -769,12 +789,14 @@ class Figure:
             _printed(cr, hips, self._fill(self.trousers), 12, K, kw, flat=flat)
         sk = min(skirt, 0.27)
         flare = 6 + max(0.0, -skirt) * 18
-        body = [P(sk, -34 * b - flare), P(0.3, -30 * b), P(0.55, -36 * b), P(0.82, -40 * b), P(0.98, -28),
-                P(1.04, -6), P(1.04, 14), P(0.9, 32 * b), P(0.68, 47 * b + belly * 0.4), P(0.42, 36 * b + belly),
-                P(0.3, 32 * b + belly), P(sk, 37 * b + belly * 0.6 + flare)]
+        w = 0.0 if belly else 1.0                                   # the waist nips in (not on Churchill)
+        body = [P(sk, -33 * b - flare), P(0.3, -25 * b - 3 * (1 - w)), P(0.55, -30 * b), P(0.84, -35 * b),
+                P(0.99, -28), P(1.04, -6), P(1.04, 16), P(0.9, 37 * b), P(0.72, 42 * b + belly * 0.4),
+                P(0.48, 31 * b + belly - 2 * w), P(0.3, 27 * b + belly + 2 * (1 - w)), P(sk, 35 * b + belly * 0.6 +
+                                                                                           flare)]
         if skirt < -0.05:                                            # a long coat: the skirts hang to the knees
             body = [P(skirt, -34 * b - flare)] + body[1:-1] + [P(skirt, 36 * b + flare)]
-        path = _poly(body)
+        path = _closed_smooth(body, sharp=(0, len(body) - 1))
         _printed(cr, path, fill, 22, K, kw, flat=flat, rim=0 if flat else 4.5)
         if flat:
             return
