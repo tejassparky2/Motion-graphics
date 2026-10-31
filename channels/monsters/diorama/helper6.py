@@ -13,6 +13,7 @@ y 960, left of x 560); its real sun shadow falls on the meadow (the blob shadow 
     blender -b -y -P channels/monsters/render_shot.py -- diorama S10b OUT_DIR [--still N --scale 0.5]
 """
 import math
+import random
 
 import bpy
 from bpy_extras.object_utils import world_to_camera_view
@@ -25,10 +26,53 @@ UP, DOWN = 0.5, -0.4               # the wing flutter: two poses, two frames eac
 WINDOW = (0.06, 0.76, 0.36, 0.86)  # u0, u1, v0, v1 (v up): left of x 560, above y 960 (and not jammed at the top)
 
 
+def _dressing(center, seed=61):
+    """Toy-table texture on the meadow around the moth: flowers (petals with a yellow eye), clover patches and a few
+    grass clumps, all lit paint (no lines)."""
+    rnd = random.Random(seed)
+    P = diorama.lit_paint
+    petals = [P("h6_pink", "#d05a8a", "#ff8fb8", "#ffd0e2"), P("h6_white", "#c9c9e0", "#ffffff", "#ffffff"),
+              P("h6_lilac", "#9a7cc8", "#c7a8ff", "#e6d8ff")]
+    eye = P("h6_eye", "#d9a400", "#ffd23f", "#fff2a8")
+    clover = [P("h6_clover0", "#2f7d3a", "#4fae4f", "#86d36e"), P("h6_clover1", "#3a8a3a", "#62bd57", "#9be07c")]
+    blade = [P("h6_blade0", "#2e7a33", "#4ea845", "#8fd66a"), P("h6_blade1", "#3d8c3b", "#69c255", "#a8e57f")]
+    cx, cy = center
+
+    def disc(loc, r, mat, z=0.04):
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=12, ring_count=6, location=(loc[0], loc[1], z))
+        o = bpy.context.object
+        o.scale = (r, r, r * 0.35)
+        o.data.materials.append(mat)
+        for pg in o.data.polygons:
+            pg.use_smooth = True
+
+    for _ in range(34):                                          # flowers
+        x, y = cx + rnd.uniform(-6.5, 6.5), cy + rnd.uniform(-8.0, 10.0)
+        m = rnd.choice(petals)
+        r = rnd.uniform(0.16, 0.24)
+        for k in range(5):
+            a = k / 5 * 2 * math.pi + rnd.uniform(0, 1)
+            disc((x + math.cos(a) * r, y + math.sin(a) * r), r * 0.8, m, 0.08)
+        disc((x, y), r * 0.55, eye, 0.12)
+    for _ in range(7):                                           # clover patches
+        x, y = cx + rnd.uniform(-6.0, 6.0), cy + rnd.uniform(-7.0, 9.0)
+        m = rnd.choice(clover)
+        for _ in range(rnd.randint(6, 10)):
+            disc((x + rnd.uniform(-0.8, 0.8), y + rnd.uniform(-0.6, 0.6)), rnd.uniform(0.22, 0.34), m, 0.05)
+    for _ in range(4):                                           # grass clumps
+        x, y = cx + rnd.uniform(-6.0, 6.0), cy + rnd.uniform(-7.0, 9.0)
+        for _ in range(9):
+            bpy.ops.mesh.primitive_cone_add(vertices=4, radius1=0.09, depth=rnd.uniform(0.7, 1.2),
+                                            location=(x + rnd.uniform(-0.35, 0.35), y + rnd.uniform(-0.25, 0.25), 0.4),
+                                            rotation=(rnd.uniform(-0.35, 0.35), rnd.uniform(-0.35, 0.35), 0))
+            bpy.context.object.data.materials.append(rnd.choice(blade))
+
+
 def _scene(turn):
     diorama.setup()
     diorama.island(seed=31)
     x, y = diorama.MAP["moth"]
+    _dressing((x, y))
     rig = fluffmoth.build((x, y, 0.0))
     rig["root"].rotation_euler = (0, 0, math.radians(turn))
     rig["hover"].rotation_euler = (math.radians(-FACE_UP), 0, 0)

@@ -206,9 +206,9 @@ def _face_mix(rig, keys, frame):
                 kp.interpolation = "CONSTANT"
 
 
-def _crawling_kai(start, heading, f0, f1, dist, period=24, look_up=0.0):
+def _crawling_kai(start, heading, f0, f1, dist, period=24, look_up=0.0, step=3):
     """Kai on hands and knees, crawling `dist` units along `heading` (radians, 0 = toward -Y) between f0 and f1. The
-    limbs swap every half period; posed and keyed on 3s (acting), the body advances in steps with each reach."""
+    limbs swap every half period; posed and keyed on 3s (acting; `step`), the body advances in steps with each reach."""
     rig = hero.load(start, scale=KAI_SCALE, rot_z=heading, outfit="world")
     arm = rig["arm"]
     arm.rotation_mode = "XYZ"                    # the appended armature is in quaternion mode; turn it to heading
@@ -228,9 +228,9 @@ def _crawling_kai(start, heading, f0, f1, dist, period=24, look_up=0.0):
     # lift the body so knees and hands sit on the grass, then step it forward with each reach (on 3s)
     bpy.context.scene.frame_set(f0)
     dz = -_ground_offset(arm) + 0.15
-    n_steps = max(1, (f1 - f0) // 3)
+    n_steps = max(1, (f1 - f0) // step)
     for k in range(n_steps + 1):
-        fr = f0 + k * 3
+        fr = f0 + k * step
         t = k / n_steps
         p = Vector(start) + fwd * dist * t
         arm.location = (p.x, p.y, start[2] + dz + 0.12 * math.sin(t * math.pi * (f1 - f0) / half))
@@ -241,8 +241,8 @@ def _crawling_kai(start, heading, f0, f1, dist, period=24, look_up=0.0):
     return rig
 
 
-def _glint(loc, cam, f0, f1, size=0.35, every=8, seed=4):
-    """A small 4-point white star that twinkles on 1s (pops up, shrinks away, turns a little), facing the camera."""
+def _glint(loc, cam, f0, f1, size=0.35, every=8, seed=4, hold=1):
+    """A small 4-point white star that twinkles on 1s (`hold` 2: on 2s), popping up and shrinking away, facing the camera."""
     r = 0.18
     verts = [(0, 0, 0)]
     for k in range(8):
@@ -261,11 +261,11 @@ def _glint(loc, cam, f0, f1, size=0.35, every=8, seed=4):
     c.target, c.track_axis, c.up_axis = cam, "TRACK_Z", "UP_Y"
     o.scale = (0.001,) * 3
     o.keyframe_insert("scale", frame=f0)
-    f = f0 + 2
+    f = f0 + 2 * hold
     while f < f1:
         for df, sc in ((0, 0.001), (1, 1.0), (2, 0.75), (3, 0.4), (4, 0.001)):
             o.scale = (size * sc,) * 3
-            o.keyframe_insert("scale", frame=f + df)
+            o.keyframe_insert("scale", frame=f + df * hold)
         f += every
     for fc in anim.all_fcurves(o.animation_data.action):
         for kp in fc.keyframe_points:
