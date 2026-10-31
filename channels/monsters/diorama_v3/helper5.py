@@ -61,7 +61,7 @@ def _world(n, breathe=True):
     return rig, sh
 
 
-def _push(name, target, f0, f1, tilt, dist0, dist1, lens, yaw=0.0, frame=None):
+def _push(name, target, f0, f1, tilt, dist0, dist1, lens, yaw=0.0, frame=None, follow=None):
     """A diorama camera on `target` pushing in from dist0 to dist1 between f0 and f1 (smoothstep, keyed on 1s), the
     tilt-shift f-stop and the haze re-solved every frame. Bound to its first frame by a marker when `frame` is set."""
     sc = bpy.context.scene
@@ -72,7 +72,7 @@ def _push(name, target, f0, f1, tilt, dist0, dist1, lens, yaw=0.0, frame=None):
     for f in range(f0, f1 + 1):
         u = acting.ease((f - f0) / max(1, f1 - f0), "inout")
         d = dist0 + (dist1 - dist0) * u
-        cam.location = Vector(target) + back * d
+        cam.location = (follow(u) if follow else Vector(target)) + back * d
         cam.data.dof.focus_distance = d
         cam.data.dof.aperture_fstop = diorama.fstop_for(d, lens, BLUR)
         cam.keyframe_insert("location", frame=f)
@@ -192,7 +192,9 @@ def s20():
     v2._puff(s3d.claw_tip(sh) + Vector((0, 0, 0.05)), SNAP, n=3, size=0.28, seed=2)   # the sad "pff"
     sc.frame_set(1)
     acting.expression(rig, "terror", 1)
-    s3d.kai_face(rig, SNAP - 2, eye_close=1.0, eye_brow_up=1.0)    # squeezes his eyes shut for the snap...
+    acting._key("eye_close", 1, 0.0)                               # (open until the squeeze)
+    acting._key("eye_close", SNAP - 3, 0.0)
+    acting._key("eye_close", SNAP - 2, 1.0)                        # squeezes his eyes shut for the snap...
     acting.expression(rig, "fear", SNAP + 4)                       # ...opens them: nothing
     acting._key("eye_close", SNAP + 4, 0.0)
     acting.expression(rig, "deadpan", CUT)
@@ -273,10 +275,11 @@ def s21():
     acting.look_at(rig, p0 + Vector((0, 0, 1.0)), 1, t0, seed=22, strength=0.6)       # eyes follow it off...
     acting.look_at(rig, mid + Vector((0, 0, 1.0)), t0 + 2, t1 - 6, seed=23, strength=0.6)
     acting.look_at(rig, drink + Vector((0, 0, 1.0)), t1 - 4, n, seed=24, strength=0.6)  # ...to the puddle
-    look = Vector((p0.x, p0.y, 0)).lerp(drink, 0.55) + Vector((0, 0, 1.0))
-    cam = _push("cam_s21", look, 1, n, 58.0, 74.0, 68.0, 100.0, yaw=20.0)
-    v2._center(cam, [s3d.kai_point(rig, "eyes"), drink, pond] +
-               v2._track(lambda: [r.matrix_world.translation.copy()], (1, t0, (t0 + t1) // 2, t1)), (0.38, 0.32))
+    a = Vector((p0.x, p0.y, 0)).lerp(s3d.kai_point(rig, "eyes"), 0.4)   # him and the shrimp on his chest...
+    b = drink.lerp(Vector((p0.x, p0.y, 0)), 0.3)                    # ...drifting with the strut to the puddle
+    cam = _push("cam_s21", a, 1, n, 58.0, 62.0, 56.0, 120.0, yaw=20.0,
+                follow=lambda u: a.lerp(b, u))
+    cam.data.shift_x, cam.data.shift_y = 0.06, -0.12                 # the action up and left of the Shorts rail
     _anchors("S21", n, cam, rig, sh, extra={"shrimp": lambda: r.matrix_world.translation.copy()})
     return dict(frames=n, step=2, ones=(1, n), subject=_subject(rig, sh))
 
