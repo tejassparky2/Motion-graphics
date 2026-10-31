@@ -249,6 +249,31 @@ def diorama_s20():
             (fx2d_anime.sweat_drop, dict(start=52 / FPS, end=99, x=cx, y=cy, size=size, tilt=tilt))]
 
 
+def tracked_terror(cr, t, a, start, size0, corr):
+    """fx2d_anime.terror_eyes + sweat_drop following the face anchors every frame (a moving camera), with the eye
+    correction measured on the plate (plate_eyes) scaled as the face grows."""
+    (cx, cy), size, tilt, eyes = face_geom(a, t)
+    k = size / size0
+    eyes = tuple((ex + dx * k, ey + dy * k) for (ex, ey), (dx, dy) in zip(eyes, corr))
+    cx, cy = (eyes[0][0] + eyes[1][0]) / 2, (eyes[0][1] + eyes[1][1]) / 2
+    size = math.hypot(eyes[1][0] - eyes[0][0], eyes[1][1] - eyes[0][1]) * 2.6
+    fx2d_anime.sweat_drop(cr, t, start - 0.2, end=99, x=cx, y=cy, size=size, tilt=tilt)
+    fx2d_anime.terror_eyes(cr, t, start, end=99, x=cx, y=cy, size=size, eyes=eyes, er=size / 2.6 * 0.26 * 1.08,
+                           tilt=tilt)
+
+
+def _terror_on_plate(shot, a, t0):
+    """(face size at t0, per-eye correction): measured on the rendered frame at t0 when the whites of his eyes show
+    there, else the anchors' eyes spread 1.32x about their midpoint (the bone-based eye offsets are that much too
+    narrow on this hero: 59 vs 78 px in the 3D S01, 26 vs ~35 px in the diorama S16)."""
+    (cx, cy), size, tilt, eyes = face_geom(a, t0)
+    png = os.path.join(BUILD, shot, f"{int(round(t0 * FPS)) + 1:04d}.png")
+    fixed = plate_eyes(png, eyes, size / 2.6 * 0.26 * 1.08) if os.path.exists(png) else eyes
+    if fixed == eyes:
+        fixed = tuple((cx + (ex - cx) * 1.32, cy + (ey - cy) * 1.32) for ex, ey in eyes)
+    return size, tuple((fx - ex, fy - ey) for (fx, fy), (ex, ey) in zip(fixed, eyes))
+
+
 def diorama_overlays(shot):
     """The diorama cut's 2D (coordinator, 31 Oct): the slow push-ins of the locked shots (TP13), S17's drop glint and
     S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D. S19 and S20 get the 3D cut's
@@ -260,8 +285,13 @@ def diorama_overlays(shot):
     a = anchors(shot)
     n = max(a)
     ex, ey = at(a, 0.0, "eyes")
-    if shot == "S01":
-        return [(push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.06))]
+    if shot in ("S01", "S16"):                                    # the pin-prick terror rhyme, as in 3D
+        t0 = 0.0 if shot == "S01" else 41 / FPS
+        size0, corr = _terror_on_plate(shot, a, t0 if shot == "S16" else 11 / FPS)
+        out = [(tracked_terror, dict(a=a, start=t0, size0=size0, corr=corr))]
+        if shot == "S01":
+            out.append((push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.06)))
+        return out
     if shot == "S17":
         dx, dy = at(a, 20 / FPS, "drop")
         return [(drop_glint, dict(a=a, f0=17, f1=23)),
