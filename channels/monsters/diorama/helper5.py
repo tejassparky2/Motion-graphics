@@ -165,8 +165,8 @@ def s19():
     anim.lids(sh, 36, 1.0)                                         # the shrimp blinks once, then locks on again
     s3d.lock_on(sh, eyes, 39)
     face = s3d.kai_point(rig, "nose")
-    cam = _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 8.75, 70.0)
-    _center(cam, [eyes, tip, _seye(sh)], (0.31, 0.32))
+    cam = _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 10.0, 70.0)
+    _center(cam, [eyes, tip, _seye(sh), sh["root"].matrix_world.translation.copy()], (0.42, 0.3))
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
@@ -209,8 +209,9 @@ def s20():
     sc.frame_set(1)
     s3d.kai_face(rig, 1, **s3d.TERROR)
     s3d.kai_face(rig, 44, eye_zitome=0.75, mouth_short=1.0)       # deadpan
-    cam = _cam("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.2)), 9.0, 72.0, tilt=70.0, yaw=-18.0)
-    _center(cam, [eyes] + _track(lambda: [s3d.claw_tip(sh), _seye(sh)], (1, 20, 24, 40)), (0.32, 0.33))
+    cam = _cam("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.2)), 10.5, 72.0, tilt=70.0, yaw=-18.0)
+    _center(cam, [eyes] + _track(lambda: [s3d.claw_tip(sh), _seye(sh), sh["root"].matrix_world.translation.copy()],
+                                 (1, 20, 24, 40)), (0.42, 0.32))
     cam = _cam("cam_s20_kai", eyes + up * 0.15, 3.4, 70.0, frame=44)
     _center(cam, [eyes], (0.42, 0.33))
     sc.camera = bpy.data.objects["cam_s20_shrimp"]
@@ -240,7 +241,8 @@ def s21():
     anim.key(r, "rotation_euler", 4, lean0)
     anim.key(r, "rotation_euler", 8, (0, 0, yaw_to(path[0], path[1])))    # stands up and turns its back on him
     s3d._key_pose(sh, 1, sh["cock"], 0.5)
-    s3d._key_pose(sh, 8, (0.0, 0.5, 0.0), 0.0)                     # claw up at its side
+    s3d._key_pose(sh, 8, (0.0, 0.5, 0.0), 0.0)
+    s3d._key_pose(sh, 32, (0.0, 0.5, 0.0), 0.0)                     # claw up at its side
     anim.squash(body, 1, 0.0)
     anim.squash(body, 6, -0.1)                                     # a huffy puff-up... squash
     hops = [(8, 14), (16, 22), (24, 30)]                            # (take-off, landing): the 3D shot's frames
@@ -261,8 +263,13 @@ def s21():
     face_pond = yaw_to(edge, pond)
     anim.key(r, "rotation_euler", 32, (0, 0, face_pond))            # faces the water
     anim.key(r, "rotation_euler", n, (0, 0, face_pond))
-    s3d._key_pose(sh, 36, (0.0, 0.5, 0.0), 0.0)
-    s3d._key_pose(sh, 42, (0.85, 0.35, 0.0), 0.3)                   # dips the claw in the water
+    bpy.context.scene.frame_set(36)                                 # at the shore, facing the water
+    into = (pond - edge).normalized()
+    over = s3d.raise_claw(sh, edge + into * 1.6 + Vector((0, 0, 2.6)), pond)
+    dip = s3d.raise_claw(sh, edge + into * 2.2 + Vector((0, 0, -0.6)), pond)
+    bpy.context.scene.frame_set(1)
+    s3d._key_pose(sh, 36, over, 0.0)                                # claw up over the water...
+    s3d._key_pose(sh, 42, dip, 0.3, interp="LINEAR")                # ...and dips it in
     anim.on_twos([r, body, sh["shoulder"], sh["hinge"]], 2)
     sc = bpy.context.scene
     sc.frame_set(42)
