@@ -41,11 +41,28 @@ class SRVGGNetCompact(nn.Module):
         return out + F.interpolate(x, scale_factor=self.upscale, mode="nearest")
 
 
-def load(weights):
+def bf16_cpu():
+    """True when the CPU runs bf16 natively (AMX or AVX512-BF16); elsewhere bf16 is emulated and slow."""
+    try:
+        flags = open("/proc/cpuinfo").read()
+    except OSError:
+        return False
+    return "amx_bf16" in flags or "avx512_bf16" in flags
+
+
+def load(weights, fast=False):
+    """The network in eval mode. fast=True (helper 7's speed pass): channels_last memory, plus bf16 weights on a CPU
+    with native bf16. On 4 cores with AMX: ~1.5 s per 720x1280 frame instead of ~7, PSNR >= 54 dB against fp32 at
+    1080x1920 (out/monsters/diorama_v3/Q4_speed.md). Without native bf16 it stays fp32 (channels_last only, ~4 s)."""
     net = SRVGGNetCompact()
     sd = torch.load(weights, map_location="cpu", weights_only=True)
     net.load_state_dict(sd.get("params", sd), strict=True)
-    return net.eval()
+    net = net.eval()
+    if fast:
+        net = net.to(memory_format=torch.channels_last)
+        if bf16_cpu():
+            net = net.to(torch.bfloat16)
+    return net
 
 
 @torch.inference_mode()
@@ -53,11 +70,15 @@ def upscale(net, im, size, tile=0, pad=10):
     """im (PIL RGB) -> PIL RGB at `size`: the network's 4x, then lanczos down to `size`. With tile > 0 the frame is
     run in tiles (with `pad` px of overlap) to bound memory."""
     x = torch.from_numpy(np.asarray(im, dtype=np.float32) / 255.0).permute(2, 0, 1)[None]
+    w0 = net.body[0].weight                                       # follow the net's dtype and memory layout
+    if w0.is_contiguous(memory_format=torch.channels_last):
+        x = x.contiguous(memory_format=torch.channels_last)
+    x = x.to(w0.dtype)
     if not tile:
         y = net(x)
     else:
         _, _, h, w = x.shape
-        y = torch.zeros(1, 3, h * 4, w * 4)
+        y = torch.zeros(1, 3, h * 4, w * 4, dtype=x.dtype)
         for t in range(0, h, tile):
             for l in range(0, w, tile):
                 t0, l0 = max(t - pad, 0), max(l - pad, 0)
@@ -66,7 +87,7 @@ def upscale(net, im, size, tile=0, pad=10):
                 bt, bl = (t - t0) * 4, (l - l0) * 4
                 th, tw = min(tile, h - t) * 4, min(tile, w - l) * 4
                 y[:, :, t * 4:t * 4 + th, l * 4:l * 4 + tw] = o[:, :, bt:bt + th, bl:bl + tw]
-    a = (y[0].clamp(0, 1).permute(1, 2, 0).numpy() * 255.0).round().astype(np.uint8)
+    a = y[0].float().mul_(255.0).round_().clamp_(0, 255).to(torch.uint8).permute(1, 2, 0).contiguous().numpy()
     return Image.fromarray(a).resize(size, Image.LANCZOS)
 
 

@@ -142,7 +142,7 @@ def s19():
     acting.glare(sh, eyes, 39)
     face = s3d.kai_point(rig, "nose")
     tgt = face.lerp(tip, 0.5)
-    cam = _push("cam_s19", tgt, 1, n, 52.0, 42.0, 37.0, 120.0)
+    cam = _push("cam_s19", tgt, 1, n, 60.0, 42.0, 37.0, 120.0)
     v2._center(cam, [eyes, tip, v2._seye(sh), sh["root"].matrix_world.translation.copy()], (0.42, 0.3))
     _anchors("S19", n, cam, rig, sh)                              # for helper 1's 2D pass (sweat, glare)
     return dict(frames=n, step=2, ones=(1, n), subject=_subject(rig, sh))
@@ -202,11 +202,11 @@ def s20():
     acting.blink(rig, CUT + 2, n, seed=20, at=(CUT + 20,))
     acting.look_at(rig, s3d.claw_tip(sh), 1, SNAP - 4, seed=20)
     acting.look_at(rig, root + Vector((0, 0, 1.5)), CUT, n, seed=21, strength=0.5)   # at the shrimp, flat
-    camA = _push("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.0)), 1, CUT - 1, 50.0, 40.0, 35.0,
-                 120.0, yaw=-24.0)
+    camA = _push("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.0)), 1, CUT - 1, 58.0, 40.0, 35.0,
+                 120.0, yaw=-150.0)                                  # from past his head: the shrimp's face and claw
     v2._center(camA, [eyes] + v2._track(lambda: [s3d.claw_tip(sh), v2._seye(sh),
                                                  sh["root"].matrix_world.translation.copy()],
-                                        (1, WIND, SNAP, SNAP + 26)), (0.42, 0.32))
+                                        (1, WIND, SNAP, SNAP + 26)), (0.45, 0.35))
     camB = _push("cam_s20_kai", eyes + UP * 0.15, CUT, n, 55.0, 30.0, 27.0, 120.0, frame=CUT)
     v2._center(camB, [eyes], (0.42, 0.33))
     sc.camera = camA
