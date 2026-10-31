@@ -308,7 +308,7 @@ def s24top():
     for f, lens, sh in ((57, 25, -0.21), (85, 33, -0.25)):
         anim.key(cd, "lens", f, lens, "BEZIER")
         anim.key(cd, "shift_y", f, sh, "BEZIER")
-    return dict(frames=n, step=3, subject=[k["arm"]])
+    return dict(frames=n, step=3, ones=(57, 85), subject=[k["arm"]])   # the push renders on 1s; Kai, shrimp on 3s
 
 
 def _local(rot, v, scale=1.3):
