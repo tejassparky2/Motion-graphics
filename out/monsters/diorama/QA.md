@@ -22,7 +22,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03a | helper 1 | **FIX** (fix in 38c9239; re-render pending) | 53 / 53 | 0.45 | the rain was near-invisible and static; the new rain reads in the OK still |
+| S03a | helper 1 + coordinator | PASS (re-rendered, 9e3862e) | 53 / 53 | 0.45 | the new rain streaks read at 360 px and fall on 1s; clean file |
 | S03b | helper 1 | PASS (remuxed, 175fa92) | 51 / 51 | 0.39 | the smile lands at ~f22; file now clean |
 | S05b | helper 1 | PASS | 51 / 51 | 0.40 | the flash fades on 1s, the finger rises and taps on 30/34; clean file; 1 NOTE |
 | S10a | helper 4 | PASS (self-review; the coordinator approved the stills) | 56 / 56 | 0.51 | the cute hold, blink on 23, on 2s; flowers round it; clean file |
@@ -31,8 +31,20 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S10b | helper 6 | PASS (remuxed clean, 8672c25) | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS (remuxed clean, 8672c25) | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
+| S17 | bGqrs | PASS | 47 / 47 | 0.38 | the drop falls from the claw tip by Kai's face; clean file; 1 NOTE |
+| S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
+| S06 | helper 9 | PASS for the picture; **FIX** no rain in the window | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
+| S07 | helper 2 | PASS (remuxed clean, 7c99972) | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
+| S09 | helper 3 | PASS (remuxed clean, e2b1af1) | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
+| S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
+| S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
+| S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
+| S21 | helper 5 | rendering (helper 4) | 64 | - | - |
 
 ## S03a: night shift at the marine lab (helper 1)
+**v2 (9e3862e): PASS.** 53 frames, saturation 0.45, a clean file. The bright diagonal streaks fill all four panes and
+fall on 1s, with drips; they read at 360 px. The shot is alive the whole way through (LC10).
+
 **Fix in progress:** mk/diorama_lab.py 38c9239 has bright 20° streaks (about 0.1 × 1.1 u) falling about 0.6 u per
 frame, plus slow drips. The OK still (okstills/S03a_rain_f2.jpg) reads at 360 px. PASS once the re-rendered,
 CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new rain on their next render.
@@ -84,7 +96,7 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 - **Readability:** Kai is about 330 px tall, the action is inside x < 560 and y < 960, and he acts on 2s. The file
   is clean (no encoder tags).
 
-Waiting for: S01, S02, S04, S05a, S06-S09, S13, S14, S16-S24; the S03a re-render.
+Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
 **FIX** (sent to helper 10, cc the coordinator).
@@ -130,3 +142,60 @@ Waiting for: S01, S02, S04, S05a, S06-S09, S13, S14, S16-S24; the S03a re-render
 - **Picture:** from above and behind, the trail of six burnt, ember-rimmed holes runs up the frame to the snail.
   The pale cel smoke rises off every hole on 1s, leaning up-left, clear of the shell. The slime ribbon is now a
   faint sheen, so the holes sit in the grass, with flower dots around.
+
+## S17: "Then I saw the drops." (bGqrs, rendered 0319933)
+**PASS**, with one NOTE.
+- **Length and level:** 47 frames, saturation 0.38, a clean file.
+- **Picture:** from above, Kai lies on his back below the pond with the shrimp on his chest. A drop swells on the
+  claw tip by his face and falls (the clue's second showing, CH3), with the 2D glint pass on it.
+- **NOTE:** the drop is small and lands by his face rather than on the jacket, as the 3D insert did. It reads at
+  360 px as a blue blip against the claw. A brighter splat would help.
+
+## S24bot: RUN (XprL, f423ff4)
+**PASS.**
+- **Length and level:** 97 frames, saturation 0.49, a clean file, on 2s.
+- **Picture:** from above, the butcher bird's giant shadow sweeps across Kai (frames 1-35). The bird then drops onto
+  the shrimp at the pond and mantles over it, with Kai beside it.
+- **Split:** it shows in place in the lower half (S24_FOCUS y 960). Kai is about 240 px tall, clear of the right rail.
+
+## S07: the strike in the tank (helper 2)
+**PASS** (remuxed clean, 7c99972).
+- **Length and level:** 36 frames, saturation 0.42.
+- **Picture:** the shrimp's eye close-up, the strike and the ring, then the crack runs up the tank glass over the
+  shrimp, seen from above. Each beat reads at 360 px and keeps the 3D frame numbers.
+- **FIX (file hygiene), done:** the mp4 carried 2 encoder tags; helper 2's CLEAN remux (7c99972) cleared them
+  (0 tags, 36 frames).
+
+## S09: waking in the meadow, the cracked sky (helper 3)
+**PASS** (remuxed clean, e2b1af1), with one NOTE.
+- **Length and level:** 66 frames, saturation 0.35 (low in the band, from the white-out at the start).
+- **Picture:** white frames bloom onto Kai lying in the pink flowers, a blur tilt up, then the crack in the sky
+  between two clouds, held from about frame 33, so it is on screen for "cracked sky" (frames 31-44).
+- **FIX (file hygiene), done:** the 2 encoder tags are gone after helper 3's CLEAN remux (e2b1af1).
+- **NOTE:** the sky crack is a thin line; at 360 px it reads, but only just. A thicker or brighter crack (or a glow
+  along it) would sell the beat.
+
+## S22: "That's when I saw the thorn tree." (XprL)
+**PASS.**
+- **Length and level:** 57 frames, saturation 0.53, a clean file.
+- **Picture:** close on the thorn tree with its skewered bugs, then a pull back to a wide from above: Kai on his back
+  by the pond, the shrimp beside him, the tree small at the top. The tree is the subject while "thorn tree" is spoken
+  (frames 27-32).
+- **Readability:** in the wide Kai is about 170 px tall, inside x < 560 and y < 960.
+
+## S23: "A butcher bird hangs its food on thorns." (XprL)
+**PASS.**
+- **Length and level:** 82 frames, saturation 0.45, a clean file.
+- **Picture:** the butcher bird lands on top of the thorn tree ("bird", frame 17), switches to its brown danger rig
+  with dark eyes, then its giant shadow and the sparkle on an empty thorn ("on thorns", frames 39-45): the threat is
+  set up for S24.
+
+## S06: "Then the storm hit." (helper 9, 8158785)
+**PASS for the picture**, with one FIX.
+- **Length and level:** 41 frames, saturation 0.47, a clean file.
+- **Picture:** the same dollhouse lab from above as S03a. The bolt forks across the window on "storm" (frame 14) with
+  2-frame flashes (14, 16), Kai turns his head up to the window on 16, and the lamp and room lights stutter on and off
+  from frame 20 to 35. Every beat reads at 360 px.
+- **FIX (continuity):** the window has no rain. It was rendered before the S03a rain fix (mk/diorama_lab.py 38c9239 /
+  3f04152), so S03a's heavy rain stops dead at the cut, just as "the storm hit". A re-render with the current
+  diorama_lab picks the rain up; nothing else changes.
