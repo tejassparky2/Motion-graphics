@@ -98,7 +98,7 @@ def _idle(t, seed=0):
 
 
 def _wave(t):
-    return dict(sh_n=2.6, el_n=0.35 + 0.45 * math.sin(t * 2 * math.pi * 1.6), sh_f=-0.08, el_f=0.15, turn=0.4,
+    return dict(sh_n=2.3, el_n=1.35 + 0.4 * math.sin(t * 2 * math.pi * 1.6),            # hand-up wave, elbow >= 0.95 sh_f=-0.08, el_f=0.15, turn=0.4,
                 face={"mouth": "smile"})
 
 
@@ -106,6 +106,13 @@ def _cheer(t):
     k = 0.5 + 0.5 * math.sin(t * 2 * math.pi * 1.4)
     return dict(sh_n=2.7 + 0.25 * k, sh_f=-2.7 - 0.25 * k + 0.0, el_n=0.25, el_f=-0.25, nod=-0.25, turn=0.6,
                 bob=-10.0 * k, hand_n="fist", hand_f="fist", face={"mouth": "o", "brow": "neutral"})
+
+
+def _fist_pump(t):
+    """A cheering fist pumped above the head, elbow always bent (never a straight raised arm)."""
+    k = abs(math.sin(t * 2 * math.pi * 1.3))
+    return dict(sh_n=2.55 + 0.15 * k, el_n=1.1 - 0.15 * k, hand_n="fist", sh_f=-0.15, el_f=0.5, nod=-0.15, turn=0.5,
+                face={"mouth": "smile"})
 
 
 def _shiver(t):
@@ -141,12 +148,13 @@ POSES = {
     "walk": _walk,
     "run": _run,
     "march": _march,
-    "point": dict(sh_n=1.6, el_n=0.05, turn=0.3, hand_n="fist", face={"brow": "angry"}),
+    "point": dict(sh_n=1.25, el_n=0.85, turn=0.3, hand_n="fist", face={"brow": "angry"}),   # a short bent-arm point
     "shrug": dict(sh_n=0.55, el_n=1.9, sh_f=-0.55, el_f=-1.9, nod=-0.12, turn=0.8, drop=-3,
                   face={"brow": "worried", "mouth": "frown"}),
     "wave": _wave,
     "salute": dict(sh_n=1.75, el_n=2.6, lean=-0.03, nod=-0.05, hand_n="open", face={"mouth": "line"}),
     "cheer": _cheer,
+    "fist_pump": _fist_pump,
     "hips": dict(sh_n=0.75, el_n=-1.9, sh_f=-0.75, el_f=1.9, turn=0.7, face={"brow": "angry", "mouth": "grit"}),
     "arms_crossed": dict(sh_n=0.25, el_n=2.0, sh_f=0.15, el_f=2.15, turn=0.7, face={"brow": "angry"}),
     "head_down": dict(lean=0.18, nod=0.5, sh_n=0.05, sh_f=-0.05, el_n=0.1, el_f=0.1, turn=0.3,
@@ -154,10 +162,10 @@ POSES = {
     "sign": dict(lean=0.42, nod=0.35, sh_n=0.95, el_n=0.8, sh_f=0.75, el_f=0.95, hip_n=1.45, kn_n=1.45,
                  hip_f=1.45, kn_f=1.45, ground="seat", face={"mouth": "line"}),
     "slam": dict(lean=0.25, nod=0.15, sh_n=2.8, el_n=0.4, turn=0.4, face={"brow": "angry", "mouth": "grit"}),
-    "slam_down": dict(lean=0.35, nod=0.2, sh_n=1.0, el_n=0.0, hand_n="fist", turn=0.4,
+    "slam_down": dict(lean=0.35, nod=0.2, sh_n=1.0, el_n=0.55, hand_n="fist", turn=0.4,
                       face={"brow": "angry", "mouth": "grit"}),
     "shake": _shake,
-    "hold_paper": dict(sh_n=2.35, el_n=0.35, turn=0.5, prop_up=1.0, face={"mouth": "smile"}),
+    "hold_paper": dict(sh_n=1.75, el_n=1.35, turn=0.5, prop_up=1.0, face={"mouth": "smile"}),
     "aim": _AIM,
     "fire": _fire,
     "crouch": dict(lean=0.35, hip_n=1.2, kn_n=2.0, hip_f=0.9, kn_f=2.1, sh_n=0.6, el_n=0.6, sh_f=0.4, el_f=0.7,
@@ -228,6 +236,18 @@ def _dir(a):
     return math.sin(a), math.cos(a)
 
 
+def _bent(a, el, p):
+    """STYLE rule (31 Oct 2026): no straight-arm gestures at any angle, which read as the Nazi salute. An arm raised
+    anywhere between about 25 deg below horizontal and steeply up (forward or back) always bends at the elbow; only a
+    rifle hold (aim/fire) and near-vertical 'both arms up' cheering are exempt."""
+    if p.get("aim"):
+        return el
+    w = math.atan2(math.sin(a), math.cos(a))                     # the arm's angle from straight down, -pi..pi
+    if 1.15 < abs(w) < 2.65 and abs(el) < 0.75:
+        return 0.75 if (el > 0 or (el == 0 and w > 0)) else -0.75
+    return el
+
+
 def skeleton(p):
     """Joint positions in the figure's own frame (facing +x, y down), hips at (0, 0) before grounding."""
     lean = p["lean"] + p.get("sway", 0.0)
@@ -241,7 +261,7 @@ def skeleton(p):
         a = p["sh_" + side] + lean * 0.5
         dx, dy = _dir(a)
         el = (sh[0] + UPPER * dx, sh[1] + UPPER * dy)
-        dx2, dy2 = _dir(a + p["el_" + side])
+        dx2, dy2 = _dir(a + _bent(a, p["el_" + side], p))
         J["el_" + side] = el
         J["hand_" + side] = (el[0] + FORE * dx2, el[1] + FORE * dy2)
         h = p["hip_" + side]

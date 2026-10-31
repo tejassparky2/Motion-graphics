@@ -154,7 +154,7 @@ Alternatives:
 109b. **In China, millions of soldiers have held down most of Japan's army since 1937. And in Burma, British and Indian troops drive Japan back.** (The camera swings west across the map: China in gold holding a long front; a blue arrow pushes out of India into Burma.)
 110. **At Iwo Jima and Okinawa, the fighting is so fierce that American leaders fear invading Japan itself will cost enormous numbers of lives.** (A bar chart of casualties grows; worried stick generals.)
 
-## Chapter 7: The end (8:50)
+## Chapter 7: Endgame (8:50)
 111. **By late April 1945, Soviet troops are fighting in the streets of Berlin.** (A red ring around Berlin.)
 112. **On April 30th, Hitler kills himself in his bunker.** (The bunker's door slams shut; silence.)
 113. **A week later, Germany surrenders.** (A signing table.)

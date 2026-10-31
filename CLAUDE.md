@@ -112,6 +112,11 @@
 ## Long videos: idea only, not now (owner, 15 Oct 2026)
 - If we ever make long-form videos, the topics are **"what if" scenarios, how finance/money works, and funny history**.
   Don't make any until the owner says so (monetization route: 4,000 long-form watch hours before the Feb 2027 change).
+- **Update (owner, 31 Oct 2026): the owner said so.** "Can you make long video on world war 2 with detailed high quality
+  animation… this is for different channel". It's a separate WW2 history channel on branch `ccr-56282fe5-evehq4-ww2`
+  (main chat session_0153qDV4AufFgT2PhEBEfS8n plus helper sessions). The owner approved the script ("OK go ahead"), the
+  1940s-poster style frames, the male British narrator and the ~12 min length, and said "Yes, start production".
+  Rules and files: channels/ww2/ (README.md, STYLE.md, ep01/PACKAGES.md). Interestingly Strange itself stays Shorts-only.
 
 ## Length: 40-50 s and clearly understandable (owner, 14 Oct 2026)
 - Target **40-50 s**; clarity comes first: every step of the logic stays, one step per sentence. Cut side facts,

@@ -33,7 +33,7 @@ SR = 24000
 CHAPTERS = [  # (id, title, first line id); line ids follow the script's numbering, "109b"/"123b" included
     ("C0", "Cold open", "1"), ("C1", "The broken peace", "8"), ("C2", "Lightning war", "34"),
     ("C3", "The war goes global", "58"), ("C4", "The turning points", "75"), ("C5", "The Holocaust", "92"),
-    ("C6", "Closing in", "98"), ("C7", "The end", "111"), ("C8", "After the war", "122")]
+    ("C6", "Closing in", "98"), ("C7", "Endgame", "111"), ("C8", "After the war", "122")]
 LEAD_IN = 0.6            # silence before the first word (the battleship scene is already moving)
 SENT_PAUSE = 0.42        # between sentences inside a line
 LINE_PAUSE = 0.62        # between lines
