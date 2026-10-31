@@ -105,6 +105,12 @@ class Pose:
         R = cur.rotation_difference(Vector(direction).normalized()).to_matrix().to_4x4()
         self._set(name, Matrix.Translation(h) @ R @ Matrix.Translation(-h) @ M)
 
+    def twist(self, name, deg):
+        """Roll a bone about its own length (e.g. turn a palm up)."""
+        p = self.pb[name]
+        bpy.context.view_layer.update()
+        self._set(name, p.matrix @ Matrix.Rotation(math.radians(deg), 4, "Y"))
+
     def hips(self, offset):
         """Move the hips (the whole upper body and the leg roots) by `offset` in armature space."""
         p = self.pb["hips"]
@@ -192,6 +198,23 @@ def _walk(P, rig, path, f0, f1, step_len, start_foot="R", crouch=(0.0, 0.0), bac
         if upper:
             upper(P, t)
         P.key(f)
+    return {k: v.copy() for k, v in feet.items()}
+
+
+def _squat(P, feet, f0, f1, drop0, drop1, upper, every=3, hold_to=None):
+    """Feet planted where `_walk` left them, the hips sinking from `drop0` to `drop1` (armature units) between f0 and
+    f1; `upper(P, t)` poses the body. Holds the last pose to `hold_to`."""
+    mid = (feet["L"] + feet["R"]) / 2
+    last = hold_to or f1
+    for f in range(f0, last + 1, every):
+        t = min(1.0, (f - f0) / max(1, f1 - f0))
+        e = 0.5 - 0.5 * math.cos(math.pi * t)
+        P.reset()
+        P.hips(Vector((mid.x, mid.y, -(drop0 + (drop1 - drop0) * e))))
+        for side in ("L", "R"):
+            P.leg(side, feet[side] + Vector((0, 0, P.ankle_h)))
+        upper(P, t)
+        P.key(f)
 
 
 # ------------------------------------------------------------------------------------------------------- the shrimp
@@ -249,23 +272,37 @@ def s24top():
     k = _hero((7.5, 0.1, 0), -90)                                        # facing -X, toward the shrimp
     P = Pose(k)
     # armature space: he walks forward (-Y); turned -90 deg, armature -Y is world -X, and 1 armature unit = 5.8
-    start, end = Vector((0, 0, 0)), Vector((0, -0.81, 0))                # world x 7.5 -> 2.8, ~60 cm from the claw
+    start, end = Vector((0, 0, 0)), Vector((0, -1.0, 0))                 # world x 7.5 -> 1.7
 
-    def upper(P, t):
-        P.rot("spine", (10 + 14 * t, 0, 0))
-        P.rot("chest", (4 + 8 * t, 0, 0))
-        P.rot("head 1", (8 + 10 * t, 0, 0))                               # eyes on the shrimp, down low
+    def walk_upper(P, t):
+        P.rot("spine", (8 + 8 * t, 0, 0))
+        P.rot("chest", (4 + 4 * t, 0, 0))
+        P.rot("head 1", (2, 0, 0))                                        # face up: no brim over the eyes
         _arms_down(P, 10)
-        reach = min(1.0, t * 1.3)                                         # an open hand held out, low and slow
+        reach = min(1.0, t * 1.2)
         P.aim("upper_arm.R", (-0.15, -0.3 - 0.45 * reach, -1 + 0.45 * reach))
         P.aim("forearm.R", (-0.05, -0.45 - 0.4 * reach, -0.85 + 0.25 * reach))
         P.aim("upper_arm.L", (0.25, 0.1, -1))
 
-    _walk(P, k, (start, end), 1, n - 24, 0.3, "R", crouch=(0.0, 0.12), upper=upper)
+    def squat_upper(P, t):
+        P.rot("spine", (16 + 14 * t, 0, 0))
+        P.rot("chest", (8 + 4 * t, 0, 0))
+        P.rot("neck", (-6 * t, 0, 0))
+        P.rot("head 1", (-8 * t, 0, 6 * t))                               # chin up: his face over his hand
+        _arms_down(P, 10)
+        P.aim("upper_arm.R", (-0.12, -0.75 - 0.15 * t, -0.55 - 0.15 * t))  # reaching low to the shrimp
+        P.aim("forearm.R", (-0.04, -0.9, -0.3 - 0.15 * t))
+        P.aim("hand.R", (-0.02, -1, -0.2))
+        P.twist("upper_arm.R", -90 * t)                                  # an open hand, offered
+        P.aim("upper_arm.L", (0.3, 0.05, -1))
+        P.aim("forearm.L", (0.15, -0.5, -0.8))
+
+    feet = _walk(P, k, (start, end), 1, 54, 0.33, "R", crouch=(0.0, 0.12), upper=walk_upper)
+    _squat(P, feet, 57, 75, 0.12, 0.36, squat_upper, hold_to=n)
     hero.face(k, "neutral", 1)
     hero.face(k, "happy", 52, 0.35)                                       # a small, steady smile as he crouches
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24top", (-1.5, -16.5, 1.5), (1.2, 0.6, 3.4), 30, shift_y=-0.22, fstop=1.2, focus=(0.0, 0.0, 2.0))
+    _cam("cam_s24top", (1.2, -6.8, 1.0), (-0.9, 0.6, 3.0), 24, fstop=2.8, focus=(-1.4, 0.8, 2.4))   # low, under the brim
     return dict(frames=n, step=3, subject=[k["arm"]])
 
 
@@ -317,14 +354,14 @@ def s24bot():
                 nd.inputs[1].default_value *= 0.6
     bush = thornbush.build()
     _bird_drop(bush, 22, 46, n)
-    k = _hero((3.6, 0.1, 0), -90)
+    k = _hero((1.7, 0.1, 0), -90)                                         # where SAVE's crouch leaves him
     P = Pose(k)
-    start, end = Vector((0, 0, 0)), Vector((-0.35, 0.45, 0))              # back and to his right: toward the trees
+    start, end = Vector((0, 0, 0)), Vector((-0.3, 0.45, 0))               # back and to his right: toward the trees
 
     def upper(P, t):
         P.rot("spine", (-6 - 6 * t, 0, 0))
         P.rot("chest", (-4, 0, 0))
-        P.rot("head 1", (-26 - 8 * t, 0, -8))                             # looking up at the bird
+        P.rot("head 1", (-14 - 6 * t, 0, -10))                            # looking up at the bird, face to us
         _arms_down(P, 14)
         P.aim("upper_arm.R", (-0.5, -0.45, 0.35 + 0.2 * t))               # an arm up, shielding
         P.aim("forearm.R", (0.3, -0.35, 0.85))
@@ -334,7 +371,7 @@ def s24bot():
     hero.face(k, "surprised", 1)
     hero.face(k, "shock", 12)
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24bot", (-2.0, -18.0, 1.3), (1.0, 0.6, 3.6), 30, shift_y=0.3, fstop=1.2, focus=(1.5, 0.0, 2.5))
+    _cam("cam_s24bot", (-6.5, 2.5, 1.0), (1.0, 0.0, 4.5), 26, fstop=2.8, focus=(1.0, 0.5, 4.0))    # behind the shrimp, up at Kai
     return dict(frames=n, step=2, subject=[k["arm"]])
 
 

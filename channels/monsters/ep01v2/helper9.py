@@ -249,7 +249,7 @@ def s12():
     rig = _crawling_kai((0.6, -11.0, 0.0), math.pi, 1, n, 3.0)
     _face_mix(rig, {"face_sad": 0.6, "eye_zitome": 0.5, "mouse_open": 0.6}, 1)
     _face_mix(rig, {"face_sad": 0.6, "eye_zitome": 0.7, "lip_a": 0.7}, 19)
-    c = _cam("cam_s12", (13.5, -9.4, 1.4), (0.6, -9.4, 2.2), 26)
+    c = _cam("cam_s12", (13.5, -8.3, 1.4), (0.6, -8.3, 2.2), 20)   # his whole crawl (feet at start, head at end) in frame
     c.data.clip_end = 2000
     return dict(frames=n, step=3, subject=[rig["arm"]])
 
