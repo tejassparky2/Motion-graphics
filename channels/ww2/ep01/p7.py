@@ -18,7 +18,7 @@ line. Shots (SHOTLIST.md C6-S07 .. C7-S09):
          long front; a blue arrow pushes out of India into Burma
     110  Iwo Jima / Okinawa: a volcanic island under flat bursts, a casualty bar chart grows (no numbers); then three
          worried American generals around a map of Japan
-    C7   Chapter 7 card
+    C7   Chapter 7 card (title from timing.json)
     111  Berlin: Soviet arrows and the red ring close round the city, flashes in the streets
     112  The bunker corridor: the steel door slams shut, then silence (no method, nothing shown)
     113  Reims: the surrender signed at a table, SURRENDER
@@ -690,7 +690,8 @@ def shot_iwo(cr, t, a, b):
 
 
 GENERALS = [dict(x=560, f=1, pose=[(0, "arms_crossed")], s=1.15, seed=3),
-            dict(x=960, f=-1, pose=[(0, "point"), (2.2, "shrug")], s=1.22, seed=5),
+            dict(x=960, f=-1, pose=[(0, dict(sh_n=0.75, el_n=1.1, lean=0.12, nod=0.25, hand_n="fist", turn=0.3)), (2.2, "shrug")],
+                 s=1.22, seed=5),
             dict(x=1370, f=-1, pose=[(0, "head_down")], s=1.15, seed=7)]
 
 
@@ -727,7 +728,7 @@ def shot_generals(cr, t, a, b):
 def shot_card7(cr, t, a, b):
     paper(cr)
     rays(cr, t, W / 2, H / 2, n=28, color="ink", alpha=0.10, spin=0.02)
-    chapter_card(cr, t, C7[0], 7, "The end", dur=C7[1] - C7[0] + 0.05)
+    chapter_card(cr, t, C7[0], 7, T.chapter("C7").title, dur=C7[1] - C7[0] + 0.05)
     date_stamp(cr, t, "1945", start=a - 1)
 
 
