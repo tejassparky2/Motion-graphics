@@ -74,10 +74,13 @@ def soldier(cr, x, y, h, t, seed, color, pose="idle", rim=False):
     cr.new_sub_path()
     cr.arc(0, -1, 9, math.pi, math.tau)
     cr.restore()
-    if pose == "wave":
-        a = -2.3 + 0.4 * math.sin(t * 7 + seed)
-        P.poly(cr, [(8, -76), (8 + 30 * math.cos(a + 0.1), -76 + 30 * math.sin(a + 0.1)),
-                    (8 + 30 * math.cos(a - 0.1), -76 + 30 * math.sin(a - 0.1)), (11, -72)])
+    if pose == "wave":                                          # a bent-arm wave (never a straight raised arm)
+        hx = 20 + 7 * math.sin(t * 7 + seed)
+        P.poly(cr, [(7, -78), (24, -90), (27, -84), (11, -72)])                  # upper arm out to the elbow
+        P.poly(cr, [(22, -88), (hx - 3, -110), (hx + 4, -110), (28, -86)])       # forearm up, hand waving
+        cr.new_sub_path()
+        cr.arc(hx, -112, 4.5, 0, math.tau)
+        P.poly(cr, [(-12, -76), (-15, -50), (-11, -50), (-8, -76)])
     else:
         P.poly(cr, [(-14, -78), (-19, -46), (-12, -46), (-7, -76)])
         P.poly(cr, [(14, -78), (19, -46), (12, -46), (7, -76)])
