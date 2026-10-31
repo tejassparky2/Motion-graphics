@@ -30,7 +30,10 @@ LOOKS = {
 }
 
 
-ON_BY_DEFAULT = False          # flipped to True for diorama_v3 once the coordinator approves the before/after
+ON_BY_DEFAULT = True           # approved for diorama_v3 (coordinator, 31 Oct 13:20 UTC): lab only, see ISLAND below
+# The island before/after (S18 f31) came out greyer and hazier, with a pale ghost over Kai's face and a blob at the pond
+# edge, while v1's island already reads clean and bright, so island scenes keep the v1 look unless DIORAMA_ISLAND_Q3=1.
+ISLAND = os.environ.get("DIORAMA_ISLAND_Q3") == "1"
 
 
 def enabled(ep):
@@ -157,6 +160,8 @@ def _grade(sc, g):
 def finish(info):
     sc = bpy.context.scene
     kind = scene_kind()
+    if kind == "island" and not ISLAND and os.environ.get("DIORAMA_LOOK") != "v2":
+        return "island (v1 look kept)"
     g = LOOKS[kind]
     _view(sc, g["exposure"])
     _render(sc)
