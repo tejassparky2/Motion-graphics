@@ -128,9 +128,10 @@ def s22():
     shells = np.array(th["shell_spots"])
     near = shells[np.argsort(np.abs(shells[:, 2] - 2.4))[:4]].mean(axis=0)
     tree = Vector((diorama.MAP["thorn"][0], diorama.MAP["thorn"][1], 4.0))
-    wide = tree.lerp(Vector((1.0, -4.0, 0.0)), 0.45)                        # the tree, the pond and Kai below it
-    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, YAW_THORN, 100.0, 0.0),
-          (tuple(wide), 125.0, 56.0, YAW_THORN, 85.0, 0.0), n)
+    hips = Vector((d16.HIPS[0], d16.HIPS[1], 2.0))
+    wide = tree.lerp(hips, 0.5)                                             # the tree at the top, Kai at the bottom
+    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, 40.0, 100.0, 0.0),   # yaw 40: the tree and Kai on one line
+          (tuple(wide), 72.0, 56.0, 40.0, 85.0, 0.0), n)
     return dict(frames=n, step=1, subject=[])
 
 
@@ -163,12 +164,12 @@ def s23():
     base, tip = (Vector(p) for p in th["empty_thorn"])
     mid = (base + tip) / 2
     ground = Vector((perch.x + reach.x, perch.y + reach.y, 0.0))
-    ins = _cam("cam_s23_thorn", None, tuple(mid.lerp(ground, 0.45)), 60.0, 64.0, yaw, 90.0)
+    ins = _cam("cam_s23_thorn", None, tuple(mid.lerp(ground, 0.22)), 36.0, 60.0, yaw, 100.0)
     h5._glint(tuple(tip + (tip - base).normalized() * 0.03), ins, 62)
     for m in list(sc.timeline_markers):
         sc.timeline_markers.remove(m)
     ms = sc.world.mist_settings
-    for f, c, d in ((1, up, 46.0), (h5.INSERT_AT, ins, 60.0)):
+    for f, c, d in ((1, up, 46.0), (h5.INSERT_AT, ins, 36.0)):
         mk = sc.timeline_markers.new(c.name, frame=f)
         mk.camera = c
         ms.start, ms.depth = d * 0.97, d * 0.55                           # the haze band follows the cut
@@ -211,10 +212,10 @@ def s24top():
         P.aim("upper_arm.L", (0.25, 0.1, -1))
 
     def squat_upper(P, t):
-        P.rot("spine", (16 + 10 * t, 0, 0))
-        P.rot("chest", (8 + 2 * t, 0, 0))
-        P.rot("neck", (-14 * t, 0, 0))
-        P.rot("head 1", (-24 * t, 0, -10 * t))                              # chin up, turned to the lens
+        P.rot("spine", (12 + 6 * t, 0, 0))
+        P.rot("chest", (6 + 2 * t, 0, 0))
+        P.rot("neck", (-20 * t, 0, 0))
+        P.rot("head 1", (-50 * t, 0, 0))                                    # chin up: his face to the lens above
         x3._arms_down(P, 10)
         P.aim("upper_arm.R", (-0.12, -0.75 - 0.15 * t, -0.45 - 0.1 * t))   # reaching out over the claw
         P.aim("forearm.R", (-0.04, -0.95, -0.15 - 0.1 * t))
@@ -229,8 +230,8 @@ def s24top():
     hero.face(k, "happy", 52, 0.35)
     _twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 2.4, SHRIMP[1] - 0.3, 2.6))
-    a = (tuple(mid + Vector((1.6, 0, 0.8))), 78.0, 44.0, 28.0, 80.0, -0.2)
-    b = (tuple(mid), 62.0, 44.0, 28.0, 96.0, -0.22)
+    a = (tuple(mid + Vector((1.6, 0, 0.8))), 78.0, 44.0, 66.0, 80.0, -0.2)     # from his front, past the shrimp
+    b = (tuple(mid), 62.0, 44.0, 66.0, 96.0, -0.22)
     _move("cam_s24top", 57, 85, a, b, n)
     return dict(frames=n, step=2, ones=(57, 85), subject=[k["arm"]])
 
