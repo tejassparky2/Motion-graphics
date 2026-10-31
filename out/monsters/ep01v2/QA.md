@@ -56,13 +56,15 @@ Most serious first within each shot. Updated as shots land.
 | S14 | helper 9 (helper 5 render) | PASS (caption placement, picture.mp4 3ad5173) | 80 / 80 | 0.33 | "Impossible." sits above the cap; the mouth is clear |
 | S16 | bGqrs | PASS | 76 / 76 | 0.40 | eyes open on "eyes", then S01's framing (SU9 rhyme) |
 | S24bot | XprL | **FIX** (restage OK in stills 08b6456; waiting for the mp4) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
-| S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
+| S07 | helper 2 | PASS (v2, d978975) | 36 / 36 | 0.29 | re-aimed: the shrimp mid-frame; the hit and the crack land |
+| S05a | helper 2 | PASS | 75 / 75 | 0.30 | the bubble peaks, then collapses to micro-bubbles on "sun" |
+| S17 | bGqrs | PASS | 47 / 47 | 0.51 | a drop falls on "drops." and splats on the jacket (CH3, second showing) |
 | S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
 | S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S02, S05a, S05b, S15, S17; the S24bot re-delivery.
+Waiting for: S02, S05b, S15; the S24bot re-delivery.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -428,3 +430,18 @@ Self-review; the coordinator's read is pending. 39 frames, saturation 0.52, valu
 - **Clearances:** no puff crosses the shell or the eye stalks in any of the 7 sheet frames. The six burnt holes and
   their orange rims are fully readable.
 - **Readability:** the smoke reads at 360 px without becoming a smear.
+
+## Round 9 (31 Oct, 01:10 UTC)
+- **S17: PASS** (bGqrs). 47 frames, saturation 0.51, the drop on 2s.
+  - The second showing of the clue (CH3): an insert of the claw tip over Kai's jacket. A drop swells and falls on
+    "drops." (frame 21; it lands on frame 23), leaves a dark wet splat on the jacket, and the next drop starts to
+    swell.
+  - The finger stays on the claw. The burning stumps are soft behind it.
+- **S05a: PASS** (helper 2). 75 frames, on 1s (the effect).
+  - The white-hot bubble glows at its peak in front of the snapped claw, then collapses with a flash on "sun."
+    (frame 53) into rising micro-bubbles. The shot then holds.
+  - NOTE: saturation 0.30, the cool tank (like S04). Fine.
+- **S07 v2: PASS** (helper 2, rendered by helper 5).
+  - The camera is re-aimed, so the shrimp sits mid-frame. The impact frames are composited from the subject pass.
+  - The crack runs up the glass in 5 frames beside the shrimp (crack_path, as before).
+  - NOTE: saturation 0.29, the tank. Round 4's notes still apply (short wind-up, impact frames on 1s).
