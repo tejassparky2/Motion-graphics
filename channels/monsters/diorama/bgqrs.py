@@ -158,18 +158,21 @@ def _hit(p):
 
 
 def _over_jacket(sh, rig):
-    """Raise the claw so its tip hangs over his jacket (the clothes material, not the bare neck): try aim points over
-    his chest, nearest the shoulder first, and keep the first whose tip is above cloth. Returns the shoulder pose."""
+    """Raise the claw so it reaches down over his jacket BESIDE the shrimp (his left chest and arm), well clear of his
+    face: try cloth spots there, nearest the shrimp first, and keep the first whose claw tip hangs over cloth at least
+    2 units from his eyes. Returns the shoulder pose."""
     chest = s3d.kai_point(rig, "chest")
+    eyes = s3d.kai_point(rig, "eyes")
     pose = None
-    for k in (0.9, 1.2, 0.6, 1.5):                                 # the arm reaches down toward a spot on his jacket,
-        for u in (0.5, 0.2, 0.8):                                  # so the tip is its lowest point, over the cloth
+    for k in (1.0, 1.3, 0.7, 1.6):
+        for u in (-0.3, -0.7, 0.0, -1.1):                          # level with the shrimp or toward his belly
             spot = _hit(chest + EAST * k + UP * u + Vector((0, 0, 3)))
             if not spot or "huku" not in spot[2]:
                 continue
             pose = s3d.raise_claw(sh, spot[0] + Vector((0, 0, 1.4)), spot[0])
-            h = _hit(s3d.claw_tip(sh))
-            if h and "huku" in h[2]:
+            tip = s3d.claw_tip(sh)
+            h = _hit(tip)
+            if h and "huku" in h[2] and (tip - eyes).length > 2.0:
                 return pose
     return pose
 
@@ -365,10 +368,11 @@ def s16():
 
 
 def s17():
-    """Then I saw the drops. Close, locked and looking down (tilt 62) on his chest: the claw reaches down over his jacket, a
-    drop swells at its tip (diorama scale, so it reads from up here), lets go at f17, lands on the jacket at f23
-    ("drops") and leaves a dark wet splat; the next drop swells from f34. Same frames as the 3D S17."""
-    n, rig, sh, _ = _world("S17", claw="jacket")
+    """Then I saw the drops. Close, locked and looking down (tilt 70) on his chest: the claw reaches down over his
+    jacket beside the shrimp, clear of his face; a drop swells at its tip (diorama scale, so it reads from up here),
+    lets go at f17, lands on the jacket at f23 ("drops") and leaves a dark wet splat; the next drop swells from f34.
+    Same frames as the 3D S17."""
+    n, rig, sh, _ = _world("S17", claw="jacket", lean=S01_LEAN)       # leaning back: its eyes show, as in S01
     r = 0.3
     tip = s3d.claw_tip(sh) - Vector((0, 0, r * 0.9))
     land, nrm, mat = _hit(tip)
@@ -385,8 +389,8 @@ def s17():
     for f, s in ((22, 0.001), (23, 0.22), (25, 0.38), (29, 0.5), (35, 0.56)):
         anim.key(spot, "scale", f, (s, s * 0.8, 1), "LINEAR" if f > 23 else "CONSTANT")
     tgt = tip.lerp(land, 0.5)
-    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=62.0, lens=120.0, blur=BLUR)
-    _move(cam, n, [(1, 62.0, 50.0, 120.0), (n, 62.0, 50.0, 120.0)], lambda f: tgt)   # locked: the push-in is 2D
+    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=70.0, lens=120.0, blur=BLUR)
+    _move(cam, n, [(1, 70.0, 50.0, 120.0), (n, 70.0, 50.0, 120.0)], lambda f: tgt)   # locked: the push-in is 2D
     s3d.kai_face(rig, 1, **s3d.TERROR)
     _anchors("S17", cam, rig, sh, extra={"drop": lambda: d1.matrix_world.translation.copy()})
     print("S17 drop lands on", mat, flush=True)
