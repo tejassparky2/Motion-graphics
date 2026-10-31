@@ -26,7 +26,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S03b | helper 1 | PASS (remuxed, 175fa92) | 51 / 51 | 0.39 | the smile lands at ~f22; file now clean |
 | S05b | helper 1 | PASS | 51 / 51 | 0.40 | the flash fades on 1s, the finger rises and taps on 30/34; clean file; 1 NOTE |
 | S10a | helper 4 | PASS (self-review; the coordinator approved the stills) | 56 / 56 | 0.51 | the cute hold, blink on 23, on 2s; flowers round it; clean file |
-| S15 | helper 10 + helper 7 + coordinator | **FIX** | 127 / 127 | 0.48 | the claw's wind-up (22-41) is unreadable: the shrimp is ~40 px and behind Kai; file tags |
+| S15 | helper 10 + helper 7 + coordinator | PASS (v2, 50369c7) | 127 / 127 | 0.46 | the close cut 19-41: the claw rises past Kai's glove and holds, big; clean file; 1 NOTE (the eye beat) |
 | S11a | helper 4 | PASS (self-review; the coordinator approved the stills) | 39 / 39 | 0.58 | the trail of ember holes leads up to the snail; pale smoke on 1s; clean file |
 | S10b | helper 6 | PASS (remuxed clean, 8672c25) | 35 / 35 | 0.54 | top-down, the moth big and cute; 1 NOTE |
 | S11b | helper 6 | PASS (remuxed clean, 8672c25) | 38 / 38 | 0.54 | all four eye-spots open and stare up at the lens |
@@ -109,6 +109,17 @@ CLEAN-remuxed mp4 lands. Other lab shots that show the window pick up the new ra
 Waiting for: S02 and the joined S01; the S03a re-render and the S15 fix.
 
 ## S15: THE SNAP, diorama (helper 10 frames 1-42, helper 7 frames 43-84, coordinator frames 85-127; 1484987)
+**v2 (helper 10, 50369c7): PASS**, with one NOTE.
+- **Length and level:** 127 frames, every frame number kept, saturation 0.46, a clean file (0 encoder strings).
+- **The fix:** on 19 the shot cuts to a close, steep profile on the shrimp (dist 28, from the west, clear of Kai's
+  head). The claw is dipped in the pond on 19-21, rises past Kai's reaching glove on 2s from 22, and is held high to
+  41, a big red shape (about 250 px) that reads at 360 px. The wide returns on 42 for the strike, the blast from 50
+  as before. The episode's biggest wind-up now reads.
+- **NOTE:** the eye beat on 19-21 is weak: from this angle we see the back of the shrimp's head, with only a sliver of
+  its eye on the right. The drip off the raised claw (about 34) is a tiny blue dot. Both are small; the rising claw
+  carries the beat.
+
+**v1: FIX** (below).
 **FIX** (sent to helper 10, cc the coordinator).
 1. **The wind-up does not read (IM1 step 3, the episode's biggest beat; DIORAMA_EP01.md: Pokémon-level clarity
    at phone size, one idea per beat).**
