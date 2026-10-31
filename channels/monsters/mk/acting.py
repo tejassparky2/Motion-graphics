@@ -353,7 +353,7 @@ def lock_on(rig, target, f, down=0.35):
     h = rig["head"].matrix_world.translation
     d = Vector(target) - h
     root_yaw = rig["root"].matrix_world.to_euler().z
-    turn = math.atan2(-d.x, -d.y) - root_yaw                       # the rig faces -Y at rest
+    turn = math.atan2(d.x, -d.y) - root_yaw                        # facing d at rest -Y: z = atan2(d.x, -d.y)
     turn = (turn + math.pi) % (2 * math.pi) - math.pi
     butcherbird.stare(rig, f, down=down, turn=turn * 1.12)          # overshoot ...
     anim.key(rig["head"], "rotation_euler", f + 9, (down, 0, turn), "CONSTANT")   # ... and settle
