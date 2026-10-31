@@ -22,7 +22,7 @@ Shots (line: picture):
     29  a drum hit: AUGUST 1939 slams in
     30-31 the pact (helper 1's leaders_pact beats on this clock): the handshake, crossed fingers, NON-AGGRESSION PACT
     32  the secret line splits Poland under SECRET; the Baltic states, Finland and Bessarabia tint red
-    33  Danzig: the battleship's salvo (stand-in until P1's DANZIG set lands)
+    33  Danzig: the callback to the cold open (P1's turret fires, star-burst, smoke, flash)
     C2  CHAPTER 2 LIGHTNING WAR card
     34  grey arrows sweep across Poland, which floods grey; a tank rolls through, a dive bomber overhead
     35  BLITZKRIEG slams over a newspaper; "Lightning war." underlines it with a bolt
@@ -267,9 +267,6 @@ PLANE = things.Airliner(x=1250, y=900, scale=1.35, facing=-1, door=1.0)
 TABLE = things.LongTable(x=W / 2, y=1060, scale=1.0, length=1700, chairs=5)
 ROOM = sets.SigningRoom(kind="office")
 SKY = sets.Sky(mode="day", horizon=820, clouds=4)
-DAWN = sets.Sky(mode="dusk", horizon=640, clouds=3)
-OCEAN = sets.Ocean(horizon=640)
-SHIP = props.Battleship(x=980, y=820, scale=1.15, facing=-1, side="germany")
 TANKS = [props.Tank(x=0, y=0, scale=s, facing=1, side="germany") for s in (0.9, 0.62)]
 FIGHTERS = [props.Fighter(x=0, y=0, scale=0.55, facing=1, side="germany") for _ in range(3)]
 STUKA = props.DiveBomber(x=0, y=0, scale=0.8, facing=1, side="germany")
@@ -529,16 +526,13 @@ def shot32(cr, t, t0, t1):
 
 
 def shot33(cr, t, t0, t1):
-    DAWN.draw(cr, t)                                                   # 4:45 a.m., 1 September
-    OCEAN.draw(cr, t)
-    cr.save()
-    push(cr, t, t0, t1, 1.06, cx=900, cy=760)
-    fire_t = at(33, 0.55)                                              # on "open fire"
-    SHIP.draw(cr, t, fire=[fire_t, fire_t + 0.9], turrets=(-12, -12, 192), elev=14)
-    cr.restore()
-    fx.flash(cr, t, fire_t + 0.02, hold=0.05, fade=0.5)
+    """The callback to the cold open: P1's turret (helper 10's p1.s04_fires) finishes its swing and fires on
+    "open fire": star-burst, smoke, shake, flash."""
+    from channels.ww2.ep01 import p1
+    fire_t = at(33, 0.55)
+    p1.s04_fires(cr, t, t0 + 1.8, t1, fire_t)
     text(cr, "DANZIG", W / 2, 150, 70, font=STENCIL, color="cream", outline="ink", outline_w=10, spacing=8,
-         alpha=ease_out(seg(t, t0 + 0.2, t0 + 0.6)))
+         alpha=ease_out(seg(t, t0 + 0.2, t0 + 0.6)) * (1 - ease_in(seg(t, fire_t - 0.1, fire_t))))
 
 
 def card(cr, t, t0, t1):
@@ -675,7 +669,7 @@ def cues(T=T):
          (cut(29) + 0.12, "door_slam", -2, 0.0),
          (L(31).start + 0.1, "stamp", -4, 0.0),
          (at(32, 0.35) + 1.4, "stamp", -6, 0.2),
-         (at(33, 0.55), "gun_boom", 0, -0.2), (at(33, 0.55) + 0.9, "gun_boom", -3, 0.1),
+         (at(33, 0.55), "gun_boom", 0, 0.2), (at(33, 0.55) + 0.05, "explosion", -6, 0.3),
          (CARD[0], "stamp", -6, 0.0),
          (S34A[0], "tank", -8, 0.0), (S34B[0], "dive_whine", -8, 0.4),
          (cut(35) + 0.55, "stamp", -4, 0.0), (cut(35) + 0.1, "typewriter", -14, 0.0)]
