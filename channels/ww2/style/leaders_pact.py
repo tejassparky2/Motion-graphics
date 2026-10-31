@@ -58,16 +58,15 @@ def track(face_down=False):
 
 
 def backdrop(cr, t):
-    """The poster ground: khaki rays turning slowly from behind the handshake (never red), each side's colour as a
-    halftone field on its own half, and a dark printed floor band."""
+    """The poster ground: neutral khaki rays turning slowly from behind the handshake (never red) and the floor
+    band printed in each side's colour under its man."""
     paper(cr)
-    rays(cr, t, W / 2, 640, n=28, color="khaki", alpha=0.38, spin=0.025)
-    for side, x0, x1 in (("axis", -40, W * 0.47), ("soviet", W * 0.53, W + 40)):
-        a = ease_out(seg(t, 0.0, 1.0))
-        halftone(cr, lambda c, x0=x0, x1=x1: c.rectangle(x0, 0, x1 - x0, H), side, density=2, alpha=0.32 * a)
-    cr.rectangle(0, GROUND + 4, W, H - GROUND)
-    cr.set_source_rgba(*col("olive", 0.85))
-    cr.fill()
+    rays(cr, t, W / 2, 640, n=28, color="khaki", alpha=0.42, spin=0.025)       # neutral on both halves
+    halftone(cr, lambda c: c.rectangle(0, 0, W, H), "ink", density=1, alpha=0.08)
+    for side, x0, x1 in (("axis", 0, W / 2), ("soviet", W / 2, W)):              # each side's colour: the floor
+        cr.rectangle(x0, GROUND + 4, x1 - x0, H - GROUND)
+        cr.set_source_rgba(*col(side, 0.92))
+        cr.fill()
     halftone(cr, lambda c: c.rectangle(0, GROUND + 4, W, H - GROUND), "ink", density=2, alpha=0.35)
     cr.move_to(0, GROUND + 4)
     cr.line_to(W, GROUND + 4)
