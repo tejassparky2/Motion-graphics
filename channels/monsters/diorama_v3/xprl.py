@@ -227,7 +227,7 @@ def s24top():
     over = Vector((SHRIMP[0] + 1.6, SHRIMP[1] + 0.1, 0.0))
     back = (Vector((perch.x, perch.y, 0)) - over).normalized() * 4.0
     v2._soft_shadow(bird, tuple(over + back - Vector((perch.x, perch.y, 0))), tuple(-back), 1, n,
-                    tone="#1d2440", opacity=0.78, soften=1.0, shrink=0.8)
+                    tone="#1d2440", opacity=0.78, soften=1.0, shrink=0.57)   # wingspan ~6.5 -> ~8.8 units
     for f, sc_ in ((1, 1.0), (n, 1.35)):
         anim.key(bird["shadow"], "scale", f, (sc_, sc_, 1), "BEZIER")
     # Kai runs in from the east, skids, crouches at its side and reaches over it (facing west, three-quarter to us)
