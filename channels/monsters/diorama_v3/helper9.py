@@ -165,6 +165,8 @@ def s06():
         for f in (15, 17):
             o.hide_render = False
             o.keyframe_insert("hide_render", frame=f)
+        o.hide_render = True                                     # and gone from 18 (the 17 key replaced the off key)
+        o.keyframe_insert("hide_render", frame=18)
     flash = storm._overlay("s06_flash", (0.93, 0.97, 1.0, 1.0), 0.0)      # 2 near-white frames over everything
     fp = storm._screen_plane("s06_flash", cam, storm.D_WHITE, flash, storm._group(cam, "flash"))
     fp.visible_shadow = False
