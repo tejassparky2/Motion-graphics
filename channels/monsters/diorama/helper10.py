@@ -235,6 +235,11 @@ def s15_diorama():
     s15._pose(k, LYING_RELAXED, tuple(land), (math.pi / 2, 0, math.pi + LAND_YAW))
     s15._ground(k)
     hip = s15._world(k, "hips")
+    beam = diorama.sunbeam(s15._world(k, "chest"), radius=7.0)    # the shared light on him at kai_down (S15 D5-S21)
+    beam.hide_render = True
+    beam.keyframe_insert("hide_render", frame=A)
+    beam.hide_render = False
+    beam.keyframe_insert("hide_render", frame=G)
     body = look.blob_shadow("kai_down_shadow", (hip.x, hip.y, 0.03), (1.9, 5.2))   # a contact shadow, his length
     body.rotation_euler = (0, 0, LAND_YAW)
     anim.key(body, "scale", A, 0.0, "CONSTANT")
