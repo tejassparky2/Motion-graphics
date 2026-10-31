@@ -40,7 +40,7 @@ Alternatives:
 ## Chapter 1: The broken peace (0:35)
 8. **Rewind to 1919.** (A calendar spins back.)
 9. **World War One is over, and Germany has lost.**  (A tired German stick soldier drops his rifle.)
-10. **At the Treaty of Versailles, the winners make Germany accept the blame, give up land, shrink its army and pay huge sums of money.** (A signing table; four ticks appear one by one: blame, land, army, money.)
+10. **At the Treaty of Versailles, the winners make Germany accept responsibility for the war, give up land, shrink its army and pay huge sums of money.** (A signing table; four ticks appear one by one: blame, land, army, money.)
 11. **Many Germans feel humiliated.** (A crowd of stick figures with heads down.)
 12. **Then, in 1929, the American stock market crashes, and the Great Depression spreads around the world.** (A stock chart plunges; coins drain off the map.)
 13. **In Germany, millions lose their jobs.** (A long queue of stick figures; the jobless counter climbs.)
@@ -58,16 +58,16 @@ Alternatives:
 25. **Then he demands part of Czechoslovakia.** (The Sudetenland edge flashes.)
 26. **At a meeting in Munich, Britain and France agree, hoping this will be his last demand.** (A table with four stick leaders; a pen signs.)
 27. **The British Prime Minister, Neville Chamberlain, flies home and promises "peace for our time".** (Chamberlain waves a paper at a plane door.)
-28. **Six months later, Hitler takes the rest of Czechoslovakia anyway.** (The rest turns grey; Chamberlain's paper crumples.)
+28. **Less than six months later, Hitler seizes what's left of Czechoslovakia anyway.** (The rest turns grey; Chamberlain's paper crumples.)
 29. **Then, in August 1939, comes the biggest shock.** (A drum hit.)
 30. **Hitler makes a deal with his sworn enemy, Joseph Stalin, the dictator of the Soviet Union.** (Hitler and Stalin shake hands, both hiding crossed fingers.)
 31. **They promise not to attack each other.** (A handshake stamp: NON-AGGRESSION PACT.)
-32. **And in secret, they agree to split Poland between them.** (A dotted line cuts Poland in two under a "SECRET" stamp.)
+32. **And in secret, they agree to split Poland and Eastern Europe between them.** (A dotted line cuts Poland in two under a "SECRET" stamp.)
 33. **Nine days later, the guns at Danzig open fire.** (The battleship flash from the opening, as a callback.)
 
 ## Chapter 2: Lightning war, 1939-1940 (2:15)
 34. **Germany smashes into Poland with tanks, planes and fast-moving troops.** (Fast grey arrows across Poland; stick tanks.)
-35. **It's called Blitzkrieg. Lightning war.** (A lightning bolt word card.)
+35. **Newspapers call it Blitzkrieg. Lightning war.** (A lightning bolt word card.)
 36. **Two days later, Britain and France declare war on Germany.** (Two telegrams fly in.)
 37. **On September 17th, the Soviet Union invades Poland from the east.** (Red arrows from the east.)
 38. **Within five weeks, Poland is defeated and divided.** (Poland is split grey and red.)
@@ -83,13 +83,13 @@ Alternatives:
 48. **In about nine days, more than three hundred and thirty thousand soldiers are carried back to Britain.** (Counter: 338,226.)
 49. **But France is finished.** (The French flag-coloured region greys out.)
 50. **On June 22nd, France signs an armistice.** (A railway carriage in a forest.)
-51. **Hitler makes them sign it in the very same railway carriage where Germany surrendered in 1918.** (A 1918 flashback of the same carriage, then 1940.)
-52. **Now Britain stands almost alone.** (A small blue island against a grey continent.)
+51. **Hitler makes them sign it in the very same railway carriage where Germany signed the armistice in 1918.** (A 1918 flashback of the same carriage, then 1940.)
+52. **Now Britain and its Commonwealth stand almost alone.** (A small blue island against a grey continent.)
 53. **Its new Prime Minister, Winston Churchill, refuses to make peace.** (Churchill with his cigar shakes his head.)
 54. **So the German air force tries to destroy Britain's Royal Air Force, to clear the way for an invasion.** (Swarms of grey planes cross the Channel.)
 55. **This is the Battle of Britain.** (A title card.)
 56. **But Britain has a chain of radar stations that can see German planes coming.** (Radar towers send rings outward; blips appear.)
-57. **By autumn, Hitler gives up on invading Britain, and turns to bombing its cities at night instead.** (The invasion arrow fades; searchlights over a city at night.)
+57. **By autumn, the invasion is called off, and German bombers pound Britain's cities at night.** (The invasion arrow fades; searchlights over a city at night.)
 
 ## Chapter 3: The war goes global, 1941 (3:50)
 58. **Then Hitler makes the biggest gamble of the war.** (A dice roll on the map.)
@@ -98,7 +98,7 @@ Alternatives:
 61. **It's called Operation Barbarossa.** (A word card.)
 62. **At first, it works.** (Arrows race east.)
 63. **Millions of Soviet soldiers are killed or captured, and by December, German troops are just outside Moscow.** (An arrow tip stops at the Moscow dot.)
-64. **Then winter arrives.** (Snow falls over everything; a thermometer drops.)
+64. **Exhausted, short of supplies, and slowed by autumn mud, the Germans stall. Then winter arrives.** (Snow falls over everything; a thermometer drops.)
 65. **Temperatures fall below minus thirty, and many German soldiers still don't have winter uniforms.** (Shivering stick soldiers; frozen tanks.)
 66. **On December 5th, the Soviets counter-attack, and push the Germans back from Moscow.** (Red arrows push the grey ones back.)
 67. **Two days later, on the other side of the world, Japan attacks the American naval base at Pearl Harbor, in Hawaii.** (A globe spins to the Pacific; planes over ships.)
@@ -113,8 +113,8 @@ Alternatives:
 ## Chapter 4: The turning points, 1942-1943 (5:05)
 75. **In early 1942, the Axis looks unstoppable.** (Grey fills half the map.)
 76. **Japan sweeps across Southeast Asia and the Pacific.** (Grey spreads across the Pacific.)
-77. **But in June 1942, American codebreakers learn where Japan will strike next. A tiny island called Midway.** (Headphones and code paper; a map pin on Midway.)
-78. **American dive bombers find the Japanese aircraft carriers, and in about five minutes, three of them are on fire.** (Dive-bombers drop; three carriers burst into flame.)
+77. **But American codebreakers have learned where Japan will strike next. A tiny island called Midway.** (Headphones and code paper; a map pin on Midway.)
+78. **On June 4th, 1942, American dive bombers find the Japanese aircraft carriers, and in about five minutes, three of them are on fire.** (Dive-bombers drop; three carriers burst into flame.)
 79. **By the next morning, Japan has lost four aircraft carriers. And its navy never fully recovers.** (Four carrier icons are crossed out.)
 80. **In North Africa, British and Commonwealth troops beat Germany's most famous general, Erwin Rommel, at El Alamein in Egypt.** (Desert; tanks; an arrow pushed back west.)
 81. **But the biggest battle of all is in the Soviet Union, at a city named after Stalin himself. Stalingrad.** (A city on the Volga; the name zooms in.)
@@ -126,16 +126,16 @@ Alternatives:
 87. **From now on, in the east, Germany is mostly retreating.** (Grey arrows reverse.)
 88. **That summer, at Kursk, the Soviets win one of the biggest tank battles in history.** (Hundreds of stick tanks clash on a plain.)
 89. **At sea, German submarines called U-boats try to starve Britain by sinking its supply ships.** (A periscope; ships sink on a map of the Atlantic.)
-90. **But British codebreakers at Bletchley Park, including Alan Turing, building on the work of Polish codebreakers, crack the German Enigma code.** (An Enigma machine; the letters scramble, then click into words.)
+90. **But British codebreakers at Bletchley Park, including Alan Turing, building on the work of Polish codebreakers, crack the German Enigma cipher.** (An Enigma machine; the letters scramble, then click into words.)
 91. **By the middle of 1943, the U-boats are losing.** (The submarine counter falls.)
 
 ## Chapter 5: The Holocaust (6:45)
 (The music drops to a single low tone. No stick-figure victims: maps, rail lines and numbers only.)
 92. **While armies fight on the battlefields, something far darker is happening behind the front lines.** (A slow fade to a muted map of Europe.)
-93. **The Nazis are carrying out the Holocaust. A plan to murder every Jewish person in Europe.** (Text on black.)
+93. **Nazi Germany and its collaborators are carrying out the Holocaust. A plan to murder every Jewish person in Europe.** (Text on black.)
 94. **Jews are forced into crowded ghettos, shot in mass killings, or sent by train to death camps like Auschwitz.** (Rail lines draw themselves toward camp dots on the map.)
 95. **Six million Jewish men, women and children are murdered.** (The number appears and stays.)
-96. **Millions of others are killed too, including Roma people, disabled people, Polish civilians and Soviet prisoners of war.** (Lines of text.)
+96. **Millions of others are killed too, including Roma and Sinti people, disabled people, Polish civilians and Soviet prisoners of war.** (Lines of text.)
 97. **It is one of the worst crimes in human history.** (A single candle.)
 
 ## Chapter 6: Closing in, 1943-1945 (7:20)
@@ -148,30 +148,32 @@ Alternatives:
 104. **On Omaha Beach, the fighting is brutal. But by nightfall, the Allies are ashore.** (Stick figures dash across the sand; the sun sets on a held beach.)
 105. **Just over two weeks later, the Soviets launch their own giant attack, Operation Bagration, and destroy most of a whole German army group.** (A huge red arrow smashes a grey block.)
 106. **In August, Paris is liberated.** (Crowds and confetti on a Paris map.)
-107. **In December, Hitler throws his last reserves into a surprise attack, back through the Ardennes forest. The Battle of the Bulge.** (A grey bulge pushes into the blue line.)
+107. **In December, Hitler launches his last big attack in the west, back through the Ardennes forest. The Battle of the Bulge.** (A grey bulge pushes into the blue line.)
 108. **It fails.** (The bulge collapses.)
 109. **In the Pacific, the Americans hop from island to island, closer and closer to Japan.** (Arrows leap between dots.)
+109b. **In China, millions of soldiers have held down most of Japan's army since 1937. And in Burma, British and Indian troops drive Japan back.** (The camera swings west across the map: China in gold holding a long front; a blue arrow pushes out of India into Burma.)
 110. **At Iwo Jima and Okinawa, the fighting is so fierce that American leaders fear invading Japan itself will cost enormous numbers of lives.** (A bar chart of casualties grows; worried stick generals.)
 
 ## Chapter 7: The end (8:50)
-111. **By April 1945, Soviet troops are fighting in the streets of Berlin.** (A red ring around Berlin.)
+111. **By late April 1945, Soviet troops are fighting in the streets of Berlin.** (A red ring around Berlin.)
 112. **On April 30th, Hitler kills himself in his bunker.** (The bunker's door slams shut; silence.)
 113. **A week later, Germany surrenders.** (A signing table.)
-114. **May 8th becomes Victory in Europe Day.** (Crowds of stick figures cheering, hats flying.)
+114. **May 8th becomes Victory in Europe Day. In Moscow, it's May 9th.** (Crowds of stick figures cheering, hats flying.)
 115. **But Japan fights on.** (Cut to the Pacific; it's quiet.)
 116. **On August 6th, 1945, an American bomber drops an atomic bomb on the city of Hiroshima.** (A lone plane; a white flash; a mushroom-cloud silhouette, far away.)
 117. **Two days later, the Soviet Union declares war on Japan.** (Red arrows into Manchuria.)
 118. **And the next day, a second atomic bomb destroys Nagasaki.** (A second flash.)
-119. **By the end of the year, the two bombs have killed around two hundred thousand people.** (The number, on black.)
+119. **By the end of the year, the two bombs have killed as many as two hundred thousand people.** (The number, on black.)
 120. **On August 15th, Emperor Hirohito tells his people on the radio that Japan will surrender.** (A radio; families listening.)
 121. **And on September 2nd, 1945, aboard the battleship USS Missouri, the war is officially over.** (A signing on the ship's deck.)
 
 ## Chapter 8: After the war (9:40)
 122. **World War Two is the deadliest war in human history.** (A slow pull-back over a grey world.)
 123. **The Soviet Union alone loses around twenty-seven million people.** (Counter.)
+123b. **China loses more than fifteen million.** (A second counter beside it.)
 124. **In total, somewhere between sixty and eighty-five million people die. Most of them civilians.** (The cold-open counter returns and settles.)
 125. **Out of the ruins, the winners create the United Nations, to stop it from ever happening again.** (A UN-style round table, generic, with no logo.)
-126. **Nazi leaders are put on trial at Nuremberg for their crimes.** (A courtroom; stick defendants in the dock.)
+126. **Nazi leaders are put on trial at Nuremberg for their crimes, and Japanese leaders in Tokyo.** (A courtroom; stick defendants in the dock.)
 127. **And the United States and the Soviet Union, allies just months before, become rivals in a new Cold War.** (The two stand back to back; the map splits blue and red.)
 128. **So here's the question historians still argue about.** (The narrator's map zooms out.)
 129. **When did Germany really lose the war?** (Three cards appear.)
@@ -181,17 +183,20 @@ Alternatives:
 ---
 
 ## Sources for the numbers and dates
+An independent fact-check of every line (helper 4, `channels/ww2/FACTCHECK.md`) found 116 lines fine and 15 to fix. All 15 fixes, plus the China/Burma and Tokyo-trials additions, are applied above.
+
 - **Westerplatte, 4:45 a.m., Sept 1 1939:** Warsaw Institute, "The Defense of Westerplatte". Some accounts give 4:47; 4:45 is the time usually given.
 - **60-85 million dead:** The National WWII Museum gives about 60 million; most recent estimates give 70-85 million (Wikipedia, "World War II casualties").
-- **Dunkirk, 338,226 rescued, ~26 May-4 June 1940:** standard figure (Royal Navy; Joshua Levine, *Forgotten Voices of Dunkirk*).
+- **Dunkirk, 338,226 rescued, ~26 May-4 June 1940:** IWM, Dunkirk pages.
 - **Barbarossa, over 3 million soldiers:** USHMM Holocaust Encyclopedia.
 - **Pearl Harbor, 2,403 Americans killed:** National WWII Museum fact sheet.
-- **Midway, three carriers burning in about five minutes, four lost:** Australian War Memorial; National WWII Museum.
+- **Midway (codes broken in May, battle 4-7 June), three carriers burning in about five minutes, four lost:** Naval History and Heritage Command; Australian War Memorial.
 - **Stalingrad, about 91,000 surrendered on 2 Feb 1943:** USHMM, "German defeat at Stalingrad".
 - **Holocaust, six million Jews murdered:** USHMM.
 - **D-Day, 156,000 troops:** National WWII Museum (newer material rounds this to "nearly 160,000").
-- **Hiroshima ~140,000 and Nagasaki ~74,000 by the end of 1945:** the city governments' estimates (ICAN; Imanaka, Springer 2006). Lower estimates exist, so the script says "around two hundred thousand".
-- **Soviet losses of 26-27 million:** Mark Harrison, *Europe-Asia Studies* 2019.
+- **Hiroshima and Nagasaki deaths by the end of 1945:** the city governments give ~140,000 and ~74,000 (ICAN; Imanaka 2006); RERF and others give lower figures (~110,000-210,000 in total), so the script says "as many as two hundred thousand".
+- **Soviet losses of 26-27 million:** Britannica, "World War II: Costs of the war"; G. F. Krivosheev (ed.), *Soviet Casualties and Combat Losses* (1997); Mark Harrison, *Europe-Asia Studies* 71(6), 2019.
+- **China, 15-20 million dead:** Britannica; Rana Mitter, *China's War with Japan* (2013).
 - **Dates and events from memory:** Versailles, Munich ("peace for our time", 30 Sept 1938), the Molotov-Ribbentrop Pact (23 Aug 1939), the Compiègne railway carriage, Sea Lion called off, Bagration (22 June 1944), V-E Day (8 May), Hirohito's broadcast (15 Aug) and USS Missouri (2 Sept). All are standard textbook facts (Britannica, IWM).
 
 ## How it gets made (after you approve)
