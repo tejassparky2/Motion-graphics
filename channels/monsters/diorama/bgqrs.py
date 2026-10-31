@@ -24,7 +24,7 @@ from channels.monsters.mk import anim, diorama, hero, look, meadow
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 ANCHORS = os.path.join(ROOT, "build", "monsters", "diorama")
 FRAMES = {k: s3d.FRAMES[k] for k in ("S01", "S16", "S17", "S18")}   # cut + 12-frame handle, as in 3D
-ORIGIN = (-0.909, 0.717)              # the snap's blast origin: the claw at the strike (helper10.py); 13 trees in the fan
+ORIGIN = (-0.809, 0.717)              # the snap's blast origin: the claw at the strike (helper10.py, MAP["shrimp"] based)
 HIPS = diorama.MAP["kai_down"]        # where the blast throws him, on his back
 _P = diorama.MAP["pond"]
 HEAD_DIR = math.degrees(math.atan2(-(_P[0] - HIPS[0]), _P[1] - HIPS[1]))   # his head points at the pond (~12 deg)
