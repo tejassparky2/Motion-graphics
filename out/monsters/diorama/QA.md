@@ -33,7 +33,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S12 | helper 9 | PASS | 47 / 47 | 0.42 | the crawl to the pond, panting, glint on 2s; clean file |
 | S17 | bGqrs | PASS | 47 / 47 | 0.38 | the drop falls from the claw tip by Kai's face; clean file; 1 NOTE |
 | S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
-| S06 | helper 9 | PASS for the picture; **FIX** no rain in the window | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
+| S06 | helper 9 + coordinator | PASS (v2 with the rain, 72be357) | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
 | S07 | helper 2 | PASS (remuxed clean, 7c99972) | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
 | S09 | helper 3 | PASS (remuxed clean, e2b1af1) | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
@@ -196,7 +196,11 @@ Waiting for: S02, S05a, S13, S16, S18, S19; the S03a re-render and the S15 fix.
   set up for S24.
 
 ## S06: "Then the storm hit." (helper 9, 8158785)
-**PASS for the picture**, with one FIX.
+**v2 (72be357, joined from the coordinator's f1-21 and helper 9's f22-41): PASS.** 41 frames, saturation 0.47, a
+clean file. S03a's rain streaks now fall in the window on every frame, the bolt and its flashes land on 14 and 16,
+and the light stutter runs unbroken across the join (off 20-21, on 22, off 23-24...), so the seam does not show.
+
+**v1: PASS for the picture**, with one FIX.
 - **Length and level:** 41 frames, saturation 0.47, a clean file.
 - **Picture:** the same dollhouse lab from above as S03a. The bolt forks across the window on "storm" (frame 14) with
   2-frame flashes (14, 16), Kai turns his head up to the window on 16, and the lamp and room lights stutter on and off
