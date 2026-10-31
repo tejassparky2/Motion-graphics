@@ -23,8 +23,8 @@ from channels.monsters.mk import anim, diorama, hero, look, meadow
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 ANCHORS = os.path.join(ROOT, "build", "monsters", "diorama")
 N = 76                                # 64 frames (test 116-179) + the 12-frame handle; f1 = episode frame 917
-ORIGIN = (0.1, 0.4)                   # the snap's blast origin (helper 10's claw tip; coordinator default until sent)
-HIPS = (1.6, -10.4)                   # where D4 lands him: on his back, head toward the pond (just short of it)
+ORIGIN = (-0.909, 0.717)              # the snap's blast origin: the claw at the strike (helper10.py), 13 trees in the fan
+HIPS = (1.0, -11.5)                   # where D4 lands him (helper10.py LAND_HIPS): on his back, head toward the pond
 HEAD_DIR = 12.0                       # degrees: his head points at (-sin, cos), toward the pond at (0.1, -2.6)
 TILT, YAW, BLUR = 78.0, 0.0, 12.0
 # the move: (frame, frame height in units at the subject, distance); lens follows from height and distance
