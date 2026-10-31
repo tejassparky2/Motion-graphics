@@ -19,7 +19,6 @@ import bpy
 from mathutils import Euler, Quaternion, Vector
 
 from channels.monsters.diorama import helper3 as d3
-from channels.monsters.diorama_v3.shots import v3_frames
 from channels.monsters.ep01v2 import helper3 as h3d
 from channels.monsters.ep01v2 import helper10 as s15
 from channels.monsters.mk import anim, diorama, look
@@ -103,6 +102,7 @@ def _key_arms(rig, spec, frame, loc, rot):
 def s09():
     diorama.setup()
     diorama.island(seed=31)
+    from channels.monsters.diorama_v3.shots import v3_frames   # here: shots.py imports this module
     n = v3_frames("S09")
     w = _words()
     f_woke = w.get("woke", 14)
