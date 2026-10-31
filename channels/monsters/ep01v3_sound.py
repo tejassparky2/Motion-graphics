@@ -39,7 +39,7 @@ S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 4
 S06_FLASH = 14            # the strong 2-frame near-white flash (helper 9)
 S08A_SPARKS = 28          # small sparks start fizzing at the plugs (helper 1)
 S08B_LAND, S08B_BLACK = 29, 31   # Kai crumples over ~f24-30 and lands; the picture goes black (helper 4)
-S23B_LOCK = 20            # the bird's 2D snap-zoom lock-on (XprL)
+S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
 
 
 # ---------------------------------------------------------------- v3 effects (original, seeded)
