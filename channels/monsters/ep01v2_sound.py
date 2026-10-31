@@ -484,6 +484,9 @@ def build(timing, n, v):
     hit(flutter(0.6), c.t("S23", 0.2), -14, 0.15)
     hit(sfx._bell(_midi(96), 0.8, 0.4) + sfx._bell(_midi(103), 0.8, 0.3) * 0.5, c.f("S23", 62), -22, 0.2)   # the glint
     hit(sfx.whoosh(), c.t("S24") + 0.02, -10)
+    hit(sfx.whoosh(2), c.f("S24", 33), -20, 0.3)                 # RUN plate: the bird's shadow passes and it dives (f33-40)
+    hit(flutter(0.5, 1), c.f("S24", 45), -20, 0.3)               # it lands and mantles its wings (f46)
+    hit(stomp(9), c.f("S24", 46), -24, 0.3)
     music_at(sting(total - c.word("l24", "Save")), c.word("l24", "Save"), total, -14, 0.25, 0.01)
     return music, fx, ambience
 
