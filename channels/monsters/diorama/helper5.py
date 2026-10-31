@@ -27,6 +27,7 @@ from channels.monsters.mk import anim, diorama, look
 
 FRAMES = {"S19": 105, "S20": 103, "S21": 64}                       # = ep01v2/bgqrs.py FRAMES (cut + 12-frame handle)
 TILT, BLUR = 78.0, 12.0
+LAST = {}                                                          # the last built rig and shrimp (for framing checks)
 
 
 def _base(n, breathe=True):
@@ -48,6 +49,7 @@ def _base(n, breathe=True):
     anim.on_twos([o for o in bpy.data.objects if o.name.startswith("d16_dust")], step=2)
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 1, n
+    LAST.update(rig=rig, sh=sh)
     return rig, sh
 
 
@@ -63,6 +65,38 @@ def _cam(name, target, height, dist, tilt=TILT, yaw=0.0, frame=1, shift=(0.0, 0.
                        frame=frame)
     c.data.shift_x, c.data.shift_y = shift
     return c
+
+
+def _seye(sh):
+    return sh["eyes"][0].matrix_world.translation.copy()
+
+
+def _track(fn, frames):
+    """fn() evaluated at each frame (world points), then back to frame 1."""
+    sc = bpy.context.scene
+    out = []
+    for f in frames:
+        sc.frame_set(f)
+        out += fn()
+    sc.frame_set(1)
+    return out
+
+
+def _center(cam, pts, at):
+    """Lens-shift `cam` so the screen box around the world points `pts` is centred on `at` (x, y as fractions of the
+    frame, from the top left): the beat's faces and claw land above the captions and left of the Shorts rail however
+    the shared staging (bgqrs.py) moves him."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene
+    w, h = sc.render.resolution_x, sc.render.resolution_y
+    for _ in range(2):
+        bpy.context.view_layer.update()
+        vs = [world_to_camera_view(sc, cam, p) for p in pts]
+        cx = (min(v.x for v in vs) + max(v.x for v in vs)) / 2
+        cy = 1 - (min(v.y for v in vs) + max(v.y for v in vs)) / 2
+        cam.data.shift_x += (cx - at[0]) * w / max(w, h)
+        cam.data.shift_y += (at[1] - cy) * h / max(w, h)
+    return cam
 
 
 def _puff(loc, f, n=3, size=0.35, rise=0.5, life=8, seed=0, name="pff"):
@@ -115,7 +149,7 @@ def s19():
     n = FRAMES["S19"]
     rig, sh = _base(n)
     tip = s3d.claw_tip(sh) + Vector((0.0, 0.0, -0.08))
-    d = s3d._drop(tip, 1, n + 40, n + 46, tip - Vector((0, 0, 2)), r=0.11)
+    d = s3d._drop(tip, 1, n + 40, n + 46, tip - Vector((0, 0, 2)), r=0.22)
     d.animation_data_clear()                                       # only the drying: no swell, no fall, no regrowth
     d.location = tip
     for f, k in ((1, 1.0), (24, 0.85), (45, 0.66), (66, 0.42), (81, 0.18), (90, 0.001)):
@@ -131,7 +165,8 @@ def s19():
     anim.lids(sh, 36, 1.0)                                         # the shrimp blinks once, then locks on again
     s3d.lock_on(sh, eyes, 39)
     face = s3d.kai_point(rig, "nose")
-    _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 7.0, 70.0, shift=(-0.06, -0.04))
+    cam = _cam("cam_s19", face.lerp(tip, 0.5) + Vector((0, 0, 0.2)), 10.0, 70.0)
+    _center(cam, [eyes, tip, _seye(sh), sh["root"].matrix_world.translation.copy()], (0.42, 0.3))
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
@@ -174,9 +209,11 @@ def s20():
     sc.frame_set(1)
     s3d.kai_face(rig, 1, **s3d.TERROR)
     s3d.kai_face(rig, 44, eye_zitome=0.75, mouth_short=1.0)       # deadpan
-    _cam("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.2)), 7.2, 72.0, tilt=70.0, yaw=-18.0,
-         shift=(0.1, 0.0))
-    _cam("cam_s20_kai", eyes + up * 0.15, 3.4, 70.0, frame=44, shift=(0.1, 0.0))
+    cam = _cam("cam_s20_shrimp", root.lerp(nose, 0.35) + Vector((0, 0, 1.2)), 10.5, 72.0, tilt=70.0, yaw=-18.0)
+    _center(cam, [eyes] + _track(lambda: [s3d.claw_tip(sh), _seye(sh), sh["root"].matrix_world.translation.copy()],
+                                 (1, 20, 24, 40)), (0.42, 0.32))
+    cam = _cam("cam_s20_kai", eyes + up * 0.15, 3.4, 70.0, frame=44)
+    _center(cam, [eyes], (0.42, 0.33))
     sc.camera = bpy.data.objects["cam_s20_shrimp"]
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
@@ -190,9 +227,10 @@ def s21():
     p0 = r.location.copy()
     pond = Vector((diorama.MAP["pond"][0], diorama.MAP["pond"][1], 0.0))
     head = s3d.kai_point(rig, "head")
-    side = Vector((head.x, head.y, 0)) + east * 2.6                 # off his chest on its claw side, past his head
-    edge = pond - up * 2.9 + east * 0.6                             # the pond's near (south) edge
-    path = [p0, side - up * 1.6, side.lerp(edge, 0.55), edge]
+    a = math.radians(-40)                                           # the pond's south-east shore, clear of his head
+    edge = pond + Vector((4.2 * math.cos(a), 2.3 * math.sin(a), 0)) * 1.12   # (diorama.pond is 4.2 x 2.3)
+    side = Vector((head.x, head.y, 0)) + east * 2.4 - up * 2.2      # off his chest on its claw side
+    path = [p0, side, side.lerp(edge, 0.5), edge]
     lean0 = tuple(r.rotation_euler)
 
     def yaw_to(a, b):
@@ -203,7 +241,8 @@ def s21():
     anim.key(r, "rotation_euler", 4, lean0)
     anim.key(r, "rotation_euler", 8, (0, 0, yaw_to(path[0], path[1])))    # stands up and turns its back on him
     s3d._key_pose(sh, 1, sh["cock"], 0.5)
-    s3d._key_pose(sh, 8, (0.0, 0.5, 0.0), 0.0)                     # claw up at its side
+    s3d._key_pose(sh, 8, (0.0, 0.5, 0.0), 0.0)
+    s3d._key_pose(sh, 32, (0.0, 0.5, 0.0), 0.0)                     # claw up at its side
     anim.squash(body, 1, 0.0)
     anim.squash(body, 6, -0.1)                                     # a huffy puff-up... squash
     hops = [(8, 14), (16, 22), (24, 30)]                            # (take-off, landing): the 3D shot's frames
@@ -224,8 +263,13 @@ def s21():
     face_pond = yaw_to(edge, pond)
     anim.key(r, "rotation_euler", 32, (0, 0, face_pond))            # faces the water
     anim.key(r, "rotation_euler", n, (0, 0, face_pond))
-    s3d._key_pose(sh, 36, (0.0, 0.5, 0.0), 0.0)
-    s3d._key_pose(sh, 42, (0.85, 0.35, 0.0), 0.3)                   # dips the claw in the water
+    bpy.context.scene.frame_set(36)                                 # at the shore, facing the water
+    into = (pond - edge).normalized()
+    over = s3d.raise_claw(sh, edge + into * 1.6 + Vector((0, 0, 2.6)), pond)
+    dip = s3d.raise_claw(sh, edge + into * 2.2 + Vector((0, 0, -0.6)), pond)
+    bpy.context.scene.frame_set(1)
+    s3d._key_pose(sh, 36, over, 0.0)                                # claw up over the water...
+    s3d._key_pose(sh, 42, dip, 0.3, interp="LINEAR")                # ...and dips it in
     anim.on_twos([r, body, sh["shoulder"], sh["hinge"]], 2)
     sc = bpy.context.scene
     sc.frame_set(42)
@@ -234,7 +278,9 @@ def s21():
     sc.frame_set(1)
     s3d.kai_face(rig, 1, eye_zitome=0.5, mouth_short=1.0)
     mid = Vector((p0.x, p0.y, 0)).lerp(edge, 0.5) + Vector((0, 0, 1.0))
-    _cam("cam_s21", mid, 15.0, 70.0, tilt=58.0, shift=(0.08, 0.04))
+    cam = _cam("cam_s21", mid, 17.0, 70.0, tilt=58.0, yaw=20.0)
+    _center(cam, [s3d.kai_point(rig, "eyes")] + _track(lambda: [r.matrix_world.translation.copy(), s3d.claw_tip(sh)],
+                                                        (1, 14, 22, 30, 42)), (0.31, 0.3))
     return dict(frames=n, step=2, subject=[rig["arm"], sh["root"]] + list(rig.get("cap", [])))
 
 
