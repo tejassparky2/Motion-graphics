@@ -70,8 +70,9 @@ def s23b():
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     prey = Vector(SHRIMP) + Vector((0, 0, 1.0))
-    # the close: from the clearing side (the forest is behind the tree), 25 deg off the line to the shrimp, so when it
-    # locks on its face turns three-quarter to the lens; before that it looks off to the side
+    # the close: from the clearing side (the forest is behind the tree), 25 deg off the line to the shrimp and a little
+    # BELOW its eye (the prey's side of the look: it glares down, so only a low lens sees the face); when it locks on its
+    # face turns three-quarter to the lens; before that it looks off to the side
     to_prey = prey - perch
     def turned(v, deg):
         c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
@@ -90,9 +91,9 @@ def s23b():
     close = None
     for f in range(1, CUT_POV):
         k = (f - 1) / (CUT_POV - 2)
-        close = v2._cam("cam_s23b_eye", f, tuple(eye_w), 13.0 - 3.0 * k, 34.0, yaw_close, 100.0, cam=close)
-    # the bird's view: from just behind and above its head, down the line to the shrimp, a long lens tightening
-    eye_pos = perch + Vector((0, 0, 1.6 * BIRD_SCALE)) - to_prey.normalized() * 1.2
+        close = v2._cam("cam_s23b_eye", f, tuple(eye_w), 10.0 - 2.5 * k, -14.0, yaw_close, 85.0, cam=close)
+    # the bird's view: from its eye, down the line to the shrimp, a wide lens tightening a little (the predator focusing)
+    eye_pos = perch + Vector((0, 0, 1.3 * BIRD_SCALE)) + to_prey.normalized() * 1.4   # at its eye, past its beak
     dist0 = (prey - eye_pos).length
     pov = None
     for f in range(CUT_POV, n + 1):
@@ -174,8 +175,8 @@ def s24top():
     acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 2.0, SHRIMP[1], 2.4))
-    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.2)    # from the south-south-west
-    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.22)
+    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.225)    # from the south-south-west
+    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.245)
     v2._move("cam_s24top_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"]])
 
