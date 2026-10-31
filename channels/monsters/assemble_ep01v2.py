@@ -372,8 +372,11 @@ def main():
                 s01 = frames
         if a.check:
             srcs = [shot.path(x) for x in (("top", "bot") if shot.name == "S24" else ("",))]
-            ids = " ".join(_sha(p) + ("^" if SHOTS_HI and p.startswith(SHOTS_HI) else "")
-                           for p in srcs if os.path.exists(p))
+            have = [p for p in srcs if os.path.exists(p)]
+            ids = " ".join(_sha(p) for p in have)
+            if SCALE > 1 and have:                         # which source each shot used at 1080
+                ids += " [" + ",".join("1080" if SHOTS_HI and p.startswith(SHOTS_HI) else f"{W}->{OW} lanczos"
+                                       for p in have) + "]"
             print(f"{shot.name:5s} {ids or '-':17s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
                   f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}"
                   f"{f'  captions at y={CAP_Y_SHOT[shot.name]}' if shot.name in CAP_Y_SHOT else ''}")
