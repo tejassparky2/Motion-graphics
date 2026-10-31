@@ -39,7 +39,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
 | S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
 | S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
-| S21 | helper 5 | rendering (helper 4) | 64 | - | - |
+| S21 | helper 5 (rendered by helper 4) | PASS | 64 / 64 | 0.43 | the shrimp stomps off Kai's chest to the pond, the claw dips in with a ripple ring; clean |
 
 ## S03a: night shift at the marine lab (helper 1)
 **v2 (9e3862e): PASS.** 53 frames, saturation 0.45, a clean file. The bright diagonal streaks fill all four panes and
@@ -199,3 +199,11 @@ Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-re
 - **FIX (continuity):** the window has no rain. It was rendered before the S03a rain fix (mk/diorama_lab.py 38c9239 /
   3f04152), so S03a's heavy rain stops dead at the cut, just as "the storm hit". A re-render with the current
   diorama_lab picks the rain up; nothing else changes.
+
+## S21: "Then it stomped back to the puddle." (helper 5's builder, rendered by helper 4)
+**PASS.**
+- **Length and level:** 64 frames, saturation 0.43, a clean file (0 encoder tags), crf 10.
+- **Picture:** from above, Kai lies on his back by the pond. The shrimp climbs off his chest on "stomped" (frame 14),
+  stomps on 2s round his head to the pond edge ("back to the puddle", frames 25-36), and dips its claw in from
+  about frame 42, with a ripple ring on the water by frame 49. Kai is about 450 px tall, the action inside x < 560
+  and y < 960.
