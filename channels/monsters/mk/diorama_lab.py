@@ -199,7 +199,7 @@ def room(seed=7):
     _box("dl_desk_leg_l", (dx0 + 0.25, dcy, (TOP - 0.3) / 2), (0.3, dy1 - dy0 - 0.3, TOP - 0.3), side)
     _box("dl_desk_drawers", (dx1 - 1.2, dcy, (TOP - 0.3) / 2), (2.2, dy1 - dy0 - 0.3, TOP - 0.3), side, bevel=0.05)
     shell = _p("laptop", "#8a92a8", "#a7afc4", "#c9d0e2")
-    lx, ly = dcx - 1.2, dcy - 0.3
+    lx, ly = dx1 - 1.9 - 3.5, dcy - 0.3                    # the laptop (and Kai) just left of the tank: within reach
     _box("dl_laptop_base", (lx, ly, TOP + 0.08), (2.2, 1.5, 0.12), shell, bevel=0.03)
     screen = lab._glow("dl_screen", "#bfe0ff", 1.3)
     _box("dl_laptop_lid", (lx, ly + 0.85, TOP + 0.75), (2.2, 0.1, 1.4), shell, rot=(math.radians(-15), 0, 0))
@@ -207,7 +207,7 @@ def room(seed=7):
     page = _p("page", "#c8c0aa", "#e9e2cf", "#f6f1e3")
     nx, ny = dx0 + 2.0, dcy - 0.4
     _box("dl_notebook", (nx, ny, TOP + 0.05), (2.0, 1.4, 0.08), page, rot=(0, 0, math.radians(8)))
-    lab._cyl("dl_mug", (lx + 2.0, ly - 0.4, TOP + 0.3), 0.3, 0.6, _p("mug", "#b04a3c", "#d96c5a", "#f08a76"))
+    lab._cyl("dl_mug", (lx - 2.2, ly - 0.4, TOP + 0.3), 0.3, 0.6, _p("mug", "#b04a3c", "#d96c5a", "#f08a76"))
     lamp_m = _p("lamp", "#b8862e", "#e3b04b", "#f5cd6e")
     bx, by = dx0 + 0.8, dy1 - 0.8
     lab._cyl("dl_lamp_base", (bx, by, TOP + 0.08), 0.45, 0.16, lamp_m)
@@ -260,7 +260,7 @@ def room(seed=7):
     # ---------------------------------------------------------------- Kai's chair (seated facing +Y, the window)
     fab = _p("chair", "#1f2740", "#2c3550", "#3e4a6e")
     blk = _p("chair_base", "#10131c", "#1b2030", "#262c40")
-    sx, sy, sz = lx - 0.2, dy0 - 1.9, 2.4
+    sx, sy, sz = lx - 0.2, dy0 - 1.2, 2.4                  # pulled in: his right hand reaches the tank glass
     before = set(bpy.context.scene.objects)
     _box("dl_chair_seat", (sx, sy, sz - 0.15), (2.3, 2.2, 0.35), fab, bevel=0.12)
     _box("dl_chair_back", (sx, sy - 1.2, sz + 1.4), (2.1, 0.3, 2.1), fab, rot=(math.radians(-8), 0, 0), bevel=0.12)

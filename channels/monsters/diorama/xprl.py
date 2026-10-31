@@ -117,6 +117,8 @@ def _drinking(n):
 
 
 # ------------------------------------------------------------------------------------------------------------- S22
+# the thorn tree is seen from the clearing (from the south-west, over the open ground): the forest is behind it
+YAW_THORN = math.degrees(math.atan2(diorama.MAP["thorn"][0], diorama.MAP["thorn"][1]))   # 64.7: camera south-west of it
 def s22():
     n = CUT["S22"] + TAIL
     diorama.setup()
@@ -127,8 +129,8 @@ def s22():
     near = shells[np.argsort(np.abs(shells[:, 2] - 2.4))[:4]].mean(axis=0)
     tree = Vector((diorama.MAP["thorn"][0], diorama.MAP["thorn"][1], 4.0))
     wide = tree.lerp(Vector((1.0, -4.0, 0.0)), 0.45)                        # the tree, the pond and Kai below it
-    _move("cam_s22", 8, 36, (tuple(near), 28.0, 42.0, -18.0, 100.0, 0.0),
-          (tuple(wide), 125.0, 56.0, -18.0, 85.0, 0.0), n)
+    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, YAW_THORN, 100.0, 0.0),
+          (tuple(wide), 125.0, 56.0, YAW_THORN, 85.0, 0.0), n)
     return dict(frames=n, step=1, subject=[])
 
 
@@ -140,7 +142,7 @@ def s23():
     _drinking(n)
     th = isl["thorn"]
     perch = Vector(th["perch"])
-    yaw = -25.0
+    yaw = YAW_THORN
     el, az = math.radians(48.0), math.radians(yaw)
     to_cam = Vector((-math.sin(az), -math.cos(az), 0))
     bird = tuftwing.build((perch.x, perch.y, 0.0), shadow_span=10.0)
@@ -233,7 +235,7 @@ def s24top():
     return dict(frames=n, step=2, ones=(57, 85), subject=[k["arm"]])
 
 
-RUN_KAI = (SHRIMP[0] - 7.6, SHRIMP[1] - 1.2)             # west of the pond, beside the shrimp's row
+RUN_KAI = (SHRIMP[0] - 6.1, SHRIMP[1] - 1.2)             # west of the pond, beside the shrimp's row
 
 
 def s24bot():
@@ -258,9 +260,10 @@ def s24bot():
     start, end = Vector((0, 0, 0)), Vector((0, -0.2, 0))
 
     def upper(P, t):
-        P.rot("spine", (-4 - 4 * t, 0, 0))
-        P.rot("chest", (-3, 0, 0))
-        P.rot("head 1", (-30 - 6 * t, 0, 12))                               # face up: the bird (and the lens) above
+        P.rot("spine", (-8 - 4 * t, 0, 0))                                 # leaning back from it
+        P.rot("chest", (-5, 0, 0))
+        P.rot("neck", (-18, 0, 0))
+        P.rot("head 1", (-40 - 6 * t, 0, 12))                               # face up: the bird (and the lens) above
         x3._arms_down(P, 14)
         P.aim("upper_arm.R", (-0.4, -0.6, -0.35))                           # both hands up by the shoulders
         P.aim("forearm.R", (-0.05, -0.3, 0.95))
@@ -275,8 +278,8 @@ def s24bot():
     hero.face(k, "run_up", 10)
     hero.face(k, "run_wide", 46)
     _twos([k["arm"]])
-    tgt = (SHRIMP[0] - 2.0, SHRIMP[1] - 0.9, 1.0)
-    _cam("cam_s24bot", 1, tgt, 71.0, 70.0, 0.0, 90.0, (0.0, 0.19))                # near top-down: Kai's height folds
+    tgt = (SHRIMP[0] - 2.6, SHRIMP[1] - 0.9, 1.0)
+    _cam("cam_s24bot", 1, tgt, 95.0, 70.0, 0.0, 90.0, (0.0, 0.19))                # near top-down: Kai's height folds
     return dict(frames=n, step=2, subject=[k["arm"]])
 
 
