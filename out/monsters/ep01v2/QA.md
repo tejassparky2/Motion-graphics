@@ -39,19 +39,28 @@ Most serious first within each shot. Updated as shots land.
 |---|---|---|---|---|---|
 | S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
 | S09 | helper 3 | PASS (v2, 6d95527) | 66 / 66 | 0.47 | v1 FIX resolved: eyes open on "woke up", crack held through "cracked sky" |
-| S06 | helper 9 | PASS | 48 / 41 | 0.37 | double flash on the line, lights cut out on 2s |
+| S06 | helper 9 | PASS (v2, bb8f476) | 41 / 41 | 0.37 | the bolt on frame 14, the stutter on 2s, the black opaque |
 | S10a | helper 4 | PASS (coordinator's second read of v2) | 56 / 56 | 0.38 | outline and lit side; known minor issue: outline slivers |
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
 | S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
-| S24bot | XprL | **FIX** | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
+| S01 | bGqrs | PASS (v2, c8a0958) | 69 / 69 | 0.46 | the terror-eye sliver is fixed; 1 NOTE (chin at the caption line) |
+| S04 | helper 2 | PASS | 73 / 73 | 0.31 | claw held open, shuts, white-hot on "boils"; 1 NOTE |
+| S18 | bGqrs (helper 5 render) | PASS (v2, b172892) | 60 / 60 | 0.38 | a 2D snap-zoom into the eyes on "wet" (resolves the NOTE) |
+| S19 | bGqrs | PASS | 105 / 105 | 0.49 | the drop dries on "dry it"; 1 NOTE (shrimp's eyes not in frame) |
+| S03a | helper 1 | PASS | 53 / 53 | 0.33 | the night lab, rain, the glowing tank; cuts with S03b |
+| S13 | helper 9 | PASS | 62 / 62 | 0.52 | the claw dipped in the puddle (the clue, CH3) |
+| S20 | bGqrs (coordinator render) | PASS | 103 / 103 | 0.45 | the pff, the stare, the head tilt, Kai's deadpan held 2 s |
+| S14 | helper 9 (helper 5 render) | PENDING (fix by caption placement) | 80 / 80 | 0.33 | helper 8 moves its caption above the cap (CAP_Y_SHOT); PASS once seen in the animatic |
+| S16 | bGqrs | PASS | 76 / 76 | 0.40 | eyes open on "eyes", then S01's framing (SU9 rhyme) |
+| S24bot | XprL | **FIX** (restage in progress) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
 | S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
 | S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
-| S21 | bGqrs (coordinator render) | PASS | 64 / 64 | 0.45 | finger stays on the claw; 1 NOTE |
+| S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S01, S02, S03a, S04, S05a, S05b, S08, S12-S20.
+Waiting for: S02, S05a, S05b, S08, S12, S15, S17.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -269,3 +278,118 @@ The first version's notes, for the record:
      face above about y 820.
 - **Passes:** 97 frames; the bird drops from the top of the thorn tree into the lower half; it is graded darker
   (the riskier option, LC8); he is on-model; acting runs on 2s and 4s.
+
+## S01: frame 0, the shrimp on Kai's chest (bGqrs)
+**PASS**, with two NOTEs.
+- **Length and level:** 69 frames (69 needed), saturation 0.46.
+- **Frame 0 (ST1, EP2, TP16):**
+  - At 360 px it reads at once: Kai on his back with 2D terror eyes and a sweat drop (TP7), the shrimp sitting on
+    his chest glaring at him with its narrow, locked-on eyes, and its claw raised and open over his face.
+  - The sliced, glowing, smoking stumps are at the top of the frame (EP4: what it just did).
+  - Locked camera; the smoke runs on 1s.
+- **Mouth:** Kai whispers the line. The mouth changes on frames 4, 10 and 13 ("Don't move."), then every 3 frames
+  from 26 to 50 ("That claw can boil water.").
+- **On-model** (cap, K, teal jacket). The finger stays on the claw.
+- The claw is raised over his face rather than "2-3 cm from his nose". That is the coordinator's reviewed pose
+  (bgqrs.py `s01` docstring), not a defect.
+- **NOTE:** under the lower 2D terror eye, a sliver of the 3D eye shows (frame 12 at full size). A slightly bigger
+  sprite, or hiding the 3D eye while the sprite is on, would clean it up.
+- **NOTE:** Kai's chin reaches about y 870, the top of the caption band (845-930). The terror eyes, at y 730-790,
+  stay clear.
+
+## S04: the slow-motion snap (helper 2)
+**PASS**, with one NOTE.
+- **Length and level:** 73 frames (73 needed). On 1s: the effects and the slow motion.
+- **Picture:** an extreme close-up of the big red snapping claw (IM13 scale). It is held open with only the glints
+  moving on frames 8-16, shuts at about frame 22 (just after "snaps", frame 16), and the bubble swells in front of
+  it to white-hot on "boils" (frame 45). The shock ring rises through the water.
+- The pistol shrimp has its outline, and the snapping finger stays on the claw.
+- **NOTE:** saturation is 0.31, just under the band but inside E22's 0.26, and fine for the cool tank.
+
+## S18: "Its claw only works wet." (bGqrs; rendered by helper 5)
+**PASS**, with one NOTE.
+- **Length and level:** 60 frames (60 needed), saturation 0.42. Acting on 2s.
+- **Picture:** Kai's eyes go from the pinprick shock to open, then narrow: by frames 40-60 the lids are visibly
+  lower. On "wet." (frame 32) the background swaps from the grass to a blue speed-line realisation background (SU16,
+  IM6).
+- **NOTE:** it is framed as a face close-up (cap to chin) rather than an extreme close-up of the eyes, so the
+  narrowing is subtle at 360 px. A tighter crop on the eyes would land "realisation" harder. Not blocking.
+
+## S19: "So I didn't move. I let the sun dry it." (bGqrs)
+**PASS**, with one NOTE.
+- **Length and level:** 105 frames (105 needed), saturation 0.49.
+- **Picture:**
+  - One held, quiet shot (SG14) with the sun glare and sparkles on 1s, and a comic sweat bead on Kai (TP7).
+  - The last drop on the claw tip shrinks and is gone by "dry it" (frames 49-55).
+  - It then holds still for 43 frames, the ~1.4 s quiet hold that v7 asks for.
+  - Kai blinks once. He is on-model, and the finger stays on the claw.
+- **NOTE (the coordinator's key check):** the shrimp's face is out of frame (only its claw shows), so its
+  locked-on eyes can't be seen here. If the eyes matter in S19, a slightly wider framing would include them.
+  Otherwise S01, S16 and S20 carry them.
+
+## S03a: night shift at the marine lab (helper 1)
+**PASS.**
+- **Length and level:** 53 frames (53 needed). Saturation 0.33, at the band's floor, which is right for the cold
+  night lab (LC1, LC2).
+- **Picture:** rain streaks the window on 1s. Kai, in the earth outfit (charcoal shirt; cap and K), sits at the
+  desk in a back three-quarter view, with the hero tank glowing cyan beside him. The camera is locked (SG4).
+- **Cut:** it cuts with S03b (same rig, same cyan tank light, same saturation band).
+- **Note (minor):** Kai is static through the shot. The tank light, rain and screen carry the life (LC10), and the
+  face change is S03b's job.
+
+## S13: "Something else was already drinking." (helper 9)
+**PASS.**
+- **Length and level:** 62 frames (62 needed), saturation 0.52.
+- **Picture:** the puff-shrimp at the puddle with its big claw dipped in the water, and ripples on the surface: the
+  clue's first showing as an insert (SG10, CH3). It blinks once and looks up (SG2).
+- Rendered from 0c0ceeb: outline and lit side present, and the finger is on the claw. The trees behind are the
+  meadow's "before" state, which is right, since S13 comes before the snap in S15.
+
+## S20: "It tried anyway." (bGqrs; rendered by the coordinator)
+**PASS.**
+- **Length and level:** 103 frames (103 needed), saturation 0.45.
+- **Picture:** the shrimp on Kai's chest raises its claw and snaps on "anyway" (frame 16): just a tiny "pff" of
+  dust. It stares at the claw and tilts its head (CH14: the "does not compute" beat).
+- **Cut:** to Kai's deadpan face, held for about 2 s (SU11). It has dot eyes and a sweat drop (TP7), then the amber
+  eyes return.
+- **Key check (locked-on eyes):** the shrimp's narrow, determined eyes show before the snap, and go round and
+  puzzled after it.
+
+## S06 v2 (bb8f476) and S21 v2 (e9c0f7c): re-deliveries
+- **S06 v2: PASS.** 41 frames, exactly what TIMING.md asks. The bolt now hits on frame 14 (0.52 brightness) with an
+  afterflash, then the room lights stutter in 2-frame pairs from frame 20 to 35. The blackout frames are now opaque,
+  so rain can't sort in front of them.
+- **S21 v2: PASS.** 64 frames, saturation 0.49. It is now seen from Kai's feet: his boots are in the foreground, and
+  the shrimp hops off him and stomps to the puddle in a huff (SU12). The finger stays on the claw, and the action
+  runs on 2s.
+
+## S14: "A shrimp. On land. Impossible." (helper 9; rendered by helper 5)
+**Resolution (coordinator, 31 Oct):** no re-render. Helper 8 moves S14's caption above the cap (CAP_Y_SHOT), which
+clears the mouth. PASS once that is checked in helper 8's next animatic.
+
+**v1: FIX** (sent to helper 9, cc helper 5, 31 Oct).
+1. **The face is framed too low: the mouth sits in the caption band (HELPERS v3.2 safe areas; TP16).**
+   - The white cap fills the top 40% of the frame. Kai's eyes sit at about y 560-640, his mouth at about y 850-880
+     and his chin at about y 1000.
+   - The caption line ("Impossible.") will cover the mouth, and the mouth is half of this shot's two-step expression
+     change (SG2).
+   - Fix: tilt or raise the camera so the face sits at about y 300-800, with the cap cropped at the top.
+2. **NOTE:** the two face changes (around frames 22 and 48, close to "On land" and "Impossible") are subtle at
+   360 px: a slight squint and a head tilt. A stronger second step, such as brows down with a flat mouth or the
+   `squint` and `brows_down` keys at 1.0, would sell "sceptical".
+- **Passes:** 80 frames, saturation 0.33, holds of 21, 26 and 33 frames (acting held between pose snaps).
+  On-model.
+
+## S16: eyes open, then S01's framing (bGqrs)
+**PASS.**
+- **Length and level:** 76 frames (76 needed), saturation 0.40.
+- **Picture:** an eye close-up with the eyes closed, opening on "eyes" (frame 24). Then a cut to S01's exact
+  framing (SU9: the scary composition rhymes), with the terror-eye sprites and the shrimp on his chest. The shrimp's
+  narrow, dark, locked-on eyes show (key check). Acting on 3s.
+- **Note:** the S01 half shares S01's NOTE (the chin at the caption line).
+
+## S01 v2 (c8a0958) and S18 v2 (b172892): re-deliveries
+- **S01 v2: PASS.** The terror eyes are 8% bigger and centred on the rendered eyes, so the sliver of 3D eye is gone
+  (frame 12 checked at full size).
+- **S18 v2: PASS.** A 2D snap-zoom into the eyes on the realisation (1.0 to 1.18 over frames 30-32, held), so the
+  narrowing now reads at 360 px.
