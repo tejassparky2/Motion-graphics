@@ -29,7 +29,7 @@ from mathutils import Vector
 from channels.monsters.diorama import bgqrs as d16
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
-from channels.monsters.mk import anim, butcherbird, diorama, hero, meadow, tuftwing
+from channels.monsters.mk import anim, butcherbird, diorama, hero, look, meadow, tuftwing
 
 TAIL = 12
 CUT = {"S22": 45, "S23": 70, "S24": 85}                  # ep01v2/TIMING.md
@@ -136,6 +136,39 @@ def s22():
 
 
 # ------------------------------------------------------------------------------------------------------------- S23
+def _soft_shadow(rig, offset, sweep=(0.0, 0.0, 0.0), f0=1, f1=2, tone="#1d2440", opacity=0.65, soften=2.5,
+                 shrink=0.5):
+    """The bird's giant shadow for the diorama insert: out on the open grass (as helper5's 3D insert has it), sized so
+    the whole bird shape (beak and head, both spread wings, the tail fan) sits in the frame, a cool dark at ~65 %
+    opacity so the grass shows through, a soft painted edge, and drifting by `sweep` (world units) over f0..f1: it
+    moves, so it reads as a bird overhead and not as a hole or a stump."""
+    from scipy import ndimage
+    sh = rig["shadow"]
+    for v in sh.data.vertices:
+        v.co.x *= shrink
+        v.co.y *= shrink
+    bpy.context.view_layer.update()
+    mw = sh.matrix_world.copy()
+    mw.translation += Vector(offset)
+    sh.matrix_world = mw
+    bpy.context.view_layer.update()
+    to_local = sh.parent.matrix_world.to_3x3().inverted()
+    l0 = sh.location.copy()
+    l1 = l0 + to_local @ Vector(sweep)
+    for f, l in ((1, l0), (f0, l0), (f1, l1)):
+        anim.key(sh, "location", f, tuple(l), "LINEAR")
+    nt = sh.data.materials[0].node_tree
+    tex = next(nd for nd in nt.nodes if nd.type == "TEX_IMAGE")
+    em = next(nd for nd in nt.nodes if nd.type == "EMISSION")
+    em.inputs[0].default_value = look.hexc(tone)
+    res = tex.image.size[0]
+    a = ndimage.gaussian_filter((tuftwing.shadow_alpha(res) > 0.3).astype(np.float32), soften) * opacity
+    rgba = np.ones((res, res, 4), np.float32)
+    rgba[..., 3] = np.clip(a, 0, 1)
+    tex.image.pixels.foreach_set(rgba.ravel())
+    tex.image.pack()
+
+
 def s23():
     n = CUT["S23"] + TAIL
     diorama.setup()
@@ -155,8 +188,9 @@ def s23():
     butcherbird.stare(bird, 32, down=-0.25, hold=n - 32)                    # head up: the glare is at the lens above
     h5._rage_light(bird, 32, perch.z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
     pond = Vector((diorama.MAP["pond"][0], diorama.MAP["pond"][1], 0.0))
-    reach = (pond - Vector((perch.x, perch.y, 0))).normalized() * 6.5      # the shadow lies out toward the pond
-    h5._deep_shadow(bird, (reach.x, reach.y, 0.0))
+    toward = (pond - Vector((perch.x, perch.y, 0))).normalized()
+    reach = toward * 4.0                                                    # the shadow lies out toward the pond
+    _soft_shadow(bird, (reach.x, reach.y, 0.0), tuple(toward * 1.6), h5.INSERT_AT, n)
     anim.blink(bird, 29)
     _twos(tuftwing._animated(bird))
     sc = bpy.context.scene
@@ -164,12 +198,12 @@ def s23():
     base, tip = (Vector(p) for p in th["empty_thorn"])
     mid = (base + tip) / 2
     ground = Vector((perch.x + reach.x, perch.y + reach.y, 0.0))
-    ins = _cam("cam_s23_thorn", None, tuple(mid.lerp(ground, 0.22)), 36.0, 60.0, yaw, 100.0)
+    ins = _cam("cam_s23_thorn", None, tuple(mid.lerp(ground, 0.45)), 40.0, 60.0, yaw, 100.0)
     h5._glint(tuple(tip + (tip - base).normalized() * 0.03), ins, 62)
     for m in list(sc.timeline_markers):
         sc.timeline_markers.remove(m)
     ms = sc.world.mist_settings
-    for f, c, d in ((1, up, 46.0), (h5.INSERT_AT, ins, 36.0)):
+    for f, c, d in ((1, up, 46.0), (h5.INSERT_AT, ins, 40.0)):
         mk = sc.timeline_markers.new(c.name, frame=f)
         mk.camera = c
         ms.start, ms.depth = d * 0.97, d * 0.55                           # the haze band follows the cut
