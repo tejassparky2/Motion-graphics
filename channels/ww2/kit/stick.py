@@ -526,9 +526,9 @@ class Figure:
         elif kind == "crossed":                                       # two fingers crossed
             bx, by = hd[0] + ux * 3, hd[1] + uy * 3
             px, py = -uy, ux
-            _line(cr, [(bx - px * 3, by - py * 3), (bx + ux * 13 + px * 4, by + uy * 13 + py * 4)], 3.4, c)
-            _line(cr, [(bx + px * 3, by + py * 3), (bx + ux * 13 - px * 4, by + uy * 13 - py * 4)], 3.4, c)
-            cr.arc(hd[0], hd[1], 5.0, 0, 2 * math.pi)
+            _line(cr, [(bx - px * 4, by - py * 4), (bx + ux * 19 + px * 6, by + uy * 19 + py * 6)], 4.2, c)
+            _line(cr, [(bx + px * 4, by + py * 4), (bx + ux * 19 - px * 6, by + uy * 19 - py * 6)], 4.2, c)
+            cr.arc(hd[0], hd[1], 6.5, 0, 2 * math.pi)
             cr.set_source_rgba(*c)
             cr.fill()
         elif kind == "splay":
