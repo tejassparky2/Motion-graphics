@@ -37,7 +37,7 @@ BLUR = 12.0
 # only from his chin side (lying face up, his cap's brim points at the sky). So: from the south, steep (tilt 70), the
 # shrimp leaning back 50. tilt, dist, lens, yaw, aim offsets toward his head and away from the camera (units); the
 # shrimp's lean back (deg).
-S01_CAM = (70.0, 62.0, 110.0, 0.0, 1.5, 0.0)
+S01_CAM = (70.0, 36.0, 110.0, 0.0, 1.5, -1.0)   # close for frame 0: face under the hook, its eyes over the captions
 S01_LEAN = 50.0
 
 
