@@ -39,7 +39,8 @@ SHEET = os.path.join(ROOT, "out", "monsters", "ep01v2", "picture_sheet.jpg")
 
 # The repo's output hygiene (render.py CLEAN), video only: no container metadata, no encoder tags, no x264 SEI.
 CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
-         "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name="]
+         "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name=",
+         "-metadata:s:v", "encoder="]
 
 HOOK = [("THIS SHRIMP", ()), ("ERASED", ("ERASED",)), ("A FOREST", ())]
 HOOK_Y = 170                 # top baseline: high in the frame, over the sliced trees, above Kai's face
@@ -258,7 +259,7 @@ def main():
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}",
                             "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-crf", "14", "-preset", "slow",
-                            "-pix_fmt", "yuv420p", *CLEAN, a.out], stdin=subprocess.PIPE)
+                            "-pix_fmt", "yuv420p", *CLEAN, a.out + ".tmp.mp4"], stdin=subprocess.PIPE)
     sheet = []
     s01 = None
     frame_no = 0
@@ -299,6 +300,9 @@ def main():
     enc.stdin.close()
     if enc.wait() != 0:
         sys.exit("ffmpeg failed")
+    # A stream-copy remux clears the "encoder" tag that libx264 writes while encoding, whatever the flags say.
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", a.out + ".tmp.mp4", "-c", "copy", *CLEAN, a.out], check=True)
+    os.remove(a.out + ".tmp.mp4")
     for w in warn:
         print("WARNING:", w)
     if missing:
