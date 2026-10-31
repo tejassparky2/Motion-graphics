@@ -2,7 +2,7 @@
 with the sound (helper 7's ep01v2_sound.py -> out/monsters/ep01v2/mix.wav), then checks it the way the channel rules
 ask before anything goes to the owner:
 
-    /home/user/.venv-main/bin/python channels/monsters/deliver_ep01v2.py [--version diorama] [--no-whisper]
+    /home/user/.venv-main/bin/python channels/monsters/deliver_ep01v2.py [--version diorama|diorama_v3] [--no-whisper]
 
 writes out/monsters/ep01v2.mp4, ep01v2_preview.mp4 (small, for a phone), ep01v2_cover.jpg (frame 0, the hook
 frame), ep01v2_metadata.md (the upload sheet) and ep01v2_check.md (the QA report):
@@ -33,7 +33,10 @@ FF = imageio_ffmpeg.get_ffmpeg_exe()
 CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
          "-flags:a", "+bitexact", "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name=",
          "-metadata:s:a", "handler_name="]                       # the same hygiene as render.py
-DIORAMA = "--version" in sys.argv and sys.argv[sys.argv.index("--version") + 1] == "diorama"
+VERSION = sys.argv[sys.argv.index("--version") + 1] if "--version" in sys.argv else "ep01v2"
+DIORAMA = VERSION == "diorama"
+V3 = VERSION == "diorama_v3"             # Episode 1 v3, 2.5D (DIORAMA_EP01_V3.md): its own script, timing and mix
+EPDIR = "ep01v3" if V3 else "ep01v2"
 D = os.path.join(ROOT, "out", "monsters", "ep01v2")
 OUT = os.path.join(ROOT, "out", "monsters", "ep01v2.mp4")
 picture, mix = os.path.join(D, "picture.mp4"), os.path.join(D, "mix.wav")
@@ -44,12 +47,18 @@ if DIORAMA:
     picture, cover_src = os.path.join(DD, "picture.mp4"), os.path.join(DD, "cover.jpg")
     if os.path.exists(os.path.join(DD, "mix.wav")):
         mix = os.path.join(DD, "mix.wav")
-timing = json.load(open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")))
-spec = importlib.util.spec_from_file_location("ep01v2_episode", os.path.join(ROOT, "channels", "monsters", "ep01v2",
-                                                                              "episode.py"))
+if V3:
+    DD = os.path.join(ROOT, "out", "monsters", "diorama_v3")
+    OUT = os.path.join(ROOT, "out", "monsters", "ep01v3_diorama.mp4")
+    picture, cover_src = os.path.join(DD, "picture.mp4"), os.path.join(DD, "cover.jpg")
+    mix = os.path.join(ROOT, "out", "monsters", "ep01v3", "mix.wav")
+timing = json.load(open(os.path.join(ROOT, "channels", "monsters", EPDIR, "timing.json")))
+spec = importlib.util.spec_from_file_location("ep01_episode", os.path.join(ROOT, "channels", "monsters", EPDIR,
+                                                                           "episode.py"))
 ep = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ep)
-report = ["# Episode 1 v2" + (" (diorama 2.5D)" if DIORAMA else "") + ": delivery check", ""]
+report = [("# Episode 1 v3 (2.5D)" if V3 else "# Episode 1 v2" + (" (diorama 2.5D)" if DIORAMA else ""))
+          + ": delivery check", ""]
 
 
 def say(line):

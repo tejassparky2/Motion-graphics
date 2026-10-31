@@ -173,13 +173,14 @@ def fstop_for(dist, lens=85.0, blur=14.0, height_px=1280):
 
 
 def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True, thorn=True, meadow_flowers=True,
-           skip=(), dressing=1):
+           skip=(), dressing=2):
     """THE other-world set (every diorama shot, seed 31): a round clearing (radius `clear_r`) with the pond by the
     origin, a ring of painted trees out to `forest_r`, a dirt path south through the trees to an open flower meadow
     (MAP), rocks and bushes, the thorn tree at MAP["thorn"]. `skip`: spot indexes to leave out (e.g. the trees the snap
-    erased, for the "after" state). `dressing=2` adds the v3 toy-table detail (dressing2(): mushrooms, clover,
-    pebble-edged paths, flower clusters, logs, a stump, pond reeds), clear of every MAP spot and the snap's fan. Deterministic for a seed. Returns dict(trees=[(trunk, canopy) or None per spot],
-    spots=[(x, y, h, r, variant)], puddle=obj or None, thorn=thornbush dict or None)."""
+    erased, for the "after" state). `dressing=2` (the default since v3; 1 = the v2 island) adds the toy-table detail
+    of dressing2(): mushrooms, clover, pebble-edged paths, flower clusters, logs, a stump, pond reeds, clear of every
+    MAP spot and of the snap's fan. Deterministic for a seed. Returns dict(trees=[(trunk, canopy) or None per spot],
+    spots=[(x, y, h, r, variant)], puddle=obj or None, thorn=thornbush dict or None, dressing=objects by kind)."""
     _ground(clear_r)
     rnd = random.Random(seed)
     spots = []
@@ -480,8 +481,23 @@ def _keep_clear(x, y, clear_r, fan=40.0):
                    ("wake", 7.0), ("snail", 13.0), ("moth", 6.0)):
         if key in MAP and math.hypot(x - MAP[key][0], y - MAP[key][1]) < r:
             return True
+    if _near_grove(x, y):
+        return True
     d = math.hypot(x, y)
     return d > 4.0 and abs(math.degrees(math.atan2(x, y))) < fan and d < 112.0
+
+
+def _near_grove(x, y, margin=3.5):
+    """True near helper 10's v3 blast grove (grove_spots(): young trees south of the kneel spot, flanking the path's
+    mouth) or the sapling by Kai's head (sapling_spot()), whenever those are defined in this module."""
+    spots = list(globals()["grove_spots"]()) if "grove_spots" in globals() else []
+    if "sapling_spot" in globals():
+        spots.append(globals()["sapling_spot"]())
+    for sp in spots:
+        r = (sp[3] if len(sp) > 3 else 1.5) + margin               # (x, y[, h, r, ...]) like island()'s spots
+        if math.hypot(x - sp[0], y - sp[1]) < r:
+            return True
+    return False
 
 
 def dressing2(seed=31, clear_r=26.0):
@@ -494,9 +510,10 @@ def dressing2(seed=31, clear_r=26.0):
         stem=P("d2_stem", "#c9b79a", "#efe2c8", "#fff7e6"),
         cap_red=P("d2_cap_red", "#a8382f", "#d9584a", "#f08a74"), cap_tan=P("d2_cap_tan", "#a8865c", "#d4b083",
                                                                              "#f0d6ac"),
-        cap_lilac=P("d2_cap_lilac", "#7c5ea8", "#b48cd8", "#dcc4f4"), spot=P("d2_spot", "#d8d2c8", "#ffffff", "#ffffff"),
-        clover=P("d2_clover", "#2c7a36", "#47a347", "#7fd067"), clover2=P("d2_clover2", "#3a8a3a", "#5cb851",
-                                                                           "#98dc77"),
+        cap_lilac=P("d2_cap_lilac", "#7c5ea8", "#b48cd8", "#dcc4f4"),
+        spot=P("d2_spot", "#d8d2c8", "#ffffff", "#ffffff"),
+        clover=P("d2_clover", "#1d5a26", "#2f7d34", "#55a84a"), clover2=P("d2_clover2", "#25652a", "#3a8a3a",
+                                                                           "#64b450"),
         pebble=P("d2_pebble", "#7d7768", "#a9a291", "#d6cfbd"), pebble2=P("d2_pebble2", "#6c6f80", "#9a9cb0",
                                                                            "#c8c9da"),
         pink=P("d2_pink", "#d05a8a", "#ff8fb8", "#ffd0e2"), white=P("d2_white", "#c9c9e0", "#ffffff", "#ffffff"),
@@ -563,6 +580,8 @@ def dressing2(seed=31, clear_r=26.0):
         for side in (-1, 1):
             x = _path_x(y) + side * rnd.uniform(2.9, 3.6)
             s = rnd.uniform(0.28, 0.55)
+            if _near_grove(x, y, 1.0):
+                continue
             B[rnd.choice(("pebble", "pebble2"))].sphere((x, y + rnd.uniform(-0.3, 0.3), s * 0.25),
                                                         (s * 1.25, s, s * 0.5), (0, 0, rnd.uniform(0, 3)), seg=8)
         y -= rnd.uniform(1.1, 1.9)
@@ -588,7 +607,8 @@ def dressing2(seed=31, clear_r=26.0):
         rot = (0, math.radians(90), ang + math.radians(70))
         B["bark"].cone((cx, cy, 0.85), 0.95, 0.85, length, rot, seg=14)
         for e in (-1, 1):
-            dx, dy = math.cos(ang + math.radians(70)) * e * length / 2, math.sin(ang + math.radians(70)) * e * length / 2
+            axis = ang + math.radians(70)
+            dx, dy = math.cos(axis) * e * length / 2, math.sin(axis) * e * length / 2
             B["cut"].sphere((cx + dx, cy + dy, 0.85), (0.86, 0.86, 0.86), seg=12)
         for _ in range(6):
             t = rnd.uniform(-0.4, 0.4) * length
