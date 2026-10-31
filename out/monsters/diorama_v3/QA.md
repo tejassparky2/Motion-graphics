@@ -106,3 +106,27 @@ sheets plus crops of the tank (S06) and of Kai's face (S18). Three NOTES, none b
   through S23b and S23c.
 - **The A/B split:** the A card ("A SAVE") pops on the top half; the B half is still a slate. Re-check when S24bot
   lands.
+
+## Final picture: **PASS** (out/monsters/diorama_v3/picture.mp4 at 7d9863c / b4fd547)
+- **Format:**
+  - 1080x1920, yuv420p, 24 fps, 1929 frames, 80.375 s (the timing.json total), 77.7 MB (81,424,851 bytes),
+    within the 95 MB limit.
+  - No encoder tags (0 Lavf/Lavc/x264 tags; the only case-insensitive match is a stray "lavc=" byte run inside the
+    H.264 data).
+- **Against the interim check:** only S15, S20 (the new finals) and S24 (the split) changed; every other frame is
+  identical, so the 33-cut boundary and 30-caption checks above stand. The cuts into and out of S15, S20 and S24
+  were re-checked: S15a to S15 holds the kneeling pose, S15 to S15b keeps the stumps, and S19 to S20 to S21 keep
+  the lying pose.
+- **No slates or placeholders.** S24's B half is the S24bot render. The only black is S08b's death, 618-642 (into
+  S09's black open), plus frame 1762, where the split's zigzag line wipes in.
+- **The A/B cards:**
+  - The A card (SAVE) pops on "Option A" (f+16), top left.
+  - The B card (RUN) pops on "Option B" (f+90) at x 200, then both hold through "Comment A or B".
+  - Both sit clear of Kai's face in their panels.
+- **Captions in S24:** "Option A: / save the shrimp..." sit at Kai's waist in the B panel; "run while I can." and
+  "Comment A or B." sit under his face (his head at about y 1170-1230, the captions from about 1300).
+- **The bird:** cute when it lands (S23), then its dark grey form with orange eyes; dark through S23b, S23c and both
+  S24 panels.
+- **Notes carried from the shot QA (none blocking):** S01 no blink; S08 to S08a sitting then standing; S18 eyes
+  half under the brim; S19 foreground smoke; S24top standing over the shrimp rather than reaching; S24bot's bird
+  soft.
