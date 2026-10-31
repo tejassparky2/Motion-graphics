@@ -967,3 +967,173 @@ def hook_text(cr, t, start, lines=("THE CUTE ONES", "KILL FIRST"), red=("KILL",)
     cr.pop_group_to_source()
     cr.paint_with_alpha(a)
     cr.restore()
+
+
+# ================================================================ v3 effects (Episode 1 v3, Q5: helper 7)
+# Added beside the v2 functions (not replacing them) so shots already built on impact_frame / speed_lines don't move.
+
+def _two_tone(cr, invert):
+    """Turn what is already drawn into pure black/white (Otsu split, as impact_frame does)."""
+    surf = cr.get_target()
+    surf.flush()
+    w, h = surf.get_width(), surf.get_height()
+    a = np.ndarray((h, surf.get_stride() // 4, 4), np.uint8, surf.get_data())[:, :w]
+    lum = gaussian_filter((0.114 * a[..., 0] + 0.587 * a[..., 1] + 0.299 * a[..., 2]).astype(np.float32), 1.5)
+    v = np.clip((lum - _otsu(lum[::3, ::3])) * 0.25 + 0.5, 0, 1)
+    if invert:
+        v = 1 - v
+    a[..., :3] = (v * 255).astype(np.uint8)[..., None]
+    a[..., 3] = 255
+    surf.mark_dirty()
+
+
+def _taper(cr, cx, cy, ang, r0, r1, w0, w1, bend=0.0):
+    """A tapered stroke from radius r0 (width w0) out to r1 (width w1), optionally bent sideways: a manga focus line."""
+    ca, sa = math.cos(ang), math.sin(ang)
+    nx, ny = -sa, ca
+    mx, my = cx + ca * (r0 + r1) / 2 + nx * bend, cy + sa * (r0 + r1) / 2 + ny * bend
+    cr.move_to(cx + ca * r0 + nx * w0 / 2, cy + sa * r0 + ny * w0 / 2)
+    cr.curve_to(mx + nx * (w0 + w1) / 4, my + ny * (w0 + w1) / 4, mx + nx * (w0 + w1) / 4, my + ny * (w0 + w1) / 4,
+                cx + ca * r1 + nx * w1 / 2, cy + sa * r1 + ny * w1 / 2)
+    cr.line_to(cx + ca * r1 - nx * w1 / 2, cy + sa * r1 - ny * w1 / 2)
+    cr.curve_to(mx - nx * (w0 + w1) / 4, my - ny * (w0 + w1) / 4, mx - nx * (w0 + w1) / 4, my - ny * (w0 + w1) / 4,
+                cx + ca * r0 - nx * w0 / 2, cy + sa * r0 - ny * w0 / 2)
+    cr.close_path()
+
+
+def impact_frame_v3(cr, t, start, cx=W / 2, cy=H * 0.5, frames=4, accent="#ff3b30", subject=None, clear=200,
+                    seed=0, sound=False):
+    """A fuller anime impact on 1s, 4 frames from `start` (draw on the frame's own context, after the render, before
+    the HUD and captions):
+      0  white-out flash, the subject as a black silhouette;
+      1  inverted two-tone (white subject on black) with tapered focus lines bursting out of (cx, cy);
+      2  the accent frame: the background flooded with `accent`, the subject solid black, white lines;
+      3  normal two-tone (black on white) with the lines thinning out.
+    subject: the shot's character-only RGBA pass for this frame (a cairo ImageSurface), which keeps the subject a
+    clean silhouette; without it frames 0 and 2 use the two-tone of the whole frame. Lines change every frame."""
+    k = int(math.floor((t - start) * FPS + 1e-6))
+    if not 0 <= k < frames:
+        return
+    if sound:
+        cue("m_hit", t, start)
+    rnd = random.Random(seed * 7919 + k)
+
+    def silhouette(col):
+        if subject is None:
+            return False
+        cr.save()
+        cr.set_source_rgba(*col[:3], 1)
+        cr.mask_surface(subject, 0, 0)
+        cr.restore()
+        return True
+
+    def lines(col, n, w_out, keep=1.0):
+        cr.save()
+        cr.set_source_rgba(*col)
+        for i in range(n):
+            if rnd.random() > keep:
+                continue
+            ang = (i + rnd.uniform(-0.45, 0.45)) * 2 * math.pi / n
+            r0 = clear * rnd.uniform(0.9, 1.7)
+            _taper(cr, cx, cy, ang, r0, 1700, 0.5, w_out * rnd.uniform(0.5, 1.5), rnd.uniform(-18, 18))
+        cr.fill()
+        cr.restore()
+
+    phase = k % 4
+    if phase == 0:
+        if subject is None:                                      # a white-out with the subject's shape still showing
+            _two_tone(cr, False)
+        cr.save()
+        cr.set_source_rgba(1, 1, 1, 1.0 if subject is not None else 0.6)
+        cr.paint()
+        cr.restore()
+        silhouette(INK)
+        lines(INK, 40, 16, 0.6)
+    elif phase == 1:
+        _two_tone(cr, True)
+        lines(WHITE, 64, 30)
+    elif phase == 2:
+        if subject is None:                                      # two-tone, then the white turns accent, black stays
+            _two_tone(cr, False)
+            cr.save()
+            cr.set_operator(cairo.OPERATOR_MULTIPLY)
+            cr.set_source_rgba(*hexa(accent))
+            cr.paint()
+            cr.restore()
+        else:
+            cr.save()
+            cr.set_source_rgba(*hexa(accent))
+            cr.paint()
+            cr.restore()
+            silhouette(INK)
+        lines(WHITE, 56, 24, 0.85)
+    else:
+        _two_tone(cr, False)
+        lines(INK, 48, 12, 0.7)
+
+
+def speed_lines_v3(cr, t, start, end=None, mode="radial", cx=W / 2, cy=H * 0.45, col=WHITE, bg=None, n=90,
+                   clear=0.24, speed=1.0, seed=0):
+    """Speed lines that move: tapered strokes (hair-thin at the inner tip, thick at the edge) that keep streaming
+    while they are re-dealt on 2s, with a feathered open zone round the focus.
+      mode "radial"     focus lines rushing in towards (cx, cy) (a reaction, a lock-on);
+      mode "horizontal" streaks racing right to left (a dash);
+      mode "vertical"   streaks falling past (a fall, a dive): they run downwards.
+    bg: None draws only the lines over the render; a pair of hex colours paints a gradient behind them first
+    (centre colour, edge colour). clear = open radius as a fraction of the frame height (radial)."""
+    a = _fade(t, start, end, 0.04, 0.15)
+    if a <= 0:
+        return
+    u = t - start
+    cr.save()
+    cr.push_group()
+    if bg:
+        c0, c1 = hexa(bg[0]), hexa(bg[1])
+        g = (cairo.RadialGradient(cx, cy, 0, cx, cy, H * 0.85) if mode == "radial"
+             else cairo.LinearGradient(0, 0, W, 0) if mode == "vertical" else cairo.LinearGradient(0, 0, 0, H))
+        if mode == "radial":
+            g.add_color_stop_rgba(0, *c0)
+        else:
+            g.add_color_stop_rgba(0, *c1)
+            g.add_color_stop_rgba(0.5, *c0)
+        g.add_color_stop_rgba(1, *c1)
+        cr.set_source(g)
+        cr.paint()
+    rnd = random.Random(seed * 104729 + _twos(u))
+    if mode == "radial":
+        flow = (u * 2.2 * speed) % 1.0                           # the lines creep inwards between re-deals
+        for i in range(n):
+            ang = rnd.uniform(0, 2 * math.pi)
+            r0 = H * clear * rnd.uniform(0.9, 1.7) * (1 - 0.12 * flow)
+            cr.set_source_rgba(*col[:3], col[3] * rnd.uniform(0.5, 0.95))
+            _taper(cr, cx, cy, ang, r0, 1600, 0.4, rnd.uniform(5, 22))
+            cr.fill()
+    else:
+        horizontal = mode == "horizontal"
+        span, across = (W, H) if horizontal else (H, W)
+        for i in range(n):
+            pos = rnd.uniform(0, across)
+            ln = rnd.uniform(140, 640)
+            th = rnd.uniform(2, 10)
+            go = (rnd.uniform(0, span + ln) + u * 2600 * speed * rnd.uniform(0.7, 1.3)) % (span + 2 * ln) - ln
+            head = span - go if horizontal else go                # horizontal runs right to left, vertical falls
+            tail = head + ln if horizontal else head - ln
+            cr.set_source_rgba(*col[:3], col[3] * rnd.uniform(0.45, 0.9))
+            if horizontal:
+                cr.move_to(head, pos)
+                cr.curve_to(head + ln * 0.4, pos - th, tail - ln * 0.2, pos - th * 0.4, tail, pos)
+                cr.curve_to(tail - ln * 0.2, pos + th * 0.4, head + ln * 0.4, pos + th, head, pos)
+            else:
+                cr.move_to(pos, head)
+                cr.curve_to(pos - th, head - ln * 0.4, pos - th * 0.4, tail + ln * 0.2, pos, tail)
+                cr.curve_to(pos + th * 0.4, tail + ln * 0.2, pos + th, head - ln * 0.4, pos, head)
+            cr.fill()
+    cr.pop_group_to_source()
+    if mode == "radial":                                         # feather the open zone so lines fade in, not stop
+        m = cairo.RadialGradient(cx, cy, H * clear * 0.7, cx, cy, H * clear * 1.35)
+        m.add_color_stop_rgba(0, 0, 0, 0, 0)
+        m.add_color_stop_rgba(1, 0, 0, 0, a)
+        cr.mask(m) if not bg else cr.paint_with_alpha(a)
+    else:
+        cr.paint_with_alpha(a)
+    cr.restore()
