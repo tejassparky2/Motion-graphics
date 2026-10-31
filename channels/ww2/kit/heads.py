@@ -35,7 +35,7 @@ CHARACTERS = {
     "stalin": dict(hair="swept", hair_col="#2b2724", vol=1.09, moustache="walrus", prop="pipe", width=1.04, jowl=0.05,
                    nose=1.05),
     "churchill": dict(hair="thin", hair_col="#cdc4b2", width=1.2, jowl=0.36, chin=-0.06, nose=0.78, prop="cigar",
-                      hat="bowler", scale=1.1, neck=1.35, brow=1.15),
+                      hat="bowler", neck=1.35, brow=1.15),   # (stick passes R 1.1x for him; portrait too)
     "roosevelt": dict(hair="receding", hair_col="#8f8b84", recede=0.18, jaw=0.12, chin=0.08, glasses="pincenez",
                       prop="holder", nose=1.06),
     "mussolini": dict(hair=None, dome=True, jaw=0.22, chin=0.1, width=1.05, brow=1.25, neck=1.25),
@@ -669,7 +669,7 @@ def portrait(cr, t, who, cx, base_y, height=900, expr="determined", turn=0.45, l
     """A chest-up poster portrait whose bottom edge sits at (cx, base_y), ~`height` px tall, facing right (+x).
     idle: breath, blinks, a small head turn and tilt. shake: an extra head turn (e.g. a head shake, -1..1). bg:
     "rays" draws a sunburst behind (never red: gold, khaki, ink or allies blue), "plain" a flat disc, None nothing."""
-    R = height * 0.155
+    R = height * 0.155 * (1.1 if who == "churchill" else 1.0)       # as stick.py sizes his head
     kw = max(5.0, height * 0.007)
     br = math.sin(2 * math.pi * t / 3.6) if idle else 0.0
     if bg == "rays":
