@@ -194,14 +194,104 @@ def drop_glint(cr, t, a, f0, f1, size=22):
         fx2d_extra._sparkle(cr, x + 6, y - 8, size * (0.6 + 0.4 * math.sin(math.pi * u)), (1, 1, 1), 1.0, rot=0.3)
 
 
+def brim_safe_mask(frame_png, eyes, rx, ry):
+    """An A8 mask for painting over Kai's eyes in the diorama close-up: soft ellipses (rx, ry) on the eyes, as
+    fx2d_anime._cover_eye draws them, minus the cap's teal brim, which there sits on his eyes and must stay, and the
+    hair strands beside them."""
+    import numpy as np
+    from scipy.ndimage import gaussian_filter
+    im = np.asarray(Image.open(frame_png).convert("RGB")).astype(int)
+    r, g, b = im[..., 0], im[..., 1], im[..., 2]
+    brim = (g - r > 40) & (b - r > 40)
+    hair = (r - b > 18) & (r + g + b < 420)                       # brown hair (the iris is only spared off the eye)
+    yy, xx = np.mgrid[0:im.shape[0], 0:im.shape[1]]
+    m = np.zeros(im.shape[:2])
+    core = np.zeros(im.shape[:2], bool)
+    for ex, ey in eyes:
+        d = np.sqrt(((xx - ex) / rx) ** 2 + ((yy - ey) / ry) ** 2)
+        m = np.maximum(m, np.clip((1.0 - d) / 0.18, 0.0, 1.0))
+        core |= (np.abs(xx - ex) <= rx * 0.72) & (d < 1.0)
+    m *= 1.0 - gaussian_filter((brim | (hair & ~core)).astype(float), 1.2)
+    surf = cairo.ImageSurface(cairo.FORMAT_A8, im.shape[1], im.shape[0])
+    stride = surf.get_stride()
+    buf = np.zeros((im.shape[0], stride), np.uint8)
+    buf[:, :im.shape[1]] = np.round(np.clip(m, 0, 1) * 255).astype(np.uint8)
+    surf.get_data()[:] = buf.tobytes()
+    surf.mark_dirty()
+    return surf
+
+
+def masked_dot_eyes(cr, t, start, eyes, r, skin, mask, end=None):
+    """fx2d_anime.dot_eyes (same 1.5 s window) with the skin painted through `mask` (brim_safe_mask)."""
+    if not fx2d_anime._on(t, start, end, 1.5):
+        return
+    cr.set_source_rgba(*skin[:3], 1.0)
+    cr.mask_surface(mask, 0, 0)
+    for ex, ey in eyes:
+        cr.arc(ex, ey, r, 0, 2 * math.pi)
+        cr.set_source_rgba(*fx2d.INK)
+        cr.fill()
+
+
+def diorama_s20():
+    """S20's deadpan in the diorama: the dot eyes on his eyes as rendered (the bone anchors sit ~25 px inside them in
+    this close-up) and a cover that spares the brim, then the sweat drop, as in 3D; the "pff" is in the plate."""
+    a = anchors("S20")
+    _, _, tilt, eyes = face_geom(a, 50 / FPS)
+    plate = os.path.join(BUILD, "S20", "0050.png")
+    eyes = plate_eyes(plate, eyes, math.dist(*eyes) * 0.23)
+    d = math.dist(*eyes)
+    (lx, ly), (rx, ry) = eyes
+    cx, cy, size, er = (lx + rx) / 2, (ly + ry) / 2, d * 2.6, d * 0.23
+    skin = skin_near_eyes(os.path.join(BUILD, "S20", "0070.png"), eyes, er)
+    mask = brim_safe_mask(plate, eyes, d * 0.35, d * 0.19)     # solid to the hair, which the mask spares
+    return [(masked_dot_eyes, dict(start=43 / FPS, eyes=eyes, r=er * 0.24, skin=skin, mask=mask)),
+            (fx2d_anime.sweat_drop, dict(start=52 / FPS, end=99, x=cx, y=cy, size=size, tilt=tilt))]
+
+
+def tracked_terror(cr, t, a, start, size0, corr):
+    """fx2d_anime.terror_eyes + sweat_drop following the face anchors every frame (a moving camera), with the eye
+    correction measured on the plate (plate_eyes) scaled as the face grows."""
+    (cx, cy), size, tilt, eyes = face_geom(a, t)
+    k = size / size0
+    eyes = tuple((ex + dx * k, ey + dy * k) for (ex, ey), (dx, dy) in zip(eyes, corr))
+    cx, cy = (eyes[0][0] + eyes[1][0]) / 2, (eyes[0][1] + eyes[1][1]) / 2
+    size = math.hypot(eyes[1][0] - eyes[0][0], eyes[1][1] - eyes[0][1]) * 2.6
+    fx2d_anime.sweat_drop(cr, t, start - 0.2, end=99, x=cx, y=cy, size=size, tilt=tilt)
+    fx2d_anime.terror_eyes(cr, t, start, end=99, x=cx, y=cy, size=size, eyes=eyes, er=size / 2.6 * 0.26 * 1.08,
+                           tilt=tilt)
+
+
+def _terror_on_plate(shot, a, t0):
+    """(face size at t0, per-eye correction): measured on the rendered frame at t0 when the whites of his eyes show
+    there, else the anchors' eyes spread 1.32x about their midpoint (the bone-based eye offsets are that much too
+    narrow on this hero: 59 vs 78 px in the 3D S01, 26 vs ~35 px in the diorama S16)."""
+    (cx, cy), size, tilt, eyes = face_geom(a, t0)
+    png = os.path.join(BUILD, shot, f"{int(round(t0 * FPS)) + 1:04d}.png")
+    fixed = plate_eyes(png, eyes, size / 2.6 * 0.26 * 1.08) if os.path.exists(png) else eyes
+    if fixed == eyes:
+        fixed = tuple((cx + (ex - cx) * 1.32, cy + (ey - cy) * 1.32) for ex, ey in eyes)
+    return size, tuple((fx - ex, fy - ey) for (fx, fy), (ex, ey) in zip(fixed, eyes))
+
+
 def diorama_overlays(shot):
     """The diorama cut's 2D (coordinator, 31 Oct): the slow push-ins of the locked shots (TP13), S17's drop glint and
-    S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D."""
+    S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D. S19 and S20 get the 3D cut's
+    comic marks (coordinator, 31 Oct); S20's "pff" is already in the diorama plate (3D puffs)."""
+    if shot == "S19":
+        return cut_overlays(shot)
+    if shot == "S20":
+        return diorama_s20()
     a = anchors(shot)
     n = max(a)
     ex, ey = at(a, 0.0, "eyes")
-    if shot == "S01":
-        return [(push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.06))]
+    if shot in ("S01", "S16"):                                    # the pin-prick terror rhyme, as in 3D
+        t0 = 0.0 if shot == "S01" else 41 / FPS
+        size0, corr = _terror_on_plate(shot, a, t0 if shot == "S16" else 11 / FPS)
+        out = [(tracked_terror, dict(a=a, start=t0, size0=size0, corr=corr))]
+        if shot == "S01":
+            out.append((push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.06)))
+        return out
     if shot == "S17":
         dx, dy = at(a, 20 / FPS, "drop")
         return [(drop_glint, dict(a=a, f0=17, f1=23)),
@@ -218,8 +308,11 @@ def diorama_overlays(shot):
 
 def overlays(shot):
     """Shot-local overlays [(fn, kwargs)] for each shot."""
-    if DIORAMA:
-        return diorama_overlays(shot)
+    return diorama_overlays(shot) if DIORAMA else cut_overlays(shot)
+
+
+def cut_overlays(shot):
+    """The 3D cut's overlays."""
     if shot in ("S01", "S16"):                                    # frame 0 (and its rhyme): pin-prick terror + sweat
         a = anchors(shot)
         t0 = 0.0 if shot == "S01" else 41 / FPS                   # S16: from his terror on the wide (frame 42)
