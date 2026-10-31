@@ -501,6 +501,8 @@ def composite(raw, sub, out_dir, name="S15", star_px=55, cap_box=None, cap_white
     os.makedirs(out_dir, exist_ok=True)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i", os.path.join(done, "%05d.png"),
                     "-c:v", "libx264", "-crf", "12", "-preset", "slow", "-pix_fmt", "yuv420p",
+                    "-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
+                    "-bsf:v", "filter_units=remove_types=6", "-metadata:s:v", "handler_name=",   # no encoder tags
                     os.path.join(out_dir, f"{name}.mp4")], check=True)
     outs = sorted(glob.glob(os.path.join(done, "*.png")))
     picks = outs[::6]
