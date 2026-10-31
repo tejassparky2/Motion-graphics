@@ -32,7 +32,7 @@ UP = Vector((-math.sin(math.radians(HEAD_DIR)), math.cos(math.radians(HEAD_DIR))
 EAST = Vector((UP.y, -UP.x, 0))       # his left side (screen right from the south), where the shrimp's claw is
 LEAN = 40.0                           # the shrimp leans back on his chest, so its face tips up toward the camera
 BLUR = 12.0
-S01_CAM = (50.0, 78.0, 95.0, 0.0)     # S01: tilt, dist, lens, yaw
+S01_CAM = (45.0, 60.0, 110.0, 0.0, 3.0)   # S01: tilt, dist, lens, yaw, aim past his eyes toward his head (units)
 
 
 # ---------------------------------------------------------------- the world after the snap
@@ -122,9 +122,12 @@ def _over_jacket(sh, rig):
     his chest, nearest the shoulder first, and keep the first whose tip is above cloth. Returns the shoulder pose."""
     chest = s3d.kai_point(rig, "chest")
     pose = None
-    for k in (1.6, 1.3, 1.9, 1.0):                                 # arm held out level: the tip is its lowest point
-        for u in (0.6, 0.3, 0.9):
-            pose = s3d.raise_claw(sh, chest + EAST * k + UP * u + Vector((0, 0, 0.9)), chest + Vector((0, 0, 4)))
+    for k in (0.9, 1.2, 0.6, 1.5):                                 # the arm reaches down toward a spot on his jacket,
+        for u in (0.5, 0.2, 0.8):                                  # so the tip is its lowest point, over the cloth
+            spot = _hit(chest + EAST * k + UP * u + Vector((0, 0, 3)))
+            if not spot or "huku" not in spot[2]:
+                continue
+            pose = s3d.raise_claw(sh, spot[0] + Vector((0, 0, 1.4)), spot[0])
             h = _hit(s3d.claw_tip(sh))
             if h and "huku" in h[2]:
                 return pose
@@ -232,8 +235,8 @@ def s01():
     face, eyes locked on), the erased forest's glowing, smoking stumps mid-frame behind them; the big hook text sits
     over the far forest at the top. Kai whispers (lips on 3s), terror face. A very slow push-in on 1s."""
     n, rig, sh, _ = _world("S01")
-    aim = s3d.kai_point(rig, "eyes") + UP * 6.0                   # past his head: him low-mid, the stumps above
-    t, d, lens, yaw = S01_CAM
+    t, d, lens, yaw, up = S01_CAM
+    aim = s3d.kai_point(rig, "eyes") + UP * up                    # his face mid-frame, the pond above his head
     cam = diorama.camera("cam_s01", aim, dist=d, tilt=t, yaw=yaw, lens=lens, blur=BLUR)
     _move(cam, n, [(1, t, d, lens), (n, t, d * 0.94, lens)], lambda f: aim, yaw=yaw)
     s3d.kai_face(rig, 1, **s3d.TERROR)
@@ -269,15 +272,12 @@ def s16():
 
 
 def s17():
-    """Then I saw the drops. Close, from the south-east and above (tilt 58), on the claw cocked beside his face (the
-    same pose as S16/S18): a drop swells at the claw's lowest point (diorama scale, so it reads from up here), lets go
-    at f17, lands on his jacket at f23 ("drops") and leaves a dark wet splat; the next drop swells from f34. Same
-    frames as the 3D S17."""
-    n, rig, sh, _ = _world("S17")
-    low = min((o.matrix_world @ v.co for o in bpy.data.objects if o.name.startswith(("puff_claw", "puff_dactyl"))
-               and o.type == "MESH" for v in o.data.vertices), key=lambda p: p.z)
+    """Then I saw the drops. Close and looking down (tilt 62) on his chest: the claw reaches down over his jacket, a
+    drop swells at its tip (diorama scale, so it reads from up here), lets go at f17, lands on the jacket at f23
+    ("drops") and leaves a dark wet splat; the next drop swells from f34. Same frames as the 3D S17."""
+    n, rig, sh, _ = _world("S17", claw="jacket")
     r = 0.3
-    tip = low - Vector((0, 0, r * 0.9))
+    tip = s3d.claw_tip(sh) - Vector((0, 0, r * 0.9))
     land, nrm, mat = _hit(tip)
     drop_m = look.flat("drip", look.hexc("#9fd8ff"))
     s3d._drop(tip, 1, 17, 23, land + nrm * r * 0.6, r=r, mat=drop_m)
@@ -292,8 +292,8 @@ def s17():
     for f, s in ((22, 0.001), (23, 0.22), (25, 0.38), (29, 0.5), (35, 0.56)):
         anim.key(spot, "scale", f, (s, s * 0.8, 1), "LINEAR" if f > 23 else "CONSTANT")
     tgt = tip.lerp(land, 0.5)
-    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=58.0, yaw=-40.0, lens=120.0, blur=BLUR)
-    _move(cam, n, [(1, 58.0, 50.0, 120.0), (n, 58.0, 45.0, 120.0)], lambda f: tgt, yaw=-40.0)
+    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=62.0, lens=120.0, blur=BLUR)
+    _move(cam, n, [(1, 62.0, 50.0, 120.0), (n, 62.0, 45.0, 120.0)], lambda f: tgt)
     s3d.kai_face(rig, 1, **s3d.TERROR)
     _anchors("S17", cam, rig, sh)
     print("S17 drop lands on", mat, flush=True)
