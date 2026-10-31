@@ -29,6 +29,9 @@ bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = look.render_setup(int(720 * scale), int(1280 * scale), int(opt.get("--samples", 16)))
 mod = importlib.import_module(f"channels.monsters.{ep}.shots")
 info = mod.SHOTS[shot]()
+from channels.monsters.mk import grade  # noqa: E402  (Q3: the v3 light and grade pass; DIORAMA_LOOK=v1 skips it)
+if grade.enabled(ep):
+    print("Q3 look:", grade.finish(info), flush=True)
 n = info["frames"]
 sc.frame_start, sc.frame_end = 1, n
 os.makedirs(out, exist_ok=True)

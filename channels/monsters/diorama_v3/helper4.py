@@ -19,7 +19,7 @@ import random
 
 try:
     import bpy
-    from mathutils import Matrix, Vector
+    from mathutils import Matrix, Quaternion, Vector
 
     from channels.monsters.mk import anim, diorama, diorama_lab, hero, look, storm
 except ImportError:                                      # helper4_comp.py imports _beats/BUILD outside Blender
@@ -46,7 +46,7 @@ def _beats(n):
     """The beat frames, on the v3 line (timing.json: "That's" 8, "how" 13, "I" 15, "died." 18, the line out by 26):
     the spark cracks at the strip on 4 and runs to his feet by 10; it hits on 11; the x-ray flashes 14-15, 18-19 (on
     "died.") and 22-23 (fx2d.xray_flash start 14, beat 2); the lights die on 27, the last arcs by 30, and it is black from 31 to the end (the flatline)."""
-    return dict(spark=4, run=(4, 10), hit=11, xray=[14, 15, 18, 19, 22, 23], out=27, fade=30, black=31)
+    return dict(spark=4, run=(4, 10), hit=11, xray=[14, 15, 18, 19, 22, 23], out=27, fade=30, black=31, land=29)
 
 
 # ----------------------------------------------------------------------------------------------- Kai, standing
@@ -69,7 +69,7 @@ BODY = ("spine", "chest", "neck", "head", "left_upper_leg", "right_upper_leg", "
 
 
 def _key(rig, f, interp="CONSTANT"):
-    for n in BODY:
+    for n in BODY + SHOULDER_BONES:
         rig["bone"](n).keyframe_insert("rotation_quaternion", frame=f)
     for fc in anim.all_fcurves(rig["arm"].animation_data.action):
         for kp in fc.keyframe_points:
@@ -113,22 +113,191 @@ def _fear(rig, sway=0.0):
 
 
 def _zap(rig, k=0.0):
-    """Electrocuted: rigid, back arched, head thrown back, arms flung out stiff with the fingers splayed, legs
-    locked apart. `k` (-1..1) shifts the pose a little so the 1s shake reads."""
+    """Electrocuted (the coordinator's notes): rigid and arched, head thrown back, elbows bent with the hands clawed up
+    by his head, the left leg locked and the right knee buckling, the two sides a little different. `k` (-1..1)
+    shifts it a touch so the 1s shake reads."""
     _reset(rig)
+    _shoulders_set(rig, 0.5 + 0.06 * k)                                   # shoulders jammed up
+    _aim(rig, "left_upper_leg", (0.17 + 0.02 * k, 0.06, -1.0))           # locked straight
+    _aim(rig, "left_lower_leg", (0.17, 0.03, -1.0))
+    _aim(rig, "left_foot", (0.15, -1.0, -0.6))
+    _aim(rig, "right_upper_leg", (-0.14, -0.42, -1.0))                   # the right knee buckles forward...
+    _aim(rig, "right_lower_leg", (-0.06, 0.45, -1.0))                    # ...the shin back
+    _aim(rig, "right_foot", (-0.1, -1.0, -0.3))
+    _aim(rig, "spine", (0.05 * k, 0.22, 1.0))                             # back arched
+    _aim(rig, "chest", (0.06 - 0.04 * k, 0.4, 1.0))
+    _aim(rig, "neck", (0.0, 0.32, 1.0))
+    _aim(rig, "head", (0.12 + 0.06 * k, 0.75, 1.0))                      # thrown back, tipped to his left
+    _aim(rig, "left_upper_arm", (0.92, 0.18, 0.42 + 0.06 * k))           # elbows out, the upper arms up...
+    _aim(rig, "left_lower_arm", (0.22, -0.2, 1.0))                       # ...forearms up: the hands by his head
+    _aim(rig, "left_hand", (0.3, 0.35, 1.0))                             # wrists cocked back, a claw
+    _aim(rig, "right_upper_arm", (-0.86, 0.06, 0.22 - 0.05 * k))         # the right arm lower and wider
+    _aim(rig, "right_lower_arm", (-0.45, -0.3, 0.85))
+    _aim(rig, "right_hand", (-0.4, 0.25, 0.9))
+
+
+def _limp(rig):
+    """The current stops: everything lets go. Head lolls forward, arms drop, both knees fold."""
+    _reset(rig)
+    _shoulders_set(rig, 0.0)
     for s, sx in (("left", 1.0), ("right", -1.0)):
-        _aim(rig, f"{s}_upper_leg", (sx * (0.2 + 0.03 * k), 0.02, -1.0))
-        _aim(rig, f"{s}_lower_leg", (sx * 0.2, 0.02, -1.0))
-        _aim(rig, f"{s}_foot", (sx * 0.2, -1.0, -0.5))
-    _aim(rig, "spine", (0.04 * k, 0.16, 1.0))
-    _aim(rig, "chest", (-0.05 * k, 0.28, 1.0))
-    _aim(rig, "neck", (0.0, 0.25, 1.0))
-    _aim(rig, "head", (0.08 * k, 0.55, 1.0))
-    for s, sx in (("left", 1.0), ("right", -1.0)):
-        up = 0.25 + 0.12 * k * sx
-        _aim(rig, f"{s}_upper_arm", (sx * 1.0, 0.05, up))
-        _aim(rig, f"{s}_lower_arm", (sx * 1.0, 0.02, up + 0.15))
-        _aim(rig, f"{s}_hand", (sx * 1.0, 0.0, up + 0.35))
+        _aim(rig, f"{s}_upper_leg", (sx * 0.12, -0.75, -1.0))
+        _aim(rig, f"{s}_lower_leg", (sx * 0.05, 0.85, -1.0))
+        _aim(rig, f"{s}_foot", (sx * 0.1, -1.0, -0.2))
+        _aim(rig, f"{s}_upper_arm", (sx * 0.3, 0.2, -1.0))
+        _aim(rig, f"{s}_lower_arm", (sx * 0.2, 0.1, -1.0))
+        _aim(rig, f"{s}_hand", (sx * 0.2, 0.0, -1.0))
+    _aim(rig, "spine", (0.0, -0.1, 1.0))
+    _aim(rig, "chest", (0.03, -0.2, 1.0))
+    _aim(rig, "neck", (0.0, -0.35, 1.0))
+    _aim(rig, "head", (0.15, -0.6, 1.0))
+
+
+def _down(rig):
+    """Landed on his back (in his own frame; the rig object is tipped back): the left leg out straight, the right knee
+    up, the left arm flung over his head, the right arm out to the side, the head rolled to one side."""
+    _reset(rig)
+    _shoulders_set(rig, 0.0)
+    _aim(rig, "left_upper_leg", (0.15, 0.05, -1.0))
+    _aim(rig, "left_lower_leg", (0.17, 0.05, -1.0))
+    _aim(rig, "left_foot", (0.25, -0.6, -1.0))
+    _aim(rig, "right_upper_leg", (-0.2, -0.9, -0.55))                    # the knee up
+    _aim(rig, "right_lower_leg", (-0.1, 0.5, -1.0))
+    _aim(rig, "right_foot", (-0.1, -1.0, -0.2))
+    _aim(rig, "spine", (0.0, 0.05, 1.0))
+    _aim(rig, "chest", (0.0, 0.08, 1.0))
+    _aim(rig, "neck", (0.1, 0.0, 1.0))
+    _aim(rig, "head", (0.55, -0.15, 1.0), twist=0.5)                     # rolled toward his left shoulder
+    _aim(rig, "left_upper_arm", (0.55, 0.2, 0.85))                       # flung over his head
+    _aim(rig, "left_lower_arm", (0.2, 0.35, 1.0))
+    _aim(rig, "left_hand", (0.1, 0.3, 1.0))
+    _aim(rig, "right_upper_arm", (-1.0, 0.25, -0.25))                    # out to the side
+    _aim(rig, "right_lower_arm", (-1.0, 0.2, 0.15))
+    _aim(rig, "right_hand", (-1.0, 0.15, 0.1))
+
+
+SHOULDER_BONES = ("left_shoulder", "right_shoulder")
+
+
+def _shoulders_set(rig, up):
+    """Raise both shoulders by `up` (0 = rest); _key() keys them with the body."""
+    for nm, sx in zip(SHOULDER_BONES, (1.0, -1.0)):
+        pb = rig["bone"](nm)
+        pb.rotation_mode = "QUATERNION"
+        pb.rotation_quaternion = (1, 0, 0, 0)
+        if up:
+            _aim(rig, nm, (sx * 1.0, 0.05, up))
+
+
+def _fingers_key(rig, curl, f):
+    _fingers(rig, curl)
+    for b in rig["arm"].pose.bones:
+        if b.name.startswith(("f_", "thumb")) and not b.name.startswith("robo"):
+            b.keyframe_insert("rotation_quaternion", frame=f)
+    _constant(rig["arm"], f)
+
+
+def _constant(obj, f):
+    for fc in anim.all_fcurves(obj.animation_data.action):
+        for kp in fc.keyframe_points:
+            if abs(kp.co.x - f) < 0.01:
+                kp.interpolation = "CONSTANT"
+
+
+def _act(rig, B):
+    """Kai's acting for S08b, on the v3 line (see _beats):
+      1-10   FEAR_STAND (helper 1's S08a end pose, so the cut is seamless), trembling on 2s
+      11-14  the hit: an overshoot (acting.ease "overshoot") from fear into the electrocution pose, on 1s
+      15-23  held rigid, shaking on 1s
+      24     the current stops: he goes limp, the knees fold
+      26-28  he tips back and to his right, onto the open floor (the lights die on 27)
+      29     he lands on his back (the body-fall thud); 30 settles; black from 31."""
+    from channels.monsters.diorama_v3.helper1 import FEAR_FACE, fear_stand
+    from channels.monsters.mk.acting import ease
+    arm = rig["arm"]
+    hit, out = B["hit"], B["out"]
+    for f, sway in ((1, 0.0), (3, 0.03), (5, -0.03), (7, 0.03), (9, -0.02)):
+        fear_stand(rig, f, sway)
+        _fingers_key(rig, -0.12, f)
+    base = arm["stand_z"]
+    fear_stand(rig, None, -0.02)
+    qa = _quats(rig)
+    _reset(rig)
+    _shoulders_set(rig, 0.0)
+    arm.location.z = base
+    bpy.context.view_layer.update()
+    ank0 = min((arm.matrix_world @ rig["bone"](f"{s}_foot").head).z for s in ("left", "right"))
+
+    yaw = arm.rotation_euler.z
+    d = Matrix.Rotation(yaw, 3, "Z") @ Vector((-0.85, 0.5, 0.0)).normalized()   # back and to his right, in the world
+    tip_axis = Vector((0, 0, 1)).cross(d).normalized()
+
+    def plant(f, rot=0.0, lie=False):
+        q = _quats(rig)                          # the pose just set; flush the pending re-evaluation of the last keys
+        bpy.context.view_layer.update()          # (it would put the keyed pose back), then set it again
+        for nm, v in q.items():
+            rig["bone"](nm).rotation_quaternion = v
+        arm.rotation_euler = (Matrix.Rotation(-rot, 3, tip_axis) @ Matrix.Rotation(yaw, 3, "Z")).to_euler("XYZ")
+        arm.location.z = base
+        bpy.context.view_layer.update()
+        if lie:                                                           # his back on the floor
+            low = min((arm.matrix_world @ rig["bone"](nm).head).z for nm in ("hips", "spine", "chest", "neck"))
+            arm.location.z = base + KAI * 0.09 - low
+        else:                                                             # the lower sole on the floor
+            low = min((arm.matrix_world @ rig["bone"](f"{s}_foot").head).z for s in ("left", "right"))
+            arm.location.z = base + ank0 - low
+        bpy.context.view_layer.update()
+        arm.keyframe_insert("location", frame=f)
+        arm.keyframe_insert("rotation_euler", frame=f)
+        _key(rig, f)
+        _constant(arm, f)
+
+    _zap(rig, 0.0)
+    qb = _quats(rig)
+    for f in range(hit, hit + 4):                                         # the overshoot into the jolt
+        _between(rig, qa, qb, ease((f - hit + 1) / 4, "overshoot", 0.15))
+        plant(f)
+    _fingers_key(rig, 0.75, hit)                                          # the hands claw
+    rnd = random.Random(8)
+    for f in range(hit + 4, out - 3):                                     # rigid, shaking on 1s
+        _zap(rig, rnd.uniform(-1, 1))
+        plant(f)
+    f_limp = out - 3
+    _limp(rig)
+    qc = _quats(rig)
+    plant(f_limp)
+    _fingers_key(rig, 0.3, f_limp)
+    plant(f_limp + 1)
+    _down(rig)
+    qd = _quats(rig)
+    for f, e, rot in ((f_limp + 2, 0.25, -0.45), (f_limp + 3, 0.5, -0.95), (f_limp + 4, 0.8, -1.3)):
+        _between(rig, qc, qd, e)                                          # tipping back, unfolding as he falls
+        plant(f, rot)
+    _down(rig)
+    plant(f_limp + 5, -1.52, lie=True)                                    # lands (the thud)
+    plant(f_limp + 6, -1.47, lie=True)                                    # a small bounce, settled
+    _face(rig, dict(FEAR_FACE, look_down=0.15), 1)
+    _face(rig, {"face_surprise": 1.0, "eye_black_small": 1.0, "mouse_open": 1.0, "lip_a": 0.8,
+                "shock_plane": 1.0}, hit)
+    _face(rig, {"eye_close": 1.0, "mouse_open": 0.35, "eye_brow_down": 0.3}, f_limp)
+
+
+def _quats(rig):
+    return {n: rig["bone"](n).rotation_quaternion.copy() for n in BODY + SHOULDER_BONES}
+
+
+def _between(rig, qa, qb, e):
+    """Set the pose `e` of the way from qa to qb (e may leave 0..1: the overshoot), bone by bone."""
+    bpy.context.view_layer.update()              # flush the pending re-evaluation of the keys just inserted first,
+    for n in qa:                                 # or it would overwrite the pose set here
+        a, b = qa[n], qb[n]
+        d = a.inverted() @ b                                              # a @ d == b
+        if d.w < 0:                                                       # the short way round
+            d.negate()
+        axis, ang = d.to_axis_angle()
+        pb = rig["bone"](n)
+        pb.rotation_quaternion = a @ Quaternion(axis, ang * e) if ang > 1e-6 else a
+    bpy.context.view_layer.update()
 
 
 def _face(rig, keys, f):
@@ -378,22 +547,12 @@ def s08b():
     from channels.monsters.diorama.helper1 import _tilt_cap
     _tilt_cap(rig, 40.0)                                                  # the brim up, so his eyes read from above
     arm = rig["arm"]
-    arm.rotation_mode = "XYZ"
+    arm.rotation_mode = "XYZ"                                             # x tips him back in his own frame (the fall)
     arm.rotation_euler = (0, 0, math.radians(18))
     bpy.context.view_layer.update()
     hit, out, fade = B["hit"], B["out"], B["fade"]
-    _fingers(rig, 0.45)
-    for f, sway in ((1, 0.0), (5, 0.03), (9, 0.0), (hit - 2, -0.02)):  # frozen, a tremble on 2s
-        _fear(rig, sway)
-        _key(rig, f)
-    rnd = random.Random(8)
-    for f in range(hit, out + 3):                                         # the jolt: rigid, shaking on 1s
-        _zap(rig, rnd.uniform(-1, 1))
-        _key(rig, f)
-    _fingers(rig, 0.0)
-    _face(rig, {"face_surprise": 0.7, "eye_black_small": 1.0, "mouse_open": 0.25, "look_down": 1.0}, 1)
-    _face(rig, {"face_surprise": 1.0, "eye_black_small": 1.0, "mouse_open": 1.0, "lip_a": 0.8,
-                "shock_plane": 1.0}, hit)
+    _act(rig, B)
+    rnd = random.Random(9)                                                # the light's flicker
 
     # the camera: close and low for the beat, a slow push-in on 1s
     chest = Vector((feet.x, feet.y, KAI * 0.85))
@@ -401,15 +560,22 @@ def s08b():
     cam = R["cam"]("cam_s08b", tuple(target), dist=48.0, tilt=46.0, yaw=-34.0, lens=90.0, blur=9.0)
     cam.data.shift_y = -0.05                                              # the strip and its spark above the captions
     p0 = cam.location.copy()
-    for f, k in ((1, 0.0), (B["black"], 1.0)):
-        cam.location = Vector(target).lerp(p0, 1.0 - 0.1 * k)
+    left = -(cam.matrix_world.to_3x3() @ Vector((1, 0, 0)))              # screen-left, in the world
+    left.z = 0.0
+    left = left.normalized() * 2.0                                        # the follow as he falls (~120 px)
+    f_fall = B["out"] - 3
+    for f in [1] + list(range(f_fall, B["black"] + 1)):                   # the push-in, plus the follow on the fall
+        k = (f - 1) / (B["black"] - 1)
+        u = min(1.0, max(0.0, (f - f_fall) / 5.0))
+        cam.location = Vector(target).lerp(p0, 1.0 - 0.1 * k) + left * (u * u * (3 - 2 * u))
         cam.keyframe_insert("location", frame=f)
-        d = (cam.location - Vector(target)).length
+        d = (Vector(target).lerp(p0, 1.0 - 0.1 * k) - Vector(target)).length
         cam.data.dof.focus_distance = d
         cam.data.dof.keyframe_insert("focus_distance", frame=f)
     for fc in anim.all_fcurves(cam.animation_data.action):
         for kp in fc.keyframe_points:
             kp.interpolation = "LINEAR"
+    bpy.context.scene.frame_set(1)
     cl = cam.location.copy()
 
     # the spark at the strip, then the run through the water to his feet (on 1s)
@@ -426,6 +592,7 @@ def s08b():
                  ring_count=8)
     lt = diorama_lab.lab._light("s08b_spark_light", "POINT", tuple(strip_pt), (0, 0, 0), 0.0, ARC_GLOW, 0.3,
                                 shadow=False)
+    diorama_lab.lab._kprop(lt.data, "energy", r0 - 1, 0.0, "CONSTANT")    # dark until the spark
     for f in range(r0, r1 + 1):
         u = (f - r0) / max(1, r1 - r0) * run_len
         i = min(int(u), run_len - 1)
@@ -488,6 +655,9 @@ def s08b():
         for o in (room, lamp):
             diorama_lab.lab._kprop(o.data, "energy", f, base[o.name] * (0.05 if f in xr else 1.0), "CONSTANT")
     R["power_out"](out)
+    from channels.monsters.mk import shared_water as sw
+    bpy.context.scene.frame_set(1)                # the spill's base strength is read from the current value: lights on
+    sw.adopt(R)                                   # helper 2's one water look for S07-S08b (keeps the power_out keys)
     _export_2d(rig, cam, n, water_pts)
     black = storm.power_out(cam, B["black"], flicker=False)
     del black

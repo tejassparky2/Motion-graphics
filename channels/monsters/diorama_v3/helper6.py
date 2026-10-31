@@ -1,14 +1,14 @@
 """Episode 1 v3 in diorama 2.5D (channels/monsters/DIORAMA_EP01_V3.md), helper 6:
 
     S23c "The shrimp had no idea." The puff-shrimp keeps drinking at the pond's east edge (MAP["shrimp_drink"]),
-         facing south, its claw dipped west into the water, its back to the thorn tree (and to us): little sips
+         facing south, its claw dipped west into the water, its back to the thorn tree: little sips
          (the claw lifts and dips), a sway, a blink. The butcher bird's giant winged shadow comes from the thorn
-         tree's side, from behind the camera, slides across the grass and over the oblivious shrimp toward the pond.
-         The bird itself is overhead, out of shot. A close diorama camera behind it (north-north-east, the bird's
-         side), pushing in slowly on 1s.
+         tree's side (upper left), slides across the grass, over the oblivious shrimp and out across the pond.
+         The bird itself is overhead, out of shot. A close, high diorama camera west-north-west of it (the pond on the
+         right), pushing in slowly on 1s.
 
-The set is the island after the snap exactly as the other v3 shots have it (diorama/xprl._set: seed 31, the fan's
-trees gone, Kai knocked flat beyond the pond); the shrimp is placed by diorama_v3/xprl._shrimp(); the shadow is
+The set is the island after v3's snap exactly as S23b and S24 have it (diorama_v3/xprl._set: bgqrs v3's set with the
+grove's stumps, Kai knocked flat in LYING_V3_L beyond the pond); the shrimp is placed by diorama_v3/xprl._shrimp(); the shadow is
 tuftwing's, softened as in XprL's S23 insert.
 
     blender -b -y -P channels/monsters/render_shot.py -- diorama_v3 S23c OUT_DIR [--still N --scale 0.5]
@@ -44,9 +44,10 @@ def _sipping(sh, n, period=18, sway=0.05):
 def s23c():
     n = v3_frames("S23c")
     diorama.setup()
-    isl, kai = dx._set(n)
+    isl, kai = v3x._set(n, kai_down=True)                     # v3's after-snap set, as S23b and S24 either side
     sh = v3x._shrimp(n)
     _sipping(sh, n)
+    dx._twos([sh["shoulder"], sh["body"]])                     # the sip and sway keys on 2s too
     shrimp = Vector((diorama.MAP["shrimp_drink"][0], diorama.MAP["shrimp_drink"][1], 0.0))
     thorn = Vector((diorama.MAP["thorn"][0], diorama.MAP["thorn"][1], 0.0))
     away = (shrimp - thorn).normalized()                       # the shadow travels from the thorn tree past the shrimp
@@ -59,10 +60,11 @@ def s23c():
             o.hide_render = True
     dx._soft_shadow(bird, (0.0, 0.0, 0.0), tuple(away * 14.0), 1, n, opacity=0.7)
     target = shrimp + Vector((-0.6, -0.4, 1.0))
-    # yaw 205: north-north-east of it, on the bird's side: its back to us, the dipped claw and the pond beyond, and
-    # the shadow sliding in from under the lens and over it
-    dx._move("cam_s23c", 1, n, (tuple(target), 34.0, 46.0, 205.0, 100.0, 0.0),
-             (tuple(target), 28.0, 44.0, 209.0, 100.0, 0.0), n)
+    # yaw 120: west-north-west of it, looking east-south-east and well down: Kai (south-south-west) is out of shot,
+    # we see it side-on with the claw dipped in the pond, and the shadow slides in from the thorn tree's side (upper
+    # left), over the shrimp and out across the water (right)
+    dx._move("cam_s23c", 1, n, (tuple(target), 30.0, 46.0, 120.0, 100.0, 0.0),
+             (tuple(target), 25.0, 44.0, 124.0, 100.0, 0.0), n)
     return dict(frames=n, step=1, subject=[sh["root"]])
 
 
