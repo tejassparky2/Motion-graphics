@@ -11,7 +11,13 @@ Music (any length; the patterns loop by bars and the cue fades on its last 0.8 s
     low_tone(dur)     the single low tone for the Holocaust chapter (script: "the music drops to a single low tone")
     triumph(dur)      a slow brass-and-strings chorale with bells, bittersweet (a borrowed minor chord): V-E Day
     drum_hit()        the stinger for "the biggest shock": timpani, bass drum, crash and a low brass stab
+    fanfare()         a newsreel title fanfare (original rising triad) for the title and chapter cards
     (the hard cut to silence is Mix.cut)
+
+Period (the owner's 1940s wartime-poster look): the score leans to a 1940s newsreel - brass swells into the tension
+phrases, snare marches, low strings - and the stingers carry a phonograph texture (phonograph(x, amount): narrow band,
+saturation, wow and flutter, surface crackle; old_radio(x) for a wartime radio speaker). Apply them to anything else
+in the mix the same way.
 
 Effects (MUSIC and SFX map the names to the functions, so a scene's engine.cue("tank", ...) names one of them):
     gun_boom, artillery, artillery_barrage, tank, plane_drone, dive_whine, explosion, rifle_crack, sea_waves, blizzard,
@@ -284,6 +290,18 @@ def brass(midi, dur, vel=1.0, seed=0, warm=False):
     return out * gate * vel
 
 
+def brass_swell(midis, dur, seed=0):
+    """A low brass chord that swells from nothing to forte over `dur` and cuts on the downbeat (the newsreel swell).
+    Stereo."""
+    n = _n(dur)
+    out = np.zeros((n, 2))
+    for k, m in enumerate(midis):
+        x = brass(m, dur, 0.9, seed + k, warm=True)[:n]
+        out += _pan(x, (k / max(1, len(midis) - 1) - 0.5) * 0.8)
+    u = np.linspace(0, 1, n)
+    return out * (u ** 2.2)[:, None] * _ramp(n, 0, 0.03)[:, None]
+
+
 def piano(midi, dur, vel=0.7, seed=0):
     """A piano note: inharmonic partials on two slightly detuned strings, a hammer knock, the damper at note-off."""
     f = _midi(midi)
@@ -349,6 +367,7 @@ def tension(dur, seed=0, bpm=100, tick_on=True):
         end = ph * 4 * beat
         _place(out, _pan(timpani_roll(D, 2 * 4 * beat * 0.5, seed + ph), -0.15), end - 4 * beat, 0.25)
         _place(out, _pan(timpani(D, 1.0, seed + ph), -0.15), end, 0.3)
+        _place(out, brass_swell((D, D + 7, D + 12, D + 15), 4 * beat, seed + ph), end - 4 * beat, 0.3)
     if bars % 4:
         _place(out, _pan(timpani_roll(D, min(dur, 2.5), seed + 99), -0.15), dur - min(dur, 2.5), 0.22)
     return _finish(_verb(out, 0.3, 1.1, seed=seed), dur)
@@ -469,16 +488,76 @@ def triumph(dur, seed=0, bpm=66):
     return _finish(_verb(out, 0.32, 1.3, seed=seed), dur, fade_in=0.3, fade_out=1.5)
 
 
-def drum_hit(seed=0):
+def drum_hit(seed=0, period=True):
     """The stinger for "the biggest shock": timpani and bass drum together, a crash, a short low brass stab on a
-    D minor cluster (D, E-flat, A), ringing out about 3 s."""
+    D minor cluster (D, E-flat, A), ringing out about 3 s, with a light phonograph texture (period=False: clean)."""
     out = np.zeros((_n(4.0), 2))
     _place(out, _pan(timpani(D, 1.0, seed) + timpani(D - 5, 0.8, seed + 1), -0.1), 0, 0.7)
     _place(out, _pan(bass_drum(1.0, seed) * 1.2, 0), 0, 0.6)
     _place(out, crash(1.0, seed), 0.005, 0.25)
     for k, m in enumerate((D, D + 1, D + 7, D + 12)):
         _place(out, _pan(brass(m, 0.45, 1.0, seed + k), (-0.3, 0.3, -0.1, 0.1)[k]), 0, 0.22)
-    return _norm(_verb(out, 0.35, 1.3, seed=seed)[: _n(4.0)] * _ramp(_n(4.0), 0, 0.6)[:, None])
+    out = _verb(out, 0.35, 1.3, seed=seed)[: _n(4.0)] * _ramp(_n(4.0), 0, 0.6)[:, None]
+    return _norm(phonograph(out, 0.6, seed) if period else out)
+
+
+# an original newsreel call: a rising D-major triad in triplets to a held high D (two brass voices in thirds)
+_FANFARE = [(0.0, 0.16, 62, 59), (0.18, 0.16, 66, 62), (0.36, 0.16, 69, 66), (0.56, 0.5, 74, 69),
+            (1.12, 0.16, 69, 66), (1.30, 0.16, 71, 67), (1.48, 1.6, 74, 69)]
+
+
+def fanfare(seed=0, period=True):
+    """A newsreel title fanfare (~3.5 s): bright brass in thirds over a snare roll, a timpani hit and a crash on the
+    held note, with the phonograph texture. An original figure (a rising D-major triad), for the title and chapter
+    cards."""
+    out = np.zeros((_n(3.6), 2))
+    for at, ln, hi, lo in _FANFARE:
+        _place(out, _pan(brass(hi, ln, 0.95, seed + hi), 0.2), at, 0.35)
+        _place(out, _pan(brass(lo, ln, 0.85, seed + lo + 1), -0.2), at + 0.006, 0.3)
+    _place(out, strings([D, D + 12], 2.0, seed, bright=1500, attack=0.05, voices=3), 1.48, 0.3)
+    roll = np.zeros(_n(1.5))
+    for i in range(24):
+        _place(roll, snare(0.25 + 0.5 * i / 24, i), i / 16)
+    _place(out, _pan(roll, 0.15), 0.0, 0.25)
+    _place(out, _pan(timpani(D, 1.0, seed), 0), 1.48, 0.4)
+    _place(out, _pan(bass_drum(0.8, seed), 0), 1.48, 0.4)
+    _place(out, crash(0.9, seed), 1.48, 0.12)
+    out = _verb(out, 0.3, 1.2, seed=seed)[: _n(3.6)] * _ramp(_n(3.6), 0, 0.5)[:, None]
+    return _norm(phonograph(out, 0.8, seed) if period else out)
+
+
+# ---------------------------------------------------------------- period texture
+
+def phonograph(x, amount=1.0, seed=0):
+    """1940s newsreel / phonograph texture: the band narrowed (about 120 Hz - 6 kHz at amount 1), gentle tube-like
+    saturation, slow wow and fast flutter in the pitch, and surface hiss and crackle. amount 0..1 blends it in."""
+    st = x if x.ndim == 2 else x[:, None]
+    n = len(st)
+    r = _rng("phonograph", seed)
+    t = _t(n)
+    speed = 0.002 * np.sin(2 * np.pi * 0.55 * t + r.uniform(0, 6)) + 0.0006 * np.sin(2 * np.pi * 6.3 * t)
+    pos = np.clip(np.arange(n) + np.cumsum(speed), 0, n - 1)                       # the read head drifts
+    out = np.stack([np.interp(pos, np.arange(n), st[:, c]) for c in range(st.shape[1])], 1)
+    out = _lp(_hp(out, 60 + 60 * amount, 2), 12000 - 6000 * amount, 2)
+    peak = np.max(np.abs(out)) + 1e-12
+    out = np.tanh(out / peak * (1 + 1.5 * amount)) / np.tanh(1 + 1.5 * amount) * peak
+    surface = _bp(r.uniform(-1, 1, n), 1500, 7000) * 0.008
+    for _ in range(int(n / SR * 9)):
+        m = _n(0.002)
+        _place(surface, r.uniform(-1, 1, m) * np.exp(-_t(m) / 0.0004) * r.uniform(0.05, 0.3), r.uniform(0, n / SR))
+    out = out + (surface * peak * amount)[:, None]
+    mono = out.mean(1, keepdims=True)
+    out = mono + (out - mono) * (1 - 0.6 * amount)                   # old records were mono: narrow the image
+    out = st * (1 - amount) + out * amount
+    return out if x.ndim == 2 else out[:, 0]
+
+
+def old_radio(x, seed=0):
+    """A wartime radio speaker: 300 Hz - 3.2 kHz, driven a little, with a faint hum and static. Mono in -> mono."""
+    m = x.mean(1) if x.ndim == 2 else x
+    y = np.tanh(2.5 * _norm(_bp(m, 300, 3200, 3)))
+    hum = 0.01 * np.sin(2 * np.pi * 50 * _t(len(y))) + 0.004 * np.sin(2 * np.pi * 150 * _t(len(y)))
+    return _norm(y + hum + radio_static(len(y) / SR, seed) * 0.08)
 
 
 # ---------------------------------------------------------------- effects
@@ -896,7 +975,8 @@ def door_slam(seed=0):
     return _norm(_verb(_pan(x, 0), 0.3, 0.6, damp=3000, seed=seed)[:n].mean(1))
 
 
-MUSIC = dict(tension=tension, march=march, somber=somber, low_tone=low_tone, triumph=triumph, drum_hit=drum_hit)
+MUSIC = dict(tension=tension, march=march, somber=somber, low_tone=low_tone, triumph=triumph, drum_hit=drum_hit,
+             fanfare=fanfare)
 SFX = dict(gun_boom=gun_boom, artillery=artillery, artillery_barrage=artillery_barrage, tank=tank,
            plane_drone=plane_drone, dive_whine=dive_whine, explosion=explosion, rifle_crack=rifle_crack,
            sea_waves=sea_waves, blizzard=blizzard, radio_static=radio_static, voice_crackle=voice_crackle,
@@ -1049,8 +1129,8 @@ def demo(path=None):
     """~40 s: the four moods with effects laid in, as the episode would use them.
     0-9 tension (clock, radio voice, morse, typewriter and stamp) -> the drum-hit stinger (9.0) -> map whoosh ->
     the battleship gun (11.2) and a hard cut to silence -> march (12.4-22.4: sea, tanks, planes, guns, a dive and its
-    explosion) -> somber (22.4-30.2: piano; a blizzard, a distant train) -> the bunker door and silence -> triumph
-    (31.2-40: the crowd cheers V-E Day)."""
+    explosion) -> somber (22.4-30.2: piano; a blizzard, a distant train) -> the bunker door and silence -> the newsreel
+    fanfare (31.2) -> triumph (33.2-40: the crowd cheers V-E Day)."""
     path = path or os.path.join(STYLE_OUT, "sound_demo.wav")
     total = 40.0
     m = Mix(total)
@@ -1082,8 +1162,9 @@ def demo(path=None):
     m.sfx(door_slam(), 30.2, -8)
     m.cut(30.75, 31.2)
     # triumph
-    m.music(triumph(8.8), 31.2, -13)
-    m.amb(crowd_cheer(6.8, 2), 32.6, -19, fade_in=0.6, fade_out=1.5)
+    m.music(fanfare(), 31.2, -15)
+    m.music(triumph(6.8), 33.2, -13, fade_in=0.4)
+    m.amb(crowd_cheer(6.0, 2), 33.4, -19, fade_in=0.6, fade_out=1.5)
     meas = m.master(path)
     return path, meas
 
@@ -1091,7 +1172,7 @@ def demo(path=None):
 def reel(path=None):
     """Every effect and the stinger one after another (1 s apart), for review. Prints the start times."""
     path = path or os.path.join(STYLE_OUT, "sfx_reel.wav")
-    items = [("drum_hit", drum_hit()), ("gun_boom", gun_boom()), ("artillery", artillery()),
+    items = [("drum_hit", drum_hit()), ("fanfare", fanfare()), ("gun_boom", gun_boom()), ("artillery", artillery()),
              ("artillery_barrage", artillery_barrage(5)), ("tank", tank(5)), ("plane_drone", plane_drone(6)),
              ("plane_drone x4", plane_drone(7, 1, count=4)), ("dive_whine", dive_whine()),
              ("explosion", explosion()), ("explosion far", explosion(2, 1.5, 3)), ("rifle_crack", rifle_crack()),
