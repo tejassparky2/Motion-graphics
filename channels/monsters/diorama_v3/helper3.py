@@ -35,10 +35,11 @@ TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
 HAND_COCK = [("left_upper_arm", (-0.5, 0.2, -0.85)), ("left_lower_arm", (-0.15, 0.45, -0.88))]   # anticipation
-HAND_REACH = [("left_upper_arm", (0.05, 0.98, 0.1)), ("left_lower_arm", (0.2, 0.97, 0.15)),       # overshoot
-              ("left_hand", (0.1, 1.0, 0.05))]
-HAND_UP = [("left_upper_arm", (0.1, 0.97, 0.2)), ("left_lower_arm", (0.3, 0.9, 0.3)),             # held up above
-           ("left_hand", (0.2, 0.95, 0.2))]                     # his face, fingers spread: one clear silhouette
+HAND_REACH = [("left_upper_arm", (0.1, 1.0, -0.12)), ("left_lower_arm", (0.3, 1.0, -0.05)),      # overshoot
+              ("left_hand", (0.25, 1.0, 0.0))]
+HAND_UP = [("left_upper_arm", (0.15, 1.0, -0.05)), ("left_lower_arm", (0.35, 0.95, 0.0)),         # straight up from
+           ("left_hand", (0.3, 0.95, 0.1))]   # the shoulder: from the lens it hangs between his eyes and us, fingers
+                                              # spread, one clear silhouette
 HEAD_AWAKE = [("neck", (0, 0.15, 1)), ("head", (-0.03, 0.35, 1))]   # the roll comes out, chin in a touch: his face
                                                                     # (wide eyes) turns to the camera
 
@@ -93,14 +94,14 @@ def _pov_flowers(pov, f_in, seed=9):
              paintbg.paint3("pov_white", look.hexc("#c9c9e0"), look.hexc("#ffffff"), look.hexc("#ffffff"), noise=0.05)]
     sb, hb = world._Batch(), [world._Batch(), world._Batch()]
     base = pov.matrix_world.translation
-    for ang, d, h in ((-38, 3.2, 1.3), (-30, 4.5, 1.7), (-22, 3.8, 1.0), (-8, 5.5, 1.2), (6, 4.2, 0.9), (18, 3.6, 1.4),
-                      (28, 4.8, 1.8), (36, 3.0, 1.1), (-45, 5.2, 2.0), (44, 5.6, 2.1)):
+    for ang, d, h in ((-34, 2.6, 1.45), (-26, 3.6, 1.7), (-17, 3.0, 1.3), (-6, 4.2, 1.35), (7, 3.4, 1.25),
+                      (17, 2.8, 1.5), (27, 3.8, 1.75), (35, 2.6, 1.4), (-40, 4.4, 2.0), (40, 4.6, 2.05)):
         a = math.radians(ang + rnd.uniform(-3, 3))
         x, y = base.x + math.sin(a) * d, base.y + math.cos(a) * d
         top = h + rnd.uniform(-0.15, 0.15)
         sb.add(world._sphere(6, 3), (x, y, top / 2), (0.05, 0.05, top / 2))
         for _ in range(rnd.randint(1, 2)):
-            r = rnd.uniform(0.22, 0.34)
+            r = rnd.uniform(0.3, 0.45)
             hb[0 if rnd.random() < 0.65 else 1].add(world._sphere(8, 5), (x + rnd.uniform(-0.2, 0.2),
                                                                         y + rnd.uniform(-0.2, 0.2), top), (r, r, r * 0.8))
     objs = [sb.obj("pov_stems", stem, shadow=False)] + [b.obj(f"pov_heads{i}", heads[i], shadow=False)
@@ -237,7 +238,7 @@ def s09():
     pov.rotation_euler = (math.radians(90 + POV_ELEV), 0, 0)
     pov.data.clip_start, pov.data.clip_end = 0.1, 5000
     pov.data.dof.focus_distance = 80
-    pov.data.dof.aperture_fstop = diorama.fstop_for(80, POV_LENS, 10)
+    pov.data.dof.aperture_fstop = diorama.fstop_for(80, POV_LENS, 10) * 10     # the near flowers soft, not gone
     for f, ln in ((f_in, POV_LENS), (n, POV_LENS * 1.1)):
         pov.data.lens = ln
         pov.data.keyframe_insert("lens", frame=f)
