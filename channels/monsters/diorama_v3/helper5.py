@@ -150,7 +150,7 @@ def s19():
 
 # ---------------------------------------------------------------- S20
 
-WIND, SNAP, CUT = 22, 30, 54                                       # S20 beats (v3 timing: "finish" / "anyway")
+WIND, SNAP, CUT = 20, 32, 70                                       # S20 beats: "finish" f20, "anyway" f31-36 (timing.json)
 
 
 def s20():
