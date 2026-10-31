@@ -370,7 +370,7 @@ S_P = 1.32
 G_P = 975
 SHAKE_POSE = lambda t: dict(stick._shake(t), sh_f=-0.45, el_f=0.22, hand_f="crossed",   # noqa: E731
                             face={"name": "smiling"})
-POINT_POSE = dict(sh_n=1.55, el_n=0.05, sh_f=-0.3, el_f=0.4, turn=0.3, hand_n="fist", lean=0.08,
+POINT_POSE = dict(sh_n=0.75, el_n=-1.9, sh_f=-0.75, el_f=1.9, turn=0.6, lean=-0.04,   # hands on hips, no arm out
                   face={"name": "angry"})
 BACK_POSE = dict(sh_n=0.75, el_n=1.6, sh_f=0.6, el_f=1.7, lean=-0.1, nod=-0.1, turn=0.6, hand_n="splay",
                  hand_f="splay", face={"name": "shocked"})
@@ -416,7 +416,7 @@ def sh_pact(cr, t, a, b):
     STALIN.draw(cr, u, s_tr, move=[(tear, STALIN.x), (tear + 0.5, STALIN.x + 150)])
     HITLER.draw(cr, u, h_tr)
     tr = ease_out(seg(u, tear, tear + 0.55))
-    things.Pact(x=W / 2, y=330, scale=0.62, tear=tr, title="PACT", seed=2).draw(cr, t)
+    things.Pact(x=W / 2, y=250, scale=0.5, tear=tr, title="PACT", seed=2).draw(cr, t)
     cr.restore()
 
 
