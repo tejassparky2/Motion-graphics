@@ -6,7 +6,7 @@ sound is synced to them.
          (MAP["wake"]). f1-4 white; f4-12 the white blooms open onto him; his eyes open on "woke up" on 2s (closed,
          squint f14, wide open f18); f22-30 the camera tilts UP off him to the sky (SG5, on 1s); f30-66 the hairline
          crack (pistolshrimp.crack_path(), the tank's zigzag) held sharp and centred through "cracked sky", with a slow
-         push under 10%. ORDER = "sky_first" plays the brief's other order (the crack first, then down to him).
+         push under 10%; the haze eases off while the camera looks up, leaving a soft haze at the horizon.
     S13  "Something else was already drinking." (62 frames) The puff-shrimp drinking at the pond's north bank, claw
          dipped in the water, ripples on 1s, while Kai crawls up from the south and stops at the bank.
     S14  "A shrimp. On land. Impossible." (80 frames, step 3) A close diorama camera from above the pond: Kai on hands
@@ -26,7 +26,6 @@ from channels.monsters.mk import anim, diorama, hero
 
 MAP = diorama.MAP
 KAI = 5.8                          # hero.load scale in creature units (1 unit = 20 cm): Kai ~8.7 units
-ORDER = "v2"                       # S09: "v2" (Kai first, the crack held through "cracked sky") or "sky_first"
 
 
 def _lying_kai(head):
@@ -55,25 +54,28 @@ def s09():
     diorama.island(seed=31)
     n = 66
     rig, face = _lying_kai(MAP["wake"])
-    dist, lens = 55.0, 100.0
-    cam = diorama.camera("cam_s09", face + Vector((0, -1.2, 0)), dist=dist, tilt=62, yaw=0, lens=lens, blur=12)
+    dist, lens = 28.0, 100.0                                       # close top-down: his face reads at phone size
+    cam = diorama.camera("cam_s09", face + Vector((0, -1.6, 0)), dist=dist, tilt=70, yaw=0, lens=lens, blur=12)
     cam.data.clip_end = 5000
     down = cam.rotation_euler.to_quaternion()
     up = Quaternion(Euler((math.radians(90 + 36), 0, 0)))          # 36 deg above the horizon, looking north
-    h3d._sky_crack(cam.location, up, dist=dist, height=0.4 * dist * 36 / lens)   # at the focus distance: sharp
-    if ORDER == "v2":
-        _key_rot(cam, ((1, down), (22, down), (30, up)))
-        push = (30, n)
-    else:
-        _key_rot(cam, ((1, up), (22, up), (30, down)))
-        push = None
-    if push:
-        for f, ln in ((push[0], lens), (push[1], lens * 1.08)):     # a slow push on the crack, under 10%
-            cam.data.lens = ln
-            cam.data.keyframe_insert("lens", frame=f)
-        for fc in anim.all_fcurves(cam.data.animation_data.action):
-            for kp in fc.keyframe_points:
-                kp.interpolation = "LINEAR"
+    crack = h3d._sky_crack(cam.location, up, dist=dist, height=0.4 * dist * 36 / lens)   # at the focus: sharp
+    for o in crack.children:                                       # below the bloom threshold: a hairline, no smear
+        for node in o.data.materials[0].node_tree.nodes:
+            if node.type == "EMISSION":
+                node.inputs["Strength"].default_value = min(node.inputs["Strength"].default_value, 0.85)
+    _key_rot(cam, ((1, down), (22, down), (30, up)))
+    for f, ln in ((30, lens), (n, lens * 1.08)):                   # a slow push on the crack, under 10%
+        cam.data.lens = ln
+        cam.data.keyframe_insert("lens", frame=f)
+    for fc in anim.all_fcurves(cam.data.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "LINEAR"
+    ramp = next(nd for nd in bpy.context.scene.node_tree.nodes if nd.type == "VALTORGB")
+    el = ramp.color_ramp.elements[1]
+    for f, hz in ((22, 0.55), (30, 0.18)):                         # looking up: only a soft haze at the horizon
+        el.color = (hz, hz, hz, 1)
+        el.keyframe_insert("color", frame=f)
     bloom = h3d._bloom(cam)
     z = 1.5                                                        # past the diorama camera's 1.0 near clip
     sx = z * (18 * 0.5625 / lens) / 0.496                          # keep the ramp's 1 = the frame's side edge
@@ -82,13 +84,9 @@ def s09():
         for f, hide in ((1, True), (5, False)):
             o.hide_render = hide
             o.keyframe_insert("hide_render", frame=f)
-    if ORDER == "v2":
-        for f, names in ((1, ("blink",)), (12, ("blink",)), (14, ("squint",)), (18, ("surprised", "brows_up"))):
-            h3d._faces(rig, names, f)                              # his eyes open on "woke up", on 2s
-    else:
-        for f, names in ((1, ("blink",)), (40, ("blink",)), (44, ("squint",)), (48, ("surprised", "brows_up"))):
-            h3d._faces(rig, names, f)
-    return dict(frames=n, step=2, ones=(22, n) if ORDER == "v2" else (1, 30), subject=[rig["arm"]])
+    for f, names in ((1, ("blink",)), (12, ("blink",)), (14, ("squint",)), (18, ("surprised", "brows_up"))):
+        h3d._faces(rig, names, f)                                  # his eyes open on "woke up", on 2s
+    return dict(frames=n, step=2, ones=(22, n), subject=[rig["arm"]])
 
 
 SHRIMP = (MAP["shrimp"][0], MAP["shrimp"][1], 0.0)
@@ -107,7 +105,7 @@ def s13():
         h9.SHRIMP_AT = keep
     h9._ripples((SHRIMP[0] - 1.5, SHRIMP[1] - 1.7, 0.03), -20, n)
     h9._crawling_kai((KAI_STOP[0], KAI_STOP[1] - 6.0, 0.0), math.pi, 1, 40, 6.0, look_up=0.6)
-    diorama.camera("cam_s13", (0.3, -6.0, 0.0), dist=95, tilt=56, yaw=0, lens=100, blur=12)
+    diorama.camera("cam_s13", (0.3, -9.0, 0.0), dist=95, tilt=56, yaw=0, lens=100, blur=12)
     return dict(frames=n, step=1, subject=[])
 
 
@@ -126,8 +124,8 @@ def s14():
     hero.line_width(rig, 0.0015)
     for f in (1, 5001):                                            # the face tipped up toward the lens
         bpy.context.scene.frame_set(f)
-        h9._aim(arm, "neck", (0, -0.25, 0.97))
-        h9._aim(arm, "head 1", (0, 0.42, 0.91))
+        h9._aim(arm, "neck", (0, 0.15, 0.99))
+        h9._aim(arm, "head 1", (0, 0.88, 0.48))                    # looking up past the brim, at the lens
         for b in ("neck", "head 1"):
             arm.pose.bones[b].keyframe_insert("rotation_quaternion", frame=f)
     h9._face_mix(rig, {"face_surprise": 0.4}, 1)
@@ -145,7 +143,7 @@ def s14():
     bpy.context.scene.frame_set(1)
     bpy.context.view_layer.update()
     eye = arm.matrix_world @ head.head + Vector((0, 0, 0.7))
-    diorama.camera("cam_s14", eye, dist=50, tilt=50, yaw=180, lens=110, blur=12)
+    diorama.camera("cam_s14", eye, dist=38, tilt=42, yaw=180, lens=110, blur=12)
     return dict(frames=n, step=3, subject=[arm])
 
 
