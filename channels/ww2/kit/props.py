@@ -1,6 +1,10 @@
 """WW2 channel kit: vehicles, ships, planes, effects and small props (pure pycairo, all animated).
 
-Style rules: channels/ww2/STYLE.md. Ink outlines 6 px at scale 1, flat side-colour fills, generic marks only:
+Style rules: channels/ww2/STYLE.md ("animated 1940s posters"). Every shape is a poster print: a flat side-colour
+fill, slightly misregistered on big shapes (MISREG), a halftone underside (TONE, screen-sized dots), an ink key line
+6 px at scale 1. No gradients: glows are halftone halos, smoke is flat two-tone puffs with a key line round the cloud,
+explosions are flat star bursts, wakes are flat cream streaks. silhouette="ink" draws any prop as one flat
+silhouette (crowded or distant shots). Generic marks only:
 a plain roundel (Britain, France), a plain white star (US), a plain red star (Soviet). German, Italian and
 Japanese machines stay plain charcoal: no crosses, no symbols of any kind.
 
@@ -19,6 +23,7 @@ Common arguments (constructor or draw()):
     side      "germany" "italy" "japan" "britain" "france" "usa" "allies" "soviet" "china" "neutral" (fill + marks)
     mark      override the insignia: "roundel", "roundel_fr", "star_us", "star_su" or None
     alpha     fade the whole prop (0..1)
+    silhouette  a colour: the whole prop as one flat poster silhouette (ships keep their cream wake and bow wave)
     seed      varies bobbing, flicker and smoke between copies
 
 Motion is a function of t, so frames render in any order. Moving props take `speed` (px/s in the prop's own units):
@@ -45,8 +50,13 @@ Marks:  roundel(cr, x, y, r, french=False), star(cr, x, y, r, fill, disc=None), 
 import math
 import random
 
-from channels.ww2.kit.core import (H, SIDE, TITLE, HAND, W, back_out, cairo, clamp01, col, ease_in,
-                                   ease_out, lerp, seg, smooth, text)
+from channels.ww2.kit.core import (H, LABEL, SIDE, TITLE, W, _dot_tile, back_out, cairo, clamp01, col,
+                                   ease_in, ease_out, lerp, seg, smooth, text)
+
+HAND = LABEL        # small lettering on props (Oswald since the poster look)
+MISREG = (2.5, 2.0)  # device-px offset of big fills from their key line (print misregistration)
+TONE = 0.62          # halftone shading covers each big shape below this fraction of its height
+DOT_CELL = 9         # halftone screen in device px
 
 TAU = math.tau
 INK = 6.0           # outline width at scale 1 (STYLE: 5-7 px)
@@ -115,9 +125,46 @@ def fill(cr, color, a=1.0, keep=False):
     cr.fill_preserve() if keep else cr.fill()
 
 
-def fill_ink(cr, color, lw, a=1.0, line="ink"):
-    """Fill the current path flat and outline it in ink."""
-    fill(cr, color, a, keep=True)
+def dots(cr, color, density=3, alpha=1.0, below=None, cell=DOT_CELL):
+    """Halftone the current path (kept) in `color`; below = only under that user-space y. Dots are screen-sized."""
+    path = cr.copy_path()
+    cr.save()
+    cr.clip()
+    if below is not None:
+        cr.rectangle(-1e5, below, 2e5, 2e5)
+        cr.clip()
+    cr.identity_matrix()
+    cr.set_source_rgba(*rgba(color, alpha))
+    cr.mask(_dot_tile(max(1, min(5, int(density))), cell))
+    cr.restore()
+    cr.new_path()
+    cr.append_path(path)
+
+
+def fill_ink(cr, color, lw, a=1.0, line="ink", tone="auto"):
+    """Poster fill of the current path: a flat fill (big shapes slightly misregistered), a halftone underside on
+    big shapes (tone="auto"; False for none), then the ink key line."""
+    path = cr.copy_path()
+    x0, y0, x1, y1 = cr.fill_extents()
+    dw, dh = cr.user_to_device_distance(x1 - x0, y1 - y0)
+    big = max(abs(dw), abs(dh)) > 70
+    if big and MISREG:
+        ox, oy = cr.device_to_user_distance(*MISREG)
+        cr.save()
+        cr.new_path()
+        cr.translate(ox, oy)
+        cr.append_path(path)
+        fill(cr, color, a)
+        cr.restore()
+    else:
+        fill(cr, color, a)
+    cr.new_path()
+    cr.append_path(path)
+    if tone and abs(dh) > 26:
+        r, g, b_, _ = rgba(color)
+        light = 0.3 * r + 0.59 * g + 0.11 * b_ > 0.78       # paper-light shapes stay clean
+        if not light:
+            dots(cr, shade(color, -0.42), 3, a, below=y0 + TONE * (y1 - y0))
     ink(cr, lw, line, a)
 
 
@@ -128,14 +175,15 @@ def line(cr, x0, y0, x1, y1, lw, color="ink", a=1.0):
 
 
 def glow(cr, x, y, r, color, a=0.6):
-    """A soft radial glow (STYLE allows glows and soft shadows only)."""
-    g = cairo.RadialGradient(x, y, 0, x, y, r)
-    c = rgba(color)
-    g.add_color_stop_rgba(0, c[0], c[1], c[2], a)
-    g.add_color_stop_rgba(1, c[0], c[1], c[2], 0)
-    cr.set_source(g)
-    cr.arc(x, y, r, 0, TAU)
-    cr.fill()
+    """A printed glow (no gradients in the poster look): a halftone halo around a flat inner disc."""
+    if r <= 1:
+        return
+    cr.new_path()
+    cr.arc(x, y, r * 0.72, 0, TAU)
+    dots(cr, color, 2, a)
+    cr.new_path()
+    cr.arc(x, y, r * 0.38, 0, TAU)
+    fill(cr, color, a * 0.55)
 
 
 def rng(*key):
@@ -170,7 +218,7 @@ def recoil(age):
 # ================================================================ insignia (generic only)
 def roundel(cr, x, y, r, french=False, lw=None):
     """A plain three-ring roundel. British: blue outside, red centre. French: blue centre, red outside."""
-    rings = (("#b8382e", "#fbf8ef", "#2f5596") if french else ("#2f5596", "#fbf8ef", "#b8382e"))
+    rings = (("alert", "cream", "allies") if french else ("allies", "cream", "alert"))
     for c, f in zip(rings, (1.0, 0.66, 0.33)):
         cr.arc(x, y, r * f, 0, TAU)
         fill(cr, c)
@@ -178,19 +226,19 @@ def roundel(cr, x, y, r, french=False, lw=None):
     ink(cr, lw or max(1.0, r * 0.12))
 
 
-def star(cr, x, y, r, color="#fbf8ef", disc=None, lw=None, rot=0.0):
+def star(cr, x, y, r, color="cream", disc=None, lw=None, rot=0.0):
     """A plain five-pointed star; disc puts it on a coloured circle (the US mark is a white star on blue)."""
     lw = lw or max(1.0, r * 0.1)
     if disc:
         cr.arc(x, y, r * 1.12, 0, TAU)
-        fill_ink(cr, disc, lw)
+        fill_ink(cr, disc, lw, tone=False)
     pts = []
     for i in range(10):
         a = -math.pi / 2 + rot + i * math.pi / 5
         rr = r if i % 2 == 0 else r * 0.42
         pts.append((x + rr * math.cos(a), y + rr * math.sin(a)))
     poly(cr, pts)
-    fill_ink(cr, color, lw * 0.8)
+    fill_ink(cr, color, lw * 0.8, tone=False)
 
 
 MARKS = {"britain": "roundel", "allies": "roundel", "france": "roundel_fr", "usa": "star_us", "soviet": "star_su",
@@ -210,11 +258,11 @@ def draw_mark(cr, kind, x, y, r, lw=None):
     elif kind == "roundel_fr":
         roundel(cr, x, y, r, french=True, lw=lw)
     elif kind == "star_us":
-        star(cr, x, y, r * 0.92, "#fbf8ef", disc="#2f5596", lw=lw)
+        star(cr, x, y, r * 0.92, "cream", disc="allies", lw=lw)
     elif kind == "star_su":
-        star(cr, x, y, r, "#c8372b", lw=lw)
+        star(cr, x, y, r, "soviet", lw=lw)
     elif kind == "star_cn":
-        star(cr, x, y, r * 0.8, "#fbf8ef", disc="#2f5596", lw=lw)
+        star(cr, x, y, r * 0.8, "cream", disc="allies", lw=lw)
 
 
 # ================================================================ effects (current coordinates)
@@ -248,13 +296,15 @@ def muzzle_flash(cr, x, y, age, size=60.0, angle=0.0, smoke_puff=True, seed=0):
     cr.restore()
 
 
-def smoke(cr, x, y, t, height=420.0, width=90.0, color="#6f6a63", alpha=0.75, wind=0.35, rate=5.0, life=4.0,
-          seed=0, dark=False, soft=True):
-    """A drifting column of smoke puffs rising from (x, y): loops forever, deterministic in t.
-    wind = sideways drift per unit of rise (+ is right). dark=True for black oil smoke. soft=False: flat discs."""
+def smoke(cr, x, y, t, height=420.0, width=90.0, color="#a59c84", alpha=0.95, wind=0.35, rate=5.0, life=4.0,
+          seed=0, dark=False, soft=False, line=True):
+    """A drifting column of flat poster smoke puffs rising from (x, y): one flat tone with a key line round the
+    whole cloud and halftone undersides; loops forever, deterministic in t. Puffs grow, then shrink away (no fades).
+    wind = sideways drift per unit of rise (+ is right). dark=True for black oil smoke. (soft is ignored.)"""
     if dark:
-        color = "#3a3632"
+        color = "#3b3633"
     n = max(1, int(rate * life))
+    puffs = []
     for k in range(n):
         r = rng(seed, k)
         age = (t + k / rate + r.random() * 0.2) % life
@@ -262,20 +312,32 @@ def smoke(cr, x, y, t, height=420.0, width=90.0, color="#6f6a63", alpha=0.75, wi
         rise = height * (u ** 0.8)
         px = x + wind * rise + noise(t * 0.6 + k, seed + k) * width * 0.15 * u
         py = y - rise
-        rad = width * (0.35 + 1.1 * u) * (0.8 + 0.4 * r.random())
-        a = alpha * min(1.0, u * 6) * (1 - u) ** 1.2
-        c = shade(color, -0.08 + 0.16 * r.random())
-        if soft:
-            g = cairo.RadialGradient(px, py, 0, px, py, rad)
-            g.add_color_stop_rgba(0, c[0], c[1], c[2], a)
-            g.add_color_stop_rgba(0.55, c[0], c[1], c[2], a * 0.85)
-            g.add_color_stop_rgba(1, c[0], c[1], c[2], 0)
-            cr.set_source(g)
+        env = min(1.0, u * 8) * (1 - smooth(seg(u, 0.72, 1.0)))
+        rad = width * (0.5 + 0.9 * u) * (0.75 + 0.5 * r.random()) * env
+        if rad > 0.5:
+            puffs.append((py, px, rad))
+    if not puffs:
+        return
+    puffs.sort()
+    klw = abs(cr.device_to_user_distance(3.0, 0)[0]) or 3.0
+    cr.push_group()
+    if line:
+        for py, px, rad in puffs:
+            cr.new_sub_path()
             cr.arc(px, py, rad, 0, TAU)
-            cr.fill()
-        else:
-            cr.arc(px, py, rad, 0, TAU)
-            fill(cr, c, a)
+        ink(cr, klw * 2, "ink")
+    for py, px, rad in puffs:                               # the shadow tone over the whole cloud, dotted
+        cr.new_sub_path()
+        cr.arc(px, py, rad, 0, TAU)
+    fill(cr, shade(color, -0.22), keep=True)
+    dots(cr, shade(color, -0.5), 2, 1.0)
+    cr.new_path()
+    for py, px, rad in puffs:                               # the lit tone, nudged up-wind: hard shadow crescents
+        cr.new_sub_path()
+        cr.arc(px - rad * 0.1, py - rad * 0.14, rad * 0.9, 0, TAU)
+    fill(cr, color)
+    cr.pop_group_to_source()
+    cr.paint_with_alpha(alpha)
 
 
 def fire(cr, x, y, t, size=60.0, seed=0, alpha=1.0):
@@ -302,18 +364,16 @@ def fire(cr, x, y, t, size=60.0, seed=0, alpha=1.0):
         fill(cr, "gold", alpha * (1 - u))
 
 
-def beam(cr, x, y, angle, length=1600.0, width=110.0, color="#fff4c8", alpha=0.45):
-    """A searchlight beam from (x, y) along `angle` (radians, 0 = right, -pi/2 = straight up), fading with distance."""
+def beam(cr, x, y, angle, length=1600.0, width=110.0, color="cream", alpha=0.45):
+    """A searchlight beam from (x, y) along `angle` (radians, 0 = right, -pi/2 = straight up): two flat
+    translucent wedges (a wide one and a bright core), poster style."""
     cr.save()
     cr.translate(x, y)
     cr.rotate(angle)
-    g = cairo.LinearGradient(0, 0, length, 0)
-    c = rgba(color)
-    g.add_color_stop_rgba(0, c[0], c[1], c[2], alpha)
-    g.add_color_stop_rgba(1, c[0], c[1], c[2], 0)
     poly(cr, [(0, -width * 0.12), (length, -width / 2), (length, width / 2), (0, width * 0.12)])
-    cr.set_source(g)
-    cr.fill()
+    fill(cr, color, alpha * 0.55)
+    poly(cr, [(0, -width * 0.06), (length, -width * 0.2), (length, width * 0.2), (0, width * 0.06)])
+    fill(cr, color, alpha * 0.6)
     cr.restore()
 
 
@@ -350,16 +410,26 @@ def explosion(cr, x, y, age, size=1.0, seed=0, smoke_life=2.6):
     if age is None or age < 0 or age > smoke_life + 0.5:
         return
     s = 120.0 * size
-    for i in range(7):                                   # smoke: rises, grows, fades
-        r = rng(seed, "s", i)
-        u = clamp01((age - 0.05) / smoke_life)
-        if u <= 0 or u >= 1:
-            continue
-        a = TAU * i / 7 + r.random()
-        d = s * (0.3 + 0.5 * ease_out(u)) * (0.6 + 0.6 * r.random())
-        cr.arc(x + math.cos(a) * d, y - s * 0.3 - s * 1.1 * ease_out(u) + math.sin(a) * d * 0.5,
-               s * (0.35 + 0.55 * ease_out(u)) * (0.7 + 0.5 * r.random()), 0, TAU)
-        fill(cr, shade("#7a746b", -0.15 + 0.3 * r.random()), 0.8 * (1 - u) ** 1.3)
+    u = clamp01((age - 0.05) / smoke_life)
+    if 0 < u < 1:                                        # flat smoke cloud: rises, grows, then shrinks away
+        puffs = []
+        for i in range(7):
+            r = rng(seed, "s", i)
+            a = TAU * i / 7 + r.random()
+            d = s * (0.3 + 0.5 * ease_out(u)) * (0.6 + 0.6 * r.random())
+            rad = s * (0.35 + 0.55 * ease_out(u)) * (0.7 + 0.5 * r.random()) * (1 - smooth(seg(u, 0.6, 1.0)))
+            puffs.append((x + math.cos(a) * d, y - s * 0.3 - s * 1.1 * ease_out(u) + math.sin(a) * d * 0.5, rad))
+        klw = abs(cr.device_to_user_distance(3.0, 0)[0]) or 3.0
+        for pass_ in ("line", "fill"):
+            for px, py, rad in puffs:
+                cr.new_sub_path()
+                cr.arc(px, py, max(rad, 0.1), 0, TAU)
+            ink(cr, klw * 2, "ink") if pass_ == "line" else fill(cr, "#8a8170")
+        for px, py, rad in puffs:
+            cr.new_path()
+            cr.arc(px, py, max(rad, 0.1), 0, TAU)
+            dots(cr, "#4f4740", 2, 1.0, below=py)
+        cr.new_path()
     if age < 0.55:                                       # shock ring
         u = age / 0.55
         cr.save()
@@ -372,6 +442,7 @@ def explosion(cr, x, y, age, size=1.0, seed=0, smoke_life=2.6):
         u = age / 0.4
         k = back_out(clamp01(age / 0.08)) * (1 - ease_in(u) * 0.6)
         glow(cr, x, y - s * 0.25, s * 2.4 * k + 1, "fire", 0.55 * (1 - u))
+        klw = abs(cr.device_to_user_distance(3.0, 0)[0]) or 3.0
         for c, f in (("alert", 1.0), ("fire", 0.74), ("gold", 0.48)):
             pts = []
             for i in range(14):
@@ -380,7 +451,10 @@ def explosion(cr, x, y, age, size=1.0, seed=0, smoke_life=2.6):
                 rr = s * f * k * ((1.0 if i % 2 == 0 else 0.62) + 0.2 * r.random())
                 pts.append((x + rr * math.cos(a), y - s * 0.25 + rr * math.sin(a) * 0.85))
             poly(cr, pts)
-            fill(cr, c, 1 - ease_in(u) * 0.5)
+            if c == "alert":
+                fill_ink(cr, c, klw * 1.6, tone=False)
+            else:
+                fill(cr, c)
     if age < 0.09:                                       # white flash
         glow(cr, x, y - s * 0.2, s * 3.2, "white", 0.9 * (1 - age / 0.09))
 
@@ -399,8 +473,20 @@ def snowfall(cr, t, density=180, wind=40.0, seed=3, w=W, h=H, size=4.0, alpha=0.
 
 
 # ================================================================ base class
+def _flatten(cr, o):
+    """Close the group pushed by draw(): as a one-tone silhouette (o["silhouette"] = colour) or faded by alpha."""
+    pat = cr.pop_group()
+    if o.get("silhouette"):
+        cr.set_source_rgba(*rgba(o["silhouette"], o["alpha"]))
+        cr.mask(pat)
+    else:
+        cr.set_source(pat)
+        cr.paint_with_alpha(o["alpha"])
+
+
 class Prop:
-    """Base: stores placement + options; draw() applies x, y, scale, facing and alpha, then calls _draw()."""
+    """Base: stores placement + options; draw() applies x, y, scale, facing and alpha, then calls _draw().
+    silhouette="ink" (any colour) draws the whole prop as one flat poster silhouette."""
     defaults = {}
 
     def __init__(self, x=0.0, y=0.0, scale=1.0, facing=1, side="allies", alpha=1.0, seed=0, **kw):
@@ -424,12 +510,12 @@ class Prop:
         cr.translate(o["x"], o["y"])
         cr.scale(o["scale"] * (1 if o["facing"] >= 0 else -1), o["scale"])
         self.lw = max(INK, MIN_PX / max(o["scale"], 1e-3))
-        if o["alpha"] < 1:
+        group = o["alpha"] < 1 or o.get("silhouette")
+        if group:
             cr.push_group()
         self._draw(cr, t, o)
-        if o["alpha"] < 1:
-            cr.pop_group_to_source()
-            cr.paint_with_alpha(o["alpha"])
+        if group:
+            _flatten(cr, o)
         cr.restore()
 
     def _draw(self, cr, t, o):
@@ -1022,18 +1108,22 @@ class Ship(Prop):
         sc = o["scale"]
         cr.scale(sc * (1 if o["facing"] >= 0 else -1), sc)
         self.lw = max(INK, MIN_PX / max(sc, 1e-3))
-        if o["alpha"] < 1:
-            cr.push_group()
         L = o["length"]
         per = 2.2 + L / 900
         dy = math.sin(t * TAU / per + o["seed"]) * (3 + L / 200) * o["bob"]
         roll = math.sin(t * TAU / (per * 1.3) + o["seed"] * 1.7) * 0.012 * o["bob"] * 600 / max(L, 150)
+        if o["alpha"] < 1:
+            cr.push_group()
         self._wake(cr, t, o, L)
+        if o.get("silhouette"):
+            cr.push_group()
         cr.save()
         cr.translate(0, dy)
         cr.rotate(roll + o["list_"])
         self._draw(cr, t, o)
         cr.restore()
+        if o.get("silhouette"):
+            _flatten(cr, dict(o, alpha=1.0))
         if o["water"]:
             self._waterline(cr, t, o, L)
         self._bow(cr, t, o, L)
@@ -1060,15 +1150,15 @@ class Ship(Prop):
             return
         k = min(1.0, sp / 200)
         stern = -L / 2
-        for j in range(7):
-            u = ((t * sp / 160) + j / 7) % 1.0
-            x = stern - 20 - u * (L * 0.9 + 200) * k
-            wdt = 30 + 140 * u * k
-            a = 0.7 * (1 - u)
-            ellipse(cr, x, 12, wdt, 6 + 10 * u)
-            ink(cr, self.lw * 0.6, "white", a)
-        ellipse(cr, stern - 30, 10, 50 * k, 9)
-        fill(cr, "white", 0.7)
+        tail = (L * 0.9 + 220) * k
+        poly(cr, [(stern + 10, 3), (stern - tail, 9), (stern - tail * 0.7, 13), (stern + 10, 16)])
+        fill(cr, "cream", 0.9)
+        for j in range(5):                                   # flat foam dashes sliding back along the wake
+            u = ((t * sp / 160) + j / 5) % 1.0
+            x = stern - 30 - u * tail
+            w = 50 * k * (1 - u * 0.6)
+            poly(cr, [(x - w, 18 + 6 * u), (x + w * 0.6, 17 + 6 * u), (x + w, 20 + 6 * u), (x - w * 0.6, 21 + 6 * u)])
+            fill(cr, "cream", 0.85)
 
     def _bow(self, cr, t, o, L):
         sp = o["speed"]
@@ -1078,7 +1168,7 @@ class Ship(Prop):
         bow = L / 2
         h = (16 + 10 * math.sin(t * 9 + o["seed"])) * k
         poly(cr, [(bow - 50, 8), (bow + 6, 6 - h), (bow + 34 * k, 10), (bow - 10, 14)])
-        fill(cr, "white", 0.85)
+        fill_ink(cr, "cream", self.lw * 0.5, tone=False)
 
     def _crowd(self, cr, n, x0, x1, y, color, lw, t, seed):
         """A row of helmeted heads on deck (rescued soldiers)."""
@@ -1718,10 +1808,29 @@ class Snow:
 __all__ = [n for n in dir() if not n.startswith("_") and n not in ("math", "random")]
 
 
+def _extend():
+    """Re-export the SHOTLIST extras (things.py, fx.py, sets.py) so `from channels.ww2.kit.props import *` has all."""
+    import importlib
+    for mod in ("things", "fx", "sets"):
+        try:
+            m = importlib.import_module("channels.ww2.kit." + mod)
+        except ModuleNotFoundError as e:
+            if e.name != "channels.ww2.kit." + mod:
+                raise
+            continue
+        for n in getattr(m, "__all__", ()):
+            if n not in globals():
+                globals()[n] = getattr(m, n)
+                __all__.append(n)
+
+
+_extend()
+
+
 # ================================================================ contact sheet
 def _sheet(t=1.3, out=None):
     import os
-    from channels.ww2.kit.core import ROOT, paper, render_clip
+    from channels.ww2.kit.core import ROOT, paper, print_finish, render_clip
 
     def draw(cr, tt):
         paper(cr)
@@ -1768,6 +1877,7 @@ def _sheet(t=1.3, out=None):
         roundel(cr, 1860, 980, 24)
         star(cr, 1860, 1040, 22, disc="#2f5596")
         signal_flash(cr, 1600, 600, tt, pattern="-")
+        print_finish(cr, tt)
 
     out = out or os.path.join(ROOT, "out", "ww2", "style", "props_sheet.png")
     return render_clip(draw, 1, out, still=t)
