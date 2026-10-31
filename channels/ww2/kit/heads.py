@@ -560,6 +560,11 @@ def _moustache(cr, c, w, R, dw):
     front = hw * (0.3 + 0.45 * w[1] + 0.7 * w[2])
     if kind == "toothbrush":
         back, front = hw * (0.6 + 0.4 * (1 - w[0])), hw * (0.35 + 0.65 * (1 - w[0]))
+    # profile: never thinner than ~0.12 R, sitting under the nose tip (the clip trims only what passes the lip line)
+    cx -= 0.07 * w[0]
+    back = max(back, 0.075 * w[0] + back * (1 - w[0]))
+    front = max(front, 0.09 * w[0] + front * (1 - w[0]))
+    h = max(h, 0.07 * w[0] + h * (1 - w[0]))
     pts = [(cx - back, top + 0.01), (cx - gap, top), (cx + gap, top), (cx + front, top + 0.01),
            (cx + front + 0.02, top + h + droop), (cx + front * 0.4, top + h), (cx - back * 0.4, top + h),
            (cx - back - 0.02, top + h + droop)]
