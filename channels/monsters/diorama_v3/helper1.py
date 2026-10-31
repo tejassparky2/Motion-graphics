@@ -5,7 +5,12 @@
           and runs under his sneakers (ripples ring out from each shoe as it arrives); he glances down, a small lift
           first, then his head drops to his feet, and his face drops with it (fear). The camera rises on 1s from his
           sneakers to his face.
-    S24bot  "Option B: run while I can."  See s24bot().
+    S24bot  (B) "Option B: run while I can." (the bottom panel all through the 3-sentence S24 line): Kai stands west
+          of the pond, frozen, eyes up at the butcher bird on the thorn tree; a crouch (anticipation), a snap turn,
+          and he runs west, arms pumping, looking back over his shoulder in fear. The bird dives (its giant shadow
+          sweeps over him on the way) and mantles over the shrimp, which keeps drinking until the last moment. The
+          action stays in a horizontal band in the plate's lower half (in-place split); the camera pans with him on
+          1s. The assembler adds the big B.
 
 Frame counts come from ep01v3/timing.json (render_frames = frames + 12).
     blender -b -y -P channels/monsters/render_shot.py -- diorama_v3 S08a OUT [--frames A-B] [--still N --scale 0.5]
@@ -17,11 +22,14 @@ import bpy
 from mathutils import Vector
 
 from channels.monsters.diorama import helper1 as d1
+from channels.monsters.diorama import xprl as xv2
 from channels.monsters.ep01v2 import helper1 as h3d
-from channels.monsters.mk import acting, anim, diorama, hero, lab, look
+from channels.monsters.ep01v2 import helper5 as h5
+from channels.monsters.ep01v2 import xprl as x3
+from channels.monsters.mk import acting, anim, diorama, hero, lab, look, tuftwing
 
 BLUR = 10.0
-GUESS = {"S08a": 54, "S24bot": 156}          # until ep01v3/timing.json lands
+GUESS = {"S08a": 54, "S24": 162}          # until ep01v3/timing.json lands
 
 
 def _frames(shot):
@@ -190,4 +198,80 @@ def s08a():
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]] + list(rig.get("cap", [])))
 
 
-SHOTS = {"S08a": s08a}
+KAI_B = (-5.6, -2.2)                 # where he stands in B: just west of the pond, facing the shrimp and the thorn tree
+RUN_TO = 15.5                        # how far west he gets (units)
+
+
+def s24bot():
+    from channels.monsters.diorama_v3 import xprl as xv3            # (lazy: shots.py imports both modules)
+    n = _frames("S24")
+    diorama.setup()
+    isl, _ = xv2._set(n, kai_down=False)
+    sh = xv3._shrimp(n)                                             # drinking on the east shore, back to the tree
+    shrimp = Vector(xv3.SHRIMP)
+    perch = Vector(isl["thorn"]["perch"])
+    # the bird: dark from frame 1 (as in A), then the dive onto the shrimp, its shadow sweeping over Kai on the way
+    f_dive, f_hit = 58, 84
+    bird = x3._bird_drop(isl["thorn"], f_dive, f_hit, n, kai_at=(KAI_B[0] - 5.0, KAI_B[1]))
+    x3._mantle(bird, f_hit - 2, f_hit + 4)
+    h5._rage_light(bird, 1, perch.z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
+    for e in sh["eyes"]:                                            # it only notices as the claws close
+        anim.key(e, "scale", f_hit - 1, (1, 1, 1), "CONSTANT")
+        anim.key(e, "scale", f_hit + 1, (0.78, 1, 0.78), "CONSTANT")
+    for h in sh["hi"]:
+        anim.key(h, "scale", f_hit - 1, (1, 1, 1), "CONSTANT")
+        anim.key(h, "scale", f_hit + 1, (1.35, 1.35, 1.35), "CONSTANT")
+    xv2._twos(tuftwing._animated(bird) + sh["eyes"] + sh["hi"])
+    # Kai: frozen facing east (the bird), a crouch, the snap turn west, then the run
+    k = x3._hero((KAI_B[0], KAI_B[1], 0), 90.0)
+    hero.line_width(k, 0.0026)
+    arm = k["arm"]
+    P = x3.Pose(k)
+    f_crouch, f_turn, f_run = 26, 34, 38
+
+    def frozen(P, t):
+        P.rot("spine", (-6, 0, 0))                                  # leaning back from it
+        P.rot("neck", (-12, 0, 0))
+        P.rot("head 1", (-26, 0, 0))                                # eyes up at the bird on the tree
+        x3._arms_down(P, 14)
+        P.aim("upper_arm.R", (-0.35, -0.55, -0.6))                  # hands up by his chest
+        P.aim("forearm.R", (0.1, -0.45, 0.9))
+        P.aim("upper_arm.L", (0.35, -0.55, -0.6))
+        P.aim("forearm.L", (-0.1, -0.45, 0.9))
+
+    x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, 0.001, 0))), 1, f_turn, 0.2, "R", crouch=(0.0, 0.1), upper=frozen,
+             every=2)
+    steps = RUN_TO / x3.SCALE / 0.3
+
+    def run_upper(P, t):
+        ph = math.sin(t * steps * math.pi)
+        P.rot("spine", (24, 0, 0))                                  # leaning into the run
+        P.rot("chest", (6, 0, 8))
+        P.rot("neck", (0, 0, 30))
+        P.rot("head 1", (-18, 0, 50))                               # looking back over his left shoulder (at us)
+        P.aim("upper_arm.R", (-0.2, 0.55 * ph, -0.8))               # arms pumping, opposite to the legs
+        P.aim("forearm.R", (-0.05, -0.85, 0.45 + 0.2 * ph))
+        P.aim("upper_arm.L", (0.2, -0.55 * ph, -0.8))
+        P.aim("forearm.L", (0.05, -0.85, 0.45 - 0.2 * ph))
+
+    x3._walk(P, k, (Vector((0, 0, 0)), Vector((0, -RUN_TO / x3.SCALE, 0))), f_run, n, 0.3, "L", crouch=(0.08, 0.06),
+             upper=run_upper, every=2)
+    for f, z in ((1, 90.0), (f_crouch, 90.0), (f_turn, 90.0), (f_turn + 2, -105.0), (f_run, -90.0)):   # snap turn,
+        arm.rotation_euler.z = math.radians(z)                                                         # overshoot
+        arm.keyframe_insert("rotation_euler", index=2, frame=f)
+    acting.expression(k, "fear", 1, value=0.8)
+    acting.expression(k, "surprised", f_turn)
+    acting.expression(k, "terror", f_run + 4, value=0.9)
+    sky = perch + Vector((0, 0, 3.0))
+    acting.look_at(k, tuple(sky), 1, f_turn - 2)
+    acting.look_at(k, tuple(shrimp + Vector((0, 0, 2.0))), f_run, n)
+    acting.blink(k, 1, n, seed=11, at=(14,))
+    xv2._twos([arm])
+    # the camera pans west with him on 1s, from the south, high enough to fold his height into the band
+    a = ((KAI_B[0] + 3.0, KAI_B[1] - 0.5, 1.0), 82.0, 60.0, 0.0, 80.0, 0.2)
+    b = ((KAI_B[0] - 6.0, KAI_B[1] - 1.0, 1.0), 80.0, 60.0, -4.0, 80.0, 0.2)
+    xv2._move("cam_s24bot_v3", 1, n, a, b, n)
+    return dict(frames=n, step=2, ones=(1, n), subject=[arm])
+
+
+SHOTS = {"S08a": s08a, "S24bot": s24bot}
