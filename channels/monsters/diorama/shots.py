@@ -5,7 +5,7 @@
 import importlib
 
 SHOTS = {}
-for _m in ("helper10", "bgqrs", "helper4"):
+for _m in ("helper10", "bgqrs", "helper3", "helper2", "xprl", "helper6", "helper5", "helper1", "helper9", "helper4"):
     try:
         SHOTS.update(importlib.import_module(f"channels.monsters.diorama.{_m}").SHOTS)
     except ModuleNotFoundError as e:
