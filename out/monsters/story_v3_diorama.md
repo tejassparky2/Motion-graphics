@@ -11,8 +11,8 @@ What this version fixes:
 - **The shrimp tries to kill Kai, said and shown.** It looks right at him and aims. The blast fires straight down
   his line (the trees behind him are erased). He says it missed him by an inch. Later it "tries to finish" him.
 - **The shrimp is in danger at the end, said and shown.** The butcher bird looks at the shrimp, and the shrimp has no idea.
-- **Kai's death and reincarnation, said and shown.** The current flows through the water into him, "That's how I
-  died." A spark of light falls through the crack in the sky, and "I woke up in another world."
+- **Kai's death and reincarnation, said and shown.** Step by step: the storm panics the shrimp, its snap cracks the
+  tank, the water pours into the power cables, Kai is standing in it, "That's how I died." A spark of light falls through the crack in the sky, and "I woke up in another world."
 - **A/B for viewers.** The narrator says "Option A" and "Option B", the two panels carry a big A and B, and the last
   line is "Comment A or B."
 
@@ -26,10 +26,11 @@ and the title.
 | 3 | Night shift at the marine lab. Just me and the pistol shrimp. | The dollhouse lab, rain on the window; Kai taps the glowing tank. | same |
 | 4 | Its claw snaps so fast, the water boils. | In the tank: the claw snaps, a white-hot bubble. | same |
 | 5 | Almost as hot as the surface of the sun. But only in water. | The bubble collapses in a flash; Kai's lifted face. | same |
-| 6 | Then the storm hit. | Lightning; the lab lights stutter. | same |
-| 7 | Snap. | The tank glass cracks. | same |
-| 8 | Water. Cables. Me. | The leak runs across the floor to the power strip, under Kai's feet. | same |
-| 8b | **That's how I died.** | The spark races through the water into him: an x-ray flash of his skeleton, the lights die, black. A flatline beep. | NEW |
+| 6 | Then the storm hit. | Lightning fills the window; the lab lights stutter; in the tank, the shrimp jolts awake. | same |
+| 7 | **The shrimp panicked. Its snap cracked the tank.** | Close in the tank: the startled shrimp snaps (flash). A crack zigzags across the glass, and a jet of water spits out. | changed (was "Snap.") |
+| 8 | **Water poured off the desk, straight into the power cables.** | The water runs over the desk edge in a little waterfall and spreads across the floor tiles. Follow it to the power strip under the desk, cables plugged in; it reaches the plugs and sparks start to fizz. | changed (was "Water. Cables. Me.") |
+| 8a | **And I was standing in it.** | Close on Kai's sneakers as the puddle slides under them. He looks down, and his face drops. | NEW |
+| 8b | **That's how I died.** | A blue spark runs from the strip through the water and up into him: an x-ray flash of his skeleton, the lights die, black. A flatline beep. | NEW |
 | 9 | **Then I woke up. In another world.** | In the black, a crack of light opens in a sky; a tiny glowing spark (his soul) falls through it into a pink-flower meadow. Kai's eyes snap open; he stares at his hands. Tilt up: the cracked sky. | changed (was "I woke up under a cracked sky.") |
 | 10 | Everything here was tiny. And cute. | The jelly-snail; the fluffmoth. | same |
 | 11 | And every one of them was wrong. | Burnt holes behind the snail; the moth's eye-spots open. | same |
@@ -53,7 +54,9 @@ and the title.
 | 29 | **Option B: run while I can.** | Bottom: Kai running from the pond, the bird diving. Big **B · RUN** | NEW |
 | 30 | **Comment A or B.** | Both panels with the big A and B; cut ~0.5 s after the last word. | NEW |
 
-**Length:** about 72 s (was 62.5 s): about 9-10 s of new lines.
+**Length:** about 76 s (was 62.5 s): about 13 s of new lines. If it should stay nearer 60 s, the easiest trims
+are line 5's "But only in water." (line 20 says it again) and line 24 (go straight from the bird to "And it was looking
+at the shrimp.").
 
 **Voice check:** a lone "A." or "B." can be misheard ("eh", "be"), so the lines say "Option A" / "Option B". Every
 take gets the Whisper-medium check as usual, and any misheard line is reworded and redone.
