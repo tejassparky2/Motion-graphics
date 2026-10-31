@@ -25,7 +25,7 @@ SCRIPT = [
     dict(id="l5", scene="S05a", text="Almost as hot as the surface of the sun. But only in water.", gap=0.5),
     dict(id="l6", scene="S06", text="Then the storm hit.", gap=0.7),
     dict(id="l7", scene="S07", text="The shrimp panicked. Its snap cracked the tank.", gap=0.5),
-    dict(id="l8", scene="S08", text="Water poured off the desk, straight into the power cables.", gap=0.5),
+    dict(id="l8", scene="S08", text="Water spilled off the desk, straight into the power cables.", gap=0.5),
     dict(id="l9", scene="S08a", text="And I was standing in it.", gap=0.5),
     dict(id="l10", scene="S08b", text="That's how I died.", gap=0.6),
     dict(id="l11", scene="S09", text="Then I woke up. In another world.", gap=1.4),   # black, flatline, the soul falls

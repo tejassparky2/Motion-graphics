@@ -1,0 +1,1621 @@
+{
+ "fps": 24,
+ "total": 80.368,
+ "total_frames": 1929,
+ "handle": 12,
+ "lines": [
+  {
+   "id": "l1",
+   "scene": "S01",
+   "text": "Don't move. That claw can boil water.",
+   "start": 0.12,
+   "end": 2.293,
+   "words": [
+    {
+     "w": "Don't",
+     "start": 0.12,
+     "end": 0.36
+    },
+    {
+     "w": "move.",
+     "start": 0.36,
+     "end": 0.52
+    },
+    {
+     "w": "That",
+     "start": 1.04,
+     "end": 1.22
+    },
+    {
+     "w": "claw",
+     "start": 1.22,
+     "end": 1.46
+    },
+    {
+     "w": "can",
+     "start": 1.46,
+     "end": 1.62
+    },
+    {
+     "w": "boil",
+     "start": 1.62,
+     "end": 1.82
+    },
+    {
+     "w": "water.",
+     "start": 1.82,
+     "end": 2.12
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "scene": "S02",
+   "text": "Ten minutes ago, I was alive.",
+   "start": 2.693,
+   "end": 4.099,
+   "words": [
+    {
+     "w": "Ten",
+     "start": 2.693,
+     "end": 2.853
+    },
+    {
+     "w": "minutes",
+     "start": 2.853,
+     "end": 3.073
+    },
+    {
+     "w": "ago,",
+     "start": 3.073,
+     "end": 3.333
+    },
+    {
+     "w": "I",
+     "start": 3.453,
+     "end": 3.513
+    },
+    {
+     "w": "was",
+     "start": 3.513,
+     "end": 3.613
+    },
+    {
+     "w": "alive.",
+     "start": 3.613,
+     "end": 3.913
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "scene": "S03a",
+   "text": "Night shift at the marine lab. Just me and the pistol shrimp.",
+   "start": 4.699,
+   "end": 7.548,
+   "words": [
+    {
+     "w": "Night",
+     "start": 4.699,
+     "end": 4.899
+    },
+    {
+     "w": "shift",
+     "start": 4.899,
+     "end": 5.119
+    },
+    {
+     "w": "at",
+     "start": 5.119,
+     "end": 5.319
+    },
+    {
+     "w": "the",
+     "start": 5.319,
+     "end": 5.399
+    },
+    {
+     "w": "marine",
+     "start": 5.399,
+     "end": 5.619
+    },
+    {
+     "w": "lab.",
+     "start": 5.619,
+     "end": 5.899
+    },
+    {
+     "w": "Just",
+     "start": 6.36,
+     "end": 6.54
+    },
+    {
+     "w": "me",
+     "start": 6.54,
+     "end": 6.76
+    },
+    {
+     "w": "and",
+     "start": 6.76,
+     "end": 6.86
+    },
+    {
+     "w": "the",
+     "start": 6.86,
+     "end": 6.96
+    },
+    {
+     "w": "pistol",
+     "start": 6.96,
+     "end": 7.2
+    },
+    {
+     "w": "shrimp.",
+     "start": 7.2,
+     "end": 7.42
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "scene": "S04",
+   "text": "Its claw snaps so fast, the water boils.",
+   "start": 8.048,
+   "end": 10.083,
+   "words": [
+    {
+     "w": "Its",
+     "start": 8.048,
+     "end": 8.208
+    },
+    {
+     "w": "claw",
+     "start": 8.208,
+     "end": 8.388
+    },
+    {
+     "w": "snaps",
+     "start": 8.388,
+     "end": 8.628
+    },
+    {
+     "w": "so",
+     "start": 8.628,
+     "end": 8.888
+    },
+    {
+     "w": "fast,",
+     "start": 8.888,
+     "end": 9.148
+    },
+    {
+     "w": "the",
+     "start": 9.308,
+     "end": 9.368
+    },
+    {
+     "w": "water",
+     "start": 9.368,
+     "end": 9.588
+    },
+    {
+     "w": "boils.",
+     "start": 9.588,
+     "end": 9.828
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "scene": "S05a",
+   "text": "Almost as hot as the surface of the sun. But only in water.",
+   "start": 10.583,
+   "end": 14.123,
+   "words": [
+    {
+     "w": "Almost",
+     "start": 10.583,
+     "end": 10.883
+    },
+    {
+     "w": "as",
+     "start": 10.883,
+     "end": 11.083
+    },
+    {
+     "w": "hot",
+     "start": 11.083,
+     "end": 11.323
+    },
+    {
+     "w": "as",
+     "start": 11.323,
+     "end": 11.603
+    },
+    {
+     "w": "the",
+     "start": 11.603,
+     "end": 11.763
+    },
+    {
+     "w": "surface",
+     "start": 11.763,
+     "end": 12.023
+    },
+    {
+     "w": "of",
+     "start": 12.023,
+     "end": 12.343
+    },
+    {
+     "w": "the",
+     "start": 12.343,
+     "end": 12.463
+    },
+    {
+     "w": "sun.",
+     "start": 12.463,
+     "end": 12.663
+    },
+    {
+     "w": "But",
+     "start": 13.195,
+     "end": 13.335
+    },
+    {
+     "w": "only",
+     "start": 13.335,
+     "end": 13.515
+    },
+    {
+     "w": "in",
+     "start": 13.515,
+     "end": 13.695
+    },
+    {
+     "w": "water.",
+     "start": 13.695,
+     "end": 13.955
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "scene": "S06",
+   "text": "Then the storm hit.",
+   "start": 14.823,
+   "end": 15.569,
+   "words": [
+    {
+     "w": "Then",
+     "start": 14.823,
+     "end": 14.963
+    },
+    {
+     "w": "the",
+     "start": 14.963,
+     "end": 15.063
+    },
+    {
+     "w": "storm",
+     "start": 15.063,
+     "end": 15.263
+    },
+    {
+     "w": "hit.",
+     "start": 15.263,
+     "end": 15.443
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "scene": "S07",
+   "text": "The shrimp panicked. Its snap cracked the tank.",
+   "start": 16.069,
+   "end": 18.676,
+   "words": [
+    {
+     "w": "The",
+     "start": 16.069,
+     "end": 16.209
+    },
+    {
+     "w": "shrimp",
+     "start": 16.209,
+     "end": 16.389
+    },
+    {
+     "w": "panicked.",
+     "start": 16.389,
+     "end": 16.749
+    },
+    {
+     "w": "Its",
+     "start": 17.35,
+     "end": 17.49
+    },
+    {
+     "w": "snap",
+     "start": 17.49,
+     "end": 17.79
+    },
+    {
+     "w": "cracked",
+     "start": 17.79,
+     "end": 18.15
+    },
+    {
+     "w": "the",
+     "start": 18.15,
+     "end": 18.35
+    },
+    {
+     "w": "tank.",
+     "start": 18.35,
+     "end": 18.55
+    }
+   ]
+  },
+  {
+   "id": "l8",
+   "scene": "S08",
+   "text": "Water spilled off the desk, straight into the power cables.",
+   "start": 19.176,
+   "end": 22.26,
+   "words": [
+    {
+     "w": "Water",
+     "start": 19.176,
+     "end": 19.476
+    },
+    {
+     "w": "spilled",
+     "start": 19.476,
+     "end": 19.756
+    },
+    {
+     "w": "off",
+     "start": 19.756,
+     "end": 19.976
+    },
+    {
+     "w": "the",
+     "start": 19.976,
+     "end": 20.096
+    },
+    {
+     "w": "desk,",
+     "start": 20.096,
+     "end": 20.456
+    },
+    {
+     "w": "straight",
+     "start": 20.756,
+     "end": 21.056
+    },
+    {
+     "w": "into",
+     "start": 21.056,
+     "end": 21.296
+    },
+    {
+     "w": "the",
+     "start": 21.296,
+     "end": 21.436
+    },
+    {
+     "w": "power",
+     "start": 21.436,
+     "end": 21.656
+    },
+    {
+     "w": "cables.",
+     "start": 21.656,
+     "end": 22.056
+    }
+   ]
+  },
+  {
+   "id": "l9",
+   "scene": "S08a",
+   "text": "And I was standing in it.",
+   "start": 22.76,
+   "end": 24.158,
+   "words": [
+    {
+     "w": "And",
+     "start": 22.76,
+     "end": 23.04
+    },
+    {
+     "w": "I",
+     "start": 23.04,
+     "end": 23.26
+    },
+    {
+     "w": "was",
+     "start": 23.26,
+     "end": 23.38
+    },
+    {
+     "w": "standing",
+     "start": 23.38,
+     "end": 23.68
+    },
+    {
+     "w": "in",
+     "start": 23.68,
+     "end": 23.92
+    },
+    {
+     "w": "it.",
+     "start": 23.92,
+     "end": 24.04
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "S08b",
+   "text": "That's how I died.",
+   "start": 24.758,
+   "end": 25.503,
+   "words": [
+    {
+     "w": "That's",
+     "start": 24.758,
+     "end": 24.978
+    },
+    {
+     "w": "how",
+     "start": 24.978,
+     "end": 25.058
+    },
+    {
+     "w": "I",
+     "start": 25.058,
+     "end": 25.178
+    },
+    {
+     "w": "died.",
+     "start": 25.178,
+     "end": 25.338
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "S09",
+   "text": "Then I woke up. In another world.",
+   "start": 26.903,
+   "end": 28.864,
+   "words": [
+    {
+     "w": "Then",
+     "start": 26.903,
+     "end": 27.083
+    },
+    {
+     "w": "I",
+     "start": 27.083,
+     "end": 27.203
+    },
+    {
+     "w": "woke",
+     "start": 27.203,
+     "end": 27.323
+    },
+    {
+     "w": "up.",
+     "start": 27.323,
+     "end": 27.523
+    },
+    {
+     "w": "In",
+     "start": 27.92,
+     "end": 28.06
+    },
+    {
+     "w": "another",
+     "start": 28.06,
+     "end": 28.3
+    },
+    {
+     "w": "world.",
+     "start": 28.3,
+     "end": 28.62
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "S10a",
+   "text": "Everything here was tiny. And cute.",
+   "start": 29.364,
+   "end": 31.755,
+   "words": [
+    {
+     "w": "Everything",
+     "start": 29.364,
+     "end": 29.864
+    },
+    {
+     "w": "here",
+     "start": 29.864,
+     "end": 30.144
+    },
+    {
+     "w": "was",
+     "start": 30.144,
+     "end": 30.324
+    },
+    {
+     "w": "tiny.",
+     "start": 30.324,
+     "end": 30.604
+    },
+    {
+     "w": "And",
+     "start": 31.208,
+     "end": 31.408
+    },
+    {
+     "w": "cute.",
+     "start": 31.408,
+     "end": 31.628
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "S11a",
+   "text": "And every one of them was wrong.",
+   "start": 32.155,
+   "end": 33.662,
+   "words": [
+    {
+     "w": "And",
+     "start": 32.155,
+     "end": 32.295
+    },
+    {
+     "w": "every",
+     "start": 32.295,
+     "end": 32.555
+    },
+    {
+     "w": "one",
+     "start": 32.555,
+     "end": 32.755
+    },
+    {
+     "w": "of",
+     "start": 32.755,
+     "end": 32.875
+    },
+    {
+     "w": "them",
+     "start": 32.875,
+     "end": 32.995
+    },
+    {
+     "w": "was",
+     "start": 32.995,
+     "end": 33.195
+    },
+    {
+     "w": "wrong.",
+     "start": 33.195,
+     "end": 33.475
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "S12",
+   "text": "I was so thirsty.",
+   "start": 34.362,
+   "end": 35.313,
+   "words": [
+    {
+     "w": "I",
+     "start": 34.362,
+     "end": 34.462
+    },
+    {
+     "w": "was",
+     "start": 34.462,
+     "end": 34.582
+    },
+    {
+     "w": "so",
+     "start": 34.582,
+     "end": 34.802
+    },
+    {
+     "w": "thirsty.",
+     "start": 34.802,
+     "end": 35.062
+    }
+   ]
+  },
+  {
+   "id": "l15",
+   "scene": "S13",
+   "text": "Something else was already drinking.",
+   "start": 35.813,
+   "end": 37.309,
+   "words": [
+    {
+     "w": "Something",
+     "start": 35.813,
+     "end": 36.153
+    },
+    {
+     "w": "else",
+     "start": 36.153,
+     "end": 36.373
+    },
+    {
+     "w": "was",
+     "start": 36.373,
+     "end": 36.593
+    },
+    {
+     "w": "already",
+     "start": 36.593,
+     "end": 36.813
+    },
+    {
+     "w": "drinking.",
+     "start": 36.813,
+     "end": 37.133
+    }
+   ]
+  },
+  {
+   "id": "l16",
+   "scene": "S14",
+   "text": "A shrimp. On land. Impossible.",
+   "start": 37.909,
+   "end": 40.341,
+   "words": [
+    {
+     "w": "A",
+     "start": 37.909,
+     "end": 38.029
+    },
+    {
+     "w": "shrimp.",
+     "start": 38.029,
+     "end": 38.249
+    },
+    {
+     "w": "On",
+     "start": 38.782,
+     "end": 38.942
+    },
+    {
+     "w": "land.",
+     "start": 38.942,
+     "end": 39.142
+    },
+    {
+     "w": "Impossible.",
+     "start": 39.67,
+     "end": 39.95
+    }
+   ]
+  },
+  {
+   "id": "l17",
+   "scene": "S15a",
+   "text": "Then it looked right at me.",
+   "start": 40.841,
+   "end": 41.946,
+   "words": [
+    {
+     "w": "Then",
+     "start": 40.841,
+     "end": 41.001
+    },
+    {
+     "w": "it",
+     "start": 41.001,
+     "end": 41.101
+    },
+    {
+     "w": "looked",
+     "start": 41.101,
+     "end": 41.281
+    },
+    {
+     "w": "right",
+     "start": 41.281,
+     "end": 41.541
+    },
+    {
+     "w": "at",
+     "start": 41.541,
+     "end": 41.721
+    },
+    {
+     "w": "me.",
+     "start": 41.721,
+     "end": 41.881
+    }
+   ]
+  },
+  {
+   "id": "l18",
+   "scene": "S15",
+   "text": "",
+   "start": 42.346,
+   "end": 46.346,
+   "words": []
+  },
+  {
+   "id": "l19",
+   "scene": "S15b",
+   "text": "It missed me by an inch.",
+   "start": 46.746,
+   "end": 48.061,
+   "words": [
+    {
+     "w": "It",
+     "start": 46.746,
+     "end": 46.906
+    },
+    {
+     "w": "missed",
+     "start": 46.906,
+     "end": 47.026
+    },
+    {
+     "w": "me",
+     "start": 47.026,
+     "end": 47.246
+    },
+    {
+     "w": "by",
+     "start": 47.246,
+     "end": 47.406
+    },
+    {
+     "w": "an",
+     "start": 47.406,
+     "end": 47.566
+    },
+    {
+     "w": "inch.",
+     "start": 47.566,
+     "end": 47.766
+    }
+   ]
+  },
+  {
+   "id": "l20",
+   "scene": "S16",
+   "text": "When I opened my eyes, it was on my chest.",
+   "start": 48.861,
+   "end": 51.03,
+   "words": [
+    {
+     "w": "When",
+     "start": 48.861,
+     "end": 48.981
+    },
+    {
+     "w": "I",
+     "start": 48.981,
+     "end": 49.081
+    },
+    {
+     "w": "opened",
+     "start": 49.081,
+     "end": 49.301
+    },
+    {
+     "w": "my",
+     "start": 49.301,
+     "end": 49.521
+    },
+    {
+     "w": "eyes,",
+     "start": 49.521,
+     "end": 49.801
+    },
+    {
+     "w": "it",
+     "start": 49.941,
+     "end": 49.961
+    },
+    {
+     "w": "was",
+     "start": 49.961,
+     "end": 50.061
+    },
+    {
+     "w": "on",
+     "start": 50.061,
+     "end": 50.241
+    },
+    {
+     "w": "my",
+     "start": 50.241,
+     "end": 50.441
+    },
+    {
+     "w": "chest.",
+     "start": 50.441,
+     "end": 50.761
+    }
+   ]
+  },
+  {
+   "id": "l21",
+   "scene": "S17",
+   "text": "Then I saw the drops.",
+   "start": 51.53,
+   "end": 52.485,
+   "words": [
+    {
+     "w": "Then",
+     "start": 51.53,
+     "end": 51.65
+    },
+    {
+     "w": "I",
+     "start": 51.65,
+     "end": 51.77
+    },
+    {
+     "w": "saw",
+     "start": 51.77,
+     "end": 51.91
+    },
+    {
+     "w": "the",
+     "start": 51.91,
+     "end": 52.05
+    },
+    {
+     "w": "drops.",
+     "start": 52.05,
+     "end": 52.27
+    }
+   ]
+  },
+  {
+   "id": "l22",
+   "scene": "S18",
+   "text": "Its claw only works wet.",
+   "start": 52.985,
+   "end": 54.363,
+   "words": [
+    {
+     "w": "Its",
+     "start": 52.985,
+     "end": 53.125
+    },
+    {
+     "w": "claw",
+     "start": 53.125,
+     "end": 53.405
+    },
+    {
+     "w": "only",
+     "start": 53.405,
+     "end": 53.645
+    },
+    {
+     "w": "works",
+     "start": 53.645,
+     "end": 53.965
+    },
+    {
+     "w": "wet.",
+     "start": 53.965,
+     "end": 54.205
+    }
+   ]
+  },
+  {
+   "id": "l23",
+   "scene": "S19",
+   "text": "So I didn't move. I let the sun dry it.",
+   "start": 54.963,
+   "end": 57.153,
+   "words": [
+    {
+     "w": "So",
+     "start": 54.963,
+     "end": 55.083
+    },
+    {
+     "w": "I",
+     "start": 55.083,
+     "end": 55.183
+    },
+    {
+     "w": "didn't",
+     "start": 55.183,
+     "end": 55.443
+    },
+    {
+     "w": "move.",
+     "start": 55.443,
+     "end": 55.563
+    },
+    {
+     "w": "I",
+     "start": 56.023,
+     "end": 56.163
+    },
+    {
+     "w": "let",
+     "start": 56.163,
+     "end": 56.303
+    },
+    {
+     "w": "the",
+     "start": 56.303,
+     "end": 56.423
+    },
+    {
+     "w": "sun",
+     "start": 56.423,
+     "end": 56.663
+    },
+    {
+     "w": "dry",
+     "start": 56.663,
+     "end": 56.903
+    },
+    {
+     "w": "it.",
+     "start": 56.903,
+     "end": 57.083
+    }
+   ]
+  },
+  {
+   "id": "l24",
+   "scene": "S20",
+   "text": "It tried to finish me anyway.",
+   "start": 58.853,
+   "end": 60.32,
+   "words": [
+    {
+     "w": "It",
+     "start": 58.853,
+     "end": 58.973
+    },
+    {
+     "w": "tried",
+     "start": 58.973,
+     "end": 59.193
+    },
+    {
+     "w": "to",
+     "start": 59.193,
+     "end": 59.333
+    },
+    {
+     "w": "finish",
+     "start": 59.333,
+     "end": 59.553
+    },
+    {
+     "w": "me",
+     "start": 59.553,
+     "end": 59.793
+    },
+    {
+     "w": "anyway.",
+     "start": 59.793,
+     "end": 60.033
+    }
+   ]
+  },
+  {
+   "id": "l25",
+   "scene": "S21",
+   "text": "Then it stomped back to the puddle.",
+   "start": 63.22,
+   "end": 64.792,
+   "words": [
+    {
+     "w": "Then",
+     "start": 63.22,
+     "end": 63.38
+    },
+    {
+     "w": "it",
+     "start": 63.38,
+     "end": 63.48
+    },
+    {
+     "w": "stomped",
+     "start": 63.48,
+     "end": 63.94
+    },
+    {
+     "w": "back",
+     "start": 63.94,
+     "end": 64.1
+    },
+    {
+     "w": "to",
+     "start": 64.1,
+     "end": 64.26
+    },
+    {
+     "w": "the",
+     "start": 64.26,
+     "end": 64.38
+    },
+    {
+     "w": "puddle.",
+     "start": 64.38,
+     "end": 64.62
+    }
+   ]
+  },
+  {
+   "id": "l26",
+   "scene": "S22",
+   "text": "That's when I saw the thorn tree.",
+   "start": 65.392,
+   "end": 66.769,
+   "words": [
+    {
+     "w": "That's",
+     "start": 65.392,
+     "end": 65.612
+    },
+    {
+     "w": "when",
+     "start": 65.612,
+     "end": 65.692
+    },
+    {
+     "w": "I",
+     "start": 65.692,
+     "end": 65.812
+    },
+    {
+     "w": "saw",
+     "start": 65.812,
+     "end": 66.012
+    },
+    {
+     "w": "the",
+     "start": 66.012,
+     "end": 66.172
+    },
+    {
+     "w": "thorn",
+     "start": 66.172,
+     "end": 66.372
+    },
+    {
+     "w": "tree.",
+     "start": 66.372,
+     "end": 66.612
+    }
+   ]
+  },
+  {
+   "id": "l27",
+   "scene": "S23",
+   "text": "A butcher bird hangs its food on thorns.",
+   "start": 67.269,
+   "end": 69.362,
+   "words": [
+    {
+     "w": "A",
+     "start": 67.269,
+     "end": 67.449
+    },
+    {
+     "w": "butcher",
+     "start": 67.449,
+     "end": 67.649
+    },
+    {
+     "w": "bird",
+     "start": 67.649,
+     "end": 67.889
+    },
+    {
+     "w": "hangs",
+     "start": 67.889,
+     "end": 68.129
+    },
+    {
+     "w": "its",
+     "start": 68.129,
+     "end": 68.309
+    },
+    {
+     "w": "food",
+     "start": 68.309,
+     "end": 68.549
+    },
+    {
+     "w": "on",
+     "start": 68.549,
+     "end": 68.809
+    },
+    {
+     "w": "thorns.",
+     "start": 68.809,
+     "end": 69.129
+    }
+   ]
+  },
+  {
+   "id": "l28",
+   "scene": "S23b",
+   "text": "And it was looking at the shrimp.",
+   "start": 69.862,
+   "end": 71.159,
+   "words": [
+    {
+     "w": "And",
+     "start": 69.862,
+     "end": 69.982
+    },
+    {
+     "w": "it",
+     "start": 69.982,
+     "end": 70.042
+    },
+    {
+     "w": "was",
+     "start": 70.042,
+     "end": 70.162
+    },
+    {
+     "w": "looking",
+     "start": 70.162,
+     "end": 70.422
+    },
+    {
+     "w": "at",
+     "start": 70.422,
+     "end": 70.642
+    },
+    {
+     "w": "the",
+     "start": 70.642,
+     "end": 70.762
+    },
+    {
+     "w": "shrimp.",
+     "start": 70.762,
+     "end": 70.982
+    }
+   ]
+  },
+  {
+   "id": "l29",
+   "scene": "S23c",
+   "text": "The shrimp had no idea.",
+   "start": 71.659,
+   "end": 72.878,
+   "words": [
+    {
+     "w": "The",
+     "start": 71.659,
+     "end": 71.779
+    },
+    {
+     "w": "shrimp",
+     "start": 71.779,
+     "end": 72.019
+    },
+    {
+     "w": "had",
+     "start": 72.019,
+     "end": 72.219
+    },
+    {
+     "w": "no",
+     "start": 72.219,
+     "end": 72.419
+    },
+    {
+     "w": "idea.",
+     "start": 72.419,
+     "end": 72.699
+    }
+   ]
+  },
+  {
+   "id": "l30",
+   "scene": "S24",
+   "text": "Option A: save the shrimp that tried to kill me. Option B: run while I can. Comment A or B.",
+   "start": 73.678,
+   "end": 80.018,
+   "words": [
+    {
+     "w": "Option",
+     "start": 73.678,
+     "end": 73.958
+    },
+    {
+     "w": "A:",
+     "start": 73.958,
+     "end": 74.238
+    },
+    {
+     "w": "save",
+     "start": 74.768,
+     "end": 75.008
+    },
+    {
+     "w": "the",
+     "start": 75.008,
+     "end": 75.148
+    },
+    {
+     "w": "shrimp",
+     "start": 75.148,
+     "end": 75.368
+    },
+    {
+     "w": "that",
+     "start": 75.368,
+     "end": 75.568
+    },
+    {
+     "w": "tried",
+     "start": 75.568,
+     "end": 75.808
+    },
+    {
+     "w": "to",
+     "start": 75.808,
+     "end": 75.968
+    },
+    {
+     "w": "kill",
+     "start": 75.968,
+     "end": 76.108
+    },
+    {
+     "w": "me.",
+     "start": 76.108,
+     "end": 76.308
+    },
+    {
+     "w": "Option",
+     "start": 76.771,
+     "end": 77.031
+    },
+    {
+     "w": "B:",
+     "start": 77.031,
+     "end": 77.251
+    },
+    {
+     "w": "run",
+     "start": 77.774,
+     "end": 77.934
+    },
+    {
+     "w": "while",
+     "start": 77.934,
+     "end": 78.114
+    },
+    {
+     "w": "I",
+     "start": 78.114,
+     "end": 78.294
+    },
+    {
+     "w": "can.",
+     "start": 78.294,
+     "end": 78.514
+    },
+    {
+     "w": "Comment",
+     "start": 79.052,
+     "end": 79.292
+    },
+    {
+     "w": "A",
+     "start": 79.292,
+     "end": 79.572
+    },
+    {
+     "w": "or",
+     "start": 79.572,
+     "end": 79.692
+    },
+    {
+     "w": "B.",
+     "start": 79.692,
+     "end": 79.852
+    }
+   ]
+  }
+ ],
+ "shots": [
+  {
+   "shot": "S01",
+   "start": 0.0,
+   "first_frame": 0,
+   "frames": 57,
+   "seconds": 2.375,
+   "render_frames": 69
+  },
+  {
+   "shot": "S02",
+   "start": 2.393,
+   "first_frame": 57,
+   "frames": 49,
+   "seconds": 2.042,
+   "render_frames": 61
+  },
+  {
+   "shot": "S03a",
+   "start": 4.399,
+   "first_frame": 106,
+   "frames": 41,
+   "seconds": 1.708,
+   "render_frames": 53
+  },
+  {
+   "shot": "S03b",
+   "start": 6.13,
+   "first_frame": 147,
+   "frames": 39,
+   "seconds": 1.625,
+   "render_frames": 51
+  },
+  {
+   "shot": "S04",
+   "start": 7.748,
+   "first_frame": 186,
+   "frames": 61,
+   "seconds": 2.542,
+   "render_frames": 73
+  },
+  {
+   "shot": "S05a",
+   "start": 10.283,
+   "first_frame": 247,
+   "frames": 63,
+   "seconds": 2.625,
+   "render_frames": 75
+  },
+  {
+   "shot": "S05b",
+   "start": 12.929,
+   "first_frame": 310,
+   "frames": 39,
+   "seconds": 1.625,
+   "render_frames": 51
+  },
+  {
+   "shot": "S06",
+   "start": 14.523,
+   "first_frame": 349,
+   "frames": 29,
+   "seconds": 1.208,
+   "render_frames": 41
+  },
+  {
+   "shot": "S07",
+   "start": 15.769,
+   "first_frame": 378,
+   "frames": 75,
+   "seconds": 3.125,
+   "render_frames": 87
+  },
+  {
+   "shot": "S08",
+   "start": 18.876,
+   "first_frame": 453,
+   "frames": 86,
+   "seconds": 3.583,
+   "render_frames": 98
+  },
+  {
+   "shot": "S08a",
+   "start": 22.46,
+   "first_frame": 539,
+   "frames": 48,
+   "seconds": 2.0,
+   "render_frames": 60
+  },
+  {
+   "shot": "S08b",
+   "start": 24.458,
+   "first_frame": 587,
+   "frames": 51,
+   "seconds": 2.125,
+   "render_frames": 63
+  },
+  {
+   "shot": "S09",
+   "start": 26.603,
+   "first_frame": 638,
+   "frames": 60,
+   "seconds": 2.5,
+   "render_frames": 72
+  },
+  {
+   "shot": "S10a",
+   "start": 29.064,
+   "first_frame": 698,
+   "frames": 44,
+   "seconds": 1.833,
+   "render_frames": 56
+  },
+  {
+   "shot": "S10b",
+   "start": 30.906,
+   "first_frame": 742,
+   "frames": 23,
+   "seconds": 0.958,
+   "render_frames": 35
+  },
+  {
+   "shot": "S11a",
+   "start": 31.855,
+   "first_frame": 765,
+   "frames": 27,
+   "seconds": 1.125,
+   "render_frames": 39
+  },
+  {
+   "shot": "S11b",
+   "start": 32.995,
+   "first_frame": 792,
+   "frames": 25,
+   "seconds": 1.042,
+   "render_frames": 37
+  },
+  {
+   "shot": "S12",
+   "start": 34.062,
+   "first_frame": 817,
+   "frames": 35,
+   "seconds": 1.458,
+   "render_frames": 47
+  },
+  {
+   "shot": "S13",
+   "start": 35.513,
+   "first_frame": 852,
+   "frames": 51,
+   "seconds": 2.125,
+   "render_frames": 63
+  },
+  {
+   "shot": "S14",
+   "start": 37.609,
+   "first_frame": 903,
+   "frames": 70,
+   "seconds": 2.917,
+   "render_frames": 82
+  },
+  {
+   "shot": "S15a",
+   "start": 40.541,
+   "first_frame": 973,
+   "frames": 36,
+   "seconds": 1.5,
+   "render_frames": 48
+  },
+  {
+   "shot": "S15",
+   "start": 42.046,
+   "first_frame": 1009,
+   "frames": 106,
+   "seconds": 4.417,
+   "render_frames": 118
+  },
+  {
+   "shot": "S15b",
+   "start": 46.446,
+   "first_frame": 1115,
+   "frames": 50,
+   "seconds": 2.083,
+   "render_frames": 62
+  },
+  {
+   "shot": "S16",
+   "start": 48.561,
+   "first_frame": 1165,
+   "frames": 65,
+   "seconds": 2.708,
+   "render_frames": 77
+  },
+  {
+   "shot": "S17",
+   "start": 51.23,
+   "first_frame": 1230,
+   "frames": 34,
+   "seconds": 1.417,
+   "render_frames": 46
+  },
+  {
+   "shot": "S18",
+   "start": 52.685,
+   "first_frame": 1264,
+   "frames": 48,
+   "seconds": 2.0,
+   "render_frames": 60
+  },
+  {
+   "shot": "S19",
+   "start": 54.663,
+   "first_frame": 1312,
+   "frames": 93,
+   "seconds": 3.875,
+   "render_frames": 105
+  },
+  {
+   "shot": "S20",
+   "start": 58.553,
+   "first_frame": 1405,
+   "frames": 105,
+   "seconds": 4.375,
+   "render_frames": 117
+  },
+  {
+   "shot": "S21",
+   "start": 62.92,
+   "first_frame": 1510,
+   "frames": 52,
+   "seconds": 2.167,
+   "render_frames": 64
+  },
+  {
+   "shot": "S22",
+   "start": 65.092,
+   "first_frame": 1562,
+   "frames": 45,
+   "seconds": 1.875,
+   "render_frames": 57
+  },
+  {
+   "shot": "S23",
+   "start": 66.969,
+   "first_frame": 1607,
+   "frames": 62,
+   "seconds": 2.583,
+   "render_frames": 74
+  },
+  {
+   "shot": "S23b",
+   "start": 69.562,
+   "first_frame": 1669,
+   "frames": 44,
+   "seconds": 1.833,
+   "render_frames": 56
+  },
+  {
+   "shot": "S23c",
+   "start": 71.359,
+   "first_frame": 1713,
+   "frames": 48,
+   "seconds": 2.0,
+   "render_frames": 60
+  },
+  {
+   "shot": "S24",
+   "start": 73.378,
+   "first_frame": 1761,
+   "frames": 168,
+   "seconds": 7.0,
+   "render_frames": 180
+  }
+ ]
+}

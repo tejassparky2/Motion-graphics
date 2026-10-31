@@ -28,7 +28,7 @@ and the title.
 | 5 | Almost as hot as the surface of the sun. But only in water. | The bubble collapses in a flash; Kai's lifted face. | same |
 | 6 | Then the storm hit. | Lightning fills the window; the lab lights stutter; in the tank, the shrimp jolts awake. | same |
 | 7 | **The shrimp panicked. Its snap cracked the tank.** | Close in the tank: the startled shrimp snaps (flash). A crack zigzags across the glass, and a jet of water spits out. | changed (was "Snap.") |
-| 8 | **Water poured off the desk, straight into the power cables.** | The water runs over the desk edge in a little waterfall and spreads across the floor tiles. Follow it to the power strip under the desk, cables plugged in; it reaches the plugs and sparks start to fizz. | changed (was "Water. Cables. Me.") |
+| 8 | **Water spilled off the desk, straight into the power cables.** | The water runs over the desk edge in a little waterfall and spreads across the floor tiles. Follow it to the power strip under the desk, cables plugged in; it reaches the plugs and sparks start to fizz. | changed (was "Water. Cables. Me.") |
 | 8a | **And I was standing in it.** | Close on Kai's sneakers as the puddle slides under them. He looks down, and his face drops. | NEW |
 | 8b | **That's how I died.** | A blue spark runs from the strip through the water and up into him: an x-ray flash of his skeleton, the lights die, black. A flatline beep. | NEW |
 | 9 | **Then I woke up. In another world.** | In the black, a crack of light opens in a sky; a tiny glowing spark (his soul) falls through it into a pink-flower meadow. Kai's eyes snap open; he stares at his hands. Tilt up: the cracked sky. | changed (was "I woke up under a cracked sky.") |
