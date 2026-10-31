@@ -248,12 +248,14 @@ def _move(cam, n, keys, look_at, yaw=0.0):
 
 def _anchors(shot, cam, rig, sh=None, extra=None):
     """Screen positions (720x1280, top-left origin) of his eyes and the claw tip per frame (plus `extra`: name ->
-    fn() -> world point), for the 2D pass."""
+    fn() -> world point), for the 2D pass. cam=None projects through the scene camera of each frame (a shot that
+    cuts between marker-bound cameras, e.g. helper 5's S20)."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
     out = {}
-    for f in range(1, FRAMES[shot] + 1):
+    for f in range(1, (FRAMES.get(shot) or s3d.FRAMES[shot]) + 1):
         sc.frame_set(f)
+        c = cam or sc.camera
         pts = {k: s3d.kai_point(rig, k) for k in ("eyes", "eye_l", "eye_r", "nose", "temple")}
         if sh is not None:
             pts["tip"] = s3d.claw_tip(sh)
@@ -261,7 +263,7 @@ def _anchors(shot, cam, rig, sh=None, extra=None):
             pts[k] = fn()
         row = {}
         for k, p in pts.items():
-            v = world_to_camera_view(sc, cam, p)
+            v = world_to_camera_view(sc, c, p)
             row[k] = (round(v.x * 720, 1), round((1 - v.y) * 1280, 1))
         out[f] = row
     os.makedirs(ANCHORS, exist_ok=True)
