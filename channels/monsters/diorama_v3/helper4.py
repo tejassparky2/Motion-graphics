@@ -592,6 +592,7 @@ def s08b():
                  ring_count=8)
     lt = diorama_lab.lab._light("s08b_spark_light", "POINT", tuple(strip_pt), (0, 0, 0), 0.0, ARC_GLOW, 0.3,
                                 shadow=False)
+    diorama_lab.lab._kprop(lt.data, "energy", r0 - 1, 0.0, "CONSTANT")    # dark until the spark
     for f in range(r0, r1 + 1):
         u = (f - r0) / max(1, r1 - r0) * run_len
         i = min(int(u), run_len - 1)
@@ -654,6 +655,9 @@ def s08b():
         for o in (room, lamp):
             diorama_lab.lab._kprop(o.data, "energy", f, base[o.name] * (0.05 if f in xr else 1.0), "CONSTANT")
     R["power_out"](out)
+    from channels.monsters.mk import shared_water as sw
+    bpy.context.scene.frame_set(1)                # the spill's base strength is read from the current value: lights on
+    sw.adopt(R)                                   # helper 2's one water look for S07-S08b (keeps the power_out keys)
     _export_2d(rig, cam, n, water_pts)
     black = storm.power_out(cam, B["black"], flicker=False)
     del black
