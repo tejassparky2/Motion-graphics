@@ -70,10 +70,14 @@ def s23b():
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     prey = Vector(SHRIMP) + Vector((0, 0, 1.0))
-    # the close: the camera south-east of the bird, low, so its face turns three-quarter toward us as it locks on
-    side = Vector((math.cos(math.radians(-40)), math.sin(math.radians(-40)), 0))
-    bird = _bird_on_perch(perch, perch + side * 10 - Vector((0, 0, 4)))   # it starts looking past the lens
+    # the close: from the clearing side (the forest is behind the tree), 25 deg off the line to the shrimp, so when it
+    # locks on its face turns three-quarter to the lens; before that it looks off to the side
     to_prey = prey - perch
+    def turned(v, deg):
+        c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+        return Vector((v.x * c - v.y * s_, v.x * s_ + v.y * c, 0)).normalized()
+    side = turned(to_prey.xy.to_3d(), 25)
+    bird = _bird_on_perch(perch, perch + turned(to_prey.xy.to_3d(), -70) * 10 - Vector((0, 0, 3)))
     acting.tilt(bird, 8, angle=0.42, hold=8)                                 # a curious tilt: one eye to the ground
     acting.lock_on(bird, prey, 20)                                          # snap onto the shrimp: glare, crest up
     anim.blink(bird, 4)
@@ -95,8 +99,8 @@ def s23b():
         k = (f - CUT_POV) / max(1, n - CUT_POV)
         d = dist0
         el = math.degrees(math.asin((eye_pos.z - prey.z) / d))
-        yw = math.degrees(math.atan2(-(prey - eye_pos).x, -(prey - eye_pos).y))
-        pov = v2._cam("cam_s23b_pov", f, tuple(prey), d, el, yw, 110.0 + 40.0 * k, cam=pov)
+        yw = math.degrees(math.atan2((prey - eye_pos).x, (prey - eye_pos).y))   # the lens sits at the bird's eye
+        pov = v2._cam("cam_s23b_pov", f, tuple(prey), d, el, yw, 30.0 + 10.0 * k, cam=pov)   # wide: it's tiny
     sc = bpy.context.scene
     for m in list(sc.timeline_markers):
         sc.timeline_markers.remove(m)
