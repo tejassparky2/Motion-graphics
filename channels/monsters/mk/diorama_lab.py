@@ -33,7 +33,7 @@ hx = look.hexc
 X0, X1, Y0, Y1, H = -11.0, 11.0, -6.0, 10.0, 13.5        # the room (units); walls on the back (+Y) and left (-X)
 TOP = 3.75                                                  # desk top
 NIGHT_HAZE = "#1b2740"
-LAB_CAM = dict(dist=118.0, tilt=56.0, yaw=-30.0, lens=90.0, blur=10.0)   # the establishing dollhouse view
+LAB_CAM = dict(dist=96.0, tilt=56.0, yaw=-30.0, lens=90.0, blur=10.0)   # the establishing dollhouse view
 
 
 def _p(name, dark, mid, light):
@@ -46,7 +46,7 @@ def _night():
     nt = sc.world.node_tree
     bg = nt.nodes["Background"]
     bg.inputs[0].default_value = hx("#2a3a66")
-    bg.inputs[1].default_value = 0.35
+    bg.inputs[1].default_value = 0.5
     for n in nt.nodes:                               # the camera sees a dark night void around the dollhouse
         if n.type == "VALTORGB":
             n.color_ramp.elements[0].color = hx("#0c1120")
@@ -199,7 +199,7 @@ def room(seed=7):
     _box("dl_desk_leg_l", (dx0 + 0.25, dcy, (TOP - 0.3) / 2), (0.3, dy1 - dy0 - 0.3, TOP - 0.3), side)
     _box("dl_desk_drawers", (dx1 - 1.2, dcy, (TOP - 0.3) / 2), (2.2, dy1 - dy0 - 0.3, TOP - 0.3), side, bevel=0.05)
     shell = _p("laptop", "#8a92a8", "#a7afc4", "#c9d0e2")
-    lx, ly = dcx - 1.2, dcy - 0.3
+    lx, ly = dx1 - 1.9 - 3.5, dcy - 0.3                    # the laptop (and Kai) just left of the tank: within reach
     _box("dl_laptop_base", (lx, ly, TOP + 0.08), (2.2, 1.5, 0.12), shell, bevel=0.03)
     screen = lab._glow("dl_screen", "#bfe0ff", 1.3)
     _box("dl_laptop_lid", (lx, ly + 0.85, TOP + 0.75), (2.2, 0.1, 1.4), shell, rot=(math.radians(-15), 0, 0))
@@ -207,7 +207,7 @@ def room(seed=7):
     page = _p("page", "#c8c0aa", "#e9e2cf", "#f6f1e3")
     nx, ny = dx0 + 2.0, dcy - 0.4
     _box("dl_notebook", (nx, ny, TOP + 0.05), (2.0, 1.4, 0.08), page, rot=(0, 0, math.radians(8)))
-    lab._cyl("dl_mug", (lx + 2.0, ly - 0.4, TOP + 0.3), 0.3, 0.6, _p("mug", "#b04a3c", "#d96c5a", "#f08a76"))
+    lab._cyl("dl_mug", (lx - 2.2, ly - 0.4, TOP + 0.3), 0.3, 0.6, _p("mug", "#b04a3c", "#d96c5a", "#f08a76"))
     lamp_m = _p("lamp", "#b8862e", "#e3b04b", "#f5cd6e")
     bx, by = dx0 + 0.8, dy1 - 0.8
     lab._cyl("dl_lamp_base", (bx, by, TOP + 0.08), 0.45, 0.16, lamp_m)
@@ -217,8 +217,8 @@ def room(seed=7):
              rot=(math.radians(-150), math.radians(-10), 0))
     bulb = lab._glow("dl_bulb", "#fff1c9", 3.0)
     lab._ball("dl_bulb", (bx + 0.65, by - 1.0, TOP + 2.15), (0.22, 0.22, 0.22), bulb, 10)
-    pool = lab._pool("dl_lamp", (nx + 0.3, ny + 0.2, TOP + 0.01), (2.4, 1.8), "#ffb85c", 0.6)
-    lamp = lab._light("dl_lamp_light", "SPOT", (bx + 0.7, by - 1.1, TOP + 2.1), (math.radians(15), 0, 0), 900,
+    pool = lab._pool("dl_lamp", (nx + 0.4, ny + 0.2, TOP + 0.01), (3.6, 2.7), "#ffb054", 0.95)
+    lamp = lab._light("dl_lamp_light", "SPOT", (bx + 0.7, by - 1.1, TOP + 2.1), (math.radians(15), 0, 0), 1400,
                       "#ffd28a", 0.2, spot=math.radians(100))
     # ---------------------------------------------------------------- the hero tank on the desk's right end
     tw, td, th = 3.2, 1.8, 1.8                               # 64 x 36 x 36 cm
@@ -253,14 +253,14 @@ def room(seed=7):
         anim.key(b, "location", t0, (tcx - 1.3, tcy + 0.5, TOP + 0.4), "LINEAR")
         anim.key(b, "location", t0 + P, (tcx - 1.3 + rnd.uniform(-0.1, 0.1), tcy + 0.5, TOP + th * 0.86), "LINEAR")
         lab._cycle(b, "location")
-    tank_light = lab._light("dl_tank_light", "AREA", (tcx, tcy - 1.6, TOP + 1.2), (math.radians(-80), 0, 0), 600,
+    tank_light = lab._light("dl_tank_light", "AREA", (tcx, tcy - 1.6, TOP + 1.2), (math.radians(-80), 0, 0), 1100,
                             "#4fd8e8", 2.4, 1.2, shadow=False)
-    cyan_pool = lab._pool("dl_tank", (tcx - 0.5, dy0 - 2.8, 0.02), (4.5, 3.2), "#4fd8e8", 0.35)
+    cyan_pool = lab._pool("dl_tank", (tcx - 0.8, dy0 - 3.0, 0.02), (6.5, 4.6), "#4fd8e8", 0.6)
     desk_pool = lab._pool("dl_tank_desk", (tcx - 0.2, dy0 + 0.6, TOP + 0.02), (2.6, 1.0), "#4fd8e8", 0.45)
     # ---------------------------------------------------------------- Kai's chair (seated facing +Y, the window)
     fab = _p("chair", "#1f2740", "#2c3550", "#3e4a6e")
     blk = _p("chair_base", "#10131c", "#1b2030", "#262c40")
-    sx, sy, sz = lx - 0.2, dy0 - 1.9, 2.4
+    sx, sy, sz = lx - 0.2, dy0 - 1.2, 2.4                  # pulled in: his right hand reaches the tank glass
     before = set(bpy.context.scene.objects)
     _box("dl_chair_seat", (sx, sy, sz - 0.15), (2.3, 2.2, 0.35), fab, bevel=0.12)
     _box("dl_chair_back", (sx, sy - 1.2, sz + 1.4), (2.1, 0.3, 2.1), fab, rot=(math.radians(-8), 0, 0), bevel=0.12)
@@ -299,7 +299,7 @@ def room(seed=7):
     end = Vector((px, py, 0.0)) - ax * 1.25
     spark_at = Vector((px, py, 0.9)) - ax * 0.6
     # ---------------------------------------------------------------- the room light (an overhead fluorescent wash)
-    room_l = lab._light("dl_room_light", "AREA", ((X0 + X1) / 2, (Y0 + Y1) / 2, H + 6), (0, 0, 0), 9000, "#cfe0ff",
+    room_l = lab._light("dl_room_light", "AREA", ((X0 + X1) / 2, (Y0 + Y1) / 2, H + 6), (0, 0, 0), 13000, "#cfe0ff",
                         14.0, 10.0)
     strike = lab._light("dl_strike", "AREA", ((wx0 + wx1) / 2, Y1 + 3.0, 9.0), (math.radians(-70), 0, 0), 0.0,
                         "#d4e0ff", 8.0, 6.0)
@@ -310,7 +310,7 @@ def room(seed=7):
             o.visible_shadow = False
     spill_m = lab._water_floor()
     base = {o.name: o.data.energy for o in (room_l, lamp, tank_light)}
-    glows = [(screen, 1.3), (bulb, 3.0), (pool, 0.6), (cyan_pool, 0.35), (desk_pool, 0.45), (water, 1.2)]
+    glows = [(screen, 1.3), (bulb, 3.0), (pool, 0.95), (cyan_pool, 0.6), (desk_pool, 0.45), (water, 1.2)]
     glows += [(m, 1.0) for m in shelf_water]
 
     def _em(m):
@@ -326,7 +326,7 @@ def room(seed=7):
             lab._kprop(strike.data, "energy", f, v * 30000 * strength, it)
             lab._ksock(fl_bolt, f, (1.0 if frame <= f <= frame + 2 and v > 0.5 else 0.0) * strength, "CONSTANT")
 
-    def _set(f, on, lamps=(room_l, lamp), mats=((screen, 1.3), (bulb, 3.0), (pool, 0.6)), k_off=0.03):
+    def _set(f, on, lamps=(room_l, lamp), mats=((screen, 1.3), (bulb, 3.0), (pool, 0.95)), k_off=0.03):
         for o in lamps:
             lab._kprop(o.data, "energy", f, base[o.name] * (1.0 if on else k_off), "CONSTANT")
         for m, s in mats:
@@ -334,10 +334,10 @@ def room(seed=7):
 
     def flicker(frames):
         frames = sorted(frames)
-        _set(frames[0] - 1, True, mats=((bulb, 3.0), (pool, 0.6)))
+        _set(frames[0] - 1, True, mats=((bulb, 3.0), (pool, 0.95)))
         for f in frames:
-            _set(f, False, mats=((bulb, 3.0), (pool, 0.6)))
-            _set(f + 2, True, mats=((bulb, 3.0), (pool, 0.6)))
+            _set(f, False, mats=((bulb, 3.0), (pool, 0.95)))
+            _set(f + 2, True, mats=((bulb, 3.0), (pool, 0.95)))
 
     def power_out(frame):
         _set(frame - 1, True, (room_l, lamp, tank_light), glows + [(spill_m, 1.0)])
