@@ -35,7 +35,7 @@ An independent read of every delivered shot in `out/monsters/diorama/shots/`, wi
 | S24bot | XprL | PASS | 97 / 97 | 0.49 | the bird's shadow sweeps over Kai, then it drops on the shrimp and mantles; clean |
 | S06 | helper 9 | PASS for the picture; **FIX** no rain in the window | 41 / 41 | 0.47 | the bolt on "storm" (14), Kai looks up, the lights stutter; clean |
 | S07 | helper 2 | PASS (remuxed clean, 7c99972) | 36 / 36 | 0.42 | the eye, the strike, the ring, the crack up the tank glass |
-| S09 | helper 3 | PASS for the picture; **FIX** file tags | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
+| S09 | helper 3 | PASS (remuxed clean, e2b1af1) | 66 / 66 | 0.35 | the white-out blooms onto Kai in the flowers, then the cracked sky; 1 NOTE |
 | S22 | XprL | PASS | 57 / 57 | 0.53 | the thorn tree on "thorn tree", pulling back to Kai by the pond; clean |
 | S23 | XprL | PASS | 82 / 82 | 0.45 | the butcher bird lands on the tree, turns to its danger colours; clean |
 | S01 | bGqrs | re-render pending (helper 4, after bGqrs's three-quarter shrimp fix) | 69 | - | v1 (45ef696) superseded |
@@ -167,11 +167,11 @@ Waiting for: S02, S04, S05a, S08, S13, S14, S16, S18-S20, S24top; the S03a re-re
   (0 tags, 36 frames).
 
 ## S09: waking in the meadow, the cracked sky (helper 3)
-**PASS for the picture**, with one FIX and one NOTE.
+**PASS** (remuxed clean, e2b1af1), with one NOTE.
 - **Length and level:** 66 frames, saturation 0.35 (low in the band, from the white-out at the start).
 - **Picture:** white frames bloom onto Kai lying in the pink flowers, a blur tilt up, then the crack in the sky
   between two clouds, held from about frame 33, so it is on screen for "cracked sky" (frames 31-44).
-- **FIX (file hygiene):** the mp4 carries 2 encoder tags; a CLEAN remux clears them.
+- **FIX (file hygiene), done:** the 2 encoder tags are gone after helper 3's CLEAN remux (e2b1af1).
 - **NOTE:** the sky crack is a thin line; at 360 px it reads, but only just. A thicker or brighter crack (or a glow
   along it) would sell the beat.
 
