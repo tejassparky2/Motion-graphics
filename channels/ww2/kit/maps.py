@@ -1,20 +1,23 @@
 """WW2 channel kit, maps: Natural Earth countries and 1938-1945 historical regions, three projections, and a Map you
-draw every frame with a camera: side fills that flood from a point, coastlines and borders, coast ripples on the sea,
-pulsing city dots, Kalam labels, growing attack arrows, moving front lines and the dashed "secret line".
-Style rules: channels/ww2/STYLE.md ("Maps").
+draw every frame with a camera, skinned as a printed 1940s war map (STYLE.md, "Maps"): aged-paper land, a grey-green
+sea hatched along the coasts, ink coastlines, dashed borders, a light lat/long grid and a compass rose; sides in the
+poster inks, occupied or annexed land halftoned; fills that flood from a point, fat poster arrows with a hard shadow
+that grow along curves, moving front lines, the dashed "secret line", stamps, pulsing cities, Oswald/stencil labels.
 
     from channels.ww2.kit.maps import Map
     m = Map("europe")                                   # or "pacific", "world"
-    m.side("poland_w", 4.4, "germany", origin=(16.5, 52.3), dur=1.2)    # floods grey from that point
+    m.side("poland_w", 4.4, "germany", origin=(16.5, 52.3), dur=1.2)    # floods grey (halftoned: occupied)
     m.arrow([(14.6, 53.2), (17.5, 52.9), (20.4, 52.3)], "germany", 3.2, 4.6)
     m.camera_key(0, (15, 52), 1.0); m.camera_key(3.5, (19.5, 52), 2.6)
-    m.draw(cr, t)                                       # inside the scene's draw(cr, t), after paper(cr)
+    m.draw(cr, t)                                       # inside the scene's draw(cr, t), after paper(cr); then the
+                                                        # date tag, and print_finish(cr, t) last
 
 Data: Natural Earth admin-0 50m and lakes (public domain), downloaded once into build/ww2/ne/; build_data() projects,
 cuts the historical regions and caches compact JSON in channels/ww2/data/<view>.json (committed), so a render needs
 only json + cairo. The historical borders (Germany 1937 with East Prussia, the Sudetenland, Poland 1939 and its
-September split, Bessarabia, Carpatho-Ukraine, Finnish Karelia, the 1940 demarcation line in France) are Natural Earth
-land cut by hand-traced lon/lat lines: close at this scale, not survey-exact.
+September split, Bessarabia, Bukovina, Carpatho-Ukraine, Finnish Karelia, the 1940 demarcation line in France) are
+Natural Earth land cut by hand-traced lon/lat lines (admin-1 at 50m doesn't cover Europe): close at this scale, not
+survey-exact.
 
     /home/user/.venv-main/bin/python -m channels.ww2.kit.maps build       # (re)build the cached views
 """
@@ -24,8 +27,8 @@ import os
 import random
 import sys
 
-from channels.ww2.kit.core import (H, HAND, ROOT, TITLE, W, back_out, cairo, clamp01, col, ease_in, ease_out, lerp,
-                                   paper_surface, seg, smooth, text)
+from channels.ww2.kit.core import (H, LABEL, ROOT, STENCIL, W, _dot_tile, back_out, cairo, clamp01, col,
+                                   ease_in, ease_out, lerp, seg, smooth, text)
 
 DATA = os.path.join(ROOT, "channels", "ww2", "data")
 NE = os.path.join(ROOT, "build", "ww2", "ne")
@@ -36,11 +39,12 @@ Q = 4                               # stored coordinates are map pixels x Q, as 
 # map pixels: at zoom 1 the view's centre sits mid-frame and `width_km` spans the 1920 px width
 VIEWS = {
     "europe": dict(proj="laea", lon0=15.0, lat0=52.0, center=(15.0, 52.0), width_km=5200,
-                   clip=[(-32, 18, 72, 76)]),
+                   clip=[(-32, 18, 72, 76)], grid=5, grid_lon=(-40, 80), grid_lat=(25, 80)),
     "pacific": dict(proj="eqearth", lon0=160.0, lat0=0.0, center=(145.0, 15.0), width_km=17000,
-                    clip=[(25, -52, 180, 72), (-180, -52, -25, 72)]),
+                    clip=[(25, -52, 180, 72), (-180, -52, -25, 72)], grid=15, grid_lon=(-335, -25),
+                    grid_lat=(-60, 75)),
     "world": dict(proj="eqearth", lon0=0.0, lat0=0.0, center=(10.0, 8.0), width_km=38000,
-                  clip=[(-179.9, -60, 179.9, 84)]),
+                  clip=[(-179.9, -60, 179.9, 84)], grid=30, grid_lon=(-180, 180), grid_lat=(-60, 75)),
 }
 
 # ---------------------------------------------------------------- historical lines (lon, lat), hand-traced
@@ -92,16 +96,17 @@ EUROPE = {
 # carved out of their modern hosts (in this order), then split further below
 CUT = [("east_prussia", "ussr"), ("kresy", "ussr"), ("kresy", "lithuania"), ("bessarabia", "ussr"),
        ("bukovina", "ussr"), ("carpatho", "ussr"), ("fin_karelia", "ussr"), ("fin_petsamo", "ussr")]
-# Aug 1939 owners (borders show only between different owners) and sides; scenes change them with owner()/side()
+# Aug 1939: owners (borders show only between different owners), sides, and annexed/occupied land (halftoned)
 OWNER_1939 = {"germany": "germany", "g37east": "germany", "east_prussia": "germany", "austria": "germany",
               "sudeten": "germany", "czech": "germany", "slovakia": "slovakia", "poland_w": "poland",
               "poland_e": "poland", "kresy": "poland", "bessarabia": "romania", "bukovina": "romania",
               "romania": "romania", "carpatho": "hungary", "fin_karelia": "finland", "fin_petsamo": "finland",
-              "france_occ": "france", "france_vichy": "france"}
+              "france_occ": "france", "france_vichy": "france", "albania": "italy"}
 SIDE_1939 = {"germany": "germany", "g37east": "germany", "east_prussia": "germany", "austria": "germany",
              "sudeten": "germany", "czech": "germany", "slovakia": "italy", "italy": "italy", "albania": "italy",
              "libya": "italy", "poland_w": "allies", "poland_e": "allies", "uk": "allies", "france_occ": "allies",
              "france_vichy": "allies", "ussr": "soviet"}
+OCCUPIED_1939 = {"austria", "sudeten", "czech", "albania"}
 GROUPS = {"germany_1937": ["germany", "g37east", "east_prussia"],
           "greater_germany": ["germany", "g37east", "east_prussia", "austria", "sudeten", "czech"],
           "czechoslovakia": ["sudeten", "czech", "slovakia", "carpatho"], "poland": ["poland_w", "poland_e"],
@@ -121,6 +126,7 @@ PACIFIC_CUT = [("manchukuo", "china"), ("china_occ", "china"), ("manchukuo", "ch
 PACIFIC_SIDE = {"japan": "japan", "korea": "japan", "taiwan": "japan", "manchukuo": "japan", "china_occ": "japan",
                 "china": "china", "ussr": "soviet", "usa": "allies", "australia": "allies", "nz": "allies",
                 "india": "allies", "burma": "allies", "malaya": "allies", "philippines": "allies"}
+PACIFIC_OCCUPIED = {"korea", "taiwan", "manchukuo", "china_occ"}
 
 CITIES = {   # (lon, lat)
     "Berlin": (13.40, 52.52), "Warsaw": (21.01, 52.23), "Danzig": (18.65, 54.35), "Krakow": (19.94, 50.06),
@@ -180,7 +186,7 @@ def _fetch(name):
 
 
 def build_data(views=("europe", "pacific", "world")):
-    from shapely.geometry import LineString, MultiPolygon, Polygon, box, shape
+    from shapely.geometry import LineString, Polygon, box, shape
     from shapely.ops import linemerge, transform, unary_union
     countries = {}
     for ft in _fetch("ne_50m_admin_0_countries")["features"]:
@@ -223,7 +229,7 @@ def build_data(views=("europe", "pacific", "world")):
             geo["carpatho"] = geo["carpatho"].difference(geo["kresy"]).difference(geo["bukovina"]).buffer(0)
         for small, big in cuts:
             geo[big] = geo[big].difference(geo[small]).buffer(0)
-        if view == "europe":                                           # 1939 Poland, its split; Sudetenland; France
+        if view == "europe":                                           # 1939 Poland, its split; France 1940
             pol = countries["POL"].difference(geo["g37east"]).difference(geo["east_prussia"])
             pol = pol.union(geo.pop("kresy")).buffer(0)
             west = Polygon(SPLIT_1939 + [(14.0, 48.5), (14.0, 55.5), (23.5, 55.5)])
@@ -257,7 +263,7 @@ def build_data(views=("europe", "pacific", "world")):
         out = dict(meta=dict(view=view, **{k: v[k] for k in ("proj", "lon0", "lat0", "center", "width_km")}, q=Q),
                    regions={}, labels={}, edges={}, land=_rings(land.simplify(tol), Q),
                    lakes=_rings(unary_union([prj(lk) for lk in lakes]).simplify(tol), Q),
-                   ripples=[], cities={k: [round(c, 1) for c in project(view, *ll)] for k, ll in CITIES.items()})
+                   bands=[], cities={k: [round(c, 1) for c in project(view, *ll)] for k, ll in CITIES.items()})
         for k, g in sorted(pg.items()):
             out["regions"][k] = _rings(g.simplify(tol / 2), Q)
             big = max(getattr(g, "geoms", [g]), key=lambda p: p.area)
@@ -277,9 +283,8 @@ def build_data(views=("europe", "pacific", "world")):
                 m = linemerge(lines) if lines else None
                 if m is not None and not m.is_empty:
                     out["edges"][f"{a}|{b}"] = _lines(m.simplify(tol), Q)
-        for km in (8, 17, 28):                                         # coast ripples on the sea
-            r = land.buffer(km * 1000 * s, quad_segs=4).simplify(tol * 2)
-            out["ripples"].append(_lines(r.boundary, Q))
+        for km in (11, 24):                                            # the coastal hatching bands (land + margin)
+            out["bands"].append(_rings(land.buffer(km * 1000 * s, quad_segs=4).simplify(tol * 2), Q))
         with open(os.path.join(DATA, view + ".json"), "w") as f:
             json.dump(out, f, separators=(",", ":"))
         print(view, len(out["regions"]), "regions", len(out["edges"]), "edges",
@@ -330,16 +335,27 @@ def _load(view):
     return _CACHE[view]
 
 
+def _ctx():
+    return cairo.Context(cairo.ImageSurface(cairo.FORMAT_A8, 1, 1))
+
+
 def _path(rings, closed=True):
     """A cairo path (in map pixels) from flat int rings, built once."""
-    surf = cairo.ImageSurface(cairo.FORMAT_A8, 1, 1)
-    c = cairo.Context(surf)
+    c = _ctx()
     for r in rings:
         c.move_to(r[0] / Q, r[1] / Q)
         for i in range(2, len(r), 2):
             c.line_to(r[i] / Q, r[i + 1] / Q)
         if closed:
             c.close_path()
+    return c.copy_path()
+
+
+def _poly_path(polys):
+    c = _ctx()
+    for poly in polys:
+        for i, p in enumerate(poly):
+            (c.move_to if i == 0 else c.line_to)(*p)
     return c.copy_path()
 
 
@@ -362,7 +378,7 @@ def _catmull(pts, n=12):
 
 
 def _cut(poly, length):
-    """The polyline's first `length` (in its own units) and the arc length of the whole."""
+    """The polyline's first `length` (in its own units)."""
     out, acc = [poly[0]], 0.0
     for a, b in zip(poly, poly[1:]):
         d = math.hypot(b[0] - a[0], b[1] - a[1])
@@ -384,32 +400,52 @@ def _resample(poly, n):
     return [_cut(poly, L * i / (n - 1))[-1] for i in range(n)]
 
 
+def _tint(side, k=0.42):
+    """An occupied land's base: the side ink mixed into the paper-land colour (the dots then carry the full ink)."""
+    a, b = col(side), col("land")
+    return tuple(lerp(b[i], a[i], k) for i in range(3)) + (1.0,)
+
+
 class Map:
     """One map view. Set it up once (sides, owners, arrows, fronts, cities, labels, camera keys), then call
     draw(cr, t) every frame. All times are seconds in the scene; places are (lon, lat)."""
 
-    def __init__(self, view="europe", sides=None, owners=None):
+    def __init__(self, view="europe", sides=None, owners=None, occupied=None, compass=True, grid=True):
         self.view = view
         d = _load(view)
         self.d = d
         self.paths = {k: _path(r) for k, r in d["regions"].items()}
         self.land = _path(d["land"])
         self.lakes = _path(d["lakes"])
-        self.ripples = [_path(r, closed=False) for r in d["ripples"]]
+        self.bands = [_path(b) for b in d["bands"]]
         self.edges = {k: _path(r, closed=False) for k, r in d["edges"].items()}
         self.bbox = {k: self._bbox(r) for k, r in d["regions"].items()}
         default = SIDE_1939 if view == "europe" else PACIFIC_SIDE if view == "pacific" else {}
-        self._side = {k: [(-1e9, (sides or default).get(k, "neutral"), None, 0.0)] for k in self.paths}
+        occ = OCCUPIED_1939 if view == "europe" else PACIFIC_OCCUPIED if view == "pacific" else set()
+        occ = occupied if occupied is not None else occ
+        self._side = {k: [(-1e9, (sides or default).get(k, "neutral"), None, 0.0, k in occ)] for k in self.paths}
         own = OWNER_1939 if view == "europe" else {}
         self._owner = {k: [(-1e9, (owners or own).get(k, k))] for k in self.paths}
         self.arrows, self.fronts, self.secrets, self.cities, self.labels, self.stamps = [], [], [], [], [], []
         self.cam = []
+        self.compass = compass
+        self.grid = self._graticule() if grid else None
 
     @staticmethod
     def _bbox(rings):
         xs = [r[i] / Q for r in rings for i in range(0, len(r), 2)]
         ys = [r[i] / Q for r in rings for i in range(1, len(r), 2)]
         return min(xs), min(ys), max(xs), max(ys)
+
+    def _graticule(self):
+        v = VIEWS[self.view]
+        step, (lo0, lo1), (la0, la1) = v["grid"], v["grid_lon"], v["grid_lat"]
+        lines = []
+        for lon in range(lo0 - lo0 % step, lo1 + 1, step):
+            lines.append([self.xy((lon, la0 + (la1 - la0) * i / 60)) for i in range(61)])
+        for lat in range(la0 - la0 % step, la1 + 1, step):
+            lines.append([self.xy((lo0 + (lo1 - lo0) * i / 120, lat)) for i in range(121)])
+        return _poly_path(lines)
 
     def xy(self, lonlat):
         return project(self.view, *lonlat)
@@ -418,12 +454,13 @@ class Map:
         return GROUPS.get(name, [name])
 
     # ------------------------------------------------------------ setup
-    def side(self, name, t, side, origin=None, dur=1.0):
+    def side(self, name, t, side, origin=None, dur=1.0, occupied=True):
         """From t, `name` (a region or a GROUPS name) turns `side`; with `origin` (lon, lat) the colour floods out
-        from there over `dur` seconds instead of switching."""
+        from there over `dur` seconds instead of switching. occupied: halftone it (newly occupied or annexed land);
+        False for land that changes side but stays its own (a country joining a side)."""
         for r in self.regions(name):
             if r in self._side:
-                self._side[r].append((t, side, self.xy(origin) if origin else None, dur))
+                self._side[r].append((t, side, self.xy(origin) if origin else None, dur, occupied))
                 self._side[r].sort(key=lambda e: e[0])
 
     def owner(self, name, t, owner):
@@ -433,9 +470,9 @@ class Map:
                 self._owner[r].append((t, owner))
                 self._owner[r].sort(key=lambda e: e[0])
 
-    def arrow(self, lonlats, side, t0, t1, width=46.0, hold=None):
-        """An attack arrow along a smooth path through `lonlats`, growing from t0 to t1 (side colour, ink outline,
-        white inner highlight, arrowhead). width is in screen pixels at the head; `hold` ends it (fades) at that time."""
+    def arrow(self, lonlats, side, t0, t1, width=70.0, hold=None):
+        """A fat poster arrow along a smooth path through `lonlats`, growing from t0 to t1: side colour, ink outline,
+        a hard drop shadow. width is in screen pixels across the head; `hold` ends it (fades) at that time."""
         self.arrows.append(dict(pts=_catmull([self.xy(p) for p in lonlats]), side=side, t0=t0, t1=t1, w=width,
                                 hold=hold))
 
@@ -444,24 +481,28 @@ class Map:
         self.fronts.append(dict(keys=[(t, _resample(_catmull([self.xy(p) for p in pts], 6), 64)) for t, pts in keys],
                                 w=width, side=side, t_in=t_in if t_in is not None else keys[0][0], t_out=t_out))
 
-    def secret_line(self, lonlats, t0, t1, color="alert", width=5.0, t_out=None):
+    def secret_line(self, lonlats, t0, t1, color="alert", width=6.0, t_out=None):
         """A dashed line drawn along `lonlats` from t0 to t1 (the secret protocol), gone at t_out."""
         self.secrets.append(dict(pts=_catmull([self.xy(p) for p in lonlats], 6), t0=t0, t1=t1, color=color, w=width,
                                  t_out=t_out))
 
     def stamp(self, word, lonlat, t0, t_out=None, size=78, color="alert", tilt=-0.12):
-        """A rubber-stamp word ("SECRET") that slams down at lonlat at t0."""
+        """A rubber-stamp word ("SECRET", stencil) that slams down at lonlat at t0."""
         self.stamps.append(dict(word=word, at=self.xy(lonlat), t0=t0, t_out=t_out, size=size, color=color, tilt=tilt))
 
-    def city(self, name, t0, t_out=None, lonlat=None, label=True, pulse=True, dx=16, dy=-14, size=32):
-        """A city dot (with its name) from t0; it pulses for a second when it appears."""
+    def city(self, name, t0, t_out=None, lonlat=None, label=True, pulse=True, dx=16, dy=-14, size=34):
+        """A city dot (with its name, Oswald) from t0; it pulses for a second when it appears."""
         self.cities.append(dict(name=name, at=self.xy(lonlat or CITIES[name]), t0=t0, t_out=t_out, label=label,
                                 pulse=pulse, dx=dx, dy=dy, size=size))
 
-    def label(self, s, t0, t_out=None, lonlat=None, region=None, size=44, color="ink", tilt=0.0, spacing=2.0):
-        """A Kalam map label at lonlat (or at a region's label point), fading in at t0."""
+    def label(self, s, t0, t_out=None, lonlat=None, region=None, size=48, color="ink", tilt=0.0, spacing=None,
+              font=None):
+        """A map label at lonlat (or a region's label point), fading in at t0: stencil for the big ones (size >= 40),
+        Oswald below."""
         at = self.xy(lonlat) if lonlat else tuple(self.d["labels"][region])
-        self.labels.append(dict(s=s, at=at, t0=t0, t_out=t_out, size=size, color=color, tilt=tilt, sp=spacing))
+        font = font or (STENCIL if size >= 40 else LABEL)
+        sp = spacing if spacing is not None else (size * 0.12 if font == STENCIL else size * 0.06)
+        self.labels.append(dict(s=s, at=at, t0=t0, t_out=t_out, size=size, color=color, tilt=tilt, sp=sp, font=font))
 
     def camera_key(self, t, lonlat, zoom):
         """The camera looks at lonlat with `zoom` at time t; between keys it eases (smooth in and out)."""
@@ -489,36 +530,31 @@ class Map:
         return o
 
     def _side_at(self, r, t):
-        """(side before, side now, flood origin, flood progress 0-1)."""
+        """(state before, state now, flood origin, flood progress 0-1); a state is (side, occupied)."""
         hist = self._side[r]
         prev, cur = hist[0], hist[0]
         for e in hist[1:]:
             if t >= e[0]:
                 prev, cur = cur, e
         if cur[2] is None or cur[3] <= 0:
-            return cur[1], cur[1], None, 1.0
-        return prev[1], cur[1], cur[2], clamp01((t - cur[0]) / cur[3])
+            return (cur[1], cur[4]), (cur[1], cur[4]), None, 1.0
+        return (prev[1], prev[4]), (cur[1], cur[4]), cur[2], clamp01((t - cur[0]) / cur[3])
 
     # ------------------------------------------------------------ draw
     def draw(self, cr, t):
         (cx, cy), z = self.camera_at(t)
-        self._z, self._c = z, (cx, cy)
+        self._z, self._c, self._t = z, (cx, cy), t
         cr.save()
-        cr.set_source_rgba(*col("sea", 0.86))                       # the sea over the paper (its grain shows through)
+        cr.set_source_rgba(*col("sea", 0.94))                       # the printed sea (paper grain shows a little)
         cr.paint()
         cr.translate(W / 2, H / 2)
         cr.scale(z, z)
         cr.translate(-cx, -cy)
         cr.set_line_cap(cairo.LINE_CAP_ROUND)
         cr.set_line_join(cairo.LINE_JOIN_ROUND)
-        for i, rp in enumerate(self.ripples):                       # coast ripples, fainter farther out
-            cr.new_path()
-            cr.append_path(rp)
-            cr.set_source_rgba(*col("sea_dk", 0.75 - 0.2 * i))
-            cr.set_line_width(1.6 / z)
-            cr.stroke()
+        self._hatch(cr)
         cr.new_path()
-        cr.append_path(self.land)                                    # neutral land under everything
+        cr.append_path(self.land)                                    # neutral land (aged paper) under everything
         cr.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
         cr.set_source_rgba(*col("land"))
         cr.fill()
@@ -526,23 +562,31 @@ class Map:
             self._fill_region(cr, r, p, t, z)
         cr.new_path()                                                # lakes
         cr.append_path(self.lakes)
-        cr.set_source_rgba(*col("sea", 0.95))
+        cr.set_source_rgba(*col("sea"))
         cr.fill_preserve()
-        cr.set_source_rgba(*col("ink_soft", 0.8))
-        cr.set_line_width(1.0 / z)
+        cr.set_source_rgba(*col("ink", 0.8))
+        cr.set_line_width(1.2 / z)
         cr.stroke()
-        cr.set_line_width(1.5 / z)                                   # borders, only between different owners
-        cr.set_source_rgba(*col("ink_soft", 0.9))
+        if self.grid is not None:                                    # the lat/long grid, printed faint over all
+            cr.new_path()
+            cr.append_path(self.grid)
+            cr.set_source_rgba(*col("ink_soft", 0.22))
+            cr.set_line_width(1.1 / z)
+            cr.stroke()
+        cr.set_line_width(1.8 / z)                                   # dashed borders, only between different owners
+        cr.set_source_rgba(*col("ink", 0.8))
+        cr.set_dash([9 / z, 5 / z])
         for k, p in self.edges.items():
             a, b = k.split("|")
             if self._owner_at(a, t) != self._owner_at(b, t):
                 cr.new_path()
                 cr.append_path(p)
                 cr.stroke()
+        cr.set_dash([])
         cr.new_path()                                                # coastline
         cr.append_path(self.land)
-        cr.set_source_rgba(*col("ink", 0.92))
-        cr.set_line_width(2.5 / z)
+        cr.set_source_rgba(*col("ink"))
+        cr.set_line_width(2.6 / z)
         cr.stroke()
         for f in self.fronts:
             self._draw_front(cr, f, t, z)
@@ -557,24 +601,66 @@ class Map:
             self._draw_city(cr, c, t)
         for s in self.stamps:
             self._draw_stamp(cr, s, t)
-        cr.save()                                                    # the paper's grain back over the flat fills
-        cr.set_operator(cairo.OPERATOR_MULTIPLY)
-        cr.set_source_surface(paper_surface(), 0, 0)
-        cr.paint_with_alpha(0.45)
-        cr.restore()
+        if self.compass:
+            self._draw_compass(cr, t)
 
     def screen(self, p):
         """Map pixels -> screen pixels with the camera of the last draw()."""
         (cx, cy), z = self._c, self._z
         return (p[0] - cx) * z + W / 2, (p[1] - cy) * z + H / 2
 
+    def _hatch(self, cr):
+        """Fine parallel hatching on the sea along the coasts: sparse out to the outer band, doubled near the shore.
+        The lines are spaced in screen pixels (a print screen), so they stay fine at any zoom."""
+        for i, band in enumerate(self.bands[::-1]):                  # outer band first
+            cr.save()
+            cr.new_path()
+            cr.append_path(band)
+            cr.append_path(self.land)
+            cr.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)               # band XOR land = the sea margin
+            cr.clip()
+            cr.identity_matrix()
+            gap, off = 12.0, 6.0 * i
+            cr.set_source_rgba(*col("sea_dk", 0.9))
+            cr.set_line_width(1.25)
+            k = -H + off
+            while k < W:
+                cr.move_to(k, H)
+                cr.line_to(k + H * 0.6, 0)
+                k += gap
+            cr.stroke()
+            cr.restore()
+
+    def _halftone_here(self, cr, side):
+        """Halftone dots in the side ink over the current clip, at a fixed print-screen size on screen."""
+        cr.save()
+        cr.identity_matrix()
+        cr.set_source_rgba(*col(side))
+        cr.mask(_dot_tile(3, 11))
+        cr.restore()
+
+    def _paint_state(self, cr, state, z):
+        """Fill the current path (preserved) in a region state: home land solid, occupied land tinted + halftoned."""
+        side, occ = state
+        if occ and side != "neutral":
+            cr.set_source_rgba(*_tint(side))
+            cr.fill_preserve()
+            cr.save()
+            cr.clip_preserve()
+            self._halftone_here(cr, side)
+            cr.restore()
+        else:
+            cr.set_source_rgba(*col(side))
+            cr.fill_preserve()
+
     def _fill_region(self, cr, r, p, t, z):
         before, now, origin, u = self._side_at(r, t)
         cr.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
         cr.new_path()
         cr.append_path(p)
-        cr.set_source_rgba(*col(before if u < 1 else now))
-        cr.fill_preserve()
+        state = before if u < 1 else now
+        self._paint_state(cr, state, z)
+        cr.set_source_rgba(*(_tint(state[0]) if state[1] and state[0] != "neutral" else col(state[0])))
         cr.set_line_width(1.2 / z)                                   # seal hairline seams between pieces
         cr.stroke()
         if u >= 1 or origin is None:
@@ -598,64 +684,66 @@ class Map:
                         + 0.02 * math.sin(13 * a + ph[2]))
             (cr.move_to if k == 0 else cr.line_to)(origin[0] + rr * math.cos(a), origin[1] + rr * math.sin(a))
         cr.close_path()
-        cr.set_source_rgba(*col(now))
-        cr.fill_preserve()
-        cr.set_source_rgba(*col("ink", 0.45))
-        cr.set_line_width(2.4 / z)
+        self._paint_state(cr, now, z)
+        cr.set_source_rgba(*col("ink", 0.55))
+        cr.set_line_width(2.6 / z)
         cr.stroke()
         cr.restore()
 
-    def _draw_arrow(self, cr, a, t, z):
+    def _arrow_poly(self, a, t, z):
         u = ease_out(seg(t, a["t0"], a["t1"]))
         if u <= 0:
-            return
-        fade = 1.0 - (ease_in(seg(t, a["hold"], a["hold"] + 0.4)) if a["hold"] is not None else 0.0)
-        if fade <= 0:
-            return
+            return None
         L = _length(a["pts"])
         body = _cut(a["pts"], L * u)
         if len(body) < 2:
-            return
+            return None
         w = a["w"] / z
-        head_len = min(1.5 * w, _length(body) * 0.6)
+        head_len = min(0.95 * w, _length(body) * 0.6)
         shaft = _cut(body, max(0.0, _length(body) - head_len))
         tip, base = body[-1], shaft[-1]
         left, right = [], []
         n = len(shaft)
-        for i, p in enumerate(shaft):                                # tapered shaft: 45 % at the tail to 62 % at the neck
+        for i, p in enumerate(shaft):                                # a fat shaft, a little wider toward the head
             q = shaft[min(i + 1, n - 1)] if i < n - 1 else tip
             o = shaft[max(i - 1, 0)] if i > 0 else p
             dx, dy = q[0] - o[0], q[1] - o[1]
             d = math.hypot(dx, dy) or 1.0
-            hw = w * lerp(0.24, 0.34, i / max(1, n - 1))
+            hw = w * lerp(0.2, 0.27, i / max(1, n - 1))
             left.append((p[0] - dy / d * hw, p[1] + dx / d * hw))
             right.append((p[0] + dy / d * hw, p[1] - dx / d * hw))
         dx, dy = tip[0] - base[0], tip[1] - base[1]
         d = math.hypot(dx, dy) or 1.0
         nx, ny = -dy / d, dx / d
-        hw = w * 0.62
-        poly = left + [(base[0] + nx * hw, base[1] + ny * hw), tip, (base[0] - nx * hw, base[1] - ny * hw)] + right[::-1]
-        cr.new_path()
-        for i, p in enumerate(poly):
-            (cr.move_to if i == 0 else cr.line_to)(*p)
-        cr.close_path()
-        cr.set_source_rgba(*col("paper", 0.9 * fade))                # a paper halo, so grey arrows read over grey land
-        cr.set_line_width(9.0 / z)
+        hw = w * 0.5
+        return left + [(base[0] + nx * hw, base[1] + ny * hw), tip, (base[0] - nx * hw, base[1] - ny * hw)] + right[::-1]
+
+    def _draw_arrow(self, cr, a, t, z):
+        poly = self._arrow_poly(a, t, z)
+        if not poly:
+            return
+        fade = 1.0 - (ease_in(seg(t, a["hold"], a["hold"] + 0.4)) if a["hold"] is not None else 0.0)
+        if fade <= 0:
+            return
+
+        def trace(dx=0.0, dy=0.0):
+            cr.new_path()
+            for i, p in enumerate(poly):
+                (cr.move_to if i == 0 else cr.line_to)(p[0] + dx, p[1] + dy)
+            cr.close_path()
+
+        trace(7 / z, 8 / z)                                          # the hard poster shadow
+        cr.set_source_rgba(*col("ink", 0.55 * fade))
+        cr.fill()
+        trace()
+        cr.set_source_rgba(*col("cream", 0.9 * fade))                # a cream rim, so grey arrows read on grey land
+        cr.set_line_width(10 / z)
         cr.stroke_preserve()
         cr.set_source_rgba(*col(a["side"], fade))
         cr.fill_preserve()
         cr.set_source_rgba(*col("ink", fade))
-        cr.set_line_width(3.0 / z)
+        cr.set_line_width(4.0 / z)
         cr.stroke()
-        if len(shaft) > 2:                                           # the white inner highlight
-            cr.new_path()
-            hl = shaft[:max(2, int(len(shaft) * 0.92))]
-            for i, p in enumerate(hl):
-                (cr.move_to if i == 0 else cr.line_to)(p[0] - (right[i][0] - left[i][0]) * 0.18,
-                                                       p[1] - (right[i][1] - left[i][1]) * 0.18)
-            cr.set_source_rgba(*col("white", 0.55 * fade))
-            cr.set_line_width(max(1.5, a["w"] * 0.09) / z)
-            cr.stroke()
 
     def _draw_front(self, cr, f, t, z):
         if t < f["t_in"] or (f["t_out"] is not None and t > f["t_out"]):
@@ -679,7 +767,7 @@ class Map:
             d = math.hypot(dx, dy) or 1.0
             k = (2.2 * math.sin(i * 0.9 + t * 2.1) + 1.4 * math.sin(i * 2.3 - t * 1.3)) / z
             wob.append((p[0] - dy / d * k, p[1] + dx / d * k))
-        for lw, c, alpha in ((f["w"] + 4, "paper", 0.8), (f["w"], f["side"] or "ink", 1.0)):
+        for lw, c, alpha in ((f["w"] + 5, "cream", 0.85), (f["w"], f["side"] or "ink", 1.0)):
             cr.new_path()
             for i, p in enumerate(wob):
                 (cr.move_to if i == 0 else cr.line_to)(*p)
@@ -696,9 +784,9 @@ class Map:
         cr.new_path()
         for i, p in enumerate(pts):
             (cr.move_to if i == 0 else cr.line_to)(*p)
-        cr.set_dash([16 / z, 11 / z])
-        cr.set_source_rgba(*col("paper", 0.85 * a))
-        cr.set_line_width((s["w"] + 4) / z)
+        cr.set_dash([18 / z, 11 / z])
+        cr.set_source_rgba(*col("cream", 0.9 * a))
+        cr.set_line_width((s["w"] + 5) / z)
         cr.stroke_preserve()
         cr.set_source_rgba(*col(s["color"], a))
         cr.set_line_width(s["w"] / z)
@@ -715,8 +803,8 @@ class Map:
         cr.save()
         cr.translate(x, y)
         cr.rotate(lb["tilt"])
-        text(cr, lb["s"], 0, lb["size"] * 0.35, lb["size"], font=HAND, color=lb["color"], alpha=a, outline="paper",
-             outline_w=lb["size"] * 0.16, spacing=lb["sp"])
+        text(cr, lb["s"], 0, lb["size"] * 0.36, lb["size"], font=lb["font"], color=lb["color"], alpha=a,
+             outline="cream", outline_w=lb["size"] * 0.17, spacing=lb["sp"])
         cr.restore()
 
     def _draw_city(self, cr, c, t):
@@ -731,22 +819,22 @@ class Map:
                 if 0 < v < 1:
                     cr.new_path()
                     cr.arc(x, y, 9 + 30 * ease_out(v), 0, 2 * math.pi)
-                    cr.set_source_rgba(*col("alert", 0.8 * (1 - v) * a))
-                    cr.set_line_width(3.0)
+                    cr.set_source_rgba(*col("alert", 0.85 * (1 - v) * a))
+                    cr.set_line_width(3.5)
                     cr.stroke()
         cr.new_path()
-        cr.arc(x, y, 8.5 * pop, 0, 2 * math.pi)
-        cr.set_source_rgba(*col("paper", a))
+        cr.arc(x, y, 9 * pop, 0, 2 * math.pi)
+        cr.set_source_rgba(*col("cream", a))
         cr.fill_preserve()
         cr.set_source_rgba(*col("ink", a))
-        cr.set_line_width(3.0)
+        cr.set_line_width(3.5)
         cr.stroke()
-        cr.arc(x, y, 3.6 * pop, 0, 2 * math.pi)
+        cr.arc(x, y, 4 * pop, 0, 2 * math.pi)
         cr.fill()
         if c["label"]:
             la = a * ease_out(seg(t, c["t0"] + 0.1, c["t0"] + 0.45))
-            text(cr, c["name"], x + c["dx"], y + c["dy"], c["size"], font=HAND, color="ink", align="left", alpha=la,
-                 outline="paper", outline_w=c["size"] * 0.18)
+            text(cr, c["name"].upper(), x + c["dx"], y + c["dy"], c["size"], font=LABEL, color="ink", align="left",
+                 alpha=la, outline="cream", outline_w=c["size"] * 0.2, spacing=c["size"] * 0.05)
 
     def _draw_stamp(self, cr, s, t):
         if t < s["t0"] or (s["t_out"] is not None and t > s["t_out"] + 0.35):
@@ -760,15 +848,46 @@ class Map:
         k = 1.8 - 0.8 * u
         cr.scale(k, k)
         size = s["size"]
-        cr.select_font_face(TITLE)
+        cr.select_font_face(STENCIL, cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
         cr.set_font_size(size)
-        wd = cr.text_extents(s["word"]).x_advance + 4 * (len(s["word"]) - 1)
+        sp = size * 0.1
+        wd = cr.text_extents(s["word"]).x_advance + sp * (len(s["word"]) - 1)
         for inset, lw in ((0, 6.0), (11, 2.5)):                      # a double stamp border
             cr.rectangle(-wd / 2 - 26 + inset, -size * 0.78 + inset, wd + 52 - 2 * inset, size * 1.22 - 2 * inset)
-            cr.set_source_rgba(*col(s["color"], 0.88 * a))
+            cr.set_source_rgba(*col(s["color"], 0.9 * a))
             cr.set_line_width(lw)
             cr.stroke()
-        text(cr, s["word"], 0, size * 0.36, size, font=TITLE, color=s["color"], bold=False, alpha=0.88 * a, spacing=4)
+        text(cr, s["word"], 0, size * 0.36, size, font=STENCIL, color=s["color"], alpha=0.9 * a, spacing=sp)
+        cr.restore()
+
+    def _draw_compass(self, cr, t, x=W - 112, y=H - 118, r=56):
+        """A small printed compass rose: an eight-point star, ink and cream halves, a stencil N."""
+        cr.save()
+        cr.translate(x, y)
+        cr.new_path()
+        cr.arc(0, 0, r * 0.78, 0, 2 * math.pi)
+        cr.set_source_rgba(*col("cream", 0.85))
+        cr.fill_preserve()
+        cr.set_source_rgba(*col("ink", 0.9))
+        cr.set_line_width(2.0)
+        cr.stroke()
+        for k, ln, wd in ((1, r * 0.62, 0.16), (0, r, 0.2)):         # diagonals behind the cardinal points
+            for q in range(4):
+                a = q * math.pi / 2 + (math.pi / 4 if k else 0)
+                ca, sa = math.cos(a), math.sin(a)
+                for half in (0, 1):                                  # each point: a dark half and a light half
+                    cr.new_path()
+                    cr.move_to(0, 0)
+                    cr.line_to(ca * ln, sa * ln)
+                    s = 1 if half else -1
+                    cr.line_to(-sa * s * ln * wd, ca * s * ln * wd)
+                    cr.close_path()
+                    cr.set_source_rgba(*col("ink" if half else "cream"))
+                    cr.fill_preserve()
+                    cr.set_source_rgba(*col("ink"))
+                    cr.set_line_width(1.6)
+                    cr.stroke()
+        text(cr, "N", 0, -r - 8, 30, font=STENCIL, color="ink", outline="cream", outline_w=6)
         cr.restore()
 
 
