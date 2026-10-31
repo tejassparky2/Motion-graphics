@@ -34,6 +34,7 @@ Canvas: 1920x1080, 24 fps, pycairo. Render with `render_clip(draw, dur, out)`; `
 | Sea | `sea` | grey-green #9db3ad |
 
 - **No Nazi symbols at all:** no swastika, no SS runes, no Nazi eagle, no Nazi or Imperial Japanese flags, and no real propaganda slogans.
+- **No raised straight-arm gestures**, in crowds or on any figure, at any angle: they read as the Nazi salute. Crowds cheer with fists, hats and both arms up; pointing is a short bent-arm point toward something specific.
 - Generic marks only: a plain roundel, a plain white star (US) or a plain red star (Soviet). German vehicles and uniforms stay plain charcoal.
 - **No graphic violence.** No blood, no bodies, no visible deaths. Battles are flashes, smoke, flat star-burst explosions, arrows and ducking figures. Losses are numbers, or figures fading out on a map.
 
