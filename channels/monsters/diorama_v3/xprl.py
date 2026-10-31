@@ -50,8 +50,8 @@ def _shrimp(n, f_lift=None):
 
 def _bird_on_perch(perch, face_to, cut=0.1, fold=False):
     """The butcher bird sitting on the top thorn, already dark (S23's rage light from frame 1: everything above `cut`
-    below the ball's centre in the deep top-shadow tone, amber eye glints), facing `face_to`. `fold`: the wings
-    folded back along its sides, small, so they never cross its face in a close shot."""
+    below the ball's centre in the deep top-shadow tone, amber eye glints), facing `face_to`. `fold`: the little
+    wings tucked away (hidden), so they never cross its face in a close shot (the head turns, the wings don't)."""
     rig = tuftwing.build((perch.x, perch.y, 0.0), shadow_span=10.0)
     rig["root"].scale = (BIRD_SCALE,) * 3
     d = Vector(face_to) - perch
@@ -60,8 +60,7 @@ def _bird_on_perch(perch, face_to, cut=0.1, fold=False):
     h5._rage_light(rig, 1, perch.z + (tuftwing.CENTER[2] - cut) * BIRD_SCALE)
     if fold:
         for sx, w in zip((-1, 1), rig["wings"]):
-            anim.key(w, "rotation_euler", 1, (0.35, 0, sx * 0.55), "CONSTANT")   # swept back along the flank
-            anim.key(w, "scale", 1, (0.8, 0.8, 0.8), "CONSTANT")
+            anim.key(w, "scale", 1, (0.001, 0.001, 0.001), "CONSTANT")   # tucked away: never across its face
     return rig
 
 
@@ -193,10 +192,10 @@ def s24top():
         P.aim("forearm.L", (0.1, -0.6, 0.4))
 
     def reach_upper(P, t):
-        P.rot("spine", (20 + 8 * t, 0, 0))
-        P.rot("chest", (6 + 2 * t, 0, 0))
-        P.rot("neck", (-18 * t, 0, 0))
-        P.rot("head 1", (-40 * t, 0, 0))                                    # chin up to the lens (and the sky)
+        P.rot("spine", (14 + 4 * t, 0, 0))
+        P.rot("chest", (4 + 2 * t, 0, 0))
+        P.rot("neck", (-24 * t, 0, 0))
+        P.rot("head 1", (-52 * t, 0, 0))                                    # chin up: his face to the lens (and sky)
         x3._arms_down(P, 12)
         P.aim("upper_arm.R", (-0.1, -0.85 - 0.1 * t, -0.35))                # reaching out over the shrimp
         P.aim("forearm.R", (-0.03, -0.98, -0.1))
@@ -220,8 +219,8 @@ def s24top():
     acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 1.8, SHRIMP[1], 2.4))
-    a = (tuple(mid + Vector((0.6, 0, 0.3))), 46.0, 48.0, 72.0, 85.0, -0.23)   # low and close, from the west-south-
-    b = (tuple(mid), 38.0, 48.0, 72.0, 85.0, -0.23)                           # west: his face, the shrimp in front
+    a = (tuple(mid + Vector((0.6, 0, 0.3))), 52.0, 42.0, 72.0, 85.0, -0.25)   # low and close, from the west-south-
+    b = (tuple(mid), 43.0, 42.0, 72.0, 85.0, -0.25)                           # west: his face, the shrimp in front
     v2._move("cam_s24top_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"]])
 
