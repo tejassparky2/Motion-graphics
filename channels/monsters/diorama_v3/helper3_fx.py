@@ -32,7 +32,8 @@ SIZE = 15            # spark size on a 720-wide frame (fx2d's default is 22; the
 LAND = 11            # frames of the landing (0.45 s)
 VOID = (0.035, 0.012, 0.085)            # inside the rift: violet-black
 EDGE = (1.0, 0.9, 0.97)                 # its rim: white-pink
-GLOW = (1.0, 0.7, 0.88)
+GLOW = (1.0, 0.78, 0.92)
+HOT = (1.0, 0.42, 0.78)                 # the rift's outer glow (reads against a light sky)
 SHARDS = ((-0.33, 1, 0), (-0.08, -1, 1), (0.17, 1, 2), (0.36, -1, 3))   # (along, side, seed): off the rift's edges
 
 
@@ -81,7 +82,7 @@ def _width(spark, f):
     f_in = spark["f_in"]
     if f < f_in:
         return 0.0
-    return 0.016 + 0.034 * (1 - (1 - min(1.0, (f - f_in) / 8)) ** 2)
+    return 0.02 + 0.045 * (1 - (1 - min(1.0, (f - f_in) / 8)) ** 2)
 
 
 def _offsets(line, hw_px, f):
@@ -122,8 +123,11 @@ def black(arr, spark, f, k):
         pts = np.array([[p[0], p[1]] for p in line], np.int32).reshape(-1, 1, 2)
         cv2.polylines(mask, [pts], False, 0, max(1, int(2 * k)))
         d = cv2.distanceTransform(mask, cv2.DIST_L2, 5)
-        feather = 6 * k + 0.5 * r
+        feather = 8 * k + 1.1 * r
         alpha = np.clip((d - r) / feather, 0, 1).astype(np.float32)
+        if f > c1:                                            # and the rest of the dark lifts as the camera turns away
+            u = min(1.0, (f - c1) / 6)
+            alpha *= 1 - u * u * (3 - 2 * u)
     arr[..., :3] = (arr[..., :3].astype(np.float32) * (1 - alpha[..., None])).astype(np.uint8)
 
 
@@ -174,9 +178,9 @@ def rift(cr, spark, f, k):
         cr.set_line_width(2.2 * k)
         cr.stroke()
     else:
-        for wdt, a in ((22, 0.08), (12, 0.16), (6, 0.32)):       # glow outside the rim
-            outline()
-            cr.set_source_rgba(*GLOW, a * shimmer)
+        for wdt, a, col in ((90, 0.12, HOT), (56, 0.2, HOT), (32, 0.32, HOT), (16, 0.6, GLOW), (8, 0.9, EDGE)):
+            outline()                                         # glow outside the rim: magenta-pink to white
+            cr.set_source_rgba(*col, a * shimmer)
             cr.set_line_width(wdt * k)
             cr.stroke()
         outline()                                             # the void
@@ -196,8 +200,8 @@ def rift(cr, spark, f, k):
             cr.fill()
         cr.restore()
         outline()                                             # the rim
-        cr.set_source_rgba(*EDGE, 0.95 * shimmer)
-        cr.set_line_width(2.4 * k)
+        cr.set_source_rgba(*EDGE, 1.0)
+        cr.set_line_width(3.4 * k * (0.9 + 0.2 * shimmer))
         cr.stroke()
         if f >= spark["f_in"]:                                # shards drifting off its edges
             for along, side, sd in SHARDS:
@@ -207,9 +211,9 @@ def rift(cr, spark, f, k):
                 ln = math.hypot(nx, ny) or 1
                 nx, ny = nx / ln, ny / ln
                 rnd = random.Random(sd)
-                drift = (8 + 0.9 * (f - spark["f_in"]) + rnd.uniform(0, 8)) * k
+                drift = (18 + 1.1 * (f - spark["f_in"]) + rnd.uniform(0, 10)) * k
                 x, y = rim[0] + nx * drift, rim[1] + ny * drift + 0.3 * (f - spark["f_in"]) * k
-                sz = rnd.uniform(6, 11) * k * hpx / 400
+                sz = rnd.uniform(12, 20) * k
                 rot = rnd.uniform(0, 6.3) + 0.04 * (f - spark["f_in"]) * side
                 cr.new_path()
                 for q in range(3):
@@ -220,9 +224,9 @@ def rift(cr, spark, f, k):
                 cr.set_source_rgb(*VOID)
                 cr.fill_preserve()
                 cr.set_source_rgba(*EDGE, 0.9 * shimmer)
-                cr.set_line_width(1.6 * k)
+                cr.set_line_width(2.2 * k)
                 cr.stroke()
-                fx2d._glow(cr, x, y, sz * 2.2, GLOW, 0.18 * shimmer)
+                fx2d._glow(cr, x, y, sz * 2.6, GLOW, 0.3 * shimmer)
     cr.restore()
 
 

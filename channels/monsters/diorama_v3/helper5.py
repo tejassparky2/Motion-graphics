@@ -39,13 +39,15 @@ def _frames(shot, fallback):
 
 
 def _world(n, breathe=True):
-    """bGqrs's after-the-snap island and light, with Kai in LYING_V3 (head toward the pond) and the shrimp on his
+    """bGqrs's v3 after-the-snap island (diorama_v3/bgqrs.py: the cut grove, the sapling stump) and light, with Kai in
+    LYING_V3_L (head toward the pond) and the shrimp on his
     chest, its claw cocked beside his face. breathe=False clears the shrimp's idle breathing for shots that key its
     body themselves."""
+    from channels.monsters.diorama_v3 import bgqrs as b3           # v3's after-state: the cut grove, the sapling
     diorama.setup()
-    d16._set(n)
+    b3._set(n)
     rig = hero.load((0, 0, 0), scale=s3d.KAI_SCALE, outfit="world")
-    acting.lie(rig, d16.HIPS, d16.HEAD_DIR)
+    acting.lie(rig, d16.HIPS, d16.HEAD_DIR, spec=acting.LYING_V3_L)  # as S15b-S18: the left arm flung
     hero.line_width(rig, 0.0025)
     sh = d16._shrimp(rig, n)
     if not breathe:
@@ -55,6 +57,7 @@ def _world(n, breathe=True):
         anim.squash(sh["body"], 1, 0.0)
     diorama.sunbeam(s3d.kai_point(rig, "chest"), radius=7.0)
     d16._dust(rig, n)
+    b3._sapling(rig, n)                                            # the cut sapling smoking by his head
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 1, n
     LAST.update(rig=rig, sh=sh)
