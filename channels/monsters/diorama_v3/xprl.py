@@ -21,10 +21,9 @@ import bpy
 from mathutils import Vector
 
 from channels.monsters.diorama import xprl as v2
-from channels.monsters.diorama_v3.shots import v3_frames
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
-from channels.monsters.mk import anim, diorama, hero, tuftwing
+from channels.monsters.mk import acting, anim, diorama, hero, tuftwing
 
 SHRIMP = (*diorama.MAP["shrimp_drink"], 0.0)  # the pond's east edge, its back to the thorn tree (coordinator, v3)
 SHRIMP_YAW = diorama.SHRIMP_DRINK_YAW
@@ -32,6 +31,7 @@ BIRD_SCALE = h5.BIRD_SCALE
 
 
 def _frames(shot, fallback):
+    from channels.monsters.diorama_v3.shots import v3_frames           # (lazy: shots.py imports this module)
     try:
         return v3_frames(shot)
     except (OSError, KeyError):                                            # timing.json not in yet
@@ -70,25 +70,16 @@ def s23b():
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     prey = Vector(SHRIMP) + Vector((0, 0, 1.0))
-    # the close: the camera south-east of the bird, low, so its face turns three-quarter toward us as it locks on
-    side = Vector((math.cos(math.radians(-40)), math.sin(math.radians(-40)), 0))
-    bird = _bird_on_perch(perch, perch + side * 10 - Vector((0, 0, 4)))   # it starts looking past the lens
-    head, eyes = bird["head"], bird["eyes"]
+    # the close: from the clearing side (the forest is behind the tree), 25 deg off the line to the shrimp, so when it
+    # locks on its face turns three-quarter to the lens; before that it looks off to the side
     to_prey = prey - perch
-    yaw_prey = math.atan2(to_prey.x, -to_prey.y) - bird["root"].rotation_euler.z
-    pitch_prey = math.atan2(-to_prey.z, to_prey.xy.length)
-    for f, rot in ((1, (0.1, 0, 0)), (6, (0.05, 0.0, -0.1)),                # a beat, an anticipation dip the other way
-                   (10, (0.15, 0.42, 0.1)),                                 # the tilt: one eye toward the ground
-                   (16, (0.15, 0.48, 0.12)),
-                   (20, (pitch_prey * 0.6, 0.15, yaw_prey * 1.12)),         # the lock-on, overshooting
-                   (24, (pitch_prey * 0.6, 0.1, yaw_prey)),
-                   (n, (pitch_prey * 0.6, 0.1, yaw_prey))):
-        anim.key(head, "rotation_euler", f, rot, "BEZIER")
-    for sx, e in zip((-1, 1), eyes):                                        # the eyes narrow on the lock
-        anim.key(e, "scale", 19, (1.05, 1, 0.72), "CONSTANT")
-        anim.key(e, "scale", 20, (1.1, 1, 0.5), "CONSTANT")
-        anim.key(e, "rotation_euler", 20, (0, sx * 0.4, 0), "CONSTANT")
-    anim.key(bird["crest"], "rotation_euler", 20, (-0.45, 0, 0), "CONSTANT")   # crest up
+    def turned(v, deg):
+        c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
+        return Vector((v.x * c - v.y * s_, v.x * s_ + v.y * c, 0)).normalized()
+    side = turned(to_prey.xy.to_3d(), 25)
+    bird = _bird_on_perch(perch, perch + turned(to_prey.xy.to_3d(), -70) * 10 - Vector((0, 0, 3)))
+    acting.tilt(bird, 8, angle=0.42, hold=8)                                 # a curious tilt: one eye to the ground
+    acting.lock_on(bird, prey, 20)                                          # snap onto the shrimp: glare, crest up
     anim.blink(bird, 4)
     anim.squash(bird["body"], 18, -0.06)                                    # a hunch into the lock
     anim.squash(bird["body"], 22, 0.03)
@@ -108,8 +99,8 @@ def s23b():
         k = (f - CUT_POV) / max(1, n - CUT_POV)
         d = dist0
         el = math.degrees(math.asin((eye_pos.z - prey.z) / d))
-        yw = math.degrees(math.atan2(-(prey - eye_pos).x, -(prey - eye_pos).y))
-        pov = v2._cam("cam_s23b_pov", f, tuple(prey), d, el, yw, 110.0 + 40.0 * k, cam=pov)
+        yw = math.degrees(math.atan2((prey - eye_pos).x, (prey - eye_pos).y))   # the lens sits at the bird's eye
+        pov = v2._cam("cam_s23b_pov", f, tuple(prey), d, el, yw, 30.0 + 10.0 * k, cam=pov)   # wide: it's tiny
     sc = bpy.context.scene
     for m in list(sc.timeline_markers):
         sc.timeline_markers.remove(m)
@@ -171,12 +162,16 @@ def s24top():
     f_run = 34
     feet = x3._walk(P, k, path, 1, f_run, 0.48, "R", crouch=(0.04, 0.14), upper=run_upper, every=2)
     x3._squat(P, feet, f_run + 2, f_run + 18, 0.14, 0.42, reach_upper, every=2, hold_to=n)
-    hero.face(k, "surprised", 1, 0.7)
-    hero.FACES.setdefault("set_jaw", {"face_angry": 0.35, "eye_brow_down": 0.4, "mouth_wide": 0.3})
-    hero.face(k, "set_jaw", f_run + 6)
-    for f in range(f_run + 20, n - 6, 34):                                  # blinks every ~1.4 s
-        hero.face(k, "blink", f)
-        hero.face(k, "set_jaw", f + 2)
+    acting.EXPR.setdefault("determined", {"face_angry": 0.45, "eye_brow_down": 0.5, "mouth_wide": 0.25})
+    acting.expression(k, "surprised", 1, value=0.7)
+    acting.expression(k, "determined", f_run + 6)
+    prey = Vector(SHRIMP) + Vector((0, 0, 1.0))
+    sky = Vector((perch.x, perch.y, perch.z + 6.0))                         # where the bird is
+    acting.look_at(k, prey, 1, n)
+    for f in (f_run + 30, f_run + 76):                                      # quick glances up at the bird
+        acting.look_at(k, sky, f, f + 10, darts=False)
+        acting.look_at(k, prey, f + 12, f + 12, darts=False)
+    acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
     mid = Vector((SHRIMP[0] + 2.0, SHRIMP[1], 2.4))
     a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.2)    # from the south-south-west

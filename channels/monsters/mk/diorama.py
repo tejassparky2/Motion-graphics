@@ -31,7 +31,7 @@ SUN_WARM = "#ffdcae"      # low golden sun
 MAP = dict(
     pond=(0.1, -2.6),          # the puddle at diorama scale (diorama.pond)
     shrimp=(0.1, 0.4),         # where the puff-shrimp drinks (north edge of the pond)
-    shrimp_drink=(5.2, -2.6),  # v3, S21's end to S24: drinking at the pond's EAST edge, facing SHRIMP_DRINK_YAW
+    shrimp_drink=(4.2, -0.1),  # v3, S21's end to S24: drinking on the pond's north-east shore, facing SHRIMP_DRINK_YAW
     kai_down=(1.5, -9.0),      # where the blast throws Kai on his back (S15 D4 -> S16-S21)
     thorn=(19.0, 9.0),         # the thorn tree at the clearing's north-east edge (S22-S24)
     path=((0.0, -24.0), (-6.0, -60.0), (4.0, -95.0), (0.0, -118.0)),   # clearing -> meadow (a gap in the trees)
@@ -39,8 +39,9 @@ MAP = dict(
     snail=(-16.0, -132.0),     # S10a/S11a: the jelly-snail and its burnt-hole trail
     moth=(20.0, -128.0),       # S10b/S11b: the fluffmoth
 )
-SHRIMP_DRINK_YAW = 0.0     # degrees (root rotation z): facing south (-Y), its back to the thorn tree, its claw (right
-                           # side) dipping west into the pond, so the bird's view from the perch sees its back
+SHRIMP_DRINK_YAW = 0.0     # degrees (root rotation z): facing south (-Y), its back to the thorn tree, so the bird's
+                           # view from the perch sees its back; its dipped claw (the drinking pose of ep01v2/xprl.
+                           # _shrimp_wet) reaches 1.7 west and 2.5 south of the root, into the water at ~(2.5, -2.6)
 
 
 def setup(samples=24, sun_elev=34, sun_azim=-50, haze=0.55, bloom=0.6):
@@ -172,11 +173,12 @@ def fstop_for(dist, lens=85.0, blur=14.0, height_px=1280):
 
 
 def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True, thorn=True, meadow_flowers=True,
-           skip=()):
+           skip=(), dressing=1):
     """THE other-world set (every diorama shot, seed 31): a round clearing (radius `clear_r`) with the pond by the
     origin, a ring of painted trees out to `forest_r`, a dirt path south through the trees to an open flower meadow
     (MAP), rocks and bushes, the thorn tree at MAP["thorn"]. `skip`: spot indexes to leave out (e.g. the trees the snap
-    erased, for the "after" state). Deterministic for a seed. Returns dict(trees=[(trunk, canopy) or None per spot],
+    erased, for the "after" state). `dressing=2` adds the v3 toy-table detail (dressing2(): mushrooms, clover,
+    pebble-edged paths, flower clusters, logs, a stump, pond reeds), clear of every MAP spot and the snap's fan. Deterministic for a seed. Returns dict(trees=[(trunk, canopy) or None per spot],
     spots=[(x, y, h, r, variant)], puddle=obj or None, thorn=thornbush dict or None)."""
     _ground(clear_r)
     rnd = random.Random(seed)
@@ -208,6 +210,8 @@ def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True, tho
     if thorn:
         from . import thornbush
         out["thorn"] = thornbush.build(loc=(MAP["thorn"][0], MAP["thorn"][1], 0.0))
+    if dressing >= 2:
+        out["dressing"] = dressing2(seed, clear_r)
     return out
 
 
@@ -424,3 +428,185 @@ def stumps(spots, origin=(0.0, 0.0)):
         yaw = math.atan2(y - origin[1], x - origin[0]) - math.pi / 2
         out.append(meadow._slice((x, y, 0), r * 0.17, sh, math.radians(rnd.uniform(28, 40)), yaw, bark, ring, core))
     return out
+
+
+# --- v3 set dressing (dressing=2; helper 6, Episode 1 v3 Q2): procedural, merged into one mesh per material -----------
+class _Batch:
+    """Many small primitives merged into one object (one material, one draw): sphere / box / cone, then done()."""
+
+    def __init__(self, name, mat, smooth=True):
+        import bmesh
+        self.name, self.mat, self.smooth, self.bm = name, mat, smooth, bmesh.new()
+
+    def _m(self, loc, scale, rot):
+        from mathutils import Euler, Matrix
+        return Matrix.LocRotScale(Vector(loc), Euler(rot), Vector(scale))
+
+    def sphere(self, loc, scale, rot=(0, 0, 0), seg=10):
+        import bmesh
+        bmesh.ops.create_uvsphere(self.bm, u_segments=seg, v_segments=max(4, seg // 2), radius=1.0,
+                                  matrix=self._m(loc, scale, rot))
+
+    def box(self, loc, size, rot=(0, 0, 0)):
+        import bmesh
+        bmesh.ops.create_cube(self.bm, size=1.0, matrix=self._m(loc, size, rot))
+
+    def cone(self, loc, r1, r2, depth, rot=(0, 0, 0), seg=8):
+        import bmesh
+        bmesh.ops.create_cone(self.bm, cap_ends=True, cap_tris=False, segments=seg, radius1=r1, radius2=r2,
+                              depth=depth, matrix=self._m(loc, (1, 1, 1), rot))
+
+    def done(self):
+        if not self.bm.verts:
+            self.bm.free()
+            return None
+        me = bpy.data.meshes.new(self.name)
+        self.bm.to_mesh(me)
+        self.bm.free()
+        o = bpy.data.objects.new(self.name, me)
+        bpy.context.scene.collection.objects.link(o)
+        o.data.materials.append(self.mat)
+        if self.smooth:
+            o.data.polygons.foreach_set("use_smooth", [True] * len(o.data.polygons))
+        return o
+
+
+def _keep_clear(x, y, clear_r, fan=40.0):
+    """True where dressing must NOT go: the pond, the path, the story spots (MAP), and the snap's fan toward +Y (its
+    trees become stumps in the "after" state, so nothing there may survive the blast)."""
+    if _near_path(x, y, 3.4):
+        return True
+    for key, r in (("pond", 7.5), ("shrimp", 4.0), ("shrimp_drink", 4.0), ("kai_down", 8.0), ("thorn", 9.0),
+                   ("wake", 7.0), ("snail", 13.0), ("moth", 6.0)):
+        if key in MAP and math.hypot(x - MAP[key][0], y - MAP[key][1]) < r:
+            return True
+    d = math.hypot(x, y)
+    return d > 4.0 and abs(math.degrees(math.atan2(x, y))) < fan and d < 112.0
+
+
+def dressing2(seed=31, clear_r=26.0):
+    """The v3 toy-table detail for the island (procedural): mushroom clusters, clover patches, pebbles lining the dirt
+    path, flower clusters in the clearing and the meadow, two mossy logs, an old stump, reeds at the pond. Returns the
+    merged objects by kind."""
+    rnd = random.Random(seed + 301)
+    P = lit_paint
+    m = dict(
+        stem=P("d2_stem", "#c9b79a", "#efe2c8", "#fff7e6"),
+        cap_red=P("d2_cap_red", "#a8382f", "#d9584a", "#f08a74"), cap_tan=P("d2_cap_tan", "#a8865c", "#d4b083",
+                                                                             "#f0d6ac"),
+        cap_lilac=P("d2_cap_lilac", "#7c5ea8", "#b48cd8", "#dcc4f4"), spot=P("d2_spot", "#d8d2c8", "#ffffff", "#ffffff"),
+        clover=P("d2_clover", "#2c7a36", "#47a347", "#7fd067"), clover2=P("d2_clover2", "#3a8a3a", "#5cb851",
+                                                                           "#98dc77"),
+        pebble=P("d2_pebble", "#7d7768", "#a9a291", "#d6cfbd"), pebble2=P("d2_pebble2", "#6c6f80", "#9a9cb0",
+                                                                           "#c8c9da"),
+        pink=P("d2_pink", "#d05a8a", "#ff8fb8", "#ffd0e2"), white=P("d2_white", "#c9c9e0", "#ffffff", "#ffffff"),
+        yellow=P("d2_yellow", "#d9a400", "#ffd23f", "#fff2a8"), blue=P("d2_blue", "#4f6fc0", "#7d9cf0", "#bcd0ff"),
+        bark=P("d2_bark", "#4a3424", "#6e4e36", "#8f6b4c"), cut=P("d2_cut", "#a8865c", "#d4b083", "#f0d6ac"),
+        moss=P("d2_moss", "#3d7a2c", "#5ea540", "#8fd062"), reed=P("d2_reed", "#4a7a3a", "#6aa24e", "#9ccb72"),
+        cattail=P("d2_cattail", "#4a3020", "#6b4630", "#8c6244"))
+    B = {k: _Batch(f"d2_{k}", v) for k, v in m.items()}
+
+    def spot(rmin, rmax, tries=60):
+        for _ in range(tries):
+            a = rnd.uniform(0, 2 * math.pi)
+            d = rnd.uniform(rmin, rmax)
+            x, y = math.cos(a) * d, math.sin(a) * d
+            if not _keep_clear(x, y, clear_r):
+                return x, y
+        return None
+
+    def meadow_spot(tries=60):
+        for _ in range(tries):
+            x, y = rnd.uniform(-55, 55), rnd.uniform(-172, -110)
+            if not _keep_clear(x, y, clear_r):
+                return x, y
+        return None
+
+    def path_side(tries=60):
+        for _ in range(tries):
+            y = rnd.uniform(-116, -26)
+            x = _path_x(y) + rnd.choice((-1, 1)) * rnd.uniform(4.2, 9.0)
+            if not _keep_clear(x, y, clear_r):
+                return x, y
+        return None
+
+    # mushrooms: clusters of 2-5 toy mushrooms, mostly red-and-white or tan, a rare lilac
+    where = [spot(clear_r * 0.72, clear_r * 1.02) for _ in range(14)] + [path_side() for _ in range(10)] + \
+        [meadow_spot() for _ in range(8)]
+    for c in [w for w in where if w]:
+        cap = rnd.choices(("cap_red", "cap_tan", "cap_lilac"), weights=(5, 4, 1))[0]
+        for _ in range(rnd.randint(2, 5)):
+            x, y = c[0] + rnd.uniform(-1.4, 1.4), c[1] + rnd.uniform(-1.4, 1.4)
+            h, r = rnd.uniform(0.6, 1.6), rnd.uniform(0.45, 1.0)
+            B["stem"].cone((x, y, h / 2), r * 0.32, r * 0.24, h)
+            B[cap].sphere((x, y, h), (r, r, r * 0.62), seg=14)
+            if cap == "cap_red":
+                for k in range(4):
+                    a = rnd.uniform(0, 2 * math.pi)
+                    B["spot"].sphere((x + math.cos(a) * r * 0.55, y + math.sin(a) * r * 0.55, h + r * 0.42),
+                                     (r * 0.16, r * 0.16, r * 0.06), seg=8)
+    # clover patches: trefoils (three round leaves) in tight clumps
+    for _ in range(46):
+        c = spot(5.0, clear_r * 0.95) if rnd.random() < 0.55 else meadow_spot()
+        if not c:
+            continue
+        mat = rnd.choice(("clover", "clover2"))
+        for _ in range(rnd.randint(6, 12)):
+            x, y = c[0] + rnd.uniform(-1.3, 1.3), c[1] + rnd.uniform(-1.0, 1.0)
+            r, a0 = rnd.uniform(0.17, 0.26), rnd.uniform(0, 2 * math.pi)
+            for k in range(3):
+                a = a0 + k * 2 * math.pi / 3
+                B[mat].sphere((x + math.cos(a) * r * 0.9, y + math.sin(a) * r * 0.9, 0.06), (r, r, r * 0.3), seg=8)
+    # pebbles lining both edges of the dirt path
+    y = MAP["path"][0][1] + 1.0
+    while y > MAP["path"][-1][1] - 7.0:
+        for side in (-1, 1):
+            x = _path_x(y) + side * rnd.uniform(2.9, 3.6)
+            s = rnd.uniform(0.28, 0.55)
+            B[rnd.choice(("pebble", "pebble2"))].sphere((x, y + rnd.uniform(-0.3, 0.3), s * 0.25),
+                                                        (s * 1.25, s, s * 0.5), (0, 0, rnd.uniform(0, 3)), seg=8)
+        y -= rnd.uniform(1.1, 1.9)
+    # flower clusters: 5-9 five-petal flowers with yellow eyes
+    for _ in range(40):
+        c = spot(6.0, clear_r * 1.0) if rnd.random() < 0.45 else meadow_spot()
+        if not c:
+            continue
+        col = rnd.choices(("pink", "white", "blue"), weights=(4, 4, 1))[0]
+        for _ in range(rnd.randint(5, 9)):
+            x, y = c[0] + rnd.uniform(-1.5, 1.5), c[1] + rnd.uniform(-1.2, 1.2)
+            r = rnd.uniform(0.16, 0.26)
+            a0 = rnd.uniform(0, 1)
+            for k in range(5):
+                a = a0 + k * 2 * math.pi / 5
+                B[col].sphere((x + math.cos(a) * r, y + math.sin(a) * r, 0.1), (r * 0.8, r * 0.8, r * 0.28), seg=8)
+            B["yellow"].sphere((x, y, 0.14), (r * 0.5, r * 0.5, r * 0.3), seg=8)
+    # two mossy fallen logs and an old stump at the clearing's rim, outside the fan
+    for ang, length in ((math.radians(205), 7.5), (math.radians(318), 6.0)):
+        cx, cy = math.cos(ang) * clear_r * 0.92, math.sin(ang) * clear_r * 0.92
+        if _keep_clear(cx, cy, clear_r):
+            continue
+        rot = (0, math.radians(90), ang + math.radians(70))
+        B["bark"].cone((cx, cy, 0.85), 0.95, 0.85, length, rot, seg=14)
+        for e in (-1, 1):
+            dx, dy = math.cos(ang + math.radians(70)) * e * length / 2, math.sin(ang + math.radians(70)) * e * length / 2
+            B["cut"].sphere((cx + dx, cy + dy, 0.85), (0.86, 0.86, 0.86), seg=12)
+        for _ in range(6):
+            t = rnd.uniform(-0.4, 0.4) * length
+            B["moss"].sphere((cx + math.cos(ang + math.radians(70)) * t, cy + math.sin(ang + math.radians(70)) * t,
+                              1.55), (rnd.uniform(0.6, 1.0), rnd.uniform(0.5, 0.8), 0.35), seg=10)
+    sx, sy = _path_x(-30.0) + 6.5, -30.0
+    if not _keep_clear(sx, sy, clear_r):
+        B["bark"].cone((sx, sy, 0.9), 1.5, 1.3, 1.8, seg=16)
+        B["cut"].cone((sx, sy, 1.82), 1.3, 1.3, 0.06, seg=16)
+        B["moss"].sphere((sx + 0.8, sy - 0.6, 1.9), (0.7, 0.6, 0.3), seg=10)
+    # reeds and cattails on the pond's west bank (the shrimp drinks at its east edge, MAP["shrimp_drink"])
+    px, py = MAP["pond"]
+    for side in (-1,):
+        for _ in range(14):
+            x, y = px + side * rnd.uniform(4.6, 5.8), py + rnd.uniform(-1.6, 1.4)
+            h = rnd.uniform(1.6, 2.8)
+            tilt = (rnd.uniform(-0.15, 0.15), side * rnd.uniform(0.0, 0.2), 0)
+            B["reed"].cone((x, y, h / 2), 0.07, 0.02, h, tilt, seg=6)
+            if rnd.random() < 0.45:
+                B["cattail"].sphere((x + side * h * 0.08, y, h * 0.92), (0.12, 0.12, 0.34), seg=8)
+    return {k: b.done() for k, b in B.items()}

@@ -1136,4 +1136,408 @@ def speed_lines_v3(cr, t, start, end=None, mode="radial", cx=W / 2, cy=H * 0.45,
         cr.mask(m) if not bg else cr.paint_with_alpha(a)
     else:
         cr.paint_with_alpha(a)
+
+
+# ================================================================ v3 effects (Q5): electricity, x-ray, soul spark
+ELECTRIC = hexa("#7fd8ff")           # the blue of the lab zap
+SOUL = hexa("#ffe7a3")               # Kai's soul spark: warm white-gold
+
+
+def _bolt(rnd, p0, p1, rough=0.25, depth=5):
+    """A jagged polyline from p0 to p1 (midpoint displacement): every level kicks each midpoint sideways by up to
+    `rough` times that segment's length, so the zigzag is the same at every scale."""
+    pts = [p0, p1]
+    for _ in range(depth):
+        nxt = [pts[0]]
+        for a, b in zip(pts, pts[1:]):
+            dx, dy = b[0] - a[0], b[1] - a[1]
+            ln = math.hypot(dx, dy) or 1.0
+            off = rnd.uniform(-rough, rough) * ln
+            nxt += [((a[0] + b[0]) / 2 - dy / ln * off, (a[1] + b[1]) / 2 + dx / ln * off), b]
+        pts = nxt
+    return pts
+
+
+def _cut_path(path, frac):
+    """The first `frac` (0-1, by length) of a polyline, and the point where it stops."""
+    segs = [math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(path, path[1:])]
+    goal = sum(segs) * clamp01(frac)
+    out = [path[0]]
+    for (a, b), s in zip(zip(path, path[1:]), segs):
+        if goal <= s:
+            k = goal / s if s else 1.0
+            p = (a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k)
+            out.append(p)
+            return out, p
+        out.append(b)
+        goal -= s
+    return out, path[-1]
+
+
+def _stroke_bolt(cr, pts, width, col, a):
+    """Three passes: a wide soft glow (added), the coloured body, a white-hot core."""
+    cr.save()
+    cr.set_line_join(cairo.LINE_JOIN_ROUND)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    for w, c, alpha, op in ((width * 5.0, col, 0.16 * a, cairo.OPERATOR_ADD),
+                            (width * 2.4, col, 0.35 * a, cairo.OPERATOR_ADD),
+                            (width * 1.25, col, 0.95 * a, cairo.OPERATOR_OVER),
+                            (width * 0.5, WHITE, a, cairo.OPERATOR_OVER)):
+        cr.set_operator(op)
+        cr.set_source_rgba(*c[:3], alpha)
+        cr.set_line_width(w)
+        cr.move_to(*pts[0])
+        for p in pts[1:]:
+            cr.line_to(*p)
+        cr.stroke()
+    cr.restore()
+
+
+def electric_arcs(cr, t, start, end=None, path=((200, 900), (520, 500)), n=3, width=5.0, col=ELECTRIC, rough=0.25,
+                  branches=3, travel=0.0, ones=True, flicker=0.25, glow=True, sound=True, seed=0):
+    """Crackling electric arcs along `path` (pixel points: the strip, the water, his feet, his chest...).
+
+    n jagged bolts follow the path, redrawn every frame (ones=True: electricity on 1s reads as live current; False
+    keeps them on 2s like the characters), with `branches` short forks and glows where they start and end.
+    travel > 0: the current RUNS along the path over that many seconds (a bright head leads, the bolts grow behind
+    it), then keeps crackling until `end`. flicker: the chance that a frame stutters dim (never the first)."""
+    a = _fade(t, start, end, 0.0, 0.08)
+    if a <= 0:
+        return
+    if sound:
+        cue("m_spark", t, start)
+    k = int(math.floor(t * FPS + 1e-6)) if ones else _twos(t)
+    rnd = random.Random(seed * 7919 + k)
+    if k != int(math.floor(start * FPS + 1e-6)) and rnd.random() < flicker:
+        a *= 0.35
+    path = [tuple(p) for p in path]
+    head = path[-1]
+    if travel > 0 and t - start < travel:
+        path, head = _cut_path(path, ease_out((t - start) / travel))
+        if len(path) < 2 or math.hypot(head[0] - path[0][0], head[1] - path[0][1]) < 2:
+            path = [path[0], (path[0][0] + 1, path[0][1])]
+    span = sum(math.hypot(q[0] - p[0], q[1] - p[1]) for p, q in zip(path, path[1:]))
+    cr.save()
+    for i in range(n):
+        pts = [path[0]]
+        for p, q in zip(path, path[1:]):
+            pts += _bolt(rnd, p, q, rough * rnd.uniform(0.7, 1.2), 5)[1:]
+        _stroke_bolt(cr, pts, width * (1.0 if i == 0 else rnd.uniform(0.45, 0.75)), col, a * (1 if i == 0 else 0.8))
+        if i == 0:                                              # forks off the main bolt
+            for _ in range(branches):
+                j = rnd.randrange(1, max(2, len(pts) - 1))
+                p, q = pts[j - 1], pts[j]
+                ang = math.atan2(q[1] - p[1], q[0] - p[0]) + rnd.choice((-1, 1)) * rnd.uniform(0.4, 1.0)
+                ln = span * rnd.uniform(0.12, 0.3)
+                tip = (q[0] + math.cos(ang) * ln, q[1] + math.sin(ang) * ln)
+                _stroke_bolt(cr, _bolt(rnd, q, tip, rough, 4), width * 0.45, col, a * 0.85)
+    if glow:
+        _glow(cr, path[0][0], path[0][1], width * 14, col, 0.8 * a)
+        _glow(cr, head[0], head[1], width * (18 if travel and t - start < travel else 12), col, 0.9 * a)
+        _glow(cr, head[0], head[1], width * 4, WHITE, a)
+    cr.restore()
+
+
+# ---- the x-ray skeleton flash
+JOINTS = ("head", "neck", "chest", "pelvis", "l_shoulder", "r_shoulder", "l_elbow", "r_elbow", "l_hand", "r_hand",
+          "l_hip", "r_hip", "l_knee", "r_knee", "l_foot", "r_foot")
+
+
+def joints_from_box(x, y, w, h, head=0.22, arms_out=0.0):
+    """Standing-pose joint positions (pixels) for a figure filling the box (x, y, w, h), facing the camera. head is
+    the head's share of the height (Kai's anime proportions ~0.2); arms_out 0 = arms down, 1 = straight out (the
+    stiff electrocution pose)."""
+    cx = x + w / 2
+
+    def p(fx, fy):
+        return (cx + fx * w, y + fy * h)
+    hr = head / 2
+    out = dict(head=p(0, hr), neck=p(0, head + 0.02), chest=p(0, head + 0.12), pelvis=p(0, head + 0.33),
+               l_shoulder=p(-0.2, head + 0.05), r_shoulder=p(0.2, head + 0.05),
+               l_hip=p(-0.1, head + 0.36), r_hip=p(0.1, head + 0.36),
+               l_knee=p(-0.11, head + 0.58), r_knee=p(0.11, head + 0.58),
+               l_foot=p(-0.12, 0.97), r_foot=p(0.12, 0.97))
+    for s, sg in (("l", -1), ("r", 1)):
+        sh = out[s + "_shoulder"]
+        ang = math.radians(90 - 80 * arms_out) if sg > 0 else math.radians(90 + 80 * arms_out)
+        up = h * 0.15
+        el = (sh[0] + math.cos(ang) * up + sg * w * 0.03, sh[1] + math.sin(ang) * up)
+        out[s + "_elbow"] = el
+        out[s + "_hand"] = (el[0] + math.cos(ang) * up, el[1] + math.sin(ang) * up)
+    return out
+
+
+def _bone_seg(cr, p, q, w):
+    """A cartoon long bone: a shaft with two round knobs at each end."""
+    dx, dy = q[0] - p[0], q[1] - p[1]
+    ln = math.hypot(dx, dy) or 1.0
+    nx, ny = -dy / ln, dx / ln
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
+    cr.set_line_width(w)
+    cr.move_to(*p)
+    cr.line_to(*q)
+    cr.stroke()
+    for c, sgn in ((p, 1), (q, -1)):
+        for side in (-1, 1):
+            cr.arc(c[0] + nx * side * w * 0.45 + dx / ln * sgn * w * 0.15,
+                   c[1] + ny * side * w * 0.45 + dy / ln * sgn * w * 0.15, w * 0.62, 0, 2 * math.pi)
+            cr.fill()
+
+
+def _skeleton(cr, j, col, hole, head_r=None):
+    """Skull, spine, ribs, pelvis and limb bones from joint positions (pixels)."""
+    torso = math.hypot(j["pelvis"][0] - j["neck"][0], j["pelvis"][1] - j["neck"][1])
+    hr = head_r or 0.42 * torso
+    w = max(4.0, hr * 0.22)
+    cr.save()
+    cr.set_source_rgba(*col)
+    # limbs
+    for a, b in (("l_shoulder", "l_elbow"), ("l_elbow", "l_hand"), ("r_shoulder", "r_elbow"), ("r_elbow", "r_hand"),
+                 ("l_hip", "l_knee"), ("l_knee", "l_foot"), ("r_hip", "r_knee"), ("r_knee", "r_foot"),
+                 ("l_shoulder", "r_shoulder")):
+        _bone_seg(cr, j[a], j[b], w * (1.15 if "knee" in a + b or "hip" in a else 0.9))
+    for s in ("l_hand", "r_hand"):                              # little finger fans
+        e = j[s.replace("hand", "elbow")]
+        h = j[s]
+        ang = math.atan2(h[1] - e[1], h[0] - e[0])
+        for f in (-0.5, -0.17, 0.17, 0.5):
+            cr.set_line_width(w * 0.4)
+            cr.move_to(*h)
+            cr.line_to(h[0] + math.cos(ang + f) * w * 2.2, h[1] + math.sin(ang + f) * w * 2.2)
+            cr.stroke()
+    # spine: vertebrae from neck to pelvis
+    n = 9
+    for i in range(n):
+        k = i / (n - 1)
+        x = j["neck"][0] + (j["pelvis"][0] - j["neck"][0]) * k
+        y = j["neck"][1] + (j["pelvis"][1] - j["neck"][1]) * k
+        cr.save()
+        cr.translate(x, y)
+        cr.scale(w * 0.75, w * 0.45)
+        cr.arc(0, 0, 1, 0, 2 * math.pi)
+        cr.restore()
+        cr.fill()
+    # ribs: curved pairs hanging off the upper spine
+    cr.set_line_width(w * 0.55)
+    sw = math.hypot(j["r_shoulder"][0] - j["l_shoulder"][0], j["r_shoulder"][1] - j["l_shoulder"][1])
+    for i in range(4):
+        k = 0.12 + i * 0.13
+        x = j["neck"][0] + (j["pelvis"][0] - j["neck"][0]) * k
+        y = j["neck"][1] + (j["pelvis"][1] - j["neck"][1]) * k
+        half = sw * (0.42 - i * 0.04)
+        for sg in (-1, 1):
+            cr.move_to(x, y)
+            cr.curve_to(x + sg * half * 0.8, y - w * 0.6, x + sg * half * 1.1, y + w * 1.2, x + sg * half * 0.7,
+                        y + w * 2.0)
+            cr.stroke()
+    # pelvis: a butterfly between the hips
+    px, py = j["pelvis"]
+    hw = abs(j["r_hip"][0] - j["l_hip"][0]) * 0.75 + w
+    cr.move_to(px, py - w)
+    cr.curve_to(px - hw, py - w * 3, px - hw * 1.2, py + w * 1.5, px - hw * 0.3, py + w * 1.6)
+    cr.line_to(px + hw * 0.3, py + w * 1.6)
+    cr.curve_to(px + hw * 1.2, py + w * 1.5, px + hw, py - w * 3, px, py - w)
+    cr.close_path()
+    cr.fill()
+    # skull: cranium + jaw, dark eye sockets and nose, a row of teeth
+    hx, hy = j["head"]
+    cr.arc(hx, hy - hr * 0.08, hr * 0.78, 0, 2 * math.pi)
+    cr.fill()
+    rrect(cr, hx - hr * 0.45, hy + hr * 0.25, hr * 0.9, hr * 0.55, hr * 0.2)
+    cr.fill()
+    cr.set_source_rgba(*hole)
+    for sg in (-1, 1):
+        cr.save()
+        cr.translate(hx + sg * hr * 0.3, hy + hr * 0.02)
+        cr.scale(hr * 0.2, hr * 0.24)
+        cr.arc(0, 0, 1, 0, 2 * math.pi)
+        cr.restore()
+        cr.fill()
+    cr.move_to(hx, hy + hr * 0.2)
+    cr.line_to(hx - hr * 0.08, hy + hr * 0.36)
+    cr.line_to(hx + hr * 0.08, hy + hr * 0.36)
+    cr.close_path()
+    cr.fill()
+    cr.set_line_width(max(1.5, hr * 0.04))
+    for i in range(5):
+        x = hx - hr * 0.3 + i * hr * 0.15
+        cr.move_to(x, hy + hr * 0.5)
+        cr.line_to(x, hy + hr * 0.72)
+    cr.move_to(hx - hr * 0.38, hy + hr * 0.6)
+    cr.line_to(hx + hr * 0.38, hy + hr * 0.6)
+    cr.stroke()
+    cr.restore()
+
+
+def _alpha_of(surf):
+    surf.flush()
+    a = np.ndarray((surf.get_height(), surf.get_stride() // 4, 4), np.uint8, surf.get_data())[:, :surf.get_width()]
+    return a[..., 3].astype(np.float32) / 255.0
+
+
+def xray_flash(cr, t, start, frames=6, beat=2, joints=None, box=None, mask=None, ctx=None, head_r=None,
+               dark=hexa("#08113a"), body=hexa("#2f9bff"), rim=hexa("#bff4ff"), bone=WHITE, sound=False, seed=0):
+    """The cartoon electrocution x-ray: for `frames` frames, alternating every `beat` frames, the picture goes deep
+    navy, the body becomes a glowing blue silhouette and his white skeleton shows through (the other beats show
+    the normal render, so it strobes).
+
+    Silhouette: `mask` (a cairo surface whose alpha is the body; a comp.py overlay gets the subject pass through
+    ctx automatically), else a glow drawn along the bones. Skeleton: `joints` (a dict of JOINTS -> pixel (x, y),
+    or a function t -> dict, e.g. mk/joints.py's per-frame export from the rig), else joints_from_box(*box), else
+    the mask's bounding box."""
+    k = int(math.floor((t - start) * FPS + 1e-6))
+    if not 0 <= k < frames or (k // beat) % 2 == 1:
+        return
+    if sound:
+        cue("m_spark", t, start)
+    if mask is None and ctx is not None:
+        mask = getattr(ctx, "subject", None)
+    alpha = _alpha_of(mask) if mask is not None else None
+    if callable(joints):
+        joints = joints(t)
+    if joints is None:
+        if box is None and alpha is not None:
+            ys, xs = np.nonzero(alpha[::2, ::2] > 0.5)
+            if len(xs):
+                box = (xs.min() * 2, ys.min() * 2, (xs.max() - xs.min()) * 2, (ys.max() - ys.min()) * 2)
+        if box is None:
+            return
+        joints = joints_from_box(*box)
+    cr.save()
+    cr.set_source_rgba(*dark)
+    cr.paint()
+    if alpha is not None and alpha.shape == (H, W):             # the body: blue fill, a bright rim, an outer glow
+        halo = gaussian_filter(alpha, 14)
+        edge = np.clip((alpha - gaussian_filter(alpha, 3)) * 3.0, 0, 1)
+        out = np.zeros((H, W, 4), np.float32)
+        cov = np.clip(alpha * 0.82 + halo * (1 - alpha) * 0.7, 0, 1)
+        for c in range(3):                                      # BGRA, premultiplied
+            col = body[2 - c] * (1 - edge) + rim[2 - c] * edge
+            out[..., c] = col * cov * 255
+        out[..., 3] = cov * 255
+        arr = np.ascontiguousarray(out.astype(np.uint8))
+        surf = cairo.ImageSurface.create_for_data(memoryview(arr), cairo.FORMAT_ARGB32, W, H, W * 4)
+        cr.set_source_surface(surf, 0, 0)
+        cr.paint()
+        del surf
+    else:                                                       # no mask: a fat glow along the limbs
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.set_line_join(cairo.LINE_JOIN_ROUND)
+        tor = math.hypot(joints["pelvis"][0] - joints["neck"][0], joints["pelvis"][1] - joints["neck"][1])
+        for w, a in ((tor * 0.75, 0.25), (tor * 0.5, 0.85)):
+            cr.set_source_rgba(*body[:3], a)
+            cr.set_line_width(w)
+            for chain in (("l_hand", "l_elbow", "l_shoulder", "r_shoulder", "r_elbow", "r_hand"),
+                          ("l_foot", "l_knee", "l_hip", "r_hip", "r_knee", "r_foot"), ("neck", "pelvis")):
+                cr.move_to(*joints[chain[0]])
+                for c in chain[1:]:
+                    cr.line_to(*joints[c])
+                cr.stroke()
+            hx, hy = joints["head"]
+            cr.arc(hx, hy, (head_r or 0.42 * tor) * (1.25 if a < 0.5 else 1.05), 0, 2 * math.pi)
+            cr.fill()
+    _skeleton(cr, joints, bone, (*dark[:3], 1.0), head_r)
+    rnd = random.Random(seed * 31 + k)                         # a few crackles around the outline
+    hx, hy = joints["head"]
+    for _ in range(3):
+        a0 = rnd.uniform(0, 2 * math.pi)
+        r0 = math.hypot(joints["head"][0] - joints["l_foot"][0], joints["head"][1] - joints["l_foot"][1]) * 0.5
+        mx, my = (joints["head"][0] + joints["pelvis"][0]) / 2, (joints["head"][1] + joints["l_foot"][1]) / 2
+        p = (mx + math.cos(a0) * r0 * 0.6, my + math.sin(a0) * r0 * 0.9)
+        q = (p[0] + math.cos(a0) * r0 * 0.3, p[1] + math.sin(a0) * r0 * 0.3)
+        _stroke_bolt(cr, _bolt(rnd, p, q, 0.3, 4), 3.0, ELECTRIC, 0.9)
+    cr.restore()
+
+
+# ---- the soul spark
+def _soul_pos(path, u, wobble, phase):
+    """Point on the spark's fall at u (0-1): a smooth (Catmull-Rom) curve through `path`, swaying sideways."""
+    pts = [tuple(p) for p in path]
+    if len(pts) == 2:
+        p = (pts[0][0] + (pts[1][0] - pts[0][0]) * u, pts[0][1] + (pts[1][1] - pts[0][1]) * u)
+    else:
+        segs = len(pts) - 1
+        s = min(segs - 1, int(u * segs))
+        f = u * segs - s
+        p0, p1, p2 = pts[max(0, s - 1)], pts[s], pts[s + 1]
+        p3 = pts[min(segs, s + 2)]
+        p = tuple(0.5 * (2 * p1[i] + (-p0[i] + p2[i]) * f + (2 * p0[i] - 5 * p1[i] + 4 * p2[i] - p3[i]) * f * f
+                         + (-p0[i] + 3 * p1[i] - 3 * p2[i] + p3[i]) * f ** 3) for i in range(2))
+    sway = wobble * math.sin(u * math.pi * 3 + phase) * math.sin(u * math.pi)   # no sway at the two ends
+    return p[0] + sway, p[1]
+
+
+def soul_spark(cr, t, start, end=None, path=((360, 160), (330, 520), (380, 820)), dur=1.6, size=22, col=SOUL,
+               trail=0.5, wobble=26, land=True, sound=False, seed=0):
+    """A tiny glowing spark (Kai's soul) drifting down along `path` over `dur` seconds with a comet trail and
+    twinkles left behind it. land=True: it lands with a soft flash, a ring and a sparkle pop at the last point.
+    end (None = gone right after the landing): hold it there, pulsing, until then. Drawn on 1s (it is light, not a
+    character); the twinkles are on 2s."""
+    if t < start:
+        return
+    stop = start + dur + (0.45 if land else 0.0)
+    hold_to = max(stop, end) if end is not None else stop
+    if t > hold_to + 0.15:
+        return
+    a = 1.0 - (clamp01((t - hold_to) / 0.15) if t > hold_to else 0.0)
+    if sound:
+        cue("m_chime_hud", t, start)
+    phase = seed * 1.7
+
+    def at(tt):
+        u = clamp01((tt - start) / dur)
+        u = u * u * (3 - 2 * u) * 0.35 + u * 0.65          # eases in and out, but never stalls
+        return _soul_pos(path, u, wobble, phase)
+    cr.save()
+    flying = t - start < dur
+    if flying:                                               # the trail: overlapping additive dots, tapering
+        steps = 22
+        for i in range(steps, 0, -1):
+            tt = t - trail * i / steps
+            if tt < start:
+                continue
+            x, y = at(tt)
+            k = 1 - i / steps
+            _glow(cr, x, y, size * (0.6 + 1.6 * k), col, 0.22 * k * a)
+            cr.set_source_rgba(1, 1, 1, 0.5 * k * k * a)
+            cr.arc(x, y, size * 0.32 * k, 0, 2 * math.pi)
+            cr.fill()
+        rnd = random.Random(seed * 101 + _twos(t))           # twinkles shed behind it
+        for i in range(4):
+            tt = t - rnd.uniform(0.05, trail * 1.4)
+            if tt < start:
+                continue
+            x, y = at(tt)
+            life = 1 - (t - tt) / (trail * 1.4)
+            cr.set_source_rgba(*col[:3], 0.9 * life * a)
+            _star4(cr, x + rnd.uniform(-18, 18), y + rnd.uniform(-10, 10), size * 0.5 * life + 3,
+                   rnd.uniform(0, 0.8))
+            cr.fill()
+    x, y = at(min(t, start + dur))
+    pulse = 1 + 0.12 * math.sin((t - start) * 2 * math.pi * 2.2)
+    _glow(cr, x, y, size * 4.5 * pulse, col, 0.5 * a)
+    _glow(cr, x, y, size * 1.8 * pulse, WHITE, 0.9 * a)
+    cr.set_source_rgba(1, 1, 1, a)
+    _star4(cr, x, y, size * 1.4 * pulse, (t - start) * 0.8, 0.14)
+    cr.fill()
+    cr.arc(x, y, size * 0.38, 0, 2 * math.pi)
+    cr.fill()
+    if land and not flying:                                  # landing: flash, ring, sparkle pop
+        u = clamp01((t - start - dur) / 0.45)
+        _glow(cr, x, y, size * (5 + 6 * u), WHITE, (1 - u) * 0.9 * a)
+        cr.set_source_rgba(*col[:3], (1 - u) * a)
+        cr.set_line_width(4 * (1 - u) + 1)
+        cr.save()
+        cr.translate(x, y)
+        cr.scale(1, 0.35)                                    # a ring lying on the ground
+        cr.arc(0, 0, size * (1.5 + 7 * ease_out(u)), 0, 2 * math.pi)
+        cr.restore()
+        cr.stroke()
+        rnd = random.Random(seed * 7 + 3)
+        for i in range(6):
+            ang = i * math.pi / 3 + rnd.uniform(-0.3, 0.3)
+            r = size * (1.2 + 4.5 * ease_out(u))
+            cr.set_source_rgba(1, 1, 1, (1 - u) * a)
+            _star4(cr, x + math.cos(ang) * r, y + math.sin(ang) * r * 0.6, size * 0.5 * (1 - u) + 2, 0.3)
+            cr.fill()
     cr.restore()
