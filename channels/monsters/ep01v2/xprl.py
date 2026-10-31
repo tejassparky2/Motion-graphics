@@ -287,8 +287,8 @@ def s24top():
     def squat_upper(P, t):
         P.rot("spine", (16 + 14 * t, 0, 0))
         P.rot("chest", (8 + 4 * t, 0, 0))
-        P.rot("neck", (-6 * t, 0, 0))
-        P.rot("head 1", (-8 * t, 0, 6 * t))                               # chin up: his face over his hand
+        P.rot("neck", (-12 * t, 0, 0))
+        P.rot("head 1", (-18 * t, 0, 8 * t))                               # chin up: his face over his hand
         _arms_down(P, 10)
         P.aim("upper_arm.R", (-0.12, -0.75 - 0.15 * t, -0.55 - 0.15 * t))  # reaching low to the shrimp
         P.aim("forearm.R", (-0.04, -0.9, -0.3 - 0.15 * t))
@@ -302,7 +302,8 @@ def s24top():
     hero.face(k, "neutral", 1)
     hero.face(k, "happy", 52, 0.35)                                       # a small, steady smile as he crouches
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24top", (1.2, -6.8, 1.0), (-0.9, 0.6, 3.0), 24, fstop=2.8, focus=(-1.4, 0.8, 2.4))   # low, under the brim
+    _cam("cam_s24top", (0.5, -15.5, 2.2), (-0.5, 0.5, 3.6), 25, shift_y=-0.21, fstop=2.8,
+         focus=(-1.0, 0.8, 2.6))                                          # low two-shot, in the top half (S24_FOCUS)
     return dict(frames=n, step=3, subject=[k["arm"]])
 
 
@@ -356,22 +357,24 @@ def s24bot():
     _bird_drop(bush, 22, 46, n)
     k = _hero((1.7, 0.1, 0), -90)                                         # where SAVE's crouch leaves him
     P = Pose(k)
-    start, end = Vector((0, 0, 0)), Vector((-0.3, 0.45, 0))               # back and to his right: toward the trees
+    start, end = Vector((0, 0, 0)), Vector((-0.45, 0.2, 0))              # back and to his right: away, toward the trees
 
     def upper(P, t):
         P.rot("spine", (-6 - 6 * t, 0, 0))
         P.rot("chest", (-4, 0, 0))
-        P.rot("head 1", (-14 - 6 * t, 0, -10))                            # looking up at the bird, face to us
+        P.rot("head 1", (-14 - 8 * t, 0, 20))                             # up and to his left: at the bird, face to us
         _arms_down(P, 14)
-        P.aim("upper_arm.R", (-0.5, -0.45, 0.35 + 0.2 * t))               # an arm up, shielding
-        P.aim("forearm.R", (0.3, -0.35, 0.85))
-        P.aim("upper_arm.L", (0.55, 0.1, -0.6))
+        P.aim("upper_arm.R", (-0.3, -0.35, -0.85))                        # both hands up at the chest: "whoa"
+        P.aim("forearm.R", (-0.05, -0.85, 0.5))
+        P.aim("upper_arm.L", (0.3, -0.35, -0.85))
+        P.aim("forearm.L", (0.05, -0.85, 0.5))
 
     _walk(P, k, (start, end), 1, n - 24, 0.22, "L", crouch=(0.02, 0.06), upper=upper)
-    hero.face(k, "surprised", 1)
-    hero.face(k, "shock", 12)
+    hero.face(k, "surprised", 1, 0.6)
+    hero.face(k, "surprised", 12)                                         # (the shock_plane preset blanks his face)
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24bot", (-6.5, 2.5, 1.0), (1.0, 0.0, 4.5), 26, fstop=2.8, focus=(1.0, 0.5, 4.0))    # behind the shrimp, up at Kai
+    _cam("cam_s24bot", (-11.0, 2.4, 3.2), (0.5, 0.2, 4.2), 28, shift_y=0.30, fstop=2.8,
+         focus=(2.5, 2.0, 7.0))                                           # from his front: the bird drops in from the right, bottom half
     return dict(frames=n, step=2, subject=[k["arm"]])
 
 
