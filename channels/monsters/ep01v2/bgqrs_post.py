@@ -203,7 +203,7 @@ def brim_safe_mask(frame_png, eyes, rx, ry):
     im = np.asarray(Image.open(frame_png).convert("RGB")).astype(int)
     r, g, b = im[..., 0], im[..., 1], im[..., 2]
     brim = (g - r > 40) & (b - r > 40)
-    hair = (r - b > 30) & (r + g + b < 420)                       # brown hair (the iris is only spared off the eye)
+    hair = (r - b > 18) & (r + g + b < 420)                       # brown hair (the iris is only spared off the eye)
     yy, xx = np.mgrid[0:im.shape[0], 0:im.shape[1]]
     m = np.zeros(im.shape[:2])
     core = np.zeros(im.shape[:2], bool)
@@ -244,7 +244,7 @@ def diorama_s20():
     (lx, ly), (rx, ry) = eyes
     cx, cy, size, er = (lx + rx) / 2, (ly + ry) / 2, d * 2.6, d * 0.23
     skin = skin_near_eyes(os.path.join(BUILD, "S20", "0070.png"), eyes, er)
-    mask = brim_safe_mask(plate, eyes, d * 0.31, d * 0.19)
+    mask = brim_safe_mask(plate, eyes, d * 0.35, d * 0.19)     # solid to the hair, which the mask spares
     return [(masked_dot_eyes, dict(start=43 / FPS, eyes=eyes, r=er * 0.24, skin=skin, mask=mask)),
             (fx2d_anime.sweat_drop, dict(start=52 / FPS, end=99, x=cx, y=cy, size=size, tilt=tilt))]
 
