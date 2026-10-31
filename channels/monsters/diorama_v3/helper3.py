@@ -29,10 +29,11 @@ TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
 HAND_COCK = [("left_upper_arm", (-0.7, 0.3, -0.6)), ("left_lower_arm", (-0.3, 0.6, -0.5))]       # anticipation
-HAND_REACH = [("left_upper_arm", (-0.25, 0.97, 0.05)), ("left_lower_arm", (0.5, 0.75, 0.45))]    # overshoot
-HAND_UP = [("left_upper_arm", (-0.3, 0.92, -0.08)), ("left_lower_arm", (0.45, 0.82, 0.32))]      # over his chest
-HEAD_AWAKE = [("neck", (-0.02, 0.45, 1)), ("head", (-0.04, 0.85, 0.55))]   # head lifts, chin in: he looks down at
-                                                                     # his hand (and his face turns to the camera)
+HAND_REACH = [("left_upper_arm", (-0.28, 0.82, -0.5)), ("left_lower_arm", (0.3, 0.95, 0.12))]    # overshoot
+HAND_UP = [("left_upper_arm", (-0.35, 0.72, -0.6)), ("left_lower_arm", (0.35, 0.93, 0.02))]      # held up over his
+                                                                                                 # chest, to the sky
+HEAD_AWAKE = [("neck", (0, 0.15, 1)), ("head", (-0.03, 0.35, 1))]   # the roll comes out, chin in a touch: his face
+                                                                    # (wide eyes) turns to the camera
 
 
 def _words(shot="S09"):
