@@ -160,7 +160,7 @@ def s20():
     nose = s3d.kai_point(rig, "nose")
     eyes = s3d.kai_point(rig, "eyes")
     root = sh["root"].matrix_world.translation.copy()
-    windup = s3d.raise_claw(sh, nose + EAST * 1.6 - UP * 1.4 + Vector((0, 0, 3.0)), nose)   # pulled up and back
+    windup = s3d.raise_claw(sh, root - UP * 1.2 + EAST * 0.4 + Vector((0, 0, 3.6)), nose)  # high over its head
     jab = s3d.raise_claw(sh, nose + EAST * 0.5 + UP * 0.1 + Vector((0, 0, 0.8)), nose)      # down at his nose
     stare = s3d.raise_claw(sh, root + UP * 1.2 + EAST * 0.6 + Vector((0, 0, 2.6)),
                            root + Vector((0, 0, 1.4)))                                       # up before its own face
@@ -189,7 +189,7 @@ def s20():
     anim.on_twos([sh["shoulder"], sh["hinge"], body], 2)
     sc = bpy.context.scene
     sc.frame_set(SNAP)
-    v2._puff(s3d.claw_tip(sh) + Vector((0, 0, 0.05)), SNAP, n=3, size=0.28, seed=2)   # the sad "pff"
+    v2._puff(s3d.claw_tip(sh) + Vector((0, 0, 0.05)), SNAP, n=4, size=0.42, seed=2)   # the sad "pff"
     sc.frame_set(1)
     acting.expression(rig, "terror", 1)
     acting._key("eye_close", 1, 0.0)                               # (open until the squeeze)

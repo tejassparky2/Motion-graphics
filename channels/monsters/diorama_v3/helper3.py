@@ -27,7 +27,7 @@ MAP = diorama.MAP
 SPARK = {}
 RIFT_H = 0.144                       # the crack's height in the sky (radians): ~40% of the frame at lens 100
 POV_SIZE = 2.0                       # ... and from his POV, opened up
-POV_LENS, POV_ELEV = 30.0, 18.0      # his POV: lens, and how far above the horizon he looks
+POV_LENS, POV_ELEV = 30.0, 20.0      # his POV: lens, and how far above the horizon he looks
 SPARK_JSON = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
                           "out", "monsters", "diorama_v3", "shots", "S09_spark.json")
 TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep01v3", "timing.json")
@@ -35,9 +35,10 @@ TIMING = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))
 # in front of his face and he stares at it (reborn); anticipation, overshoot, settle on 2s. The right arm stays flung
 # over his head (acting.LYING_V3).
 HAND_COCK = [("left_upper_arm", (-0.5, 0.2, -0.85)), ("left_lower_arm", (-0.15, 0.45, -0.88))]   # anticipation
-HAND_REACH = [("left_upper_arm", (-0.28, 0.82, -0.5)), ("left_lower_arm", (0.3, 0.95, 0.12))]    # overshoot
-HAND_UP = [("left_upper_arm", (-0.35, 0.72, -0.6)), ("left_lower_arm", (0.35, 0.93, 0.02))]      # held up over his
-                                                                                                 # chest, to the sky
+HAND_REACH = [("left_upper_arm", (0.05, 0.98, 0.1)), ("left_lower_arm", (0.2, 0.97, 0.15)),       # overshoot
+              ("left_hand", (0.1, 1.0, 0.05))]
+HAND_UP = [("left_upper_arm", (0.1, 0.97, 0.2)), ("left_lower_arm", (0.3, 0.9, 0.3)),             # held up above
+           ("left_hand", (0.2, 0.95, 0.2))]                     # his face, fingers spread: one clear silhouette
 HEAD_AWAKE = [("neck", (0, 0.15, 1)), ("head", (-0.03, 0.35, 1))]   # the roll comes out, chin in a touch: his face
                                                                     # (wide eyes) turns to the camera
 
@@ -79,6 +80,35 @@ def _spark(cam_loc, up, land, f0, f1, radius):
     anim.key(ball, "scale", f0 - 1, 1.0, "CONSTANT")
     anim.key(ball, "scale", f1 + 1, 0.0, "CONSTANT")
     return ball, lambda f: pos(max(0.0, min(1.0, (f - f0) / max(1, f1 - f0))))
+
+
+def _pov_flowers(pov, f_in, seed=9):
+    """Tall pink and white flowers close in front of his POV, out of focus along the bottom and sides of the frame
+    (hidden until the cut, so they never stand over him in the overhead shots)."""
+    import random
+    from channels.monsters.mk import paintbg, world
+    rnd = random.Random(seed)
+    stem = paintbg.paint3("pov_stem", *paintbg.greens(1), noise=0.1)
+    heads = [paintbg.paint3("pov_pink", look.hexc("#d05a8a"), look.hexc("#ff8fb8"), look.hexc("#ffd0e2"), noise=0.05),
+             paintbg.paint3("pov_white", look.hexc("#c9c9e0"), look.hexc("#ffffff"), look.hexc("#ffffff"), noise=0.05)]
+    sb, hb = world._Batch(), [world._Batch(), world._Batch()]
+    base = pov.matrix_world.translation
+    for ang, d, h in ((-38, 3.2, 1.3), (-30, 4.5, 1.7), (-22, 3.8, 1.0), (-8, 5.5, 1.2), (6, 4.2, 0.9), (18, 3.6, 1.4),
+                      (28, 4.8, 1.8), (36, 3.0, 1.1), (-45, 5.2, 2.0), (44, 5.6, 2.1)):
+        a = math.radians(ang + rnd.uniform(-3, 3))
+        x, y = base.x + math.sin(a) * d, base.y + math.cos(a) * d
+        top = h + rnd.uniform(-0.15, 0.15)
+        sb.add(world._sphere(6, 3), (x, y, top / 2), (0.05, 0.05, top / 2))
+        for _ in range(rnd.randint(1, 2)):
+            r = rnd.uniform(0.22, 0.34)
+            hb[0 if rnd.random() < 0.65 else 1].add(world._sphere(8, 5), (x + rnd.uniform(-0.2, 0.2),
+                                                                        y + rnd.uniform(-0.2, 0.2), top), (r, r, r * 0.8))
+    objs = [sb.obj("pov_stems", stem, shadow=False)] + [b.obj(f"pov_heads{i}", heads[i], shadow=False)
+                                                         for i, b in enumerate(hb)]
+    for o in objs:
+        for f, hide in ((1, True), (f_in, False)):
+            o.hide_render = hide
+            o.keyframe_insert("hide_render", frame=f)
 
 
 def _crack_norm():
@@ -214,6 +244,7 @@ def s09():
     for fc in anim.all_fcurves(pov.data.animation_data.action):
         for kp in fc.keyframe_points:
             kp.interpolation = "LINEAR"
+    _pov_flowers(pov, f_in)
     mist = bpy.context.scene.world.mist_settings
     for f, st, dp in ((1, dist * 0.97, dist * 0.55), (f_in - 1, dist * 0.97, dist * 0.55), (f_in, 120.0, 400.0)):
         mist.start, mist.depth = st, dp
@@ -237,6 +268,8 @@ def s09():
     _key_pose(rig, HEAD_AWAKE + HAND_COCK, f_woke + 2, loc, rot)
     _key_pose(rig, HEAD_AWAKE + HAND_REACH, f_woke + 6, loc, rot)
     _key_pose(rig, HEAD_AWAKE + HAND_UP, f_woke + 8, loc, rot)
+    _key_pose(rig, HEAD_AWAKE + HAND_UP, f_woke + 12, loc, rot, roll=0.25)   # a small turn of the wrist (on 2s)
+    _key_pose(rig, HEAD_AWAKE + HAND_UP, f_woke + 14, loc, rot, roll=0.45)
     s15._flush_keys(rig)
     bpy.context.scene.frame_set(f_woke + 8)
     hand = s15._world(rig, "left_hand")
