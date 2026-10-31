@@ -269,13 +269,16 @@ def s16():
 
 
 def s17():
-    """Then I saw the drops. Close and looking down (tilt 62) on his chest: a drop swells at the claw tip (diorama
-    scale, so it reads from up here), lets go at f17, lands on his jacket at f23 ("drops") and leaves a dark wet
-    splat; the next drop swells from f34. Same frames as the 3D S17."""
-    n, rig, sh, _ = _world("S17", claw="jacket")
-    tip = s3d.claw_tip(sh) + Vector((0, 0, -0.12))
-    land, nrm, _m = _hit(tip)
+    """Then I saw the drops. Close, from the south-east and above (tilt 58), on the claw cocked beside his face (the
+    same pose as S16/S18): a drop swells at the claw's lowest point (diorama scale, so it reads from up here), lets go
+    at f17, lands on his jacket at f23 ("drops") and leaves a dark wet splat; the next drop swells from f34. Same
+    frames as the 3D S17."""
+    n, rig, sh, _ = _world("S17")
+    low = min((o.matrix_world @ v.co for o in bpy.data.objects if o.name.startswith(("puff_claw", "puff_dactyl"))
+               and o.type == "MESH" for v in o.data.vertices), key=lambda p: p.z)
     r = 0.3
+    tip = low - Vector((0, 0, r * 0.9))
+    land, nrm, mat = _hit(tip)
     drop_m = look.flat("drip", look.hexc("#9fd8ff"))
     s3d._drop(tip, 1, 17, 23, land + nrm * r * 0.6, r=r, mat=drop_m)
     s3d._drop(tip, 34, n + 20, n + 26, land, r=r, mat=drop_m)
@@ -288,11 +291,12 @@ def s17():
     spot.data.materials.append(look.flat("wet_tunic", look.hexc("#0f5d60")))
     for f, s in ((22, 0.001), (23, 0.22), (25, 0.38), (29, 0.5), (35, 0.56)):
         anim.key(spot, "scale", f, (s, s * 0.8, 1), "LINEAR" if f > 23 else "CONSTANT")
-    tgt = tip.lerp(land, 0.55)
-    cam = diorama.camera("cam_s17", tgt, dist=52.0, tilt=62.0, lens=120.0, blur=BLUR)
-    _move(cam, n, [(1, 62.0, 52.0, 120.0), (n, 62.0, 47.0, 120.0)], lambda f: tgt)
+    tgt = tip.lerp(land, 0.5)
+    cam = diorama.camera("cam_s17", tgt, dist=50.0, tilt=58.0, yaw=-40.0, lens=120.0, blur=BLUR)
+    _move(cam, n, [(1, 58.0, 50.0, 120.0), (n, 58.0, 45.0, 120.0)], lambda f: tgt, yaw=-40.0)
     s3d.kai_face(rig, 1, **s3d.TERROR)
     _anchors("S17", cam, rig, sh)
+    print("S17 drop lands on", mat, flush=True)
     return _ret(n, [sh["root"]])
 
 
