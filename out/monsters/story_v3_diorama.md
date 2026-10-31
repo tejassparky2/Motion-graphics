@@ -5,15 +5,18 @@ The owner's notes on the 3D/2.5D comparison (31 Oct 2026):
 2. "Go for 2.5d just try to improve it more"
 3. "The srimp tried to kill mc also not correctly conved go with 2.5d because I think it renders fast improve overall
    animation quality and clear explanation"
+4. "And the mc dieing cause dead and reincarnation also not clear"
 
 What this version fixes:
 - **The shrimp tries to kill Kai, said and shown.** It looks right at him and aims. The blast fires straight down
   his line (the trees behind him are erased). He says it missed him by an inch. Later it "tries to finish" him.
 - **The shrimp is in danger at the end, said and shown.** The butcher bird looks at the shrimp, and the shrimp has no idea.
+- **Kai's death and reincarnation, said and shown.** The current flows through the water into him, "That's how I
+  died." A spark of light falls through the crack in the sky, and "I woke up in another world."
 - **A/B for viewers.** The narrator says "Option A" and "Option B", the two panels carry a big A and B, and the last
   line is "Comment A or B."
 
-Kept the same: lines 1-14 and 17-23 (marked "same"), the voice (Turbo am_liam), the look (2.5D diorama), the hook text
+Kept the same: every line marked "same" (marked "same"), the voice (Turbo am_liam), the look (2.5D diorama), the hook text
 and the title.
 
 | # | Kai (narration unless noted) | On screen | |
@@ -25,8 +28,9 @@ and the title.
 | 5 | Almost as hot as the surface of the sun. But only in water. | The bubble collapses in a flash; Kai's lifted face. | same |
 | 6 | Then the storm hit. | Lightning; the lab lights stutter. | same |
 | 7 | Snap. | The tank glass cracks. | same |
-| 8 | Water. Cables. Me. | The leak runs to the power strip; a spark; black. | same |
-| 9 | I woke up under a cracked sky. | Kai in pink flowers; tilt up to a sky with a crack in it. | same |
+| 8 | Water. Cables. Me. | The leak runs across the floor to the power strip, under Kai's feet. | same |
+| 8b | **That's how I died.** | The spark races through the water into him: an x-ray flash of his skeleton, the lights die, black. A flatline beep. | NEW |
+| 9 | **Then I woke up. In another world.** | In the black, a crack of light opens in a sky; a tiny glowing spark (his soul) falls through it into a pink-flower meadow. Kai's eyes snap open; he stares at his hands. Tilt up: the cracked sky. | changed (was "I woke up under a cracked sky.") |
 | 10 | Everything here was tiny. And cute. | The jelly-snail; the fluffmoth. | same |
 | 11 | And every one of them was wrong. | Burnt holes behind the snail; the moth's eye-spots open. | same |
 | 12 | I was so thirsty. | Kai crawls to the pond. | same |
@@ -49,7 +53,7 @@ and the title.
 | 29 | **Option B: run while I can.** | Bottom: Kai running from the pond, the bird diving. Big **B · RUN** | NEW |
 | 30 | **Comment A or B.** | Both panels with the big A and B; cut ~0.5 s after the last word. | NEW |
 
-**Length:** about 69 s (was 62.5 s): about 7 s of new lines.
+**Length:** about 72 s (was 62.5 s): about 9-10 s of new lines.
 
 **Voice check:** a lone "A." or "B." can be misheard ("eh", "be"), so the lines say "Option A" / "Option B". Every
 take gets the Whisper-medium check as usual, and any misheard line is reworded and redone.
