@@ -278,10 +278,12 @@ def grass_round(hip, up, seed=21):
                                             location=(c.x + rnd.uniform(-0.25, 0.25), c.y + rnd.uniform(-0.25, 0.25),
                                                       0.4))
             o = bpy.context.object
+            o.name = "act_tuft"
             o.rotation_euler = (rnd.uniform(-0.5, 0.5), rnd.uniform(-0.5, 0.5), rnd.uniform(0, 3))
             o.data.materials.append(blade)
         if rnd.random() < 0.5:
             bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=5, radius=0.16, location=(c.x, c.y, 0.75))
+            bpy.context.object.name = "act_flower"
             bpy.context.object.data.materials.append(rnd.choice(petals))
 
 

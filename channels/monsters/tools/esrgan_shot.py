@@ -8,7 +8,11 @@ tilt-shift bokeh keeps its softness.
 
   --src DIR   default out/monsters/diorama_v3/shots (reads <SHOT>.mp4, 720x1280)
   --out DIR   default out/monsters/diorama_v3/shots_1080
-  --threads N torch CPU threads (default: all cores). ~7.5 s per frame on 4 cores.
+  --threads N torch CPU threads (default: all cores).
+  --force     redo a shot or part whose output already exists with the right frame count (skipped by default).
+  --exact     the plain fp32 network (~7.5 s per frame on 4 cores). By default the fast path runs (channels_last, plus
+              bf16 on a CPU with AMX/AVX512-BF16): ~1.9 s per frame on 4 cores, PSNR >= 54 dB against --exact
+              (out/monsters/diorama_v3/Q4_speed.md). Two parts side by side with --threads 2 each beat one with 4.
 
 Splitting: idle helpers each take a frame range of the same shot (frames are 1-based, as in render_shot.py); the
 last one (or anyone) runs --join, which checks the parts cover every frame exactly once.
@@ -60,12 +64,12 @@ def clean_remux(tmp, dst):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN, dst], check=True)
 
 
-def upscale_range(shot, a, b, src, dst, threads):
+def upscale_range(shot, a, b, src, dst, threads, fast=True):
     import torch
     from channels.monsters.tools.esrgan_upscale import load, upscale
     if threads:
         torch.set_num_threads(threads)
-    net = load(WEIGHTS)
+    net = load(WEIGHTS, fast=fast)
     n, w, h = count_frames(src)
     if (w, h) != (SRC_W, SRC_H):
         print(f"{shot}: source is {w}x{h}, expected {SRC_W}x{SRC_H}; upscaling to {W}x{H} anyway", flush=True)
@@ -136,6 +140,8 @@ def main():
     ap.add_argument("--src", default=os.path.join(ROOT, "out", "monsters", "diorama_v3", "shots"))
     ap.add_argument("--out", default=os.path.join(ROOT, "out", "monsters", "diorama_v3", "shots_1080"))
     ap.add_argument("--threads", type=int, default=0)
+    ap.add_argument("--exact", action="store_true", help="the plain fp32 network (slow; the quality reference)")
+    ap.add_argument("--force", action="store_true", help="redo a shot or part that is already done")
     a = ap.parse_args()
     src = os.path.join(a.src, f"{a.shot}.mp4")
     if not os.path.exists(src):
@@ -149,7 +155,10 @@ def main():
         dst = os.path.join(a.out, "parts", f"{a.shot}_f{f0:03d}-{f1:03d}.mp4")
     else:
         f0, f1, dst = 1, n, os.path.join(a.out, f"{a.shot}.mp4")
-    upscale_range(a.shot, f0, f1, src, dst, a.threads)
+    if not a.force and os.path.exists(dst) and count_frames(dst)[:1] == (f1 - f0 + 1,):
+        print(f"{a.shot}: {dst} is already done ({f1 - f0 + 1} frames); --force to redo it", flush=True)
+        return
+    upscale_range(a.shot, f0, f1, src, dst, a.threads, fast=not a.exact)
 
 
 if __name__ == "__main__":

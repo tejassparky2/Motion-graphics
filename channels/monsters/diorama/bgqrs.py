@@ -149,7 +149,7 @@ def _hit(p):
         hit, loc, nrm, idx, ob, _m = bpy.context.scene.ray_cast(dg, o, Vector((0, 0, -1)))
         if not hit:
             return None
-        if not ob.name.startswith(("puff", "drop", "d16_")):
+        if not ob.name.startswith(("puff", "drop", "d16_", "act_", "sapling", "kai_down_shadow")):
             ev = ob.evaluated_get(dg)
             mi = ev.data.polygons[idx].material_index if ob.type == "MESH" else 0
             mats = ev.data.materials if ob.type == "MESH" else []
@@ -164,9 +164,9 @@ def _over_jacket(sh, rig):
     2 units from his eyes. Returns the shoulder pose."""
     chest = s3d.kai_point(rig, "chest")
     eyes = s3d.kai_point(rig, "eyes")
-    pose = None
-    for k in (1.0, 1.3, 0.7, 1.6):
-        for u in (-0.3, -0.7, 0.0, -1.1):                          # level with the shrimp or toward his belly
+    pose = s3d.raise_claw(sh, chest + EAST * 1.0 + Vector((0, 0, 1.4)), chest + EAST * 1.0)   # the fallback
+    for k in (1.0, 1.3, 0.7, 1.6, 0.4):
+        for u in (-0.3, -0.7, 0.0, -1.1, 0.4):                     # level with the shrimp or toward his belly
             spot = _hit(chest + EAST * k + UP * u + Vector((0, 0, 3)))
             if not spot or "huku" not in spot[2]:
                 continue
