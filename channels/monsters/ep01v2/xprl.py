@@ -302,13 +302,13 @@ def s24top():
     hero.face(k, "neutral", 1)
     hero.face(k, "happy", 52, 0.35)                                       # a small, steady smile as he crouches
     anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24top", (0.5, -15.5, 2.2), (-0.5, 0.5, 3.6), 25, shift_y=-0.21, fstop=2.8,
+    _cam("cam_s24top", (-5.56, -14.71, 2.2), (-0.5, 0.5, 3.6), 25, shift_y=-0.21, fstop=2.8,
          focus=(-1.0, 0.8, 2.6))                                          # low two-shot, in the top half (S24_FOCUS)
     cd = bpy.context.scene.camera.data                                    # push in as he crouches to the shrimp
     for f, lens, sh in ((57, 25, -0.21), (85, 33, -0.25)):
         anim.key(cd, "lens", f, lens, "BEZIER")
         anim.key(cd, "shift_y", f, sh, "BEZIER")
-    return dict(frames=n, step=3, subject=[k["arm"]])
+    return dict(frames=n, step=3, ones=(57, 85), subject=[k["arm"]])   # the push renders on 1s; Kai, shrimp on 3s
 
 
 def _local(rot, v, scale=1.3):
@@ -340,14 +340,38 @@ def _bird_drop(bush, f0, f1, n, kai_at=(5.2, 1.0)):
     for f, p_ in ((1, k0), (f0, k0), (f1, k1), (n, k1)):
         anim.key(sh, "location", f, (p_.x, p_.y, z), "LINEAR")
     anim.on_twos(tuftwing._animated(rig) + [sh], step=2)
+    rig["land"] = (tx, ty)
     return rig
+
+def _mantle(rig, f0, f1):
+    """On landing the bird mantles over its prey like a raptor: wings half-open and arched over the shrimp, body leaning
+    in, beak pointed down at its head. No longer a chick sitting on it."""
+    for sx, w in zip((-1, 1), rig["wings"]):
+        anim.key(w, "rotation_euler", f0, (0, -sx * 0.5, 0))
+        anim.key(w, "scale", f0, (1, 1, 1))
+        anim.key(w, "rotation_euler", f1, (-0.3, -sx * 1.45, -sx * 0.35))
+        anim.key(w, "scale", f1, (2.4, 2.4, 2.4))
+    anim.key(rig["body"], "rotation_euler", f0, (0, 0, 0))
+    anim.key(rig["body"], "rotation_euler", f1, (math.radians(20), 0, 0))
+    anim.key(rig["head"], "rotation_euler", f1, (0.45, 0, 0))
+    # it turns on the shrimp's back to face the way the shrimp does (+X, toward the camera), so the arched wings spread
+    # across the frame; the lift and shadow are re-keyed so it stays put on the back
+    tx, ty = rig["land"]
+    root, turn = rig["root"], math.radians(90)
+    anim.key(root, "rotation_euler", f0, tuple(root.rotation_euler), "CONSTANT")
+    anim.key(root, "rotation_euler", f0 + 2, (0, 0, turn), "CONSTANT")
+    on = _local(turn, (tx, ty, 1.6))
+    anim.key(rig["lift"], "location", f0 + 2, tuple(on), "CONSTANT")
+    gr = _local(turn, (tx, ty, 0))
+    anim.key(rig["shadow"], "location", f0 + 2, (gr.x, gr.y, rig["shadow"].location.z), "CONSTANT")
+
 
 def s24bot():
     """B, RUN: Kai backs away toward the trees, looking up as the butcher bird drops toward the shrimp, its giant
     shadow sweeping the ground; the sun goes behind cloud (darker, cooler: RUN is the riskier choice, LC8)."""
     n = _frames()
     meadow.build("after")
-    _shrimp_wet(None, n)                                                  # still drinking: it hasn't seen the bird
+    shrimp = _shrimp_wet(None, n)                                         # still drinking: it hasn't seen the bird
     for o in bpy.data.objects:                                            # the sun goes behind cloud: dimmer, cooler
         if o.type == "LIGHT":
             o.data.energy *= 0.42
@@ -358,27 +382,47 @@ def s24bot():
             if nd.type == "BACKGROUND":
                 nd.inputs[1].default_value *= 0.6
     bush = thornbush.build()
-    _bird_drop(bush, 22, 46, n)
-    k = _hero((1.7, 0.1, 0), -90)                                         # where SAVE's crouch leaves him
+    bird = _bird_drop(bush, 22, 46, n, kai_at=(7.3, -4.0))
+    _mantle(bird, 44, 50)
+    for e in shrimp["eyes"]:                                              # pinned: scared, small pupils
+        anim.key(e, "scale", 45, (1, 1, 1), "CONSTANT")
+        anim.key(e, "scale", 47, (0.78, 1, 0.78), "CONSTANT")
+    for h in shrimp["hi"]:
+        anim.key(h, "scale", 45, (1, 1, 1), "CONSTANT")
+        anim.key(h, "scale", 47, (1.35, 1.35, 1.35), "CONSTANT")
+    anim.on_twos(tuftwing._animated(bird) + shrimp["eyes"] + shrimp["hi"], step=2)
+    # Kai has turned from the shrimp toward us, mid-step away (RUN), so the lens sees his face while the bird hits the
+    # shrimp behind him. Turned 106 deg: facing world (0.96, 0.28), to the camera and a touch toward the bird.
+    k = _hero((6.75, -4.17, 0), 106)
     P = Pose(k)
-    start, end = Vector((0, 0, 0)), Vector((-0.45, 0.2, 0))              # back and to his right: away, toward the trees
+    start, end = Vector((0, 0, 0)), Vector((0, -0.2, 0))                  # one step, away from the shrimp
 
     def upper(P, t):
-        P.rot("spine", (-6 - 6 * t, 0, 0))
-        P.rot("chest", (-4, 0, 0))
-        P.rot("head 1", (-14 - 8 * t, 0, 20))                             # up and to his left: at the bird, face to us
+        P.rot("spine", (-4 - 4 * t, 0, 0))
+        P.rot("chest", (-3, 0, 0))
+        P.rot("head 1", (-12 - 3 * t, 0, 0))                              # chin up ~15 deg: eyes and mouth to the lens
         _arms_down(P, 14)
-        P.aim("upper_arm.R", (-0.3, -0.35, -0.85))                        # both hands up at the chest: "whoa"
-        P.aim("forearm.R", (-0.05, -0.85, 0.5))
-        P.aim("upper_arm.L", (0.3, -0.35, -0.85))
-        P.aim("forearm.L", (0.05, -0.85, 0.5))
+        P.aim("upper_arm.R", (-0.4, -0.6, -0.35))                         # both hands up by the shoulders: "whoa"
+        P.aim("forearm.R", (-0.05, -0.3, 0.95))
+        P.aim("upper_arm.L", (0.4, -0.6, -0.35))
+        P.aim("forearm.L", (0.05, -0.3, 0.95))
 
-    _walk(P, k, (start, end), 1, n - 24, 0.22, "L", crouch=(0.02, 0.06), upper=upper)
+    _walk(P, k, (start, end), 10, 40, 0.2, "L", crouch=(0.02, 0.06), upper=upper)
+    _walk(P, k, (end, end + Vector((0, -0.001, 0))), 41, n, 0.2, "L", crouch=(0.06, 0.06), upper=upper)
+    hero.FACES.setdefault("run_up", {"face_surprise": 1, "look_up": 0.18, "mouse_open": 0.7})
+    hero.FACES.setdefault("run_wide", {"face_surprise": 1, "look_up": 0.18, "mouse_open": 0.85, "eye_black_small": 0.6})
     hero.face(k, "surprised", 1, 0.6)
-    hero.face(k, "surprised", 12)                                         # (the shock_plane preset blanks his face)
-    anim.on_twos([k["arm"]], step=3)
-    _cam("cam_s24bot", (-11.0, 2.4, 3.2), (0.5, 0.2, 4.2), 28, shift_y=0.30, fstop=2.8,
-         focus=(2.5, 2.0, 7.0))                                           # from his front: the bird drops in from the right, bottom half
+    hero.face(k, "run_up", 10)                                            # eyes up at the bird (irises showing), mouth open
+    hero.face(k, "run_wide", 46)                                          # it lands: wide eyes, small pupils
+    anim.on_twos([k["arm"]], step=2)
+    for o in [k["arm"], shrimp["shoulder"], shrimp["body"], shrimp["hinge"]] + shrimp["eyes"]:
+        ad = o.animation_data                                             # all on 2s: RUN renders every 2nd frame
+        for fc in (anim.all_fcurves(ad.action) if ad and ad.action else []):
+            for m in fc.modifiers:
+                if m.type == "STEPPED":
+                    m.frame_step = 2
+    _cam("cam_s24bot", (22.94, -2.19, 14.21), (0.34, -0.96, 5.27), 28.9, shift_y=0.146, fstop=2.8,
+         focus=(7.6, -3.9, 7.5))                                          # above and in front of him: the shrimp behind, all above the UI
     return dict(frames=n, step=2, subject=[k["arm"]])
 
 

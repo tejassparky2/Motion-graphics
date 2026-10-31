@@ -199,6 +199,9 @@ get blocked.
   - Retry on network errors (2/4/8/16 s).
   - Commit messages end with your own session's attribution lines.
 - **Long renders:** run them as tracked background tasks in chunks under 2 h. The container sleeps when idle.
+- **Stepped shots, camera moves and chunks** (31 Oct, bGqrs's catch on S24top):
+  - A camera move (pan, push-in, lens zoom) renders on 1s. Characters and creatures stay held on 2s/3s through the STEPPED modifier (TP13: step > 1 only with a locked camera). A push on 3s reads as a stuttering zoom.
+  - A shot split into chunks: each chunk renders from the step multiple at or before its first frame, and encodes only its own range. render_shot.py renders the range's first frame plus every frame where f % step == 0, so this keeps every held frame identical to a full render.
 
 ## Report back (send_message to session_0153qDV4AufFgT2PhEBEfS8n)
 - The files you added and the commit hash.

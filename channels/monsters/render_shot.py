@@ -4,7 +4,7 @@
                                                        [--samples 16] [--still N]
 
 The shot builders live in channels/monsters/<EPISODE>/shots.py: SHOTS[SHOT]() builds the scene and returns
-dict(frames=N, step=1|2|3, subject=[roots]). Frames are written as OUT_DIR/0001.png...; with --subject the character-only RGBA
+dict(frames=N, step=1|2|3, subject=[roots][, ones=(A, B)]). Frames are written as OUT_DIR/0001.png...; with --subject the character-only RGBA
 pass goes to OUT_DIR/subject/. --still N renders one frame to OUT_DIR/still_N.png for checking."""
 import importlib  # noqa: I001
 import os
@@ -42,15 +42,18 @@ else:
 
 
 step = int(info.get("step", 1))
+ones = info.get("ones")                       # (A, B): frames rendered on 1s in a stepped shot (a camera move, TP13)
 
 
 def render(frames, folder, still=False):
     """With step > 1 (locked camera, characters on 2s/3s, no 1s effects) only every step-th frame is rendered; the
-    frames in between are copies (TP13: render only frames that change)."""
+    frames in between are copies (TP13: render only frames that change). Frames inside `ones` are all rendered: the
+    camera moves on 1s there while the characters hold on their STEPPED modifiers. A chunk must start on a frame a full
+    render renders (a multiple of step, or inside `ones`), so its held frames match the neighbouring chunks."""
     import shutil
     last = None
     for f in frames:
-        if not still and step > 1 and last is not None and f % step != 0:
+        if not still and step > 1 and last is not None and f % step != 0 and not (ones and ones[0] <= f <= ones[1]):
             shutil.copyfile(last, os.path.join(folder, f"{f:04d}.png"))
             continue
         sc.frame_set(f)
