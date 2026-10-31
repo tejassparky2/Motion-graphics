@@ -1,11 +1,12 @@
 # Episode 1 v2: delivery check
 
+- picture out/monsters/ep01v2/picture.mp4, sound out/monsters/ep01v2/mix.wav
 - picture: 1500 frames (timing.json: 1500)
 - sound: 62.48 s (timing.json: 62.48 s)
 - the cut lands 0.51 s after the last word (rule: about 0.5 s or less)
 - out/monsters/ep01v2.mp4: 1500 frames
 - out/monsters/ep01v2_preview.mp4: 1500 frames
-- wrote out/monsters/ep01v2.mp4 (22.9 MB), the preview and the cover
+- wrote out/monsters/ep01v2.mp4 (22.8 MB), the preview and the cover
 - frame 0 mean brightness 144/255
 - tags in the files: {'x264': 0, 'Lavf': 0, 'Lavc': 0, 'encoder': 0, 'c2pa': 0, 'jumb': 0}
 - trademark terms in the upload sheet: none
@@ -14,10 +15,10 @@
 | Line | Match | Heard |
 |---|---|---|
 | l1 | 100% | Don't move. That claw can boil water. |
-| l2 | 100% | Ten minutes ago, I was alive |
+| l2 | 100% | Ten minutes ago I was alive |
 | l3 | 100% | Night shift at the Marine Lab. Just me and the pistol shrimp. |
 | l4 | 100% | Its claw snaps so fast, the water boils. |
-| l5 | 100% | almost as hot as the surface of the sun, but only in water. |
+| l5 | 100% | Almost as hot as the surface of the sun, but only in water. |
 | l6 | 100% | Then the storm hit. |
 | l7 | 100% | Snap. |
 | l8 | 100% | Water. Cables. Me. |
