@@ -77,6 +77,8 @@ CAP_Y_VERSION["diorama_v3"] = {k: v for k, v in CAP_Y_VERSION["diorama"].items()
 CAP_Y_VERSION["diorama_v3"].update({
     "S07": 200,              # v3: over the pebbles above the shrimp, off the claw, the snap and the crack
     "S08a": 620,             # over his shorts: the face, the sneakers in the spill and the sparking strip stay clear
+    "S08b": 945,             # below his feet and the skeleton's (text ends ~955, above the Shorts UI line at 960)
+    "S15a": 250,             # above the shrimp's eyes, then the blurred trees above Kai's cap; off the raised claw
     "S22": [(0.0, CAP_Y), (0.9, 500)],   # the tree close-up keeps the band; after the pull-back, the grass between
                                          # the tree and Kai at the puddle
 })
