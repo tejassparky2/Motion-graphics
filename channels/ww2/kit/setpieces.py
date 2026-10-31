@@ -238,9 +238,9 @@ def shivering_soldiers(cr, t, nation="germany", x=960.0, ground=930.0, n=3, scal
                 size=0.18 * scale / 0.66, seed=i, life=1.4, color="#f4f0e6", rise=40)
         # snow drifted over the boots
         cr.save()
-        cr.translate(xx, ground - 4)
-        cr.scale(1, 0.32)
-        cr.arc(0, 0, 70 * scale / 0.66, math.pi, 2 * math.pi)
+        cr.translate(xx, ground + 2)
+        cr.scale(1, 0.34)
+        cr.arc(0, 0, 74 * scale / 0.66, 0, 2 * math.pi)
         cr.restore()
         cr.set_source_rgba(*col("snow"))
         cr.fill()
