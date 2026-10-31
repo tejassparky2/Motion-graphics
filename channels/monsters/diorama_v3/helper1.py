@@ -26,7 +26,7 @@ from channels.monsters.diorama import xprl as xv2
 from channels.monsters.ep01v2 import helper1 as h3d
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
-from channels.monsters.mk import acting, anim, diorama, hero, lab, look, tuftwing
+from channels.monsters.mk import acting, anim, diorama, diorama_lab, hero, lab, look, tuftwing
 
 BLUR = 10.0
 GUESS = {"S08a": 54, "S24": 162}          # until ep01v3/timing.json lands
@@ -137,64 +137,132 @@ def _smooth_water(n):
     return m
 
 
-def s08a():
-    R, rig = d1._stage()
-    n = _frames("S08a")
-    # he has swivelled his chair right round, away from the desk, toward the open front of the dollhouse (south):
-    # feet flat on the tiles in front of him, his face to the lens; the spill comes from the desk behind him
-    turn = 2.75
-    d1._tilt_cap(rig, 36.0)
-    rig["arm"].rotation_euler.z = math.pi - turn
-    R["desk"]["chair"].rotation_euler.z = -turn
-    bpy.context.view_layer.update()
-    k = h3d._key_pose
-    h3d._sit(rig, lean=0.02, look=(-0.35, -0.12))                  # looking back over his shoulder at the tank
-    k(rig, 1, h3d.BODY)
-    k(rig, 10, h3d.BODY)
-    h3d._sit(rig, lean=-0.02, look=(-0.2, -0.25))                  # anticipation: a small lift as he hears it
-    k(rig, 14, h3d.BODY)
-    h3d._sit(rig, lean=0.16, look=(0.0, 0.12))                     # head dips to his sneakers (overshoot)...
-    k(rig, 20, h3d.BODY)
-    h3d._sit(rig, lean=0.12, look=(0.0, -0.02))                    # ...and settles, eyes doing the rest
-    k(rig, 24, h3d.BODY)
-    h3d._sit(rig, lean=0.14, look=(0.03, 0.0))
-    k(rig, n, h3d.BODY)
+def _stand_look(rig, look_yaw=0.0, lift=0.0):
+    """Standing in the spill before he sees it (helper 4's standing rig conventions): legs straight, arms loose, the
+    head turned `look_yaw` toward his right (the tank) and lifted by `lift` (anticipation)."""
+    h4._reset(rig)
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4._aim(rig, f"{s_}_upper_leg", (sx * 0.08, -0.04, -1.0))
+        h4._aim(rig, f"{s_}_lower_leg", (sx * 0.04, 0.05, -1.0))
+        h4._aim(rig, f"{s_}_foot", (sx * 0.1, -1.0, -0.35))
+    h4._aim(rig, "spine", (0.0, 0.02 + lift * 0.5, 1.0))
+    h4._aim(rig, "chest", (0.0, 0.0 + lift, 1.0))
+    h4._aim(rig, "neck", (-look_yaw * 0.4, 0.0, 1.0))
+    h4._aim(rig, "head", (-look_yaw, -0.04 + lift * 0.5, 1.0))
+    for s_, sx in (("left", 1.0), ("right", -1.0)):
+        h4._aim(rig, f"{s_}_upper_arm", (sx * 0.28, 0.02, -1.0))
+        h4._aim(rig, f"{s_}_lower_arm", (sx * 0.12, -0.25, -1.0))
+        h4._aim(rig, f"{s_}_hand", (sx * 0.1, -0.2, -1.0))
+
+
+def _anchors(shot, cam, rig, n):
+    """Kai's eye anchors per frame (720x1280, top-left origin) for the 2D pass (bgqrs_post's format)."""
+    import json
+    import os
+    from bpy_extras.object_utils import world_to_camera_view
+    from channels.monsters.ep01v2 import bgqrs as s3d
     sc = bpy.context.scene
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        row = {}
+        for k_ in ("eyes", "eye_l", "eye_r", "nose", "temple"):
+            v = world_to_camera_view(sc, cam, s3d.kai_point(rig, k_))
+            row[k_] = (round(v.x * 720, 1), round((1 - v.y) * 1280, 1))
+        out[f] = row
+    d = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))),
+                     "build", "monsters", "diorama_v3")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, f"{shot}_anchors.json"), "w") as fh:
+        json.dump(out, fh)
     sc.frame_set(1)
-    feet = [_bone_world(rig, f"{s}_foot", tail=True) for s in ("left", "right")]
-    mid = (feet[0] + feet[1]) / 2
-    sc.frame_set(24)
-    head = h3d._head_pos(rig)
-    sc.frame_set(1)
-    # the S08 spill is already on the tiles (desk to the power strip); its front now slides under the chair to his
-    # sneakers and on past them
+
+
+def s08a():
+    from channels.monsters.diorama_v3 import helper4 as h4_
+    global h4
+    h4 = h4_
+    n = _frames("S08a")
+    diorama.setup()
+    R = diorama_lab.room()
+    # S08b's staging (helper 4): he has stood up and pushed the chair back; he stands in the spill's path between the
+    # desk front and the power strip, facing the front of the room, turned a little toward the camera
+    leak, end = Vector(R["tank"]["leak"]), Vector(R["strip"]["end"])
+    pa, pb = Vector((leak.x, R["desk"]["front_y"] - 0.4, 0)), Vector((end.x + 0.2, end.y + 0.2, 0))
+
+    def path(u):
+        return pa.lerp(pb, u) + Vector((-0.6, -0.4, 0)) * math.sin(u * math.pi)
+
+    feet = path(0.5)
+    feet.z = 0.0
+    chair = R["desk"]["chair"]
+    chair.location.y -= 1.6
+    chair.rotation_euler.z = math.radians(25)
+    rig = hero.load((feet.x, feet.y, 0.0), scale=d1.KAI, outfit="earth")
+    d1._tilt_cap(rig, 40.0)
+    rig["arm"].rotation_mode = "XYZ"
+    rig["arm"].rotation_euler = (0, 0, math.radians(18))
+    bpy.context.view_layer.update()
+    # the spill (S08) is on the tiles from the desk to the strip, except round his feet: there it is still arriving,
+    # and slides under his sneakers from the desk side (f4-15)
     R["puddle"](-60, -12)
     _smooth_water(n)
-    a = Vector((R["tank"]["leak"][0] - 1.2, R["desk"]["front_y"] - 0.5, 0))
-    beyond = mid + (mid - a).normalized() * 1.6
-    _spill_front(a, beyond, 2, 15)
-    for i, ft in enumerate(feet):
+    for o in bpy.data.objects:
+        if o.name.startswith("dl_spill") and o.name[8:].isdigit():
+            d = (Vector((o.location.x, o.location.y, 0)) - feet).length
+            if d < 2.2:
+                ts = 5 + int(d * 4)
+                o.animation_data_clear()
+                anim.key(o, "scale", 1, 0.001, "CONSTANT")
+                anim.key(o, "scale", ts, 0.001, "CONSTANT")
+                anim.key(o, "scale", ts + 4, 1.0)
+    _spill_front(path(0.3), feet + (feet - path(0.3)).normalized() * 1.2, 3, 15, width=1.0)
+    toes = []
+    for s_ in ("left", "right"):
+        toes.append(_bone_world(rig, f"{s_}_foot", tail=True))
+    for i, ft in enumerate(toes):
         _ripples(ft, 11 + i * 2, n)
+    # acting on 2s: looking back at the tank, a small lift as he hears the water (anticipation), his head drops to
+    # the water (overshoot: hunched), then S08b's frozen fear pose (helper 4's _fear) with a tremble
+    k = h4._key
+    h4._fingers(rig, 0.3)
+    _stand_look(rig, look_yaw=0.45)
+    k(rig, 1)
+    _stand_look(rig, look_yaw=0.4)
+    k(rig, 9)
+    _stand_look(rig, look_yaw=0.15, lift=0.12)
+    k(rig, 14)
+    h4._fear(rig, 0.0)
+    for nm, v in (("chest", (0.0, -0.3, 1.0)),):                    # overshoot: hunched a touch past it
+        h4._aim(rig, nm, v)
+    k(rig, 20)
+    for f, sway in ((24, 0.0), (30, 0.025), (36, 0.0), (42, -0.02), (48, 0.0), (54, 0.02), (n, 0.0)):
+        h4._fear(rig, sway)
+        k(rig, f)
+    h4._fingers(rig, 0.45)
     # face (mk/acting): a blank look back at the tank, a blink, then his eyes drop to his shoes (with small darts)
-    # and the face drops with them: surprised, then fear
+    # and the face drops with them: surprised, then fear (S08b opens on this face)
     acting.expression(rig, "neutral", 1)
     acting.expression(rig, "surprised", 19, value=0.8)
     acting.expression(rig, "fear", 25)
     acting.look_at(rig, R["tank"]["center"], 1, 12)
-    acting.look_at(rig, tuple(mid), 15, n)
+    acting.look_at(rig, tuple(feet), 15, n)
     acting.blink(rig, 1, n, at=(7,))
     hero.line_width(rig, 0.0028)
+    sc = bpy.context.scene
+    sc.frame_set(30)
+    face = Vector(__import__("channels.monsters.ep01v2.bgqrs", fromlist=["x"]).kai_point(rig, "eyes"))
+    sc.frame_set(1)
+    mid = feet + Vector((0, 0, 0.3))
     # from the open front, low: the camera rises on 1s from his sneakers in the water to his face
-    face = head + Vector((0.0, 0.0, -0.4))
-    cam = R["cam"]("cam_s08a", tuple(mid), dist=27.0, tilt=42.0, yaw=-18.0, lens=100.0, blur=BLUR)
+    cam = R["cam"]("cam_s08a", tuple(mid), dist=27.0, tilt=42.0, yaw=-22.0, lens=100.0, blur=BLUR)
 
-    def path(u):
-        return mid.lerp(face, 0.08 + 0.7 * u), 27.0 - 4.0 * u, 42.0 - 1.0 * u, -18.0 - 4.0 * u
+    def path_cam(u):
+        return mid.lerp(face + Vector((0, 0, -1.6)), 0.08 + 0.8 * u), 27.0 - 3.0 * u, 42.0, -22.0 - 6.0 * u
 
-    _move(cam, 1, n - 6, path, n)
-    _light_face = h3d._tank_glow(side=Vector((0.6, 0.8, 0.0)))
-    h3d._tint_hero(0.1)
+    _move(cam, 1, n - 6, path_cam, n)
     R["flicker"]([30, 33])                                         # the lights stutter: the plugs are fizzing
+    _anchors("S08a", cam, rig, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]] + list(rig.get("cap", [])))
 
 
