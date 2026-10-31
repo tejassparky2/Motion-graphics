@@ -2,6 +2,7 @@
 comp.py over the Blender frames, then the mp4 and contact sheet for out/monsters/ep01v2/shots/.
 
     FPS=24 python channels/monsters/ep01v2/bgqrs_post.py S19 [S20 ...]
+    DIORAMA=1 FPS=24 python channels/monsters/ep01v2/bgqrs_post.py S17     (the diorama cut, DIORAMA_EP01.md)
 
 Needs a venv with pycairo, numpy, scipy, opencv-python-headless and pillow, plus ffmpeg (helpers 5 and 6: fx2d
 imports scipy). Reads build/monsters/ep01v2/<SHOT>/0001.png ... (render_shot.py output; subject/ when rendered with --subject) and
@@ -22,8 +23,9 @@ from PIL import Image  # noqa: E402
 from motion.engine import H, W, cairo, clamp01, ease_out  # noqa: E402
 from channels.monsters import comp, fx2d, fx2d_anime, fx2d_extra  # noqa: E402
 
-BUILD = os.path.join(ROOT, "build", "monsters", "ep01v2")
-SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "ep01v2", "shots")
+DIORAMA = os.environ.get("DIORAMA") == "1"
+BUILD = os.path.join(ROOT, "build", "monsters", "diorama" if DIORAMA else "ep01v2")
+SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama" if DIORAMA else "ep01v2", "shots")
 FPS = 24
 # render.py's output hygiene: no container metadata, no encoder tags, no x264 settings SEI
 CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
@@ -183,8 +185,41 @@ def puff(cr, t, start, x, y, size=1.0, seed=0):
 
 # ---------------------------------------------------------------- the shots' 2D
 
+def drop_glint(cr, t, a, f0, f1, size=22):
+    """A sparkle riding the falling drop (anchor "drop") from frame f0 to f1, so the drop reads at phone size."""
+    f = int(round(t * FPS)) + 1
+    if f0 <= f <= f1:
+        x, y = a[f]["drop"]
+        u = (f - f0 + 0.5) / (f1 - f0 + 1)
+        fx2d_extra._sparkle(cr, x + 6, y - 8, size * (0.6 + 0.4 * math.sin(math.pi * u)), (1, 1, 1), 1.0, rot=0.3)
+
+
+def diorama_overlays(shot):
+    """The diorama cut's 2D (coordinator, 31 Oct): the slow push-ins of the locked shots (TP13), S17's drop glint and
+    S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D."""
+    a = anchors(shot)
+    n = max(a)
+    ex, ey = at(a, 0.0, "eyes")
+    if shot == "S01":
+        return [(push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.06))]
+    if shot == "S17":
+        dx, dy = at(a, 20 / FPS, "drop")
+        return [(drop_glint, dict(a=a, f0=17, f1=23)),
+                (push, dict(start=0.0, end=n / FPS, cx=dx, cy=dy, amount=0.10))]
+    if shot == "S18":
+        ex, ey = at(a, 32 / FPS, "eyes")
+        return [(comp.backdrop, dict(start=29 / FPS, end=99, fn=fx2d_anime.emotion_bg,
+                                     args=dict(mood="realisation", cx=ex, cy=ey))),
+                (glint, dict(start=32 / FPS, x=ex + 30, y=ey - 18, size=18)),
+                (snap_zoom, dict(start=29 / FPS, cx=ex, cy=ey)),
+                (push, dict(start=0.0, end=n / FPS, cx=ex, cy=ey, amount=0.06))]
+    return []
+
+
 def overlays(shot):
     """Shot-local overlays [(fn, kwargs)] for each shot."""
+    if DIORAMA:
+        return diorama_overlays(shot)
     if shot in ("S01", "S16"):                                    # frame 0 (and its rhyme): pin-prick terror + sweat
         a = anchors(shot)
         t0 = 0.0 if shot == "S01" else 41 / FPS                   # S16: from his terror on the wide (frame 42)
