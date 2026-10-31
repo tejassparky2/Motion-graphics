@@ -38,6 +38,8 @@ MAP = dict(
     wake=(8.0, -140.0),        # S09: Kai wakes in the flower meadow
     snail=(-16.0, -132.0),     # S10a/S11a: the jelly-snail and its burnt-hole trail
     moth=(20.0, -128.0),       # S10b/S11b: the fluffmoth
+    kai_kneel=(1.0, -6.4),     # v3 S15a-S15: Kai on his knees at the pond's south edge (his hips), facing the shrimp
+    blast=(-1.3, -0.3),        # v3 S15: the claw's muzzle at the snap (helper 10); the shot passes his left ear
 )
 SHRIMP_DRINK_YAW = 0.0     # degrees (root rotation z): facing south (-Y), its back to the thorn tree, so the bird's
                            # view from the perch sees its back; its dipped claw (the drinking pose of ep01v2/xprl.
@@ -173,14 +175,17 @@ def fstop_for(dist, lens=85.0, blur=14.0, height_px=1280):
 
 
 def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True, thorn=True, meadow_flowers=True,
-           skip=(), dressing=2):
+           skip=(), dressing=2, grove=False):
     """THE other-world set (every diorama shot, seed 31): a round clearing (radius `clear_r`) with the pond by the
     origin, a ring of painted trees out to `forest_r`, a dirt path south through the trees to an open flower meadow
     (MAP), rocks and bushes, the thorn tree at MAP["thorn"]. `skip`: spot indexes to leave out (e.g. the trees the snap
     erased, for the "after" state). `dressing=2` (the default since v3; 1 = the v2 island) adds the toy-table detail
     of dressing2(): mushrooms, clover, pebble-edged paths, flower clusters, logs, a stump, pond reeds, clear of every
     MAP spot and of the snap's fan. Deterministic for a seed. Returns dict(trees=[(trunk, canopy) or None per spot],
-    spots=[(x, y, h, r, variant)], puddle=obj or None, thorn=thornbush dict or None, dressing=objects by kind)."""
+    spots=[(x, y, h, r, variant)], puddle=obj or None, thorn=thornbush dict or None, dressing=objects by kind).
+    grove (v3, helper 10): True plants the young blast grove (grove_spots(), appended to spots/trees) and the sapling
+    (sapling_spot(), out["sapling"]) that stand before the snap; "cut" is the after state: neither is planted (put
+    stumps(grove_spots(), MAP["blast"]) and the sapling's stump in their place)."""
     _ground(clear_r)
     rnd = random.Random(seed)
     spots = []
@@ -200,6 +205,12 @@ def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True, tho
     for i, (x, y, h, r, v) in enumerate(spots):
         out["trees"].append(None if i in skip else paintbg.tree((x, y, 0), height=h, radius=r, seed=500 + i,
                                                                  variant=v))
+    if grove is True:
+        for j, (x, y, h, r, v) in enumerate(grove_spots()):
+            spots.append((x, y, h, r, v))
+            out["trees"].append(paintbg.tree((x, y, 0), height=h, radius=r, seed=900 + j, variant=v))
+        x, y, h, r, v = sapling_spot()
+        out["sapling"] = paintbg.tree((x, y, 0), height=h, radius=r, seed=950, variant=v)
     path_strip()
     _dressing(seed, clear_r)
     if puddle:
@@ -403,6 +414,32 @@ def grass_lit(name="diorama_grass", clear_r=26.0):
     L(mul.outputs[0], em.inputs[0])
     L(em.outputs[0], out.inputs[0])
     return m
+
+
+# --- v3: the snap fires SOUTH at Kai (helper 10, S15). The shot leaves the claw (MAP["blast"]), passes his left ear
+# as he kneels (MAP["kai_kneel"]) and erases the young grove behind him along the line; its blast fan cuts the sapling
+# that later stands an inch from his head (S15b on); MAP["kai_down"] is where it throws him.
+BLAST_LINE = (0.51, -0.86)            # the shot's ground direction: ~31 deg east of south
+
+
+def sapling_spot():
+    """(x, y, h, r, variant): the young tree the snap cuts, ~1.6 units west of his head once he lies at kai_down (clear
+    of him while he kneels at kai_kneel)."""
+    return (-0.9, -5.5, 2.0 * TREE, 0.34 * TREE, 1)
+
+
+def grove_spots():
+    """[(x, y, h, r, variant)]: the young grove behind where he knelt, in a fan along BLAST_LINE (all erased by the
+    snap). Smaller than the rim forest, so it reads as a stand of young trees inside the clearing."""
+    dx, dy = BLAST_LINE
+    px, py = -dy, dx                                            # perpendicular (east-north-east)
+    x0, y0 = 2.3, -6.4                                          # the line where it passes his kneeling hips
+    out = []
+    for j, (s, o, h, r) in enumerate(((5.5, 2.4, 3.3, 1.05), (8.0, -2.6, 3.8, 1.15), (10.5, 2.2, 3.5, 1.1),
+                                      (13.0, -1.2, 4.0, 1.2), (15.5, 3.4, 3.6, 1.1), (18.5, -2.4, 4.1, 1.25),
+                                      (21.0, 1.6, 3.9, 1.2))):
+        out.append((x0 + dx * s + px * o, y0 + dy * s + py * o, h * TREE, r * TREE, j % 4))
+    return out
 
 
 def blast_spots(spots, origin=(0.0, 0.0), half_angle=34.0, reach=None):
