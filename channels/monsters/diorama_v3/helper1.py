@@ -27,6 +27,7 @@ from channels.monsters.ep01v2 import helper1 as h3d
 from channels.monsters.ep01v2 import helper5 as h5
 from channels.monsters.ep01v2 import xprl as x3
 from channels.monsters.mk import acting, anim, diorama, diorama_lab, hero, lab, look, tuftwing
+from channels.monsters.mk import shared_water as sw
 
 BLUR = 10.0
 GUESS = {"S08a": 54, "S24": 162}          # until ep01v3/timing.json lands
@@ -81,7 +82,6 @@ def _spill_front(a, b, f0, f1, width=0.9, seed=8):
     """The water's front sliding from `a` to `b` (floor points) between f0 and f1: overlapping discs that swell into
     place one after another, each with a pale rim a touch larger under it (the meniscus catching the tank light)."""
     water = lab._water_floor()
-    rim = look.flat("s08a_rim", look.hexc("#9fe2fb"), strength=1.2)
     rnd = random.Random(seed)
     a, b = Vector((a[0], a[1], 0)), Vector((b[0], b[1], 0))
     side = Vector((-(b - a).y, (b - a).x, 0)).normalized()
@@ -91,7 +91,7 @@ def _spill_front(a, b, f0, f1, width=0.9, seed=8):
         p = a.lerp(b, u) + side * 0.35 * math.sin(u * 5.0) * width
         rad = width * (0.75 + 0.35 * math.sin(u * math.pi)) * rnd.uniform(0.9, 1.1)
         ts = f0 + (f1 - f0) * u
-        for nm, mat, r, z in (("w", water, rad, 0.032), ("r", rim, rad * 1.04, 0.031)):
+        for nm, mat, r, z in (("w", water, rad, 0.032),):                 # (rims: shared_water.adopt)
             d = _disc(f"s08a_{nm}{i}", p, r, mat, z + i * 0.0001, random.Random(seed * 100 + i))
             d.visible_shadow = False
             anim.key(d, "scale", ts - 1, (0.001, 0.001, 1), "CONSTANT")
@@ -282,7 +282,6 @@ def s08a():
     # the spill (S08) is on the tiles from the desk to the strip, except round his feet: there it is still arriving,
     # and slides under his sneakers from the desk side (f4-15)
     R["puddle"](-60, -12)
-    _smooth_water(n)
     for o in bpy.data.objects:
         if o.name.startswith("dl_spill") and o.name[8:].isdigit():
             d = (Vector((o.location.x, o.location.y, 0)) - feet).length
@@ -296,8 +295,8 @@ def s08a():
     toes = []
     for s_ in ("left", "right"):
         toes.append(_bone_world(rig, f"{s_}_foot", tail=True))
-    for i, ft in enumerate(toes):
-        _ripples(ft, 11 + i * 2, n)
+    for i, ft in enumerate(toes):                                  # rings as the water reaches each sneaker
+        sw.ripple_rings(ft, 11 + i * 2, n=2, every=4, radius=0.45, k=2.2)
     # acting on 2s: looking back at the tank, a small lift as he hears the water (anticipation), he drops into
     # FEAR_STAND past it (overshoot: lower, hands higher), settles, then trembles (S08b opens on fear_stand(rig))
     arm = rig["arm"]
@@ -358,12 +357,13 @@ def s08a():
         lab._kprop(fl.data, "energy", f, (rnd.uniform(120, 320) if on else 8.0), "CONSTANT")
     R["flicker"]([30, 33])                                         # the lights stutter: the plugs are fizzing
     _anchors("S08a", cam, rig, n, extra={"plug": plug, "feet": feet.copy()})
+    sw.adopt(R)                                                    # helper 2's shared water look (S07-S08b)
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"]] + list(rig.get("cap", [])))
 
 
 AWAY = Vector((-0.85, -0.53, 0.0))   # away from the thorn tree (its bearing from the pond is ~58 deg): south-west
-RUN_TO = 5.5                         # how far he gets (units)
-STEP = 0.12                          # run step (armature units): quick short steps, a scamper at toy scale
+RUN_TO = 8.0                         # how far he gets (units): to the frame's left edge
+STEP = 0.09                          # run step (armature units): quick short steps, a scamper at toy scale
 
 
 def _facing(d):
@@ -380,7 +380,7 @@ def s24bot():
     shrimp = Vector(xv3.SHRIMP)
     perch = Vector(isl["thorn"]["perch"])
     pond = Vector((*diorama.MAP["pond"], 0.0))
-    start = pond + AWAY * 4.8                                       # at the pond's south-west edge
+    start = pond + AWAY * 4.3                                       # at the pond's south-west edge
     # the bird: dark from frame 1 (as in A), then the dive onto the shrimp from the north-east (screen right), its
     # giant shadow sweeping in ahead of it
     f_dive, f_hit = 58, 84
@@ -459,9 +459,9 @@ def s24bot():
     # side-on from the south-east (the tree is screen-right, he runs screen-left), high enough to fold everyone into
     # the panel's band; a slow pan with him on 1s
     side = Vector((-AWAY.y, AWAY.x, 0))                              # unused helper direction (screen depth)
-    mid = start.lerp(shrimp, 0.42)
+    mid = start.lerp(shrimp, 0.5)
     a = (tuple(mid + Vector((0, 0, 1.0))), 84.0, 58.0, -32.0, 80.0, 0.2)
-    b = (tuple(mid + AWAY * 2.0 + Vector((0, 0, 1.0))), 80.0, 58.0, -34.0, 80.0, 0.2)
+    b = (tuple(mid + AWAY * 2.0 + Vector((0, 0, 1.0))), 81.0, 58.0, -34.0, 80.0, 0.2)
     del side
     xv2._move("cam_s24bot_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[arm])
