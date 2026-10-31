@@ -100,6 +100,30 @@ def _compositor(sc, haze, bloom):
     nt.links.new(out, comp.inputs[0])
 
 
+def sunbeam(target, radius=7.0, dist=40.0, strength=1.0):
+    """A warm pool of sunlight through a gap in the canopy onto `target` (the forest's long shadows cover the south of
+    the clearing in the low sun, where Kai lies after the snap): a soft spot placed along the scene sun's own direction,
+    so its shadows agree with the sun's. `radius` is the pool's radius at the target (soft edge). Every shot of Kai at
+    MAP["kai_down"] (S15's D5 to S21) calls it on his chest, so the light on him matches across the cuts."""
+    sun = next((o for o in bpy.context.scene.objects if o.type == "LIGHT" and o.data.type == "SUN"), None)
+    if sun is not None:
+        bpy.context.view_layer.update()
+        d = (sun.matrix_world.to_3x3() @ Vector((0, 0, -1))).normalized()
+    else:
+        d = Vector((0.635, 0.533, -0.559))                     # setup()'s default sun (elev 34, azim -50)
+    t = Vector(target)
+    bpy.ops.object.light_add(type="SPOT", location=t - d * dist)
+    sp = bpy.context.object
+    sp.name = "sunbeam"
+    sp.data.energy = 26000.0 * strength * (dist / 34.6) ** 2   # the same light on the target at any distance
+    sp.data.color = look.hexc(SUN_WARM)[:3]
+    sp.data.spot_size = 2 * math.atan(radius / dist)
+    sp.data.spot_blend = 0.6
+    sp.data.shadow_soft_size = 1.5
+    sp.rotation_euler = d.to_track_quat("-Z", "Y").to_euler()
+    return sp
+
+
 def camera(name, target, dist=200.0, tilt=48.0, yaw=0.0, lens=85.0, blur=14.0, frame=1, haze=(0.97, 0.55)):
     """A diorama camera `dist` units from `target`, `tilt` degrees above the ground plane, `yaw` degrees around Z
     (0 = from the south, looking north). Tilt-shift: DOF focused exactly on `target`, with the f-stop solved so that

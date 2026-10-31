@@ -55,7 +55,9 @@ def _stage():
 
 def _dim_water(tank, keys):
     """Darken the hero tank's water (fear is darkness, LC2; the glow reads against it): keys = [(frame, level)]."""
-    for m in tank["water"]:
+    for m in tank.get("water", []):
+        if "Emission" not in m.node_tree.nodes:
+            continue
         em = m.node_tree.nodes["Emission"].inputs[1]
         base = em.default_value
         for f, lv in keys:
@@ -176,13 +178,16 @@ def _pulse(objs, f0, f1, amount=0.18):
             mix.inputs[0].keyframe_insert("default_value", frame=n)
 
 
-def _snap_sequence(offset):
+def _snap_sequence(offset, stage=None, cameras=True):
     """The S04 + S05a slow-motion snap as one continuous action; `offset` shifts it so S05a can start at frame 1
-    (sequence frame s renders at frame s - offset)."""
+    (sequence frame s renders at frame s - offset). `stage` builds the set and returns (handles, tank, rig) (default:
+    the 3D lab); the diorama version (diorama/helper2.py) passes its own and makes its own cameras, so both versions
+    share every keyframe (the SFX are synced to them)."""
     def F(s):
         return s - offset
 
-    h, tank, rig = _stage()
+    h, tank, rig = (stage or _stage)()
+    k = rig["k"]
     _freeze_pose(rig, F(1), ps.OPEN)
     # S04's words, in shot frames: "snaps" 15-21 (the strike), "boils" 44-50 (the bubble reaches its peak)
     _freeze_pose(rig, F(15), ps.OPEN)
@@ -206,7 +211,10 @@ def _snap_sequence(offset):
     _pulse(layers, F(28), F(107))
     ps.shock(rig, F(19), slow=4, radius=1.8)
     _dim_water(tank, [(F(4), 1.0), (F(15), 0.45)])
-    ps.bubbles(Vector(tank["floor"]) + Vector((-0.06, -0.02, 0.0)), F(1), F(140), n=6, seed=8, rise=0.3, spread=0.04, size=K)
+    ps.bubbles(Vector(tank["floor"]) + Vector((-2.4, -0.8, 0.0)) * k, F(1), F(140), n=6, seed=8, rise=12 * k,
+               spread=1.6 * k, size=k)
+    if not cameras:
+        return h, tank, rig, None, F
     cams = dict(
         eye=_eye_cam(rig, "cam_eye"),
         side=_cam("cam_claw", _at(tank, (0.175, 1.998, 0.805)), _at(tank, (0.035, 2.125, 0.80)), 50, rig["hinge"]),
@@ -233,8 +241,9 @@ def s05a():
 S07_EYE, S07_WIND, S07_SHUT, S07_FLASH, S07_IMPACT, S07_CRACK = 1, 3, 8, 10, 11, 13
 
 
-def s07():
-    h, tank, rig = _stage()
+def _s07_action(tank, rig, units=1.0):
+    """S07's keyframes and effects (shared with the diorama version): the held cock, the 2-frame shut on "Snap",
+    bubble, ring, and the crack up the front glass from the tank's leak point. `units` = set units per metre."""
     ps.reaction(rig, 1, hold=S07_SHUT - 2)             # cocked wide and HELD: only the glint moves
     anim.key(rig["hinge"], "rotation_euler", S07_SHUT - 1, (0, ps.OPEN, 0), "LINEAR")
     anim.key(rig["hinge"], "rotation_euler", S07_SHUT + 1, (0, 0.0, 0), "CONSTANT")
@@ -244,11 +253,17 @@ def s07():
     ps.bubble(rig, S07_SHUT + 1)
     ps.shock(rig, S07_SHUT + 1, radius=2.2)
     lx, ly, lz = tank["leak"]
-    gy = tank["glass"].location.y - 0.006
-    gc = ps.glass_crack((lx, gy, lz - 0.005))
+    gy = tank["glass"].location.y - 0.006 * units
+    gc = ps.glass_crack((lx, gy, lz - 0.005 * units), [(x * units, z * units) for x, z in ps.crack_path()], k=units)
     ps.crack(gc, S07_CRACK, frames=5)
-    eye = _eye_cam(rig, "cam_eye")
     _dim_water(tank, [(S07_WIND, 1.0), (S07_SHUT, 0.6)])
+    return lx, gy, lz
+
+
+def s07():
+    h, tank, rig = _stage()
+    lx, gy, lz = _s07_action(tank, rig)
+    eye = _eye_cam(rig, "cam_eye")
     # the shrimp sits mid-frame (y ~600-760, clear of the Shorts UI); the crack runs off the top edge
     cam = _cam("cam_tank", _at(tank, (0.065, 1.95, 0.83)), _at(tank, (0.045, 2.10, 0.80)), 28, None)
     cam.data.dof.use_dof = True
