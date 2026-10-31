@@ -489,9 +489,10 @@ class Prop:
     silhouette="ink" (any colour) draws the whole prop as one flat poster silhouette."""
     defaults = {}
 
-    def __init__(self, x=0.0, y=0.0, scale=1.0, facing=1, side="allies", alpha=1.0, seed=0, **kw):
-        self.o = dict(x=x, y=y, scale=scale, facing=facing, side=side, alpha=alpha, seed=seed)
-        self.o.update(self.defaults)
+    def __init__(self, x=0.0, y=0.0, scale=1.0, facing=1, side=None, alpha=1.0, seed=0, **kw):
+        self.o = dict(self.defaults)
+        self.o.update(x=x, y=y, scale=scale, facing=facing, alpha=alpha, seed=seed)
+        self.o["side"] = side or self.defaults.get("side", "allies")     # an explicit side beats the class default
         self.o.update(kw)
 
     def opts(self, kw):
@@ -1809,7 +1810,8 @@ __all__ = [n for n in dir() if not n.startswith("_") and n not in ("math", "rand
 
 
 def _extend():
-    """Re-export the SHOTLIST extras (things.py, fx.py, sets.py) so `from channels.ww2.kit.props import *` has all."""
+    """Re-export the SHOTLIST extras (things.py, fx.py, sets.py) so `from channels.ww2.kit.props import *` has all.
+    (Import props first for that; importing fx or sets first still works, they just are not re-exported then.)"""
     import importlib
     for mod in ("things", "fx", "sets"):
         try:
@@ -1817,6 +1819,8 @@ def _extend():
         except ModuleNotFoundError as e:
             if e.name != "channels.ww2.kit." + mod:
                 raise
+            continue
+        except ImportError:          # circular: that module is being imported first; it imports us, not vice versa
             continue
         for n in getattr(m, "__all__", ()):
             if n not in globals():
