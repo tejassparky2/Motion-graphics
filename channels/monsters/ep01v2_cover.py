@@ -28,7 +28,7 @@ WHITE, HOT = (255, 255, 255), (255, 92, 60)                      # HOT marks the
 # name: (shot, frame in the shot, [(line, colour), ...]); the first is the default pick
 CANDIDATES = {
     "hook": ("S01", 30, [("IT ERASED", WHITE), ("A FOREST", HOT)]),
-    "snap": ("S15", 40, [("ONE SNAP.", WHITE), ("GONE.", HOT)]),
+    "snap": ("S15", 65, [("ONE SNAP.", WHITE), ("GONE.", HOT)]),
     "deadpan": ("S20", 70, [("IT TRIED", WHITE), ("AGAIN.", HOT)]),
 }
 PICK = "hook"
