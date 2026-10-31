@@ -128,9 +128,10 @@ def s22():
     shells = np.array(th["shell_spots"])
     near = shells[np.argsort(np.abs(shells[:, 2] - 2.4))[:4]].mean(axis=0)
     tree = Vector((diorama.MAP["thorn"][0], diorama.MAP["thorn"][1], 4.0))
-    wide = tree.lerp(Vector((1.0, -4.0, 0.0)), 0.5)                         # the tree, the pond and Kai below it
-    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, YAW_THORN, 100.0, 0.0),
-          (tuple(wide), 72.0, 56.0, YAW_THORN, 85.0, 0.0), n)
+    hips = Vector((d16.HIPS[0], d16.HIPS[1], 2.0))
+    wide = tree.lerp(hips, 0.5)                                             # the tree at the top, Kai at the bottom
+    _move("cam_s22", 8, 36, (tuple(near), 30.0, 44.0, 40.0, 100.0, 0.0),   # yaw 40: the tree and Kai on one line
+          (tuple(wide), 72.0, 56.0, 40.0, 85.0, 0.0), n)
     return dict(frames=n, step=1, subject=[])
 
 
@@ -163,7 +164,7 @@ def s23():
     base, tip = (Vector(p) for p in th["empty_thorn"])
     mid = (base + tip) / 2
     ground = Vector((perch.x + reach.x, perch.y + reach.y, 0.0))
-    ins = _cam("cam_s23_thorn", None, tuple(mid.lerp(ground, 0.3)), 36.0, 60.0, yaw, 100.0)
+    ins = _cam("cam_s23_thorn", None, tuple(mid.lerp(ground, 0.22)), 36.0, 60.0, yaw, 100.0)
     h5._glint(tuple(tip + (tip - base).normalized() * 0.03), ins, 62)
     for m in list(sc.timeline_markers):
         sc.timeline_markers.remove(m)
