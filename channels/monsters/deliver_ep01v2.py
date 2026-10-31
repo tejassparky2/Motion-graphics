@@ -68,7 +68,7 @@ say(f"- the cut lands {timing['total'] - last_word:.2f} s after the last word (r
 # 2. mux, then a stream-copy pass so no encoder tag is written back
 tmp = os.path.join(D, "_mux.mp4")
 subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", picture, "-i", mix, "-map", "0:v:0", "-map", "1:a:0",
-                       "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", *CLEAN, tmp])
+                       "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", *CLEAN, tmp])   # no -shortest: it cut 3 frames
 subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN, "-movflags", "+faststart",
                        OUT])
 prev = OUT[:-4] + "_preview.mp4"
@@ -77,6 +77,10 @@ subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", OUT, "-c:v", "libx2
 subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN, "-movflags", "+faststart",
                        prev])
 os.remove(tmp)
+for f in (OUT, prev):                    # the delivered files keep every frame of the picture
+    nf = len(subprocess.run([FF, "-v", "error", "-i", f, "-map", "0:v:0", "-vf", "scale=8:8", "-f", "rawvideo",
+                             "-pix_fmt", "gray", "-"], capture_output=True, check=True).stdout) // 64
+    say(f"- {os.path.relpath(f, ROOT)}: {nf} frames" + ("" if nf == timing["total_frames"] else "  **FRAMES LOST**"))
 cover = OUT[:-4] + "_cover.jpg"
 if not os.path.exists(cover):           # helper 7's ep01v2_cover.py writes the designed cover here; keep it if present
     subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", OUT, "-frames:v", "1", "-q:v", "2", *CLEAN[:4], cover])
@@ -107,7 +111,8 @@ with open(OUT[:-4] + "_metadata.md", "w") as f:
     f.write(f"**Pinned comment**\n```\n{m['pinned_comment']}\n```\n\n")
     f.write(f"**Video facts:** {timing['total']:.1f} s. Narrated with Chatterbox Turbo (synthetic voice; nobody real "
             "is cloned). Music and sound effects are original. Made for kids: **No** (comments stay on for the vote). "
-            "Altered or synthetic content: **No** (fully animated fantasy). The cover is frame 0, the hook frame.\n")
+            "Altered or synthetic content: **No** (fully animated fantasy). Cover: ep01v2_cover.jpg (S01 with \"IT ERASED A "
+            "FOREST\"); where the app can't take a custom Shorts cover, pick frame 0, the hook frame.\n")
 say(f"- wrote {os.path.relpath(OUT[:-4] + '_metadata.md', ROOT)}")
 
 # 6. every line heard as written (Whisper medium.en)
