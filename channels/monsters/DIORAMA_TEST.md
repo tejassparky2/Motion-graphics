@@ -1,3 +1,5 @@
+**Superseded (owner, 31 Oct 2026: "Make episode 1 with 2.5 d so i can compare correctly"): see DIORAMA_EP01.md. D15 is now S15 and D16 is now S16 in the diorama registry.**
+
 # Diorama 2.5D style test (owner, 31 Oct 2026)
 
 The owner watched Episode 1 (3D) and said "Go for 2.5d". Asked which 2.5D, they chose **"Diorama 2.5D (game look)"**:

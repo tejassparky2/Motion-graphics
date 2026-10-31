@@ -25,13 +25,29 @@ TREE = meadow.TREE
 HAZE = "#d9ecf6"          # far-edge haze colour (pale sky blue, a little warm in the grade)
 SUN_WARM = "#ffdcae"      # low golden sun
 
+# The one other-world map (units; +Y is north, away from the default camera). Every diorama shot uses these spots so the
+# world stays the same place from shot to shot. The clearing is ringed by forest; a dirt path leaves it to the south,
+# through the trees, into the open flower meadow where Kai wakes (S09) and meets the jelly-snail and the fluffmoth.
+MAP = dict(
+    pond=(0.1, -2.6),          # the puddle at diorama scale (diorama.pond)
+    shrimp=(0.1, 0.4),         # where the puff-shrimp drinks (north edge of the pond)
+    kai_down=(1.5, -9.0),      # where the blast throws Kai on his back (S15 D4 -> S16-S21)
+    thorn=(19.0, 9.0),         # the thorn tree at the clearing's north-east edge (S22-S24)
+    path=((0.0, -24.0), (-6.0, -60.0), (4.0, -95.0), (0.0, -118.0)),   # clearing -> meadow (a gap in the trees)
+    wake=(8.0, -140.0),        # S09: Kai wakes in the flower meadow
+    snail=(-16.0, -132.0),     # S10a/S11a: the jelly-snail and its burnt-hole trail
+    moth=(20.0, -128.0),       # S10b/S11b: the fluffmoth
+)
+
 
 def setup(samples=24, sun_elev=34, sun_azim=-50, haze=0.55, bloom=0.6):
     """EEVEE scene for the diorama: Standard view (painted colours stay true), warm low sun with soft shadows, a pale
     sky fill so shadows stay blue, mist pass -> haze toward the far edge, bloom on glows (stump cuts, the flash)."""
     sc0 = bpy.context.scene
     w, h = sc0.render.resolution_x, sc0.render.resolution_y     # keep render_shot.py's --scale
-    sc = look.render_setup(w if w > 8 else 720, h if h > 8 else 1280,
+    if (w, h) == (1920, 1080) or w < 8:                           # factory default: the Shorts frame
+        w, h = 720, 1280
+    sc = look.render_setup(w, h,
                            samples=max(samples, getattr(sc0.eevee, "taa_render_samples", 0)))
     look.world(sky="#7cc3f0", horizon="#e4f3fb", fill="#c4e2ff", fill_strength=0.65)
     s = look.sun(elev=sun_elev, azim=sun_azim, energy=4.2, color=SUN_WARM)
@@ -125,10 +141,13 @@ def fstop_for(dist, lens=85.0, blur=14.0, height_px=1280):
     return max(0.001, f * f / (5.0 * dist * coc))
 
 
-def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True):
-    """A forest island in a sea of grass: a round clearing (radius `clear_r`) with the puddle by the origin and a ring
-    of painted trees out to `forest_r`. Deterministic for a seed, so every shot of the test shares the same trees.
-    Returns dict(trees=[(trunk, canopy)], spots=[(x, y, h, r, variant)], puddle=obj or None)."""
+def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True, thorn=True, meadow_flowers=True,
+           skip=()):
+    """THE other-world set (every diorama shot, seed 31): a round clearing (radius `clear_r`) with the pond by the
+    origin, a ring of painted trees out to `forest_r`, a dirt path south through the trees to an open flower meadow
+    (MAP), rocks and bushes, the thorn tree at MAP["thorn"]. `skip`: spot indexes to leave out (e.g. the trees the snap
+    erased, for the "after" state). Deterministic for a seed. Returns dict(trees=[(trunk, canopy) or None per spot],
+    spots=[(x, y, h, r, variant)], puddle=obj or None, thorn=thornbush dict or None)."""
     _ground(clear_r)
     rnd = random.Random(seed)
     spots = []
@@ -139,20 +158,121 @@ def island(seed=31, clear_r=26.0, forest_r=105.0, puddle=True, flowers=True):
         d = math.sqrt(rnd.uniform(clear_r ** 2, forest_r ** 2))
         x, y = math.cos(a) * d, math.sin(a) * d
         r = rnd.uniform(2.1, 2.9) * TREE
+        if _near_path(x, y, r * 0.9 + 7.0) or math.hypot(x - MAP["thorn"][0], y - MAP["thorn"][1]) < r + 6:
+            continue
         if any(math.hypot(x - sx, y - sy) < (r + sr) * 0.78 for sx, sy, _, sr, _ in spots):
             continue
         spots.append((x, y, rnd.uniform(5.2, 7.6) * TREE, r, len(spots) % 4))
-    out = dict(trees=[], spots=spots, puddle=None)
+    out = dict(trees=[], spots=spots, puddle=None, thorn=None)
     for i, (x, y, h, r, v) in enumerate(spots):
-        out["trees"].append(paintbg.tree((x, y, 0), height=h, radius=r, seed=500 + i, variant=v))
+        out["trees"].append(None if i in skip else paintbg.tree((x, y, 0), height=h, radius=r, seed=500 + i,
+                                                                 variant=v))
+    path_strip()
+    _dressing(seed, clear_r)
     if puddle:
-        out["puddle"] = pond()
+        out["puddle"] = pond(center=MAP["pond"])
     if flowers:
         meadow._flowers(2.6, seed=seed, n=60)
+    if meadow_flowers:
+        _meadow_flowers(seed)
+    if thorn:
+        from . import thornbush
+        out["thorn"] = thornbush.build(loc=(MAP["thorn"][0], MAP["thorn"][1], 0.0))
     return out
 
 
-def pond(center=(0.1, -2.6), size=(4.2, 2.3), seed=3):
+def _path_x(y):
+    """The path's centre line: x at a given y (piecewise linear through MAP["path"])."""
+    pts = MAP["path"]
+    if y >= pts[0][1]:
+        return pts[0][0]
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if y1 <= y <= y0:
+            t = (y0 - y) / (y0 - y1)
+            return x0 + (x1 - x0) * t
+    return pts[-1][0]
+
+
+def _near_path(x, y, w):
+    return MAP["path"][-1][1] - 10 <= y <= MAP["path"][0][1] + 4 and abs(x - _path_x(y)) < w
+
+
+def path_strip(width=5.5):
+    """The dirt path as a flat ribbon just above the grass (lit, so tree shadows fall across it)."""
+    import bmesh
+    dirt = lit_paint("path_dirt", "#8a6a48", "#b48c5e", "#d9b583")
+    me = bpy.data.meshes.new("path")
+    bm = bmesh.new()
+    y0, y1 = MAP["path"][0][1] + 2, MAP["path"][-1][1] - 8
+    n = 60
+    rows = []
+    for i in range(n + 1):
+        y = y0 + (y1 - y0) * i / n
+        w = width * (1.0 + 0.25 * math.sin(i * 0.9))
+        x = _path_x(y)
+        rows.append((bm.verts.new((x - w / 2, y, 0.02)), bm.verts.new((x + w / 2, y, 0.02))))
+    for (a, b), (c, d) in zip(rows, rows[1:]):
+        bm.faces.new((a, b, d, c))
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new("path", me)
+    bpy.context.scene.collection.objects.link(o)
+    o.data.materials.append(dirt)
+    return o
+
+
+def lit_paint(name, dark, mid, light):
+    """paintbg.paint3 (three painted bands driven by the light, so it takes shadows) from hex colours."""
+    return paintbg.paint3(name, look.hexc(dark), look.hexc(mid), look.hexc(light), noise=0.2, scale=1.2)
+
+
+def _dressing(seed, clear_r):
+    """Rocks and round bushes around the clearing's rim and along the path: the toy-table detail."""
+    rnd = random.Random(seed + 5)
+    rock = lit_paint("dio_rock", "#6f6a82", "#9c98b0", "#cfcbe0")
+    bush = paintbg.paint3("dio_bush", *paintbg.greens(2), noise=0.15)
+    spots = [(math.cos(a) * clear_r * rnd.uniform(0.85, 1.05), math.sin(a) * clear_r * rnd.uniform(0.85, 1.05))
+             for a in [rnd.uniform(0, 2 * math.pi) for _ in range(16)]]
+    spots += [(_path_x(y) + rnd.choice((-1, 1)) * rnd.uniform(4.0, 6.5), y) for y in
+              [rnd.uniform(-115, -30) for _ in range(12)]]
+    for i, (x, y) in enumerate(spots):
+        if _near_path(x, y, 3.2) or math.hypot(x - MAP["pond"][0], y - MAP["pond"][1]) < 9:
+            continue
+        if i % 3 == 0:
+            bpy.ops.mesh.primitive_ico_sphere_add(subdivisions=2, location=(x, y, 0.4))
+            o = bpy.context.object
+            s = rnd.uniform(0.8, 1.6)
+            o.scale = (s * 1.3, s, s * 0.7)
+            o.rotation_euler = (0, 0, rnd.uniform(0, 3))
+            o.data.materials.append(rock)
+        else:
+            bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=8, location=(x, y, 0.9))
+            o = bpy.context.object
+            s = rnd.uniform(1.3, 2.4)
+            o.scale = (s * 1.25, s, s * 0.8)
+            o.data.materials.append(bush)
+            for p in o.data.polygons:
+                p.use_smooth = True
+
+
+def _meadow_flowers(seed, n=320):
+    """The open flower meadow south of the forest (S09: Kai wakes in pink grass): pink, white and yellow dots."""
+    rnd = random.Random(seed + 9)
+    cols = [paintbg.paint3(f"mflower{j}", *(look.hexc(c) for c in cs), noise=0.05) for j, cs in enumerate((
+        ("#d05a8a", "#ff8fb8", "#ffd0e2"), ("#d05a8a", "#ff8fb8", "#ffd0e2"), ("#c9c9e0", "#ffffff", "#ffffff"),
+        ("#d9a400", "#ffd23f", "#fff2a8")))]
+    for _ in range(n):
+        x, y = rnd.uniform(-60, 60), rnd.uniform(-175, -108)
+        if _near_path(x, y, 3.5):
+            continue
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=8, ring_count=5, location=(x, y, 0.12))
+        o = bpy.context.object
+        s = rnd.uniform(0.22, 0.4)
+        o.scale = (s, s, s * 0.6)
+        o.data.materials.append(rnd.choice(cols))
+
+
+def pond(center=MAP["pond"], size=(4.2, 2.3), seed=3):
     """The puddle at diorama scale (the plot device: the claw only works wet), bigger than the meadow's so it reads
     from above, with a ring of pebbles and two white glints. Returns the water object."""
     water = meadow._puddle(center=center, size=size, z=0.015, pebbles=False)
