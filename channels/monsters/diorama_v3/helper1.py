@@ -432,6 +432,7 @@ def s24bot():
     x3._mantle(bird, f_hit - 2, f_hit + 4)
     landed_z = p1.z * h5.BIRD_SCALE
     h5._rage_light(bird, 1, landed_z + (tuftwing.CENTER[2] - 0.1) * h5.BIRD_SCALE)
+    xv3.dark_form(1)                                                # XprL's predator form: mask, amber eyes, lids
     for e in sh["eyes"]:                                            # it only notices as the claws close
         anim.key(e, "scale", f_hit - 1, (1, 1, 1), "CONSTANT")
         anim.key(e, "scale", f_hit + 1, (0.78, 1, 0.78), "CONSTANT")
