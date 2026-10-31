@@ -131,10 +131,10 @@ def _box(name, loc, size, mat, rot=(0, 0, 0), bevel=0.0):
     return lab._box(name, loc, size, mat, rot=rot, bevel=bevel)
 
 
-def room(seed=7, dressing=1):
+def room(seed=7, dressing=2):
     """Build the lab dollhouse into the current scene (call diorama.setup() first). Returns the anchors.
-    `dressing=2` adds the v3 lived-in detail (dressing2(): a rug, a potted plant, a book stack, a backpack, a bin, a
-    picture), all off the water's path from the desk to the power strip."""
+    `dressing=2` (the default since v3; 1 = the v2 room) adds the lived-in detail of dressing2(): a rug, a potted
+    plant, a book stack, a backpack, a bin, a picture, all off the water's path from the desk to the power strip."""
     rnd = random.Random(seed)
     moon = _night()
     # ---------------------------------------------------------------- shell: floor, two walls, skirting
