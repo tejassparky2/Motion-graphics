@@ -3,7 +3,8 @@ Frame counts come from channels/monsters/ep01v3/timing.json (render_frames); the
 
     S06 "Then the storm hit.": the dollhouse lab from above, the window over Kai at the desk, the hero tank beside
         him with the shrimp asleep on the gravel (eyes shut, antennae down, breathing). The bolt and the room flash
-        land on "storm" (14); the shrimp jolts awake (squash, hop with its claw and antennae flung up, overshoot,
+        land on "storm" (14): 2 near-white frames (14-15, a 2D overlay at 72 % / 60 %, then 18 % on 16) with hard
+        window shadows and the bolt in the glass (14-17); the shrimp jolts awake (squash, hop with its claw and antennae flung up, overshoot,
         land, wide eyes, 2D surprise lines) and Kai looks up to the window (16); the room lights stutter at 20, 23,
         26, 30, 34. A slow push-in on 1s; characters on 2s.
     S08 "Water spilled off the desk, straight into the power cables." (98 frames): the camera follows the water on
@@ -23,7 +24,7 @@ from mathutils import Vector
 from channels.monsters.diorama import helper1 as d1              # the dollhouse lab with Kai seated at the desk
 from channels.monsters.diorama import helper9 as v2              # the window bolt
 from channels.monsters.ep01v2 import helper1 as h1               # his seated pose
-from channels.monsters.mk import anim, hero, look
+from channels.monsters.mk import anim, hero, look, storm
 from channels.monsters.mk import pistolshrimp as ps
 
 V2 = {"S06": 41, "S08": 85}                                     # v2 counts: only a fallback until timing.json lands
@@ -157,8 +158,18 @@ def s06():
     cam = R["cam"]("cam_s06", tuple(target), dist=40.0, tilt=42.0, yaw=yaw, lens=95.0, blur=10.0)
     cam.data.shift_x = 0.07                                      # the tank left of the Shorts rail (x < 560)
     _push(cam, target, 1, n, 0.1)
-    R["lightning"](14)                                            # on "storm": the sky and the room flash
-    v2._window_bolt(R, 14)
+    strike = R["lights"]["strike"].data                          # the lightning: a small hot source behind the window,
+    strike.size, strike.size_y = 1.2, 1.0                        # so the window bars throw hard shadows into the room
+    R["lightning"](14, strength=1.4)                             # on "storm": the sky and the room flash
+    for o in v2._window_bolt(R, 14):                             # the bolt in the glass through the whole hit (14-17)
+        for f in (15, 17):
+            o.hide_render = False
+            o.keyframe_insert("hide_render", frame=f)
+    flash = storm._overlay("s06_flash", (0.93, 0.97, 1.0, 1.0), 0.0)      # 2 near-white frames over everything
+    fp = storm._screen_plane("s06_flash", cam, storm.D_WHITE, flash, storm._group(cam, "flash"))
+    fp.visible_shadow = False
+    for f, a in ((13, 0.0), (14, 0.72), (15, 0.6), (16, 0.18), (17, 0.0)):
+        storm._key_socket(storm._alpha(flash), f, a, "CONSTANT")
     R["flicker"]([20, 23, 26, 30, 34])
     shrimp = _tank_shrimp(R, yaw)
     _jolt(shrimp, 14)
@@ -303,6 +314,8 @@ def s08():
         anim.key(cam, "location", f, tuple(t + off * k))
         cam.data.dof.focus_distance = dist0 * k
         cam.data.dof.keyframe_insert("focus_distance", frame=f)
+    from channels.monsters.mk import shared_water as sw          # helper 2's one water look for S07-S08b
+    sw.adopt(R)
     return dict(frames=n, step=2, ones=(1, n), subject=[rig["arm"], shrimp["root"]] + list(rig.get("cap", [])))
 
 

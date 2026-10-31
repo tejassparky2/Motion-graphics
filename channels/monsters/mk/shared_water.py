@@ -231,9 +231,9 @@ def ripple_rings(where, f0, n=2, every=4, radius=0.45, frames=8, k=1.0, color=RI
     return out
 
 
-def fall_material(name="shared_fall"):
+def fall_material(name="shared_fall", opacity=(0.55, 0.95)):
     """The falling water's glassy body: translucent cyan, brighter at its silhouette (a glass tube), with faint
-    lighter bands sliding down it."""
+    lighter bands sliding down it. `opacity` = its opacity facing the camera and at the silhouette."""
     if name in bpy.data.materials:
         return bpy.data.materials[name]
     m = bpy.data.materials.new(name)
@@ -273,7 +273,7 @@ def fall_material(name="shared_fall"):
     em.inputs[1].default_value = 1.15
     L(col.outputs[2], em.inputs[0])
     alpha = N("ShaderNodeMapRange")                                              # see-through in the middle
-    alpha.inputs[3].default_value, alpha.inputs[4].default_value = 0.55, 0.95
+    alpha.inputs[3].default_value, alpha.inputs[4].default_value = opacity
     L(lw.outputs["Facing"], alpha.inputs[0])
     tp = N("ShaderNodeBsdfTransparent")
     mix = N("ShaderNodeMixShader")
@@ -309,15 +309,22 @@ def _tube(name, pts, radius, mat):
 
 
 def falling_water(points, f0, f1=None, radius=0.07, grow=3, k=1.0, drops=True, rings=True, name="fall", seed=5,
-                  taper=(1.15, 0.85)):
+                  taper=(1.15, 0.85), glassy=False, jitter=0.0):
     """Water falling along `points` (world, top to bottom: the desk-edge waterfall, the tank jet's arc) from f0:
     a glassy ribbon (fall_material) round a thin white core, reaching the foot in `grow` frames (on 1s), its
     thickness pulsing on 2s; at the foot, splash drops hopping on 2s and ripple rings (k scales them). `taper`
-    = the radius at the top and at the foot. Returns dict(body, core, drops, rings)."""
+    = the radius at the top and at the foot. `glassy`: a see-through body (fall_material "shared_fall_glass") for
+    water close to the camera; `jitter` > 0: the edges go irregular, each point's radius flickering on 2s by up to
+    that fraction. Returns dict(body, core, drops, rings)."""
     pts = [Vector(p) for p in points]
     f1 = f1 if f1 is not None else f0 + 96
-    body = _tube(f"{name}_body", pts, radius, fall_material())
-    core = _tube(f"{name}_core", pts, radius * 0.32, look.flat("shared_fall_core", _hex(RIM), 1.6))
+    if glassy:
+        gm = fall_material("shared_fall_glass", (0.12, 0.8))
+        gm.use_backface_culling = True                 # only the near surface: see-through in the middle
+        if hasattr(gm, "use_transparency_overlap"):
+            gm.use_transparency_overlap = False
+    body = _tube(f"{name}_body", pts, radius, gm if glassy else fall_material())
+    core = _tube(f"{name}_core", pts, radius * (0.2 if glassy else 0.32), look.flat("shared_fall_core", _hex(RIM), 1.6))
     for o in (body, core):
         sp = o.data.splines[0]
         for i, bp in enumerate(sp.bezier_points):
@@ -331,6 +338,15 @@ def falling_water(points, f0, f1=None, radius=0.07, grow=3, k=1.0, drops=True, r
         for n in range(f0 + grow, f1 + 1, 2):
             cu.bevel_depth = r0 * (1.1 if (n - f0) % 4 == 0 else 0.92)
             cu.keyframe_insert("bevel_depth", frame=n)
+        if jitter > 0:                                 # irregular, flickering edges on 2s
+            rj = random.Random(seed + len(o.name))
+            base = [bp.radius for bp in sp.bezier_points]
+            for n in range(f0 - 1, f1 + 1, 2):
+                for bp, b0 in zip(sp.bezier_points, base):
+                    bp.radius = b0 * (1 + rj.uniform(-jitter, jitter))
+                    bp.keyframe_insert("radius", frame=n)
+            for bp, b0 in zip(sp.bezier_points, base):
+                bp.radius = b0
         for fc in anim.all_fcurves(cu.animation_data.action):
             for kp in fc.keyframe_points:
                 kp.interpolation = "CONSTANT"
@@ -366,26 +382,37 @@ def falling_water(points, f0, f1=None, radius=0.07, grow=3, k=1.0, drops=True, r
     return out
 
 
-def _copy_strength(old, new):
-    """Carry an old material's Emission-strength keys (power_out, flickers, dimming) over to the new material,
-    relative to each one's base strength."""
-    eo, en = _em(old), _em(new)
-    if eo is None or en is None or not (old.node_tree.animation_data and old.node_tree.animation_data.action):
-        return
+def _strength_keys(old):
+    """An old material's Emission-strength keys (power_out, flickers, dimming) as (frame, level, interpolation),
+    level relative to its full ("on") strength: the highest key, not the current value (after power_out() keyed it,
+    the current value may be the "off" one)."""
+    eo = _em(old)
+    if eo is None or not (old.node_tree.animation_data and old.node_tree.animation_data.action):
+        return []
     path = eo.inputs[1].path_from_id("default_value")
-    base_o, base_n = eo.inputs[1].default_value or 1.0, en.inputs[1].default_value
     for fc in anim.all_fcurves(old.node_tree.animation_data.action):
-        if fc.data_path != path:
-            continue
-        for kp in fc.keyframe_points:
-            en.inputs[1].default_value = base_n * kp.co.y / base_o
-            en.inputs[1].keyframe_insert("default_value", frame=kp.co.x)
-        for nfc in anim.all_fcurves(new.node_tree.animation_data.action):
-            if nfc.data_path == en.inputs[1].path_from_id("default_value"):
-                for a, b in zip(nfc.keyframe_points, fc.keyframe_points):
-                    a.interpolation = b.interpolation
-        en.inputs[1].default_value = base_n
-        break
+        if fc.data_path == path and len(fc.keyframe_points):
+            top = max(kp.co.y for kp in fc.keyframe_points) or 1.0
+            return [(kp.co.x, kp.co.y / top, kp.interpolation) for kp in fc.keyframe_points]
+    return []
+
+
+def _apply_strength(m, keys):
+    """Key material m's Emission strength to its own base x each relative level in `keys`."""
+    en = _em(m)
+    if en is None or not keys:
+        return
+    sock = en.inputs[1]
+    base = sock.default_value
+    for f, lv, _ in keys:
+        sock.default_value = base * lv
+        sock.keyframe_insert("default_value", frame=f)
+    sock.default_value = base
+    interp = {f: it for f, _, it in keys}
+    for fc in anim.all_fcurves(m.node_tree.animation_data.action):
+        if fc.data_path == sock.path_from_id("default_value"):
+            for kp in fc.keyframe_points:
+                kp.interpolation = interp.get(kp.co.x, kp.interpolation)
 
 
 def _em(m):
@@ -404,7 +431,7 @@ def adopt(R=None, rims=True, stream=True, old=("lab_spill",)):
         if lamp is not None:
             glint = (lamp.location.x, lamp.location.y - 1.0)
     new = spill_material(glint=glint)
-    swapped = set()
+    swapped, keys = set(), []
     for o in list(bpy.data.objects):
         if o.type != "MESH" or o.name.endswith("_rim"):
             continue
@@ -412,7 +439,7 @@ def adopt(R=None, rims=True, stream=True, old=("lab_spill",)):
         for i, m in enumerate(o.data.materials):
             if m is not None and m.name.startswith(old) and m is not new:
                 if m.name not in swapped:
-                    _copy_strength(m, new)
+                    keys = keys or _strength_keys(m)
                     swapped.add(m.name)
                 o.data.materials[i] = new
                 hit = True
@@ -424,6 +451,10 @@ def adopt(R=None, rims=True, stream=True, old=("lab_spill",)):
             continue
         if rims and (o.dimensions.z < 0.02 or o.name.startswith("dl_spill")):
             rim(o)
+    # the lights going out (power_out, flickers) dim every part of the water alike: the sheet, its rims, the fall
+    for name in (new.name, "shared_water_rim", "shared_fall", "shared_fall_core", "shared_drop"):
+        if name in bpy.data.materials:
+            _apply_strength(bpy.data.materials[name], keys)
     return new
 
 
@@ -437,4 +468,4 @@ def _restream(quad):
     pts = [top + Vector((0, -0.02, 0)), top + Vector((0, -0.12, -top.z * 0.35)), top + Vector((0, -0.2, -top.z * 0.75)),
            Vector((top.x, top.y - 0.24, 0.02))]
     quad.hide_render = True
-    falling_water(pts, f0, grow=max(2, f_floor - f0), radius=0.09, k=1.0, name="dl_fall")
+    falling_water(pts, f0, grow=max(2, f_floor - f0), radius=0.09, k=1.0, name="dl_fall", taper=(2.3, 0.95))

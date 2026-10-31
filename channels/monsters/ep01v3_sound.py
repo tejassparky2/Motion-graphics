@@ -37,7 +37,8 @@ S15_STRIKE, S15_FLASH, S15_DUST, S15_BLOWN = 41, 43, 49, 79     # helper 10's v2
 S18_REALISE, S21_LANDINGS, S21_HUFF, S21_DIP, S23_GLINT = 29, (13, 21, 29), 4, 42, 62
 # the v3 staging pass (coordinator, 31 Oct 12:25; provisional until the shot owners confirm the frames)
 S06_FLASH = 13            # the strong near-white flash, 0-based f13-14 (helper 9; the crack on f13)
-S08A_SPARKS, S08A_SWELL = 4, 28   # helper 1's tiny 2D arcs fizz at the plugs from f4; the swell into the zap from f28
+S08A_SPARKS, S08A_SWELL = 3, 28   # helper 1: the 2D arcs fizz at the plugs from f3; the swell into the zap from f28
+S08A_WATER, S08A_FEAR, S08A_STUTTER = 4, 19, (29, 32)   # water at his sneakers f4-14, face drops f19, lights stutter
 S08B_HIT, S08B_LIGHTS, S08B_LAND, S08B_BLACK = 10, 26, 28, 30   # helper 4: the jolt hits f10, the lights die f26,
                                                                   # the body lands f28, black from f30 (0-based)
 S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
@@ -295,14 +296,17 @@ def build(timing, n, v):
 
     # --- S08a: the puddle under his sneakers, his face drops; the bed thins to a held tense pad
     amb(lambda d, s: base.trickle(d, 40 + s), c.t("S08a"), c.end("S08a"), -24, 0.2, 0.2)
-    hit(puddle_creep(1.0), c.t("S08a", 0.1), -18)
+    hit(puddle_creep(0.5), c.f("S08a", S08A_WATER), -18)        # the water slides under his sneakers (f4-14)
+    for k, f in enumerate(S08A_STUTTER):
+        hit(sfx.spark(20 + k), c.f("S08a", f), -24, 0.2)
     sp0, sw = c.f("S08a", S08A_SPARKS), c.f("S08a", S08A_SWELL)  # the plugs fizz quietly under the line, then swell
     sp1 = c.t("S08b", 0.05)                                      # into the zap
     n_ = _n(sp1 - sp0 + 0.2)
     tt = np.arange(n_) / SR + sp0
     env = np.where(tt < sw, 0.18, 0.18 + 0.82 * np.clip((tt - sw) / max(sp1 - sw, 0.1), 0, 1))
     hit(plug_fizz(sp1 - sp0 + 0.2, 9) * env, sp0, -22, 0.2)
-    music_at(base.tense_tone(c.end("S08a") - c.t("S08a")), c.t("S08a"), c.end("S08a"), -20, 0.3, 0.2)
+    fear = c.f("S08a", S08A_FEAR)                                # his face drops: the tense tone comes in
+    music_at(base.tense_tone(c.end("S08a") - fear), fear, c.end("S08a"), -20, 0.15, 0.2)
 
     # --- S08b: the zap and the falling hum under "That's how I died.", the power dies, black, the flatline
     zap_t = c.f("S08b", S08B_HIT)                                 # the jolt hits him

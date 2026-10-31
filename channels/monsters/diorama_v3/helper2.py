@@ -149,21 +149,39 @@ def _jet(origin, f, end, floor_z, k=UNITS, seed=11):
 
     t_hit = (v.z + math.sqrt(v.z * v.z + 2 * g * (o.z - floor_z))) / g
     pts = [at(t_hit * i / 10) for i in range(11)]
-    fall = sw.falling_water(pts, f, end, radius=0.0022 * k, grow=3, k=0.22, name="jet", taper=(1.3, 0.8))
+    fall = sw.falling_water(pts, f, end, radius=0.0024 * k, grow=3, k=0.22, name="jet", taper=(1.4, 0.8), glassy=True,
+                            jitter=0.3)
+    # a little spray right where it bursts out of the crack: fine droplets flung out on 2s, again and again
+    sm = look.flat("jet_spray", look.hexc("#f2fdff"), 1.8)
+    for i in range(10):
+        dpl = ps._sphere(f"jet_spray{i}", o, (1, 1, 1), sm, 0, 8)
+        dpl.visible_shadow = False
+        a = rnd.uniform(0, 2 * math.pi)
+        dv = Vector((math.cos(a) * 0.8, -rnd.uniform(0.3, 1.0), math.sin(a) * 0.8)).normalized() * \
+            rnd.uniform(0.012, 0.03) * k
+        r = rnd.uniform(0.0006, 0.0012) * k
+        anim.key(dpl, "scale", f - 1, 0.0001, "CONSTANT")
+        s0 = f + (i % 3) * 2
+        while s0 < end:
+            for t in (0, 2, 4):
+                anim.key(dpl, "location", s0 + t, o + dv * (t / 4) + Vector((0, 0, -0.004 * k * (t / 4) ** 2)),
+                         "CONSTANT")
+                anim.key(dpl, "scale", s0 + t, r if t < 4 else 0.0001, "CONSTANT")
+            s0 += 6
     arcs = [fall["body"], fall["core"]]
     # the burst at the crack: a little star of spray, then it keeps fizzing
     burst = ps._sphere("jet_burst", o, (1, 1, 1), ps._glow("jet_burst_m", look.hexc("#e6fbff"), 0.8), 0, 16)
     burst.visible_shadow = False
-    for fr, sc_ in ((f - 1, 0.0001), (f, 0.014 * k), (f + 1, 0.009 * k), (f + 3, 0.006 * k)):
+    for fr, sc_ in ((f - 1, 0.0001), (f, 0.006 * k), (f + 1, 0.004 * k), (f + 3, 0.0025 * k)):
         anim.key(burst, "scale", fr, sc_, "CONSTANT")
     for n in range(f + 3, end + 1, 2):
-        anim.key(burst, "scale", n, (0.005 if (n - f) % 4 == 1 else 0.0065) * k, "CONSTANT")
+        anim.key(burst, "scale", n, (0.002 if (n - f) % 4 == 1 else 0.0028) * k, "CONSTANT")
     # droplets thrown off the stream, on 1s
     dm = look.flat("jet_drop", look.hexc("#e9fcff"), 1.6)
     for i in range(9):
         d = ps._sphere(f"jet_drop{i}", o, (1, 1, 1), dm, 0, 10)
         d.visible_shadow = False
-        r = rnd.uniform(0.0035, 0.007) * k
+        r = rnd.uniform(0.0009, 0.0016) * k
         off = Vector((rnd.uniform(-0.04, 0.04), rnd.uniform(-0.03, 0.02), rnd.uniform(-0.01, 0.05))) * k
         life = 7
         start = f + 1 + (i * 3) % 8
@@ -372,4 +390,14 @@ def s07():
                                                                      jet=jet))
 
 
-SHOTS = {"S07": s07}
+def _reuse(build, shot):
+    """A v2 diorama tank shot in the v3 set (dressing, Q3 lighting, shared water are applied by the shared modules
+    and render_shot), with its v3 frame count. S04/S05a keep v2's lines, so every beat stays on its frame."""
+    def b():
+        info = build()
+        info["frames"] = v3_frames(shot) if os.path.exists(_T) else info["frames"]
+        return info
+    return b
+
+
+SHOTS = {"S07": s07, "S04": _reuse(d2.s04, "S04"), "S05a": _reuse(d2.s05a, "S05a")}
