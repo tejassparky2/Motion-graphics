@@ -48,19 +48,52 @@ def _shrimp(n, f_lift=None):
     return sh
 
 
-def _bird_on_perch(perch, face_to):
-    """The butcher bird sitting on the top thorn, already dark (S23's rage light from frame 1), facing `face_to`."""
+def _bird_on_perch(perch, face_to, cut=0.1, fold=False):
+    """The butcher bird sitting on the top thorn, already dark (S23's rage light from frame 1: everything above `cut`
+    below the ball's centre in the deep top-shadow tone, amber eye glints), facing `face_to`. `fold`: the wings
+    folded back along its sides, small, so they never cross its face in a close shot."""
     rig = tuftwing.build((perch.x, perch.y, 0.0), shadow_span=10.0)
     rig["root"].scale = (BIRD_SCALE,) * 3
     d = Vector(face_to) - perch
     rig["root"].rotation_euler = (0, 0, math.atan2(d.x, -d.y))
     anim.key(rig["lift"], "location", 1, (0.0, 0.0, perch.z / BIRD_SCALE), "CONSTANT")
-    h5._rage_light(rig, 1, perch.z + (tuftwing.CENTER[2] - 0.1) * BIRD_SCALE)
+    h5._rage_light(rig, 1, perch.z + (tuftwing.CENTER[2] - cut) * BIRD_SCALE)
+    if fold:
+        for sx, w in zip((-1, 1), rig["wings"]):
+            anim.key(w, "rotation_euler", 1, (0.35, 0, sx * 0.55), "CONSTANT")   # swept back along the flank
+            anim.key(w, "scale", 1, (0.8, 0.8, 0.8), "CONSTANT")
     return rig
 
 
 # ------------------------------------------------------------------------------------------------------------ S23b
+def _twig(cam):
+    """A thorny twig of the tree right in front of the bird's-view lens, across its top-left corner, so the POV reads
+    "seen from the thorn tree" (the tilt-shift blurs it soft). Parented to the camera so it stays put as it moves."""
+    bark = bpy.data.materials.get("thorn_bark")
+    thorn = bpy.data.materials.get("thorn")
+    pts = [Vector((-1.9, 2.1, -3.2)), Vector((-0.6, 1.25, -3.0)), Vector((0.4, 0.9, -2.9))]   # camera space
+    objs = []
+    for a, b, r in ((pts[0], pts[1], 0.07), (pts[1], pts[2], 0.05)):
+        d = b - a
+        bpy.ops.mesh.primitive_cylinder_add(vertices=10, radius=r, depth=d.length, location=(a + b) / 2)
+        o = bpy.context.object
+        o.rotation_euler = d.to_track_quat("Z", "Y").to_euler()
+        objs.append((o, bark))
+    for i, t in enumerate((0.2, 0.45, 0.7, 0.9, 1.25, 1.6)):
+        p = pts[0].lerp(pts[1], t) if t <= 1 else pts[1].lerp(pts[2], t - 1)
+        bpy.ops.mesh.primitive_cone_add(vertices=8, radius1=0.035, depth=0.32, location=p)
+        o = bpy.context.object
+        o.rotation_euler = (1.2 * (1 if i % 2 else -1), 0.4, 0.3 * i)
+        objs.append((o, thorn))
+    for o, m in objs:
+        if m:
+            o.data.materials.append(m)
+        o.parent = cam
+        o.visible_shadow = False
+
+
 CUT_POV = 30                        # the cut to the bird's view (about where "looking" lands)
+LOCK = 20                           # the lock-on, on "looking" (and the sting): the 2D snap-zoom of ~12 % lands here
 
 
 def s23b():
@@ -70,29 +103,41 @@ def s23b():
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     prey = Vector(SHRIMP) + Vector((0, 0, 1.0))
-    # the close: from the clearing side (the forest is behind the tree), 25 deg off the line to the shrimp, so when it
-    # locks on its face turns three-quarter to the lens; before that it looks off to the side
+    # the close: from the clearing side (the forest is behind the tree), 25 deg off the line to the shrimp and a little
+    # BELOW its eye (the prey's side of the look: it glares down, so only a low lens sees the face); when it locks on its
+    # face turns three-quarter to the lens; before that it looks off to the side
     to_prey = prey - perch
     def turned(v, deg):
         c, s_ = math.cos(math.radians(deg)), math.sin(math.radians(deg))
         return Vector((v.x * c - v.y * s_, v.x * s_ + v.y * c, 0)).normalized()
     side = turned(to_prey.xy.to_3d(), 25)
-    bird = _bird_on_perch(perch, perch + turned(to_prey.xy.to_3d(), -70) * 10 - Vector((0, 0, 3)))
+    bird = _bird_on_perch(perch, perch + turned(to_prey.xy.to_3d(), -70) * 10 - Vector((0, 0, 3)),
+                          cut=0.3, fold=True)                               # S23's last look: dark head, white chin
     acting.tilt(bird, 8, angle=0.42, hold=8)                                 # a curious tilt: one eye to the ground
-    acting.lock_on(bird, prey, 20)                                          # snap onto the shrimp: glare, crest up
+    acting.lock_on(bird, prey, LOCK)                                        # snap onto the shrimp, head down at it
+    # ... and make it predatory (overriding lock_on's cute stare): a half-lid squint, the pupil shrunk to a hard dot
+    # with the amber glint, the crest flattened BACK, a slow forward lean
+    for f in (LOCK, LOCK + 2, LOCK + 6, LOCK + 9):
+        for sx, e in zip((-1, 1), bird["eyes"]):
+            anim.key(e, "scale", f, (0.72, 1, 0.4), "CONSTANT")
+            anim.key(e, "rotation_euler", f, (0, sx * 0.42, 0), "CONSTANT")
+        anim.key(bird["crest"], "rotation_euler", f, (-1.0, 0, 0), "CONSTANT")
+    anim.key(bird["body"], "rotation_euler", LOCK, (0, 0, 0), "BEZIER")
+    anim.key(bird["body"], "rotation_euler", n, (0.24, 0, 0), "BEZIER")   # leaning in, slowly
     anim.blink(bird, 4)
-    anim.squash(bird["body"], 18, -0.06)                                    # a hunch into the lock
-    anim.squash(bird["body"], 22, 0.03)
-    anim.squash(bird["body"], 26, 0.0)
+    anim.squash(bird["body"], LOCK - 2, -0.06)                              # a hunch into the lock
+    anim.squash(bird["body"], LOCK + 2, 0.03)
+    anim.squash(bird["body"], LOCK + 6, 0.0)
     v2._twos(tuftwing._animated(bird))
     eye_w = perch + Vector((0, 0, (tuftwing.CENTER[2] + 0.12) * BIRD_SCALE))
     yaw_close = math.degrees(math.atan2(side.x, side.y)) + 180              # camera on the `side` of the bird
     close = None
     for f in range(1, CUT_POV):
         k = (f - 1) / (CUT_POV - 2)
-        close = v2._cam("cam_s23b_eye", f, tuple(eye_w), 13.0 - 3.0 * k, 34.0, yaw_close, 100.0, cam=close)
-    # the bird's view: from just behind and above its head, down the line to the shrimp, a long lens tightening
-    eye_pos = perch + Vector((0, 0, 1.6 * BIRD_SCALE)) - to_prey.normalized() * 1.2
+        snap = 1.0 if f < LOCK else {LOCK: 1.0, LOCK + 1: 1.08, LOCK + 2: 1.16, LOCK + 3: 1.13}.get(f, 1.12)
+        close = v2._cam("cam_s23b_eye", f, tuple(eye_w), 10.0 - 2.5 * k, -14.0, yaw_close, 85.0 * snap, cam=close)
+    # the bird's view: from its eye, down the line to the shrimp, a wide lens tightening a little (the predator focusing)
+    eye_pos = perch + Vector((0, 0, 1.3 * BIRD_SCALE)) + to_prey.normalized() * 1.4   # at its eye, past its beak
     dist0 = (prey - eye_pos).length
     pov = None
     for f in range(CUT_POV, n + 1):
@@ -101,6 +146,7 @@ def s23b():
         el = math.degrees(math.asin((eye_pos.z - prey.z) / d))
         yw = math.degrees(math.atan2((prey - eye_pos).x, (prey - eye_pos).y))   # the lens sits at the bird's eye
         pov = v2._cam("cam_s23b_pov", f, tuple(prey), d, el, yw, 30.0 + 10.0 * k, cam=pov)   # wide: it's tiny
+    _twig(pov)
     sc = bpy.context.scene
     for m in list(sc.timeline_markers):
         sc.timeline_markers.remove(m)
@@ -118,14 +164,14 @@ def s24top():
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
     bird = _bird_on_perch(perch, Vector(SHRIMP))
-    # its giant shadow on the ground over the shrimp, growing as it comes (the dive is in panel B)
-    shadow = bird["shadow"]
-    bpy.context.view_layer.update()
-    to_local = bird["root"].matrix_world.inverted()
-    for f, (w, s) in ((1, (0.55, 0.55)), (n // 2, (0.85, 0.8)), (n, (1.0, 1.0))):
-        p = to_local @ (Vector(SHRIMP).lerp(Vector((perch.x, perch.y, 0)), 1.0 - w) + Vector((0, 0, 0.02)))
-        anim.key(shadow, "location", f, tuple(p), "BEZIER")
-        anim.key(shadow, "scale", f, (s, s, 1), "BEZIER")
+    # its giant shadow on the ground: a clear bird silhouette (sharp edge, wings spread) sliding in from the tree's side
+    # over the shrimp and Kai, and growing as the bird comes (the dive itself is in panel B)
+    over = Vector((SHRIMP[0] + 1.6, SHRIMP[1] + 0.1, 0.0))
+    back = (Vector((perch.x, perch.y, 0)) - over).normalized() * 4.0
+    v2._soft_shadow(bird, tuple(over + back - Vector((perch.x, perch.y, 0))), tuple(-back), 1, n,
+                    tone="#1d2440", opacity=0.68, soften=1.0, shrink=0.42)
+    for f, sc_ in ((1, 1.0), (n, 1.55)):
+        anim.key(bird["shadow"], "scale", f, (sc_, sc_, 1), "BEZIER")
     # Kai runs in from the east, skids, crouches at its side and reaches over it (facing west, three-quarter to us)
     reach_at = Vector((SHRIMP[0] + 3.6, SHRIMP[1] + 0.2, 0))
     facing = (Vector(SHRIMP) - reach_at).normalized()
@@ -173,9 +219,9 @@ def s24top():
         acting.look_at(k, prey, f + 12, f + 12, darts=False)
     acting.blink(k, 1, n, seed=7)
     v2._twos([k["arm"]])
-    mid = Vector((SHRIMP[0] + 2.0, SHRIMP[1], 2.4))
-    a = (tuple(mid + Vector((1.2, -0.4, 0.6))), 74.0, 46.0, 30.0, 80.0, -0.2)    # from the south-south-west
-    b = (tuple(mid), 58.0, 46.0, 30.0, 92.0, -0.22)
+    mid = Vector((SHRIMP[0] + 1.8, SHRIMP[1], 2.4))
+    a = (tuple(mid + Vector((0.6, 0, 0.3))), 46.0, 48.0, 72.0, 85.0, -0.23)   # low and close, from the west-south-
+    b = (tuple(mid), 38.0, 48.0, 72.0, 85.0, -0.23)                           # west: his face, the shrimp in front
     v2._move("cam_s24top_v3", 1, n, a, b, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"]])
 

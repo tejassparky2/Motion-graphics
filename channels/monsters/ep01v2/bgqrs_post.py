@@ -23,9 +23,11 @@ from PIL import Image  # noqa: E402
 from motion.engine import H, W, cairo, clamp01, ease_out  # noqa: E402
 from channels.monsters import comp, fx2d, fx2d_anime, fx2d_extra  # noqa: E402
 
-DIORAMA = os.environ.get("DIORAMA") == "1"
-BUILD = os.path.join(ROOT, "build", "monsters", "diorama" if DIORAMA else "ep01v2")
-SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama" if DIORAMA else "ep01v2", "shots")
+DIORAMA = os.environ.get("DIORAMA") in ("1", "v3")             # "v3": Episode 1 v3 (DIORAMA_EP01_V3.md)
+SET = {"1": "diorama", "v3": "diorama_v3"}.get(os.environ.get("DIORAMA"), "ep01v2")
+BUILD = os.path.join(ROOT, "build", "monsters", SET)
+SHOTS_OUT = os.path.join(ROOT, "out", "monsters", SET, "shots")
+CRF = "10" if SET == "diorama_v3" else "12"
 FPS = 24
 # render.py's output hygiene: no container metadata, no encoder tags, no x264 settings SEI
 CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact",
@@ -274,6 +276,41 @@ def _terror_on_plate(shot, a, t0):
     return size, tuple((fx - ex, fy - ey) for (fx, fy), (ex, ey) in zip(fixed, eyes))
 
 
+def ko_stars(cr, t, a, f0, f1, size=None):
+    """Knocked-out stars: 3 small yellow cel stars with navy lines circling over his head on 2s (one orbit per 16
+    frames, a tilted ellipse), following the head anchor; they fade out over the last 4 frames before f1."""
+    f = int(round(t * FPS)) + 1
+    if not f0 <= f <= f1:
+        return
+    (cx, cy), fsize, tilt, _ = face_geom(a, t)
+    star = size or max(18.0, fsize * 0.45)
+    rx = fsize * 0.62
+    cx, cy = at(a, t, "crown")                                     # just past the top of his head
+    cx = min(cx, 560 - rx - star * 0.6)                            # clear of the Shorts right rail
+    fade = 1.0 if f < f1 - 4 else (f1 - f) / 4
+    ph = 2 * math.pi * ((f - f0) // 2 * 2) / 16
+    stars = []
+    for i in range(3):
+        ang = ph + i * 2 * math.pi / 3
+        ex, ey = math.cos(ang) * rx, math.sin(ang) * rx * 0.24
+        x = cx + ex * math.cos(tilt) - ey * math.sin(tilt)
+        y = cy + ex * math.sin(tilt) + ey * math.cos(tilt)
+        stars.append((math.sin(ang), x, y, star * (1 + 0.18 * (math.sin(ang) + 1) / 2)))
+    for _, x, y, r in sorted(stars):                               # back to front
+        cr.new_path()
+        for j in range(10):
+            rr = r / 2 if j % 2 == 0 else r / 2 * 0.45
+            aa = -math.pi / 2 + j * math.pi / 5 + ph * 0.5
+            cr.line_to(x + rr * math.cos(aa), y + rr * math.sin(aa))
+        cr.close_path()
+        cr.set_source_rgba(1.0, 0.85, 0.25, fade)
+        cr.fill_preserve()
+        cr.set_source_rgba(0.11, 0.1, 0.2, fade)
+        cr.set_line_width(max(2.0, star * 0.12))
+        cr.set_line_join(1)
+        cr.stroke()
+
+
 def diorama_overlays(shot):
     """The diorama cut's 2D (coordinator, 31 Oct): the slow push-ins of the locked shots (TP13), S17's drop glint and
     S18's realisation background with the 18% snap-zoom, as in 3D. S16's push is in 3D. S19 and S20 get the 3D cut's
@@ -285,6 +322,8 @@ def diorama_overlays(shot):
     a = anchors(shot)
     n = max(a)
     ex, ey = at(a, 0.0, "eyes")
+    if shot == "S15b":                                            # dazed: the stars circle until near the end
+        return [(ko_stars, dict(a=a, f0=1, f1=n - 8))]
     if shot in ("S01", "S16"):                                    # the pin-prick terror rhyme, as in 3D
         t0 = 0.0 if shot == "S01" else 41 / FPS
         size0, corr = _terror_on_plate(shot, a, t0 if shot == "S16" else 11 / FPS)
@@ -378,7 +417,7 @@ def run(shot):
     mp4 = os.path.join(SHOTS_OUT, f"{shot}.mp4")
     tmp = os.path.join(BUILD, f"{shot}_enc.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i",
-                    os.path.join(out_frames, "%05d.png"), "-c:v", "libx264", "-crf", "12", "-preset", "slow",
+                    os.path.join(out_frames, "%05d.png"), "-c:v", "libx264", "-crf", CRF, "-preset", "slow",
                     "-pix_fmt", "yuv420p", *CLEAN, tmp], check=True)
     # a stream-copy remux drops the encoder name the first pass leaves in the track header (as render.py does)
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", *CLEAN, "-movflags", "+faststart",
