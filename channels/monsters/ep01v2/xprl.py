@@ -304,6 +304,10 @@ def s24top():
     anim.on_twos([k["arm"]], step=3)
     _cam("cam_s24top", (0.5, -15.5, 2.2), (-0.5, 0.5, 3.6), 25, shift_y=-0.21, fstop=2.8,
          focus=(-1.0, 0.8, 2.6))                                          # low two-shot, in the top half (S24_FOCUS)
+    cd = bpy.context.scene.camera.data                                    # push in as he crouches to the shrimp
+    for f, lens, sh in ((57, 25, -0.21), (85, 33, -0.25)):
+        anim.key(cd, "lens", f, lens, "BEZIER")
+        anim.key(cd, "shift_y", f, sh, "BEZIER")
     return dict(frames=n, step=3, subject=[k["arm"]])
 
 

@@ -78,7 +78,8 @@ subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", tmp, "-c", "copy", 
                        prev])
 os.remove(tmp)
 cover = OUT[:-4] + "_cover.jpg"
-subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", OUT, "-frames:v", "1", "-q:v", "2", *CLEAN[:4], cover])
+if not os.path.exists(cover):           # helper 7's ep01v2_cover.py writes the designed cover here; keep it if present
+    subprocess.check_call([FF, "-y", "-loglevel", "error", "-i", OUT, "-frames:v", "1", "-q:v", "2", *CLEAN[:4], cover])
 say(f"- wrote {os.path.relpath(OUT, ROOT)} ({os.path.getsize(OUT) / 1e6:.1f} MB), the preview and the cover")
 
 # 3. frame 0 is not black and the file carries no tags
