@@ -301,7 +301,7 @@ def print_finish(cr, t=0.0, strength=1.0):
     cr.save()
     cr.identity_matrix()
     cr.set_operator(cairo.OPERATOR_MULTIPLY)
-    dx = (int(t * FPS) * 37) % 9 - 4                     # the grain shifts a little each frame, like film/print
+    dx = 0                                               # static, like real printed paper: cheap to encode, survives YouTube's compression
     cr.set_source_surface(_FINISH["s"], dx, 0)
     cr.paint_with_alpha(strength)
     cr.restore()
@@ -314,7 +314,7 @@ def ffmpeg():
                                    text=True).strip()
 
 
-def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=12):
+def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=16):
     """Render draw(cr, t) for `dur` seconds to out_mp4 (or one frame at time `still` to a .png when still is set).
     frames: optional (first, last) frame range for split renders. Output carries no metadata or encoder tags."""
     os.makedirs(os.path.dirname(os.path.abspath(out_mp4)), exist_ok=True)
