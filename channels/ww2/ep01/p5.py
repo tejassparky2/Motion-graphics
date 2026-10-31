@@ -253,9 +253,14 @@ def s_hitler_atlantic(cr, t, t0, t1):
     lt = t - t0
     paper(cr)
     m.draw(cr, lt)
-    track = [(0.0, "stand"), (0.35, dict(turn=0.5, face={"brow": "angry"})), (w - 0.4, "point"),   # a short bent-arm
-             (w + 1.8, dict(sh_n=1.15, el_n=0.95, turn=0.35, hand_n="fist",                         # point (no straight
-                            face={"brow": "angry", "mouth": "grit"}))]                              # arms: STYLE.md)
+    # he turns to the map and jabs down at the Atlantic twice, elbow bent (no straight arms: STYLE.md); the arrow
+    # does the pointing
+    jab_up = dict(lean=0.18, nod=0.32, sh_n=0.85, el_n=1.25, turn=0.35, hand_n="fist",
+                  face={"brow": "angry", "mouth": "grit", "look": (-4, 6)})
+    jab = dict(lean=0.3, nod=0.42, sh_n=0.55, el_n=0.75, turn=0.35, hand_n="fist",
+               face={"brow": "angry", "mouth": "grit", "look": (-4, 8)})
+    track = [(0.0, "stand"), (0.35, dict(turn=0.5, face={"brow": "angry"})), (w - 0.5, jab_up), (w - 0.15, jab),
+             (w + 0.25, jab_up), (w + 0.55, jab), (w + 1.6, dict(jab, nod=0.25, lean=0.2))]
     z = push_in(t, t0, t1, 1.0, 1.05)
     cr.save()
     camera(cr, z, W / 2, H / 2)
@@ -984,7 +989,8 @@ HITLER_SLAM = Figure(leader="hitler", x=700, y=1400, scale=2.7, facing=1, seed=6
 
 def s_slam(cr, t, t0, t1):
     hit = at(84, "forbids") + 0.05
-    sx, sy = shake(t, hit, amp=16)
+    sx, sy = shake(t, hit, amp=10)
+    sy += 18 * math.exp(-14 * (t - hit)) * math.cos(30 * (t - hit)) if t >= hit else 0.0   # a camera bump on impact
     paper(cr)
     cr.save()
     cr.translate(sx, sy)
@@ -992,8 +998,8 @@ def s_slam(cr, t, t0, t1):
     rays(cr, t, 820, 420, n=28, color="ink", alpha=0.13, spin=0.02)
     windup = dict(lean=0.2, nod=0.1, sh_n=2.3, el_n=1.6, hand_n="fist", turn=0.4,   # fist up by the head, elbow bent
                   face={"brow": "angry", "mouth": "grit"})
-    down = dict(lean=0.38, nod=0.22, sh_n=0.75, el_n=0.95, hand_n="fist", turn=0.4,   # fist on the table, elbow bent
-                face={"brow": "angry", "mouth": "grit"})
+    down = dict(lean=0.4, nod=0.25, sh_n=0.3, el_n=1.05, hand_n="fist", turn=0.4,    # the fist DOWN on the table,
+                face={"brow": "angry", "mouth": "grit"})                              # elbow bent
     track = [(t0, dict(turn=0.45, face={"brow": "angry", "mouth": "grit"})), (hit - 0.3, windup), (hit, down)]
     HITLER_SLAM.draw(cr, t, track)
     cr.rectangle(-300, 860, W + 600, 400)                       # the map table
