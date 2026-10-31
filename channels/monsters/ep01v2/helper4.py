@@ -171,6 +171,58 @@ def _hole_glow(trail, k=2.4):
     return out
 
 
+def _cel_smoke(trail, top="#cfc8d8", under="#9a93ab"):
+    """Give every wisp its own anime smoke material: pale lavender-grey with one darker tone on the underside (a hard
+    cel step on the normal), and a soft, see-through edge. The node keyed by jellysnail.smoke() ("Mix") stays the
+    overall opacity; the edge fade sits inside it."""
+    for w in trail["wisps"]:
+        o = w["obj"]
+        m = bpy.data.materials.new(f"h4_smoke_{o.name}")
+        m.use_nodes = True
+        nt = m.node_tree
+        nt.nodes.clear()
+        L = nt.links.new
+        out = nt.nodes.new("ShaderNodeOutputMaterial")
+        mix = nt.nodes.new("ShaderNodeMixShader")
+        mix.name = "Mix"
+        mix.inputs[0].default_value = 0.0
+        tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+        tr2 = nt.nodes.new("ShaderNodeBsdfTransparent")
+        edge = nt.nodes.new("ShaderNodeMixShader")
+        em = nt.nodes.new("ShaderNodeEmission")
+        geo = nt.nodes.new("ShaderNodeNewGeometry")
+        sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+        tone = nt.nodes.new("ShaderNodeValToRGB")              # the underside step (cel shading)
+        tone.color_ramp.interpolation = "CONSTANT"
+        tone.color_ramp.elements[0].position, tone.color_ramp.elements[0].color = 0.0, look.hexc(under)
+        tone.color_ramp.elements[1].position, tone.color_ramp.elements[1].color = 0.38, look.hexc(top)
+        lw = nt.nodes.new("ShaderNodeLayerWeight")
+        lw.inputs["Blend"].default_value = 0.5
+        soft = nt.nodes.new("ShaderNodeValToRGB")              # opaque in the middle, fading out at the rim
+        soft.color_ramp.interpolation = "EASE"
+        soft.color_ramp.elements[0].position, soft.color_ramp.elements[0].color = 0.55, (1, 1, 1, 1)
+        soft.color_ramp.elements[1].position, soft.color_ramp.elements[1].color = 0.95, (0, 0, 0, 1)
+        nrm = nt.nodes.new("ShaderNodeMath")                   # normal z (-1..1) -> 0..1
+        nrm.operation = "MULTIPLY_ADD"
+        nrm.inputs[1].default_value = 0.5
+        nrm.inputs[2].default_value = 0.5
+        L(geo.outputs["Normal"], sep.inputs[0])
+        L(sep.outputs["Z"], nrm.inputs[0])
+        L(nrm.outputs[0], tone.inputs[0])
+        L(tone.outputs[0], em.inputs[0])
+        L(lw.outputs["Facing"], soft.inputs[0])
+        L(soft.outputs[0], edge.inputs[0])
+        L(tr2.outputs[0], edge.inputs[1])
+        L(em.outputs[0], edge.inputs[2])
+        L(tr.outputs[0], mix.inputs[1])
+        L(edge.outputs[0], mix.inputs[2])
+        L(mix.outputs[0], out.inputs[0])
+        m.surface_render_method = "BLENDED"
+        m.use_backface_culling = True
+        o.data.materials.clear()
+        o.data.materials.append(m)
+
+
 def _clear_props(h, center, radius):
     """Delete the world's small mushrooms near `center` (this scene only): nothing bright may pull the eye off the
     holes."""
@@ -206,8 +258,11 @@ def s11a():
     tr = rig["trail"]
     x, y = SPOT
     _clear_props(h, (x, y + 6.0), 3.5)                               # the small red mushroom by the camera
-    # the wrong detail must read in 1.1 s (EP4): darker, thicker smoke, brighter embers, a glow on the grass
-    jellysnail.smoke(tr, 1, strength=1.6, color="#3a3340")
+    # the wrong detail must read in 1.1 s (EP4): bright embers and a glow on the grass; the smoke is pale anime smoke
+    # (lavender-grey, a darker underside, soft edges): thin wisps leaning up and to screen-left (world +X, since the
+    # camera looks down -Y), off the snail's shell and eyes
+    _cel_smoke(tr)
+    jellysnail.smoke(tr, 1, strength=1.5, size=0.75, rise=0.85, lean=(0.55, 0.0))
     jellysnail.idle(rig, 1, frames)
     _ember_flicker(1, frames, lo=1.8, hi=2.8)
     _hole_glow(tr)
