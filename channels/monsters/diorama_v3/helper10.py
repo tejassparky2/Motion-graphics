@@ -97,6 +97,15 @@ def _kneeling_kai():
     return k, loc, reach
 
 
+def _kai_objects(k):
+    """Every object that draws Kai: the armature's meshes and the constraint-held cap and shoes."""
+    arm = k["arm"]
+    objs = [c for c in arm.children_recursive if c.type == "MESH"]
+    objs += [o for o in bpy.context.scene.objects if o not in objs
+             and any(getattr(c, "target", None) == arm for c in o.constraints)]
+    return objs + [o for o in k.get("cap", []) if o not in objs]
+
+
 def face_point(k):
     """Between his eyes: 55% up the head bone, nudged forward (toward -Y... his facing) by a little."""
     bpy.context.view_layer.update()
@@ -153,6 +162,12 @@ def s15a():
     s15._key_pose(k, FLINCH + 2)
     s15._flush_keys(k)
     acting.expression(k, "neutral", 1)
+    # shot A (1..CUT-1) is the shrimp's close-up: Kai is out of it (from that low camera his reaching arm would
+    # come down in front of the shrimp's head), so he is hidden there and appears from the cut to shot B
+    for o in _kai_objects(k):
+        for fr, v in ((1, True), (CUT, False)):
+            o.hide_render = v
+            o.keyframe_insert("hide_render", frame=fr)
     acting.expression(k, "surprised", FLINCH)
     acting.expression(k, "fear", FLINCH + 10)
     acting.blink(k, 1, n, at=(6,))
