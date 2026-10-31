@@ -18,7 +18,7 @@ The owner approved the poster look, the male British narrator and the ~11-13 min
 | P5 | 70-86 | bGqrs |
 | P6 | 87-101 | helper 4 |
 | P7 | 102-116 | helper 5 |
-| P8 | 117-131 | helper 6 |
+| P8 | 117-131 | helper 9 (after P2) |
 
 - Assembly, YouTube chapters and the thumbnail: helper 8.
 - Final mix (score, SFX from your `cues()`, narration): helper 7.
