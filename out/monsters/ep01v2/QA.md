@@ -37,30 +37,34 @@ Most serious first within each shot. Updated as shots land.
 
 | Shot | Builder | Verdict | Frames (got / want) | Mean sat. | Notes |
 |---|---|---|---|---|---|
-| S03b | helper 1 | PASS (v2, 20:38) | 51 / 51 | 0.28 | v1 FIX resolved; 1 NOTE (saturation) |
+| S03b | helper 1 | PASS (v3, 93da447) | 51 / 51 | 0.24 | warm skin, cyan on the lit side; 1 NOTE (saturation, a hard split down the face) |
 | S09 | helper 3 | PASS (v2, 6d95527) | 66 / 66 | 0.47 | v1 FIX resolved: eyes open on "woke up", crack held through "cracked sky" |
 | S06 | helper 9 | PASS (v2, bb8f476) | 41 / 41 | 0.37 | the bolt on frame 14, the stutter on 2s, the black opaque |
 | S10a | helper 4 | PASS (coordinator's second read of v2) | 56 / 56 | 0.38 | outline and lit side; known minor issue: outline slivers |
 | S10b | helper 6 | PASS (v2, 7dcec9b) | 35 / 35 | 0.46 | outline back; reframed, so the wings stay in frame |
-| S11a | helper 4 | PASS (coordinator's second read of v2) | 39 / 39 | 0.51 | the holes lead the eye up the trail in 1.1 s |
+| S11a | helper 4 | PASS (v3, 4898f09; the coordinator's read) | 39 / 39 | 0.52 | pale smoke rises off the holes; the shell and eyes are clear |
 | S11b | helper 6 | PASS (v2, 285c3f1) | 38 / 38 | 0.49 | outline back; brighter eye-spot glow |
 | S01 | bGqrs | PASS (v2, c8a0958) | 69 / 69 | 0.46 | the terror-eye sliver is fixed; 1 NOTE (chin at the caption line) |
 | S04 | helper 2 | PASS | 73 / 73 | 0.31 | claw held open, shuts, white-hot on "boils"; 1 NOTE |
 | S18 | bGqrs (helper 5 render) | PASS (v2, b172892) | 60 / 60 | 0.38 | a 2D snap-zoom into the eyes on "wet" (resolves the NOTE) |
-| S19 | bGqrs | PASS | 105 / 105 | 0.49 | the drop dries on "dry it"; 1 NOTE (shrimp's eyes not in frame) |
+| S19 | bGqrs | PASS (v2, b0aa7eb) | 105 / 105 | 0.49 | the last drop dries by frame 90 and stays gone; 1 NOTE (shrimp's eyes not in frame) |
+| S08 | helper 9 | PASS | 85 / 85 | 0.23* | water to the strip, spark on frame 55 after "Me.", then black; *black frames pull the mean down |
+| S12 | helper 9 | PASS | 47 / 47 | 0.61 | the whole crawl in a low side view, on 3s; 1 NOTE (Kai small) |
 | S03a | helper 1 | PASS | 53 / 53 | 0.33 | the night lab, rain, the glowing tank; cuts with S03b |
 | S13 | helper 9 | PASS | 62 / 62 | 0.52 | the claw dipped in the puddle (the clue, CH3) |
 | S20 | bGqrs (coordinator render) | PASS | 103 / 103 | 0.45 | the pff, the stare, the head tilt, Kai's deadpan held 2 s |
-| S14 | helper 9 (helper 5 render) | PENDING (fix by caption placement) | 80 / 80 | 0.33 | helper 8 moves its caption above the cap (CAP_Y_SHOT); PASS once seen in the animatic |
+| S14 | helper 9 (helper 5 render) | PASS (caption placement, picture.mp4 3ad5173) | 80 / 80 | 0.33 | "Impossible." sits above the cap; the mouth is clear |
 | S16 | bGqrs | PASS | 76 / 76 | 0.40 | eyes open on "eyes", then S01's framing (SU9 rhyme) |
-| S24bot | XprL | **FIX** (restage in progress) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
-| S07 | helper 2 | PASS | 36 / 36 | 0.32 | the hit lands; 2 NOTEs (short wind-up, impact frames on 1s) |
+| S24bot | XprL | **FIX** (restage OK in stills 08b6456; waiting for the mp4) | 97 / 97 | 0.62 | Kai backs into the Shorts right rail (x 531-655 from frame 60) |
+| S07 | helper 2 | PASS (v2, d978975) | 36 / 36 | 0.29 | re-aimed: the shrimp mid-frame; the hit and the crack land |
+| S05a | helper 2 | PASS | 75 / 75 | 0.30 | the bubble peaks, then collapses to micro-bubbles on "sun" |
+| S17 | bGqrs | PASS | 47 / 47 | 0.51 | a drop falls on "drops." and splats on the jacket (CH3, second showing) |
 | S24top | XprL | PASS | 97 / 97 | 0.53 | the SAVE plate; split-ready |
 | S21 | bGqrs (coordinator render) | PASS (v2, e9c0f7c) | 64 / 64 | 0.49 | the stomp seen from Kai's feet; the finger stays on |
 | S22 | helper 5 | PASS | 57 / 57 | 0.44 | 1 NOTE (the shells read as beans) |
 | S23 | helper 5 | PASS | 82 / 82 | 0.63 | 1 NOTE (saturation just over the band) |
 
-Waiting for: S02, S05a, S05b, S08, S12, S15, S17.
+Waiting for: S02, S05b, S15; the S24bot re-delivery.
 
 ## S03b: Kai's face lit cyan by the tank, a fond smile (helper 1)
 **v2 (9ff69f6): PASS**, with one NOTE.
@@ -393,3 +397,51 @@ clears the mouth. PASS once that is checked in helper 8's next animatic.
   (frame 12 checked at full size).
 - **S18 v2: PASS.** A 2D snap-zoom into the eyes on the realisation (1.0 to 1.18 over frames 30-32, held), so the
   narrowing now reads at 360 px.
+
+## Round 8 (31 Oct, 00:45 UTC)
+- **S14: PASS** (fixed by placement). In the animatic (picture.mp4 at 3ad5173), "Impossible." sits at y ≈ 150,
+  above the cap, and the mouth is clear.
+- **S24bot:** XprL's restage stills (okstills, 08b6456) put Kai in the centre-left of the RUN plate (about x
+  240-500) with the bird dropping to his right, clear of the rail. PASS once the restaged mp4 lands.
+- **S08: PASS** (helper 9). 85 frames.
+  - Floor level, the lab after the strike: water pours from the hero tank to the floor and runs to the power strip.
+    The spark lands on frame 55, right after "Me." (frame 48), then cut to black from frame 58 with no rain showing
+    through. Nothing graphic (EP1).
+  - The words line up: "Water." frame 8 (the pour), "Cables." frame 28 (the strip), "Me." frame 48.
+  - **NOTE (continuity):** at this framing the tank's crack is too small to compare with S07 and S09. The water
+    comes from the front of the tank, which is consistent. Code-wise it is the same lab tank.
+- **S12: PASS** (helper 9). 47 frames, Kai on 3s.
+  - A low side view: Kai crawls on hands and knees across the meadow toward flowers and the puddle (off frame
+    right, where S13 picks up). On-model.
+  - **NOTE:** Kai is small (about a quarter of the frame width, in the upper middle). Saturation 0.61 sits at the
+    top of the band because of the deep sky. Thirst would read more at a tighter, lower angle. Not blocking.
+- **S03b v3: PASS** (helper 1).
+  - Warm skin, with the tank's cyan on the lit side only, a jaw rim light, and catchlights until the smile at
+    frame 22.
+  - **NOTE:** the cyan half reads teal-grey against the warm half, as a hard split down the middle of the face.
+    Mean saturation fell to 0.24, below even E22's 0.26. It is a designed shadow tone, so not blocking, but it may
+    look odd next to S03a.
+- **S19 v2: PASS.** The last drop is full at frame 1, gone at frame 90, and stays gone.
+
+## S11a v3: pale anime smoke (helper 4, from the coordinator's polish note, 31 Oct)
+**The coordinator's read: accepted.** 39 frames, saturation 0.52, value 0.79, 13-24 s per frame.
+- **Smoke:** pale lavender-grey (#cfc8d8) with a cel step to a darker underside (#9a93ab) and a soft see-through
+  rim, peaking at about 60-70% opacity. Thin columns of three small puffs per hole lean up and to screen-left.
+- **Clearances:** no puff crosses the shell or the eye stalks in any of the 7 sheet frames. The six burnt holes and
+  their orange rims are fully readable.
+- **Readability:** the smoke reads at 360 px without becoming a smear.
+
+## Round 9 (31 Oct, 01:10 UTC)
+- **S17: PASS** (bGqrs). 47 frames, saturation 0.51, the drop on 2s.
+  - The second showing of the clue (CH3): an insert of the claw tip over Kai's jacket. A drop swells and falls on
+    "drops." (frame 21; it lands on frame 23), leaves a dark wet splat on the jacket, and the next drop starts to
+    swell.
+  - The finger stays on the claw. The burning stumps are soft behind it.
+- **S05a: PASS** (helper 2). 75 frames, on 1s (the effect).
+  - The white-hot bubble glows at its peak in front of the snapped claw, then collapses with a flash on "sun."
+    (frame 53) into rising micro-bubbles. The shot then holds.
+  - NOTE: saturation 0.30, the cool tank (like S04). Fine.
+- **S07 v2: PASS** (helper 2, rendered by helper 5).
+  - The camera is re-aimed, so the shrimp sits mid-frame. The impact frames are composited from the subject pass.
+  - The crack runs up the glass in 5 frames beside the shrimp (crack_path, as before).
+  - NOTE: saturation 0.29, the tank. Round 4's notes still apply (short wind-up, impact frames on 1s).
