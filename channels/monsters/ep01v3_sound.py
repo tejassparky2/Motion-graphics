@@ -13,8 +13,9 @@ What v3 adds (DIORAMA_EP01_V3.md): the tank crack and the jet of water (S07), th
 fizzing (S08), the puddle under Kai's sneakers (S08a), the zap with a falling hum, the lights dying and the flatline
 (S08b, into the black), the soul chime as the spark falls through the crack (S09), the aim (S15a), the smoking stump
 and dazed stars (S15b), the wind-up and startle on the failed snap (S20), the bird's lock-on sting (S23b), the shadow
-whoosh (S23c), and the A and B stingers on "Option A" / "Option B" (S24). Owner rules kept: no heartbeat (the monitor
-gives one beep, then the flat tone) and no riser (stings climb in plucked steps over a held chord).
+whoosh (S23c), the A and B stingers on "Option A" / "Option B" and the bird's dive and wing mantle in the RUN panel
+(S24). Owner rules kept: no heartbeat (the monitor gives one beep, then the flat tone) and no riser (stings climb in
+plucked steps over a held chord).
 """
 import os
 import sys
@@ -47,6 +48,7 @@ S08B_HIT, S08B_LIGHTS, S08B_LAND, S08B_BLACK = 10, 26, 28, 30   # helper 4: the 
                                                                   # the body lands f28, black from f30 (0-based)
 S09_EYES = 14             # helper 3's final S09 (2a2d3e3): his eyes snap open on "woke"; the world cuts in at f32
 S20_DUD = 53              # S20 final (0a72c30): the claw clacks shut on nothing and the tiny yellow puff, f53
+S24_BIRD_LAND, S24_BIRD_MANTLE = 57, 83   # S24bot final (18d71f2): the bird drops onto the shrimp f57, wings spread f83
 S23B_LOCK = 19            # the snap-zoom and lock-on pose start (XprL: 1-based f20; peak f21 0-based)
 
 
@@ -222,6 +224,28 @@ def shadow_whoosh(dur=1.4, seed=0):
     body = _bp(noise, 120, 700) * np.sin(np.pi * p) ** 2
     air = _bp(noise, 700, 2500) * np.sin(np.pi * p) ** 3 * 0.4
     return body + air
+
+
+def dive_swoop(dur=0.45, seed=0):
+    """The bird dropping in: an air rush that swells into the landing (ends at `dur`), then cuts."""
+    r = _rng("dive", seed)
+    n = _n(dur)
+    p = np.linspace(0, 1, n)
+    noise = r.uniform(-1, 1, n)
+    return (_bp(noise, 400, 3000) * p ** 2.5 + _bp(noise, 150, 600) * p ** 3 * 0.6) * np.minimum(1, (1 - p) * 40)
+
+
+def wing_mantle(flaps=3, seed=0):
+    """The bird mantling over its prey: a few heavy, soft wing beats (low fwumps with a feathery rustle)."""
+    r = _rng("mantle", seed)
+    out = np.zeros(_n(0.2 + 0.13 * flaps))
+    for k in range(flaps):
+        m = _n(0.16)
+        t = _t(m)
+        env = np.minimum(1, t / 0.012) * np.exp(-t / 0.05)
+        beat = _bp(r.uniform(-1, 1, m), 90, 500) * env + _bp(r.uniform(-1, 1, m), 2000, 6000) * env * 0.25
+        _place(out, beat * (1 - 0.25 * k), 0.13 * k)
+    return out
 
 
 def option_sting(which="A", seed=0):
@@ -413,6 +437,10 @@ def build(timing, n, v):
     hit(option_sting("A"), a_t, -12, -0.15)
     hit(option_sting("B"), b_t, -12, 0.15)
     hit(sfx.ui_select(5), comment, -20)
+    land = c.f("S24", S24_BIRD_LAND)                             # the RUN panel: the bird drops in and mantles
+    hit(dive_swoop(0.45), land - 0.45, -18, -0.4)
+    hit(wing_mantle(1, 1), land - 0.04, -20, -0.4)                # one braking beat as it lands
+    hit(wing_mantle(3), c.f("S24", S24_BIRD_MANTLE), -16, -0.4)
     music_at(base.sting(total - opt_a), opt_a, total, -15, 0.25, 0.01)
     return music, fx, ambience
 
