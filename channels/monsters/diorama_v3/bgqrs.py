@@ -253,7 +253,7 @@ def s17():
     spot.data.materials.append(look.flat("wet_tunic", look.hexc("#0f5d60")))
     for df, s in ((-1, 0.001), (0, 0.22), (2, 0.38), (6, 0.5), (12, 0.56)):
         anim.key(spot, "scale", land_f + df, (s, s * 0.8, 1), "LINEAR" if df > 0 else "CONSTANT")
-    tgt = tip.lerp(land, 0.4)
+    tgt = tip.lerp(land, 0.4) - EAST * 0.7 + UP * 0.3              # his whole face in at the top left
     cam = diorama.camera("cam_s17", tgt, dist=v2.S17_DIST, tilt=66.0, lens=120.0, blur=BLUR)
     v2._move(cam, n, [(1, 66.0, v2.S17_DIST, 120.0), (n, 66.0, v2.S17_DIST, 120.0)], lambda f: tgt)
     acting.expression(rig, "fear", 1)
