@@ -122,9 +122,9 @@ def _over_jacket(sh, rig):
     his chest, nearest the shoulder first, and keep the first whose tip is above cloth. Returns the shoulder pose."""
     chest = s3d.kai_point(rig, "chest")
     pose = None
-    for k in (0.9, 0.6, 1.2, 0.3):
-        for u in (0.2, 0.0, -0.3):
-            pose = s3d.raise_claw(sh, chest + EAST * k + UP * u + Vector((0, 0, 1.5)), chest + EAST * k)
+    for k in (1.6, 1.3, 1.9, 1.0):                                 # arm held out level: the tip is its lowest point
+        for u in (0.6, 0.3, 0.9):
+            pose = s3d.raise_claw(sh, chest + EAST * k + UP * u + Vector((0, 0, 0.9)), chest + Vector((0, 0, 4)))
             h = _hit(s3d.claw_tip(sh))
             if h and "huku" in h[2]:
                 return pose
@@ -275,7 +275,7 @@ def s17():
     n, rig, sh, _ = _world("S17", claw="jacket")
     tip = s3d.claw_tip(sh) + Vector((0, 0, -0.12))
     land, nrm, _m = _hit(tip)
-    r = 0.24
+    r = 0.3
     drop_m = look.flat("drip", look.hexc("#9fd8ff"))
     s3d._drop(tip, 1, 17, 23, land + nrm * r * 0.6, r=r, mat=drop_m)
     s3d._drop(tip, 34, n + 20, n + 26, land, r=r, mat=drop_m)

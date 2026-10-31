@@ -100,17 +100,20 @@ def _compositor(sc, haze, bloom):
     nt.links.new(out, comp.inputs[0])
 
 
-def sunbeam(target, radius=7.0, dist=40.0, strength=1.0):
+def sunbeam(target, radius=7.0, dist=30.0, elev=60.0, strength=1.0):
     """A warm pool of sunlight through a gap in the canopy onto `target` (the forest's long shadows cover the south of
-    the clearing in the low sun, where Kai lies after the snap): a soft spot placed along the scene sun's own direction,
-    so its shadows agree with the sun's. `radius` is the pool's radius at the target (soft edge). Every shot of Kai at
-    MAP["kai_down"] (S15's D5 to S21) calls it on his chest, so the light on him matches across the cuts."""
+    the clearing in the low sun, where Kai lies after the snap): a soft spot from the scene sun's azimuth, so its
+    shadows fall the same way, but steeper (`elev`) so it shines from above the clearing instead of through the tree
+    ring. `radius` is the pool's radius at the target (soft edge). Every shot of Kai at MAP["kai_down"] (S15's D5 to
+    S21) calls it on his chest, so the light on him matches across the cuts."""
     sun = next((o for o in bpy.context.scene.objects if o.type == "LIGHT" and o.data.type == "SUN"), None)
     if sun is not None:
         bpy.context.view_layer.update()
-        d = (sun.matrix_world.to_3x3() @ Vector((0, 0, -1))).normalized()
+        d = sun.matrix_world.to_3x3() @ Vector((0, 0, -1))
     else:
         d = Vector((0.635, 0.533, -0.559))                     # setup()'s default sun (elev 34, azim -50)
+    h = Vector((d.x, d.y, 0)).normalized()
+    d = (h * math.cos(math.radians(elev)) - Vector((0, 0, math.sin(math.radians(elev))))).normalized()
     t = Vector(target)
     bpy.ops.object.light_add(type="SPOT", location=t - d * dist)
     sp = bpy.context.object
