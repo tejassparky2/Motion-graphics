@@ -9,7 +9,7 @@ from channels.ww2 import sound as s
 
 SHORT = dict(tension=(3.0,), march=(3.0,), somber=(3.0,), low_tone=(3.0,), triumph=(3.0,), drum_hit=(),
              gun_boom=(), artillery=(), artillery_barrage=(2.0,), tank=(2.0,), plane_drone=(2.0,), dive_whine=(1.5,),
-             explosion=(), rifle_crack=(), sea_waves=(3.0,), blizzard=(3.0,), radio_static=(1.0,),
+             fanfare=(), explosion=(), rifle_crack=(), sea_waves=(3.0,), blizzard=(3.0,), radio_static=(1.0,),
              voice_crackle=(1.5,), morse=("SOS",), typewriter=(1.5,), stamp=(), page_whoosh=(),
              crowd_cheer=(2.0,), clock_tick=(2.0,), train=(2.0,), door_slam=())
 
