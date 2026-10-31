@@ -34,7 +34,7 @@ from channels.monsters.ep01v2 import helper10 as s15  # noqa: E402  (S15's poses
 A, C, D, E, F, G, END, HANDLE = s15.A, s15.C, s15.D, s15.E, s15.F, s15.G, s15.END, s15.HANDLE
 LENS, BLUR = 100.0, 12.0
 HAZE = (0.97, 0.55)                                            # diorama.camera's default haze band
-STAR_PX, CAP_BOX = 30, (60, 120, 600, 900)                     # the D5 stars and where to find the cap in D5
+STAR_PX, CAP_BOX = 32, (280, 495, 420, 580)                     # the D5 stars and where his cap is in D5
 LAND_YAW = 0.21                                                 # where he lands (MAP["kai_down"], his hips) his head
                                                                 # points ~12 deg west of +Y, toward the pond
 
@@ -324,7 +324,7 @@ SHOTS = {"S15": s15_diorama}
 
 def composite(raw, sub, out_dir):
     """The 2D pass (S15's): flash 44-45, impact frames 46-49 on 2s from the subject pass, knocked-out stars in D5."""
-    return s15.composite(raw, sub, out_dir, name="S15", star_px=STAR_PX, cap_box=CAP_BOX)
+    return s15.composite(raw, sub, out_dir, name="S15", star_px=STAR_PX, cap_box=CAP_BOX, cap_white=200)
 
 
 if __name__ == "__main__" and bpy is None:
