@@ -41,6 +41,8 @@ def _frame(t):
 
 
 def water_arcs(cr, t, water, start, end, travel, bright_until):
+    if t >= end:                                                     # nothing over the black (fx2d fades past `end`)
+        return
     path = water.get(_frame(t)) or water[max(water)]
     k = 1.0 if t < bright_until else 0.55
     fx2d.electric_arcs(cr, t, start, end, path=path, n=3, width=5.0 * k, branches=3, travel=travel, flicker=0.2,
@@ -48,6 +50,8 @@ def water_arcs(cr, t, water, start, end, travel, bright_until):
 
 
 def body_arcs(cr, t, jfn, start, end, dim_from):
+    if t >= end:
+        return
     j = jfn(t)
     chains = CHAINS if t < dim_from else CHAINS[:2]                  # after the lights die: only the legs crackle
     for i, ch in enumerate(chains):
@@ -70,9 +74,9 @@ def shot(frames_dir, sub, n):
         water = {int(k): [tuple(p) for p in v] for k, v in json.load(fh).items()}
     r0, r1 = B["run"]
     ov = [
-        (water_arcs, dict(water=water, start=T(r0), end=T(B["fade"] + 1), travel=T(r1) - T(r0),
+        (water_arcs, dict(water=water, start=T(r0), end=T(B["black"]), travel=T(r1) - T(r0),
                           bright_until=T(B["out"]))),
-        (body_arcs, dict(jfn=jfn, start=T(B["hit"]), end=T(B["fade"] + 1), dim_from=T(B["out"]))),
+        (body_arcs, dict(jfn=jfn, start=T(B["hit"]), end=T(B["black"]), dim_from=T(B["out"]))),
         (xray, dict(jfn=jfn, start=T(B["xray"][0]), frames=B["xray"][-1] - B["xray"][0] + 1, sub=sub)),
     ]
     return comp.Shot(comp.Source(frames_dir, subject=None), n / FPS, ov, name="S08b")
