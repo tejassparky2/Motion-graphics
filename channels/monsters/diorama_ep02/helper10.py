@@ -140,6 +140,18 @@ def _fly(rig, f0, f1, path, step=2, face=None):
         tuftwing.flutter(rig, f, flaps=2, amount=1.0)
 
 
+S10_YAW = 205.0                                                 # S10's camera, degrees round from Kai's line
+
+
+def _stuck(perch):
+    """Where the bird hangs in the crown: off the tree's leader (never on a spike: it is caught, not skewered),
+    among the side branches on S10's camera side, a little below the top."""
+    az = math.radians(math.degrees(math.atan2(AIM.x, AIM.y)) + S10_YAW)
+    tow = Vector((-math.sin(az), -math.cos(az), 0.0))
+    side = Vector((tow.y, -tow.x, 0.0))
+    return Vector(perch) + Vector((0, 0, -2.4)) + tow * 1.0 + side * 1.2
+
+
 def _far(*cams):
     """dv2._key sets clip_end to 6x the subject distance; close shots still need the island behind them."""
     for c in cams:
@@ -208,7 +220,7 @@ def s09():
     acting.expression(k, "surprised", SNAP_F + 1)
     acting.blink(k, 1, SNAP_F - 2, at=(8,))
     perch = Vector(isl["thorn"]["perch"]) if isl.get("thorn") else THORN + Vector((0, 0, 9.0))
-    stuck = perch + Vector((0, 0, -1.6))
+    stuck = _stuck(perch)
     target = KAI_AT + AIM * 30 + Vector((0, 0, 9))
     aim, _ = h3.aim_euler(rig, emp, target)
     sh, hg = rig["shoulder"], rig["hinge"]
@@ -315,7 +327,7 @@ def s10():
     sc = bpy.context.scene
     isl = _set()
     perch = Vector(isl["thorn"]["perch"]) if isl.get("thorn") else THORN + Vector((0, 0, 9.0))
-    stuck = perch + Vector((0, 0, -1.6))
+    stuck = _stuck(perch)
     bird = _bird(stuck)
     root = bird["root"]
     yaw = math.atan2(-AIM.x, AIM.y)
@@ -325,15 +337,13 @@ def s10():
         anim.key(root, "location", f, tuple(stuck + Vector((0, 0, 0.12 * math.sin(f / 7.0)))), "CONSTANT")
     for f in (10, 30, 50):                                       # a dazed, feeble flutter
         tuftwing.flutter(bird, f, flaps=1, amount=0.35)
-    for e in bird.get("eyes", []):                               # eyes squeezed half-shut
-        anim.key(e, "scale", 1, (1.1, 1, 0.45), "CONSTANT")
     cam_t = stuck + Vector((0, 0, 0.2))
-    cam = dv2._camera("S10_cam", 1, cam_t, 14.0, 12.0, yaw=math.degrees(math.atan2(AIM.x, AIM.y)) + 180 + 25)
+    yaw_c = math.degrees(math.atan2(AIM.x, AIM.y)) + S10_YAW
+    cam = dv2._camera("S10_cam", 1, cam_t, 10.0, 12.0, yaw=yaw_c)
     cam.data.lens = 40.0
-    yaw_c = math.degrees(math.atan2(AIM.x, AIM.y)) + 205
     for f in range(1, n + 1):
         u = acting.ease((f - 1) / (n - 1), "inout")
-        dv2._key(cam, f, cam_t, 14.0 - 3.0 * u, 12.0 + 3 * u, yaw=yaw_c - 6 * u)
+        dv2._key(cam, f, cam_t, 10.0 - 2.0 * u, 12.0 + 3 * u, yaw=yaw_c - 6 * u)
     _far(cam)
     head = stuck + Vector((0, 0, -0.9 * h5.BIRD_SCALE))          # upside down: its head hangs below the body
     rows = {}
