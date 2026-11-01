@@ -266,8 +266,8 @@ def s01():
         cam.data.dof.keyframe_insert("focus_distance", frame=f)
     bpy.context.scene.camera = cam
     from channels.monsters.diorama_v3.helper1 import _clear_view
-    keep = {arm, *arm.children_recursive, bird["root"], *bird["root"].children_recursive, sh["root"],
-            *sh["root"].children_recursive}
+    keep = {arm, *arm.children_recursive, *k.get("cap", []), bird["root"], *bird["root"].children_recursive,
+            sh["root"], *sh["root"].children_recursive}
     _clear_view(cam, [1, n // 2, n], start.lerp(SHRIMP, 0.5), keep)
     bpy.context.scene.frame_set(n // 2)                              # and the bushes in front of the bird's shadow
     shadow_mid = bird["shadow"].matrix_world.translation.copy()
@@ -523,7 +523,7 @@ def s03():
         b3._keycam(cam, f, aim, c["tilt"], c["dist"] - c["push"] * e, c["lens"], c["yaw"])
     bpy.context.scene.camera = cam
     from channels.monsters.diorama_v3.helper1 import _clear_view
-    keep = {arm, *arm.children_recursive, sh["root"], *sh["root"].children_recursive}
+    keep = {arm, *arm.children_recursive, *k.get("cap", []), sh["root"], *sh["root"].children_recursive}
     _clear_view(cam, [1, n // 2, n], SHRIMP, keep)
     _anchors("S03", n, cam, k, sh)
     return dict(frames=n, step=2, ones=(1, n), subject=b3._subject(k, sh))
