@@ -289,7 +289,7 @@ def s11():
     for t, a in ((F_GLARE + 6, -0.06), (F_GLARE + 8, 0.08), (F_GLARE + 10, 0.0)):
         anim.key(body, "scale", t, (1.45 * (1 - a / 2), 1.45 * (1 - a / 2), 1.42 * (1 + a)), "CONSTANT")
     # 5. a sharp "hmph": turns its back and stomps off (stiff little hops, tail up, head high)
-    away = Vector((-cam_dir.y, cam_dir.x, 0.0)).normalized() * 0.85 - cam_dir * 0.3   # screen left, a bit away
+    away = Vector((cam_dir.y, -cam_dir.x, 0.0)).normalized() * 0.85 - cam_dir * 0.3   # screen left, a bit away
     yaw_away = math.atan2(away.x, -away.y)
     for t, y in ((F_TURN, yaw_cam), (F_TURN + 2, yaw_away + 0.3), (F_TURN + 4, yaw_away)):
         anim.key(root, "rotation_euler", t, (0, 0, y), "CONSTANT")
@@ -344,7 +344,7 @@ def _cock_at_face(sh, k):
 def s12():
     n = _frames("S12", 74)
     X._world(n)
-    k, P = _kai_cupping(n, raise_hands=22.0)
+    k, P = _kai_cupping(n, raise_hands=32.0)
     yaw_out = X.KAI_YAW
     sh = _shrimp_in_hands(k, yaw_out)
     base = sh["root"].location.copy()
@@ -390,8 +390,8 @@ def s12():
     # camera: the frame-0 threat: three-quarter from his left-front, low, both faces in frame; slow push-in
     eyes = s3d.kai_point(k, "eyes")
     tgt = base.lerp(eyes, 0.55)
-    yaw = _yaw_toward(-(FWD * 0.75 - LEFT * 0.65))
-    _cam("cam_s12", tgt, 1, n, 2.0, 7.0, 6.0, 40.0, yaw)
+    yaw = _yaw_toward(-(FWD * 0.6 - LEFT * 0.8))                       # low, from his right: under the brim
+    _cam("cam_s12", tgt, 1, n, -6.0, 6.2, 5.2, 40.0, yaw)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
 
