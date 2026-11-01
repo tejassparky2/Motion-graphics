@@ -92,7 +92,7 @@ for b in tl.beats:
     line_of.setdefault(b.scene, b)
 for shot, line, word in ep.SPLITS:
     line_of[shot] = tl.by_id[line]
-md = ["# Episode 1 v2: exact timing (from the voice takes)", "",
+md = [f"# {EP}: exact timing (from the voice takes)", "",
       f"Total **{tl.total:.2f} s = {f_total} frames** at {FPS} fps. Made by `channels/monsters/ep01v2_timing.py`;",
       "the numbers here win over the estimates in EP01V2_SHOTS.md.", "",
       f"- **frames** is the shot's length in the cut. Render **frames + {HANDLE}** (the tail handle).",
