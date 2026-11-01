@@ -211,6 +211,9 @@ def s02_turret(cr, t, t0, t1, fire_t=None):
     rays(cr, t, W * 0.75, H * 0.9, n=24, color="cream", alpha=0.05)
     u = smooth(seg(t, t0 + 0.4, t0 + 3.6))
     ang = lerp(-58.0, 0.0, u)                                     # the barrels come round to aim right
+    cr.rectangle(-400, H * 0.98 + 60 * 1.35 - 4, W + 800, 700)    # the hull under the deck edge, past the frame bottom
+    cr.set_source_rgba(*props.shade(PAL["axis"], -0.5))
+    cr.fill()
     TURRET.draw(cr, t, x=W * 0.46, y=H * 0.98, scale=1.35, turret=ang, elev=lerp(4, 10, u),
                 fire=(fire_t,) if fire_t else ())
     cr.restore()
