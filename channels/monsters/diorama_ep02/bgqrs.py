@@ -413,15 +413,15 @@ def _s03_pose(P, f, slide0, slide1):
         u = (f - B["scoop"]) / (B["lift"] - B["scoop"])
         P.rot("spine", (50 - 22 * u, 0, 0))
         P.rot("chest", (10, 0, 0))
-        P.rot("head 1", (6, 0, 0))
+        P.rot("head 1", (-2, 0, 0))
         _cup_up(P, 0.4 * u)
     else:                                                           # up to his chest, hunched over it: protect it
         u = min(1.0, (f - B["lift"]) / max(1, B["hold"] - B["lift"]))
         br = 0.6 * math.sin(2 * math.pi * f / 30.0)
         P.rot("spine", (28 - 10 * u + br, 0, 0))
         P.rot("chest", (12 + 8 * u, 0, 0))
-        P.rot("neck", (14 * u, 0, 0))
-        P.rot("head 1", (14 * u, 0, 0))                             # head down over the cup
+        P.rot("neck", (6 * u, 0, 0))
+        P.rot("head 1", (-4 * u, 0, 0))                             # over the cup, his face still to us
         _cup_up(P, 0.4 + 0.6 * u)
 
 
@@ -431,7 +431,7 @@ def kai_s03_end(f=1):
     d, k0, k1, start, slide0, slide1 = _s03_layout()
     k = x3._hero(tuple(start), _facing(d))
     hero.line_width(k, 0.0028)
-    d1._tilt_cap(k, 20.0)
+    d1._tilt_cap(k, 32.0)
     P = x3.Pose(k)
     _s03_pose(P, 999, slide0, slide1)
     P.key(f)
@@ -449,7 +449,7 @@ def s03():
     d, k0, k1, start, slide0, slide1 = _s03_layout()
     k = x3._hero(tuple(start), _facing(d))
     hero.line_width(k, 0.0028)
-    d1._tilt_cap(k, 20.0)
+    d1._tilt_cap(k, 32.0)                                            # brim up: his eyes read over the cup
     arm = k["arm"]
     P = x3.Pose(k)
     for f in range(1, n + 1, 2):
@@ -462,13 +462,15 @@ def s03():
     anim.on_twos([arm], step=2)
     # the shrimp: drinking, then scooped (it rides in his cupped hands from the scoop on, a startled squash)
     r = sh["root"]
+    loc0 = tuple(r.location)                                         # drinking, until the scoop
     pal = arm.pose.bones
     sc = bpy.context.scene
     for f in range(B["scoop"], n + 1):
         sc.frame_set(f)
         mid = (arm.matrix_world @ pal["hand.L"].tail + arm.matrix_world @ pal["hand.R"].tail) / 2
         anim.key(r, "location", f, tuple(mid + Vector((0, 0, 0.05))), "CONSTANT")
-    anim.key(r, "location", B["scoop"] - 1, tuple(r.location), "CONSTANT")
+    anim.key(r, "location", 1, loc0, "CONSTANT")
+    anim.key(r, "location", B["scoop"] - 1, loc0, "CONSTANT")
     sc.frame_set(1)
     anim.squash(sh["body"], B["scoop"], 0.18)                       # startled
     anim.squash(sh["body"], B["scoop"] + 4, -0.08)
