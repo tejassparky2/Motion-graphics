@@ -123,43 +123,42 @@ def bell_rings(cr, t, start, a, name, end=None, period=4):
 SKIN = (0.98, 0.84, 0.72)
 
 
-def claw_slash(cr, t, start, a, dur=0.3):
-    """Three white claw streaks slicing across his forearm in the bird's direction: they draw on in 2 frames, hold 2,
-    then thin away."""
+def claw_slash(cr, t, start, a, dur=0.3, length=190.0):
+    """Three white claw streaks slicing across his forearm along the bird's line of flight at the hit: they draw on
+    in 2 frames, hold 2, then thin away."""
     u = (t - start) / dur
     if not 0 <= u <= 1:
         return
     f0 = frame_of(start)
-    ex, ey, _ = at(a, f0, "elbow")
-    wx, wy, _ = at(a, f0, "wrist")
+    ex, ey, _ = at(a, f0 + 1, "elbow")
+    wx, wy, _ = at(a, f0 + 1, "wrist")
     mx, my = (ex + wx) / 2, (ey + wy) / 2
-    L = math.hypot(wx - ex, wy - ey) or 1.0
-    ax, ay = (wx - ex) / L, (wy - ey) / L                       # along the forearm
-    nx, ny = -ay, ax                                             # across it
+    (bx0, by0, _), (bx1, by1, _) = at(a, f0 - 1, "bird"), at(a, f0 + 3, "bird")
+    L = math.hypot(bx1 - bx0, by1 - by0) or 1.0
+    ux, uy = (bx1 - bx0) / L, (by1 - by0) / L                    # the bird's direction on screen
+    nx, ny = -uy, ux
     grow = min(1.0, u / 0.25)
     thin = 1.0 - max(0.0, (u - 0.5) / 0.5)
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
     for i in (-1, 0, 1):
-        cx, cy = mx + ax * i * L * 0.18, my + ay * i * L * 0.18
-        half = L * 0.75
-        x0, y0 = cx - nx * half - ax * half * 0.35, cy - ny * half - ay * half * 0.35
-        x1, y1 = cx + nx * half + ax * half * 0.35, cy + ny * half + ay * half * 0.35
-        x1, y1 = x0 + (x1 - x0) * grow, y0 + (y1 - y0) * grow
+        cx, cy = mx + nx * i * 22, my + ny * i * 22
+        x0, y0 = cx - ux * length / 2, cy - uy * length / 2
+        x1, y1 = x0 + ux * length * grow, y0 + uy * length * grow
         cr.new_path()
         cr.move_to(x0, y0)
-        cr.curve_to(x0 + (x1 - x0) * 0.4 + ax * 20, y0 + (y1 - y0) * 0.4 + ay * 20,
-                    x0 + (x1 - x0) * 0.7 + ax * 20, y0 + (y1 - y0) * 0.7 + ay * 20, x1, y1)
-        cr.set_line_cap(cairo.LINE_CAP_ROUND)
-        cr.set_line_width(14 * thin)
+        cr.curve_to(x0 + (x1 - x0) * 0.35 + nx * 14, y0 + (y1 - y0) * 0.35 + ny * 14,
+                    x0 + (x1 - x0) * 0.7 + nx * 14, y0 + (y1 - y0) * 0.7 + ny * 14, x1, y1)
+        cr.set_line_width(16 * thin)
         cr.set_source_rgba(1, 1, 1, 0.35 * thin)
         cr.stroke_preserve()
-        cr.set_line_width(5 * thin)
-        cr.set_source_rgba(1, 1, 1, 0.95 * thin)
+        cr.set_line_width(5.5 * thin)
+        cr.set_source_rgba(1, 1, 1, 0.97 * thin)
         cr.stroke()
 
 
-def torn_sleeve(cr, t, start, a, sleeve=(0.24, 0.46, 0.62)):
-    """From the hit on: a jagged rip across the sleeve (skin showing through a zig-zag gap with a darker cloth edge)
-    and three thin pink scratch lines on the skin. Light, no blood. Tracks the forearm anchors frame by frame."""
+def torn_sleeve(cr, t, start, a, band=(0.16, 0.6, 0.62)):
+    """From the hit on: three thin pink scratch marks across his bare forearm (his sleeves are short) and a torn,
+    frayed nick in the teal wristband beside them. Light, no blood. Tracks the forearm anchors frame by frame."""
     if t < start:
         return
     f = frame_of(t)
@@ -171,39 +170,37 @@ def torn_sleeve(cr, t, start, a, sleeve=(0.24, 0.46, 0.62)):
     L = math.hypot(wx - ex, wy - ey) or 1.0
     ax, ay = (wx - ex) / L, (wy - ey) / L
     nx, ny = -ay, ax
-    cx, cy = ex + (wx - ex) * 0.55, ey + (wy - ey) * 0.55        # the rip sits on the outer middle of the forearm
-    w, h = L * 0.42 * pop, L * 0.16
-    r = random.Random(4)
-    top, bot = [], []
-    for i in range(7):
-        s = -0.5 + i / 6
-        top.append((cx + ax * s * w + nx * (-h / 2 + r.uniform(-1, 1) * h * 0.18),
-                    cy + ay * s * w + ny * (-h / 2 + r.uniform(-1, 1) * h * 0.18)))
-        bot.append((cx + ax * s * w + nx * (h / 2 + r.uniform(-1, 1) * h * 0.18),
-                    cy + ay * s * w + ny * (h / 2 + r.uniform(-1, 1) * h * 0.18)))
-    cr.new_path()
-    cr.move_to(*top[0])
-    for p in top[1:]:
-        cr.line_to(*p)
-    for p in reversed(bot):
-        cr.line_to(*p)
-    cr.close_path()
-    cr.set_source_rgba(*SKIN, 1.0)
-    cr.fill_preserve()
-    cr.set_line_width(2.6)
-    cr.set_source_rgba(sleeve[0] * 0.55, sleeve[1] * 0.55, sleeve[2] * 0.6, 1.0)
-    cr.stroke()
+    s = max(L, 40.0)                                              # (the forearm is foreshortened toward the lens)
+    cx, cy = ex + (wx - ex) * 0.45, ey + (wy - ey) * 0.45
+    cr.set_line_cap(cairo.LINE_CAP_ROUND)
     for i in (-1, 0, 1):                                         # three thin marks, diagonal to the arm
-        mx, my = cx + ax * i * w * 0.22, cy + ay * i * w * 0.22
-        x0, y0 = mx - nx * h * 0.32 - ax * h * 0.25, my - ny * h * 0.32 - ay * h * 0.25
-        x1, y1 = mx + nx * h * 0.32 + ax * h * 0.25, my + ny * h * 0.32 + ay * h * 0.25
+        mx, my = cx + ax * i * s * 0.16, cy + ay * i * s * 0.16
+        h = s * 0.42 * pop
+        x0, y0 = mx - nx * h - ax * h * 0.4, my - ny * h - ay * h * 0.4
+        x1, y1 = mx + nx * h + ax * h * 0.4, my + ny * h + ay * h * 0.4
         cr.new_path()
         cr.move_to(x0, y0)
         cr.line_to(x1, y1)
-        cr.set_line_cap(cairo.LINE_CAP_ROUND)
-        cr.set_line_width(1.8)
-        cr.set_source_rgba(0.88, 0.5, 0.5, 0.9)
+        cr.set_line_width(4.5)
+        cr.set_source_rgba(1.0, 0.93, 0.88, 0.8)                   # a pale weal round each...
+        cr.stroke_preserve()
+        cr.set_line_width(2.2)
+        cr.set_source_rgba(0.86, 0.42, 0.45, 0.95)                 # ...thin pink line: a scratch, not a wound
         cr.stroke()
+    bx, by = ex + (wx - ex) * 0.9, ey + (wy - ey) * 0.9           # the wristband: a frayed V-nick out of its edge
+    r = random.Random(3)
+    cr.new_path()
+    cr.move_to(bx - nx * s * 0.2, by - ny * s * 0.2)
+    for k in range(5):
+        v = -0.2 + 0.1 * (k + 1)
+        dep = s * (0.16 if k % 2 == 0 else 0.07) * pop + r.uniform(-1, 1)
+        cr.line_to(bx + nx * s * v - ax * dep, by + ny * s * v - ay * dep)
+    cr.close_path()
+    cr.set_source_rgba(*SKIN, 1.0)
+    cr.fill_preserve()
+    cr.set_line_width(2.0)
+    cr.set_source_rgba(band[0] * 0.6, band[1] * 0.6, band[2] * 0.6, 1.0)
+    cr.stroke()
 
 
 def tracked_face(fn, a):
