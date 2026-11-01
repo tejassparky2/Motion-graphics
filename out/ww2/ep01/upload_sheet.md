@@ -1,6 +1,6 @@
-# Upload sheet: WW2 Episode 1 (PROVISIONAL clock: chapter times move when the voiced timing lands)
+# Upload sheet: WW2 Episode 1
 
-Video: `out/ww2/ep01/ep01_final.mp4` (1920x1080, 13:45). Thumbnail: `out/ww2/ep01/thumbnail.png` (1280x720).
+Video: `out/ww2/ep01/ep01_final.mp4` (1920x1080, 12:14). Thumbnail: `out/ww2/ep01/thumbnail.png` (1280x720).
 Captions: `out/ww2/ep01/captions.srt` (upload under Subtitles, English).
 
 ## Title
@@ -8,25 +8,25 @@ Captions: `out/ww2/ep01/captions.srt` (upload under Subtitles, English).
 
 Alternatives:
 - How World War 2 Actually Happened
-- World War 2 in 14 Minutes, Animated
+- World War 2 in 12 Minutes, Animated
 - (Not used: "The Whole of World War 2, Explained with Stick Figures". The final look is posters, not stick figures.)
 
 ## Description
 ```
 September 1st, 1939. 4:45 in the morning. The first shots of the deadliest war in history.
 
-The whole of World War 2 in 14 minutes, from the first shot to the last: how the broken peace after 1918 led to war, the lightning campaigns of 1939-1940, the war going global in 1941, the turning points, the Holocaust, the long road to Berlin and Tokyo, and the world the war left behind. Animated in the style of 1940s wartime posters and printed war maps.
+The whole of World War 2 in 12 minutes, from the first shot to the last: how the broken peace after 1918 led to war, the lightning campaigns of 1939-1940, the war going global in 1941, the turning points, the Holocaust, the long road to Berlin and Tokyo, and the world the war left behind. Animated in the style of 1940s wartime posters and printed war maps.
 
 Chapters
 0:00 The first shot
-0:43 The broken peace
-3:13 Lightning war, 1939-1940
-5:26 The war goes global, 1941
-7:05 The turning points, 1942-1943
-9:02 The Holocaust
-9:54 Closing in, 1943-1945
-11:29 Endgame
-12:38 After the war
+0:39 The broken peace
+2:51 Lightning war, 1939-1940
+4:52 The war goes global, 1941
+6:17 The turning points, 1942-1943
+8:02 The Holocaust
+8:47 Closing in, 1943-1945
+10:13 Endgame
+11:16 After the war
 
 Sources
 - Westerplatte, 4:45 a.m., Sept 1 1939: Warsaw Institute, "The Defense of Westerplatte". Some accounts give 4:47; 4:45 is the time usually given.
