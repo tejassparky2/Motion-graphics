@@ -13,3 +13,6 @@
   - recoloured the tunic (sage green), trousers (navy), trim (cream) and hair (dark brown):
     `wear_hero.png`, `hair_hero.png` and `body_hero.png` (bare fingers on the right hand), made by `channels/monsters/hero_recolor.py`.
 - **Every upload description must include:** "Hero base model: Seed-san by VirtualCast, Inc. (VRM Public License 1.0)".
+- Episode 2 adds **Wren** (`channels/monsters/mk/wren.py`), a second character from the same Seed-san base: recoloured
+  tunic and hair (`assets/monsters/wren/`, made by `channels/monsters/wren_recolor.py`), plus our own hooded cape,
+  braids, satchel and hand bell. The same credit line covers her.
