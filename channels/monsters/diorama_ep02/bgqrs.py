@@ -279,7 +279,7 @@ def s01():
 # and the splash are in front and his face reads in three-quarter. His last stride drops him onto his knees; he slides
 # in, both hands reaching down; they scoop the shrimp out of the shallows with a splash and bring it up to his chest
 # in a cup, and he hunches over it. Then the bird's shadow sweeps over him from behind (S04: the talons).
-S03_CAM = dict(yaw=100.0, tilt=14.0, dist=30.0, lens=85.0, lift=2.6)
+S03_CAM = dict(yaw=100.0, tilt=14.0, dist=26.0, lens=85.0, lift=2.6, right=1.6, push=3.0)
 S03_BEATS = dict(kneel=6, slide=10, scoop=22, lift=28, hold=36, shadow=44)
 S03_SLIDE = (4.6, 1.15)                # his knees' distance from the shrimp: where the slide starts, where it stops
 
@@ -347,6 +347,98 @@ def _splash(at, f, n=26, seed=5, up=2.6, out=2.2, life=14):
     anim.key(ring, "scale", f + 16, (0.001,) * 3, "CONSTANT")
 
 
+def _s03_layout():
+    """(heading d, knees' slide start k0 and stop k1, the armature's start point, slide0/slide1 in armature units)."""
+    d, _s, _e = _s01_line()                                          # the same approach line as S01 (heading SSW)
+    k0, k1 = SHRIMP - d * S03_SLIDE[0], SHRIMP - d * S03_SLIDE[1]   # the knees' slide
+    run_in = 3.0                                                     # the last stride before he drops (units)
+    start = k0 - d * run_in
+    slide0 = run_in / KAI_SCALE                                      # armature units along -Y
+    slide1 = slide0 + (S03_SLIDE[0] - S03_SLIDE[1]) / KAI_SCALE
+    return d, k0, k1, start, slide0, slide1
+
+
+def _arms_reach(P, t):
+    """Both arms down at the ground ahead (t lifts them a little)."""
+    for sx, sg in (("L", 1), ("R", -1)):
+        P.aim(f"upper_arm.{sx}", (sg * 0.14, -0.75, -0.65 + 0.2 * t))
+        P.aim(f"forearm.{sx}", (-sg * 0.02, -0.7, -0.7 + 0.25 * t))
+        P.aim(f"hand.{sx}", (-sg * 0.05, -0.6, -0.8))
+
+
+def _cup_up(P, t):
+    """The cupped hands rising from the ground (t=0) to his chest (t=1), together, palms up."""
+    for sx, sg in (("L", 1), ("R", -1)):
+        P.aim(f"upper_arm.{sx}", (sg * 0.12, -0.45 + 0.12 * t, -0.9 + 0.12 * t))
+        P.aim(f"forearm.{sx}", (-sg * 0.5, -0.85, -0.35 + 0.3 * t))
+        P.aim(f"hand.{sx}", (-sg * 0.5, -0.85, -0.2 + 0.05 * t))
+
+
+def _s03_pose(P, f, slide0, slide1):
+    """Kai's pose at frame f of S03 (armature space; the caller keys it)."""
+    B = S03_BEATS
+    fwd = Vector((0, -1, 0))
+    P.reset()
+    if f < B["kneel"]:                                              # the last stride, flying in
+        u = (f - 1) / (B["kneel"] - 1)
+        y = fwd * slide0 * u
+        P.hips(Vector((0, y.y - 0.05, -0.05 - 0.04 * u)))
+        P.leg("L", y + fwd * 0.28 + Vector((0.075, 0, P.ankle_h)))
+        P.leg("R", y - fwd * 0.22 + Vector((-0.075, 0, P.ankle_h + 0.18)))
+        P.rot("spine", (30, 0, 0))
+        P.rot("neck", (-20, 0, 0))
+        P.rot("head 1", (-18, 0, 0))
+        _arms_reach(P, 0.6)
+        return
+    if f < B["slide"]:                                              # the drop onto the knees
+        u = (f - B["kneel"]) / (B["slide"] - B["kneel"])
+        y = slide0 + (slide1 - slide0) * 0.25 * u
+        drop = 0.05 + 0.33 * u * u
+    else:                                                           # the slide, slowing, then still
+        u = min(1.0, (f - B["slide"]) / (B["scoop"] + 2 - B["slide"]))
+        e = 1 - (1 - u) ** 2.2
+        y = slide0 + (slide1 - slide0) * (0.25 + 0.75 * e)
+        drop = 0.38
+    hip_g = fwd * y
+    P.hips(Vector((hip_g.x, hip_g.y, -drop)))
+    _kneel_legs(P, hip_g, drop)
+    if f < B["scoop"]:                                              # leaning down to it, arms reaching
+        lean = 28 + 22 * min(1.0, (f - B["kneel"]) / max(1, B["scoop"] - B["kneel"]))
+        P.rot("spine", (lean, 0, 0))
+        P.rot("chest", (10, 0, 0))
+        P.rot("neck", (-18, 0, 0))
+        P.rot("head 1", (6, 0, 0))                                  # eyes down on the shrimp
+        _arms_reach(P, 0.0)
+    elif f < B["lift"]:                                             # the scoop
+        u = (f - B["scoop"]) / (B["lift"] - B["scoop"])
+        P.rot("spine", (50 - 22 * u, 0, 0))
+        P.rot("chest", (10, 0, 0))
+        P.rot("head 1", (-2, 0, 0))
+        _cup_up(P, 0.4 * u)
+    else:                                                           # up to his chest, hunched over it: protect it
+        u = min(1.0, (f - B["lift"]) / max(1, B["hold"] - B["lift"]))
+        br = 0.6 * math.sin(2 * math.pi * f / 30.0)
+        P.rot("spine", (28 - 10 * u + br, 0, 0))
+        P.rot("chest", (12 + 8 * u, 0, 0))
+        P.rot("neck", (6 * u, 0, 0))
+        P.rot("head 1", (-4 * u, 0, 0))                             # over the cup, his face still to us
+        _cup_up(P, 0.4 + 0.6 * u)
+
+
+def kai_s03_end(f=1):
+    """For S04 (helper 1): Kai exactly as S03's last frame leaves him (kneeling a little north of the shrimp's spot,
+    hunched over the cupped hands at his chest, facing SSW), keyed CONSTANT at frame f. Returns the hero rig."""
+    d, k0, k1, start, slide0, slide1 = _s03_layout()
+    k = x3._hero(tuple(start), _facing(d))
+    hero.line_width(k, 0.0028)
+    d1._tilt_cap(k, 32.0)
+    P = x3.Pose(k)
+    _s03_pose(P, 999, slide0, slide1)
+    P.key(f)
+    _cup_hands(k["arm"], f, 1.0)
+    return k
+
+
 def s03():
     n = _frames("S03")
     B = S03_BEATS
@@ -354,80 +446,14 @@ def s03():
     isl, _ = xv3._set(n, kai_down=False)
     sh = _shrimp(n)
     perch = Vector(isl["thorn"]["perch"])
-    d, _s, _e = _s01_line()                                          # the same approach line as S01 (heading SSW)
-    k0, k1 = SHRIMP - d * S03_SLIDE[0], SHRIMP - d * S03_SLIDE[1]   # the knees' slide
-    run_in = 0.9 * KAI_SCALE / 5.8 * 3.0                             # the last stride before he drops (units)
-    start = k0 - d * run_in
+    d, k0, k1, start, slide0, slide1 = _s03_layout()
     k = x3._hero(tuple(start), _facing(d))
     hero.line_width(k, 0.0028)
-    d1._tilt_cap(k, 20.0)
+    d1._tilt_cap(k, 32.0)                                            # brim up: his eyes read over the cup
     arm = k["arm"]
     P = x3.Pose(k)
-    S = KAI_SCALE
-    slide0 = run_in / S                                              # armature units along -Y
-    slide1 = slide0 + (S03_SLIDE[0] - S03_SLIDE[1]) / S
-    fwd = Vector((0, -1, 0))
-
-    def arms_reach(P, t):                                           # both arms down at the ground ahead
-        P.aim("upper_arm.R", (-0.14, -0.75, -0.65 + 0.2 * t))
-        P.aim("forearm.R", (0.02, -0.7, -0.7 + 0.25 * t))
-        P.aim("upper_arm.L", (0.14, -0.75, -0.65 + 0.2 * t))
-        P.aim("forearm.L", (-0.02, -0.7, -0.7 + 0.25 * t))
-        P.aim("hand.R", (0.05, -0.6, -0.8))
-        P.aim("hand.L", (-0.05, -0.6, -0.8))
-
-    def cup_up(P, t):                                               # the cup rising to his chest
-        for sx, sg in (("L", 1), ("R", -1)):
-            P.aim(f"upper_arm.{sx}", (sg * 0.12, -0.45 + 0.1 * t, -0.9 + 0.1 * t))
-            P.aim(f"forearm.{sx}", (-sg * 0.5, -0.85, -0.25 + 0.5 * t))
-            P.aim(f"hand.{sx}", (-sg * 0.5, -0.85, -0.15 + 0.1 * t))
-
     for f in range(1, n + 1, 2):
-        P.reset()
-        if f < B["kneel"]:                                          # the last stride, flying in
-            u = (f - 1) / (B["kneel"] - 1)
-            y = fwd * slide0 * u
-            P.hips(Vector((0, y.y - 0.05, -0.05 - 0.04 * u)))
-            P.leg("L", y + fwd * 0.28 + Vector((0.075, 0, P.ankle_h)))
-            P.leg("R", y - fwd * 0.22 + Vector((-0.075, 0, P.ankle_h + 0.18)))
-            P.rot("spine", (30, 0, 0))
-            P.rot("neck", (-20, 0, 0))
-            P.rot("head 1", (-18, 0, 0))
-            arms_reach(P, 0.6)
-        else:
-            if f < B["slide"]:                                      # the drop onto the knees
-                u = (f - B["kneel"]) / (B["slide"] - B["kneel"])
-                y = slide0 + (slide1 - slide0) * 0.25 * u
-                drop = 0.05 + 0.33 * u * u
-            else:                                                   # the slide, slowing, then still
-                u = min(1.0, (f - B["slide"]) / (B["scoop"] + 2 - B["slide"]))
-                e = 1 - (1 - u) ** 2.2
-                y = slide0 + (slide1 - slide0) * (0.25 + 0.75 * e)
-                drop = 0.38
-            hip_g = fwd * y
-            P.hips(Vector((hip_g.x, hip_g.y, -drop)))
-            _kneel_legs(P, hip_g, drop)
-            if f < B["scoop"]:                                      # leaning down to it, arms reaching
-                lean = 28 + 22 * min(1.0, (f - B["kneel"]) / max(1, B["scoop"] - B["kneel"]))
-                P.rot("spine", (lean, 0, 0))
-                P.rot("chest", (10, 0, 0))
-                P.rot("neck", (-18, 0, 0))
-                P.rot("head 1", (6, 0, 0))                          # eyes down on the shrimp
-                arms_reach(P, 0.0)
-            elif f < B["lift"]:                                     # the scoop
-                u = (f - B["scoop"]) / (B["lift"] - B["scoop"])
-                P.rot("spine", (50 - 22 * u, 0, 0))
-                P.rot("chest", (10, 0, 0))
-                P.rot("head 1", (6, 0, 0))
-                cup_up(P, 0.4 * u)
-            else:                                                   # up to his chest, hunched over it: protect it
-                u = min(1.0, (f - B["lift"]) / max(1, B["hold"] - B["lift"]))
-                br = 0.6 * math.sin(2 * math.pi * f / 30.0)
-                P.rot("spine", (28 - 10 * u + br, 0, 0))
-                P.rot("chest", (12 + 8 * u, 0, 0))
-                P.rot("neck", (14 * u, 0, 0))
-                P.rot("head 1", (14 * u, 0, 0))                     # head down over the cup
-                cup_up(P, 0.4 + 0.6 * u)
+        _s03_pose(P, f, slide0, slide1)
         P.key(f)
     _open_hand(arm, "R", 1)
     _open_hand(arm, "L", 1)
@@ -436,24 +462,40 @@ def s03():
     anim.on_twos([arm], step=2)
     # the shrimp: drinking, then scooped (it rides in his cupped hands from the scoop on, a startled squash)
     r = sh["root"]
+    loc0 = tuple(r.location)                                         # drinking, until the scoop
     pal = arm.pose.bones
     sc = bpy.context.scene
     for f in range(B["scoop"], n + 1):
         sc.frame_set(f)
         mid = (arm.matrix_world @ pal["hand.L"].tail + arm.matrix_world @ pal["hand.R"].tail) / 2
         anim.key(r, "location", f, tuple(mid + Vector((0, 0, 0.05))), "CONSTANT")
-    anim.key(r, "location", B["scoop"] - 1, tuple(r.location), "CONSTANT")
+    anim.key(r, "location", 1, loc0, "CONSTANT")
+    anim.key(r, "location", B["scoop"] - 1, loc0, "CONSTANT")
     sc.frame_set(1)
     anim.squash(sh["body"], B["scoop"], 0.18)                       # startled
     anim.squash(sh["body"], B["scoop"] + 4, -0.08)
     anim.squash(sh["body"], B["scoop"] + 8, 0.0)
-    _splash(tuple(SHRIMP + Vector((0, 0, 0.3)) - d * 0.3), B["scoop"])
+    _splash(tuple(SHRIMP + Vector((0, 0, 0.3)) - d * 0.3), B["scoop"], n=40, up=3.4, out=2.8)
     anim.dust(tuple(k0 + Vector((0, 0, 0.3))), B["slide"], n=10, spread=2.4, seed=8, color="#b9a77f")
-    # the bird: still plunging, off the top of the frame; its shadow sweeps over him from behind at the end
+    # the bird is not in this shot (S04 is its strike): only its giant shadow sweeps in over him from behind at the
+    # end, growing, the bird right on top of them
     bird = _bird_dive(n, 1, n + 30, perch)
-    _dive_line(bird, n, perch, (0.74, 0.97))
+    _dive_line(bird, n, perch, (0.95, 1.0))
     _bird_shadow_look(bird)
-    _shadow_under(bird, n, perch)
+    for o in [bird["root"], *bird["root"].children_recursive]:
+        if o.type == "MESH" and o != bird["shadow"]:
+            o.hide_render = True
+    shd = bird["shadow"]
+    z = shd.location.z
+    rot = bird["root"].rotation_euler.z
+    over = x3._local(rot, tuple(k1.lerp(SHRIMP, 0.4) - Vector((perch.x, perch.y, 0.0))), scale=xv3.BIRD_SCALE)
+    back = x3._local(rot, tuple((Vector((perch.x, perch.y, 0.0)) - SHRIMP).normalized() * 9.0), scale=1.0)
+    t0 = B["shadow"]
+    for f, u in ((1, 0.0), (t0, 0.0), (n, 1.0)):
+        p = Vector((over.x, over.y, z)) + Vector((back.x, back.y, 0)) * (1 - u) / xv3.BIRD_SCALE
+        anim.key(shd, "location", f, tuple(p), "LINEAR" if f >= t0 else "CONSTANT")
+        k_ = 0.8 + 0.5 * u
+        anim.key(shd, "scale", f, (k_, k_, 1.0), "LINEAR" if f >= t0 else "CONSTANT")
     # his face: determined into the slide, then wide-eyed relief over the shrimp
     acting.expression(k, "angry", 1, value=0.7)
     acting.face_keys(k, 1, lip_a=0.5)
@@ -462,8 +504,10 @@ def s03():
     acting.look_at(k, tuple(k1 + Vector((0, 0, 4.2)) - d * 1.5), B["lift"], n, darts=True, seed=4)
     acting.blink(k, B["hold"], n, every=(30, 44), seed=9)
     c = S03_CAM                                                      # low from the west over the water, a push on 1s
-    aim0 = SHRIMP.lerp(k0, 0.45) + Vector((0, 0, c["lift"]))
-    aim1 = SHRIMP.lerp(k1, 0.6) + Vector((0, 0, c["lift"] + 0.6))
+    az = math.radians(c["yaw"])
+    sr = Vector((math.cos(az), -math.sin(az), 0.0))                  # screen right
+    aim0 = SHRIMP.lerp(k0, 0.5) + sr * c["right"] + Vector((0, 0, c["lift"]))
+    aim1 = SHRIMP.lerp(k1, 0.5) + sr * c["right"] + Vector((0, 0, c["lift"] + 0.4))
     cam = None
     for f in range(1, n + 1):
         u = (f - 1) / max(1, n - 1)
@@ -472,11 +516,10 @@ def s03():
         if cam is None:
             cam = diorama.camera("cam_s03", tuple(aim), dist=c["dist"], tilt=c["tilt"], yaw=c["yaw"], lens=c["lens"],
                                  blur=BLUR)
-        b3._keycam(cam, f, aim, c["tilt"], c["dist"] - 4.0 * e, c["lens"], c["yaw"])
+        b3._keycam(cam, f, aim, c["tilt"], c["dist"] - c["push"] * e, c["lens"], c["yaw"])
     bpy.context.scene.camera = cam
     from channels.monsters.diorama_v3.helper1 import _clear_view
-    keep = {arm, *arm.children_recursive, bird["root"], *bird["root"].children_recursive, sh["root"],
-            *sh["root"].children_recursive}
+    keep = {arm, *arm.children_recursive, sh["root"], *sh["root"].children_recursive}
     _clear_view(cam, [1, n // 2, n], SHRIMP, keep)
     _anchors("S03", n, cam, k, sh)
     return dict(frames=n, step=2, ones=(1, n), subject=b3._subject(k, sh))
