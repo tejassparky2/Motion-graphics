@@ -30,7 +30,10 @@ from channels.monsters.ep01v2 import xprl as x3                       # Pose
 from channels.monsters.mk import acting, anim, diorama, puffshrimp, tuftwing
 
 BLUR = 6.0
-SHRIMP_S = 0.55                                                       # the shrimp's size in his hands
+try:                                                                  # the shrimp's size in his hands (helper 4's)
+    from channels.monsters.diorama_ep02.helper4 import SHRIMP_IN_HAND as SHRIMP_S
+except ImportError:
+    SHRIMP_S = 0.6
 FWD = Vector((math.sin(math.radians(X.KAI_YAW)), -math.cos(math.radians(X.KAI_YAW)), 0.0))   # where Kai faces
 LEFT = Vector((-FWD.y, FWD.x, 0.0))                                   # Kai's left (screen right from the front)
 LAST = {}
@@ -81,8 +84,9 @@ def _kai_cupping(n, raise_hands=0.0, lean=4.0):
         for sx, s in (("L", 1), ("R", -1)):
             P.rot(f"upper_arm.{sx}", (-raise_hands, 0, 0))
         P.rot("chest", (lean + 1.5 * math.sin(f / 16.0), 0, 0))
-        P.rot("neck", (10, 0, 0))
-        P.rot("head 1", (14, 0, 0))                                     # looking down into his hands
+        P.rot("neck", (5, 0, 0))
+        P.rot("head 1", (7, 0, 0))                                      # looking down into his hands (face clear
+                                                                        # of the cap brim from a low lens)
         P.key(f)
     bpy.context.scene.frame_set(1)
     return k, P
@@ -100,7 +104,8 @@ def _palm(k):
 
 
 def _shrimp_in_hands(k, yaw):
-    """The puff-shrimp (SHRIMP_S) sitting in his cupped hands, turned to `yaw` (degrees, root rotation z)."""
+    """The puff-shrimp (helper 4's SHRIMP_IN_HAND, shared with S05) sitting in his cupped hands, turned to `yaw`
+    (degrees, root rotation z)."""
     sh = puffshrimp.build((0, 0, 0))
     s3d._fix_pivots(sh)
     sh["root"].scale = (SHRIMP_S,) * 3
@@ -164,7 +169,7 @@ def s07():
     eyes = s3d.kai_point(k, "eyes")
     tgt = base.lerp(eyes, 0.42)
     yaw = _yaw_toward(-(FWD * 0.85 + LEFT * 0.35))                   # from in front, a little to his left
-    _cam("cam_s07", tgt, 1, n, 14.0, 5.2, 4.6, 40.0, yaw)
+    _cam("cam_s07", tgt, 1, n, -4.0, 6.6, 5.8, 40.0, yaw)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
 
@@ -198,101 +203,123 @@ def _tufts(rig, n=9, seed=4):
         o.location = p + d * 0.1
         look.outline(o, 0.008)
         bpy.context.view_layer.update()
+        mw = o.matrix_world.copy()
         o.parent = rig["body"]
         o.matrix_parent_inverse = rig["body"].matrix_world.inverted()
+        o.matrix_world = mw
         out.append(o)
     return out
 
 
 def s11():
+    from channels.monsters.diorama_ep02 import helper10 as H10                   # S10's set, bird and its spot
     n = _frames("S11", 113)
-    X._world(n)
-    rig = tuftwing.build((0, 0, 0), name="tuft", shadow_span=10.0)
+    isl = H10._set()
+    sc = bpy.context.scene
+    sc.frame_start, sc.frame_end = 1, n
+    perch = Vector(isl["thorn"]["perch"]) if isl.get("thorn") else BUSH + Vector((0, 0, 9.6))
+    stuck = perch + Vector((0, 0, -1.6))                                         # where S10 leaves it
+    rig = tuftwing.build((0, 0, 0), name="tuft", shadow_span=6.0)
+    tufts = _tufts(rig)                                                          # (built in rest space)
     root, lift, body, head = rig["root"], rig["lift"], rig["body"], rig["head"]
     root.scale = (BIRD_SCALE,) * 3
-    cam_dir = Vector((-0.55, -1.0, 0.0)).normalized()                  # the camera stands south-west of the bush
-    stuck = BUSH + cam_dir * 1.1 + Vector((0, 0, 0.0))
-    yaw_cam = math.atan2(cam_dir.x, -cam_dir.y)                        # root yaw that faces the lens (-Y local)
-    root.location = stuck
+    H10.xv3.dark_form(1, name="tuft")
     root.rotation_mode = "XYZ"
-    STUCK_Z = 4.6 / BIRD_SCALE
-    F_DROP, F_LAND, F_SHAKE, F_POOF, F_GLARE, F_TURN = 13, 21, 27, 41, 49, 67
-    # 1. upside down in the thorns, wriggling (on 2s)
+    yaw_c = math.degrees(math.atan2(H10.AIM.x, H10.AIM.y)) + 205.0              # S10's camera heading
+    cam_dir = -Vector((math.sin(math.radians(yaw_c)), math.cos(math.radians(yaw_c)), 0.0))   # bush -> camera
+    yaw_s10 = math.atan2(-H10.AIM.x, H10.AIM.y)
+    yaw_cam = math.atan2(cam_dir.x, -cam_dir.y)                                  # facing the lens
+    ground = Vector((stuck.x, stuck.y, 0.0)) + cam_dir * 1.6
+    F_DROP, F_LAND, F_SHAKE, F_POOF, F_GLARE, F_TURN = 11, 19, 27, 41, 49, 67
+    # 1. upside down in the crown (S10's pose), a wriggle on 2s
     for f in range(1, F_DROP + 1, 2):
-        anim.key(root, "rotation_euler", f, (math.pi, 0.25 * math.sin(f * 1.3), yaw_cam), "CONSTANT")
-        anim.key(lift, "location", f, (0, 0, -STUCK_Z - 1.2), "CONSTANT")   # upside down: lift points down
-    # 2. drops out, flipping upright, lands with a squash
-    for i, f in enumerate(range(F_DROP + 1, F_LAND + 1)):
+        anim.key(root, "rotation_euler", f, (math.pi + 0.25 * math.sin(f * 1.4), 0.1 * math.sin(f), yaw_s10),
+                 "CONSTANT")
+        anim.key(root, "location", f, tuple(stuck), "CONSTANT")
+    # 2. drops out, flipping upright on the way down, lands with a squash
+    for f in range(F_DROP + 1, F_LAND + 1):
         u = (f - F_DROP) / (F_LAND - F_DROP)
         flip = math.pi * (1 - acting.ease(u, "out"))
-        anim.key(root, "rotation_euler", f, (flip, 0, yaw_cam), "LINEAR")
-        z = STUCK_Z * (1 - u * u)
-        anim.key(lift, "location", f, (0, 0, -z - 1.2 * (1 - u) if flip > math.pi / 2 else z), "LINEAR")
-    anim.key(lift, "location", F_LAND, (0, 0, 0), "CONSTANT")
+        p = stuck.lerp(ground, u)
+        p.z = stuck.z * (1 - u * u) + (BIRD_SCALE * 1.4 if flip > math.pi / 2 else 0.0) * (1 - u)
+        anim.key(root, "rotation_euler", f, (flip, 0, yaw_s10 + (yaw_cam - yaw_s10) * u), "LINEAR")
+        anim.key(root, "location", f, tuple(p), "LINEAR")
+    anim.key(root, "location", F_LAND, tuple(ground), "CONSTANT")
     anim.key(root, "rotation_euler", F_LAND, (0, 0, yaw_cam), "CONSTANT")
-    for t, a in ((F_LAND, -0.35), (F_LAND + 2, 0.12), (F_LAND + 4, -0.06), (F_LAND + 6, 0.0)):
-        anim.squash(body, t, a, "LINEAR")
-    # dazed: eyes half shut, head wobble
-    for f in (F_LAND, F_LAND + 2):
+    for t, a in ((F_LAND, -0.38), (F_LAND + 2, 0.14), (F_LAND + 4, -0.06), (F_LAND + 6, 0.0)):
+        anim.squash(body, t, a, "CONSTANT")
+    for f in (F_LAND, F_LAND + 2):                                               # dazed: eyes half shut, wobble
         for e in rig["eyes"]:
             anim.key(e, "scale", f, (1.05, 1, 0.45), "CONSTANT")
     for f, a in ((F_LAND, 0.25), (F_LAND + 2, -0.2), (F_LAND + 4, 0.15), (F_SHAKE - 1, 0.0)):
         anim.key(head, "rotation_euler", f, (0, a, 0), "CONSTANT")
-    # 3. the shake: a fast wet-dog shake (alternating every frame), then POOF
+    # 3. the shake: a wet-dog shake (alternating every frame), then POOF into a puffball
     for f in range(F_SHAKE, F_POOF):
-        s = 1 if (f - F_SHAKE) % 2 == 0 else -1
-        anim.key(root, "rotation_euler", f, (0, 0.18 * s, yaw_cam + 0.45 * s), "CONSTANT")
-        anim.key(body, "scale", f, (1.0 + 0.05 * s, 1.0, 1.0 - 0.04 * s), "CONSTANT")
+        s_ = 1 if (f - F_SHAKE) % 2 == 0 else -1
+        anim.key(root, "rotation_euler", f, (0, 0.18 * s_, yaw_cam + 0.45 * s_), "CONSTANT")
+        anim.key(body, "scale", f, (1.0 + 0.05 * s_, 1.0, 1.0 - 0.04 * s_), "CONSTANT")
         for e in rig["eyes"]:
-            anim.key(e, "scale", f, (1.1, 1, 0.12), "CONSTANT")             # squeezed shut
+            anim.key(e, "scale", f, (1.1, 1, 0.12), "CONSTANT")                  # squeezed shut
     anim.key(root, "rotation_euler", F_POOF, (0, 0, yaw_cam), "CONSTANT")
-    tufts = _tufts(rig)
     for o in tufts:
-        anim.key(o, "scale", F_POOF - 1, 0.001, "CONSTANT")
+        anim.key(o, "scale", 1, 0.001, "CONSTANT")
         anim.key(o, "scale", F_POOF, 1.3, "CONSTANT")
         anim.key(o, "scale", F_POOF + 2, 1.0, "CONSTANT")
-    for t, sc in ((F_POOF, 1.62), (F_POOF + 2, 1.38), (F_POOF + 4, 1.48), (F_POOF + 6, 1.45)):
-        anim.key(body, "scale", t, (sc, sc, sc * 0.98), "CONSTANT")
-    v2h5._puff(stuck + Vector((0, 0, 1.0)), F_POOF, n=6, size=1.1, rise=0.8, life=10, seed=11, name="poof")
+    for t, sc_ in ((F_POOF, 1.62), (F_POOF + 2, 1.38), (F_POOF + 4, 1.48), (F_POOF + 6, 1.45)):
+        anim.key(body, "scale", t, (sc_, sc_, sc_ * 0.98), "CONSTANT")
+    v2h5._puff(ground + Vector((0, 0, 1.2)), F_POOF, n=6, size=1.2, rise=0.8, life=10, seed=11, name="poof")
     for e in rig["eyes"]:
-        anim.key(e, "scale", F_POOF, (1.25, 1, 1.25), "CONSTANT")          # eyes popped wide in the poof
+        anim.key(e, "scale", F_POOF, (1.25, 1, 1.25), "CONSTANT")                # popped wide in the poof
         anim.key(e, "scale", F_POOF + 4, (1, 1, 1), "CONSTANT")
     anim.key(rig["crest"], "rotation_euler", F_POOF, (-0.6, 0, 0), "CONSTANT")
-    # 4. the glare at the lens: narrowed, slanted, crest up; a huff (squash) and hold through the line
+    # 4. the glare at the lens: narrowed, slanted, crest up; a huff; held through the line
     for sx, e in zip((-1, 1), rig["eyes"]):
-        anim.key(e, "scale", F_GLARE, (1.05, 1, 0.55), "CONSTANT")
+        anim.key(e, "scale", F_GLARE, (1.05, 1, 0.5), "CONSTANT")
         anim.key(e, "rotation_euler", F_GLARE, (0, sx * 0.4, 0), "CONSTANT")
     anim.key(head, "rotation_euler", F_GLARE, (-0.12, 0, 0), "CONSTANT")
     for t, a in ((F_GLARE + 6, -0.06), (F_GLARE + 8, 0.08), (F_GLARE + 10, 0.0)):
         anim.key(body, "scale", t, (1.45 * (1 - a / 2), 1.45 * (1 - a / 2), 1.42 * (1 + a)), "CONSTANT")
-    # 5. turns its back (a sharp "hmph") and stomps off south-west, stiff little hops, tail up, head high
+    # 5. a sharp "hmph": turns its back and stomps off (stiff little hops, tail up, head high)
     away = Vector((cam_dir.y, -cam_dir.x, 0.0)).normalized() * 0.85 - cam_dir * 0.3
     yaw_away = math.atan2(away.x, -away.y)
     for t, y in ((F_TURN, yaw_cam), (F_TURN + 2, yaw_away + 0.3), (F_TURN + 4, yaw_away)):
         anim.key(root, "rotation_euler", t, (0, 0, y), "CONSTANT")
     anim.key(rig["tail"], "rotation_euler", F_TURN + 2, (0.5, 0, 0), "CONSTANT")
     anim.key(head, "rotation_euler", F_TURN + 2, (-0.25, 0, 0), "CONSTANT")
-    pos = stuck.copy()
+    pos = ground.copy()
     f = F_TURN + 6
     while f + 6 <= n:
         a, b = pos.copy(), pos + away.normalized() * 0.75
         for t in range(0, 7):
             u = t / 6
-            p = a.lerp(b, u)
-            anim.key(root, "location", f + t, tuple(p), "LINEAR")
+            anim.key(root, "location", f + t, tuple(a.lerp(b, u)), "LINEAR")
             anim.key(lift, "location", f + t, (0, 0, 0.35 * math.sin(math.pi * u) / BIRD_SCALE), "LINEAR")
-        anim.squash(body, f, 0.0)
-        anim.key(body, "scale", f + 6, (1.5, 1.5, 1.32), "CONSTANT")       # a stomp
+        anim.key(body, "scale", f + 6, (1.5, 1.5, 1.32), "CONSTANT")             # a stomp
         anim.key(body, "scale", f + 8, (1.45, 1.45, 1.42), "CONSTANT")
         pos = b
         f += 8
     anim.blink(rig, 60)
     X.v2._twos(tuftwing._animated(rig))
-    # camera: low, south-west of the bush, on the bird's landing spot; follows the stomp a little
-    tgt = stuck + Vector((0, 0, 1.4))
-    end = pos + Vector((0, 0, 1.4))
-    yaw = _yaw_toward(-cam_dir)
-    _cam("cam_s11", tgt, 1, n, 6.0, 12.0, 10.5, 50.0, yaw, follow=lambda u: tgt.lerp(tgt.lerp(end, 0.5), u))
+    # camera: S10's side of the tree; starts on the crown, tilts down with the fall, then a slow push-in on the
+    # ground as it fluffs and glares, drifting a little with the stomp
+    top, low = stuck + Vector((0, 0, 0.3)), ground + Vector((0, 0, 1.3))
+    endp = pos + Vector((0, 0, 1.3))
+    cam = diorama.camera("cam_s11", top, dist=15.0, tilt=10.0, yaw=yaw_c, lens=40.0, blur=BLUR, frame=1)
+    el, az = math.radians(8.0), math.radians(yaw_c)
+    back = Vector((-math.sin(az) * math.cos(el), -math.cos(az) * math.cos(el), math.sin(el)))
+    for f in range(1, n + 1):
+        uf = acting.ease(max(0.0, min(1.0, (f - F_DROP) / (F_LAND + 4 - F_DROP))), "inout")
+        up = acting.ease((f - 1) / (n - 1), "inout")
+        t = top.lerp(low, uf).lerp(low.lerp(endp, 0.45), max(0.0, (f - F_TURN) / (n - F_TURN)) * uf)
+        d = 15.0 - 4.0 * up
+        cam.location = t + back * d
+        cam.rotation_euler = (-back).to_track_quat("-Z", "Y").to_euler()
+        cam.data.dof.focus_distance = d
+        cam.data.dof.aperture_fstop = diorama.fstop_for(d, 40.0, BLUR)
+        cam.keyframe_insert("location", frame=f)
+        cam.keyframe_insert("rotation_euler", frame=f)
+        cam.data.dof.keyframe_insert("focus_distance", frame=f)
+        cam.data.dof.keyframe_insert("aperture_fstop", frame=f)
     LAST.update(bird=rig)
     return dict(frames=n, step=2, ones=(1, n), subject=[root])
 
@@ -308,7 +335,7 @@ def _cock_at_face(sh, k):
 def s12():
     n = _frames("S12", 74)
     X._world(n)
-    k, P = _kai_cupping(n, raise_hands=18.0)
+    k, P = _kai_cupping(n, raise_hands=32.0)
     yaw_out = X.KAI_YAW
     sh = _shrimp_in_hands(k, yaw_out)
     base = sh["root"].location.copy()
@@ -355,7 +382,7 @@ def s12():
     eyes = s3d.kai_point(k, "eyes")
     tgt = base.lerp(eyes, 0.55)
     yaw = _yaw_toward(-(FWD * 0.7 + LEFT * 0.7))
-    _cam("cam_s12", tgt, 1, n, 4.0, 5.6, 4.8, 50.0, yaw)
+    _cam("cam_s12", tgt, 1, n, -6.0, 7.0, 6.0, 40.0, yaw)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
 
@@ -364,10 +391,11 @@ def s12():
 def s13():
     n = _frames("S13", 59)
     X._world(n)
-    k, P = _kai_cupping(n, raise_hands=18.0)
+    k, P = _kai_cupping(n, raise_hands=32.0)
     sh = _shrimp_in_hands(k, X.KAI_YAW + 180.0)
     base = sh["root"].location.copy()
-    eyes, nose = s3d.kai_point(k, "eyes"), s3d.kai_point(k, "nose")
+    eyes = s3d.kai_point(k, "eyes")
+    nose = s3d.kai_point(k, "nose") + Vector((0, 0, 0.1))                     # the tip of his nose
     s3d.lock_on(sh, eyes, 1)
     cock = _cock_at_face(sh, k)
     # the tap: the claw reaches to his nose; the shrimp leans in to reach it
@@ -406,7 +434,7 @@ def s13():
     # camera: closer, more in profile so the tap reads; a slow push-in
     tgt = nose.lerp(base, 0.4)
     yaw = _yaw_toward(-(FWD * 0.6 + LEFT * 0.8))
-    _cam("cam_s13", tgt, 1, n, 3.0, 4.0, 3.5, 50.0, yaw)
+    _cam("cam_s13", tgt, 1, n, -4.0, 5.0, 4.4, 40.0, yaw)
     _anchors("S13", n, k, sh)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
