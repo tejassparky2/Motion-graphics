@@ -489,3 +489,32 @@ def grip(rig, f, side="R", curl=1.0):
             b.rotation_mode = "QUATERNION"
             b.rotation_quaternion = Matrix.Rotation(math.radians(ang * curl), 4, "X").to_quaternion()
             b.keyframe_insert("rotation_quaternion", frame=f, group=name)
+
+
+def talk_words(rig, words, t0, fps=24, amount=0.85, first=1):
+    """Lip-sync from word timings (ep02/timing.json "words": [{w, start, end}], seconds): each word opens on its
+    vowel shapes between its start and end (on 2s), the mouth shuts in the gaps. t0 = the shot's start in seconds
+    (frame `first`)."""
+    head = rig["head"]
+
+    def fr(s):
+        return int(round((s - t0) * fps)) + first
+    shut = {k: (1.0 if k == "mouth_short" else 0.0) for k in _LIPS}
+    for k, v in shut.items():
+        _key(head, k, first, v)
+    for w in words:
+        a, b = fr(w["start"]), max(fr(w["start"]) + 2, fr(w["end"]))
+        groups, prev = [], False
+        for ch in w["w"].lower():
+            v = ch in VOWEL
+            if v and not prev:
+                groups.append(VOWEL[ch])
+            prev = v
+        groups = groups or ["lip_u"]
+        span = max(2, b - a)
+        for i, g in enumerate(groups):
+            f = a + int(i * span / len(groups))
+            for k in _LIPS:
+                _key(head, k, f, amount if k == g else 0.0)
+        for k, v in shut.items():
+            _key(head, k, b, v)
