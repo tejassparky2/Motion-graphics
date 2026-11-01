@@ -18,7 +18,7 @@ TWIST = "l9"                                       # the snap: the music drops u
 
 SCRIPT = [
     dict(id="l1", scene="S01", text="You said save it. So I ran at the butcher bird."),
-    dict(id="l2", scene="S02", text="It dove first.", gap=0.4),
+    dict(id="l2", scene="S02", text="The bird dived first.", gap=0.4),   # was "It dove first." (heard "It doe/Itto first")
     dict(id="l3", scene="S03", text="I got there half a second sooner.", gap=0.4),
     dict(id="l4", scene="S04", text="Its talons got my arm instead.", gap=0.5),
     dict(id="l5", scene="S05", text="Now I was holding a wet pistol shrimp. In my bare hands.", gap=0.7),
@@ -32,8 +32,8 @@ SCRIPT = [
     dict(id="l13", scene="S13", text="And tapped my nose.", gap=1.0),                # a second of silence: will it?
     dict(id="l14", scene="S14", text="Something on my wrist started to glow.", gap=1.0),   # Kai's stunned dot eyes
     dict(id="l15", scene="S15", text="The same shape as the crack in the sky.", gap=0.5),
-    dict(id="l16", scene="S16", text="Then the bells started.", gap=0.9),            # the bells ring in the gap
-    dict(id="l17", scene="S17", text="A girl with a bell walked straight up to me.", gap=0.5),
+    dict(id="l16", scene="S16", text="Then came the bells.", gap=0.9),   # was "Then the bells started." (Whisper heard "the bell started")
+    dict(id="l17", scene="S17", text="A girl with a bell marched right up to me.", gap=0.5),   # was "walked straight" (heard "walks")
     dict(id="l18", scene="S18", text="Step away from the snapper. It goes in the lake.", gap=0.5,
          speaker="wren", speaker_from="Step"),
     dict(id="l19", scene="S19", text="The lake. Deep water. Where a pistol shrimp never runs dry.", gap=0.7),

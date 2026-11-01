@@ -1,0 +1,1114 @@
+{
+ "fps": 24,
+ "total": 57.343,
+ "total_frames": 1376,
+ "handle": 12,
+ "lines": [
+  {
+   "id": "l1",
+   "scene": "S01",
+   "text": "You said save it. So I ran at the butcher bird.",
+   "start": 0.12,
+   "end": 2.642,
+   "words": [
+    {
+     "w": "You",
+     "start": 0.12,
+     "end": 0.24
+    },
+    {
+     "w": "said",
+     "start": 0.24,
+     "end": 0.42
+    },
+    {
+     "w": "save",
+     "start": 0.42,
+     "end": 0.68
+    },
+    {
+     "w": "it.",
+     "start": 0.68,
+     "end": 0.86
+    },
+    {
+     "w": "So",
+     "start": 1.32,
+     "end": 1.44
+    },
+    {
+     "w": "I",
+     "start": 1.44,
+     "end": 1.56
+    },
+    {
+     "w": "ran",
+     "start": 1.56,
+     "end": 1.74
+    },
+    {
+     "w": "at",
+     "start": 1.74,
+     "end": 1.9
+    },
+    {
+     "w": "the",
+     "start": 1.9,
+     "end": 2.02
+    },
+    {
+     "w": "butcher",
+     "start": 2.02,
+     "end": 2.26
+    },
+    {
+     "w": "bird.",
+     "start": 2.26,
+     "end": 2.5
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "scene": "S02",
+   "text": "The bird dived first.",
+   "start": 3.042,
+   "end": 4.022,
+   "words": [
+    {
+     "w": "The",
+     "start": 3.042,
+     "end": 3.162
+    },
+    {
+     "w": "bird",
+     "start": 3.162,
+     "end": 3.322
+    },
+    {
+     "w": "dived",
+     "start": 3.322,
+     "end": 3.622
+    },
+    {
+     "w": "first.",
+     "start": 3.622,
+     "end": 3.842
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "scene": "S03",
+   "text": "I got there half a second sooner.",
+   "start": 4.422,
+   "end": 6.015,
+   "words": [
+    {
+     "w": "I",
+     "start": 4.422,
+     "end": 4.562
+    },
+    {
+     "w": "got",
+     "start": 4.562,
+     "end": 4.722
+    },
+    {
+     "w": "there",
+     "start": 4.722,
+     "end": 4.902
+    },
+    {
+     "w": "half",
+     "start": 4.902,
+     "end": 5.102
+    },
+    {
+     "w": "a",
+     "start": 5.102,
+     "end": 5.242
+    },
+    {
+     "w": "second",
+     "start": 5.242,
+     "end": 5.482
+    },
+    {
+     "w": "sooner.",
+     "start": 5.482,
+     "end": 5.822
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "scene": "S04",
+   "text": "Its talons got my arm instead.",
+   "start": 6.515,
+   "end": 8.058,
+   "words": [
+    {
+     "w": "Its",
+     "start": 6.515,
+     "end": 6.695
+    },
+    {
+     "w": "talons",
+     "start": 6.695,
+     "end": 7.055
+    },
+    {
+     "w": "got",
+     "start": 7.055,
+     "end": 7.195
+    },
+    {
+     "w": "my",
+     "start": 7.195,
+     "end": 7.335
+    },
+    {
+     "w": "arm",
+     "start": 7.335,
+     "end": 7.595
+    },
+    {
+     "w": "instead.",
+     "start": 7.595,
+     "end": 7.915
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "scene": "S05",
+   "text": "Now I was holding a wet pistol shrimp. In my bare hands.",
+   "start": 8.758,
+   "end": 11.793,
+   "words": [
+    {
+     "w": "Now",
+     "start": 8.758,
+     "end": 8.918
+    },
+    {
+     "w": "I",
+     "start": 8.918,
+     "end": 9.078
+    },
+    {
+     "w": "was",
+     "start": 9.078,
+     "end": 9.178
+    },
+    {
+     "w": "holding",
+     "start": 9.178,
+     "end": 9.458
+    },
+    {
+     "w": "a",
+     "start": 9.458,
+     "end": 9.578
+    },
+    {
+     "w": "wet",
+     "start": 9.578,
+     "end": 9.758
+    },
+    {
+     "w": "pistol",
+     "start": 9.758,
+     "end": 10.058
+    },
+    {
+     "w": "shrimp.",
+     "start": 10.058,
+     "end": 10.318
+    },
+    {
+     "w": "In",
+     "start": 10.761,
+     "end": 10.881
+    },
+    {
+     "w": "my",
+     "start": 10.881,
+     "end": 11.021
+    },
+    {
+     "w": "bare",
+     "start": 11.021,
+     "end": 11.241
+    },
+    {
+     "w": "hands.",
+     "start": 11.241,
+     "end": 11.621
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "scene": "S06",
+   "text": "But a pistol shrimp only fires one way. Straight ahead.",
+   "start": 12.393,
+   "end": 15.465,
+   "words": [
+    {
+     "w": "But",
+     "start": 12.393,
+     "end": 12.533
+    },
+    {
+     "w": "a",
+     "start": 12.533,
+     "end": 12.653
+    },
+    {
+     "w": "pistol",
+     "start": 12.653,
+     "end": 12.973
+    },
+    {
+     "w": "shrimp",
+     "start": 12.973,
+     "end": 13.233
+    },
+    {
+     "w": "only",
+     "start": 13.233,
+     "end": 13.493
+    },
+    {
+     "w": "fires",
+     "start": 13.493,
+     "end": 13.873
+    },
+    {
+     "w": "one",
+     "start": 13.873,
+     "end": 14.153
+    },
+    {
+     "w": "way.",
+     "start": 14.153,
+     "end": 14.393
+    },
+    {
+     "w": "Straight",
+     "start": 14.852,
+     "end": 15.112
+    },
+    {
+     "w": "ahead.",
+     "start": 15.112,
+     "end": 15.312
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "scene": "S07",
+   "text": "So I turned it around.",
+   "start": 15.965,
+   "end": 17.045,
+   "words": [
+    {
+     "w": "So",
+     "start": 15.965,
+     "end": 16.145
+    },
+    {
+     "w": "I",
+     "start": 16.145,
+     "end": 16.245
+    },
+    {
+     "w": "turned",
+     "start": 16.245,
+     "end": 16.405
+    },
+    {
+     "w": "it",
+     "start": 16.405,
+     "end": 16.545
+    },
+    {
+     "w": "around.",
+     "start": 16.545,
+     "end": 16.805
+    }
+   ]
+  },
+  {
+   "id": "l8",
+   "scene": "S08",
+   "text": "They don't call it a pistol shrimp for nothing.",
+   "start": 17.545,
+   "end": 19.436,
+   "words": [
+    {
+     "w": "They",
+     "start": 17.545,
+     "end": 17.665
+    },
+    {
+     "w": "don't",
+     "start": 17.665,
+     "end": 17.825
+    },
+    {
+     "w": "call",
+     "start": 17.825,
+     "end": 17.985
+    },
+    {
+     "w": "it",
+     "start": 17.985,
+     "end": 18.105
+    },
+    {
+     "w": "a",
+     "start": 18.105,
+     "end": 18.265
+    },
+    {
+     "w": "pistol",
+     "start": 18.265,
+     "end": 18.525
+    },
+    {
+     "w": "shrimp",
+     "start": 18.525,
+     "end": 18.785
+    },
+    {
+     "w": "for",
+     "start": 18.785,
+     "end": 18.985
+    },
+    {
+     "w": "nothing.",
+     "start": 18.985,
+     "end": 19.205
+    }
+   ]
+  },
+  {
+   "id": "l9",
+   "scene": "S09",
+   "text": "",
+   "start": 20.036,
+   "end": 23.036,
+   "words": []
+  },
+  {
+   "id": "l10",
+   "scene": "S10",
+   "text": "The bird landed in the thorn bush.",
+   "start": 23.436,
+   "end": 24.972,
+   "words": [
+    {
+     "w": "The",
+     "start": 23.436,
+     "end": 23.596
+    },
+    {
+     "w": "bird",
+     "start": 23.596,
+     "end": 23.796
+    },
+    {
+     "w": "landed",
+     "start": 23.796,
+     "end": 24.076
+    },
+    {
+     "w": "in",
+     "start": 24.076,
+     "end": 24.256
+    },
+    {
+     "w": "the",
+     "start": 24.256,
+     "end": 24.376
+    },
+    {
+     "w": "thorn",
+     "start": 24.376,
+     "end": 24.556
+    },
+    {
+     "w": "bush.",
+     "start": 24.556,
+     "end": 24.756
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "S11",
+   "text": "Alive. Just very, very fluffed.",
+   "start": 25.572,
+   "end": 27.793,
+   "words": [
+    {
+     "w": "Alive.",
+     "start": 25.572,
+     "end": 25.872
+    },
+    {
+     "w": "Just",
+     "start": 26.447,
+     "end": 26.607
+    },
+    {
+     "w": "very,",
+     "start": 26.607,
+     "end": 26.967
+    },
+    {
+     "w": "very",
+     "start": 26.967,
+     "end": 27.267
+    },
+    {
+     "w": "fluffed.",
+     "start": 27.267,
+     "end": 27.647
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "S12",
+   "text": "Then the shrimp looked at me.",
+   "start": 29.793,
+   "end": 31.389,
+   "words": [
+    {
+     "w": "Then",
+     "start": 29.793,
+     "end": 30.053
+    },
+    {
+     "w": "the",
+     "start": 30.053,
+     "end": 30.433
+    },
+    {
+     "w": "shrimp",
+     "start": 30.433,
+     "end": 30.673
+    },
+    {
+     "w": "looked",
+     "start": 30.673,
+     "end": 30.913
+    },
+    {
+     "w": "at",
+     "start": 30.913,
+     "end": 31.073
+    },
+    {
+     "w": "me.",
+     "start": 31.073,
+     "end": 31.253
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "S13",
+   "text": "And tapped my nose.",
+   "start": 32.389,
+   "end": 33.342,
+   "words": [
+    {
+     "w": "And",
+     "start": 32.389,
+     "end": 32.509
+    },
+    {
+     "w": "tapped",
+     "start": 32.509,
+     "end": 32.669
+    },
+    {
+     "w": "my",
+     "start": 32.669,
+     "end": 32.829
+    },
+    {
+     "w": "nose.",
+     "start": 32.829,
+     "end": 33.089
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "S14",
+   "text": "Something on my wrist started to glow.",
+   "start": 34.342,
+   "end": 36.468,
+   "words": [
+    {
+     "w": "Something",
+     "start": 34.342,
+     "end": 34.662
+    },
+    {
+     "w": "on",
+     "start": 34.662,
+     "end": 34.842
+    },
+    {
+     "w": "my",
+     "start": 34.842,
+     "end": 35.002
+    },
+    {
+     "w": "wrist",
+     "start": 35.002,
+     "end": 35.322
+    },
+    {
+     "w": "started",
+     "start": 35.322,
+     "end": 35.842
+    },
+    {
+     "w": "to",
+     "start": 35.842,
+     "end": 36.062
+    },
+    {
+     "w": "glow.",
+     "start": 36.062,
+     "end": 36.282
+    }
+   ]
+  },
+  {
+   "id": "l15",
+   "scene": "S15",
+   "text": "The same shape as the crack in the sky.",
+   "start": 36.968,
+   "end": 38.909,
+   "words": [
+    {
+     "w": "The",
+     "start": 36.968,
+     "end": 37.108
+    },
+    {
+     "w": "same",
+     "start": 37.108,
+     "end": 37.328
+    },
+    {
+     "w": "shape",
+     "start": 37.328,
+     "end": 37.608
+    },
+    {
+     "w": "as",
+     "start": 37.608,
+     "end": 37.948
+    },
+    {
+     "w": "the",
+     "start": 37.948,
+     "end": 38.068
+    },
+    {
+     "w": "crack",
+     "start": 38.068,
+     "end": 38.268
+    },
+    {
+     "w": "in",
+     "start": 38.268,
+     "end": 38.428
+    },
+    {
+     "w": "the",
+     "start": 38.428,
+     "end": 38.508
+    },
+    {
+     "w": "sky.",
+     "start": 38.508,
+     "end": 38.728
+    }
+   ]
+  },
+  {
+   "id": "l16",
+   "scene": "S16",
+   "text": "Then came the bells.",
+   "start": 39.809,
+   "end": 40.772,
+   "words": [
+    {
+     "w": "Then",
+     "start": 39.809,
+     "end": 39.989
+    },
+    {
+     "w": "came",
+     "start": 39.989,
+     "end": 40.169
+    },
+    {
+     "w": "the",
+     "start": 40.169,
+     "end": 40.329
+    },
+    {
+     "w": "bells.",
+     "start": 40.329,
+     "end": 40.529
+    }
+   ]
+  },
+  {
+   "id": "l17",
+   "scene": "S17",
+   "text": "A girl with a bell marched right up to me.",
+   "start": 41.272,
+   "end": 43.373,
+   "words": [
+    {
+     "w": "A",
+     "start": 41.272,
+     "end": 41.412
+    },
+    {
+     "w": "girl",
+     "start": 41.412,
+     "end": 41.592
+    },
+    {
+     "w": "with",
+     "start": 41.592,
+     "end": 41.732
+    },
+    {
+     "w": "a",
+     "start": 41.732,
+     "end": 41.812
+    },
+    {
+     "w": "bell",
+     "start": 41.812,
+     "end": 42.032
+    },
+    {
+     "w": "marched",
+     "start": 42.032,
+     "end": 42.352
+    },
+    {
+     "w": "right",
+     "start": 42.352,
+     "end": 42.712
+    },
+    {
+     "w": "up",
+     "start": 42.712,
+     "end": 42.952
+    },
+    {
+     "w": "to",
+     "start": 42.952,
+     "end": 43.112
+    },
+    {
+     "w": "me.",
+     "start": 43.112,
+     "end": 43.272
+    }
+   ]
+  },
+  {
+   "id": "l18",
+   "scene": "S18",
+   "text": "Step away from the snapper. It goes in the lake.",
+   "start": 43.873,
+   "end": 46.275,
+   "words": [
+    {
+     "w": "Step",
+     "start": 43.873,
+     "end": 44.033
+    },
+    {
+     "w": "away",
+     "start": 44.033,
+     "end": 44.273
+    },
+    {
+     "w": "from",
+     "start": 44.273,
+     "end": 44.513
+    },
+    {
+     "w": "the",
+     "start": 44.513,
+     "end": 44.593
+    },
+    {
+     "w": "snapper.",
+     "start": 44.593,
+     "end": 44.973
+    },
+    {
+     "w": "It",
+     "start": 45.463,
+     "end": 45.603
+    },
+    {
+     "w": "goes",
+     "start": 45.603,
+     "end": 45.783
+    },
+    {
+     "w": "in",
+     "start": 45.783,
+     "end": 45.963
+    },
+    {
+     "w": "the",
+     "start": 45.963,
+     "end": 46.043
+    },
+    {
+     "w": "lake.",
+     "start": 46.043,
+     "end": 46.203
+    }
+   ]
+  },
+  {
+   "id": "l19",
+   "scene": "S19",
+   "text": "The lake. Deep water. Where a pistol shrimp never runs dry.",
+   "start": 46.975,
+   "end": 50.824,
+   "words": [
+    {
+     "w": "The",
+     "start": 46.975,
+     "end": 47.175
+    },
+    {
+     "w": "lake.",
+     "start": 47.175,
+     "end": 47.375
+    },
+    {
+     "w": "Deep",
+     "start": 47.885,
+     "end": 48.085
+    },
+    {
+     "w": "water.",
+     "start": 48.085,
+     "end": 48.305
+    },
+    {
+     "w": "Where",
+     "start": 48.806,
+     "end": 49.006
+    },
+    {
+     "w": "a",
+     "start": 49.006,
+     "end": 49.146
+    },
+    {
+     "w": "pistol",
+     "start": 49.146,
+     "end": 49.346
+    },
+    {
+     "w": "shrimp",
+     "start": 49.346,
+     "end": 49.686
+    },
+    {
+     "w": "never",
+     "start": 49.686,
+     "end": 50.046
+    },
+    {
+     "w": "runs",
+     "start": 50.046,
+     "end": 50.386
+    },
+    {
+     "w": "dry.",
+     "start": 50.386,
+     "end": 50.666
+    }
+   ]
+  },
+  {
+   "id": "l20",
+   "scene": "S20",
+   "text": "Option A: hand it over. Option B: hide it in my shirt. Comment A or B.",
+   "start": 51.624,
+   "end": 56.993,
+   "words": [
+    {
+     "w": "Option",
+     "start": 51.624,
+     "end": 51.904
+    },
+    {
+     "w": "A:",
+     "start": 51.904,
+     "end": 52.184
+    },
+    {
+     "w": "hand",
+     "start": 52.714,
+     "end": 52.874
+    },
+    {
+     "w": "it",
+     "start": 52.874,
+     "end": 52.994
+    },
+    {
+     "w": "over.",
+     "start": 52.994,
+     "end": 53.214
+    },
+    {
+     "w": "Option",
+     "start": 53.765,
+     "end": 54.025
+    },
+    {
+     "w": "B:",
+     "start": 54.025,
+     "end": 54.245
+    },
+    {
+     "w": "hide",
+     "start": 54.769,
+     "end": 54.989
+    },
+    {
+     "w": "it",
+     "start": 54.989,
+     "end": 55.129
+    },
+    {
+     "w": "in",
+     "start": 55.129,
+     "end": 55.209
+    },
+    {
+     "w": "my",
+     "start": 55.209,
+     "end": 55.349
+    },
+    {
+     "w": "shirt.",
+     "start": 55.349,
+     "end": 55.629
+    },
+    {
+     "w": "Comment",
+     "start": 56.026,
+     "end": 56.266
+    },
+    {
+     "w": "A",
+     "start": 56.266,
+     "end": 56.546
+    },
+    {
+     "w": "or",
+     "start": 56.546,
+     "end": 56.666
+    },
+    {
+     "w": "B.",
+     "start": 56.666,
+     "end": 56.826
+    }
+   ]
+  }
+ ],
+ "shots": [
+  {
+   "shot": "S01",
+   "start": 0.0,
+   "first_frame": 0,
+   "frames": 66,
+   "seconds": 2.75,
+   "render_frames": 78
+  },
+  {
+   "shot": "S02",
+   "start": 2.742,
+   "first_frame": 66,
+   "frames": 33,
+   "seconds": 1.375,
+   "render_frames": 45
+  },
+  {
+   "shot": "S03",
+   "start": 4.122,
+   "first_frame": 99,
+   "frames": 50,
+   "seconds": 2.083,
+   "render_frames": 62
+  },
+  {
+   "shot": "S04",
+   "start": 6.215,
+   "first_frame": 149,
+   "frames": 54,
+   "seconds": 2.25,
+   "render_frames": 66
+  },
+  {
+   "shot": "S05",
+   "start": 8.458,
+   "first_frame": 203,
+   "frames": 87,
+   "seconds": 3.625,
+   "render_frames": 99
+  },
+  {
+   "shot": "S06",
+   "start": 12.093,
+   "first_frame": 290,
+   "frames": 86,
+   "seconds": 3.583,
+   "render_frames": 98
+  },
+  {
+   "shot": "S07",
+   "start": 15.665,
+   "first_frame": 376,
+   "frames": 38,
+   "seconds": 1.583,
+   "render_frames": 50
+  },
+  {
+   "shot": "S08",
+   "start": 17.245,
+   "first_frame": 414,
+   "frames": 60,
+   "seconds": 2.5,
+   "render_frames": 72
+  },
+  {
+   "shot": "S09",
+   "start": 19.736,
+   "first_frame": 474,
+   "frames": 81,
+   "seconds": 3.375,
+   "render_frames": 93
+  },
+  {
+   "shot": "S10",
+   "start": 23.136,
+   "first_frame": 555,
+   "frames": 52,
+   "seconds": 2.167,
+   "render_frames": 64
+  },
+  {
+   "shot": "S11",
+   "start": 25.272,
+   "first_frame": 607,
+   "frames": 101,
+   "seconds": 4.208,
+   "render_frames": 113
+  },
+  {
+   "shot": "S12",
+   "start": 29.493,
+   "first_frame": 708,
+   "frames": 62,
+   "seconds": 2.583,
+   "render_frames": 74
+  },
+  {
+   "shot": "S13",
+   "start": 32.089,
+   "first_frame": 770,
+   "frames": 47,
+   "seconds": 1.958,
+   "render_frames": 59
+  },
+  {
+   "shot": "S14",
+   "start": 34.042,
+   "first_frame": 817,
+   "frames": 63,
+   "seconds": 2.625,
+   "render_frames": 75
+  },
+  {
+   "shot": "S15",
+   "start": 36.668,
+   "first_frame": 880,
+   "frames": 68,
+   "seconds": 2.833,
+   "render_frames": 80
+  },
+  {
+   "shot": "S16",
+   "start": 39.509,
+   "first_frame": 948,
+   "frames": 35,
+   "seconds": 1.458,
+   "render_frames": 47
+  },
+  {
+   "shot": "S17",
+   "start": 40.972,
+   "first_frame": 983,
+   "frames": 63,
+   "seconds": 2.625,
+   "render_frames": 75
+  },
+  {
+   "shot": "S18",
+   "start": 43.573,
+   "first_frame": 1046,
+   "frames": 74,
+   "seconds": 3.083,
+   "render_frames": 86
+  },
+  {
+   "shot": "S19",
+   "start": 46.675,
+   "first_frame": 1120,
+   "frames": 112,
+   "seconds": 4.667,
+   "render_frames": 124
+  },
+  {
+   "shot": "S20",
+   "start": 51.324,
+   "first_frame": 1232,
+   "frames": 144,
+   "seconds": 6.0,
+   "render_frames": 156
+  }
+ ]
+}
