@@ -430,6 +430,8 @@ MAP_F.camera_key(cut(48, 49), (2.5, 47.6), 2.6)
 MAP_F.camera_key(cut(49, 50), (2.5, 47.0), 2.95)
 MAP_F.label("FRANCE", cut(48, 49), lonlat=(2.6, 46.6), size=60, t_out=L(49).end - 0.4)
 MAP_F.side("france_occ", L(49).start + 0.1, "germany", origin=(2.4, 49.6), dur=1.4)
+MAP_F.side("france_vichy", L(49).start + 0.5, "neutral", origin=(2.4, 46.9), dur=1.2, occupied=False)   # no longer
+                                                                                                         # an Ally
 MAP_F.label("VICHY", L(49).end - 0.4, lonlat=(2.5, 45.6), size=34, color="ink_soft")
 MAP_F.city("Paris", L(49).start + 0.3)
 
