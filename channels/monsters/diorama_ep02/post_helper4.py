@@ -106,16 +106,16 @@ def jet(a):
         cr.save()
         cr.translate(x0, y0)
         cr.rotate(ang)
-        w0, w1 = 7.0 * thin + 2, 26.0 * thin + 3                          # tapered: thin at the muzzle
-        head = min(46.0, front - tail)
+        w0, w1 = 12.0 * thin + 3, 40.0 * thin + 4                          # tapered: thin at the muzzle
+        head = min(70.0, front - tail)
 
         def body(grow):
             cr.new_path()
             cr.move_to(tail, -(w0 + grow) / 2)
             cr.line_to(front - head, -(w1 + grow) / 2)
-            cr.line_to(front - head, -(w1 * 1.7 + grow) / 2)               # the arrowhead's barbs
+            cr.line_to(front - head, -(w1 * 2.0 + grow) / 2)               # the arrowhead's barbs
             cr.line_to(front + grow * 0.6, 0)
-            cr.line_to(front - head, (w1 * 1.7 + grow) / 2)
+            cr.line_to(front - head, (w1 * 2.0 + grow) / 2)
             cr.line_to(front - head, (w1 + grow) / 2)
             cr.line_to(tail, (w0 + grow) / 2)
             cr.close_path()

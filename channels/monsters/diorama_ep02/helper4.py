@@ -214,7 +214,7 @@ def s05():
     sh = _shrimp_in_hands(k, X.KAI_YAW + 180)
     pb = k["arm"].pose.bones["hand.L"]
     palm_l = k["arm"].matrix_world @ (pb.head.lerp(pb.tail, 0.7))
-    anim.key(sh["shoulder"], "rotation_euler", 1, s3d.aim_claw(sh, palm_l - Vector((0, 0, 0.35))), "CONSTANT")
+    anim.key(sh["shoulder"], "rotation_euler", 1, s3d.aim_claw(sh, palm_l + Vector((0, 0, 0.12))), "CONSTANT")
     # (the claw laid down over the heel of his left palm, its tip resting on it)
     anim.key(sh["hinge"], "rotation_euler", 1, (0.12, 0.0, 0.0), "CONSTANT")
     for f in range(1, n + 1, 24):
@@ -232,10 +232,10 @@ def s05():
     # B up to his face, a touch low, his eyes above the caption band (CUT..n)
     hands = _palms(k) + Vector((0, 0, 0.55))
     face = s3d.kai_point(k, "eyes")
-    _shot_cam("S05a", 1, tuple(hands), 6.0, 12.0, -X.KAI_YAW - 80.0, 60.0, 3.0, push=0.07, f1=S05_CUT - 1,
-              shift_y=-0.13)
+    _shot_cam("S05a", 1, tuple(hands), 7.6, 18.0, -X.KAI_YAW - 42.0, 60.0, 3.0, push=0.07, f1=S05_CUT - 1,
+              shift_y=-0.2)
     _shot_cam("S05b", S05_CUT, tuple(face - Vector((0, 0, 0.35))), 5.6, 4.0, -X.KAI_YAW + 8.0, 55.0, 2.5, push=0.1,
-              f1=n, shift_y=-0.15)
+              f1=n, shift_y=-0.07)
     _anchors("S05", n, k, extra={"tip": lambda: s3d.claw_tip(sh)})
     return dict(frames=n, step=1, subject=[k["arm"], sh["root"]] + list(k.get("cap", [])), cut=S05_CUT,
                 beats=dict(wet=f_wet, sweat=f_in))
@@ -268,6 +268,7 @@ def _backdrop(color):
     bm.free()
     o = bpy.data.objects.new("s06_cyc", me)
     bpy.context.scene.collection.objects.link(o)
+    o.rotation_euler = (0.0, 0.0, -math.pi / 2)                     # the wall behind the shrimp on +X (the camera's -X)
     o.data.materials.append(look.flat("s06_ground", look.hexc(color), 1.0))
     o.visible_shadow = False
     return o
@@ -289,7 +290,7 @@ def s06():
     sc.world.mist_settings.start, sc.world.mist_settings.depth = 500.0, 100.0   # no haze on the insert
     # the shrimp turned so its right side (the claw) faces the camera on -X, its front (-Y) to screen right
     origin = Vector((0.0, -20.0, 0.0))
-    _backdrop(S06_BG)
+    _backdrop(S06_BG).location = origin
     sh = puffshrimp.build(tuple(origin))
     s3d._fix_pivots(sh)
     bpy.context.view_layer.update()
@@ -312,13 +313,13 @@ def s06():
     # the camera: side-on from its right (-X), level, a long lens; the shrimp left of centre so the streak has room
     tip0 = s3d.claw_tip(sh)
     tgt = origin + Vector((0, -1.6, 1.9))
-    bpy.ops.object.camera_add(location=tgt + Vector((-34.0, 0.0, 1.0)))
+    bpy.ops.object.camera_add(location=tgt + Vector((-24.0, 0.0, 1.0)))
     cam = bpy.context.object
     cam.name = "S06cam"
     cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
     cam.data.lens = 85.0
-    cam.data.shift_x = -0.12                                        # the shrimp left; the jet runs to the right
-    cam.data.shift_y = 0.12
+    cam.data.shift_x = 0.16                                         # the shrimp left; the jet runs to the right
+    cam.data.shift_y = -0.17                                        # and above the caption band
     cam.data.clip_end = 400
     sc.camera = cam
     p0 = cam.location.copy()

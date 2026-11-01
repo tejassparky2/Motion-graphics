@@ -185,22 +185,23 @@ def s08():
     s15._flush_keys(k)
     acting.expression(k, "angry", 1, value=0.6)
     acting.blink(k, 1, n, at=(30,))
-    aim, _ = h3.aim_euler(rig, emp, KAI_AT + AIM * 30 + Vector((0, 0, 9)))
-    anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
-    acting.glare(rig, THORN + Vector((0, 0, 18)), 1)
-    # the bird wheels in the sky behind him (a banking loop over the pond), lining up its second dive
-    c = KAI_AT - AIM * 16.0 + SIDE * 4.0 + Vector((0, 0, 17.0))
-    bird = _bird(c)
-    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 6, math.sin(2.2 * u * math.pi) * 4,
-                                            1.5 * math.sin(u * 5))))
-    # camera: heroic, low, in front and a little to his left: he aims almost into the lens; push-in on 1s
+    # camera: heroic, a little below his hands, in front and to his left; the claw aims just beside the lens
     chest = s15._world(k, "chest")
-    pos0 = KAI_AT + AIM * 12.0 - SIDE * 4.5 + Vector((0, 0, 1.0))
+    pos0 = KAI_AT + AIM * 11.0 - SIDE * 3.0 + Vector((0, 0, 3.0))
+    aim, err = h3.aim_euler(rig, emp, pos0 - SIDE * 1.2 + Vector((0, 0, 0.6)))
+    print("S08 aim err", round(err, 1))
+    anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
+    acting.glare(rig, pos0, 1)
+    # the bird wheels in the sky behind him, upper right of frame, lining up its second dive
+    c = KAI_AT - AIM * 14.0 - SIDE * 6.0 + Vector((0, 0, 16.0))
+    bird = _bird(c)
+    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 4, math.sin(2.2 * u * math.pi) * 3,
+                                            1.2 * math.sin(u * 5))))
     cam = dv2._camera("S08_cam", 1, chest, (pos0 - chest).length, 0.0)
     cam.data.lens = 28.0
     for f in range(1, n + 1):
         u = acting.ease((f - 1) / (n - 1), "inout")
-        h3._key_cam(cam, f, pos0.lerp(chest + (pos0 - chest) * 0.8, u), chest + Vector((0, 0, 1.6 + 0.3 * u)))
+        h3._key_cam(cam, f, pos0.lerp(chest + (pos0 - chest) * 0.8, u), chest + Vector((0, 0, 1.2 + 0.3 * u)))
     _far(cam)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], rig["root"], bird["root"]])
