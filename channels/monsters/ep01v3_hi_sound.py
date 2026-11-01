@@ -10,7 +10,10 @@ plus lines.json).
 
     python channels/monsters/ep01v3_hi_sound.py TAKES_DIR          # -> out/monsters/ep01v3_hi/mix.wav + stems + layout.json
     python channels/monsters/ep01v3_hi_sound.py TAKES_DIR --mux [--picture ep01v3_diorama.mp4]   # + the final mp4
-    ... --check                                                     # + Whisper medium (Hindi) on every line of the mix
+
+The shorts chat records AND Whisper-checks every take with its Hindi Whisper before pushing (owner, 1 Nov 2026: "It
+uses whisper made for hindi so let it do it don't download specifically for hindi here"). --check (multilingual
+medium on the mix) stays only for a container that already has that model; don't download one for it.
 
 Layout: every take starts where its English line started, so the English captions and every picture cue stay put.
 A take longer than its slot (up to GAP before the next line starts) is sped up with ffmpeg atempo, x1.12 at most;
