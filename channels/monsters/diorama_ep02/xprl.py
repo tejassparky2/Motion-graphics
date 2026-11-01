@@ -297,7 +297,7 @@ def s18():
     from channels.monsters.mk import anim
     h1.hill()
     v = h1.villager(1, 18, net=True, bell=False)                       # S16/S17's net-carrier, right behind her
-    v["root"].location = WREN_STOP - back * 6.5 - side * 3.2
+    v["root"].location = WREN_STOP - back * 8.0 - side * 6.0          # behind her, off her shoulder, in view
     v["root"].rotation_euler.z = math.atan2(back.x, -back.y)
     for f in range(1, n + 1, 2):                                       # a ready, slightly impatient sway
         anim.key(v["body"], "rotation_euler", f, (0, 0.04 * math.sin(f / 7.0), 0), "CONSTANT")
