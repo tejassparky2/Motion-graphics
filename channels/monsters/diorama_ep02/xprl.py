@@ -132,12 +132,13 @@ def s17():
         P.rot("head 1", (-6, 0, 0))                                   # chin up
     feet = wren.march(w, PW, ((0, 0, 0), (0, -dist, 0)), 1, f_stop, step_len=0.31, upper=upper, every=2)
     mid = (feet["L"] + feet["R"]) / 2
-    for f, lean, chin in ((f_stop + 2, 7, -8), (f_stop + 6, -3, -10), (f_stop + 10, 0, -8), (n, 0, -8)):
-        PW.reset()                                                   # planted: overshoot forward, settle back
-        PW.hips(Vector((mid.x, mid.y, 0)))
+    for f, lean, chin, sink in ((f_stop + 2, 7, -6, 0.035), (f_stop + 6, -3, -3, 0.02), (f_stop + 10, 0, -2, 0.012),
+                                (n, 0, -2, 0.012)):
+        PW.reset()                                                   # planted: overshoot forward, settle back,
+        PW.hips(Vector((mid.x, mid.y, -sink)))                       # knees giving a little on the stop
         for side in ("L", "R"):
             PW.leg(side, feet[side] + Vector((0, 0, PW.ankle_h)))
-        wren.hold_bell(PW, 0.3)
+        wren.hold_bell(PW, 0.45)
         PW.rot("chest", (lean, 0, 0))
         PW.rot("head 1", (chin, 0, 0))
         PW.key(f)
@@ -145,7 +146,8 @@ def s17():
     wren.ring(w, 1, ring_until)
     wren.face(w, "stern", 1)
     wren.face(w, "stern", f_stop + 2, value=1.0)
-    wren.blink(w, 1, n, at=(f_stop + 12,))
+    wren.blink(w, 1, f_stop - 14, every=(200, 201), at=(18,))       # one blink mid-march; eyes open on Kai at the end
+    wren.contact_shadows(w)
     v2._twos([k["arm"], w["arm"]])
     # camera: over Kai's right shoulder toward where she stops; a slow push-in on 1s
     tgt = WREN_STOP + Vector((0, 0, 5.2))
@@ -251,6 +253,7 @@ def s18():
     wren.face(w, "stern", 1)
     wren.talk_words(w, words, t0)
     wren.blink(w, 1, n, at=(fr.get("it", 46) - 4,))
+    wren.contact_shadows(w)
     v2._twos([w["arm"]])
     back = (KAI_AT - WREN_STOP).normalized()                           # toward Kai (the camera side)
     side = Vector((back.y, -back.x, 0))
@@ -271,7 +274,15 @@ SHOTS["S18"] = s18
 
 
 # ------------------------------------------------------------------------------------------------------------ S20top
-SHRIMP_IN_HAND = 0.3          # puffshrimp scale in Kai's cupped hands (~1.1 units = 22 cm tall with the claw raised)
+SHRIMP_IN_HAND = 0.3          # fallback only: the shared value is helper4.SHRIMP_IN_HAND (one size for every shot)
+
+
+def _shrimp_scale():
+    try:
+        from channels.monsters.diorama_ep02 import helper4        # lazy: helper4 imports this module's staging
+        return helper4.SHRIMP_IN_HAND
+    except (ImportError, AttributeError):
+        return SHRIMP_IN_HAND
 
 
 def _to_arm(rig, p):
@@ -364,7 +375,7 @@ def s20top():
         PW.key(f)
     # the shrimp: in his cupped hands until "over", then it drops into the bag, bounces and settles, blinking
     sh = puffshrimp.build((0, 0, 0), name="s20puff")
-    sh["root"].scale = (SHRIMP_IN_HAND,) * 3
+    sh["root"].scale = (_shrimp_scale(),) * 3
     bag_pt = hoop_c - up * 0.9
     for f in range(1, n + 1):
         bpy.context.scene.frame_set(f)
@@ -390,6 +401,7 @@ def s20top():
     wren.grip(w, 1, "R")
     wren.grip(w, 1, "L")
     wren.blink(w, 1, n, at=(f_rel + 30,))
+    wren.contact_shadows(w)
     v2._twos([k["arm"], w["arm"]])
     # camera: side-on from the west, the pair in the top half (shift the frame down), a slow push-in on 1s
     mid = (KAI_AT + WREN_STOP) / 2

@@ -518,3 +518,26 @@ def talk_words(rig, words, t0, fps=24, amount=0.85, first=1):
                 _key(head, k, f, amount if k == g else 0.0)
         for k, v in shut.items():
             _key(head, k, b, v)
+
+
+def contact_shadows(rig, size=(0.55, 0.85)):
+    """Soft blob shadows under her boots (look.blob_shadow), following each foot over the ground (x, y only), so she
+    reads as standing ON the grass in diorama light. Sizes are in creature units at scale 5.8 (scaled with her)."""
+    arm = rig["arm"]
+    k = arm.scale.x / 5.8
+    out = []
+    for side in ("L", "R"):
+        sh = look.blob_shadow(f"wren_foot_shadow.{side}", (0, 0, 0.03), (size[0] * k, size[1] * k))
+        c = sh.constraints.new("COPY_LOCATION")
+        c.target = arm
+        c.subtarget = f"foot.{side}"
+        c.use_z = False
+        out.append(sh)
+    body = look.blob_shadow("wren_body_shadow", (0, 0, 0.025), (1.2 * k, 0.9 * k))
+    c = body.constraints.new("COPY_LOCATION")
+    c.target = arm
+    c.subtarget = "hips"
+    c.use_z = False
+    out.append(body)
+    rig["shadows"] = out
+    return out

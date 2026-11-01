@@ -277,7 +277,7 @@ def _claw_tip(rig):
     return min(vs, key=lambda v: v.z)
 
 
-def _mark_light(k, f_on, f_full, n, seed=3):
+def _mark_light(k, f_on, f_full, n, toward, seed=3):
     """A small coral point light at the mark (it lights his arm and the shrimp): off, a flicker on 2s from f_on, full
     from f_full (with a small overshoot), then a slow pulse."""
     bpy.context.scene.frame_set(1)
@@ -287,7 +287,7 @@ def _mark_light(k, f_on, f_full, n, seed=3):
     d.shadow_soft_size = 0.15
     lt = bpy.data.objects.new("h9_mark_light", d)
     bpy.context.scene.collection.objects.link(lt)
-    lt.location = m + Vector((0, 0, 0.12))
+    lt.location = m + (Vector(toward) - m).normalized() * 0.45     # just off the skin, on the camera's side
     rnd = random.Random(seed)
     full = 60.0
     for f in range(1, n + 1):
@@ -303,9 +303,25 @@ def _mark_light(k, f_on, f_full, n, seed=3):
     return lt
 
 
+def _tree(o):
+    return [o] + [c for ch in o.children for c in _tree(ch)]
+
+
+def _hide_from(f, objs):
+    for o in objs:
+        for g, hide in ((1, False), (f, True)):
+            o.hide_render = hide
+            o.keyframe_insert("hide_render", frame=g)
+        if o.animation_data and o.animation_data.action:
+            for fc in anim.all_fcurves(o.animation_data.action):
+                if fc.data_path == "hide_render":
+                    for kp in fc.keyframe_points:
+                        kp.interpolation = "CONSTANT"
+
+
 # ------------------------------------------------------------------------------------------------------------ S14
 def _s14_cam(mark, seat):
-    return mark.lerp(seat, 0.3), _az(-0.3, 0.9)           # over his left shoulder, looking down at his hands
+    return mark.lerp(seat, 0.45), _az(-0.3, 0.9)          # over his left shoulder, looking down at his hands
 
 
 def s14():
@@ -325,12 +341,12 @@ def s14():
     anim.on_twos(_shrimp_parts(sh), step=2)
     bpy.context.scene.frame_set(1)
     mark = _forearm(k, MARK_U)
-    _mark_light(k, f_wrist, f_glow, n)
     tgt, yaw = _s14_cam(mark, seat)
+    _mark_light(k, f_wrist, f_glow, n, _orbit(tgt, 5.0, 55.0, yaw)[0])
     cam = _new_cam("S14cam")
     for f in range(1, n + 1):                                           # a slow push-in on 1s
-        loc, rot = _orbit(tgt, 4.6 - 0.7 * _smooth((f - 1) / (n - 1)), 55.0, yaw)
-        _key_cam(cam, f, loc, rot, 50.0, (tgt - loc).length, blur=4.0)
+        loc, rot = _orbit(tgt, 5.4 - 0.8 * _smooth((f - 1) / (n - 1)), 55.0, yaw)
+        _key_cam(cam, f, loc, rot, 50.0, (tgt - loc).length, blur=4.0, haze=(3.0, 3.0))
     _linear(cam, cam.data, bpy.context.scene.world)
     X.v2._twos([k["arm"]])
     LAST.update(k=k, sh=sh, mark=mark, seat=seat)
@@ -348,10 +364,10 @@ def s15():
     anim.key(sh["body"], "rotation_euler", 1, (0.28, 0, 0))              # still leaning over the mark
     anim.blink(sh, 14)
     anim.on_twos(_shrimp_parts(sh), step=2)
-    _mark_light(k, -10, -2, n)
     sc = bpy.context.scene
     sc.frame_set(1)
     m = _forearm(k, MARK_U)
+    _mark_light(k, -10, -2, n, _orbit(m, 5.0, 55.0, _s14_cam(m, seat)[1])[0])
     a = (_forearm(k, 1.0) - _forearm(k, 0.0)).normalized()               # elbow -> wrist: the crack's "up"
     tgt, yaw = _s14_cam(m, seat)
     view_from, _ = _orbit(m, 1.0, 55.0, yaw)
@@ -363,7 +379,7 @@ def s15():
     ins = _new_cam("S15ins", 1)
     for f in range(1, fc):
         d = d1 * (1.18 - 0.18 * _smooth((f - 1) / max(1, fc - 2)))       # pushing in on the mark
-        _key_cam(ins, f, m + nrm * d, _look(-nrm, a), f_mm, d, shift_y=shift, blur=6.0)
+        _key_cam(ins, f, m + nrm * d, _look(-nrm, a), f_mm, d, shift_y=shift, blur=6.0, haze=(3.0, 3.0))
     # the sky: from his eyes, the rift dead ahead at the cut (same spot, same size), then a tilt up
     sky = _new_cam("S15sky", fc)
     eye = X.KAI_AT + Vector((0, 0, EYE))
@@ -375,6 +391,7 @@ def s15():
         _key_cam(sky, f, eye, _look(q @ fwd), lens * (1 + 0.06 * u), 400.0, shift_y=shift, blur=2.0,
                  haze=(0.5, 1.5))
     _linear(ins, ins.data, sky, sky.data, sc.world)
+    _hide_from(fc, list(k["arm"].users_collection[0].objects) + _tree(sh["root"]))   # the sky camera is at his eyes
     X.v2._twos([k["arm"]])
     LAST.update(k=k, sh=sh, mark=m, seat=seat, fc=fc)
     _anchors("S15", lambda f, c: dict(mark=_mark_geo(k, c)) if f < fc else dict(rift=_rift_geo(c)), meta=dict(fc=fc))
@@ -544,7 +561,7 @@ def s19():
     w = _wren_facing_kai(n)
     sh, seat = _shrimp_in_hands(k)
     shp, hinge, body = sh["shoulder"], sh["hinge"], sh["body"]
-    anim.key(shp, "rotation_euler", 1, (0.55, 0, 0))                     # the claw held low and forward, relaxed
+    anim.key(shp, "rotation_euler", 1, (1.25, 0, 0))                     # the claw hanging forward and down, wet
     anim.key(hinge, "rotation_euler", 1, (0.12, 0, 0))
     for f in range(1, n + 1, 24):                                        # breathing
         anim.squash(body, f, 0.0)
@@ -572,13 +589,13 @@ def s19():
     crane = _new_cam("S19crane", 1)
     head = X.KAI_AT + Vector((0, 0, EYE + 0.6))
     a = (head + X._d * 6.0, 9.0, 12.0, _az(-1.0, 0.0), 40.0)
-    b = (VILLAGE + Vector((0, 32.0, 0)), 330.0, 33.0, 180.0, 34.0)
+    b = (VILLAGE + Vector((0, 20.0, 0)), 330.0, 33.0, 180.0, 34.0)
     f_end = max(30, fc - 6)
     for f in range(1, fc):
         u = _smooth((f - 1) / (f_end - 1))
         t = Vector(a[0]).lerp(Vector(b[0]), u)
         d = math.exp(math.log(a[1]) + (math.log(b[1]) - math.log(a[1])) * u)
-        tl = a[2] + (b[2] - a[2]) * u
+        tl = a[2] + (b[2] - a[2]) * _smooth(min(1.0, u * 1.8))           # up over the trees before it pulls back
         yw = a[3] + ((b[3] - a[3] + 180) % 360 - 180) * u
         ln = a[4] + (b[4] - a[4]) * u
         drift = 1 - 0.03 * max(0.0, (f - f_end) / 10)                    # keeps drifting in after the crane lands
@@ -586,11 +603,12 @@ def s19():
         _key_cam(crane, f, loc, rot, ln, d * drift, blur=BLUR + 6 * u, haze=(0.97 + 0.5 * u, 0.55 + 2.2 * u))
     # part B: the claw in his hands, dripping; a slow push-in
     close = _new_cam("S19claw", fc)
-    yaw = _az(0.9, -0.45)
+    yaw = _az(0.75, -0.65)                                               # from the claw's side (its right), in front
+    aim = tip.lerp(seat, 0.35) + Vector((0, 0, 0.1))                    # the claw and its face, the drops below
     for f in range(fc, n + 1):
         u = _smooth((f - fc) / (n - fc))
-        loc, rot = _orbit(tip + Vector((0, 0, -0.15)), 2.3 - 0.35 * u, 6.0, yaw)
-        _key_cam(close, f, loc, rot, 85.0, (tip - loc).length, blur=14.0)
+        loc, rot = _orbit(aim, 3.4 - 0.45 * u, 8.0, yaw)
+        _key_cam(close, f, loc, rot, 70.0, (aim - loc).length, blur=14.0, haze=(3.0, 3.0))
     _linear(crane, crane.data, close, close.data, sc.world)
     LAST.update(k=k, sh=sh, w=w, fc=fc, tip=tip, lake=lake)
 
