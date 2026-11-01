@@ -119,6 +119,8 @@ def _bird(at):
     rig = tuftwing.build(tuple(at), name="tuft", shadow_span=6.0)
     rig["root"].scale = (h5.BIRD_SCALE,) * 3
     xv3.dark_form(1, name="tuft")
+    for o in [rig["shadow"]] + list(rig["shadow"].children_recursive):   # the ground-shadow decal: it would float
+        o.hide_render = True                                              # in the air under a flying bird
     return rig
 
 
