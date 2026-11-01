@@ -179,6 +179,7 @@ def s07():
     yaw = _yaw_toward(-(FWD * 0.85 - LEFT * 0.35))                   # from in front, a little to his right
     # (west of him: the stump smoke south-east of him stays off-frame)
     _cam("cam_s07", tgt, 1, n, -4.0, 6.6, 5.8, 40.0, yaw)
+    _anchors("S07", n, k, sh)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
 
@@ -334,10 +335,11 @@ def s11():
 
 
 # ------------------------------------------------------------------------------------------------------------ S12
-def _cock_at_face(sh, k):
-    """Claw raised beside his face, pincer open, aimed at his nose (Episode 1's frame-0 threat, at this scale)."""
+def _cock_at_face(sh, k, side_k=1.0):
+    """Claw raised beside his face, pincer open, aimed at his nose (Episode 1's frame-0 threat, at this scale).
+    side_k: +1 beside his left cheek, -1 beside his right (the lens side in S12)."""
     nose = s3d.kai_point(k, "nose")
-    side = LEFT * 0.35 * SHRIMP_S / 0.55
+    side = LEFT * 0.35 * side_k * SHRIMP_S / 0.55
     return s3d.raise_claw(sh, nose + side + Vector((0, 0, 0.55)), nose)
 
 
@@ -369,7 +371,7 @@ def s12():
     rest = _claw_rest(sh)
     anim.key(sh["shoulder"], "rotation_euler", 1, rest, "CONSTANT")
     anim.key(sh["hinge"], "rotation_euler", 1, (0.2, 0.0, 0.0), "CONSTANT")
-    cock = _cock_at_face(sh, k)
+    cock = _cock_at_face(sh, k, side_k=-1.0)
     anim.key(sh["shoulder"], "rotation_euler", RAISE - 2, tuple(v * 1.1 for v in rest), "CONSTANT")   # the dip
     over = tuple(v * 1.12 for v in cock)
     anim.key(sh["shoulder"], "rotation_euler", RAISE, over, "CONSTANT")
@@ -391,7 +393,8 @@ def s12():
     eyes = s3d.kai_point(k, "eyes")
     tgt = base.lerp(eyes, 0.55)
     yaw = _yaw_toward(-(FWD * 0.6 - LEFT * 0.8))                       # low, from his right: under the brim
-    _cam("cam_s12", tgt, 1, n, -6.0, 6.2, 5.2, 40.0, yaw)
+    _cam("cam_s12", tgt, 1, n, -6.0, 7.4, 6.4, 40.0, yaw)
+    _anchors("S12", n, k, sh)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
 
