@@ -119,6 +119,8 @@ def _bird(at):
     rig = tuftwing.build(tuple(at), name="tuft", shadow_span=6.0)
     rig["root"].scale = (h5.BIRD_SCALE,) * 3
     xv3.dark_form(1, name="tuft")
+    for o in [rig["shadow"]] + list(rig["shadow"].children_recursive):   # the ground-shadow decal: it would float
+        o.hide_render = True                                              # in the air under a flying bird
     return rig
 
 
@@ -185,22 +187,24 @@ def s08():
     s15._flush_keys(k)
     acting.expression(k, "angry", 1, value=0.6)
     acting.blink(k, 1, n, at=(30,))
-    aim, _ = h3.aim_euler(rig, emp, KAI_AT + AIM * 30 + Vector((0, 0, 9)))
-    anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
-    acting.glare(rig, THORN + Vector((0, 0, 18)), 1)
-    # the bird wheels in the sky behind him (a banking loop over the pond), lining up its second dive
-    c = KAI_AT - AIM * 16.0 + SIDE * 4.0 + Vector((0, 0, 17.0))
-    bird = _bird(c)
-    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 6, math.sin(2.2 * u * math.pi) * 4,
-                                            1.5 * math.sin(u * 5))))
-    # camera: heroic, low, in front and a little to his left: he aims almost into the lens; push-in on 1s
+    # camera: heroic, a little below his hands, in front and to his left; the claw aims just beside the lens
     chest = s15._world(k, "chest")
-    pos0 = KAI_AT + AIM * 12.0 - SIDE * 4.5 + Vector((0, 0, 1.0))
+    pos0 = KAI_AT + AIM * 10.5 - SIDE * 5.0 + Vector((0, 0, 3.5))
+    aim, err = h3.aim_euler(rig, emp, pos0 - SIDE * 1.2 + Vector((0, 0, 0.6)))
+    print("S08 aim err", round(err, 1))
+    anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
+    acting.glare(rig, pos0, 1)
+    # the bird wheels in the sky behind him, upper right of frame, lining up its second dive
+    c = KAI_AT - AIM * 14.0 - SIDE * 3.0 + Vector((0, 0, 15.0))
+    bird = _bird(c)
+    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 2.5, math.sin(2.2 * u * math.pi) * 2,
+                                            1.2 * math.sin(u * 5))))
+    dv2.BLUR = 3.0                                               # the shrimp and Kai both sharp
     cam = dv2._camera("S08_cam", 1, chest, (pos0 - chest).length, 0.0)
     cam.data.lens = 28.0
     for f in range(1, n + 1):
         u = acting.ease((f - 1) / (n - 1), "inout")
-        h3._key_cam(cam, f, pos0.lerp(chest + (pos0 - chest) * 0.8, u), chest + Vector((0, 0, 1.6 + 0.3 * u)))
+        h3._key_cam(cam, f, pos0.lerp(chest + (pos0 - chest) * 0.8, u), chest + Vector((0, 0, 1.2 + 0.3 * u)))
     _far(cam)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], rig["root"], bird["root"]])
@@ -241,7 +245,7 @@ def s09():
     bpy.context.view_layer.update()
     muzzle = emp[1].matrix_world.translation.copy()
     # the bird: dives in along the line (12-33), is blasted back up it tumbling (34-62), lands upside down
-    hi = THORN + Vector((-2.0, -3.0, 22.0))
+    hi = THORN + Vector((-2.0, -3.0, 15.0))
     near = KAI_AT + AIM * 7.5 + Vector((0, 0, 6.8))
     bird = _bird(hi)
     _fly(bird, 1, 11, lambda u: hi + Vector((1.5 * math.sin(u * 3), 1.5 * math.cos(u * 3), 0)))
@@ -284,13 +288,13 @@ def s09():
         u = acting.ease((f - 1) / (CUT_B - 2), "inout")
         h3._key_cam(ca, f, eye + AIM * (3.6 - 0.6 * u) - SIDE * 1.0 + Vector((0, 0, -0.45)), eye + Vector((0, 0, 0.1)))
     head = s15._world(k, "head")
-    focus = KAI_AT + AIM * 6.0 + Vector((0, 0, 6.3))            # between the claw and where the bird pulls up
+    focus = KAI_AT + AIM * 9.0 + Vector((0, 0, 8.5))            # the claw low right, the bird diving in above
     dv2.BLUR = 5.0
     cb = dv2._camera("S09_B", CUT_B, near, 20.0, 5.0)
     cb.data.lens = 30.0
     for f in range(CUT_B, CUT_C):
         u = acting.ease((f - CUT_B) / (CUT_C - 1 - CUT_B), "out")
-        pos = head - AIM * (4.2 - 0.8 * u) + SIDE * 1.7 + Vector((0, 0, 1.6))
+        pos = head - AIM * (3.4 - 0.6 * u) + SIDE * 2.2 + Vector((0, 0, 1.0))
         h3._key_cam(cb, f, pos, focus)
     goal = KAI_AT.lerp(THORN, 0.62) + Vector((0, 0, 5.0))
     dv2.BLUR = 3.0
@@ -316,7 +320,10 @@ def s09():
         o.rotation_euler = (o.rotation_euler.x, -pitch, o.rotation_euler.z)
     _far(ca, cb, cc)
     sc.frame_set(SNAP_F)
-    _anchor("S09", dict(muzzle=_screen(cb, muzzle), bird=_screen(cb, near)))
+    sc.frame_set(CUT_C)
+    muzzle_c = _screen(cc, muzzle)
+    sc.frame_set(SNAP_F)
+    _anchor("S09", dict(muzzle=_screen(cb, muzzle), muzzle_c=muzzle_c, bird=_screen(cb, near)))
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], rig["root"], bird["root"]])
 
@@ -345,11 +352,15 @@ def s10():
         u = acting.ease((f - 1) / (n - 1), "inout")
         dv2._key(cam, f, cam_t, 10.0 - 2.0 * u, 12.0 + 3 * u, yaw=yaw_c - 6 * u)
     _far(cam)
-    head = stuck + Vector((0, 0, -0.9 * h5.BIRD_SCALE))          # upside down: its head hangs below the body
     rows = {}
-    for f in range(1, n + 1):
+    for f in range(1, n + 1):                                    # the ball (its head and body) and its screen radius
         sc.frame_set(f)
-        rows[f] = _screen(cam, head)
+        bpy.context.view_layer.update()
+        c = root.matrix_world @ Vector(tuftwing.CENTER)
+        right = cam.matrix_world.to_3x3() @ Vector((1, 0, 0))
+        x, y = _screen(cam, c)
+        ex, ey = _screen(cam, c + right * tuftwing.BALL[0] * h5.BIRD_SCALE)
+        rows[f] = (x, y, round(math.hypot(ex - x, ey - y), 1))
     _anchor("S10", dict(head=rows))
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[bird["root"]])
@@ -378,7 +389,7 @@ def post(shot, raw, sub, out):
         if shot == "S09" and SNAP_F <= f <= SNAP_F + 12:
             img = cairo.ImageSurface.create_from_png(path)
             cr = cairo.Context(img)
-            mx, my = a["muzzle"]
+            mx, my = a["muzzle"] if f < CUT_C else a.get("muzzle_c", a["muzzle"])   # the ring follows the cut
             if f < SNAP_F + 3:
                 sp = os.path.join(sub, "subject", name)
                 subj = cairo.ImageSurface.create_from_png(sp) if os.path.exists(sp) else None
@@ -389,20 +400,24 @@ def post(shot, raw, sub, out):
         elif shot == "S10":
             img = cairo.ImageSurface.create_from_png(path)
             cr = cairo.Context(img)
-            hx, hy = a["head"][str(f)]
-            _stars(cr, f, hx, hy)
+            hx, hy, hr = a["head"][str(f)]
+            _stars(cr, f, hx, hy, hr)
             img.write_to_png(dst)
         else:
             shutil.copyfile(path, dst)
     return out
 
 
-def _stars(cr, f, cx, cy, n=3, rx=70.0, size=26.0):
-    """Little yellow cel stars with navy lines circling over a dazed head on 2s (one orbit per 16 frames)."""
+def _stars(cr, f, cx, cy, r, n=3):
+    """Little yellow cel stars with navy lines circling the dazed bird's crown (on 2s, one orbit per 16 frames). It
+    hangs upside down, so the crown is the bottom of the ball (screen centre cx, cy, radius r px): the orbit is a flat
+    ellipse just under it, the far stars a little smaller."""
+    rx, size = r * 1.1, max(16.0, r * 0.32)
+    cy = cy + r * 0.95
     ph = 2 * math.pi * ((f // 2) * 2) / 16
     for i in range(n):
         a = ph + i * 2 * math.pi / n
-        x, y = cx + math.cos(a) * rx, cy - size * 1.6 + math.sin(a) * rx * 0.25
+        x, y = cx + math.cos(a) * rx, cy + math.sin(a) * rx * 0.28
         r = size * (1 + 0.18 * math.sin(a))
         cr.new_path()
         for j in range(10):
