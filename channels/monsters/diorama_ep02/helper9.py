@@ -609,7 +609,7 @@ def s19():
     for f in range(fc, n + 1):
         u = _smooth((f - fc) / (n - fc))
         loc, rot = _orbit(aim, 4.6 - 0.5 * u, 6.0, yaw)
-        _key_cam(close, f, loc, rot, 55.0, (aim - loc).length, blur=10.0, haze=(3.0, 3.0))
+        _key_cam(close, f, loc, rot, 55.0, (aim - loc).length, shift_y=-0.08, blur=10.0, haze=(3.0, 3.0))  # tip above the captions
     _linear(crane, crane.data, close, close.data, sc.world)
     LAST.update(k=k, sh=sh, w=w, fc=fc, tip=tip, lake=lake)
 
