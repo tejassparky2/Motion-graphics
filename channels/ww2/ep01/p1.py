@@ -652,14 +652,14 @@ def _shots():
     L2, L3, L4, L5, L6, L7 = L(2), L(3), L(4), L(5), L(6), L(7)
     card = T.chapter("C1").card
     fort_cut = word_t(2, "turns its guns")
-    fire_t = L3.start + 0.35
+    fire_t = S(3, 0).end + 0.05                                    # BOOM right after "fires." (not over it)
     sh = [
         (0.0, L2.start - 0.05, s01_harbour),
         (L2.start - 0.05, fort_cut, s02_turret),
         (fort_cut, L3.start - 0.1, s03_fort),
         (L3.start - 0.1, fire_t + 0.85, lambda cr, t, a, b: s04_fires(cr, t, a, b, fire_t)),
-        (fire_t + 0.85, L4.start - 0.25, None),                   # silence: black
-        (L4.start - 0.25, L5.start - 0.2, s05_world),
+        (fire_t + 0.85, max(L4.start - 0.25, fire_t + 0.9), None),   # silence: black
+        (max(L4.start - 0.25, fire_t + 0.9), L5.start - 0.2, s05_world),
         (L5.start - 0.2, L6.start - 0.2, s06_counter),
         (L6.start - 0.2, L7.start - 0.4,
          lambda cr, t, a, b: s07_city(cr, t, a, b, word_t(6, "one bomb", 0.5))),
@@ -711,7 +711,7 @@ def draw(cr, t):
 
 def cues(T=T):
     """(episode time, sfx, gain dB, pan) for helper 7's mix."""
-    fire_t = L(3).start + 0.35
+    fire_t = S(3, 0).end + 0.05
     c = [(0.0, "sea_waves", -14, 0.0), (0.0, "clock_tick", -10, -0.6), (L(2).start + 0.3, "tank", -18, 0.2),
          (fire_t, "gun_boom", 0, 0.3), (fire_t + 0.05, "explosion", -6, 0.5),
          (L(4).start - 0.2, "artillery", -20, 0.0),
