@@ -182,7 +182,7 @@ def s01_harbour(cr, t, t0, t1):
     cr.restore()
     # the hook: big type over the frame
     s1 = S(1, 0) if len(T._lines["1"]["sentences"]) > 1 else L(1)
-    _hook(cr, t, t0 + 0.0, "1 SEPTEMBER 1939", W * 0.6, 190, 104)
+    _hook(cr, t, t0 - 0.4, "1 SEPTEMBER 1939", W * 0.6, 190, 104)   # full size on frame 0 (the hook)
     _hook(cr, t, S(1, 1).start - 0.1 if len(T._lines["1"]["sentences"]) > 1 else s1.start + 2.5, "4:45 AM",
           W * 0.6, 335, 120, color="fire")
 
@@ -190,7 +190,7 @@ def s01_harbour(cr, t, t0, t1):
 def _hook(cr, t, start, s, x, y, size, color="cream"):
     if t < start:
         return
-    u = back_out(clamp01((t - start) / 0.3), 1.4)
+    u = max(0.02, back_out(clamp01((t - start) / 0.3), 1.4))
     cr.save()
     cr.translate(x, y)
     cr.scale(u, u)
@@ -284,7 +284,7 @@ def s06_counter(cr, t, t0, t1):
     if t < t0 + 2.6:
         counter(cr, t, t0 + 0.1, t0 + 2.4, 85_000_000, W / 2, H * 0.56, size=230, color="cream")
     else:
-        u = back_out(clamp01((t - t0 - 2.6) / 0.3), 1.5)
+        u = max(0.02, back_out(clamp01((t - t0 - 2.6) / 0.3), 1.5))
         cr.save()
         cr.translate(W / 2, H * 0.5)
         cr.scale(u, u)
@@ -320,7 +320,7 @@ def s08_title(cr, t, t0, t1, sub_t):
     _frame(cr, t, t0, t1 + 4, 1.0, 1.08)
     paper(cr)
     rays(cr, t, W / 2, H * 0.48, n=32, color="gold", alpha=0.3, spin=0.04)
-    u = back_out(clamp01((t - t0) / 0.35), 1.3)
+    u = max(0.02, back_out(clamp01((t - t0) / 0.35), 1.3))
     cr.save()
     cr.translate(W / 2, H * 0.44)
     cr.scale(u, u)
