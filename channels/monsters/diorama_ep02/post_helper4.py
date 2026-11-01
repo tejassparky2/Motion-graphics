@@ -69,6 +69,19 @@ def sweat(a, side=1, k=2.6):
     return draw
 
 
+def terror(a, k=0.34):
+    """Pin-prick terror eyes over his own (fx2d_anime.terror_eyes, the blue shock lines included), tracked."""
+    def draw(cr, t, start, end=None):
+        (lx, ly), (rx, ry) = at(a, t, "eye_l"), at(a, t, "eye_r")
+        d = math.hypot(rx - lx, ry - ly)
+        tilt = math.atan2(ry - ly, rx - lx)
+        if abs(tilt) > math.pi / 2:
+            tilt -= math.copysign(math.pi, tilt)
+        fx2d_anime.terror_eyes(cr, t, start, x=(lx + rx) / 2, y=(ly + ry) / 2, size=d * 2.6, end=end,
+                               eyes=((lx, ly), (rx, ry)), er=k * d, tilt=tilt)
+    return draw
+
+
 # ------------------------------------------------------------------------------------------------------------ S06
 def _ease_out(u):
     u = max(0.0, min(1.0, u))
@@ -84,7 +97,8 @@ def jet(a):
             return
         (x0, y0), (x1, y1) = at(a, t, "tip"), at(a, t, "ahead")
         ang = math.atan2(y1 - y0, x1 - x0)
-        L = 900.0                                                         # past the frame edge
+        ca = math.cos(ang)
+        L = (690.0 - x0) / ca if ca > 0.2 else 600.0                      # the point stops just inside the right edge
         front = L * _ease_out(u / (4 / FPS))
         tail = L * max(0.0, (u - 9 / FPS) / (5 / FPS)) ** 1.5
         thin = 1.0 - max(0.0, (u - 9 / FPS) / (5 / FPS))
@@ -93,16 +107,16 @@ def jet(a):
         cr.save()
         cr.translate(x0, y0)
         cr.rotate(ang)
-        w0, w1 = 7.0 * thin + 2, 26.0 * thin + 3                          # tapered: thin at the muzzle
-        head = min(46.0, front - tail)
+        w0, w1 = 12.0 * thin + 3, 40.0 * thin + 4                          # tapered: thin at the muzzle
+        head = min(70.0, front - tail)
 
         def body(grow):
             cr.new_path()
             cr.move_to(tail, -(w0 + grow) / 2)
             cr.line_to(front - head, -(w1 + grow) / 2)
-            cr.line_to(front - head, -(w1 * 1.7 + grow) / 2)               # the arrowhead's barbs
+            cr.line_to(front - head, -(w1 * 2.0 + grow) / 2)               # the arrowhead's barbs
             cr.line_to(front + grow * 0.6, 0)
-            cr.line_to(front - head, (w1 * 1.7 + grow) / 2)
+            cr.line_to(front - head, (w1 * 2.0 + grow) / 2)
             cr.line_to(front - head, (w1 + grow) / 2)
             cr.line_to(tail, (w0 + grow) / 2)
             cr.close_path()
@@ -145,7 +159,8 @@ def overlays(shot):
     n = max(a)
     if shot == "S05":
         w = _words("l5")
-        return [(sweat(a), dict(start=w["In"][0] - 2 / FPS, end=(n - 1) / FPS))]
+        return [(terror(a), dict(start=(S05_CUT - 1) / FPS, end=(n - 1) / FPS)),
+                (sweat(a), dict(start=w["In"][0] - 2 / FPS, end=(n - 1) / FPS))]
     if shot == "S06":
         w = _words("l6")
         return [(jet(a), dict(start=w["Straight"][0]))]

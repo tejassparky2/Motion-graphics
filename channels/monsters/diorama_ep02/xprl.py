@@ -27,6 +27,7 @@ from channels.monsters.mk import diorama, hero, wren
 SCALE = 5.8                                         # hero.blend / wren: 1.5 m model -> creature units (20 cm)
 KAI_AT = Vector((5.0, -3.5, 0.0))                   # the pond's east shore, just south of the shrimp's drinking spot
 WREN_FROM = Vector((-0.5, -23.0, 0.0))              # the top of the path from the south (the villagers' side)
+QUIET_STUMPS = ((4.1, -14.6), (7.2, -9.9))           # grove stumps by Wren's path: no smoke left by Episode 2
 BLUR, HAZE = 4.0, (2.5, 2.0)                        # character shots: a gentle tilt-shift, haze well behind them
 _d = (WREN_FROM - KAI_AT).normalized()
 WREN_STOP = KAI_AT + _d * 6.5                       # where she plants her feet, facing Kai
@@ -68,6 +69,13 @@ def _world(n):
     """The island as Episode 1 left it (diorama_v3/bgqrs._set: the cut grove's stumps), no Kai lying down."""
     diorama.setup()
     b3._set(n)
+    for o in list(bpy.data.objects):                                     # the stumps on Wren's path have burnt out
+        if o.name.startswith("puff") and o.type == "EMPTY" and o.parent is None:
+            x, y = o.location.x, o.location.y
+            if any(math.hypot(x - sx, y - sy) < 1.5 for sx, sy in QUIET_STUMPS):
+                for ch in o.children:
+                    ch.hide_render = True
+                o.hide_render = True
     sc = bpy.context.scene
     sc.frame_start, sc.frame_end = 1, n
 
@@ -124,12 +132,13 @@ def s17():
         P.rot("head 1", (-6, 0, 0))                                   # chin up
     feet = wren.march(w, PW, ((0, 0, 0), (0, -dist, 0)), 1, f_stop, step_len=0.31, upper=upper, every=2)
     mid = (feet["L"] + feet["R"]) / 2
-    for f, lean, chin in ((f_stop + 2, 7, -8), (f_stop + 6, -3, -10), (f_stop + 10, 0, -8), (n, 0, -8)):
-        PW.reset()                                                   # planted: overshoot forward, settle back
-        PW.hips(Vector((mid.x, mid.y, 0)))
+    for f, lean, chin, sink in ((f_stop + 2, 7, -6, 0.035), (f_stop + 6, -3, -3, 0.02), (f_stop + 10, 0, -2, 0.012),
+                                (n, 0, -2, 0.012)):
+        PW.reset()                                                   # planted: overshoot forward, settle back,
+        PW.hips(Vector((mid.x, mid.y, -sink)))                       # knees giving a little on the stop
         for side in ("L", "R"):
             PW.leg(side, feet[side] + Vector((0, 0, PW.ankle_h)))
-        wren.hold_bell(PW, 0.3)
+        wren.hold_bell(PW, 0.45)
         PW.rot("chest", (lean, 0, 0))
         PW.rot("head 1", (chin, 0, 0))
         PW.key(f)
@@ -137,7 +146,8 @@ def s17():
     wren.ring(w, 1, ring_until)
     wren.face(w, "stern", 1)
     wren.face(w, "stern", f_stop + 2, value=1.0)
-    wren.blink(w, 1, n, at=(f_stop + 12,))
+    wren.blink(w, 1, f_stop - 14, every=(200, 201), at=(18,))       # one blink mid-march; eyes open on Kai at the end
+    wren.contact_shadows(w)
     v2._twos([k["arm"], w["arm"]])
     # camera: over Kai's right shoulder toward where she stops; a slow push-in on 1s
     tgt = WREN_STOP + Vector((0, 0, 5.2))
@@ -192,7 +202,7 @@ def net(name, length=13.0, hoop=1.6, depth=2.2):
     bpy.ops.mesh.primitive_cone_add(vertices=14, radius1=hoop * 0.98, radius2=0.25, depth=depth, end_fill_type="NOTHING")
     bag = bpy.context.object
     bag.name = f"{name}_bag"
-    bag.rotation_euler = (math.radians(90), 0, 0)
+    bag.rotation_euler = (math.radians(-90), 0, 0)               # its wide end on the hoop, hanging along +Y
     bag.location = c + Vector((0, depth / 2, 0))
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     me = bag.data
@@ -243,21 +253,189 @@ def s18():
     wren.face(w, "stern", 1)
     wren.talk_words(w, words, t0)
     wren.blink(w, 1, n, at=(fr.get("it", 46) - 4,))
+    wren.contact_shadows(w)
     v2._twos([w["arm"]])
     back = (KAI_AT - WREN_STOP).normalized()                           # toward Kai (the camera side)
     side = Vector((back.y, -back.x, 0))
-    nr = net("S18net", length=12.0)
-    nr.location = WREN_STOP - back * 6.0 + side * 3.0 + Vector((0, 0, 1.5))
+    nr = net("S18net", length=7.5)
+    nr.location = WREN_STOP - back * 5.0 - side * 4.4 + Vector((0, 0, 0.6))
     yaw_net = math.atan2(back.x, -back.y)
-    nr.rotation_euler = (math.radians(-12), math.radians(14), yaw_net)
-    for f in range(1, n + 1, 4):                                       # held up, swaying a little
-        nr.rotation_euler = (math.radians(-12 + 2 * math.sin(f / 9.0)), math.radians(14 + 2 * math.sin(f / 13.0)),
+    for f in range(1, n + 1, 4):                                       # held up, ready, swaying a little
+        nr.rotation_euler = (math.radians(-8 + 2 * math.sin(f / 9.0)), math.radians(-16 + 2 * math.sin(f / 13.0)),
                              yaw_net)
         nr.keyframe_insert("rotation_euler", frame=f)
-    tgt = WREN_STOP + Vector((0, 0, 7.15))
-    yaw = math.degrees(math.atan2(-back.x, -back.y))
-    _cam_move("S18cam", n, (tuple(tgt), 6.4, 3.0, yaw, 45.0, 0.0), (tuple(tgt), 5.7, 3.0, yaw, 45.0, 0.0))
+    tgt = WREN_STOP + Vector((0, 0, 6.6))
+    yaw = math.degrees(math.atan2(-back.x, -back.y)) + 20.0           # a three-quarter view, her right side to us
+    _cam_move("S18cam", n, (tuple(tgt), 8.6, 4.0, yaw, 45.0, 0.0), (tuple(tgt), 7.6, 4.0, yaw, 45.0, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 
 SHOTS["S18"] = s18
+
+
+# ------------------------------------------------------------------------------------------------------------ S20top
+SHRIMP_IN_HAND = 0.3          # fallback only: the shared value is helper4.SHRIMP_IN_HAND (one size for every shot)
+
+
+def _shrimp_scale():
+    try:
+        from channels.monsters.diorama_ep02 import helper4        # lazy: helper4 imports this module's staging
+        return helper4.SHRIMP_IN_HAND
+    except (ImportError, AttributeError):
+        return SHRIMP_IN_HAND
+
+
+def _to_arm(rig, p):
+    return rig["arm"].matrix_world.inverted() @ Vector(p)
+
+
+def _world_of(rig, bone, tail=True):
+    pb = rig["arm"].pose.bones[bone]
+    return rig["arm"].matrix_world @ (pb.tail if tail else pb.head)
+
+
+def _reach(P, rig, side, target_w, bend=(0, 0, -0.35)):
+    """Point one arm at a world target: the upper arm toward it (a little down), then the forearm from the elbow."""
+    sx = side
+    T = _to_arm(rig, target_w)
+    bpy.context.view_layer.update()
+    sh = P.pb[f"upper_arm.{sx}"].head
+    P.aim(f"upper_arm.{sx}", (T - sh).normalized() + Vector(bend))
+    el = P.pb[f"forearm.{sx}"].head
+    P.aim(f"forearm.{sx}", T - el)
+    P.aim(f"hand.{sx}", (T - el).normalized() + Vector((0, 0, -0.3)))
+
+
+def s20top():
+    """Option A, the top panel: Kai lowers the cupped shrimp into the net Wren holds out between them, opens his
+    hands, the shrimp drops into the bag (a bounce, the net sags), Wren's face softens and she nods once; Kai lets
+    out a breath. Framed in the top half (y 80-600) for the split; slow push-in on 1s."""
+    from channels.monsters.mk import anim, puffshrimp
+    n = _frames("S20", 156)
+    _world(n)
+    t0 = _shot_start("S20")
+    words = {w["w"].strip(".:").lower() + str(i): w for i, w in enumerate(_line_words("l20"))}
+    f_over = int(round((words["over.4"]["start"] - t0) * 24)) + 1 if "over.4" in words else 40
+    f_low0, f_low1 = 6, max(20, f_over - 4)                    # lowering on "Option A: hand it..."
+    f_rel = f_over + 2                                         # the hands open on "over"
+    k = _kai()
+    w = _wren(WREN_STOP, WREN_YAW)
+    PW, PK = x3.Pose(w), x3.Pose(k)
+    feetW = {"L": Vector((0.09, 0, 0)), "R": Vector((-0.09, 0, 0))}
+    feetK = dict(feetW)
+
+    def wren_pose(P, lift=0.0, nod=0.0, f=1):
+        P.reset()
+        for sd in ("L", "R"):
+            P.leg(sd, feetW[sd] + Vector((0, 0, P.ankle_h)))
+        P.aim("upper_arm.L", (0.16, -0.72, -0.68))
+        P.aim("forearm.L", (-0.04, -1.0, 0.06 + lift))
+        P.aim("hand.L", (-0.05, -1.0, 0.0 + lift))
+        P.aim("upper_arm.R", (-0.24, -0.22, -1))
+        P.aim("forearm.R", (0.12, -0.75, -0.25 + lift * 0.6))
+        P.aim("hand.R", (0.1, -0.6, -0.8))
+        P.rot("chest", (4 + 1.0 * math.sin(f / 22.0), 0, 0))
+        P.rot("head 1", (8 + nod, 0, 0))                          # eyes on the net
+    # the net in Wren's hands: the pole through both hands, the hoop out in front between them
+    wren_pose(PW)
+    bpy.context.view_layer.update()
+    hl, hr = _world_of(w, "hand.L"), _world_of(w, "hand.R")
+    d = Vector(((hl - hr).x, (hl - hr).y, 0.0)).normalized()     # a level pole: the hoop lies flat
+    L = (hl - hr).length + 2.2
+    nr = net("S20net", length=L, hoop=1.35, depth=1.9)
+    up = Vector((0, 0, 1))
+    zr = d
+    yr = (-up - zr * (-up).dot(zr)).normalized()                 # the hoop's normal points down: the bag hangs
+    xr = yr.cross(zr)
+    from mathutils import Matrix
+    M = Matrix((xr, yr, zr)).transposed().to_4x4()
+    origin = Vector((hr.x, hr.y, (hl.z + hr.z) / 2)) - d * 0.8
+    nr.matrix_world = Matrix.Translation(origin) @ M
+    hoop_c = origin + d * (L + 0.8 + 1.35)
+    nr.keyframe_insert("location", frame=1)
+    # Kai: cupped at his chest, lowering his hands over the hoop, opening them on "over", then a breath
+    above = hoop_c + up * 1.25
+    for f in range(1, n + 1, 2):
+        u = smooth01((f - f_low0) / max(1, f_low1 - f_low0))
+        PK.reset()
+        for sd in ("L", "R"):
+            PK.leg(sd, feetK[sd] + Vector((0, 0, PK.ankle_h)))
+        PK.rot("chest", (10 * u + 1.5 * math.sin(f / 20.0), 0, 0))
+        PK.rot("head 1", (16 * u, 0, 0))
+        if u <= 0:
+            _cup(PK)
+        else:
+            for sd, s_ in (("L", 1), ("R", -1)):
+                open_ = 0.45 if f >= f_rel else 0.0
+                tgt = above + _side_vec(k) * s_ * (0.28 + open_)
+                tgt.z += (1 - u) * 1.6
+                _reach(PK, k, sd, tgt)
+        PK.key(f)
+        wren_pose(PW, nod=10 if f_rel + 10 <= f < f_rel + 18 else 0, f=f)   # one nod once it's in
+        PW.key(f)
+    # the shrimp: in his cupped hands until "over", then it drops into the bag, bounces and settles, blinking
+    sh = puffshrimp.build((0, 0, 0), name="s20puff")
+    sh["root"].scale = (_shrimp_scale(),) * 3
+    bag_pt = hoop_c - up * 0.9
+    for f in range(1, n + 1):
+        bpy.context.scene.frame_set(f)
+        if f <= f_rel:
+            p = (_world_of(k, "hand.L") + _world_of(k, "hand.R")) / 2 + up * 0.25
+        else:
+            a = (f - f_rel) / 24.0
+            start = (_hands_mid_at(k, f_rel))
+            z = start.z - 0.5 * 30.0 * a * a
+            p = Vector((lerp(start.x, bag_pt.x, min(1, a * 3)), lerp(start.y, bag_pt.y, min(1, a * 3)), max(bag_pt.z, z)))
+            if z < bag_pt.z:                                           # landed: a little bounce in the bag
+                tl = a - math.sqrt(2 * (start.z - bag_pt.z) / 30.0)
+                p.z = bag_pt.z + 0.35 * abs(math.sin(tl * 9.0)) * math.exp(-tl * 5.0)
+        sh["root"].location = p
+        sh["root"].keyframe_insert("location", frame=f)
+    face_k = (WREN_STOP - KAI_AT).normalized()
+    sh["root"].rotation_euler = (0, 0, math.atan2(face_k.x, -face_k.y))
+    anim.blink(sh, f_rel + 20)
+    hero.face(k, "sad", 1)
+    hero.face(k, "relaxed", f_rel + 14)
+    wren.face(w, "stern", 1)
+    wren.face(w, "softer", f_rel + 8)
+    wren.grip(w, 1, "R")
+    wren.grip(w, 1, "L")
+    wren.blink(w, 1, n, at=(f_rel + 30,))
+    wren.contact_shadows(w)
+    v2._twos([k["arm"], w["arm"]])
+    # camera: side-on from the west, the pair in the top half (shift the frame down), a slow push-in on 1s
+    mid = (KAI_AT + WREN_STOP) / 2
+    tgt = mid + Vector((0, 0, 5.6))
+    line_ = (WREN_STOP - KAI_AT).normalized()
+    perp = Vector((-line_.y, line_.x, 0))
+    if perp.x > 0:
+        perp = -perp                                             # from the west
+    yaw = math.degrees(math.atan2(-perp.x, -perp.y))
+    _cam_move("S20Acam", n, (tuple(tgt), 15.0, 5.0, yaw, 32.0, -0.21), (tuple(tgt), 13.6, 5.0, yaw, 32.0, -0.21))
+    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]])
+
+
+def smooth01(u):
+    u = max(0.0, min(1.0, u))
+    return u * u * (3 - 2 * u)
+
+
+def lerp(a, b, u):
+    return a + (b - a) * u
+
+
+def _side_vec(rig):
+    """Kai's left (+X of his armature) in world space."""
+    return rig["arm"].matrix_world.to_3x3() @ Vector((1, 0, 0)) / rig["arm"].scale.x
+
+
+def _hands_mid_at(rig, f):
+    sc = bpy.context.scene
+    cur = sc.frame_current
+    sc.frame_set(f)
+    p = (_world_of(rig, "hand.L") + _world_of(rig, "hand.R")) / 2 + Vector((0, 0, 0.25))
+    sc.frame_set(cur)
+    return p
+
+
+SHOTS["S20top"] = s20top

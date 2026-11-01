@@ -110,7 +110,7 @@ def _shrimp_in_hands(k, scale=None):
         scale = helper4.SHRIMP_IN_HAND
     root.scale = (scale,) * 3
     root.rotation_euler = (0, 0, math.atan2(AIM.x, -AIM.y))    # its -Y (front) along AIM
-    root.location = hands + AIM * 0.15 - Vector((0, 0, 0.55))
+    root.location = hands + AIM * 0.15 - Vector((0, 0, 0.1))     # sits on his palms, face clear
     bpy.context.view_layer.update()
     return rig, emp
 
@@ -138,6 +138,18 @@ def _fly(rig, f0, f1, path, step=2, face=None):
         prev = p
     for f in range(f0, f1, 8):
         tuftwing.flutter(rig, f, flaps=2, amount=1.0)
+
+
+S10_YAW = 205.0                                                 # S10's camera, degrees round from Kai's line
+
+
+def _stuck(perch):
+    """Where the bird hangs in the crown: off the tree's leader (never on a spike: it is caught, not skewered),
+    among the side branches on S10's camera side, a little below the top."""
+    az = math.radians(math.degrees(math.atan2(AIM.x, AIM.y)) + S10_YAW)
+    tow = Vector((-math.sin(az), -math.cos(az), 0.0))
+    side = Vector((tow.y, -tow.x, 0.0))
+    return Vector(perch) + Vector((0, 0, -2.4)) + tow * 1.0 + side * 1.2
 
 
 def _far(*cams):
@@ -173,22 +185,24 @@ def s08():
     s15._flush_keys(k)
     acting.expression(k, "angry", 1, value=0.6)
     acting.blink(k, 1, n, at=(30,))
-    aim, _ = h3.aim_euler(rig, emp, KAI_AT + AIM * 30 + Vector((0, 0, 9)))
-    anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
-    acting.glare(rig, THORN + Vector((0, 0, 18)), 1)
-    # the bird wheels in the sky behind him (a banking loop over the pond), lining up its second dive
-    c = KAI_AT - AIM * 16.0 + SIDE * 4.0 + Vector((0, 0, 17.0))
-    bird = _bird(c)
-    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 6, math.sin(2.2 * u * math.pi) * 4,
-                                            1.5 * math.sin(u * 5))))
-    # camera: heroic, low, in front and a little to his left: he aims almost into the lens; push-in on 1s
+    # camera: heroic, a little below his hands, in front and to his left; the claw aims just beside the lens
     chest = s15._world(k, "chest")
-    pos0 = KAI_AT + AIM * 12.0 - SIDE * 4.5 + Vector((0, 0, 1.0))
+    pos0 = KAI_AT + AIM * 10.5 - SIDE * 5.0 + Vector((0, 0, 3.5))
+    aim, err = h3.aim_euler(rig, emp, pos0 - SIDE * 1.2 + Vector((0, 0, 0.6)))
+    print("S08 aim err", round(err, 1))
+    anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
+    acting.glare(rig, pos0, 1)
+    # the bird wheels in the sky behind him, upper right of frame, lining up its second dive
+    c = KAI_AT - AIM * 14.0 - SIDE * 3.0 + Vector((0, 0, 15.0))
+    bird = _bird(c)
+    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 2.5, math.sin(2.2 * u * math.pi) * 2,
+                                            1.2 * math.sin(u * 5))))
+    dv2.BLUR = 3.0                                               # the shrimp and Kai both sharp
     cam = dv2._camera("S08_cam", 1, chest, (pos0 - chest).length, 0.0)
     cam.data.lens = 28.0
     for f in range(1, n + 1):
         u = acting.ease((f - 1) / (n - 1), "inout")
-        h3._key_cam(cam, f, pos0.lerp(chest + (pos0 - chest) * 0.8, u), chest + Vector((0, 0, 1.6 + 0.3 * u)))
+        h3._key_cam(cam, f, pos0.lerp(chest + (pos0 - chest) * 0.8, u), chest + Vector((0, 0, 1.2 + 0.3 * u)))
     _far(cam)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], rig["root"], bird["root"]])
@@ -208,7 +222,7 @@ def s09():
     acting.expression(k, "surprised", SNAP_F + 1)
     acting.blink(k, 1, SNAP_F - 2, at=(8,))
     perch = Vector(isl["thorn"]["perch"]) if isl.get("thorn") else THORN + Vector((0, 0, 9.0))
-    stuck = perch + Vector((0, 0, -1.6))
+    stuck = _stuck(perch)
     target = KAI_AT + AIM * 30 + Vector((0, 0, 9))
     aim, _ = h3.aim_euler(rig, emp, target)
     sh, hg = rig["shoulder"], rig["hinge"]
@@ -229,7 +243,7 @@ def s09():
     bpy.context.view_layer.update()
     muzzle = emp[1].matrix_world.translation.copy()
     # the bird: dives in along the line (12-33), is blasted back up it tumbling (34-62), lands upside down
-    hi = THORN + Vector((-2.0, -3.0, 22.0))
+    hi = THORN + Vector((-2.0, -3.0, 15.0))
     near = KAI_AT + AIM * 7.5 + Vector((0, 0, 6.8))
     bird = _bird(hi)
     _fly(bird, 1, 11, lambda u: hi + Vector((1.5 * math.sin(u * 3), 1.5 * math.cos(u * 3), 0)))
@@ -260,38 +274,43 @@ def s09():
             p = stuck + Vector((r.uniform(-2, 2) + 0.6 * math.sin(j + i), r.uniform(-2, 2), 1.5 - j * 0.45))
             anim.key(fe, "location", f, tuple(p), "CONSTANT")
             anim.key(fe, "scale", f, (0.28, 0.06, 0.16), "CONSTANT")
-    # cameras: A eye close-up, B over his shoulder down the line, C wide from the side
+    # cameras: A eye close-up, B over his shoulder down the line, C high and wide from behind him (portrait: the
+    # blast runs up the frame into the thorn tree)
     sc.frame_set(1)
     bpy.context.view_layer.update()
     eye = sum((e.matrix_world.translation for e in rig["eyes"]), Vector()) / 2
+    dv2.BLUR = 10.0
     ca = dv2._camera("S09_A", 1, eye, 3.0, 0.0)
     ca.data.lens = 50.0
     for f in range(1, CUT_B):
         u = acting.ease((f - 1) / (CUT_B - 2), "inout")
-        h3._key_cam(ca, f, eye + AIM * (2.6 - 0.5 * u) - SIDE * 0.9 + Vector((0, 0, -0.25)), eye)
+        h3._key_cam(ca, f, eye + AIM * (3.6 - 0.6 * u) - SIDE * 1.0 + Vector((0, 0, -0.45)), eye + Vector((0, 0, 0.1)))
     head = s15._world(k, "head")
+    focus = KAI_AT + AIM * 9.0 + Vector((0, 0, 8.5))            # the claw low right, the bird diving in above
+    dv2.BLUR = 5.0
     cb = dv2._camera("S09_B", CUT_B, near, 20.0, 5.0)
     cb.data.lens = 30.0
     for f in range(CUT_B, CUT_C):
         u = acting.ease((f - CUT_B) / (CUT_C - 1 - CUT_B), "out")
-        pos = head - AIM * (4.2 - 0.8 * u) + SIDE * 1.7 + Vector((0, 0, 1.6))
-        h3._key_cam(cb, f, pos, KAI_AT + AIM * 16 + Vector((0, 0, 7.5)))
-    mid = KAI_AT.lerp(THORN, 0.55)
-    cc = dv2._camera("S09_C", CUT_C, mid, 40.0, 8.0)
+        pos = head - AIM * (3.4 - 0.6 * u) + SIDE * 2.2 + Vector((0, 0, 1.0))
+        h3._key_cam(cb, f, pos, focus)
+    goal = KAI_AT.lerp(THORN, 0.62) + Vector((0, 0, 5.0))
+    dv2.BLUR = 3.0
+    cc = dv2._camera("S09_C", CUT_C, goal, 30.0, 25.0)
     cc.data.lens = 30.0
     rnd = random.Random(9)
     sign = 1
     for f in range(CUT_C, n + 1):
         u = acting.ease((f - CUT_C) / (n - CUT_C), "out")
-        pos = mid - SIDE * (40 - 6 * u) + Vector((0, 0, 7.5 + 2 * u))
+        pos = KAI_AT - AIM * (10.0 - 2.5 * u) + SIDE * 4.0 + Vector((0, 0, 13.0 + 1.0 * u))
         i = f - CUT_C
         if i < 14 and i % 2 == 0:
             sign = -sign
-        off = SIDE * 0 + Vector((0, 0, 0))
+        off = Vector((0, 0, 0))
         if i < 14:
-            amp = 0.9 * (1 - i / 14)
-            off = AIM * amp * sign * rnd.uniform(0.6, 1.0) + Vector((0, 0, amp * 0.5 * rnd.uniform(-1, 1)))
-        h3._key_cam(cc, f, pos + off, mid + Vector((0, 0, 6.0 + 2 * u)) + off * 0.5)
+            amp = 0.6 * (1 - i / 14)
+            off = SIDE * amp * sign * rnd.uniform(0.6, 1.0) + Vector((0, 0, amp * 0.5 * rnd.uniform(-1, 1)))
+        h3._key_cam(cc, f, pos + off, goal + off * 0.5)
     # the streak along the shot (3D), turned to camera C
     st = erase._streak(tuple(muzzle), (AIM.x, AIM.y), (stuck - muzzle).length + 4, SNAP_F, cc)
     pitch = math.atan2(near.z - muzzle.z, (near - muzzle).length)
@@ -310,7 +329,7 @@ def s10():
     sc = bpy.context.scene
     isl = _set()
     perch = Vector(isl["thorn"]["perch"]) if isl.get("thorn") else THORN + Vector((0, 0, 9.0))
-    stuck = perch + Vector((0, 0, -1.6))
+    stuck = _stuck(perch)
     bird = _bird(stuck)
     root = bird["root"]
     yaw = math.atan2(-AIM.x, AIM.y)
@@ -320,15 +339,13 @@ def s10():
         anim.key(root, "location", f, tuple(stuck + Vector((0, 0, 0.12 * math.sin(f / 7.0)))), "CONSTANT")
     for f in (10, 30, 50):                                       # a dazed, feeble flutter
         tuftwing.flutter(bird, f, flaps=1, amount=0.35)
-    for e in bird.get("eyes", []):                               # eyes squeezed half-shut
-        anim.key(e, "scale", 1, (1.1, 1, 0.45), "CONSTANT")
     cam_t = stuck + Vector((0, 0, 0.2))
-    cam = dv2._camera("S10_cam", 1, cam_t, 14.0, 12.0, yaw=math.degrees(math.atan2(AIM.x, AIM.y)) + 180 + 25)
+    yaw_c = math.degrees(math.atan2(AIM.x, AIM.y)) + S10_YAW
+    cam = dv2._camera("S10_cam", 1, cam_t, 10.0, 12.0, yaw=yaw_c)
     cam.data.lens = 40.0
-    yaw_c = math.degrees(math.atan2(AIM.x, AIM.y)) + 205
     for f in range(1, n + 1):
         u = acting.ease((f - 1) / (n - 1), "inout")
-        dv2._key(cam, f, cam_t, 14.0 - 3.0 * u, 12.0 + 3 * u, yaw=yaw_c - 6 * u)
+        dv2._key(cam, f, cam_t, 10.0 - 2.0 * u, 12.0 + 3 * u, yaw=yaw_c - 6 * u)
     _far(cam)
     head = stuck + Vector((0, 0, -0.9 * h5.BIRD_SCALE))          # upside down: its head hangs below the body
     rows = {}
