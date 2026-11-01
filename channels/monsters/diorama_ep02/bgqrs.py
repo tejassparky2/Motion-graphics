@@ -451,7 +451,7 @@ def s03():
     anim.dust(tuple(k0 + Vector((0, 0, 0.3))), B["slide"], n=10, spread=2.4, seed=8, color="#b9a77f")
     # the bird: still plunging, off the top of the frame; its shadow sweeps over him from behind at the end
     bird = _bird_dive(n, 1, n + 30, perch)
-    _dive_line(bird, n, perch, (0.74, 0.97))
+    _dive_line(bird, n, perch, (0.88, 1.0))                          # S02 (helper 1) takes it 0.74 -> 0.88
     _bird_shadow_look(bird)
     _shadow_under(bird, n, perch)
     # his face: determined into the slide, then wide-eyed relief over the shrimp
