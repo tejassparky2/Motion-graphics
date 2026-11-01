@@ -271,7 +271,15 @@ SHOTS["S18"] = s18
 
 
 # ------------------------------------------------------------------------------------------------------------ S20top
-SHRIMP_IN_HAND = 0.3          # puffshrimp scale in Kai's cupped hands (~1.1 units = 22 cm tall with the claw raised)
+SHRIMP_IN_HAND = 0.3          # fallback only: the shared value is helper4.SHRIMP_IN_HAND (one size for every shot)
+
+
+def _shrimp_scale():
+    try:
+        from channels.monsters.diorama_ep02 import helper4        # lazy: helper4 imports this module's staging
+        return helper4.SHRIMP_IN_HAND
+    except (ImportError, AttributeError):
+        return SHRIMP_IN_HAND
 
 
 def _to_arm(rig, p):
@@ -364,7 +372,7 @@ def s20top():
         PW.key(f)
     # the shrimp: in his cupped hands until "over", then it drops into the bag, bounces and settles, blinking
     sh = puffshrimp.build((0, 0, 0), name="s20puff")
-    sh["root"].scale = (SHRIMP_IN_HAND,) * 3
+    sh["root"].scale = (_shrimp_scale(),) * 3
     bag_pt = hoop_c - up * 0.9
     for f in range(1, n + 1):
         bpy.context.scene.frame_set(f)
