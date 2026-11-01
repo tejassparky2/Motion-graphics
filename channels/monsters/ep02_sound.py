@@ -1,0 +1,309 @@
+"""Cute Things Kill Here, Episode 2 ("I Saved the Shrimp That Tried to Kill Me") sound mix -> out/monsters/ep02/mix.wav
+(48 kHz stereo, 57.34 s).
+
+    tar xf assets/voice_cache/monsters_ep02_takes.tar
+    python channels/monsters/ep02_sound.py [--check] [--roughcut]
+
+It is ep01v2_sound.py with EPISODE = "ep02" and the cue sheet below, as ep01v3_sound.py does it: the voice layout from
+the cached takes (it refuses to synthesise), the sidechain duck (20/300 ms), the two-pass ffmpeg loudnorm to -14 LUFS
+/ -1 dBTP, the stems and the Whisper medium.en check per line. Every cue is (shot, frame) or (line, word) from
+channels/monsters/ep02/timing.json, so a re-timed cut moves the sound with it. Frames are 0-based in the cut. The
+picture beats are constants at the top: word anchors and placeholders until each shot's owner gives the exact frame.
+
+The cues (DIORAMA_EP02.md, the coordinator 1 Nov 2026): the bird's dive whoosh, the talon swipe and the sleeve tear;
+the wet drip; the wind-up hush and THE SNAP with its shockwave (TWIST = l9: the music drops a tick before the shot);
+the thorn-bush crash, dazed tweets and the fluff "poomf"; the nose-tap "tink" and the wrist-glow chime; the bells
+(S16), Wren's steps (S17) and the lake (S19); the A and B stingers on "Option A" / "Option B". Owner rules kept: every
+sound original and synthesised, no heartbeat, no riser (swells stay on one pitch band; stings climb in plucked steps).
+"""
+import os
+import sys
+
+import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from channels.monsters import ep01v2_sound as base                       # noqa: E402
+from channels.monsters import ep01v3_sound as v3                         # noqa: E402  (its effects; it sets base)
+from channels.monsters import sfx                                        # noqa: E402
+from channels.monsters.sfx import SR, _bp, _hp, _lp, _midi, _n, _place, _rng, _t, _verb  # noqa: E402
+
+base.EPISODE = "ep02"
+base.OUT = os.path.join(base.ROOT, "out", "monsters", "ep02")
+base._whisper_line = lambda x: x          # Episode 1's line 1 was whispered; Episode 2's is spoken in full
+
+# ---------------------------------------------------------------- picture beats (0-based frames in the cut)
+# PLACEHOLDERS until the shot owners send their frames; each is where DIORAMA_EP02.md puts the beat.
+S02_DIVE_END = 33          # the dive whoosh peaks into the cut to S03 (the bird reaches the puddle)
+S03_SLIDE, S03_SCOOP = 4, 18      # Kai slides in on his knees; the hands scoop the shrimp out (splash)
+S04_SWIPE, S04_UP = 10, 30        # the talons rake his sleeve (swipe + tear); the bird swoops up and away
+S05_DROP = 40              # one drop falls from the claw (the wet drip)
+S09_COCK, S09_SNAP = 12, 36       # the claw cocks (the wind-up hush runs to the snap); SNAP: the white impact frames
+S10_CRASH = 3              # the bird lands in the thorn bush
+S11_POOF = 50              # it shakes itself into a puffball (the "poomf")
+S11_STOMP = 62             # it stomps off, offended (four little steps and a huff)
+S12_RAISE = 12             # the shrimp raises its claw at his face (a creak)
+S17_STEPS, S17_STOP = 0, 46       # Wren marches up from the cut and stops in front of Kai
+S20_SPLIT = 0              # the split screen opens
+
+
+# ---------------------------------------------------------------- Episode 2 effects (original, seeded)
+
+def talon_swipe(seed=0):
+    """Talons raking past: a fast air swish with three scratchy rakes on top."""
+    r = _rng("talon", seed)
+    n = _n(0.35)
+    p = np.linspace(0, 1, n)
+    noise = r.uniform(-1, 1, n)
+    swish = sum(_bp(noise, lo, lo * 2) * np.exp(-((p - c) / 0.12) ** 2) for lo, c in ((700, 0.3), (1400, 0.45)))
+    out = swish * 0.8
+    for k in range(3):
+        m = _n(0.05)
+        _place(out, _bp(r.uniform(-1, 1, m), 2500, 8000) * np.exp(-_t(m) / 0.012) * 0.7, 0.1 + 0.035 * k)
+    return out
+
+
+def cloth_tear(dur=0.28, seed=0):
+    """A sleeve tearing: a quick run of tiny fibre snaps that bunch together, over a papery rip."""
+    r = _rng("tear", seed)
+    n = _n(dur)
+    out = _bp(r.uniform(-1, 1, n), 1200, 6000) * np.sin(np.pi * np.linspace(0, 1, n)) * 0.3
+    at = 0.0
+    while at < dur * 0.9:
+        m = _n(0.004)
+        _place(out, r.uniform(-1, 1, m) * np.exp(-_t(m) / 0.0008) * r.uniform(0.4, 1.0), at)
+        at += r.exponential(0.006 + 0.01 * (1 - at / dur))
+    return _hp(out, 600)
+
+
+def windup_hush(dur=1.0, seed=0):
+    """The breath before the snap: an airy, steady hush that thins to nothing (one band, no pitch rise)."""
+    r = _rng("hush", seed)
+    n = _n(dur)
+    p = np.linspace(0, 1, n)
+    air = _bp(r.uniform(-1, 1, n), 900, 4000)
+    return air * np.minimum(1, p / 0.25) * (1 - p) ** 0.6
+
+
+def thorn_crash(seed=0):
+    """Landing in a thorn bush: a soft thump, then a cascade of twig snaps and a leafy rustle settling."""
+    r = _rng("thorn", seed)
+    n = _n(1.1)
+    t = _t(n)
+    out = np.sin(2 * np.pi * (90 + 60 * np.exp(-t / 0.03)) * t) * np.exp(-t / 0.08) * 0.8
+    out += _bp(r.uniform(-1, 1, n), 1500, 7000) * np.exp(-t / 0.35) * 0.35        # leaves
+    for _ in range(26):
+        at = r.exponential(0.12)
+        m = _n(0.012)
+        f = r.uniform(1800, 4500)
+        twig = (np.sin(2 * np.pi * f * _t(m)) + r.uniform(-1, 1, m)) * np.exp(-_t(m) / 0.0025)
+        _place(out, twig * r.uniform(0.3, 1.0) * np.exp(-at / 0.5), at)
+    return out
+
+
+def dazed_tweets(dur=2.0, seed=0):
+    """Dazed little-bird tweets going round with the stars: chirps on a slow wobble, under the star twinkles."""
+    out = np.zeros(_n(dur + 0.5))
+    at, k = 0.0, 0
+    while at < dur:
+        _place(out, sfx.cute_chirp(2.2 + 0.25 * np.sin(k * 1.7), 40 + k) * 0.5 * (1 - 0.4 * at / dur), at)
+        at += 0.32
+        k += 1
+    stars = v3.dazed(dur, seed + 3)[: len(out)]
+    out[: len(stars)] += stars * 0.6
+    return out
+
+
+def poomf(seed=0):
+    """A bird fluffing itself into a ball: a soft low puff with a feather flutter."""
+    r = _rng("poomf", seed)
+    n = _n(0.6)
+    t = _t(n)
+    puff = _lp(r.uniform(-1, 1, n), 700) * np.minimum(1, t / 0.015) * np.exp(-t / 0.12)
+    thump = np.sin(2 * np.pi * (140 * np.exp(-t / 0.08) + 60) * t) * np.exp(-t / 0.1) * 0.6
+    return puff + thump + np.pad(base.flutter(0.4, seed), (0, n))[:n] * 0.4
+
+
+def nose_tink(seed=0):
+    """The claw tapping his nose: a tiny bright glassy tink with a soft click."""
+    n = _n(0.6)
+    click = _hp(_rng("tink", seed).uniform(-1, 1, n), 3000) * np.exp(-_t(n) / 0.002) * 0.4
+    return sfx._bell(_midi(100), 0.6, 0.25) + sfx._bell(_midi(107), 0.6, 0.15) * 0.4 + click
+
+
+def glow_chime(seed=0):
+    """The wrist mark lighting up: a soft rising arpeggio of bells (in plucked steps) over a shimmer."""
+    out = np.zeros(_n(2.2))
+    for k, m in enumerate((79, 83, 86, 91)):
+        _place(out, sfx._bell(_midi(m), 1.6, 0.8) * (0.8 - 0.1 * k), 0.09 * k)
+    r = _rng("glow", seed)
+    shimmer = _bp(r.uniform(-1, 1, _n(1.6)), 5000, 11000) * np.sin(np.pi * np.linspace(0, 1, _n(1.6))) * 0.08
+    _place(out, shimmer, 0.05)
+    return _verb(out, 0.3)
+
+
+def hand_bell(midi=86, seed=0):
+    """One shake of a small brass hand bell: three quick strikes of the clapper, ringing on."""
+    out = np.zeros(_n(1.6))
+    for k in range(3):
+        _place(out, sfx._bell(_midi(midi) * (1 + 0.002 * k), 1.2, 0.5) * (1.0, 0.7, 0.55)[k], 0.09 * k)
+    return out
+
+
+def bell_peal(dur=2.4, seed=0):
+    """The village bells from over the hill: hand bells at five pitches rung unevenly, distant and roomy."""
+    r = _rng("peal", seed)
+    out = np.zeros(_n(dur + 1.6))
+    at = 0.0
+    while at < dur:
+        _place(out, hand_bell(int(r.choice((81, 84, 86, 88, 91))), seed) * r.uniform(0.4, 1.0), at)
+        at += r.uniform(0.12, 0.3)
+    return _verb(_lp(out, 6000), 0.45, 1.3)
+
+
+def footstep(seed=0, weight=1.0):
+    """One step on grass: a soft heel thud and a crunch of blades."""
+    r = _rng("step", seed)
+    n = _n(0.18)
+    t = _t(n)
+    thud = _lp(r.uniform(-1, 1, n), 300) * np.exp(-t / 0.03) * weight
+    crunch = _bp(r.uniform(-1, 1, n), 1500, 6000) * np.exp(-t / 0.05) * 0.35
+    return thud + crunch
+
+
+def lake(dur, seed=0):
+    """A big still lake: small waves lapping the shore, a deep soft water hush, a breeze."""
+    r = _rng("lake", seed)
+    n = _n(dur)
+    hush = _lp(r.uniform(-1, 1, n), 500) * (0.7 + 0.3 * np.sin(2 * np.pi * 0.15 * _t(n) + seed))
+    out = hush * 0.6 + base.meadow_wind(dur, 200 + seed)[:n] * 0.5
+    at = r.uniform(0, 0.4)
+    k = 0
+    while at < dur:
+        _place(out, base.lap(30 + k + 10 * seed) * r.uniform(0.5, 1.0), at)
+        at += r.uniform(0.6, 1.3)
+        k += 1
+    return out
+
+
+# ---------------------------------------------------------------- the cue sheet
+
+def build(timing, n, v):
+    c = base.Cue(timing)
+    total = n / SR
+    music = np.zeros(n)
+    fx = [np.zeros(n), np.zeros(n)]
+    ambience = [np.zeros(n), np.zeros(n)]
+    v_rms = base._rms(v[np.abs(v) > 0.01])
+    db = base._db
+
+    def music_at(x, t0, t1, d, fi=0.3, fo=0.4):
+        base._span(music, x / base._rms(x) * v_rms * db(d), t0, t1, fi, fo)
+
+    def amb(gen, t0, t1, d, fi=0.3, fo=0.3):
+        for side in (0, 1):
+            x = gen(t1 - t0 + 0.1, side)
+            base._span(ambience[side], x / base._rms(x) * v_rms * db(d), t0, t1, fi, fo)
+
+    def hit(x, at, d, pan=0.0):
+        x = np.asarray(x, np.float64)
+        x = x / (np.max(np.abs(x)) + 1e-12) * v_rms * db(d) * 4
+        _place(fx[0], x * min(1.0, 1 - pan), at)
+        _place(fx[1], x * min(1.0, 1 + pan), at)
+
+    # the meadow under everything up to the lake (frame 0 has sound)
+    amb(lambda d, s: base.meadow_wind(d, s), 0.0, c.t("S19"), -27, 0.02, 0.6)
+
+    # --- S01-S04: the run, the dive, the slide, the talons (the action bed from frame 0)
+    music_at(base.bed("danger", c.t("S05") + 0.6, 5), 0.0, c.t("S05") + 0.3, -17, 0.02, 0.6)
+    for k in range(7):                                               # Kai sprinting
+        hit(footstep(k, 1.2), 0.08 + 0.3 * k, -24, -0.2)
+    dive_end = c.f("S02", S02_DIVE_END)
+    dive_from = c.word("l2", "dived", "end") + 0.02                # never under "dived" (Whisper heard "died")
+    hit(v3.dive_swoop(dive_end - dive_from, 2), dive_from, -12, 0.2)
+    hit(_lp(np.random.default_rng(5).uniform(-1, 1, _n(0.5)), 900) * np.exp(-_t(_n(0.5)) / 0.12),
+        c.f("S03", S03_SLIDE), -18, -0.1)                            # the knee slide on grass
+    hit(v3.splash(3), c.f("S03", S03_SCOOP), -14, 0.0)
+    swipe = c.f("S04", S04_SWIPE)
+    hit(talon_swipe(), swipe, -9, 0.25)
+    hit(cloth_tear(), swipe + 0.07, -12, 0.15)
+    hit(v3.wing_mantle(2, 4), c.f("S04", S04_UP), -16, 0.4)
+
+    # --- S05-S08: wet hands, the fact, the turn, the aim (a tense low bed); the music drops a tick before S09
+    snap_shot = c.t("S09")
+    music_at(base.tense_tone(snap_shot - c.t("S05") + 0.3, 2), c.t("S05"), snap_shot - 0.1, -19, 0.6, 0.06)
+    hit(base.drip(3), c.f("S05", S05_DROP), -16, 0.1)
+    hit(v3.water_jet(0.5, 4), c.word("l6", "Straight"), -20, 0.3)   # the 2D jet straight ahead
+    hit(v3.startle(4), c.word("l7", "around", "end") + 0.05, -24, 0.0)   # the shrimp lets him, confused
+
+    # --- S09: THE SNAP. No music; the claw cocks, the hush, SNAP + shockwave, the bird blasted back
+    cock, snap_t = c.f("S09", S09_COCK), c.f("S09", S09_SNAP)
+    hit(base.glass_tap(2), cock, -22, 0.0)
+    hit(windup_hush(snap_t - cock), cock, -22, 0.0)
+    hit(sfx.snap(4), snap_t, 0)
+    hit(sfx.shockwave(2), snap_t + 0.02, -1)
+    hit(sfx.whoosh(3), snap_t + 0.08, -10, 0.3)
+    hit(base.ring_out(2.2), snap_t + 0.25, -18)
+    hit(base.flutter(0.7, 5), snap_t + 0.3, -18, 0.5)
+
+    # --- S10-S11: the thorn bush, the dazed tweets, the puffball and the offended exit (a light comic bed)
+    music_at(base.bed("lab", c.t("S12") - c.t("S10") + 0.8, 6), c.t("S10") + 0.4, c.t("S12"), -21, 0.5, 0.5)
+    crash = c.f("S10", S10_CRASH)
+    hit(thorn_crash(), crash, -9, 0.2)
+    hit(dazed_tweets(c.end("S10") - crash - 0.4), crash + 0.35, -18, 0.25)
+    hit(poomf(), c.f("S11", S11_POOF), -10, 0.15)
+    stomp0 = c.f("S11", S11_STOMP)
+    for k in range(4):
+        hit(base.stomp(k), stomp0 + 0.22 * k, -22, 0.1 + 0.15 * k)
+    hit(base.huff(1), stomp0 + 0.95, -20, 0.6)
+
+    # --- S12-S13: the shrimp looks at him, the claw comes up: a held tense second, then the nose tap
+    music_at(base.tense_tone(c.t("S14") - c.t("S12") + 0.3, 3), c.t("S12") + 0.2, c.word("l13", "tapped"), -22,
+             0.6, 0.08)
+    hit(v3.aim(0.7, 6), c.f("S12", S12_RAISE), -22, 0.0)
+    hit(nose_tink(), c.word("l13", "tapped") + 0.12, -12, 0.0)
+
+    # --- S14-S15: the wrist glows (a wonder pad), the match cut to the crack in the sky
+    music_at(base.soft_pad(c.t("S16") - c.t("S14") + 0.6, (62, 69, 74, 78), 0.1, 3), c.t("S14"), c.t("S16") + 0.2,
+             -18, 0.6, 0.4)
+    hit(glow_chime(), c.word("l14", "glow") - 0.05, -12, -0.1)
+    hit(base.eerie_sting(2), c.word("l15", "crack"), -20, 0.0)
+
+    # --- S16-S18: the bells over the hill, Wren's march, her stern line (a low tense bed under Wren)
+    hit(bell_peal(2.6, 1), c.word("l16", "bells") - 0.05, -16, 0.2)
+    steps0, stop = c.f("S17", S17_STEPS), c.f("S17", S17_STOP)
+    k, at = 0, steps0 + 0.1
+    while at < stop:
+        hit(footstep(10 + k, 0.9), at, -21, -0.15 + 0.1 * (k % 2))
+        at += 0.36
+        k += 1
+    hit(hand_bell(86, 2), stop + 0.05, -16, -0.1)
+    music_at(base.tense_tone(c.t("S19") - c.t("S17") + 0.3, 4), c.t("S17"), c.t("S19") + 0.2, -21, 0.5, 0.4)
+
+    # --- S19: the lake: water, depth and a breeze; the claw drips on "dry"
+    amb(lambda d, s: lake(d, s), c.t("S19"), c.t("S20") + 0.4, -20, 0.5, 0.4)
+    music_at(base.soft_pad(c.t("S20") - c.t("S19") + 0.6, (50, 57, 62, 65), 0.08, 5), c.t("S19"), c.t("S20"),
+             -19, 0.6, 0.3)
+    hit(base.drip(4), c.word("l19", "dry", "end") + 0.05, -16, 0.1)
+
+    # --- S20: the split opens; the A and B stingers on the letters; "Comment" blip; cut on the picture
+    words = v3.timing_words(timing, "l20")
+    opt_a = c.word("l20", "Option")
+    a_t = next(w["start"] for w in words if w["w"].strip(".,:?!").upper() == "A")
+    b_t = [w["start"] for w in words if w["w"].strip(".,:?!").upper() == "B"][0]
+    comment = next(w["start"] for w in words if w["w"].lower().startswith("comment"))
+    hit(sfx.whoosh(), c.f("S20", S20_SPLIT) + 0.02, -10)
+    hit(v3.option_sting("A"), a_t, -12, -0.15)
+    hit(v3.option_sting("B"), b_t, -12, 0.15)
+    hit(sfx.ui_select(5), comment, -20)
+    music_at(base.sting(total - opt_a), opt_a, total, -15, 0.25, 0.01)
+    return music, fx, ambience
+
+
+base.build = build
+
+if __name__ == "__main__":
+    base.main()
+    if "--check" in sys.argv:
+        base.check()
+    if "--roughcut" in sys.argv:
+        base.roughcut()
