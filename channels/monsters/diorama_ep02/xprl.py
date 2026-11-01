@@ -25,8 +25,9 @@ from channels.monsters.ep01v2 import xprl as x3
 from channels.monsters.mk import diorama, hero, wren
 
 SCALE = 5.8                                         # hero.blend / wren: 1.5 m model -> creature units (20 cm)
-KAI_AT = Vector((5.5, -1.5, 0.0))                   # the pond's north-east shore, by the shrimp's drinking spot
-WREN_FROM = Vector((1.0, -22.0, 0.0))               # the path from the south (the villagers' side)
+KAI_AT = Vector((5.0, -3.5, 0.0))                   # the pond's east shore, just south of the shrimp's drinking spot
+WREN_FROM = Vector((-0.5, -23.0, 0.0))              # the top of the path from the south (the villagers' side)
+BLUR, HAZE = 4.0, (2.5, 2.0)                        # character shots: a gentle tilt-shift, haze well behind them
 _d = (WREN_FROM - KAI_AT).normalized()
 WREN_STOP = KAI_AT + _d * 6.5                       # where she plants her feet, facing Kai
 KAI_YAW = math.degrees(math.atan2(_d.x, -_d.y))     # rot_z so -Y (the model's front) points along _d
@@ -39,6 +40,28 @@ def _frames(shot, fallback):
         return ep02_frames(shot)
     except (OSError, KeyError, ValueError):                              # timing.json not in yet
         return fallback
+
+
+def _cam_move(name, n, a, b, f0=1, f1=None):
+    """diorama/xprl._move (a camera move on 1s, poses (target, dist, tilt, yaw, lens, shift_y)) with this module's
+    gentler blur and farther haze, so both characters stay readable."""
+    old = v2.BLUR
+    v2.BLUR = BLUR
+    try:
+        cam = v2._move(name, f0, f1 or n, a, b, n)
+    finally:
+        v2.BLUR = old
+    ms = bpy.context.scene.world.mist_settings
+    ad = bpy.context.scene.world.animation_data
+    for f in range(1, n + 1):
+        k = (f - f0) / max(1, (f1 or n) - f0)
+        k = max(0.0, min(1.0, k))
+        d = a[1] + (b[1] - a[1]) * (k * k * (3 - 2 * k))
+        ms.start, ms.depth = d * HAZE[0], d * HAZE[1]
+        ms.keyframe_insert("start", frame=f)
+        ms.keyframe_insert("depth", frame=f)
+    del ad
+    return cam
 
 
 def _world(n):
@@ -119,10 +142,10 @@ def s17():
     # camera: over Kai's right shoulder toward where she stops; a slow push-in on 1s
     tgt = WREN_STOP + Vector((0, 0, 5.2))
     back = (KAI_AT - WREN_STOP).normalized()
-    side = Vector((back.y, -back.x, 0))                               # to Kai's right as he faces her
-    cdir = (back + side * 0.33).normalized()
+    side = Vector((back.y, -back.x, 0))
+    cdir = (back - side * 0.33).normalized()                          # west of him: the smoking stumps stay off-frame
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
-    v2._move("S17cam", 1, n, (tuple(tgt), 17.0, 9.0, yaw, 42.0, 0.0), (tuple(tgt), 15.2, 9.0, yaw, 42.0, 0.0), n)
+    _cam_move("S17cam", n, (tuple(tgt), 17.0, 9.0, yaw, 42.0, 0.0), (tuple(tgt), 15.2, 9.0, yaw, 42.0, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
 
