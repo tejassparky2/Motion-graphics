@@ -76,103 +76,65 @@ def _world(n):
 
 
 # ------------------------------------------------------------------------------------------------------------ S02
-F_HITCH, F_FOLD, F_END = 7, 11, 45          # the hitch up, the wings folded into a dart, the plunge (eased in) to here
-START = Vector((7.4, 5.1, 10.5))           # the bird's ball centre at frame 1 (world offset from the shrimp)
-STOP = Vector((0.9, 0.6, 2.6))              # where the plunge has got to at F_END (the cut is at 33: still above it)
+DIVE = (0.74, 0.95)         # how far down bGqrs's dive line (thorn perch -> the shrimp's back) the bird is at the
+                            # first and last frame: S01 ends at 0.74; S03 shows only its shadow; S04 has it on top
+F_FOLD = 10                 # the wings snap shut into a dart (spread and flared just before: the anticipation)
 
 
-def _plunge(rig, rot, scale, n):
-    """Glide (wings spread, a slight sink), the hitch (a small rise, wings up), the fold (wings swept back and tucked,
-    body stretched to a dart, head pitched down at the prey, tail up, crest flat), then the plunge: accelerating along
-    a slightly bowed line. The giant shadow slides in under it and spreads over the shrimp. Keys on 1s for the path
-    (the camera reads it as smooth), the pose on 2s (anim.on_twos)."""
-    lift = rig["lift"]
-    c = Vector(tuftwing.CENTER)
-    hitch = START + Vector((-0.6, -0.4, 0.5))
-    for f in range(1, n + 1):
-        if f <= F_HITCH:
-            u = (f - 1) / (F_HITCH - 1)
-            p = START.lerp(START + Vector((-0.6, -0.4, -0.2)), u)
-        elif f <= F_FOLD:
-            u = _ease((f - F_HITCH) / (F_FOLD - F_HITCH))
-            p = (START + Vector((-0.6, -0.4, -0.2))).lerp(hitch, u)
-        else:
-            u = ((f - F_FOLD) / (F_END - F_FOLD)) ** 1.7                 # accelerating
-            p = hitch.lerp(STOP, u)                                     # a straight plunge
-        anim.key(lift, "location", f, tuple(_local(rot, p, scale) - c), "LINEAR")
-    # the pose (on 2s)
+def _fold(rig, n):
+    """Re-key the wings over butcherbird.dive's: spread wide at the start, flared once more, then folded tight along
+    the body (a dart), held; the body stretches as they close. On 2s."""
+    for w in rig["wings"]:
+        w.animation_data_clear()
     for sx, w in zip((-1, 1), rig["wings"]):
-        anim.key(w, "rotation_euler", 1, (0, -sx * 1.25, 0))                # spread: gliding
-        anim.key(w, "scale", 1, (1.6, 1.6, 1.6))
-        anim.key(w, "rotation_euler", F_HITCH, (0, -sx * 1.45, 0))         # up for the hitch
-        anim.key(w, "scale", F_HITCH, (1.7, 1.7, 1.7))
-        anim.key(w, "rotation_euler", F_FOLD, (0, -sx * 0.5, 0))             # swept back for the plunge (as
-        anim.key(w, "scale", F_FOLD, (1.15, 1.15, 1.15))                     # butcherbird.dive), then tucked in
-        anim.key(w, "rotation_euler", F_FOLD + 6, (0, -sx * 0.32, 0))
-        anim.key(w, "scale", F_FOLD + 6, (1.0, 1.0, 1.0))
-    body, head = rig["body"], rig["head"]
-    anim.squash(body, 1, 0.0)
-    anim.squash(body, F_HITCH, -0.1)                                        # bunched for the hitch
-    anim.squash(body, F_FOLD, 0.3)                                          # stretched into a dart
-    anim.squash(body, F_FOLD + 2, 0.24)
-    anim.key(body, "rotation_euler", 1, (0.2, 0, 0))
-    anim.key(body, "rotation_euler", F_FOLD, (0.35, 0, 0))                  # nose down along the plunge
-    anim.key(head, "rotation_euler", 1, (0.3, 0, 0))
-    anim.key(head, "rotation_euler", F_HITCH, (0.15, 0, 0))
-    anim.key(head, "rotation_euler", F_FOLD, (0.5, 0, 0))                   # eyes locked on the prey
-    anim.key(rig["tail"], "rotation_euler", 1, (0.2, 0, 0))
-    anim.key(rig["tail"], "rotation_euler", F_FOLD, (0.55, 0, 0))
-    anim.key(rig["crest"], "rotation_euler", 1, (-0.2, 0, 0))
-    anim.key(rig["crest"], "rotation_euler", F_FOLD, (-0.6, 0, 0))          # flattened by the wind
-    butcherbird.stare(rig, 1, down=0.3)                                     # the glare (eyes narrowed, slanted)
-    # the giant shadow (its tell): from under its line of flight it slides onto the shrimp and spreads over it
-    sh = rig["shadow"]
-    z = sh.location.z
-    for f in range(1, n + 1, 2):
-        u = _ease((f - 1) / (F_END - 1))
-        g = Vector((START.x, START.y, 0)).lerp(Vector((0.4, 0.3, 0)), u ** 0.8)
-        lo = _local(rot, g, scale)
-        anim.key(sh, "location", f, (lo.x, lo.y, z), "LINEAR")
-        s = 0.55 + 0.75 * u
-        anim.key(sh, "scale", f, (s, s, 1), "LINEAR")
-    anim.on_twos([body, head, rig["tail"], rig["crest"], sh] + rig["eyes"] + rig["wings"], step=2)
+        anim.key(w, "rotation_euler", 1, (0, -sx * 1.25, 0))
+        anim.key(w, "scale", 1, (1.45, 1.45, 1.45))
+        anim.key(w, "rotation_euler", F_FOLD - 4, (0, -sx * 1.5, 0))         # flared: the last brake
+        anim.key(w, "scale", F_FOLD - 4, (1.6, 1.6, 1.6))
+        anim.key(w, "rotation_euler", F_FOLD, (0, -sx * 0.18, 0))            # SNAP shut
+        anim.key(w, "scale", F_FOLD, (0.9, 0.9, 0.9))
+        anim.key(w, "rotation_euler", n, (0, -sx * 0.14, 0))
+    anim.squash(rig["body"], F_FOLD - 4, -0.08)
+    anim.squash(rig["body"], F_FOLD, 0.3)                                     # stretched into a dart
+    anim.squash(rig["body"], F_FOLD + 4, 0.24)
+    anim.on_twos(rig["wings"] + [rig["body"]], step=2)
 
 
 def s02():
-    from channels.monsters.diorama_v3 import xprl as xv3
+    from channels.monsters.diorama_ep02 import bgqrs as bq
+    from channels.monsters.diorama_ep02.xprl import _cam_move           # (XprL's gentler blur and farther haze)
     n = _frames("S02")
     isl = _world(n)
-    sh = xv3._shrimp(n)                                                 # drinking: it hasn't seen it
-    shrimp = Vector(xv3.SHRIMP)
-    scale = xv3.BIRD_SCALE
-    rig = tuftwing.build((shrimp.x, shrimp.y, 0.0), shadow_span=10.0)
-    rig["root"].scale = (scale,) * 3
-    d = -START                                                          # it flies toward the shrimp
-    rot = math.atan2(d.x, -d.y)
-    rig["root"].rotation_euler.z = rot
-    _plunge(rig, rot, scale, n)
-    xv3.dark_form(1)                                                    # the predator form (Ep 1's dive)
+    sh = bq._shrimp(n)                                                  # drinking: it hasn't seen it
+    shrimp = Vector(bq.SHRIMP)
+    perch = Vector(isl["thorn"]["perch"])
+    bird = bq._bird_dive(n, 1, n + 30, perch)
+    bq._dive_line(bird, n, perch, DIVE)
+    bq._bird_shadow_look(bird)
+    bq._shadow_under(bird, n, perch)
+    _fold(bird, n)
     for e in sh["eyes"]:                                                # it only feels the shadow at the end
         anim.key(e, "scale", 37, (1, 1, 1), "CONSTANT")
         anim.key(e, "scale", 39, (0.8, 1, 0.8), "CONSTANT")
-    # low from the south-west, looking up the line the bird comes down: the shrimp low in frame, the thorn tree far
-    # behind and up, the bird big against the sky as it comes; a slow push-in on 1s
-    from channels.monsters.diorama_ep02.xprl import _cam_move           # (XprL's gentler blur and farther haze)
-    yaw = math.degrees(math.atan2(START.x, START.y)) - 90.0             # side-on to the dive: a big diagonal
-    tgt = shrimp + Vector((START.x * 0.42, START.y * 0.42, 4.6))
-    a = (tuple(tgt), 21.0, 12.0, yaw, 30.0, 0.0)
-    b = (tuple(tgt + Vector((-0.5, -0.35, -0.5))), 18.5, 12.0, yaw + 2.0, 30.0, 0.0)
+    # side-on to the dive (from the south-east, the pond on the left): the bird comes down a big diagonal from the
+    # top right onto the tiny shrimp at the water's edge; its shadow spreads over it. A slow push-in on 1s.
+    line = Vector((shrimp.x - perch.x, shrimp.y - perch.y, 0)).normalized()
+    yaw = math.degrees(math.atan2(-line.x, -line.y)) - 90.0
+    lift = bird["lift"]
+    bpy.context.scene.frame_set(n // 2)
+    mid = lift.matrix_world.translation.copy()
+    bpy.context.scene.frame_set(1)
+    tgt = shrimp.lerp(mid, 0.5) + Vector((0, 0, 0.6))
+    a = (tuple(tgt), 13.0, 9.0, yaw, 30.0, -0.08)
+    b = (tuple(tgt + Vector((0, 0, -0.2))), 11.0, 9.0, yaw + 2.0, 30.0, -0.08)
     cam = _cam_move("cam_s02", n, a, b)
-    lift = rig["lift"]
     from channels.monsters.diorama_v3.helper1 import _clear_view
-    keep = {rig["root"], *rig["root"].children_recursive, sh["root"], *sh["root"].children_recursive}
+    keep = {bird["root"], *bird["root"].children_recursive, sh["root"], *sh["root"].children_recursive}
     _clear_view(cam, [1, n], shrimp, keep, reach=0.9)
-
-    def bird_at(f):
-        return lift.matrix_world.translation.copy()
-    _anchors("S02", cam, {"bird": bird_at, "shrimp": lambda f: shrimp + Vector((0, 0, 0.8))}, n)
-    del isl
-    return dict(frames=n, step=2, ones=(1, n), subject=[rig["root"], sh["root"]])
+    _clear_smoke(cam, [1, n], tgt)
+    _anchors("S02", cam, {"bird": lambda f: lift.matrix_world.translation.copy(),
+                          "shrimp": lambda f: shrimp + Vector((0, 0, 0.8))}, n)
+    return dict(frames=n, step=2, ones=(1, n), subject=[bird["root"], sh["root"]])
 
 
 # ------------------------------------------------------------------------------------------------------------ S16
@@ -386,137 +348,129 @@ def s16():
 
 
 # ------------------------------------------------------------------------------------------------------------ S04
-F_RAKE = 15                 # the talons cross his forearm ("Its TALONS got my arm"): the 2D slash lands here
-KNEEL_AT = Vector((4.9, -2.6, 0.0))   # on his knees just south of the shrimp's drinking spot (S03's slide ends here)
-KNEEL_YAW = -40.0           # facing south-west: toward the camera, his back to the thorn tree the bird comes from
+F_RAKE = 13                 # the talons cross his forearm ("Its TALONS got my arm"): the 2D slash lands here
 
 
-def kneel(P, look_up=0.0, curl=0.0, flinch=0.0, rake_arm=0.0):
-    """On his knees, sitting back a little, the shrimp cupped in both hands at his chest. look_up (0-1): chin up to
-    the bird above and behind; curl (0-1): hunched over his hands, head down, shoulders round (shielding it);
-    flinch (0-1): the jolt as the talons hit (shoulders up, head away); rake_arm (0-1): the right forearm knocked
-    out and down by the talons."""
-    from channels.monsters.diorama_ep02 import xprl as xp
-    P.reset()
-    h0 = P.pb["hips"].matrix.translation.z
-    hip_z = P.l1 * 0.92 + P.ankle_h * 0.5 - 0.06 * curl
-    P.hips(Vector((0, 0.04 + 0.03 * curl, hip_z - h0)))
-    for side, sx in (("L", 1), ("R", -1)):                               # knees forward on the grass, shins back
-        P.leg(side, Vector((sx * 0.11, P.l2 * 0.92 + 0.06, P.ankle_h * 0.7)))
-    xp._cup(P)
-    P.rot("spine", (8 + 26 * curl - 6 * flinch, 0, 0))
-    P.rot("chest", (4 + 18 * curl - 8 * look_up, 0, 4 * flinch))
-    P.rot("neck", (-10 * look_up + 14 * curl, 0, 0))
-    P.rot("head 1", (-26 * look_up + 22 * curl + 6 * flinch, 0, -14 * flinch))
+def _s04_pose(P, B, layout, f, look=0.0, flinch=0.0, rake=0.0, curl=0.0):
+    """S03's last pose (bgqrs._s03_pose: on his knees, hunched over the cupped hands at his chest, facing SSW) plus:
+    look (0-1) his head up and round over his left shoulder at the wings behind him; flinch (0-1) the jolt of the hit
+    (shoulders up, head snapped away); rake (0-1) his left forearm knocked out by the talons; curl (0-1) folded
+    tighter over the shrimp, his left shoulder turned to the bird (shielding it)."""
+    d, k0, k1, start, slide0, slide1 = layout
+    B._s03_pose(P, 999, slide0, slide1)
+    P.rot("spine", (12 * curl - 4 * flinch, 0, 8 * curl))
+    P.rot("chest", (10 * curl, 0, 6 * curl))
+    P.rot("neck", (-14 * look + 10 * curl, 0, 18 * look))
+    P.rot("head 1", (-16 * look + 12 * curl + 4 * flinch, 0, 22 * look - 18 * flinch))
     for nm, sx in (("shoulder.L", 1), ("shoulder.R", -1)):
-        P.rot(nm, (0, sx * (8 * flinch + 6 * curl), 0))                   # shoulders up
-    if rake_arm:
-        P.aim("forearm.R", (-0.35 - 0.25 * rake_arm, -0.75, -0.25 * rake_arm))
-        P.aim("hand.R", (-0.5, -0.7, -0.3 * rake_arm))
+        P.rot(nm, (0, sx * (9 * flinch + 5 * curl), 0))                     # shoulders up round his ears
+    if rake:
+        P.aim("forearm.L", (0.25 + 0.45 * rake, -0.8, -0.2 - 0.3 * rake))    # knocked out and down
+        P.aim("hand.L", (0.3 + 0.4 * rake, -0.7, -0.35 * rake))
+    P.key(f)
 
 
 def s04():
-    from channels.monsters.diorama_ep02 import xprl as xp
+    from channels.monsters.diorama_ep02 import bgqrs as B
+    from channels.monsters.diorama_ep02.xprl import _cam_move
     from channels.monsters.diorama_v3 import xprl as xv3
-    from channels.monsters.ep01v2.xprl import Pose
+    from channels.monsters.diorama import helper1 as d1
+    from channels.monsters.ep01v2 import bgqrs as s3d
+    from channels.monsters.ep01v2 import helper5 as h5
+    from channels.monsters.ep01v2 import xprl as x3
     from channels.monsters.mk import acting, hero
     n = _frames("S04")
     _world(n)
-    k = hero.load((0, 0, 0), scale=xp.SCALE, outfit="world")
-    k["arm"].rotation_mode = "XYZ"
-    k["arm"].rotation_euler = (0, 0, math.radians(KNEEL_YAW))
-    k["arm"].location = KNEEL_AT
-    bpy.context.view_layer.update()
+    layout = B._s03_layout()
+    d, start = layout[0], layout[3]
+    k = x3._hero(tuple(start), B._facing(d))                             # exactly as bgqrs.kai_s03_end builds him
     hero.line_width(k, 0.0028)
-    P = Pose(k)
-    beats = [(1, dict(look_up=0.9)), (9, dict(look_up=1.0)),                      # eyes up: it's coming
-             (13, dict(look_up=0.7, flinch=0.3)),                                     # anticipation: a small duck
-             (F_RAKE, dict(look_up=0.2, flinch=1.0, rake_arm=1.0)),                  # HIT: the arm knocked out
-             (F_RAKE + 2, dict(look_up=0.0, flinch=0.9, rake_arm=0.8, curl=0.3)),
-             (F_RAKE + 6, dict(curl=1.1, flinch=0.4, rake_arm=0.2)),                 # curls round the shrimp (past)
-             (F_RAKE + 10, dict(curl=1.0, flinch=0.2)),                               # settle
-             (F_RAKE + 24, dict(curl=0.95, flinch=0.1)), (n, dict(curl=0.95))]
+    d1._tilt_cap(k, 32.0)
+    P = x3.Pose(k)
+    beats = [(1, dict()), (5, dict(look=0.5)), (9, dict(look=1.0)),           # the wings behind him: a look
+             (11, dict(look=0.6, flinch=0.3)),                                    # anticipation: a duck
+             (F_RAKE, dict(flinch=1.0, rake=1.0)),                                # HIT: the arm knocked out
+             (F_RAKE + 2, dict(flinch=0.9, rake=0.7, curl=0.3)),
+             (F_RAKE + 6, dict(flinch=0.5, rake=0.1, curl=1.15)),                 # curls round it (past)
+             (F_RAKE + 10, dict(flinch=0.3, curl=1.0)),                           # settle
+             (F_RAKE + 24, dict(flinch=0.15, curl=0.95))]
     for f, kw in beats:
-        kneel(P, **kw)
-        P.key(f)
-    for f in range(F_RAKE + 26, n + 1, 4):                                         # a tremble on 2s
-        kneel(P, curl=0.95 + 0.03 * math.sin(f), flinch=0.08)
-        P.key(f)
-    v2._twos([k["arm"]])
-    # the shrimp in his cupped hands (scooped in S03): it rides with them, facing out, on 2s
-    shr = xv3._shrimp(n)
-    shr["root"].scale = (0.62,) * 3
+        _s04_pose(P, B, layout, f, **kw)
+    for i, f in enumerate(range(F_RAKE + 28, n + 1, 4)):                        # a tremble on 2s
+        _s04_pose(P, B, layout, f, flinch=0.1 + 0.06 * (i % 2), curl=0.95)
+    B._cup_hands(k["arm"], 1, 1.0)
+    anim.on_twos([k["arm"]], step=2)
+    acting.EXPR.setdefault("wince", {"eye_V": 1.0, "mouth_wide": 0.7, "eye_brow_down": 0.4})
+    acting.expression(k, "fear", 1, value=0.8)
+    acting.expression(k, "surprised", 7, value=0.8)
+    acting.expression(k, "wince", F_RAKE)
+    acting.expression(k, "wince", F_RAKE + 20, value=0.85)
+    acting.blink(k, 1, F_RAKE - 2, at=(4,))
+    # the shrimp in his cupped hands (bgqrs: 0.6 scale, its root at the midpoint of his hand tails + 0.05 z), on 2s
+    shr = B._shrimp(n)
     for f in range(1, n + 1, 2):
         bpy.context.scene.frame_set(f)
         hl = k["arm"].matrix_world @ k["arm"].pose.bones["hand.L"].tail
         hr = k["arm"].matrix_world @ k["arm"].pose.bones["hand.R"].tail
-        mid = (hl + hr) / 2 + Vector((0, 0, 0.05))
-        anim.key(shr["root"], "location", f, tuple(mid), "CONSTANT")
-        anim.key(shr["root"], "rotation_euler", f, (0, 0, math.radians(KNEEL_YAW)), "CONSTANT")
-    bpy.context.scene.frame_set(1)
-    acting.EXPR.setdefault("wince", {"eye_V": 1.0, "mouth_wide": 0.7, "eye_brow_down": 0.4})
-    acting.expression(k, "fear", 1, value=0.9)
-    acting.expression(k, "wince", F_RAKE)
-    acting.expression(k, "wince", F_RAKE + 20, value=0.85)
-    acting.blink(k, 1, F_RAKE - 2, at=(5,))
-    # the bird: from high behind him (the thorn side) it swoops down past his right forearm, talons first, then
-    # beats up and away over his left (screen left), climbing
-    face = Vector((math.sin(math.radians(KNEEL_YAW)), -math.cos(math.radians(KNEEL_YAW)), 0))   # his front (-Y)
-    right = Vector((face.y, -face.x, 0))                                             # his right (-X)
+        anim.key(shr["root"], "location", f, tuple((hl + hr) / 2 + Vector((0, 0, 0.05))), "CONSTANT")
+        anim.key(shr["root"], "rotation_euler", f, (0, 0, math.radians(B._facing(d))), "CONSTANT")
+    # the bird: right on top of them at frame 1 (behind his left shoulder, where S02's dive was taking it); it
+    # strikes past his left forearm talons first, then beats up and away over his left, climbing out of frame
+    face = Vector((d.x, d.y, 0)).normalized()
+    left = Vector((-face.y, face.x, 0))
     bpy.context.scene.frame_set(F_RAKE)
-    pb = k["arm"].pose.bones["forearm.R"]
-    elbow = k["arm"].matrix_world @ pb.head
-    wrist = k["arm"].matrix_world @ pb.tail
+    pb = k["arm"].pose.bones["forearm.L"]
+    elbow, wrist = k["arm"].matrix_world @ pb.head, k["arm"].matrix_world @ pb.tail
     bpy.context.scene.frame_set(1)
-    hit = elbow.lerp(wrist, 0.55) + right * 0.6 + Vector((0, 0, 0.6))
-    p0 = hit - face * 9.0 + right * 3.0 + Vector((0, 0, 9.0))                 # high behind his right shoulder
-    p2 = hit + face * 6.0 - right * 9.0 + Vector((0, 0, 10.0))                # away past the camera's left, up
-    scale = xv3.BIRD_SCALE
+    hit = elbow.lerp(wrist, 0.55) + left * 0.7 + Vector((0, 0, 0.5))
+    p0 = hit - face * 3.2 + left * 1.2 + Vector((0, 0, 4.6))
+    p2 = hit + face * 6.0 + left * 7.0 + Vector((0, 0, 11.0))
+    S = xv3.BIRD_SCALE
     rig = tuftwing.build((hit.x, hit.y, 0.0), shadow_span=10.0)
-    rig["root"].scale = (scale,) * 3
+    rig["root"].scale = (S,) * 3
     c = Vector(tuftwing.CENTER)
-    d_in = (hit - p0)
-    rot = math.atan2(d_in.x, -d_in.y)
+    din = hit - p0
+    rot = math.atan2(din.x, -din.y)
     rig["root"].rotation_euler.z = rot
     lift = rig["lift"]
-    for f in range(1, n + 1):
+    base = Vector((hit.x, hit.y, 0))
+    for f in range(1, F_RAKE + 31):
         if f <= F_RAKE:
-            u = ((f - 1) / (F_RAKE - 1)) ** 1.6                                        # accelerating down
-            p = p0.lerp(hit, u)
+            p = p0.lerp(hit, ((f - 1) / (F_RAKE - 1)) ** 1.5)                     # dropping onto the arm
         else:
-            u = min(1.0, (f - F_RAKE) / 22.0)
-            e = 1 - (1 - u) ** 2                                                      # bursting away, slowing
-            p = hit.lerp(p2, e) + Vector((0, 0, -2.5)) * math.sin(math.pi * e) * 0.5
-        anim.key(lift, "location", f, tuple(_local(rot, p - Vector((hit.x, hit.y, 0)), scale) - c), "LINEAR")
-        if f > F_RAKE + 26:
-            break
-    anim.key(lift, "location", F_RAKE + 30, tuple(_local(rot, p2 + face * 20 - Vector((hit.x, hit.y, 0)), scale) - c),
+            e = 1 - (1 - min(1.0, (f - F_RAKE) / 24.0)) ** 2                      # bursting away, slowing
+            p = hit.lerp(p2, e)
+        anim.key(lift, "location", f, tuple(_local(rot, p - base, S) - c), "LINEAR")
+    anim.key(lift, "location", F_RAKE + 40, tuple(_local(rot, p2 + face * 25 + Vector((0, 0, 10)) - base, S) - c),
              "LINEAR")
     for sx, w in zip((-1, 1), rig["wings"]):
-        anim.key(w, "rotation_euler", 1, (0, -sx * 0.5, 0))                          # swept back in the dive
-        anim.key(w, "rotation_euler", F_RAKE - 3, (0, -sx * 1.4, 0))                 # flared to brake...
+        anim.key(w, "rotation_euler", 1, (0, -sx * 0.25, 0))                       # tucked, still diving
+        anim.key(w, "rotation_euler", F_RAKE - 3, (0, -sx * 1.45, 0))              # flared to brake...
         anim.key(w, "scale", F_RAKE - 3, (1.6, 1.6, 1.6))
-    anim.key(rig["body"], "rotation_euler", F_RAKE - 3, (-0.5, 0, 0))                # ...feet (talons) thrown forward
+    anim.key(rig["body"], "rotation_euler", F_RAKE - 3, (-0.55, 0, 0))             # ...talons thrown forward
     anim.key(rig["body"], "rotation_euler", F_RAKE + 4, (0.3, 0, 0))
-    tuftwing.flutter(rig, F_RAKE + 2, flaps=5, amount=1.4)                          # beating hard to climb away
+    tuftwing.flutter(rig, F_RAKE + 2, flaps=6, amount=1.4)                        # beating hard to climb away
     butcherbird.stare(rig, 1, down=0.45)
+    h5._rage_light(rig, 1, B.SHRIMP.z + (tuftwing.CENTER[2] - 0.1) * S)          # all dark, as in S01-S02
     xv3.dark_form(1)
-    sh = rig["shadow"]                                                               # its shadow sweeps over him
+    B._bird_shadow_look(rig)
+    sh = rig["shadow"]                                                            # its shadow sweeps over him
     z = sh.location.z
     for f in range(1, n + 1, 2):
-        u = min(1.0, (f - 1) / (F_RAKE + 20))
-        g = (p0.lerp(hit, min(1.0, u * 1.6)) if u < 0.62 else hit.lerp(p2, (u - 0.62) / 0.38))
-        lo = _local(rot, Vector((g.x - hit.x, g.y - hit.y, 0)), scale)
-        anim.key(sh, "location", f, (lo.x, lo.y, z), "LINEAR")
-    anim.on_twos([o for o in tuftwing._animated(rig) if o is not lift], step=2)    # the swoop path stays on 1s
-    # in front of him, a little to his right and low: his face, the cupped hands and the right forearm; the bird
-    # comes down out of the top of frame behind his shoulder; a slow push-in on 1s
-    chest = KNEEL_AT + Vector((0, 0, 4.0))
-    cam_dir = (face * 1.0 - right * 0.35).normalized()
-    yaw = math.degrees(math.atan2(-cam_dir.x, -cam_dir.y))
-    a = (tuple(chest + Vector((0, 0, 1.6))), 13.0, 9.0, yaw, 36.0, -0.1)
-    b = (tuple(chest + Vector((0, 0, 1.4))), 11.0, 9.0, yaw - 2.0, 36.0, -0.1)
-    cam = xp._cam_move("cam_s04", n, a, b)
+        bpy.context.scene.frame_set(f)
+        lx, ly, _ = lift.location
+        anim.key(sh, "location", f, (lx, ly, z), "CONSTANT")
+    bpy.context.scene.frame_set(1)
+    anim.on_twos([o for o in tuftwing._animated(rig) if o is not lift], step=2)  # the swoop path stays on 1s
+    # low in front of him and a little to his left: his face under the cap, the cupped hands, the left forearm;
+    # the bird drops in from the top behind his shoulder. A slow push-in on 1s.
+    hips = start + face * (layout[5] * B.KAI_SCALE)
+    chest = hips + Vector((0, 0, 3.6))
+    cdir = (face + left * 0.5).normalized()
+    yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
+    a = (tuple(chest + Vector((0, 0, 1.2))), 12.5, 7.0, yaw, 35.0, -0.1)
+    b = (tuple(chest + Vector((0, 0, 1.0))), 10.5, 7.0, yaw - 2.0, 35.0, -0.1)
+    cam = _cam_move("cam_s04", n, a, b)
     _clear_smoke(cam, [1, n // 2, n], chest)
 
     def bone(name, tail=False):
@@ -524,12 +478,10 @@ def s04():
             pbn = k["arm"].pose.bones[name]
             return k["arm"].matrix_world @ (pbn.tail if tail else pbn.head)
         return fn
-    from channels.monsters.ep01v2 import bgqrs as s3d
-    pts = {"elbow": bone("forearm.R"), "wrist": bone("forearm.R", True),
+    pts = {"elbow": bone("forearm.L"), "wrist": bone("forearm.L", True),
            "bird": lambda f: lift.matrix_world.translation.copy(),
            "eye_l": lambda f: s3d.kai_point(k, "eye_l"), "eye_r": lambda f: s3d.kai_point(k, "eye_r")}
     _anchors("S04", cam, pts, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], rig["root"], shr["root"]])
-
 
 SHOTS = {"S02": s02, "S04": s04, "S16": s16}
