@@ -187,16 +187,17 @@ def s08():
     acting.blink(k, 1, n, at=(30,))
     # camera: heroic, a little below his hands, in front and to his left; the claw aims just beside the lens
     chest = s15._world(k, "chest")
-    pos0 = KAI_AT + AIM * 11.0 - SIDE * 3.0 + Vector((0, 0, 3.0))
+    pos0 = KAI_AT + AIM * 10.5 - SIDE * 5.0 + Vector((0, 0, 3.5))
     aim, err = h3.aim_euler(rig, emp, pos0 - SIDE * 1.2 + Vector((0, 0, 0.6)))
     print("S08 aim err", round(err, 1))
     anim.key(rig["shoulder"], "rotation_euler", 1, aim, "CONSTANT")
     acting.glare(rig, pos0, 1)
     # the bird wheels in the sky behind him, upper right of frame, lining up its second dive
-    c = KAI_AT - AIM * 14.0 - SIDE * 6.0 + Vector((0, 0, 16.0))
+    c = KAI_AT - AIM * 14.0 - SIDE * 3.0 + Vector((0, 0, 15.0))
     bird = _bird(c)
-    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 4, math.sin(2.2 * u * math.pi) * 3,
+    _fly(bird, 1, n, lambda u: c + Vector((math.cos(2.2 * u * math.pi) * 2.5, math.sin(2.2 * u * math.pi) * 2,
                                             1.2 * math.sin(u * 5))))
+    dv2.BLUR = 3.0                                               # the shrimp and Kai both sharp
     cam = dv2._camera("S08_cam", 1, chest, (pos0 - chest).length, 0.0)
     cam.data.lens = 28.0
     for f in range(1, n + 1):
