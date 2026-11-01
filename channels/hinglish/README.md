@@ -116,6 +116,11 @@ every line, upload sheet. Sources go with every script, and health claims must b
   - Every line gets a Whisper retake (`retake.py`) and a liveliness retake (`lively_retake.py`, keeping the take
     with the widest pitch movement that stays clear).
   - Nobody is cloned.
+  - Words the voice gets wrong: "नए/नई" come out as "नहीं" (it said "das nahi keede" for "das naye keede" in every
+    take), and "प्रिंटिंग" at the start of a line came out "printinting". Write around them.
+- **Hooks must sound impossible** (owner, 1 Nov 2026: "hook should be like impossible to assume belive simple hooks
+  won't work"): open on the most unbelievable true fact as a contradiction ("kaato toh marta nahi, do ban jaata hai"),
+  then the twist. Never a plain "X happened".
 - **Topics: science AND tech** (owner, 29 Oct 2026: "Not only science we also do tech like how speaker works how
   internet works with examples").
   - Tech explainers, "how X works": a speaker, the internet, a phone. Each one is built around everyday examples.
