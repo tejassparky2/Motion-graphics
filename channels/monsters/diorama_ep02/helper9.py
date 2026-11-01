@@ -40,8 +40,9 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep02")
 TIMING = os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")
 SHRIMP_K = 0.42                      # the puff-shrimp sitting on his fists
-MARK_U = 0.6                         # the mark's centre: this far from his left elbow to his wrist (above the bracelet)
-MARK_H = 0.45                        # the mark's length along the forearm (world units; the crack's 1-unit height)
+MARK_U = 0.3                         # the mark's centre: this far from his left elbow to his wrist (the bracelet
+                                     # hoop covers ~0.48-0.9, so the mark sits on bare skin nearer the elbow)
+MARK_H = 0.36                        # the mark's length along the forearm (world units; the crack's 1-unit height)
 CORAL = (1.0, 0.48, 0.36)
 RIFT_EL = 58.0                       # the sky crack: due north, this many degrees up
 RIFT_ANG = 0.144 * 2.0               # its angular height (helper 3's RIFT_H x POV_SIZE: the opened rift)
@@ -375,7 +376,7 @@ def s15():
     nrm = (nrm - a * nrm.dot(a)).normalized()                            # face the arm square-on from S14's side
     f_mm = 50.0
     d1 = MARK_H * (f_mm / 36.0 * 1280) / MATCH_PX                        # at the cut: the mark is MATCH_PX tall
-    shift = (640 - MATCH_Y) / 1280                                       # its centre above the frame's centre
+    shift = (MATCH_Y - 640) / 1280                                       # its centre above the frame's centre (- = up)
     ins = _new_cam("S15ins", 1)
     for f in range(1, fc):
         d = d1 * (1.18 - 0.18 * _smooth((f - 1) / max(1, fc - 2)))       # pushing in on the mark
@@ -561,7 +562,7 @@ def s19():
     w = _wren_facing_kai(n)
     sh, seat = _shrimp_in_hands(k)
     shp, hinge, body = sh["shoulder"], sh["hinge"], sh["body"]
-    anim.key(shp, "rotation_euler", 1, (1.25, 0, 0))                     # the claw hanging forward and down, wet
+    anim.key(shp, "rotation_euler", 1, (0.35, -1.95, 0))                 # the claw draped out over his fists, down
     anim.key(hinge, "rotation_euler", 1, (0.12, 0, 0))
     for f in range(1, n + 1, 24):                                        # breathing
         anim.squash(body, f, 0.0)
@@ -580,7 +581,7 @@ def s19():
     tip = _claw_tip(sh)
     from channels.monsters.mk import meadow
     before = set(bpy.data.objects)
-    meadow.drips(tip, fc - 10, n + 2, every=15, fall=2.4, seed=4)
+    meadow.drips(tip, fc - 10, n + 2, every=8, fall=2.4, seed=4)
     drops = sorted(set(bpy.data.objects) - before, key=lambda o: o.name)
     for i, o in enumerate(drops):
         o.name = f"h9_drop{i}"
@@ -603,12 +604,12 @@ def s19():
         _key_cam(crane, f, loc, rot, ln, d * drift, blur=BLUR + 6 * u, haze=(0.97 + 0.5 * u, 0.55 + 2.2 * u))
     # part B: the claw in his hands, dripping; a slow push-in
     close = _new_cam("S19claw", fc)
-    yaw = _az(0.75, -0.65)                                               # from the claw's side (its right), in front
-    aim = tip.lerp(seat, 0.35) + Vector((0, 0, 0.1))                    # the claw and its face, the drops below
+    yaw = _az(1.0, -0.5)                                                 # in front of him, a little to the claw's side
+    aim = tip.lerp(seat + Vector((0, 0, 0.35)), 0.5)                     # its face, the claw, the drops below
     for f in range(fc, n + 1):
         u = _smooth((f - fc) / (n - fc))
-        loc, rot = _orbit(aim, 3.4 - 0.45 * u, 8.0, yaw)
-        _key_cam(close, f, loc, rot, 70.0, (aim - loc).length, blur=14.0, haze=(3.0, 3.0))
+        loc, rot = _orbit(aim, 4.6 - 0.5 * u, 6.0, yaw)
+        _key_cam(close, f, loc, rot, 55.0, (aim - loc).length, blur=10.0, haze=(3.0, 3.0))
     _linear(crane, crane.data, close, close.data, sc.world)
     LAST.update(k=k, sh=sh, w=w, fc=fc, tip=tip, lake=lake)
 
