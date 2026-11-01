@@ -19,6 +19,7 @@ where it hangs upside down, dazed. It is never killed.
 
     blender -b -y -P channels/monsters/render_shot.py -- diorama_ep02 S09 OUT [--frames A-B] [--still N --scale 0.5]
     python channels/monsters/diorama_ep02/helper10.py post S09 RAW_DIR SUB_DIR OUT_DIR   (the 2D pass)
+    python channels/monsters/diorama_ep02/helper10.py encode S09 OUT_DIR                  (-> shots/S09.mp4 + sheet)
 """
 import json
 import math
@@ -412,8 +413,8 @@ def _stars(cr, f, cx, cy, r, n=3):
     """Little yellow cel stars with navy lines circling the dazed bird's crown (on 2s, one orbit per 16 frames). It
     hangs upside down, so the crown is the bottom of the ball (screen centre cx, cy, radius r px): the orbit is a flat
     ellipse just under it, the far stars a little smaller."""
-    rx, size = r * 1.1, max(16.0, r * 0.32)
-    cy = cy + r * 0.95
+    rx, size = r * 1.2, max(18.0, r * 0.4)
+    cy = cy + r * 1.05
     ph = 2 * math.pi * ((f // 2) * 2) / 16
     for i in range(n):
         a = ph + i * 2 * math.pi / n
@@ -432,6 +433,41 @@ def _stars(cr, f, cx, cy, r, n=3):
         cr.stroke()
 
 
+def encode(shot, frames_dir):
+    """The finished frames -> out/monsters/diorama_ep02/shots/<SHOT>.mp4 + <SHOT>_sheet.jpg, like every diorama shot
+    (diorama/join_parts.py): crf 10, stream-copy remux, no encoder tags; checks the frame count."""
+    import subprocess
+    import tempfile
+    import imageio_ffmpeg
+    ff = imageio_ffmpeg.get_ffmpeg_exe()
+    with open(os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")) as fh:   # (shots.py needs bpy)
+        n = {s["shot"]: s["render_frames"] for s in json.load(fh)["shots"]}[shot]
+    shots = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "shots")
+    os.makedirs(shots, exist_ok=True)
+    out = os.path.join(shots, shot + ".mp4")
+    clean = ["-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact", "-bsf:v",
+             "filter_units=remove_types=6"]
+    tmp = tempfile.mkdtemp()
+    enc = os.path.join(tmp, "enc.mp4")
+    subprocess.run([ff, "-v", "error", "-framerate", "24", "-start_number", "1", "-i", os.path.join(frames_dir, "%04d.png"),
+                    "-frames:v", str(n), "-vf", "scale=720:1280:flags=lanczos", "-c:v", "libx264", "-crf", "10",
+                    "-pix_fmt", "yuv420p", *clean, enc], check=True)
+    subprocess.run([ff, "-y", "-v", "error", "-i", enc, "-c", "copy", "-map_metadata", "-1", "-fflags", "+bitexact",
+                    "-metadata:s:v", "handler_name=", "-movflags", "+faststart", out], check=True)
+    subprocess.run([ff, "-y", "-v", "error", "-i", out, "-vf", "select=not(mod(n\\,6)),scale=180:320,tile=7x2",
+                    "-frames:v", "1", "-q:v", "3", os.path.join(shots, shot + "_sheet.jpg")], check=True)
+    got = len(subprocess.run([ff, "-v", "error", "-i", out, "-vf", "scale=8:8", "-f", "rawvideo", "-pix_fmt", "gray",
+                              "-"], capture_output=True, check=True).stdout) // 64
+    data = open(out, "rb").read()
+    tags = {t: data.count(t.encode()) for t in ("x264", "Lavf", "Lavc")}
+    os.remove(enc)
+    os.rmdir(tmp)
+    print(f"{shot}: {got}/{n} frames, tags {tags}" + ("" if got == n and not any(tags.values()) else "  **CHECK**"))
+
+
 if __name__ == "__main__" and bpy is None:
+    sys.path.insert(0, ROOT)
     if sys.argv[1] == "post":
         print(post(*sys.argv[2:6]))
+    elif sys.argv[1] == "encode":
+        encode(*sys.argv[2:4])
