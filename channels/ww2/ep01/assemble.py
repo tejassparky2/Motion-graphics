@@ -95,7 +95,7 @@ def find_parts(parts_dir, name, n):
     if nxt != n:
         problems.append(f"chunks end at f{nxt - 1:05d}, the package needs f{n - 1:05d}")
     if problems:
-        sys.exit(f"{name}: " + "; ".join(problems))
+        raise ValueError("; ".join(problems))
     return chunks
 
 
@@ -105,15 +105,24 @@ def frame_md5s(path):
     return [ln.rsplit(",", 1)[1].strip() for ln in out.splitlines() if ln and not ln.startswith("#")]
 
 
-def join(T, parts_dir, out_mp4):
-    plan, files, problems = spans(T), [], []
+def check_parts(T, parts_dir):
+    """Check every package that has landed (chunk coverage, codec, size, fps, frame counts) without joining.
+    Returns (files, problems, missing); files = [(package, path, first episode frame, frames)] in order."""
+    files, problems, missing = [], [], []
     print(f"clock: {'PROVISIONAL (estimated)' if T.estimated else 'voiced'}, {T.total:.3f} s, "
           f"{round(T.total * T.fps)} frames at {T.fps} fps")
-    for name, f0, n in plan:
-        got = find_parts(parts_dir, name, n)
-        if got is None:
-            problems.append(f"{name}: no part")
+    for name, f0, n in spans(T):
+        try:
+            got = find_parts(parts_dir, name, n)
+        except ValueError as e:
+            problems.append(f"{name}: {e}")
+            print(f"  {name}: PROBLEM {e}")
             continue
+        if got is None:
+            missing.append(name)
+            print(f"  {name}: episode frames {f0:5d}-{f0 + n - 1:5d} ({n:5d}, {n / T.fps:7.2f} s)  not landed")
+            continue
+        bad_here = []
         for path, a, b in got:
             codec, w, h, pix, fps, frames = probe(path)
             want = b - a + 1
@@ -121,12 +130,19 @@ def join(T, parts_dir, out_mp4):
                                    (pix, pix == "yuv420p"), (f"{fps:g} fps", abs(fps - FPS) < 1e-6),
                                    (f"{frames} frames, needs {want}", frames == want)) if not ok]
             if bad:
-                problems.append(f"{os.path.basename(path)}: " + ", ".join(bad))
+                bad_here.append(f"{os.path.basename(path)}: " + ", ".join(bad))
             files.append((name, path, f0 + a, want))
-        print(f"  {name}: episode frames {f0:5d}-{f0 + n - 1:5d} ({n:5d}, {n / T.fps:7.2f} s)  "
-              f"{len(got)} file{'s' if len(got) > 1 else ''}")
-    if problems:
-        sys.exit("refusing to join:\n  " + "\n  ".join(problems))
+        problems += bad_here
+        mb = sum(os.path.getsize(p) for p, _, _ in got) / 1e6
+        print(f"  {name}: episode frames {f0:5d}-{f0 + n - 1:5d} ({n:5d}, {n / T.fps:7.2f} s)  {len(got)} file"
+              f"{'s' if len(got) > 1 else ''}, {mb:.0f} MB  " + ("; ".join(bad_here) if bad_here else "ok"))
+    return files, problems, missing
+
+
+def join(T, parts_dir, out_mp4):
+    files, problems, missing = check_parts(T, parts_dir)
+    if problems or missing:
+        sys.exit("refusing to join:\n  " + "\n  ".join(problems + [f"{m}: not landed" for m in missing]))
 
     os.makedirs(os.path.dirname(out_mp4), exist_ok=True)
     lst = out_mp4 + ".txt"
@@ -467,6 +483,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--text", action="store_true", help="only the captions, chapters and upload sheet")
     ap.add_argument("--stub", action="store_true", help="test run on stub parts in out/ww2/ep01/stub/")
+    ap.add_argument("--check", action="store_true", help="only check the parts that have landed (no join)")
     ap.add_argument("--pieces", type=float, default=None, metavar="MB", help="also cut the picture into pieces")
     a = ap.parse_args()
     T = Timing()
@@ -481,6 +498,11 @@ def main():
     if a.text:
         return
     parts_dir = os.path.join(out_dir, "parts")
+    if a.check:
+        _, problems, missing = check_parts(T, parts_dir)
+        print(f"{8 - len(missing)}/8 landed, {len(problems)} problem(s)" + (f"; waiting on {', '.join(missing)}"
+                                                                           if missing else ""))
+        sys.exit(1 if problems else 0)
     if a.stub:
         make_stubs(T, parts_dir)
     pic = join(T, parts_dir, os.path.join(out_dir, "picture.mp4"))
