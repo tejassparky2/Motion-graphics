@@ -1,6 +1,6 @@
 # Upload sheet: WW2 Episode 1
 
-Video: `out/ww2/ep01/ep01_final.mp4` (1920x1080, 12:14). Thumbnail: `out/ww2/ep01/thumbnail.png` (1280x720).
+Video: `WW2_Explained_Episode1.mp4` (1920x1080, 24 fps, 12:14, sent directly; too big for git). Thumbnail: `out/ww2/ep01/thumbnail.png` (1280x720).
 Captions: `out/ww2/ep01/captions.srt` (upload under Subtitles, English).
 
 ## Title
@@ -56,7 +56,7 @@ world war 2, ww2, world war ii, second world war, ww2 explained, world war 2 exp
 
 ## Pinned comment
 ```
-Which moment decided the war: Stalingrad, Midway or D-Day? Pick one and give your reason.
+When did Germany really lose the war? 1 = the day Hitler invaded the Soviet Union, 2 = the day America joined, 3 = the frozen streets of Stalingrad. Answer 1, 2 or 3 and give your reason.
 ```
 
 ## Settings
