@@ -214,7 +214,7 @@ def s05():
     sh = _shrimp_in_hands(k, X.KAI_YAW + 180)
     pb = k["arm"].pose.bones["hand.L"]
     palm_l = k["arm"].matrix_world @ (pb.head.lerp(pb.tail, 0.7))
-    anim.key(sh["shoulder"], "rotation_euler", 1, s3d.aim_claw(sh, palm_l - Vector((0, 0, 0.35))), "CONSTANT")
+    anim.key(sh["shoulder"], "rotation_euler", 1, s3d.aim_claw(sh, palm_l + Vector((0, 0, 0.12))), "CONSTANT")
     # (the claw laid down over the heel of his left palm, its tip resting on it)
     anim.key(sh["hinge"], "rotation_euler", 1, (0.12, 0.0, 0.0), "CONSTANT")
     for f in range(1, n + 1, 24):
@@ -232,8 +232,8 @@ def s05():
     # B up to his face, a touch low, his eyes above the caption band (CUT..n)
     hands = _palms(k) + Vector((0, 0, 0.55))
     face = s3d.kai_point(k, "eyes")
-    _shot_cam("S05a", 1, tuple(hands), 6.0, 12.0, -X.KAI_YAW - 80.0, 60.0, 3.0, push=0.07, f1=S05_CUT - 1,
-              shift_y=-0.13)
+    _shot_cam("S05a", 1, tuple(hands), 7.6, 18.0, -X.KAI_YAW - 42.0, 60.0, 3.0, push=0.07, f1=S05_CUT - 1,
+              shift_y=-0.2)
     _shot_cam("S05b", S05_CUT, tuple(face - Vector((0, 0, 0.35))), 5.6, 4.0, -X.KAI_YAW + 8.0, 55.0, 2.5, push=0.1,
               f1=n, shift_y=-0.15)
     _anchors("S05", n, k, extra={"tip": lambda: s3d.claw_tip(sh)})
