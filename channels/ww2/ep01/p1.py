@@ -354,6 +354,7 @@ def s09_soldier(cr, t, t0, t1):
     _frame(cr, t, t0, t1, 1.0, 1.08, W / 2, H * 0.62)
     paper(cr)
     rays(cr, t, W / 2, H * 0.95, n=26, color="ink", alpha=0.14)
+    fx.mud(cr, t, -100, W + 100, 900, depth=420, seed=5)             # mud all the way past the frame bottom
     fx.mud(cr, t, -100, W + 100, 900, depth=200)
     props.BarbedWire().draw(cr, t, x=W * 0.2, y=900, scale=1.1)
     props.BarbedWire().draw(cr, t, x=W * 0.83, y=905, scale=0.9)

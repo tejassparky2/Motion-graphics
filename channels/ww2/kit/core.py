@@ -132,7 +132,11 @@ def paper_surface(w=W, h=H, seed=7):
 
 
 def paper(cr):
-    cr.set_source_surface(paper_surface(), 0, 0)
+    """Paint the page. Mirrored past its edges, so a camera framed off-centre (cy != H/2 at zoom 1) never exposes
+    unpainted black canvas."""
+    pat = cairo.SurfacePattern(paper_surface())
+    pat.set_extend(cairo.EXTEND_REFLECT)
+    cr.set_source(pat)
     cr.paint()
 
 
