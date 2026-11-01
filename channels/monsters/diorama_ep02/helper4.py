@@ -120,6 +120,24 @@ def _wet(sh, n, seed=3):
     return out
 
 
+def _face(keys, f):
+    """Key a whole face at frame f: every expression key touched by hero.FACES (and `keys`) is set, to its value in
+    `keys` or 0 (hero.face keys one recipe and zeroes the rest, so recipes can't be stacked). CONSTANT, anime snaps."""
+    head = bpy.data.objects["head"]
+    kb = head.data.shape_keys.key_blocks
+    touched = set(keys)
+    for rv in hero.FACES.values():
+        touched.update(rv.keys())
+    for nm in touched:
+        if nm in kb:
+            kb[nm].value = keys.get(nm, 0.0)
+            kb[nm].keyframe_insert("value", frame=f)
+    for fc in anim.all_fcurves(head.data.shape_keys.animation_data.action):
+        for kp in fc.keyframe_points:
+            if abs(kp.co.x - f) < 0.01:
+                kp.interpolation = "CONSTANT"
+
+
 # ------------------------------------------------------------------------------------------------- the cameras
 def _shot_cam(name, frame, target, dist, tilt, yaw, lens, blur, push=0.06, f1=None, shift_y=0.0):
     """A diorama camera bound at `frame` (timeline marker), pushing in `push` of its distance by f1 on 1s, its focus
@@ -174,7 +192,8 @@ def s05():
     f_in = next(a for w, a, b in W if w == "In")                    # 56
     X._world(n)
     k = X._kai()
-    rig = k
+    from channels.monsters.diorama.helper1 import _tilt_cap
+    _tilt_cap(k, 40.0)                                                # the brim up, so his eyes read
     P = x3.Pose(k)
     # Kai: frozen, holding his breath; a tremble on 2s that gets worse after the cut
     for f in range(1, n + 1, 2):
@@ -186,16 +205,10 @@ def s05():
         P.key(f)
     _fingers(k, 0.32)
     _key_fingers(k, 1)
-    hero.face(k, "pinprick", 1)
-    hero.face(k, "brows_up", 1, value=0.6)
-    hero.face(k, "look_down", 1, value=0.7)
-    for f in (S05_CUT - 1,):
-        hero.face(k, "look_down", f, value=0.7)
-    hero.face(k, "look_down", S05_CUT, value=0.0)
-    hero.face(k, "shock", S05_CUT, value=1.0)
-    hero.face(k, "pinprick", S05_CUT, value=1.0)
-    hero.face(k, "brows_up", S05_CUT, value=1.0)
-    hero.face(k, "grit", S05_CUT + 6, value=0.45)
+    _face({"eye_black_small": 1.0, "eye_brow_up": 0.6, "look_down": 0.7}, 1)        # A: staring down at it
+    _face({"eye_black_small": 1.0, "eye_brow_up": 1.0, "shock_plane": 1.0, "mouth_short": 0.6}, S05_CUT)  # B: terror
+    _face({"eye_black_small": 1.0, "eye_brow_up": 1.0, "shock_plane": 1.0, "mouth_wide": 0.35, "lip_i": 0.4},
+          S05_CUT + 8)                                              # the teeth clench on "In my bare hands"
     X.v2._twos([k["arm"]])
 
     # the shrimp in his hands, facing his face, its claw down along his left palm; eyes locked on his face
@@ -220,11 +233,117 @@ def s05():
     face = s3d.kai_point(k, "eyes")
     _shot_cam("S05a", 1, tuple(hands), 6.5, 16.0, -X.KAI_YAW - 55.0, 60.0, 3.0, push=0.06, f1=S05_CUT - 1,
               shift_y=0.12)
-    _shot_cam("S05b", S05_CUT, tuple(face - Vector((0, 0, 0.35))), 7.5, 4.0, -X.KAI_YAW + 8.0, 55.0, 2.5, push=0.08,
+    _shot_cam("S05b", S05_CUT, tuple(face - Vector((0, 0, 0.35))), 5.6, 4.0, -X.KAI_YAW + 8.0, 55.0, 2.5, push=0.1,
               f1=n, shift_y=0.1)
     _anchors("S05", n, k, extra={"tip": lambda: s3d.claw_tip(sh)})
     return dict(frames=n, step=1, subject=[k["arm"], sh["root"]] + list(k.get("cap", [])), cut=S05_CUT,
                 beats=dict(wet=f_wet, sweat=f_in))
 
 
-SHOTS = {"S05": s05}
+# ------------------------------------------------------------------------------------------------------------ S06
+S06_BG = "#fbefc8"                              # the graphic insert's light ground (pale butter: aqua and coral pop)
+
+
+def _backdrop(color):
+    """A seamless light cyc behind and under the shrimp (a plain graphic ground, no island): a floor plane curving
+    up into a back wall, flat-lit (emission) so it stays one clean light tone."""
+    import bmesh
+    me = bpy.data.meshes.new("s06_cyc")
+    bm = bmesh.new()
+    rows = []
+    for i in range(25):                                              # the profile: floor -> quarter circle -> wall
+        u = i / 24
+        if u < 0.4:
+            y, z = -60 + (u / 0.4) * 60, 0.0
+        else:
+            a = (u - 0.4) / 0.6 * (math.pi / 2)
+            y, z = 18 * math.sin(a), 18 * (1 - math.cos(a))
+            if u > 0.99:
+                z = 80.0
+        rows.append([bm.verts.new((x, y, z)) for x in (-80.0, 80.0)])
+    for r0, r1 in zip(rows[:-1], rows[1:]):
+        bm.faces.new((r0[0], r0[1], r1[1], r1[0]))
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new("s06_cyc", me)
+    bpy.context.scene.collection.objects.link(o)
+    o.data.materials.append(look.flat("s06_ground", look.hexc(color), 1.0))
+    o.visible_shadow = False
+    return o
+
+
+def s06():
+    """The claw in clean side profile, aimed straight ahead (screen right), on a light graphic ground: the shrimp
+    breathes and blinks; on "fires" the snapping finger cocks open (anticipation); on "Straight ahead" the 2D pass
+    (post_helper4.py) fires an arrow-like jet streak straight out of the claw to the frame edge, nothing in any other
+    direction. A slow push-in on 1s; the shrimp on 2s."""
+    from channels.monsters.mk import diorama
+    n = _frames("S06", 98)
+    W = _words("l6")
+    f_fires = next(a for w, a, b in W if w == "fires")              # 35
+    f_str = next(a for w, a, b in W if w == "Straight")             # 67
+    diorama.setup()
+    sc = bpy.context.scene
+    sc.frame_start, sc.frame_end = 1, n
+    sc.world.mist_settings.start, sc.world.mist_settings.depth = 500.0, 100.0   # no haze on the insert
+    # the shrimp turned so its right side (the claw) faces the camera on -X, its front (-Y) to screen right
+    origin = Vector((0.0, -20.0, 0.0))
+    _backdrop(S06_BG)
+    sh = puffshrimp.build(tuple(origin))
+    s3d._fix_pivots(sh)
+    bpy.context.view_layer.update()
+    ahead = origin + Vector((0, -40.0, 2.6))                        # straight ahead, at the claw's height
+    rest = s3d.aim_claw(sh, ahead)
+    anim.key(sh["shoulder"], "rotation_euler", 1, rest, "CONSTANT")
+    anim.key(sh["hinge"], "rotation_euler", 1, (0.2, 0.0, 0.0), "CONSTANT")
+    for f, v in ((f_fires - 4, 0.2), (f_fires, 1.25), (f_fires + 4, 1.05)):   # it cocks: the finger swings wide
+        anim.key(sh["hinge"], "rotation_euler", f, (v, 0.0, 0.0), "BEZIER")
+    for f in range(1, n + 1, 24):
+        anim.squash(sh["body"], f, 0.0)
+        anim.squash(sh["body"], f + 12, -0.03)
+    anim.squash(sh["body"], f_str - 6, -0.06)                       # a little crouch before the streak...
+    anim.squash(sh["body"], f_str, 0.03)                            # ...and the kick of the recoil
+    anim.squash(sh["body"], f_str + 6, 0.0)
+    anim.blink(sh, 16)
+    anim.blink(sh, 84)
+    s3d.lock_on(sh, ahead, 1, lids=0.3, slant=0.25)
+    X.v2._twos([sh["body"], sh["shoulder"], sh["hinge"]] + sh["eyes"])
+    # the camera: side-on from its right (-X), level, a long lens; the shrimp left of centre so the streak has room
+    tip0 = s3d.claw_tip(sh)
+    tgt = origin + Vector((0, -1.6, 1.9))
+    bpy.ops.object.camera_add(location=tgt + Vector((-34.0, 0.0, 1.0)))
+    cam = bpy.context.object
+    cam.name = "S06cam"
+    cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
+    cam.data.lens = 85.0
+    cam.data.shift_x = -0.12                                        # the shrimp left; the jet runs to the right
+    cam.data.shift_y = 0.12
+    cam.data.clip_end = 400
+    sc.camera = cam
+    p0 = cam.location.copy()
+    for f in range(1, n + 1):
+        u = (f - 1) / max(1, n - 1)
+        cam.location = p0.lerp(tgt, 0.08 * u * u * (3 - 2 * u))
+        cam.keyframe_insert("location", frame=f)
+    # the 2D pass's anchors: the muzzle and a point far straight ahead of it, per frame
+    from bpy_extras.object_utils import world_to_camera_view
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        t = s3d.claw_tip(sh)
+        piv = sh["shoulder"].matrix_world.translation
+        d = (t - piv).normalized()
+        row = {}
+        for nm, p in (("tip", t), ("ahead", t + d * 60.0)):
+            v = world_to_camera_view(sc, cam, p)
+            row[nm] = (round(v.x * 720, 1), round((1 - v.y) * 1280, 1))
+        out[f] = row
+    os.makedirs(BUILD, exist_ok=True)
+    with open(os.path.join(BUILD, "S06_anchors.json"), "w") as fh:
+        json.dump(out, fh)
+    sc.frame_set(1)
+    del tip0
+    return dict(frames=n, step=1, subject=[sh["root"]], beats=dict(fires=f_fires, streak=f_str))
+
+
+SHOTS = {"S05": s05, "S06": s06}
