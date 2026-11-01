@@ -97,7 +97,8 @@ def jet(a):
             return
         (x0, y0), (x1, y1) = at(a, t, "tip"), at(a, t, "ahead")
         ang = math.atan2(y1 - y0, x1 - x0)
-        L = 900.0                                                         # past the frame edge
+        ca = math.cos(ang)
+        L = (690.0 - x0) / ca if ca > 0.2 else 600.0                      # the point stops just inside the right edge
         front = L * _ease_out(u / (4 / FPS))
         tail = L * max(0.0, (u - 9 / FPS) / (5 / FPS)) ** 1.5
         thin = 1.0 - max(0.0, (u - 9 / FPS) / (5 / FPS))
