@@ -309,9 +309,21 @@ def print_finish(cr, t=0.0, strength=1.0):
 
 # ---------------------------------------------------------------- frame loop
 def ffmpeg():
-    py = os.path.join("/home/user/.venv-main/bin/python")
-    return subprocess.check_output([py, "-c", "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"],
-                                   text=True).strip()
+    """The ffmpeg binary: imageio-ffmpeg in this interpreter, else the main venv's, else ffmpeg on PATH."""
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        pass
+    py = "/home/user/.venv-main/bin/python"
+    if os.path.exists(py):
+        return subprocess.check_output([py, "-c", "import imageio_ffmpeg;print(imageio_ffmpeg.get_ffmpeg_exe())"],
+                                       text=True).strip()
+    import shutil
+    exe = shutil.which("ffmpeg")
+    if exe:
+        return exe
+    raise RuntimeError("no ffmpeg: pip install imageio-ffmpeg")
 
 
 def render_clip(draw, dur, out_mp4, frames=None, still=None, crf=16):
