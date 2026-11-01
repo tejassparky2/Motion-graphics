@@ -40,8 +40,9 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep02")
 TIMING = os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")
 SHRIMP_K = 0.42                      # the puff-shrimp sitting on his fists
-MARK_U = 0.6                         # the mark's centre: this far from his left elbow to his wrist (above the bracelet)
-MARK_H = 0.45                        # the mark's length along the forearm (world units; the crack's 1-unit height)
+MARK_U = 0.3                         # the mark's centre: this far from his left elbow to his wrist (the bracelet
+                                     # hoop covers ~0.48-0.9, so the mark sits on bare skin nearer the elbow)
+MARK_H = 0.36                        # the mark's length along the forearm (world units; the crack's 1-unit height)
 CORAL = (1.0, 0.48, 0.36)
 RIFT_EL = 58.0                       # the sky crack: due north, this many degrees up
 RIFT_ANG = 0.144 * 2.0               # its angular height (helper 3's RIFT_H x POV_SIZE: the opened rift)
