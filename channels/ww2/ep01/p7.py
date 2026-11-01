@@ -561,13 +561,36 @@ def shot_bagration(cr, t, a, b):
 
 
 # ================================================================ 106: Paris
+def tricolour(cr, t, x, y, scale=0.9, facing=1, seed=0, h=260.0):
+    """The French tricolour on a pole: three vertical stripes, blue at the hoist, then white, then red (no emblem),
+    waving like things.Flag."""
+    cr.save()
+    cr.translate(x, y)
+    cr.scale(scale * (1 if facing >= 0 else -1), scale)
+    lw = 5.0
+    P.line(cr, 0, 0, 0, -h, lw)
+
+    def edge(u, top):
+        wv = math.sin(t * 5 - u * 4 + seed) * 10 * u
+        return (u * 150, (-h + 4 if top else -h + 84 - u * 10) + wv)
+
+    for k, c in enumerate(("allies", "white", "alert")):
+        us = [k / 3 + j / 12 for j in range(5)]
+        P.poly(cr, [edge(u, True) for u in us] + [edge(u, False) for u in us[::-1]])
+        P.fill(cr, c)
+    us = [j / 12 for j in range(13)]
+    P.poly(cr, [edge(u, True) for u in us] + [edge(u, False) for u in us[::-1]])
+    P.ink(cr, lw * 0.7)
+    cr.restore()
+
+
 def shot_paris(cr, t, a, b):
     cr.save()
     push(cr, t, a, b, 1.0, 1.07, W * 0.5, H * 0.45)
     S.Sky(mode="day", horizon=700, clouds=2, rays=True, seed=12).draw(cr, t)
     S.Skyline(city="paris", ground=700, seed=6).draw(cr, t)
     for i, x in enumerate((260, 1660)):
-        Th.Flag(color="allies", stripe="cream", seed=i).draw(cr, t, x=x, y=720, scale=0.9, facing=1 if i == 0 else -1)
+        tricolour(cr, t, x, 720, scale=0.9, facing=1 if i == 0 else -1, seed=i)
     SP.cheering_crowd(cr, t, x0=-40, x1=W + 40, y0=690, y1=1090, n=48, scale=0.5, front=6, seed=11)
     cr.restore()
     word_card(cr, t, L(106).start + 0.9, "PARIS LIBERATED", dur=10, y=H * 0.2, size=118, color="allies")
