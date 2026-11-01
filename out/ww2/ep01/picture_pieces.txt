@@ -1,0 +1,11 @@
+# 8 pieces of picture.mp4 (17623 frames). Join losslessly with:
+#   ffmpeg -f concat -safe 0 -i picture_pieces.txt -c copy picture.mp4
+# MD5 of all its decoded frames, in order: 8a83a53a5789681884a65cac21812695
+file 'picture_piece00.mp4'
+file 'picture_piece01.mp4'
+file 'picture_piece02.mp4'
+file 'picture_piece03.mp4'
+file 'picture_piece04.mp4'
+file 'picture_piece05.mp4'
+file 'picture_piece06.mp4'
+file 'picture_piece07.mp4'
