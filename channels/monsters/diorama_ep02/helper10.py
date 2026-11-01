@@ -242,7 +242,7 @@ def s09():
     bpy.context.view_layer.update()
     muzzle = emp[1].matrix_world.translation.copy()
     # the bird: dives in along the line (12-33), is blasted back up it tumbling (34-62), lands upside down
-    hi = THORN + Vector((-2.0, -3.0, 22.0))
+    hi = THORN + Vector((-2.0, -3.0, 15.0))
     near = KAI_AT + AIM * 7.5 + Vector((0, 0, 6.8))
     bird = _bird(hi)
     _fly(bird, 1, 11, lambda u: hi + Vector((1.5 * math.sin(u * 3), 1.5 * math.cos(u * 3), 0)))
@@ -285,13 +285,13 @@ def s09():
         u = acting.ease((f - 1) / (CUT_B - 2), "inout")
         h3._key_cam(ca, f, eye + AIM * (3.6 - 0.6 * u) - SIDE * 1.0 + Vector((0, 0, -0.45)), eye + Vector((0, 0, 0.1)))
     head = s15._world(k, "head")
-    focus = KAI_AT + AIM * 6.0 + Vector((0, 0, 6.3))            # between the claw and where the bird pulls up
+    focus = KAI_AT + AIM * 9.0 + Vector((0, 0, 8.5))            # the claw low right, the bird diving in above
     dv2.BLUR = 5.0
     cb = dv2._camera("S09_B", CUT_B, near, 20.0, 5.0)
     cb.data.lens = 30.0
     for f in range(CUT_B, CUT_C):
         u = acting.ease((f - CUT_B) / (CUT_C - 1 - CUT_B), "out")
-        pos = head - AIM * (4.2 - 0.8 * u) + SIDE * 1.7 + Vector((0, 0, 1.6))
+        pos = head - AIM * (3.4 - 0.6 * u) + SIDE * 2.2 + Vector((0, 0, 1.0))
         h3._key_cam(cb, f, pos, focus)
     goal = KAI_AT.lerp(THORN, 0.62) + Vector((0, 0, 5.0))
     dv2.BLUR = 3.0

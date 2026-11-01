@@ -312,13 +312,13 @@ def s06():
     X.v2._twos([sh["body"], sh["shoulder"], sh["hinge"]] + sh["eyes"])
     # the camera: side-on from its right (-X), level, a long lens; the shrimp left of centre so the streak has room
     tip0 = s3d.claw_tip(sh)
-    tgt = origin + Vector((0, -1.6, 1.9))
-    bpy.ops.object.camera_add(location=tgt + Vector((-24.0, 0.0, 1.0)))
+    tgt = origin + Vector((0, -0.7, 1.9))
+    bpy.ops.object.camera_add(location=tgt + Vector((-27.0, 0.0, 1.0)))
     cam = bpy.context.object
     cam.name = "S06cam"
     cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
     cam.data.lens = 85.0
-    cam.data.shift_x = 0.16                                         # the shrimp left; the jet runs to the right
+    cam.data.shift_x = 0.07                                         # the shrimp left; the jet runs to the right
     cam.data.shift_y = -0.17                                        # and above the caption band
     cam.data.clip_end = 400
     sc.camera = cam
