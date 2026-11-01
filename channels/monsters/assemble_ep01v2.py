@@ -1,6 +1,7 @@
 """Episode 1 v2 picture assembler: shot mp4s in, the silent 720x1280 picture out.
 
-    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama|diorama_v3] [--animatic] [--check]
+    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama|diorama_v3|diorama_ep02] [--animatic]
+                                                       [--check]
                                                        [--shots DIR] [--out PATH]
 
 - Every shot in channels/monsters/ep01v2/timing.json comes from out/monsters/ep01v2/shots/<SHOT>.mp4, conformed
@@ -12,6 +13,11 @@
 - Captions are word-timed from timing.json in the 71% band (2-4 words, the spoken word highlighted); none in
   S15. The frame-0 hook text THIS SHRIMP ERASED A FOREST sits high in the frame until line 1 ends (TP16).
 - Nothing else goes in the picture: no HUD, no logos, no series chip.
+- Episode 2 (--version diorama_ep02, channels/monsters/DIORAMA_EP02.md): its own timing (ep02/timing.json), no rewind
+  (its S02 is a plain shot), captions on every spoken shot, the hook I SAVED THE SHRIMP THAT TRIED TO KILL ME, and the
+  A/B split on S20 (S20top.mp4 = A · HAND OVER, S20bot.mp4 = B · HIDE). Per-version settings: the *_VERSION tables.
+- Every frame's outer 3 px are scanned for unpainted black: a run of 24+ px along an edge (a render that shows past
+  the world's edge, or a gap in the composite). Deliberate black frames are skipped. The frames and edges are printed.
 
 --animatic: a missing shot becomes a dark slate with its name in small grey type. Without it, a missing shot is an
 error. --check: also writes a contact sheet of every 12th frame (out/monsters/ep01v2/picture_sheet.jpg) and prints
@@ -39,11 +45,17 @@ TIMING = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 # (channels/monsters/DIORAMA_EP01.md). Each has its own shots folder, output and caption placements.
 VERSIONS = {"ep01v2": os.path.join(ROOT, "out", "monsters", "ep01v2"),
             "diorama": os.path.join(ROOT, "out", "monsters", "diorama"),
-            "diorama_v3": os.path.join(ROOT, "out", "monsters", "diorama_v3")}
+            "diorama_v3": os.path.join(ROOT, "out", "monsters", "diorama_v3"),
+            "diorama_ep02": os.path.join(ROOT, "out", "monsters", "diorama_ep02")}
 # v3 (channels/monsters/DIORAMA_EP01_V3.md) has its own script and timing; the first two share ep01v2's.
 TIMINGS = {"ep01v2": TIMING, "diorama": TIMING,
-           "diorama_v3": os.path.join(ROOT, "channels", "monsters", "ep01v3", "timing.json")}
-AB_VERSIONS = {"diorama_v3"}     # S24 carries the big A / B letters timed to "Option A", "Option B", "Comment"
+           "diorama_v3": os.path.join(ROOT, "channels", "monsters", "ep01v3", "timing.json"),
+           "diorama_ep02": os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")}
+AB_VERSIONS = {"diorama_v3", "diorama_ep02"}   # the split carries big A / B letters on "Option A", "Option B", "Comment"
+SPLIT_SHOT_VERSION = {"diorama_ep02": "S20"}   # the A/B split shot (<SHOT>top.mp4 above, <SHOT>bot.mp4 below); else S24
+REWIND_VERSIONS = {"ep01v2", "diorama", "diorama_v3"}   # S02 is S01's glitch rewind (Episode 1 only)
+AB_LABELS_VERSION = {"diorama_v3": ("SAVE", "RUN"), "diorama_ep02": ("HAND OVER", "HIDE")}
+AB_LABELS = ("SAVE", "RUN")
 SHOTS = os.path.join(VERSIONS["ep01v2"], "shots")
 OUT = os.path.join(VERSIONS["ep01v2"], "picture.mp4")
 SHEET = os.path.join(VERSIONS["ep01v2"], "picture_sheet.jpg")
@@ -56,7 +68,11 @@ CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "
 HOOK = [("THIS SHRIMP", ()), ("ERASED", ("ERASED",)), ("A FOREST", ())]
 HOOK_Y = 170                 # top baseline: high in the frame, over the sliced trees, above Kai's face
 HOOK_SIZE = 108
-NO_CAPTIONS = {"S15"}
+# Episode 2's frame-0 hook: four short lines, the threat in red; placed against S01 when it lands
+HOOK_VERSION = {"diorama_ep02": dict(lines=[("I SAVED", ()), ("THE SHRIMP", ()), ("THAT TRIED", ()),
+                                            ("TO KILL ME", ("TO KILL ME",))], y=150, size=92)}
+NO_CAPTIONS = {"S15"}        # Episode 1's snap; Episode 2's wordless S09 has no words to caption anyway
+NO_CAPTIONS_VERSION = {"diorama_ep02": set()}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
 CAP_SIZE = 60
 CAP_MAX_W = 560              # clear of the right rail
@@ -85,15 +101,18 @@ CAP_Y_VERSION["diorama_v3"].update({
     "S15a": 250,             # above the shrimp's eyes, then the blurred trees above Kai's cap; off the raised claw
     "S22": [(0.0, CAP_Y), (0.9, 500)],
     "S23c": 860,
-    "S24": [(0.0, CAP_Y), (3.3, 945)],   # from "Option B" Kai walks down the B panel: under his head             # between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in   # the tree close-up keeps the band; after the pull-back, the grass between
-                                         # the tree and Kai at the puddle
+    "S24": [(0.0, CAP_Y), (3.3, 945)],   # from "Option B" Kai walks down the B panel: under his head
 })
+# S22: the tree close-up keeps the band; after the pull-back, the grass between the tree and Kai at the puddle.
+# S23c: between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in.
+# Episode 2: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
+CAP_Y_VERSION["diorama_ep02"] = {}
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
 # Output resolution: the overlays are designed on the 720x1280 canvas (W, H) and drawn under cr.scale(SCALE), so the
 # text stays sharp at 1080x1920. v3 is delivered at 1080 (Q4: shots_1080/ from esrgan_shot.py, else lanczos).
-RES = {"diorama_v3": 1.5}
+RES = {"diorama_v3": 1.5, "diorama_ep02": 1.5}
 SCALE = 1.0
 OW, OH = W, H
 SHOTS_HI = None              # the 1080 shots folder, preferred over SHOTS when SCALE > 1
@@ -147,11 +166,28 @@ def conform(frames, need, name, warn):
     return frames[:need]
 
 
-def slate(name):
+def slate(name, i=None, n=None, line="", y=None):
+    """A placeholder for a shot that hasn't landed: its name, and with i/n its frame counter and its line, so the
+    animatic reads as a timed storyboard. Dark grey, never black (the edge-band scan ignores it)."""
     s, cr = blank()
     cr.set_source_rgb(*SLATE)
     cr.paint()
-    fx2d._text(cr, name, W / 2, H * 0.42, 26, (0.55, 0.56, 0.6, 1), fx2d.ROUND, "center")
+    if i is None:
+        fx2d._text(cr, name, W / 2, y or H * 0.42, 26, (0.55, 0.56, 0.6, 1), fx2d.ROUND, "center")
+        return s
+    grey = (0.55, 0.56, 0.6, 1)
+    fx2d._text(cr, name, W / 2, H * 0.36, 120, (0.75, 0.76, 0.8, 1), fx2d.ROUND, "center")
+    fx2d._text(cr, f"f {i + 1:3d} / {n}", W / 2, H * 0.36 + 70, 34, grey, fx2d.ROUND, "center")
+    cr.set_source_rgba(*grey[:3], 0.8)                          # the shot's progress bar
+    cr.rectangle(W * 0.2, H * 0.36 + 100, W * 0.6 * (i + 1) / n, 8)
+    cr.fill()
+    words, row, y = line.split(), "", H * 0.36 + 170
+    for w in words + [None]:                                    # the line, wrapped, small
+        if w is None or (row and text_width(cr, row + " " + w, 30, fx2d.ROUND) > W * 0.8):
+            fx2d._text(cr, row, W / 2, y, 30, grey, fx2d.ROUND, "center")
+            row, y = w or "", y + 40
+        else:
+            row = (row + " " + w).strip()
     return s
 
 
@@ -210,7 +246,7 @@ def build_s02(shot, s01, warn):
     return out
 
 
-def build_s24(shot, animatic, warn, missing):
+def build_split(shot, animatic, warn, missing):
     plates = []
     for suffix in ("top", "bot"):
         p = shot.path(suffix)
@@ -219,20 +255,19 @@ def build_s24(shot, animatic, warn, missing):
         else:
             missing.append(shot.name + suffix)
             plates.append(None)
-    if plates == [None, None]:
-        return None
-    if not animatic and None in plates:
+    if not animatic and None in plates:                     # (the animatic splits two slates: the layout reads)
         return None
     return _Split(shot, plates)
 
 
 class _Split:
-    """S24's frames, composed one at a time as they are written (holding them all at 1080 would cost ~1.4 GB)."""
+    """The split shot's frames, composed one at a time as they are written (holding them all at 1080 would cost ~1.4 GB)."""
 
     def __init__(self, shot, plates):
         self.shot, self.plates = shot, plates
-        self.slates = [slate(shot.name + sfx) if p is None else None
-                       for p, sfx in zip(plates, ("top · SAVE", "bot · RUN"))]
+        self.slates = [slate(shot.name + sfx, y=y) if p is None else None      # each label in its own half
+                       for p, sfx, y in zip(plates, (f"top · {AB_LABELS[0]}", f"bot · {AB_LABELS[1]}"),
+                                            (H * 0.30, H * 0.80))]
 
     def __getitem__(self, i):
         s, cr = blank()
@@ -308,7 +343,8 @@ def draw_caption(cr, t, chunks, total, y=CAP_Y, shot_start=0.0):
 
 
 def draw_hook(cr):
-    """THIS SHRIMP / ERASED / A FOREST: white, the key word red, thick dark outline. Static from frame 0."""
+    """The frame-0 hook (Episode 1: THIS SHRIMP / ERASED / A FOREST): white, the key words red, thick dark outline.
+    Static from frame 0 until line 1 ends."""
     for j, (line, red) in enumerate(HOOK):
         size = min(HOOK_SIZE, HOOK_SIZE * (W - 70) / text_width(cr, line, HOOK_SIZE, fx2d.ROUND))
         col = fx2d.RED if line in red else fx2d.WHITE
@@ -316,21 +352,42 @@ def draw_hook(cr):
                    outline=(0.05, 0.03, 0.06, 1), ow=size * 0.2, shadow=0.55)
 
 
+def edge_black(s, band=3, level=8, run=24):
+    """Which frame edges show unpainted black: a run of at least `run` px along an edge where the whole outer `band`
+    px are black (every channel at or below `level`), the mark of a render that shows past the world or a gap in the
+    composite. Scattered dark pixels (static, outlines, the split's ink divider) don't make a run, and a frame that
+    is black on purpose (a cut to black) is skipped."""
+    a = np.ndarray((s.get_height(), s.get_width(), 4), np.uint8, s.get_data())[..., :3]
+    dark = a[::8, ::8].max(axis=-1) <= level
+    if dark.mean() > 0.9:                                      # a deliberate black frame
+        return []
+    out = []
+    for name, strip, axis in (("top", a[:band], 0), ("bottom", a[-band:], 0), ("left", a[:, :band], 1),
+                              ("right", a[:, -band:], 1)):
+        black = (strip.max(axis=-1) <= level).all(axis=axis)   # per position along the edge
+        if black.any():
+            d = np.diff(np.concatenate(([0], black.astype(np.int8), [0])))
+            if (np.flatnonzero(d == -1) - np.flatnonzero(d == 1)).max() >= run:
+                out.append(name)
+    return out
+
+
 # ---------------------------------------------------------------- the A/B letters (v3)
-def ab_times(lines):
+def ab_times(lines, shot="S24"):
     """Episode times of the "A" in "Option A", the "B" in "Option B" and "Comment" in S24's line (the mix's A/B
     stingers land on those words)."""
-    words = [w for ln in lines if ln["scene"] == "S24" for w in ln["words"]]
+    words = [w for ln in lines if ln["scene"] == shot for w in ln["words"]]
     opt = [i for i, w in enumerate(words) if w["w"].lower().startswith("option")]
     com = [w["start"] for w in words if w["w"].lower().startswith("comment")]
     if len(opt) < 2 or not com or opt[1] + 1 >= len(words):
-        raise SystemExit("S24's line needs 'Option A', 'Option B' and 'Comment' for the A/B cards")
+        raise SystemExit(f"{shot}'s line needs 'Option A', 'Option B' and 'Comment' for the A/B cards")
     return words[opt[0] + 1]["start"], words[opt[1] + 1]["start"], com[0]
 
 
 # ---------------------------------------------------------------- main
 def main():
-    global SHOTS, CAP_Y_SHOT, SCALE, OW, OH, SHOTS_HI, S24_FOCUS_SHOT, AB_POS_SHOT
+    global SHOTS, CAP_Y_SHOT, SCALE, OW, OH, SHOTS_HI, S24_FOCUS_SHOT, AB_POS_SHOT, AB_LABELS, NO_CAPTIONS
+    global HOOK, HOOK_Y, HOOK_SIZE
     ap = argparse.ArgumentParser()
     ap.add_argument("--animatic", action="store_true")
     ap.add_argument("--check", action="store_true")
@@ -359,12 +416,22 @@ def main():
     CAP_Y_SHOT = CAP_Y_VERSION[a.version]
     S24_FOCUS_SHOT = S24_FOCUS_VERSION.get(a.version, S24_FOCUS)
     AB_POS_SHOT = AB_POS_VERSION.get(a.version, {})
+    AB_LABELS = AB_LABELS_VERSION.get(a.version, ("SAVE", "RUN"))
+    NO_CAPTIONS = NO_CAPTIONS_VERSION.get(a.version, NO_CAPTIONS)
+    if a.version in HOOK_VERSION:
+        hv = HOOK_VERSION[a.version]
+        HOOK, HOOK_Y, HOOK_SIZE = hv["lines"], hv["y"], hv["size"]
+    split = SPLIT_SHOT_VERSION.get(a.version, "S24")
+    rewind = a.version in REWIND_VERSIONS
     if a.check:
         print(f"version {a.version}: shots {os.path.relpath(SHOTS, ROOT)} -> {os.path.relpath(a.out, ROOT)}"
               f" at {OW}x{OH}" + (f" (prefers {os.path.relpath(SHOTS_HI, ROOT)})" if SHOTS_HI else ""))
 
     tj = json.load(open(TIMINGS[a.version]))
-    ab = ab_times(tj["lines"]) if a.version in AB_VERSIONS else None
+    ab = ab_times(tj["lines"], split) if a.version in AB_VERSIONS else None
+    line_of = {}
+    for ln in tj["lines"]:
+        line_of[ln["scene"]] = (line_of.get(ln["scene"], "") + " " + ln["text"]).strip()
     assert tj["fps"] == FPS, f"timing.json is {tj['fps']} fps, the canvas is {FPS}"
     shots = [Shot(s) for s in tj["shots"]]
     total = tj["total_frames"]
@@ -374,9 +441,9 @@ def main():
 
     warn, missing = [], []
     if not a.animatic:                                         # delivery: refuse before doing any work
-        need = [s.path("top") if s.name == "S24" else s.path() for s in shots if s.name != "S02"]
-        if any(s.name == "S24" for s in shots):
-            need.append(os.path.join(SHOTS, "S24bot.mp4"))
+        need = [s.path("top") if s.name == split else s.path() for s in shots if not (rewind and s.name == "S02")]
+        if any(s.name == split for s in shots):
+            need.append(shots[[s.name for s in shots].index(split)].path("bot"))
         gone = [os.path.basename(p) for p in need if not os.path.exists(p)]
         if gone:
             sys.exit(f"missing shots (use --animatic to slate them): {', '.join(gone)}")
@@ -389,22 +456,22 @@ def main():
                             "-r", str(FPS), "-i", "-", "-crf", str(a.crf), *x264, a.out + ".tmp.mp4",
                             *(["-c:v", "libx264", "-qp", "0", "-preset", "ultrafast", "-pix_fmt", "yuv420p",
                                lossless] if lossless else [])], stdin=subprocess.PIPE)
-    sheet = []
+    sheet, edges = [], {}
     s01 = None
     frame_no = 0
     for shot in shots:
-        if shot.name == "S02":
+        if rewind and shot.name == "S02":
             frames = build_s02(shot, s01, warn) if s01 is not None else None
             if frames is None:
                 missing.append("S02 (needs S01)")
-        elif shot.name == "S24":
-            frames = build_s24(shot, a.animatic, warn, missing)
+        elif shot.name == split:
+            frames = build_split(shot, a.animatic, warn, missing)
         else:
             frames = build_plain(shot, a.animatic, warn, missing)
             if shot.name == "S01" and frames is not None:
                 s01 = frames
         if a.check:
-            srcs = [shot.path(x) for x in (("top", "bot") if shot.name == "S24" else ("",))]
+            srcs = [shot.path(x) for x in (("top", "bot") if shot.name == split else ("",))]
             have = [p for p in srcs if os.path.exists(p)]
             ids = " ".join(_sha(p) for p in have)
             if SCALE > 1 and have:                         # which source each shot used at 1080
@@ -413,22 +480,28 @@ def main():
             print(f"{shot.name:5s} {ids or '-':17s} frames {shot.first:4d}-{shot.first + shot.frames - 1:4d} "
                   f"({shot.frames:3d}, {shot.frames / FPS:5.2f} s){'' if frames is not None else '  SLATE'}"
                   f"{f'  captions at y={CAP_Y_SHOT[shot.name]}' if shot.name in CAP_Y_SHOT else ''}")
-        sl = slate(shot.name) if frames is None else None
+        numbered = frames is None and not rewind                 # Episode 2+: a numbered card per frame
+        sl = slate(shot.name) if frames is None and not numbered else None
         for i in range(shot.frames):
+            if numbered:
+                sl = slate(shot.name, i, shot.frames, line_of.get(shot.name, ""))
             src = sl if frames is None else frames[i]
             s, cr = blank()
             paint_full(cr, src if isinstance(src, cairo.ImageSurface) else surface(src))
             t = frame_no / FPS
             if frame_no <= hook_end:
                 draw_hook(cr)
-            if ab and shot.name == "S24":                       # helper 7's vote cards, under the captions
+            if ab and shot.name == split:                       # helper 7's vote cards, under the captions
                 t0 = shot.first / FPS
-                for letter, label, at in (("A", "SAVE", ab[0]), ("B", "RUN", ab[1])):
+                for letter, label, at in (("A", AB_LABELS[0], ab[0]), ("B", AB_LABELS[1], ab[1])):
                     fx2d_ab.ab_card(cr, t - t0, at - t0, letter, label, pos=AB_POS_SHOT.get(letter),
                                     pulse_at=ab[2] - t0)
             if shot.name not in NO_CAPTIONS:
                 draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y), shot.first / FPS)
             s.flush()
+            bad = edge_black(s)
+            if bad:
+                edges.setdefault(shot.name, []).append((frame_no - shot.first, bad))
             enc.stdin.write(bytes(s.get_data()))
             if a.check and frame_no % 12 == 0:
                 sheet.append((frame_no, shot.name, _thumb(s)))
@@ -453,6 +526,13 @@ def main():
         print("WARNING:", w)
     if missing:
         print(f"missing ({len(missing)}): {', '.join(missing)}")
+    if edges:
+        for name, hits in edges.items():
+            sides = sorted({e for _, b in hits for e in b})
+            print(f"EDGE BAND: {name}: unpainted black on the {'/'.join(sides)} edge in {len(hits)} frame(s), "
+                  f"shot frames {hits[0][0]}-{hits[-1][0]}")
+    else:
+        print("edge bands: clean (no unpainted black in the outer 3 px of any frame)")
     print(f"{a.out}: {frame_no} frames, {frame_no / FPS:.2f} s, crf {crf}, {os.path.getsize(a.out) / 1e6:.1f} MB")
     if a.check:
         write_sheet(sheet, os.path.join(os.path.dirname(a.out), os.path.basename(SHEET)))
