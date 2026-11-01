@@ -192,8 +192,6 @@ def s05():
     f_in = next(a for w, a, b in W if w == "In")                    # 56
     X._world(n)
     k = X._kai()
-    from channels.monsters.diorama.helper1 import _tilt_cap
-    _tilt_cap(k, 40.0)                                                # the brim up, so his eyes read
     P = x3.Pose(k)
     # Kai: frozen, holding his breath; a tremble on 2s that gets worse after the cut
     for f in range(1, n + 1, 2):
@@ -214,7 +212,10 @@ def s05():
     # the shrimp in his hands, facing his face, its claw down along his left palm; eyes locked on his face
     bpy.context.scene.frame_set(1)
     sh = _shrimp_in_hands(k, X.KAI_YAW + 180)
-    anim.key(sh["shoulder"], "rotation_euler", 1, (1.45, 0.0, 0.15), "CONSTANT")   # the claw laid down on his palm
+    pb = k["arm"].pose.bones["hand.L"]
+    palm_l = k["arm"].matrix_world @ (pb.head.lerp(pb.tail, 0.7))
+    anim.key(sh["shoulder"], "rotation_euler", 1, s3d.aim_claw(sh, palm_l - Vector((0, 0, 0.35))), "CONSTANT")
+    # (the claw laid down over the heel of his left palm, its tip resting on it)
     anim.key(sh["hinge"], "rotation_euler", 1, (0.12, 0.0, 0.0), "CONSTANT")
     for f in range(1, n + 1, 24):
         anim.squash(sh["body"], f, 0.0)
@@ -231,10 +232,10 @@ def s05():
     # B up to his face, a touch low, his eyes above the caption band (CUT..n)
     hands = _palms(k) + Vector((0, 0, 0.55))
     face = s3d.kai_point(k, "eyes")
-    _shot_cam("S05a", 1, tuple(hands), 6.5, 16.0, -X.KAI_YAW - 55.0, 60.0, 3.0, push=0.06, f1=S05_CUT - 1,
-              shift_y=0.12)
+    _shot_cam("S05a", 1, tuple(hands), 6.0, 12.0, -X.KAI_YAW - 80.0, 60.0, 3.0, push=0.07, f1=S05_CUT - 1,
+              shift_y=-0.13)
     _shot_cam("S05b", S05_CUT, tuple(face - Vector((0, 0, 0.35))), 5.6, 4.0, -X.KAI_YAW + 8.0, 55.0, 2.5, push=0.1,
-              f1=n, shift_y=0.1)
+              f1=n, shift_y=-0.15)
     _anchors("S05", n, k, extra={"tip": lambda: s3d.claw_tip(sh)})
     return dict(frames=n, step=1, subject=[k["arm"], sh["root"]] + list(k.get("cap", [])), cut=S05_CUT,
                 beats=dict(wet=f_wet, sweat=f_in))
