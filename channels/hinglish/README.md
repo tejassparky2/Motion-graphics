@@ -108,6 +108,12 @@ every line, upload sheet. Sources go with every script, and health claims must b
 - **Video 7, the internet comes from under the sea** (owner, 1 Nov: "make next video auto approved"). Script and
   facts in the module docstring of videos/sea_internet.py; maps use measured percent positions (WP, IP) on
   world_map.png and india_map.png, so pins and cable routes land on the right coasts.
+- **Video 8, your head ages faster than your feet** (owner, 1 Nov, about the internet video: "Everyone knows this i
+  want something unique and seems like unbelievable auto approved"). Gravity bends time (NIST 2010, one clock raised
+  33 cm ran faster), and GPS satellite clocks gain 38 µs a day, which uncorrected is an 11 km error a day (Ashby 2002);
+  also the 1977 first-satellite test and NavIC's IRNSS-1A clock failures. Script and facts are in
+  videos/head_time.py. "+45 / −7 / = 38" was merged into one "38 ahead" line to stay under 2 minutes. Pick topics
+  most viewers have never heard of, not famous "how X works" facts.
 - **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
   (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
   minutes, side facts are the first thing to drop.
@@ -123,7 +129,8 @@ every line, upload sheet. Sources go with every script, and health claims must b
     with the widest pitch movement that stays clear).
   - Nobody is cloned.
   - Words the voice gets wrong: "नए/नई" come out as "नहीं" (it said "das nahi keede" for "das naye keede" in every
-    take), and "प्रिंटिंग" at the start of a line came out "printinting". Write around them.
+    take), and "प्रिंटिंग" at the start of a line came out "printinting". "तेज़ चली" came out "tes chali" in every
+    take, but "तेज़ी से" is clear. Write around them.
 - **Hooks must sound impossible** (owner, 1 Nov 2026: "hook should be like impossible to assume belive simple hooks
   won't work"): open on the most unbelievable true fact as a contradiction ("kaato toh marta nahi, do ban jaata hai"),
   then the twist. Never a plain "X happened".
