@@ -228,8 +228,9 @@ def overlays(shot):
         names = [k for k in a[1] if k.startswith("bell")]
         return [(bell_rings, dict(start=0.0, a=a, name=nm)) for nm in names]
     if shot == "S04":
-        from channels.monsters.diorama_ep02.helper1 import F_RAKE
-        hit = (F_RAKE - 1) / FPS
+        import re                                                # (helper1 needs bpy: read F_RAKE from its source)
+        src = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "helper1.py")).read()
+        hit = (int(re.search(r"^F_RAKE = (\d+)", src, re.M).group(1)) - 1) / FPS
         return [(claw_slash, dict(start=hit - 1 / FPS, a=a)),
                 (torn_sleeve, dict(start=hit + 1 / FPS, a=a)),
                 (tracked_face(fx2d_anime.sweat_drop, a), dict(start=hit + 6 / FPS, end=99))]
