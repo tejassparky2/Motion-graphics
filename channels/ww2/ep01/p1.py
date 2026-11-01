@@ -490,8 +490,26 @@ def s15_queue(cr, t, t0, t1):
         f.draw(cr, t + r.uniform(0, 3), [(0.0, r.choice(["head_down", "stand", "head_down"]))])
     cr.restore()
     cr.restore()
-    counter(cr, t, t0 + 0.2, t1 - 0.3, 6_000_000, W / 2, H * 0.24, size=170, color="ink",
-            label="JOBLESS IN GERMANY, 1932")
+    if t >= t0 + 0.2:                                             # counts in round 100,000s, lands on ABOUT 6,000,000
+        u = ease_out(seg(t, t0 + 0.2, t1 - 0.5))
+        v = round(6_000_000 * u / 100_000) * 100_000
+        s_ = ("ABOUT " if v >= 6_000_000 else "") + f"{v:,.0f}"
+        text(cr, s_, W / 2, H * 0.24, 150, font=TITLE, color="ink", bold=False, outline="paper", outline_w=12)
+        text(cr, "JOBLESS IN GERMANY, 1932", W / 2, H * 0.24 + 72, 46, font=LABEL, color="ink_soft")
+
+
+GRIP = dict(sh_n=0.42, el_n=1.15, sh_f=0.38, el_f=1.2, lean=0.1, nod=0.08, hand_n="fist", hand_f="fist")
+LIFT = dict(sh_n=1.35, el_n=2.35, sh_f=0.38, el_f=1.2, lean=-0.04, hand_n="fist", hand_f="fist")   # fist cocked by
+POUND = dict(sh_n=0.55, el_n=1.35, sh_f=0.38, el_f=1.2, lean=0.22, nod=0.15, hand_n="fist", hand_f="fist")  # the head
+
+
+def _podium_track(t0):
+    """Both hands gripping the lectern; on the beats one fist is lifted (elbow bent) and brought DOWN onto it.
+    Never an arm held out forward."""
+    tr = [(0.0, GRIP)]
+    for b in (t0 + 1.5, t0 + 3.6):
+        tr += [(b, LIFT), (b + 0.3, POUND), (b + 1.1, GRIP)]
+    return tr
 
 
 def s16_podium(cr, t, t0, t1):
@@ -506,12 +524,11 @@ def s16_podium(cr, t, t0, t1):
                       color="#a9997a")                            # his shadow on the wall, growing
     cr.save()
     cr.translate(0, -H * 0.04 * grow)
-    sh.draw(cr, t, [(0.0, "slam_down"), (t0 + 1.6, "slam"), (t0 + 3.0, "slam_down")])
+    sh.draw(cr, t, _podium_track(t0))
     cr.restore()
+    sp = stick.Figure(leader="hitler", x=W * 0.5 + 30, y=H * 0.98 - 150, scale=1.75, facing=-1, seed=81)
+    sp.draw(cr, t, _podium_track(t0))                             # behind the lectern: it hides him below the chest
     PODIUM.draw(cr, t, x=W * 0.5, y=H * 0.98, scale=1.45)
-    sp = stick.Figure(leader="hitler", x=W * 0.5, y=H * 0.98 + PODIUM.top_y * 1.45 + 6, scale=0.95, facing=-1,
-                      seed=81)
-    sp.draw(cr, t, [(0.0, "slam_down"), (t0 + 1.6, "slam"), (t0 + 3.0, "slam_down")])
     cr.restore()
 
 
