@@ -322,7 +322,7 @@ def _hide_from(f, objs):
 
 # ------------------------------------------------------------------------------------------------------------ S14
 def _s14_cam(mark, seat):
-    return mark.lerp(seat, 0.45), _az(-0.3, 0.9)          # over his left shoulder, looking down at his hands
+    return mark.lerp(seat, 0.3), _az(-0.3, 0.9)           # over his left shoulder, looking down at his hands
 
 
 def s14():
@@ -346,8 +346,8 @@ def s14():
     _mark_light(k, f_wrist, f_glow, n, _orbit(tgt, 5.0, 55.0, yaw)[0])
     cam = _new_cam("S14cam")
     for f in range(1, n + 1):                                           # a slow push-in on 1s
-        loc, rot = _orbit(tgt, 5.4 - 0.8 * _smooth((f - 1) / (n - 1)), 55.0, yaw)
-        _key_cam(cam, f, loc, rot, 50.0, (tgt - loc).length, blur=4.0, haze=(3.0, 3.0))
+        loc, rot = _orbit(tgt, 6.2 - 0.8 * _smooth((f - 1) / (n - 1)), 55.0, yaw)
+        _key_cam(cam, f, loc, rot, 50.0, (tgt - loc).length, shift_y=-0.1, blur=4.0, haze=(3.0, 3.0))   # mark ~y 560
     _linear(cam, cam.data, bpy.context.scene.world)
     X.v2._twos([k["arm"]])
     LAST.update(k=k, sh=sh, mark=mark, seat=seat)
