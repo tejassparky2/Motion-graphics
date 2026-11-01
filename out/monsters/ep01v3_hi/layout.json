@@ -1,0 +1,292 @@
+[
+ {
+  "id": "l1",
+  "eng_start": 0.12,
+  "eng_end": 2.293,
+  "start": 0.12,
+  "end": 2.263,
+  "take_s": 2.143,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l2",
+  "eng_start": 2.693,
+  "eng_end": 4.099,
+  "start": 2.693,
+  "end": 4.356,
+  "take_s": 1.663,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l3",
+  "eng_start": 4.699,
+  "eng_end": 7.548,
+  "start": 4.699,
+  "end": 7.788,
+  "take_s": 3.089,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l4",
+  "eng_start": 8.048,
+  "eng_end": 10.083,
+  "start": 8.048,
+  "end": 9.954,
+  "take_s": 1.906,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l5",
+  "eng_start": 10.583,
+  "eng_end": 14.123,
+  "start": 10.583,
+  "end": 13.345,
+  "take_s": 2.762,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l6",
+  "eng_start": 14.823,
+  "eng_end": 15.569,
+  "start": 14.823,
+  "end": 15.644,
+  "take_s": 0.821,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l7",
+  "eng_start": 16.069,
+  "eng_end": 18.676,
+  "start": 16.069,
+  "end": 18.577,
+  "take_s": 2.508,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l8",
+  "eng_start": 19.176,
+  "eng_end": 22.26,
+  "start": 19.176,
+  "end": 21.566,
+  "take_s": 2.39,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l9",
+  "eng_start": 22.76,
+  "eng_end": 24.158,
+  "start": 22.76,
+  "end": 23.962,
+  "take_s": 1.202,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l10",
+  "eng_start": 24.758,
+  "eng_end": 25.503,
+  "start": 24.758,
+  "end": 25.397,
+  "take_s": 0.639,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l11",
+  "eng_start": 26.903,
+  "eng_end": 28.864,
+  "start": 26.903,
+  "end": 28.73,
+  "take_s": 1.827,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l12",
+  "eng_start": 29.364,
+  "eng_end": 31.755,
+  "start": 29.364,
+  "end": 31.093,
+  "take_s": 1.729,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l13",
+  "eng_start": 32.155,
+  "eng_end": 33.662,
+  "start": 32.155,
+  "end": 33.572,
+  "take_s": 1.417,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l14",
+  "eng_start": 34.362,
+  "eng_end": 35.313,
+  "start": 34.362,
+  "end": 35.508,
+  "take_s": 1.146,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l15",
+  "eng_start": 35.813,
+  "eng_end": 37.309,
+  "start": 35.813,
+  "end": 37.089,
+  "take_s": 1.276,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l16",
+  "eng_start": 37.909,
+  "eng_end": 40.341,
+  "start": 37.909,
+  "end": 39.934,
+  "take_s": 2.025,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l17",
+  "eng_start": 40.841,
+  "eng_end": 41.946,
+  "start": 40.841,
+  "end": 42.153,
+  "take_s": 1.312,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l19",
+  "eng_start": 46.746,
+  "eng_end": 48.061,
+  "start": 46.746,
+  "end": 47.771,
+  "take_s": 1.025,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l20",
+  "eng_start": 48.861,
+  "eng_end": 51.03,
+  "start": 48.861,
+  "end": 50.868,
+  "take_s": 2.007,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l21",
+  "eng_start": 51.53,
+  "eng_end": 52.485,
+  "start": 51.53,
+  "end": 52.649,
+  "take_s": 1.119,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l22",
+  "eng_start": 52.985,
+  "eng_end": 54.363,
+  "start": 52.985,
+  "end": 54.338,
+  "take_s": 1.353,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l23",
+  "eng_start": 54.963,
+  "eng_end": 57.153,
+  "start": 54.963,
+  "end": 57.007,
+  "take_s": 2.044,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l24",
+  "eng_start": 58.853,
+  "eng_end": 60.32,
+  "start": 58.853,
+  "end": 59.98,
+  "take_s": 1.127,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l25",
+  "eng_start": 63.22,
+  "eng_end": 64.792,
+  "start": 63.22,
+  "end": 65.079,
+  "take_s": 1.859,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l26",
+  "eng_start": 65.392,
+  "eng_end": 66.769,
+  "start": 65.392,
+  "end": 66.954,
+  "take_s": 1.562,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l27",
+  "eng_start": 67.269,
+  "eng_end": 69.362,
+  "start": 67.269,
+  "end": 69.544,
+  "take_s": 2.275,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l28",
+  "eng_start": 69.862,
+  "eng_end": 71.159,
+  "start": 69.862,
+  "end": 71.275,
+  "take_s": 1.413,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l29",
+  "eng_start": 71.659,
+  "eng_end": 72.878,
+  "start": 71.659,
+  "end": 72.994,
+  "take_s": 1.335,
+  "rate": 1.0,
+  "late": 0.0
+ },
+ {
+  "id": "l30",
+  "eng_start": 73.678,
+  "eng_end": 80.018,
+  "start": 73.678,
+  "end": 79.644,
+  "take_s": 5.966,
+  "rate": 1.0,
+  "late": 0.0
+ }
+]

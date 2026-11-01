@@ -42,6 +42,7 @@ GAP = 0.2                 # the least silence between two lines
 MAX_RATE = 1.12           # the most a take is sped up to fit its slot
 MAX_RATE_LAST = 1.2       # the A/B question may go a little faster so it still lands before the cut
 EARLY = 0.15              # a long take may start this much before its English line (into the silence before it)
+VOICE_GAIN = {"l6": 3.0}  # dB: "Phir toofan aaya" sits on the thunder (only 3.9 dB over the bed at 0 dB)
 END_PAD = 0.5             # the last word ends at least this long before the cut (channel rule TAIL = 0.5)
 
 
@@ -73,7 +74,7 @@ def layout(timing, takes_dir):
         path = os.path.join(takes_dir, f"l{num:02d}.wav")
         if not os.path.exists(path):
             raise SystemExit(f"missing take {path}")
-        x = load_take(path)
+        x = load_take(path) * 10 ** (VOICE_GAIN.get(l["id"], 0.0) / 20)
         last = i + 1 == len(eng)
         nxt = timing["total"] - END_PAD + GAP if last else eng[i + 1]["start"]
         dur = len(x) / SR
@@ -103,7 +104,7 @@ def layout(timing, takes_dir):
 LINES = {   # the approved Hinglish lines (owner, 1 Nov 2026), as the voice reads them
     "l1": "हिलना मत। इसका पंजा पानी उबाल देता है।", "l2": "दस मिनट पहले, मैं ज़िंदा था।",
     "l3": "मरीन लैब में नाइट शिफ्ट। बस मैं, और पिस्टल श्रिम्प।", "l4": "पंजा इतना तेज़, कि पानी उबल जाए।",
-    "l5": "लगभग सूरज की सतह जितना गरम। पर सिर्फ पानी में।", "l6": "फिर तूफ़ान आया।",
+    "l5": "क़रीब सूरज की सतह जितना गरम। पर सिर्फ पानी में।", "l6": "फिर तूफ़ान आया।",
     "l7": "श्रिम्प घबरा गया। उसके स्नैप से टैंक टूट गया।", "l8": "पानी डेस्क से गिरा, सीधा पावर केबल्स में।",
     "l9": "और मैं उसी में खड़ा था।", "l10": "ऐसे मैं मरा।", "l11": "फिर मैं जागा। एक दूसरी दुनिया में।",
     "l12": "यहाँ सब कुछ छोटा था। और क्यूट।", "l13": "और हर एक में कुछ गड़बड़ थी।", "l14": "मुझे बहुत प्यास लगी थी।",
@@ -166,14 +167,14 @@ def main():
 
 
 def mux():
-    """The unchanged v3 picture (stream copy) + the Hinglish mix -> out/monsters/ep01v3_hi.mp4, no tags."""
+    """The unchanged v3 picture (stream copy, all 1929 frames) + the Hinglish mix -> out/monsters/ep01v3_hi.mp4, no tags."""
     picture = (sys.argv[sys.argv.index("--picture") + 1] if "--picture" in sys.argv
                else os.path.join(ROOT, "out", "monsters", "ep01v3_diorama.mp4"))   # the English cut: its video stream
     out = os.path.join(ROOT, "out", "monsters", "ep01v3_hi.mp4")
     tmp = out + ".tmp.mp4"
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", picture, "-i", os.path.join(OUT, "mix.wav"),
                     "-map", "0:v:0", "-map", "1:a:0", "-c:v", "copy", "-c:a", "aac", "-b:a", "256k", "-ar", "48000",
-                    "-shortest", "-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact",
+                    "-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact",
                     "-flags:a", "+bitexact", "-movflags", "+faststart", tmp], check=True)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", tmp, "-map", "0", "-c", "copy", "-map_metadata", "-1",
                     "-fflags", "+bitexact", "-flags:v", "+bitexact", "-flags:a", "+bitexact",
