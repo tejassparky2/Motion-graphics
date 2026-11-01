@@ -581,7 +581,11 @@ def s19():
     tip = _claw_tip(sh)
     from channels.monsters.mk import meadow
     before = set(bpy.data.objects)
-    meadow.drips(tip, fc - 10, n + 2, every=8, fall=2.4, seed=4)
+    meadow.drips(tip, fc - 10, fc + 22, every=8, fall=2.4, seed=4)      # from the tip before it turns...
+    sc.frame_set(fc + 24)
+    bpy.context.view_layer.update()
+    meadow.drips(_claw_tip(sh), fc + 22, n + 2, every=8, fall=2.4, seed=5)   # ...and after (body turn at fc+22)
+    sc.frame_set(fc)
     drops = sorted(set(bpy.data.objects) - before, key=lambda o: o.name)
     for i, o in enumerate(drops):
         o.name = f"h9_drop{i}"
