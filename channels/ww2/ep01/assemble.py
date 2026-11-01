@@ -422,7 +422,7 @@ Maps: Natural Earth (public domain). Original animation; no archive footage.
 #WW2 #WorldWar2 #History"""
     sheet = f"""# Upload sheet: WW2 Episode 1{' (PROVISIONAL clock: chapter times move when the voiced timing lands)' if T.estimated else ''}
 
-Video: `out/ww2/ep01/ep01_final.mp4` (1920x1080, {clock(T.total)}). Thumbnail: `out/ww2/ep01/thumbnail.png` (1280x720).
+Video: `WW2_Explained_Episode1.mp4` (1920x1080, 24 fps, {clock(T.total)}, sent directly; too big for git). Thumbnail: `out/ww2/ep01/thumbnail.png` (1280x720).
 Captions: `out/ww2/ep01/captions.srt` (upload under Subtitles, English).
 
 ## Title
@@ -444,7 +444,7 @@ Alternatives:
 
 ## Pinned comment
 ```
-Which moment decided the war: Stalingrad, Midway or D-Day? Pick one and give your reason.
+When did Germany really lose the war? 1 = the day Hitler invaded the Soviet Union, 2 = the day America joined, 3 = the frozen streets of Stalingrad. Answer 1, 2 or 3 and give your reason.
 ```
 
 ## Settings
