@@ -115,6 +115,14 @@ def _shrimp_in_hands(k, yaw):
     return sh
 
 
+def _claw_rest(sh):
+    """The claw laid down in front of it, resting on his fingers (s3d.aim_claw at a point low ahead of it)."""
+    r = sh["root"]
+    bpy.context.view_layer.update()
+    front = r.matrix_world.to_3x3().normalized() @ Vector((0, -1, 0))
+    return s3d.aim_claw(sh, r.matrix_world.translation + front * 1.2 * SHRIMP_S + Vector((0, 0, -0.35)))
+
+
 def _breathe(sh, n, every=24, amount=0.035):
     for f in range(1, n + 1, every):
         anim.squash(sh["body"], f, 0.0)
@@ -154,7 +162,7 @@ def s07():
     for f, a in ((1, 0.0), (13, -0.35), (n, -0.35)):
         for i, ant in enumerate(sh["antennae"]):
             anim.key(ant, "rotation_euler", f, (a, (-1) ** i * 0.15 * (a != 0), 0), "CONSTANT")
-    anim.key(sh["shoulder"], "rotation_euler", 1, (0.0, 0.0, 0.0), "CONSTANT")   # claw resting low
+    anim.key(sh["shoulder"], "rotation_euler", 1, _claw_rest(sh), "CONSTANT")    # claw laid down, resting
     anim.key(sh["hinge"], "rotation_euler", 1, (0.2, 0.0, 0.0), "CONSTANT")
     _breathe(sh, n)
     anim.blink(sh, 27)
@@ -168,7 +176,8 @@ def s07():
     # camera: in front of him, a little to his left, looking down past the hands at his face
     eyes = s3d.kai_point(k, "eyes")
     tgt = base.lerp(eyes, 0.42)
-    yaw = _yaw_toward(-(FWD * 0.85 + LEFT * 0.35))                   # from in front, a little to his left
+    yaw = _yaw_toward(-(FWD * 0.85 - LEFT * 0.35))                   # from in front, a little to his right
+    # (west of him: the stump smoke south-east of him stays off-frame)
     _cam("cam_s07", tgt, 1, n, -4.0, 6.6, 5.8, 40.0, yaw)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
@@ -280,7 +289,7 @@ def s11():
     for t, a in ((F_GLARE + 6, -0.06), (F_GLARE + 8, 0.08), (F_GLARE + 10, 0.0)):
         anim.key(body, "scale", t, (1.45 * (1 - a / 2), 1.45 * (1 - a / 2), 1.42 * (1 + a)), "CONSTANT")
     # 5. a sharp "hmph": turns its back and stomps off (stiff little hops, tail up, head high)
-    away = Vector((cam_dir.y, -cam_dir.x, 0.0)).normalized() * 0.85 - cam_dir * 0.3
+    away = Vector((-cam_dir.y, cam_dir.x, 0.0)).normalized() * 0.85 - cam_dir * 0.3   # screen left, a bit away
     yaw_away = math.atan2(away.x, -away.y)
     for t, y in ((F_TURN, yaw_cam), (F_TURN + 2, yaw_away + 0.3), (F_TURN + 4, yaw_away)):
         anim.key(root, "rotation_euler", t, (0, 0, y), "CONSTANT")
@@ -335,7 +344,7 @@ def _cock_at_face(sh, k):
 def s12():
     n = _frames("S12", 74)
     X._world(n)
-    k, P = _kai_cupping(n, raise_hands=32.0)
+    k, P = _kai_cupping(n, raise_hands=22.0)
     yaw_out = X.KAI_YAW
     sh = _shrimp_in_hands(k, yaw_out)
     base = sh["root"].location.copy()
@@ -357,11 +366,11 @@ def s12():
     # it looks up at him ... then the claw goes up: the threat (anticipation dip, overshoot, settle)
     LOOK, RAISE = 28, 36
     s3d.lock_on(sh, s3d.kai_point(k, "eyes"), LOOK)
-    rest = (0.0, 0.0, 0.0)
+    rest = _claw_rest(sh)
     anim.key(sh["shoulder"], "rotation_euler", 1, rest, "CONSTANT")
     anim.key(sh["hinge"], "rotation_euler", 1, (0.2, 0.0, 0.0), "CONSTANT")
     cock = _cock_at_face(sh, k)
-    anim.key(sh["shoulder"], "rotation_euler", RAISE - 2, (-0.15, 0.0, 0.0), "CONSTANT")   # the dip
+    anim.key(sh["shoulder"], "rotation_euler", RAISE - 2, tuple(v * 1.1 for v in rest), "CONSTANT")   # the dip
     over = tuple(v * 1.12 for v in cock)
     anim.key(sh["shoulder"], "rotation_euler", RAISE, over, "CONSTANT")
     anim.key(sh["shoulder"], "rotation_euler", RAISE + 2, cock, "CONSTANT")
@@ -381,8 +390,8 @@ def s12():
     # camera: the frame-0 threat: three-quarter from his left-front, low, both faces in frame; slow push-in
     eyes = s3d.kai_point(k, "eyes")
     tgt = base.lerp(eyes, 0.55)
-    yaw = _yaw_toward(-(FWD * 0.7 + LEFT * 0.7))
-    _cam("cam_s12", tgt, 1, n, -6.0, 7.0, 6.0, 40.0, yaw)
+    yaw = _yaw_toward(-(FWD * 0.75 - LEFT * 0.65))
+    _cam("cam_s12", tgt, 1, n, 2.0, 7.0, 6.0, 40.0, yaw)
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]])
 
@@ -416,7 +425,8 @@ def s13():
         anim.key(sh["hinge"], "rotation_euler", f, (a, 0.0, 0.0), "CONSTANT")
     # after the tap: it lowers the claw, sits back, pleased (lids up, a little bounce, a blink)
     LOW = TAP + 14
-    anim.key(sh["shoulder"], "rotation_euler", LOW, (0.0, 0.0, 0.0), "CONSTANT")
+    sh["shoulder"].rotation_euler = cock
+    anim.key(sh["shoulder"], "rotation_euler", LOW, _claw_rest(sh), "CONSTANT")
     for lp, hi in zip(sh["lids"], sh["hi"]):
         anim.key(lp, "scale", LOW, 0.001, "CONSTANT")
         anim.key(hi, "scale", LOW, 1.0, "CONSTANT")
@@ -433,7 +443,7 @@ def s13():
     X.v2._twos([k["arm"], sh["root"], sh["body"], sh["shoulder"], sh["hinge"]] + sh["eyes"] + sh["antennae"])
     # camera: closer, more in profile so the tap reads; a slow push-in
     tgt = nose.lerp(base, 0.4)
-    yaw = _yaw_toward(-(FWD * 0.6 + LEFT * 0.8))
+    yaw = _yaw_toward(-(FWD * 0.6 - LEFT * 0.8))
     _cam("cam_s13", tgt, 1, n, -4.0, 5.0, 4.4, 40.0, yaw)
     _anchors("S13", n, k, sh)
     LAST.update(k=k, sh=sh)

@@ -131,7 +131,7 @@ def s02():
     from channels.monsters.diorama_v3.helper1 import _clear_view
     keep = {bird["root"], *bird["root"].children_recursive, sh["root"], *sh["root"].children_recursive}
     _clear_view(cam, [1, n], shrimp, keep, reach=0.9)
-    _clear_smoke(cam, [1, n], tgt)
+    _clear_smoke(cam, list(range(1, n + 1, 2)), tgt)
     _anchors("S02", cam, {"bird": lambda f: lift.matrix_world.translation.copy(),
                           "shrimp": lambda f: shrimp + Vector((0, 0, 0.8))}, n)
     return dict(frames=n, step=2, ones=(1, n), subject=[bird["root"], sh["root"]])
@@ -340,7 +340,7 @@ def s16():
     yaw = math.degrees(math.atan2(v.x, v.y))
     cam = xp._cam_move("cam_s16", n, (tuple(crest), dist, tilt, yaw, 30.0, -0.12),
                        (tuple(crest), dist - 3.0, tilt, yaw, 30.0, -0.12))
-    _clear_smoke(cam, [1, n // 2, n], crest)
+    _clear_smoke(cam, list(range(1, n + 1, 2)), crest)
     pts = {name: (lambda f, o=o: o.matrix_world.translation.copy() + Vector((0, 0, -1.0)))
            for name, o in bells.items()}
     _anchors("S16", cam, pts, n)
@@ -361,7 +361,7 @@ def _s04_pose(P, B, layout, f, look=0.0, flinch=0.0, rake=0.0, curl=0.0):
     P.rot("spine", (12 * curl - 4 * flinch, 0, 8 * curl))
     P.rot("chest", (10 * curl, 0, 6 * curl))
     P.rot("neck", (-14 * look + 10 * curl, 0, 18 * look))
-    P.rot("head 1", (-16 * look + 12 * curl + 4 * flinch, 0, 22 * look - 18 * flinch))
+    P.rot("head 1", (-16 * look + 3 * curl + 4 * flinch, 0, 22 * look - 18 * flinch + 6 * curl))
     for nm, sx in (("shoulder.L", 1), ("shoulder.R", -1)):
         P.rot(nm, (0, sx * (9 * flinch + 5 * curl), 0))                     # shoulders up round his ears
     if rake:
@@ -424,7 +424,7 @@ def s04():
     bpy.context.scene.frame_set(1)
     hit = elbow.lerp(wrist, 0.55) + left * 0.7 + Vector((0, 0, 0.5))
     p0 = hit - face * 3.2 + left * 1.2 + Vector((0, 0, 4.6))
-    p2 = hit + face * 6.0 + left * 7.0 + Vector((0, 0, 11.0))
+    p2 = hit + face * 2.0 + left * 9.0 + Vector((0, 0, 12.0))
     S = xv3.BIRD_SCALE
     rig = tuftwing.build((hit.x, hit.y, 0.0), shadow_span=10.0)
     rig["root"].scale = (S,) * 3
@@ -468,10 +468,10 @@ def s04():
     chest = hips + Vector((0, 0, 3.6))
     cdir = (face + left * 0.5).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
-    a = (tuple(chest + Vector((0, 0, 1.2))), 12.5, 7.0, yaw, 35.0, -0.1)
-    b = (tuple(chest + Vector((0, 0, 1.0))), 10.5, 7.0, yaw - 2.0, 35.0, -0.1)
+    a = (tuple(chest + Vector((0, 0, 1.2))), 12.5, 7.0, yaw, 35.0, -0.14)
+    b = (tuple(chest + Vector((0, 0, 1.0))), 10.5, 7.0, yaw - 2.0, 35.0, -0.14)
     cam = _cam_move("cam_s04", n, a, b)
-    _clear_smoke(cam, [1, n // 2, n], chest)
+    _clear_smoke(cam, list(range(1, n + 1, 2)), chest)
 
     def bone(name, tail=False):
         def fn(f):
