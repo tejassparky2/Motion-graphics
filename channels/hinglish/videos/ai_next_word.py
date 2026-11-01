@@ -1,6 +1,9 @@
 """Video 6 (tech): "AI bas agla shabd guess karta hai" - how ChatGPT-style AI works. Script approved by the owner
 1 Nov 2026 ("Approve"; scripts_batch4.md); narration below is that script word for word, in Devanagari for the
-voice, with numbers and English words written for the voice (AI = "ए-आई")."""
+voice, with numbers and English words written for the voice (AI = "ए-आई").
+Hook v2 (owner, 1 Nov 2026: "The hook is not good change it and auto approved"): b1 now says the model holds no
+written answers, no book, no search, only numbers (true of the model itself: its weights); b2 is the next-word game
+and the phone keyboard."""
 import math
 import os
 import random
@@ -13,10 +16,10 @@ from channel import ASSETS_ROOT, MUSIC, NARRATOR, NARRATOR_LABEL, REVEAL_GAP, TA
 from shots import T, asset_finder, draw_frame, pic, starts
 
 SCRIPT = [
-    dict(id="b1", text="सोचो, जो ए-आई डॉक्टर्स वाले एग्ज़ाम के सवाल हल कर लेता है... वो असल में बस एक ही काम करता है: "
-                       "अगला शब्द गेस करना।"),
-    dict(id="b2", text="वही काम जो तुम्हारे फ़ोन का कीबोर्ड करता है, जब वो अगला शब्द सजेस्ट करता है। "
-                       "बस ये बहुत, बहुत बड़ा है।"),
+    dict(id="b1", text="सोचो, जो ए-आई डॉक्टर्स वाले एग्ज़ाम के सवाल हल कर लेता है... उसके अंदर एक भी जवाब लिखा हुआ नहीं है। "
+                       "ना कोई किताब, ना गूगल। सिर्फ़ नंबर्स।"),
+    dict(id="b2", text="और वो बस एक ही काम करता है: अगला शब्द गेस करना। वही जो तुम्हारे फ़ोन का कीबोर्ड करता है... "
+                       "बस बहुत, बहुत बड़ा।"),
     dict(id="b3", text="ये कोई जादू नहीं है। ये गणित है।", gap=REVEAL_GAP),
     dict(id="b4", text="पहले इसे पढ़ाया जाता है: इंटरनेट की किताबें, आर्टिकल्स, कोड... खरबों शब्द।"),
     dict(id="b5", text="मेटा के ए-आई, लामा थ्री, ने जितना पढ़ा... उतना पढ़ने में एक इंसान को, रोज़ आठ घंटे पढ़कर भी, "
@@ -44,13 +47,14 @@ SCRIPT = [
 
 METADATA = dict(
     title="AI bas agla shabd guess karta hai",
-    caption="Jo AI doctors ke exam ke sawaal hal kar leta hai... wo asal mein bas agla shabd guess karta hai 😳\n\n"
+    caption="Jo AI doctors ke exam ke sawaal hal kar leta hai, uske andar ek bhi jawab likha hua nahi hai... sirf "
+            "numbers 😳\n\nAur wo bas ek kaam karta hai: agla shabd guess karna.\n\n"
             "Tumhare phone ke keyboard jaisa, bas bahut bada. Har galat guess par iske andar ke arbon \"knobs\" thode "
             "ghumaaye jaate hain. GPT-3 mein 175 arab the.\n\n"
             "Isiliye jawab ek-ek shabd karke type hota dikhta hai, aur kabhi-kabhi ye poore bharose se galat bhi bol "
             "deta hai.\n\n"
             "AI sach mein samajhta hai, ya bas bahut accha guess karta hai? Comment mein batao 👇",
-    yt_title="ChatGPT Bas Agla Shabd Guess Karta Hai? 😳 | AI",
+    yt_title="ChatGPT Ke Andar Ek Bhi Jawab Nahi Hai? 😳 | AI",
     yt_description="ChatGPT jaisa AI asal mein kaise kaam karta hai: agla shabd guess karna, kharabon shabd padhkar "
                    "seekhna, aur har galti par arbon knobs ko thoda ghumaana. Jawab ek-ek shabd karke kyun aata hai, "
                    "ek hi sawaal ka jawab alag kyun aata hai, aur AI kabhi-kabhi galat kyun bolta hai.",
@@ -319,11 +323,33 @@ def h_phone(cr, t, tl, t0):                              # b1 frame 0: "the AI t
     _pic(cr, "stethoscope", 850, 920, 330, t, T(tl, "b1", "डॉक्टर्स") - 0.2)
     card(cr, t, T(tl, "b1", "सवाल"), 690, 1250, ["EXAM QUESTIONS"], size=38)
     tick(cr, 940, 1390, 70, prog(t, T(tl, "b1", "सवाल") + 0.4, 0.3), color=GREEN)
-    headline(cr, t, "PASSES DOCTOR EXAMS, BUT ONLY", "GUESSES", -1, min(1.8, T(tl, "b1", "गेस")), t_ghost=-1)
+    headline(cr, t, "IT PASSES DOCTOR EXAMS WITH", "0 ANSWERS INSIDE", -1, min(1.8, T(tl, "b1", "जवाब")),
+             t_ghost=-1)
 
 
-def o_onejob(cr, t, tl, t0):                             # b1 "...it really does one thing: guess the next word"
-    tg = T(tl, "b1", "गेस")
+def o_numbers(cr, t, tl, t0):                            # b1 "...no book, no Google. Only numbers."
+    tb, tg, tn = T(tl, "b1", "किताब"), T(tl, "b1", "गूगल"), T(tl, "b1", "नंबर्स")
+    _pic(cr, "books", 230, 820, 260, t, tb - 0.3)
+    cross(cr, 230, 820, 150, prog(t, tb + 0.2, 0.3))
+    q = prog(t, tg - 0.3, 0.3)                           # a plain search bar (no logo)
+    rrect(cr, 560, 770, 420, 100, 50)
+    cr.set_source_rgba(1, 1, 1, q)
+    cr.fill()
+    draw_text(cr, "search...", 610, 820, 40, (0.5, 0.5, 0.5), q, MONO_FONT, "lm")
+    cross(cr, 770, 820, 150, prog(t, tg + 0.2, 0.3))
+    ai_box(cr, W / 2, 1300, 420, glow=prog(t, tn, 0.4))
+    p = prog(t, tn - 0.1, 0.6)                           # the inside: nothing but numbers
+    if p > 0:
+        rng = random.Random(int(t * 12))
+        for r in range(6):
+            for c in range(7):
+                draw_text(cr, f"{rng.uniform(-1, 1):+.2f}"[:4], W / 2 - 170 + c * 56, 1150 + r * 56, 26, GOLD,
+                          p * (0.5 + 0.5 * rng.random()), MONO_FONT, "cm")
+    headline(cr, t, "NO BOOK, NO GOOGLE...", "ONLY NUMBERS", t0, tn)
+
+
+def o_onejob(cr, t, tl, t0):                             # b2 "and it does one thing: guess the next word"
+    tg = T(tl, "b2", "गेस")
     sentence(cr, t, 70, 1000, ["THE", "HEART", "HAS", "FOUR"], 80, blank=("CHAMBERS", prog(t, tg + 0.4, 0.2)))
     ai_box(cr, W / 2, 1400, 200, glow=prog(t, tg, 0.4))
     headline(cr, t, "ITS ONLY JOB:", "THE NEXT WORD", t0, tg)
@@ -331,7 +357,7 @@ def o_onejob(cr, t, tl, t0):                             # b1 "...it really does
 
 def k_keyboard(cr, t, tl, t0):                           # b2 "the same thing your phone's keyboard does..."
     keyboard(cr, 90, 860, 900, "Good morning, how are", ("you", "u", "things"),
-             prog(t, T(tl, "b2", "सजेस्ट"), 0.3), prog(t, t0, 0.3))
+             prog(t, T(tl, "b2", "कीबोर्ड") + 0.4, 0.3), prog(t, t0, 0.3))
     headline(cr, t, "LIKE YOUR PHONE'S", "KEYBOARD", t0, t0 + 0.3)
 
 
@@ -345,7 +371,7 @@ def k_giant(cr, t, tl, t0):                              # b2 "...just very, ver
     cr.fill()
     draw_text(cr, "you", 0, 0, 52, INK, 1, MONO_FONT, "cm")
     cr.restore()
-    headline(cr, t, "SAME TRICK, JUST", "MUCH BIGGER", t0, T(tl, "b2", "बहुत"))
+    headline(cr, t, "SAME TRICK, JUST", "MUCH BIGGER", t0, t0 + 0.3)
 
 
 def j_maths(cr, t, tl, t0):                              # b3 "it's not magic. it's maths."
@@ -569,8 +595,8 @@ def e_question(cr, t, tl, t0):                           # b19 "does AI really u
 
 
 SHOTS = [   # (line, cue where the shot starts, draw function, background)
-    ("b1", None, h_phone, "paper"), ("b1", "असल", o_onejob, "paper"),
-    ("b2", None, k_keyboard, "paper"), ("b2", "बस", k_giant, "paper"),
+    ("b1", None, h_phone, "paper"), ("b1", "कोई", o_numbers, "paper"),
+    ("b2", None, o_onejob, "paper"), ("b2", "वही", k_keyboard, "paper"), ("b2", "बहुत", k_giant, "paper"),
     ("b3", None, j_maths, "paper"),
     ("b4", None, r_read, "paper"),
     ("b5", None, r_llama, "paper"), ("b5", "इंसान", r_years, "paper"),

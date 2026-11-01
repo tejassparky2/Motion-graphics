@@ -102,9 +102,12 @@ every line, upload sheet. Sources go with every script, and health claims must b
   scripts_batch3.md). Planarians are drawn by `worm()` in videos/planarian.py: each end can be a head, a tail or a
   cut, and grows back out of pale new tissue. The real two-headed photo is from a different lab (Nogi et al.) and the
   video says so on screen. Frame 0 is our illustration, marked as one.
-- **Video 6, how AI works** (owner, 1 Nov: "make next video on tech on trending topics like how ai works", then
-  "Approve"; scripts_batch4.md). Drawn phone, chat bubbles, keyboard and fan-regulator knobs in
-  videos/ai_next_word.py; the knob is the one metaphor (the model's parameters).
+- **Video 6, how AI works: skipped** (owner, 1 Nov: "Ai video didn't seem good to me skipping"). The module
+  (videos/ai_next_word.py) stays with a half-done hook v2 ("0 answers inside, only numbers"), not voiced. An abstract
+  topic with drawn props didn't land; prefer topics with a real, visual "wrong belief" to break.
+- **Video 7, the internet comes from under the sea** (owner, 1 Nov: "make next video auto approved"). Script and
+  facts in the module docstring of videos/sea_internet.py; maps use measured percent positions (WP, IP) on
+  world_map.png and india_map.png, so pins and cable routes land on the right coasts.
 - **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
   (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
   minutes, side facts are the first thing to drop.
