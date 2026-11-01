@@ -258,7 +258,7 @@ def s18():
     back = (KAI_AT - WREN_STOP).normalized()                           # toward Kai (the camera side)
     side = Vector((back.y, -back.x, 0))
     nr = net("S18net", length=7.5)
-    nr.location = WREN_STOP - back * 5.0 + side * 5.0 + Vector((0, 0, 0.0))   # beside her, clear of her head
+    nr.location = WREN_STOP - back * 6.5 - side * 3.4 + Vector((0, 0, -1.5))  # behind her shoulder, hoop low
     yaw_net = math.atan2(back.x, -back.y)
     for f in range(1, n + 1, 4):                                       # held up, ready, swaying a little
         nr.rotation_euler = (math.radians(-8 + 2 * math.sin(f / 9.0)), math.radians(-16 + 2 * math.sin(f / 13.0)),
@@ -354,7 +354,7 @@ def s20top():
     hoop_c = origin + d * (L + 1.35)                           # the hoop's centre (net(): pole L, hoop radius 1.35)
     nr.keyframe_insert("location", frame=1)
     # Kai: cupped at his chest, lowering his hands over the hoop, opening them on "over", then a breath
-    above = hoop_c + up * 1.25
+    above = hoop_c + up * 0.7
     for f in range(1, n + 1, 2):
         u = smooth01((f - f_low0) / max(1, f_low1 - f_low0))
         PK.reset()

@@ -1,5 +1,6 @@
 """Join a diorama shot rendered in pieces (HELPERS.md chunk rule) into out/monsters/diorama/shots/<SHOT>.mp4 + sheet
-(or, with --v3 first, out/monsters/diorama_v3/shots/<SHOT>.mp4 on the ep01v3 timing).
+(or, with --v3 first, out/monsters/diorama_v3/shots/<SHOT>.mp4 on the ep01v3 timing; with --ep02,
+out/monsters/diorama_ep02/shots/<SHOT>.mp4 on ep02/timing.json). Split plates (S20top/S20bot) take their shot's length.
 
 Each piece is either a near-lossless part (out/monsters/diorama/parts/<SHOT>_fAAA-BBB.mp4, frames AAA..BBB) or a folder
 of render_shot.py PNGs (0001.png ...) given as DIR:AAA-BBB. Every frame 1..render_frames must be covered exactly once;
@@ -20,18 +21,21 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 V3 = "--v3" in sys.argv
-SHOTS = os.path.join(ROOT, "out", "monsters", "diorama_v3" if V3 else "diorama", "shots")
-EPDIR = "ep01v3" if V3 else "ep01v2"
+EP02 = "--ep02" in sys.argv                     # Episode 2: out/monsters/diorama_ep02/shots, ep02/timing.json
+SHOTS = os.path.join(ROOT, "out", "monsters", "diorama_ep02" if EP02 else "diorama_v3" if V3 else "diorama", "shots")
+EPDIR = "ep02" if EP02 else "ep01v3" if V3 else "ep01v2"
+ALIAS = {"S20top": "S20", "S20bot": "S20", "S24top": "S24", "S24bot": "S24"}   # split plates share their shot's length
 CLEAN = ["-map_metadata", "-1", "-fflags", "+bitexact", "-flags:v", "+bitexact", "-bsf:v", "filter_units=remove_types=6"]
 
 
 def main():
     import imageio_ffmpeg
     ff = imageio_ffmpeg.get_ffmpeg_exe()
-    args = [a for a in sys.argv[1:] if a != "--v3"]
+    args = [a for a in sys.argv[1:] if a not in ("--v3", "--ep02")]
     shot, pieces = args[0], args[1:]
     timing = json.load(open(os.path.join(ROOT, "channels", "monsters", EPDIR, "timing.json")))
-    n = {s["shot"]: s["render_frames"] for s in timing["shots"]}[shot]
+    lengths = {s["shot"]: s["render_frames"] for s in timing["shots"]}
+    n = lengths[shot] if shot in lengths else lengths[ALIAS[shot]]
     tmp = tempfile.mkdtemp(prefix=f"join_{shot}_")
     have = {}
     for p in pieces:
