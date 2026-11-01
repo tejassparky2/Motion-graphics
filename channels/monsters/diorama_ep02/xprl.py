@@ -113,7 +113,7 @@ def s17():
     w = _wren(WREN_FROM, WREN_YAW)
     PW = x3.Pose(w)
     dist = (WREN_STOP - WREN_FROM).length / SCALE                    # armature units (model metres)
-    f_stop = max(30, n - 26)
+    f_stop = max(30, n - 25)                                          # planted on "...up to me"
     ring_until = 20
 
     def upper(P, t):
@@ -150,3 +150,114 @@ def s17():
 
 
 SHOTS = {"S17": s17}
+
+
+# ------------------------------------------------------------------------------------------------------------ props
+def _line_words(lid):
+    import json
+    import os
+    p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep02", "timing.json")
+    d = json.load(open(p))
+    line = next(ln for ln in d["lines"] if ln["id"] == lid)
+    return line["words"]
+
+
+def _shot_start(shot):
+    import json
+    import os
+    p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ep02", "timing.json")
+    return next(s["start"] for s in json.load(open(p))["shots"] if s["shot"] == shot)
+
+
+def net(name, length=13.0, hoop=1.6, depth=2.2):
+    """A villager's long-handled net (creature units): a wooden pole along +Z from the origin (the grip end), a hoop
+    at its top in the pole's XZ plane, and a loose cord bag hanging from the hoop (a wireframe cone). Returns the
+    root empty (rotate/move it); toon look with outlines."""
+    from channels.monsters.mk import look, sdf
+    wood = look.toon("net_pole", look.hexc("#9a6a3c"))
+    rim = look.toon("net_hoop", look.hexc("#6a4a2c"))
+    cord = look.toon("net_cord", look.hexc("#efe3c2"))
+    root = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(root)
+    pole = sdf.build(f"{name}_pole", [(sdf.C(Vector((0, 0, 0)), Vector((0, 0, length)), 0.16, 0.14), wood.name,
+                                       None)], k=0.01, res=0.06, pad=0.2, smooth_iter=2)
+    parts = []
+    c = Vector((0, 0, length + hoop))
+    for i in range(24):
+        a0, a1 = 2 * math.pi * i / 24, 2 * math.pi * (i + 1) / 24
+        p0 = c + Vector((hoop * math.cos(a0), 0, hoop * math.sin(a0)))
+        p1 = c + Vector((hoop * math.cos(a1), 0, hoop * math.sin(a1)))
+        parts.append((sdf.C(p0, p1, 0.09, 0.09), rim.name, 0.02))
+    ring = sdf.build(f"{name}_hoop", parts, k=0.02, res=0.04, pad=0.2, smooth_iter=2)
+    bpy.ops.mesh.primitive_cone_add(vertices=14, radius1=hoop * 0.98, radius2=0.25, depth=depth, end_fill_type="NOTHING")
+    bag = bpy.context.object
+    bag.name = f"{name}_bag"
+    bag.rotation_euler = (math.radians(90), 0, 0)
+    bag.location = c + Vector((0, depth / 2, 0))
+    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+    me = bag.data
+    import bmesh
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bmesh.ops.subdivide_edges(bm, edges=bm.edges[:], cuts=3, use_grid_fill=True)
+    for v in bm.verts:                                     # a slack, sagging bag
+        t = (v.co.y - c.y) / depth
+        v.co.z -= 0.6 * t * t * hoop
+    bm.to_mesh(me)
+    bm.free()
+    me.materials.append(cord)
+    wf = bag.modifiers.new("cords", "WIREFRAME")
+    wf.thickness = 0.06
+    wf.use_replace = True
+    for o in (pole, ring, bag):
+        o.parent = root
+        look.outline(o, 0.03)
+    return root
+
+
+# ------------------------------------------------------------------------------------------------------------ S18
+def s18():
+    """Close on Wren (Kai's eyeline), stern, speaking her line on the word timings; a villager's net raised behind
+    her. A lean in on "Step away", a glance toward the lake on "lake"."""
+    n = _frames("S18", 86)
+    _world(n)
+    t0 = _shot_start("S18")
+    words = _line_words("l18")
+    fr = {w["w"].strip(".").lower(): int(round((w["start"] - t0) * 24)) + 1 for w in words}
+    w = _wren(WREN_STOP, WREN_YAW)
+    feet = {"L": Vector((0.09, 0, 0)), "R": Vector((-0.09, 0, 0))}
+    P = x3.Pose(w)
+    f_step, f_lake = fr.get("step", 8), fr.get("lake", 60)
+    for f in range(1, n + 1, 2):
+        P.reset()
+        lean = 4 if f_step <= f < f_step + 14 else 0                   # leans in on "Step away"
+        nod = 6 if f_step + 2 <= f < f_step + 8 else 0
+        turn = 22 if f_lake - 2 <= f < f_lake + 14 else 0              # a glance toward the lake
+        for side in ("L", "R"):
+            P.leg(side, feet[side] + Vector((0, 0, P.ankle_h)))
+        wren.hold_bell(P, 0.12)
+        P.rot("chest", (lean + 1.2 * math.sin(f / 20.0), 0, 0))
+        P.rot("head 1", (-6 + nod, 0, -turn))
+        P.key(f)
+    wren.grip(w, 1)
+    wren.face(w, "stern", 1)
+    wren.talk_words(w, words, t0)
+    wren.blink(w, 1, n, at=(fr.get("it", 46) - 4,))
+    v2._twos([w["arm"]])
+    back = (KAI_AT - WREN_STOP).normalized()                           # toward Kai (the camera side)
+    side = Vector((back.y, -back.x, 0))
+    nr = net("S18net", length=12.0)
+    nr.location = WREN_STOP - back * 6.0 + side * 3.0 + Vector((0, 0, 1.5))
+    yaw_net = math.atan2(back.x, -back.y)
+    nr.rotation_euler = (math.radians(-12), math.radians(14), yaw_net)
+    for f in range(1, n + 1, 4):                                       # held up, swaying a little
+        nr.rotation_euler = (math.radians(-12 + 2 * math.sin(f / 9.0)), math.radians(14 + 2 * math.sin(f / 13.0)),
+                             yaw_net)
+        nr.keyframe_insert("rotation_euler", frame=f)
+    tgt = WREN_STOP + Vector((0, 0, 7.15))
+    yaw = math.degrees(math.atan2(-back.x, -back.y))
+    _cam_move("S18cam", n, (tuple(tgt), 6.4, 3.0, yaw, 45.0, 0.0), (tuple(tgt), 5.7, 3.0, yaw, 45.0, 0.0))
+    return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
+
+
+SHOTS["S18"] = s18

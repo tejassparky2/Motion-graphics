@@ -4,6 +4,7 @@
     python channels/monsters/ep01v2_cover.py S15 35 "ONE SNAP." "GONE."    # one cover: shot, frame in the shot, lines
     python channels/monsters/ep01v2_cover.py --diorama    # the same from out/monsters/diorama/ -> diorama/cover.jpg
     python channels/monsters/ep01v2_cover.py --v3         # v3: the full hook on S01 -> diorama_v3/cover.jpg
+    python channels/monsters/ep01v2_cover.py --ep02       # Episode 2: the candidates + phone grid -> diorama_ep02/
 
 The frame comes from the clean shot render out/monsters/ep01v2/shots/<SHOT>.mp4 when it exists (no captions or hook
 text burned in), else from out/monsters/ep01v2/picture.mp4 at the shot's first frame + `frame` (timing.json).
@@ -37,6 +38,15 @@ CANDIDATES = {
 PICK = "hook"
 # v3 (coordinator, 31 Oct): the frame-0 hook text in full; three shorter lines so they stay above Kai's face
 V3 = ("S01", 24, [("THIS SHRIMP", WHITE), ("ERASED", HOT), ("A FOREST", WHITE)])
+# Episode 2 (DIORAMA_EP02.md): 2-3 words each, never the title ("I Saved the Shrimp That Tried to Kill Me") repeated.
+# Frames are placeholders until the shots land: re-pick them on the real renders.
+EP02 = {
+    "hook": ("S01", 30, [("I SAVED", WHITE), ("MY KILLER", HOT)]),        # the sprint at the diving bird
+    "aim": ("S08", 40, [("NATURE'S", WHITE), ("PISTOL", HOT)]),           # Kai aiming the shrimp like a pistol
+    "tap": ("S13", 24, [("IT TAPPED", WHITE), ("MY NOSE", HOT)]),          # the nose tap, his dot eyes
+}
+EP02_PICK = "hook"
+TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 
 
 def frame(shot, f):
@@ -47,7 +57,7 @@ def frame(shot, f):
     if os.path.exists(clean):
         src, t = clean, f / 24
     else:
-        with open(os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")) as fh:
+        with open(TIMING_JSON) as fh:
             s = {x["shot"]: x for x in json.load(fh)["shots"]}[shot]
         src, t = os.path.join(EP, "picture.mp4"), (s["first_frame"] + min(f, s["frames"] - 1)) / 24
         print(f"warning: no shots/{shot}.mp4 yet; using picture.mp4, which has the captions (and in S01 the hook "
@@ -105,7 +115,20 @@ def phone_grid(paths, out, w=160):
 
 
 def main(argv):
-    global EP, PICK_PATH
+    global EP, PICK_PATH, TIMING_JSON
+    if "--ep02" in argv:
+        EP = os.path.join(ROOT, "out", "monsters", "diorama_ep02")
+        TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")
+        made = []
+        for name, (shot, f, lines) in EP02.items():
+            p, src = cover(shot, f, lines, os.path.join(EP, "covers", f"cover_{name}.jpg"), size=200, top=170)
+            print(f"{name:5} {shot} f{f} from {os.path.relpath(src, ROOT)} -> {os.path.relpath(p, ROOT)}")
+            made.append((name, p))
+        phone_grid(made, os.path.join(EP, "covers", "phone_grid.jpg"))
+        shot, f, lines = EP02[EP02_PICK]
+        cover(shot, f, lines, os.path.join(EP, "cover.jpg"), size=200, top=170)
+        print("pick:", EP02_PICK, "->", os.path.relpath(os.path.join(EP, "cover.jpg"), ROOT))
+        return
     if "--v3" in argv:
         EP = os.path.join(ROOT, "out", "monsters", "diorama_v3")
         shot, f, lines = V3

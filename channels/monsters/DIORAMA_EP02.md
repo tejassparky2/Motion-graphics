@@ -5,6 +5,9 @@
 - The Episode 2 script is approved: "OK go ahead". The script is `channels/monsters/ep02/episode.py`; the outline is
   2A "SAVE" in out/monsters/story_v2.md.
 
+**Language: English only** (owner, 1 Nov 2026: "In English not hindi"). No Hinglish dub for this episode unless the
+owner asks.
+
 **The same as Episode 1 v3:**
 - the 2.5D diorama look: mk/diorama.py, the seed-31 island, the pond and the thorn tree where Ep 1 ended;
 - Kai (mk/kai.py), the shrimp (mk/puffshrimp.py) and the butcher bird (mk/butcherbird.py);
