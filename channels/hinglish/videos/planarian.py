@@ -1,7 +1,10 @@
 """Video 5: "Space se wapas aaya keeda, do sar ke saath" - the planarian that regrew a head at both ends after five
 weeks on the ISS (Morokuma et al. 2017, Regeneration; Tufts). Script approved by the owner 30 Oct 2026 ("Approve";
 scripts_batch3.md); narration below is that script word for word, in Devanagari for the voice, with numbers written
-as words. It says 1 of 15, and that nobody knows why (the "fluke" critique is in line 17)."""
+as words. It says 1 of 15, and that nobody knows why (the "fluke" critique is in line 17).
+Hook v2 (owner, 1 Nov 2026: "hook should be like impossible to assume belive simple hooks won't work", "it
+regenerate evey cut parts"): b1 opens on the regeneration itself, b2 adds the space twist; b6 now deepens b1 instead
+of repeating it. It does not say space gave the worm its power: planarians regrow cut pieces on Earth too."""
 import math
 import os
 import random
@@ -16,13 +19,14 @@ from channel import ASSETS_ROOT, MUSIC, NARRATOR, NARRATOR_LABEL, REVEAL_GAP, TA
 from shots import T, asset_finder, draw_frame, pic, starts
 
 SCRIPT = [
-    dict(id="b1", text="सोचो, एक कीड़ा स्पेस गया... और वापस आया, तो उसके दो सिर थे। एक आगे, एक पीछे।"),
-    dict(id="b2", text="और जब साइंटिस्ट्स ने उसके दोनों सिर काट दिए... तो जो हुआ, उसने सबको हिला दिया।"),
+    dict(id="b1", text="सोचो, एक ऐसा कीड़ा जिसे काटो, तो वो मरता नहीं... बल्कि दो बन जाता है। "
+                       "दस टुकड़े करो, तो दस कीड़े बन जाते हैं।"),   # "नए" came out "नहीं" (ten NOT worms)
+    dict(id="b2", text="और जब इसे स्पेस भेजा गया... तो ये वापस आया, दो सिर के साथ। एक आगे, एक पीछे।"),
     dict(id="b3", text="ये कोई साइंस-फ़िक्शन नहीं है। ये अमेरिका की टफ्ट्स यूनिवर्सिटी का एक्सपेरिमेंट है, "
                        "जो इंटरनेशनल स्पेस स्टेशन पर हुआ।", gap=REVEAL_GAP),
     dict(id="b4", text="इस कीड़े का नाम है प्लेनेरियन। पानी में रहने वाला, एक-दो सेंटीमीटर का चपटा कीड़ा।"),
     dict(id="b5", text="छिपकली की पूँछ कट जाए, तो वापस उग आती है ना? ये कीड़ा उससे बहुत आगे है।"),
-    dict(id="b6", text="इसे कई टुकड़ों में काट दो... तो हर टुकड़ा एक पूरा नया कीड़ा बन जाता है। सिर, दिमाग़, आँखें, सब।"),
+    dict(id="b6", text="इसका हर कटा हुआ टुकड़ा अपना सिर, दिमाग़, आँखें... सब ख़ुद दोबारा बना लेता है।"),   # no "नई"
     dict(id="b7", text="और हर टुकड़ा जानता है कि सिर किस तरफ़ बनाना है, और पूँछ किस तरफ़। "
                        "जैसे शरीर के अंदर कोई नक्शा हो।"),
     dict(id="b8", text="तो साइंटिस्ट्स ने सोचा: स्पेस में, जहाँ ग्रैविटी ना के बराबर है, ये नक्शा कैसे काम करेगा?"),
@@ -46,13 +50,14 @@ SCRIPT = [
 
 METADATA = dict(
     title="Space se wapas aaya keeda, do sar ke saath",
-    caption="Ek keeda space gaya... aur wapas aaya toh uske do sar the. Phir scientists ne dono kaat diye 😳\n\n"
+    caption="Is keede ko kaato toh ye marta nahi, do ban jaata hai... aur space se ye do sar ke saath wapas aaya 😳"
+            "\n\n"
             "2015 mein Tufts University ne 15 planarian keedon ke sar aur poonchh kaat ke unhe 5 hafte ke liye "
             "International Space Station bheja. Wapas aake 15 mein se ek ne dono taraf sar uga liya. Dono sar kaate, "
             "toh beech wale tukde ne phir se do sar uga liye.\n\n"
             "Kyun hua, ye aaj bhi pakka nahi pata. Kuch scientists kehte hain ye bas ittefaq ho sakta hai.\n\n"
             "Kya space ne is keede ka naksha badal diya? Comment mein YES ya NO likho 👇",
-    yt_title="Space Se Wapas Aaya Keeda, Do Sar Ke Saath 😳 | Planarian",
+    yt_title="Kaato Toh Do Ban Jaata Hai Ye Keeda 😳 | Space Worm",
     yt_description="2015 mein Tufts University ke scientists ne planarian flatworms ko 5 hafte ke liye International "
                    "Space Station bheja. 15 mein se ek kata hua tukda wapas aake dono taraf sar ke saath ugaa, aur "
                    "dono sar kaatne par beech ke tukde ne phir se do sar uga liye. Kyun hua, ye aaj bhi pakka nahi "
@@ -266,36 +271,38 @@ def fifteen(cr, t, t0, cx, cy, glow=None, alpha=1.0):
 # Rules (style bible + parasite-reels study): a new picture every ~3 s cut on the word, the literal noun on screen,
 # red = the key word, gold = numbers, dark slate for space; the blueprint "naksha" is the one recurring metaphor.
 
-def h_twohead(cr, t, tl, t0):                            # b1 frame 0: "a worm went to space and came back with two heads"
-    _pic(cr, "iss", 830, 690, 0, t, T(tl, "b1", "स्पेस") - 0.1, rot=0.04, frame=(340, 220))
-    worm(cr, W / 2, 1150, 440, 150, "head", "head", wiggle=0.25, t=t)
-    ring(cr, 234, 1150, 125, 125, prog(t, T(tl, "b1", "आगे"), 0.4))      # on each head (trunk ends at 320 / 760)
-    ring(cr, 846, 1150, 125, 125, prog(t, T(tl, "b1", "पीछे"), 0.4))
+def h_cut(cr, t, tl, t0):                                # b1 frame 0: "cut it and it doesn't die... it becomes two"
+    tc = T(tl, "b1", "काटो")
+    p = prog(t, tc, 0.5)
+    if p <= 0:                                           # one worm, the cut already marked from the first frame
+        worm(cr, W / 2, 1150, 440, 150, "head", "tail", wiggle=0.2, t=t)
+    else:                                                # the halves part (up and down), then each grows what it lost
+        g = prog(t, T(tl, "b1", "मरता"), T(tl, "b1", "दो") - T(tl, "b1", "मरता") + 0.4)
+        w = 150 - 30 * p
+        worm(cr, W / 2 - 110 - 100 * p, 1150 - 140 * p, 220 - 20 * p, w, "head", "tail", 1, g, wiggle=0.2, t=t)
+        worm(cr, W / 2 + 110 + 100 * p, 1150 + 140 * p, 220 - 20 * p, w, "head", "tail", g, 1, wiggle=0.2, t=t + 1)
+    cut_line(cr, W / 2, 1150, 280, prog(t, -1, 0.3), 1 - p)
+    _pic(cr, "scissors", W / 2 - 40, 880, 230, t, -1, rot=0.5, alpha=1 - p)
     footnote(cr, "illustration", 0.8)
-    headline(cr, t, "IT CAME BACK FROM SPACE WITH", "TWO HEADS", -1, min(1.8, T(tl, "b1", "दो")), t_ghost=-1)
+    headline(cr, t, "CUT THIS WORM AND IT", "BECOMES TWO", -1, min(1.8, T(tl, "b1", "दो")), t_ghost=-1)
 
 
-def h_snip(cr, t, tl, t0):                               # b2 "and when scientists cut off both its heads..."
-    tc = T(tl, "b2", "काट")
-    p = prog(t, tc, 0.6)
-    if p <= 0:                                           # the frame-0 worm, cut 30 px inside each head
-        worm(cr, W / 2, 1150, 440, 150, "head", "head", wiggle=0.15, t=t)
-    else:
-        worm(cr, W / 2, 1150, 380, 150, "cut", "cut", wiggle=0.15, t=t)
-        worm(cr, 335 - 130 * p, 1150 + 50 * p, 30, 150, "head", "cut", rot=-0.25 * p)
-        worm(cr, 745 + 130 * p, 1150 + 50 * p, 30, 150, "cut", "head", rot=0.25 * p)
-    for x in (350, 730):
-        cut_line(cr, x, 1150, 260, prog(t, tc - 0.4, 0.3), 1 - prog(t, tc + 0.4, 0.3))
-    _pic(cr, "scissors", 330, 860, 230, t, tc - 0.5, rot=0.5)
-    headline(cr, t, "THEN THEY CUT OFF", "BOTH HEADS", t0, tc)
+def h_ten(cr, t, tl, t0):                                # b1 "...cut it in ten, and you get ten new worms"
+    for i in range(10):
+        q = prog(t, t0 + 0.1 + 0.12 * i, 0.25)
+        x, y = 200 + (i % 5) * 170, 990 + (i // 5) * 290
+        worm(cr, x, y + 30 * (1 - q), 90, 66, "head", "tail", rot=-1.45 + 0.2 * math.sin(i * 2.3), alpha=q,
+             wiggle=0.3, t=t + i)
+    counter(cr, t, t0 + 1.3, W / 2, 1480, "10", 120, color=GOLD)
+    headline(cr, t, "10 PIECES:", "10 NEW WORMS", t0, t0 + 0.6)
 
 
-def h_shock(cr, t, tl, t0):                              # b2 "...what happened shocked everyone"
-    s = 1 + 0.04 * math.sin(t * 6)
-    worm(cr, W / 2, 1200, 380 * s, 150, "cut", "cut", wiggle=0.2, t=t)
-    q = prog(t, t0 + 0.1, 0.3)
-    draw_text(cr, "?", W / 2, 860, 320 * (0.8 + 0.2 * q), RED, q, anchor="cm")
-    headline(cr, t, "WHAT HAPPENED NEXT", "SHOCKED EVERYONE", t0, t0 + 0.3)
+def h_space(cr, t, tl, t0):                              # b2 "and when it went to space... it came back with two heads"
+    _pic(cr, "iss", 830, 690, 0, t, t0, rot=0.04, frame=(340, 220))
+    worm(cr, W / 2, 1150, 440, 150, "head", "head", wiggle=0.25, t=t, alpha=prog(t, t0 + 0.2, 0.3))
+    ring(cr, 234, 1150, 125, 125, prog(t, T(tl, "b2", "आगे"), 0.4))      # on each head (trunk ends at 320 / 760)
+    ring(cr, 846, 1150, 125, 125, prog(t, T(tl, "b2", "पीछे"), 0.4))
+    headline(cr, t, "AND BACK FROM SPACE WITH", "TWO HEADS", t0, T(tl, "b2", "दो"), t_ghost=t0)
 
 
 def r_notscifi(cr, t, tl, t0):                           # b3 "this is no science fiction..."
@@ -360,31 +367,19 @@ def l_beyond(cr, t, tl, t0):                             # b5 "...this worm is f
     headline(cr, t, "THIS WORM GOES", "WAY BEYOND", t0, t0 + 0.3)
 
 
-def c_cut(cr, t, tl, t0):                                # b6 "cut it into many pieces..."
-    tc = T(tl, "b6", "काट")
-    p = prog(t, tc, 0.6)
-    kinds = [("head", "cut"), ("cut", "cut"), ("cut", "cut"), ("cut", "tail")]
-    if p <= 0:
-        worm(cr, W / 2, 1100, 640, 110, "head", "tail", wiggle=0.2, t=t)
-    else:
-        for k, (l, r) in enumerate(kinds):
-            worm(cr, 300 + 160 * k + (k - 1.5) * 70 * p, 1100 + 20 * math.sin(k * 2.1) * p, 160, 110, l, r,
-                 rot=0.06 * (k - 1.5) * p)
-    for k in (1, 2, 3):
-        cut_line(cr, 220 + 160 * k, 1100, 220, prog(t, tc - 0.4, 0.3), 1 - prog(t, tc + 0.3, 0.3))
-    _pic(cr, "scissors", 560, 830, 210, t, tc - 0.5, rot=0.5)
-    headline(cr, t, "CUT IT INTO", "PIECES", t0, tc)
+def c_build(cr, t, tl, t0):                              # b6 "every cut piece makes itself a new head, brain, eyes..."
+    ts = T(tl, "b6", "सिर")
+    worm(cr, W / 2, 1050, 300, 140, "head", "tail", prog(t, ts - 0.2, 1.4), prog(t, ts + 0.6, 1.2), wiggle=0.15,
+         t=t)
+    for i, lab in enumerate(("NEW HEAD", "NEW BRAIN", "NEW EYES")):
+        card(cr, t, ts + 0.75 * i, 90 + 300 * i, 1300 + 40 * (i % 2), [lab], size=40)
+    headline(cr, t, "EVERY CUT PIECE BUILDS", "A NEW HEAD", t0, ts)
 
 
-def c_regrow(cr, t, tl, t0):                             # b6 "...every piece becomes a whole new worm"
-    g = prog(t, t0 + 0.2, 1.6)
-    spots = [(290, 900, "head", "tail", 1, g), (790, 900, "head", "tail", g, g),
-             (290, 1180, "head", "tail", g, g), (790, 1180, "head", "tail", g, 1)]
-    for x, y, l, r, gl, gr in spots:
-        worm(cr, x, y, 160, 100, l, r, gl, gr, wiggle=0.2 * g, t=t)
-    card(cr, t, T(tl, "b6", "सिर"), 120, 1420, ["HEAD, BRAIN, EYES: ALL OF IT"], size=40)
-    counter(cr, t, t0 + 1.6, 860, 1460, "4", 110, color=GOLD)
-    headline(cr, t, "EVERY PIECE:", "A NEW WORM", t0, t0 + 0.4)
+def c_self(cr, t, tl, t0):                               # b6 "...all by itself"
+    worm(cr, W / 2, 1050, 300, 140, "head", "tail", wiggle=0.25, t=t)
+    stamp(cr, t, "NO HELP NEEDED", t0 + 0.2, W / 2, 1350, 70)
+    headline(cr, t, "ALL OF IT,", "BY ITSELF", t0, t0 + 0.2)
 
 
 def m_knows(cr, t, tl, t0):                              # b7 "every piece knows where the head goes, and the tail"
@@ -581,12 +576,12 @@ def e_question(cr, t, tl, t0):                           # b19 "did space change
 
 
 SHOTS = [   # (line, cue where the shot starts, draw function, background)
-    ("b1", None, h_twohead, "paper"),
-    ("b2", None, h_snip, "paper"), ("b2", "हुआ", h_shock, "paper"),
+    ("b1", None, h_cut, "paper"), ("b1", "दस", h_ten, "paper"),
+    ("b2", None, h_space, "paper"),
     ("b3", None, r_notscifi, "paper"), ("b3", "अमेरिका", r_tufts, "paper"), ("b3", "इंटरनेशनल", r_iss, "paper"),
     ("b4", None, n_name, "paper"), ("b4", "पानी", n_size, "paper"),
     ("b5", None, l_gecko, "paper"), ("b5", "कीड़ा", l_beyond, "paper"),
-    ("b6", None, c_cut, "paper"), ("b6", "हर", c_regrow, "paper"),
+    ("b6", None, c_build, "paper"), ("b6", "सब", c_self, "paper"),
     ("b7", None, m_knows, "paper"), ("b7", "जैसे", m_map, "paper"),
     ("b8", None, g_space, "slate"),
     ("b9", None, x_15, "paper"), ("b9", "उन्हें", x_launch, "paper"),
@@ -611,7 +606,8 @@ def sfx(tl):
     """A whoosh on every cut, thuds on the cuts and stamps, a tick (and a music dip) before the re-hook, the doubt and
     the closing line, typing on the card."""
     ev = [(s, "whoosh", 0.25) for s in starts(tl, SHOTS)[1:]]
-    ev += [(T(tl, "b2", "काट"), "thud", 0.0), (T(tl, "b11", "दो"), "thud", 0.0), (T(tl, "b14", "उगा"), "thud", 0.0),
+    ev += [(T(tl, "b1", "काटो"), "thud", 0.0), (T(tl, "b2", "दो"), "thud", 0.0), (T(tl, "b11", "दो"), "thud", 0.0),
+           (T(tl, "b14", "उगा"), "thud", 0.0),
            (T(tl, "b13", None) - 0.35, "tick", 0.0), (T(tl, "b17", None) - 0.35, "tick", 0.0),
            (T(tl, "b19", None) - 0.35, "tick", 0.0), (T(tl, "b19", "यस"), "typing", 1.0)]
     for bid in ("b4", "b9", "b12", "b16"):

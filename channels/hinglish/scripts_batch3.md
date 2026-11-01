@@ -1,4 +1,20 @@
-# Video 5: "Space se wapas aaya keeda, do sar ke saath" (science). Waiting for approval.
+# Video 5: "Space se wapas aaya keeda, do sar ke saath" (science). Approved 30 Oct 2026; hook v2 on 1 Nov.
+
+## Hook v2 (owner, 1 Nov 2026: "Change the hook not good... hook should be like impossible to assume belive simple
+## hooks won't work", then "Auto approved")
+
+| # | Narration | On screen |
+|---|---|---|
+| 1 | Socho, ek aisa keeda jise kaato, toh wo marta nahi... balki do ban jaata hai. Das tukde karo, toh das keede ban jaate hain. | one worm with a red cut mark (frame 0, `CUT THIS WORM AND IT` / **`BECOMES TWO`**); it splits, each half grows what it lost; then 10 worms, counter **10** |
+| 2 | Aur jab ise space bheja gaya... toh ye wapas aaya, do sar ke saath. Ek aage, ek peeche. | ISS photo; the two-headed worm, both heads circled; **`TWO HEADS`** |
+| 6 | Iska har kata hua tukda apna sir, dimaag, aankhein... sab khud dobara bana leta hai. | a cut piece grows a head and tail; cards NEW HEAD / NEW BRAIN / NEW EYES; `NO HELP NEEDED` |
+
+- Not "space gave it the power" (the owner's first idea): planarians regrow cut pieces on Earth too, so that would
+  be false. Space is where the two heads came, and the hook says only that.
+- "Das naye keede" and "nayi aankhein" were heard as "das nahi keede" / "nahi aankhein" in every take, so the
+  words "naye/nayi" are gone.
+
+## v1 (approved 30 Oct)
 
 Owner, 30 Oct 2026: "make something weird breaks our thoughts as mayank does a worm in space or something like that",
 then picked "Two-headed space worm" from four options. Mayank's tardigrade-in-space reel did 2.3M, but he has
