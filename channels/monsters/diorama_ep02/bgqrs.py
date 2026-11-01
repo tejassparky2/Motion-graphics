@@ -269,6 +269,10 @@ def s01():
     keep = {arm, *arm.children_recursive, bird["root"], *bird["root"].children_recursive, sh["root"],
             *sh["root"].children_recursive}
     _clear_view(cam, [1, n // 2, n], start.lerp(SHRIMP, 0.5), keep)
+    bpy.context.scene.frame_set(n // 2)                              # and the bushes in front of the bird's shadow
+    shadow_mid = bird["shadow"].matrix_world.translation.copy()
+    bpy.context.scene.frame_set(1)
+    _clear_view(cam, [1, n // 2, n], shadow_mid, keep, reach=1.0)
     _anchors("S01", n, cam, k, sh)
     return dict(frames=n, step=2, ones=(1, n), subject=b3._subject(k, sh))
 
