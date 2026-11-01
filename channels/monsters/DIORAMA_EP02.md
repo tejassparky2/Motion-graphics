@@ -23,7 +23,7 @@
 - **Original designs only** (HELPERS.md "Hard rules"). Free/open-source and CC0 only, credited where asked.
 
 ## Files
-- **Script and timing:** `channels/monsters/ep02/episode.py`, `ep02/timing.json` and `TIMING.md` (voiced: Kai is
+- **Script and timing (FINAL, 57.34 s = 1376 frames):** `channels/monsters/ep02/episode.py`, `ep02/timing.json` and `TIMING.md` (voiced: Kai is
   Turbo am_liam as in Ep 1; Wren is her own Turbo voice). Every shot's frames and render_frames (= frames + 12)
   come from timing.json.
 - **Builders:** `channels/monsters/diorama_ep02/<you>.py`, with `SHOTS = {"S05": build_s05, ...}`. They're
@@ -42,7 +42,7 @@
 | Shot | Line | Picture | Who |
 |---|---|---|---|
 | S01 | You said save it. So I ran at the butcher bird. | **Frame 0, the hook:** a medium-close, low shot; Kai sprinting at camera-left, hand out; behind him the bird already diving at the shrimp by the pond, its shadow on the grass. Moving from frame 0. | bGqrs |
-| S02 | It dove first. | The bird folds its wings and drops (speed lines), its shadow growing over the tiny shrimp at the puddle. | helper 1 |
+| S02 | The bird dived first. | The bird folds its wings and drops (speed lines), its shadow growing over the tiny shrimp at the puddle. | helper 1 |
 | S03 | I got there half a second sooner. | Kai slides in on his knees and scoops the shrimp up in cupped hands; water splash. | bGqrs |
 | S04 | Its talons got my arm instead. | The talons rake past his forearm: the sleeve tears, three thin marks, NO blood. Kai winces and curls round the shrimp; the bird swoops up and away. | helper 1 |
 | S05 | Now I was holding a wet pistol shrimp. In my bare hands. | Close on his cupped hands: the dripping claw resting against his palm, one drop falls; cut up to Kai's terror eyes and sweat drop. | helper 4 |
@@ -56,8 +56,8 @@
 | S13 | And tapped my nose. | A tiny tap on his nose; Kai's stunned dot eyes, a held beat. | helper 5 |
 | S14 | Something on my wrist started to glow. | Close on his wrist: a thin coral zigzag mark lights up, soft glow and sparkles. | helper 9 |
 | S15 | The same shape as the crack in the sky. | Match cut: the zigzag mark, then the zigzag crack in the sky in the same screen position. Tilt up. | helper 9 |
-| S16 | Then the bells started. | Bells ring (2D ring lines). Villagers with nets come over the hill, small and stylised. | helper 1 |
-| S17 | A girl with a bell walked straight up to me. | Wren (new) marches up, bell in hand, stern, and stops in front of Kai. | XprL |
+| S16 | Then came the bells. | Bells ring (2D ring lines). Villagers with nets come over the hill, small and stylised. | helper 1 |
+| S17 | A girl with a bell marched right up to me. | Wren (new) marches up, bell in hand, stern, and stops in front of Kai. | XprL |
 | S18 | (Wren) Step away from the snapper. It goes in the lake. | Close on Wren speaking (mouth flaps); a villager's net is held ready behind her. | XprL |
 | S19 | The lake. Deep water. Where a pistol shrimp never runs dry. | Kai looks past the village to a huge deep-blue lake; cut to the shrimp's claw dripping in his hand. | helper 9 |
 | S20 | Option A: hand it over. Option B: hide it in my shirt. Comment A or B. | Split screen with a jagged divider. **Top (A):** Kai lowers the shrimp into Wren's net. **Bottom (B):** Kai slips the shrimp into his shirt as Wren turns away. The A/B letters (A · HAND OVER, B · HIDE) are added by the assembler. | XprL (top + Wren in bottom), helper 4 (bottom) |
