@@ -1,5 +1,6 @@
 """WW2 Episode 1: the final mix. Narration + the score (planned here from the episode clock) + the effects each package
-lists in its cues(T) -> out/ww2/ep01/mix.wav at -14 LUFS, true peak <= -1 dBTP, 48 kHz 16-bit stereo, no metadata.
+lists in its cues(T) -> out/ww2/ep01/mix.wav at -14 LUFS, true peak <= -1 dBTP, 48 kHz 16-bit stereo, no metadata,
+and the same audio losslessly as mix.flac (the one in git: the wav is over GitHub's 100 MB file limit).
 
     python channels/ww2/ep01/mix.py              # the mix (stand-ins for whatever hasn't landed yet)
     python channels/ww2/ep01/mix.py --check      # + Whisper medium on every line of the mix
@@ -28,6 +29,7 @@ import importlib
 import json
 import os
 import re
+import subprocess
 import sys
 
 import numpy as np
@@ -44,6 +46,7 @@ from channels.ww2.ep01.timing import PACKAGES, Timing   # noqa: E402
 OUT_DIR = os.path.join(ROOT, "out", "ww2", "ep01")
 NARRATION = os.path.join(OUT_DIR, "narration.wav")
 MIX = os.path.join(OUT_DIR, "mix.wav")
+MIX_FLAC = os.path.join(OUT_DIR, "mix.flac")      # the copy that's committed (a 12-min wav is over GitHub's 100 MB)
 REPORT = os.path.join(OUT_DIR, "mix_report.json")
 
 DUCK = dict(music_duck_db=-10.0, amb_duck_db=-10.0, fx_duck_db=-6.0,   # under the narration, and the
@@ -289,6 +292,36 @@ def line_snr(T, mix, voice):
     return out
 
 
+_ONES = ("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "
+         "seventeen eighteen nineteen").split()
+_TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+
+
+def _words(n):
+    """An integer in words, British style ("three hundred and thirty thousand")."""
+    if n < 20:
+        return _ONES[n]
+    if n < 100:
+        return _TENS[n // 10] + ("" if n % 10 == 0 else " " + _ONES[n % 10])
+    if n < 1000:
+        return _ONES[n // 100] + " hundred" + ("" if n % 100 == 0 else " and " + _words(n % 100))
+    for size, name in ((10 ** 9, "billion"), (10 ** 6, "million"), (1000, "thousand")):
+        if n >= size:
+            rest = n % size
+            tail = "" if not rest else (" and " if rest < 100 else " ") + _words(rest)
+            return _words(n // size) + " " + name + tail
+    return str(n)
+
+
+def _heard_ratio(ln, heard):
+    """Word match of what Whisper heard against the line, as written (digits) or as spoken (numbers in words),
+    whichever is closer: Whisper writes "1939" for "nineteen thirty-nine"."""
+    norm = lambda s: re.sub(r"[^a-z0-9 ]", "", s.lower().replace("-", " ")).split()      # noqa: E731
+    spelled = re.sub(r"\d[\d,]*\d|\d", lambda m: _words(int(m.group().replace(",", ""))), heard)
+    return max(difflib.SequenceMatcher(None, norm(ref), norm(h)).ratio()
+               for ref in (ln["text"], ln.get("spoken", ln["text"])) for h in (heard, spelled))
+
+
 def whisper_check(T, path=MIX, model="medium.en"):
     """Whisper on every line of the mix (cut at the line's times): how close the heard words are to the spoken text.
     Returns [(line id, ratio, heard)]; ratio < 0.85 is flagged."""
@@ -298,15 +331,13 @@ def whisper_check(T, path=MIX, model="medium.en"):
     x, sr = sf.read(path, always_2d=True)
     x = signal.resample_poly(x.mean(1), 1, sr // 16000).astype(np.float32) if sr % 16000 == 0 else \
         signal.resample_poly(x.mean(1), 16000, sr).astype(np.float32)
-    norm = lambda s: re.sub(r"[^a-z0-9 ]", "", s.lower().replace("-", " "))            # noqa: E731
     out = []
     for lid in T.order:
         ln = T._lines[lid]
         a, b = int(max(0, ln["start"] - 0.25) * 16000), int((ln["end"] + 0.35) * 16000)
         heard = w.transcribe(x[a:b], language="en", fp16=False, temperature=0.0,
                              initial_prompt="A World War Two documentary.")["text"].strip()
-        r = difflib.SequenceMatcher(None, norm(ln.get("spoken", ln["text"])).split(), norm(heard).split()).ratio()
-        out.append((lid, round(r, 3), heard))
+        out.append((lid, round(_heard_ratio(ln, heard), 3), heard))
     return out
 
 
@@ -326,6 +357,8 @@ def main():
     print(f"timing: total {T.total:.2f} s, {'provisional' if T.estimated else 'voiced'}")
     mix, voice, real, plan, cues = build(T)
     meas = mix.master(MIX, voice=voice, **DUCK)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", MIX, "-c:a", "flac", "-compression_level", "8",
+                    "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:a", "+bitexact", MIX_FLAC], check=True)
     snr = line_snr(T, mix, voice)
     low = [r for r in snr if r[1] < SNR_MIN]
     print(f"voice over background, per line: median {np.median([r[1] for r in snr]):.1f} dB, lowest "
