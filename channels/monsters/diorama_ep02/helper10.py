@@ -119,6 +119,8 @@ def _bird(at):
     rig = tuftwing.build(tuple(at), name="tuft", shadow_span=6.0)
     rig["root"].scale = (h5.BIRD_SCALE,) * 3
     xv3.dark_form(1, name="tuft")
+    for o in [rig["shadow"]] + list(rig["shadow"].children_recursive):   # the ground-shadow decal: it would float
+        o.hide_render = True                                              # in the air under a flying bird
     return rig
 
 
@@ -318,7 +320,10 @@ def s09():
         o.rotation_euler = (o.rotation_euler.x, -pitch, o.rotation_euler.z)
     _far(ca, cb, cc)
     sc.frame_set(SNAP_F)
-    _anchor("S09", dict(muzzle=_screen(cb, muzzle), bird=_screen(cb, near)))
+    sc.frame_set(CUT_C)
+    muzzle_c = _screen(cc, muzzle)
+    sc.frame_set(SNAP_F)
+    _anchor("S09", dict(muzzle=_screen(cb, muzzle), muzzle_c=muzzle_c, bird=_screen(cb, near)))
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], rig["root"], bird["root"]])
 
@@ -347,11 +352,15 @@ def s10():
         u = acting.ease((f - 1) / (n - 1), "inout")
         dv2._key(cam, f, cam_t, 10.0 - 2.0 * u, 12.0 + 3 * u, yaw=yaw_c - 6 * u)
     _far(cam)
-    head = stuck + Vector((0, 0, -0.9 * h5.BIRD_SCALE))          # upside down: its head hangs below the body
     rows = {}
-    for f in range(1, n + 1):
+    for f in range(1, n + 1):                                    # the ball (its head and body) and its screen radius
         sc.frame_set(f)
-        rows[f] = _screen(cam, head)
+        bpy.context.view_layer.update()
+        c = root.matrix_world @ Vector(tuftwing.CENTER)
+        right = cam.matrix_world.to_3x3() @ Vector((1, 0, 0))
+        x, y = _screen(cam, c)
+        ex, ey = _screen(cam, c + right * tuftwing.BALL[0] * h5.BIRD_SCALE)
+        rows[f] = (x, y, round(math.hypot(ex - x, ey - y), 1))
     _anchor("S10", dict(head=rows))
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[bird["root"]])
@@ -380,7 +389,7 @@ def post(shot, raw, sub, out):
         if shot == "S09" and SNAP_F <= f <= SNAP_F + 12:
             img = cairo.ImageSurface.create_from_png(path)
             cr = cairo.Context(img)
-            mx, my = a["muzzle"]
+            mx, my = a["muzzle"] if f < CUT_C else a.get("muzzle_c", a["muzzle"])   # the ring follows the cut
             if f < SNAP_F + 3:
                 sp = os.path.join(sub, "subject", name)
                 subj = cairo.ImageSurface.create_from_png(sp) if os.path.exists(sp) else None
@@ -391,20 +400,24 @@ def post(shot, raw, sub, out):
         elif shot == "S10":
             img = cairo.ImageSurface.create_from_png(path)
             cr = cairo.Context(img)
-            hx, hy = a["head"][str(f)]
-            _stars(cr, f, hx, hy)
+            hx, hy, hr = a["head"][str(f)]
+            _stars(cr, f, hx, hy, hr)
             img.write_to_png(dst)
         else:
             shutil.copyfile(path, dst)
     return out
 
 
-def _stars(cr, f, cx, cy, n=3, rx=70.0, size=26.0):
-    """Little yellow cel stars with navy lines circling over a dazed head on 2s (one orbit per 16 frames)."""
+def _stars(cr, f, cx, cy, r, n=3):
+    """Little yellow cel stars with navy lines circling the dazed bird's crown (on 2s, one orbit per 16 frames). It
+    hangs upside down, so the crown is the bottom of the ball (screen centre cx, cy, radius r px): the orbit is a flat
+    ellipse just under it, the far stars a little smaller."""
+    rx, size = r * 1.1, max(16.0, r * 0.32)
+    cy = cy + r * 0.95
     ph = 2 * math.pi * ((f // 2) * 2) / 16
     for i in range(n):
         a = ph + i * 2 * math.pi / n
-        x, y = cx + math.cos(a) * rx, cy - size * 1.6 + math.sin(a) * rx * 0.25
+        x, y = cx + math.cos(a) * rx, cy + math.sin(a) * rx * 0.28
         r = size * (1 + 0.18 * math.sin(a))
         cr.new_path()
         for j in range(10):
