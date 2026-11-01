@@ -91,8 +91,8 @@ def _pose_kai(k, f, lean=0.0, rise=0.0):
     s15._key_pose(k, f)
 
 
-def _shrimp_in_hands(k, scale=0.5):
-    """The puff-shrimp at palm size between his hands, claw forward along AIM; muzzle empties on the claw."""
+def _shrimp_in_hands(k, scale=None):
+    """The puff-shrimp at palm size (helper4.SHRIMP_IN_HAND, shared with S05) between his hands, claw forward along AIM; muzzle empties on the claw."""
     rig = puffshrimp.build((0, 0, 0), name="puff")
     emp = []
     for nm, off in (("puff_palm", (-1.7, -0.4, 2.2)), ("puff_muzzle", (-1.62, -0.44, 3.4))):
@@ -105,6 +105,9 @@ def _shrimp_in_hands(k, scale=0.5):
         emp.append(e)
     hands = (s15._world(k, "right_hand", True) + s15._world(k, "left_hand", True)) / 2
     root = rig["root"]
+    if scale is None:
+        from channels.monsters.diorama_ep02 import helper4
+        scale = helper4.SHRIMP_IN_HAND
     root.scale = (scale,) * 3
     root.rotation_euler = (0, 0, math.atan2(AIM.x, -AIM.y))    # its -Y (front) along AIM
     root.location = hands + AIM * 0.15 - Vector((0, 0, 0.55))
