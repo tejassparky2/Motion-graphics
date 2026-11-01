@@ -100,6 +100,30 @@ def _fold(rig, n):
     anim.on_twos(rig["wings"] + [rig["body"]], step=2)
 
 
+def _plunge(rig, n, perch):
+    """Bend the last stretch of bGqrs's dive line into a drop: from where S01 leaves the bird (DIVE[0] down the line)
+    it holds its height a moment while the wings snap shut, then falls steeply onto the shrimp's back (DIVE[1]),
+    accelerating (a quadratic curve whose control point keeps the start height above the end point; keyed on 1s)."""
+    from channels.monsters.diorama_ep02 import bgqrs as bq
+    from channels.monsters.ep01v2 import xprl as x3
+    lift = rig["lift"]
+    for fc in list(anim.all_fcurves(lift.animation_data.action)):
+        if fc.data_path == "location":
+            while fc.keyframe_points:
+                fc.keyframe_points.remove(fc.keyframe_points[0])
+    S = __import__("channels.monsters.diorama_v3.xprl", fromlist=["x"]).BIRD_SCALE
+    rot = rig["root"].rotation_euler.z
+    to = bq.SHRIMP - Vector((perch.x, perch.y, 0.0))
+    top = Vector((0.0, 0.0, perch.z / S))
+    end = x3._local(rot, (to.x, to.y, 1.6), scale=S)
+    p0, p1 = top.lerp(end, DIVE[0]), top.lerp(end, DIVE[1])
+    ctl = Vector((p1.x, p1.y, p0.z + 0.6))
+    for f in range(1, n + 3):
+        u = min(1.0, (f - 1) / max(1, n - 1)) ** 1.5
+        q = (1 - u) ** 2 * p0 + 2 * u * (1 - u) * ctl + u * u * p1
+        anim.key(lift, "location", f, tuple(q), "LINEAR")
+
+
 def s02():
     from channels.monsters.diorama_ep02 import bgqrs as bq
     from channels.monsters.diorama_ep02.xprl import _cam_move           # (XprL's gentler blur and farther haze)
@@ -110,6 +134,7 @@ def s02():
     perch = Vector(isl["thorn"]["perch"])
     bird = bq._bird_dive(n, 1, n + 30, perch)
     bq._dive_line(bird, n, perch, DIVE)
+    _plunge(bird, n, perch)
     bq._bird_shadow_look(bird)
     bq._shadow_under(bird, n, perch)
     _fold(bird, n)
