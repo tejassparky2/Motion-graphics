@@ -151,6 +151,26 @@ def _norm(x, peak=0.9):
     return x / m * peak if m > 0 else x
 
 
+def _comb(x, d, g):
+    """y[n] = x[n] + g y[n-d], computed a block of d samples at a time (exact, and fast for long delays)."""
+    y = x.astype(np.float64).copy()
+    for i in range(d, len(y), d):
+        j = min(len(y), i + d)
+        y[i:j] += g * y[i - d:j - d]
+    return y
+
+
+def _allpass(x, d, g):
+    """y[n] = -g x[n] + x[n-d] + g y[n-d] (Schroeder all-pass), block-wise like _comb."""
+    x = x.astype(np.float64)
+    y = -g * x
+    y[d:] += x[:-d]
+    for i in range(d, len(y), d):
+        j = min(len(y), i + d)
+        y[i:j] += g * y[i - d:j - d]
+    return y
+
+
 def _verb(x, mix=0.25, size=1.0, damp=6000, seed=0):
     """A Schroeder reverb (four combs, two all-passes) with a tail; stereo in -> decorrelated stereo out."""
     st = x if x.ndim == 2 else np.stack([x, x], 1)
@@ -159,17 +179,9 @@ def _verb(x, mix=0.25, size=1.0, damp=6000, seed=0):
     for ch in range(2):
         wet = np.zeros(len(pad))
         for d, g in ((1687, 0.82), (1753, 0.81), (1615, 0.80), (1541, 0.79)):
-            d = int(d * size) + 23 * ch + seed % 7
-            a = np.zeros(d + 1)
-            a[0], a[d] = 1, -g
-            wet += signal.lfilter([1.0], a, pad[:, ch])
+            wet += _comb(pad[:, ch], int(d * size) + 23 * ch + seed % 7, g)
         for d, g in ((245, 0.5), (603, 0.5)):
-            d += 11 * ch
-            b = np.zeros(d + 1)
-            b[0], b[d] = -g, 1
-            a = np.zeros(d + 1)
-            a[0], a[d] = 1, -g
-            wet = signal.lfilter(b, a, wet)
+            wet = _allpass(wet, d + 11 * ch, g)
         out[:, ch] = pad[:, ch] * (1 - mix) + _lp(wet, damp, 2) * 0.1 * mix
     return out
 
@@ -755,7 +767,7 @@ _VOWELS = [(730, 1090, 2440), (530, 1840, 2480), (270, 2290, 3010), (570, 840, 2
            (660, 1720, 2410), (490, 1350, 1690)]
 
 
-def voice_crackle(dur, seed=0, f0=120):
+def voice_crackle(dur, seed=0, f0=120, radio=True):
     """A voice on a bad radio: a glottal buzz through changing vowel formants in syllables, with consonant hiss and
     phrase pauses, squeezed into a telephone band under static. It sounds like speech but says nothing."""
     n = _n(dur)
@@ -782,6 +794,8 @@ def voice_crackle(dur, seed=0, f0=120):
             src = buzz * env
             out += _reso(src, f1, 8) + 0.6 * _reso(src, f2, 12) + 0.3 * _reso(src, f3, 14)
     cons = _hp(r.uniform(-1, 1, n), 3000) * np.clip(np.diff(syl, prepend=0) * SR / 12, 0, 1) * 0.6
+    if not radio:                                                  # clean babble (a stand-in narrator for mix tests)
+        return _norm(_hp(out + cons, 90))
     x = np.tanh(3 * _norm(_bp(out + cons, 400, 2800)))
     return _norm(x + radio_static(dur, seed + 7) * 0.35)
 
@@ -1005,13 +1019,37 @@ def duck_env(v):
     return np.clip(np.concatenate([env, np.full(len(gate) - len(env), env[-1] if len(env) else 0.0)]), 0, 1)
 
 
+def voice_protect(v, bed, margin_db=10.0, win=0.03, hop=0.005, release=0.2):
+    """A gain for the bed that keeps it at least margin_db under the narration while a word is heard (what a mixer
+    does riding the fader): short-term RMS of both every 5 ms, a 10 ms look-ahead, a 200 ms release. 1 elsewhere."""
+    h, w = int(hop * SR), int(win * SR)
+    def env(x):
+        c = np.concatenate([[0.0], np.cumsum(x.astype(np.float64) ** 2)])
+        i = np.arange(0, len(x), h)
+        a, b = np.maximum(0, i - w // 2), np.minimum(len(x), i + w // 2)
+        return np.sqrt((c[b] - c[a]) / np.maximum(1, b - a))
+    ev, eb = env(v), env(bed.mean(1) if bed.ndim == 2 else bed)
+    need = np.where(ev > 0.01, np.minimum(1.0, ev * _db(-margin_db) / np.maximum(eb, 1e-9)), 1.0)
+    need = minimum_filter1d(need, 2 * int(0.01 / hop) + 1, mode="nearest")
+    g = np.empty_like(need)
+    a, val = np.exp(-hop / release), 1.0
+    for i, x in enumerate(need):
+        val = x if x < val else x + (val - x) * a
+        g[i] = val
+    return np.interp(np.arange(len(v)), np.arange(len(g)) * h, g)
+
+
 def limit(x, ceiling_db=-1.5, release=0.08):
     """A look-ahead peak limiter on a 4x oversampled detector, so the true peak stays under the ceiling.
     Vectorised: the release is a peak-hold with exponential decay, computed as a running max in the log domain."""
     ceil = _db(ceiling_db)
-    det = np.max(np.abs(signal.resample_poly(x, 4, 1, axis=0)), axis=1)
-    det = det[: len(x) * 4].reshape(-1, 4).max(axis=1)[: len(x)]
-    det = np.pad(det, (0, len(x) - len(det)), mode="edge")
+    det = np.empty(len(x))
+    block, pad = 1 << 20, 256                                     # in blocks, so a 14-minute master fits in memory
+    for i in range(0, len(x), block):
+        a, b = max(0, i - pad), min(len(x), i + block + pad)
+        up = np.max(np.abs(signal.resample_poly(x[a:b], 4, 1, axis=0)), axis=1)
+        up = np.pad(up, (0, (b - a) * 4 - len(up)), mode="edge").reshape(-1, 4).max(axis=1)
+        det[i:min(len(x), i + block)] = up[i - a:i - a + min(block, len(x) - i)]
     need = np.minimum(1.0, ceil / np.maximum(det, 1e-12))
     g = minimum_filter1d(need, 2 * int(0.004 * SR) + 1, mode="nearest")               # 4 ms look-ahead and hold
     red = -np.log(g)                                                                     # >= 0, 0 = no reduction
@@ -1032,18 +1070,31 @@ def write_wav(path, x):
         w.writeframes(pcm.tobytes())
 
 
+def _ffmpeg_json(cmd, **kw):
+    r = subprocess.run(cmd, capture_output=True, **kw)
+    err = r.stderr.decode(errors="replace") if isinstance(r.stderr, bytes) else r.stderr
+    found = re.findall(r"\{[^{}]*\}", err)
+    if r.returncode or not found:
+        raise RuntimeError(f"ffmpeg failed ({r.returncode}): {err[-600:]}")
+    return json.loads(found[-1])
+
+
 def loudnorm(src, dst, target=-14.0, tp=-1.0):
-    """ffmpeg loudnorm, two passes (measure, then a linear correction). Returns the pass-2 measurement."""
+    """ffmpeg loudnorm, two passes (measure, then a linear correction). src is a wav path or a stereo float array at
+    SR (streamed to ffmpeg, so no temporary file). Returns the pass-2 measurement."""
     flt = f"loudnorm=I={target}:TP={tp}:LRA=20"
-    r = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-i", src, "-af", flt + ":print_format=json",
-                        "-f", "null", "-"], capture_output=True, text=True)
-    m = json.loads(re.findall(r"\{[^{}]*\}", r.stderr)[-1])
+    if isinstance(src, str):
+        inp, data = ["-i", src], None
+    else:
+        inp = ["-f", "s16le", "-ar", str(SR), "-ac", "2", "-i", "-"]
+        data = (np.clip(src, -1, 1) * 32767).round().astype("<i2").tobytes()
+    m = _ffmpeg_json(["ffmpeg", "-hide_banner", "-nostats", *inp, "-af", flt + ":print_format=json", "-f", "null",
+                      "-"], input=data)
     flt2 = (f"{flt}:measured_I={m['input_i']}:measured_TP={m['input_tp']}:measured_LRA={m['input_lra']}"
             f":measured_thresh={m['input_thresh']}:offset={m['target_offset']}:linear=true:print_format=json")
-    r = subprocess.run(["ffmpeg", "-hide_banner", "-nostats", "-y", "-i", src, "-af", flt2, "-ar", str(SR),
-                        "-c:a", "pcm_s16le", "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:a", "+bitexact",
-                        dst], capture_output=True, text=True)
-    return json.loads(re.findall(r"\{[^{}]*\}", r.stderr)[-1])
+    return _ffmpeg_json(["ffmpeg", "-hide_banner", "-nostats", "-y", *inp, "-af", flt2, "-ar", str(SR),
+                         "-c:a", "pcm_s16le", "-map_metadata", "-1", "-fflags", "+bitexact", "-flags:a", "+bitexact",
+                         dst], input=data)
 
 
 def measure(path):
@@ -1061,7 +1112,7 @@ class Mix:
     def __init__(self, total):
         self.total = total
         n = _n(total)
-        self.bus = {k: np.zeros((n, 2)) for k in ("music", "fx", "amb")}
+        self.bus = {k: np.zeros((n, 2), np.float32) for k in ("music", "fx", "amb")}   # float32: long episodes
         self.cuts = []
 
     def _add(self, bus, x, at, db, pan, fade_in, fade_out):
@@ -1086,15 +1137,17 @@ class Mix:
         """A hard cut to silence from t0 to t1 on music, effects and ambience (5 ms edges, so no click)."""
         self.cuts.append((t0, t1))
 
-    def render(self, voice=None, music_duck_db=-10.0, amb_duck_db=-8.0):
+    def render(self, voice=None, music_duck_db=-10.0, amb_duck_db=-8.0, fx_duck_db=0.0, protect_db=None):
         n = _n(self.total)
-        music, fx, amb = (self.bus[k].copy() for k in ("music", "fx", "amb"))
+        music, amb, fx = self.bus["music"].copy(), self.bus["amb"].copy(), self.bus["fx"]
         v = np.zeros(n)
         if voice is not None:
             v[: min(n, len(voice))] = np.asarray(voice, np.float64)[:n]
             env = duck_env(v)[:, None]
             music *= 1 - (1 - _db(music_duck_db)) * env
             amb *= 1 - (1 - _db(amb_duck_db)) * env
+            if fx_duck_db:
+                fx = fx * (1 - (1 - _db(fx_duck_db)) * env)
         gate = np.ones(n)
         e = _n(0.005)
         for t0, t1 in self.cuts:
@@ -1103,23 +1156,26 @@ class Mix:
             gate[i0:i1] = 0
             gate[i1:i1 + e] *= np.linspace(0, 1, len(gate[i1:i1 + e]))
         bed = _hp(music + fx + amb, 30, 2)                    # nothing useful lives under 30 Hz: keep the headroom
+        if voice is not None and protect_db is not None:
+            bed *= voice_protect(v, bed, protect_db)[:, None]
         return bed * gate[:, None] + v[:, None]
 
-    def master(self, path, voice=None, target=-14.0):
+    def master(self, path, voice=None, target=-14.0, **duck):
         """Render, bring to the target loudness through the limiter, then ffmpeg loudnorm (two passes) to the file.
         Returns the measured {"I", "TP", "LRA"} of the written file."""
         import pyloudnorm
-        mix = self.render(voice)
+        mix = self.render(voice, **duck)
         meter = pyloudnorm.Meter(SR)
         g = _db(target - meter.integrated_loudness(mix))
         for _ in range(3):                                   # the limiter costs loudness: make it up and re-limit
             lim = limit(mix * g, -1.5)
             g *= _db(target - meter.integrated_loudness(lim))
         mix = limit(mix * g, -1.5)
-        pre = path[:-4] + "_pre.wav"
-        write_wav(pre, mix)
-        loudnorm(pre, path, target)
-        os.remove(pre)
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        loudnorm(mix, path, target)
+        with wave.open(path) as w:                           # a full disk truncates silently: check the length
+            if abs(w.getnframes() - len(mix)) > SR // 100:
+                raise RuntimeError(f"{path}: {w.getnframes() / SR:.2f} s written of {len(mix) / SR:.2f} s")
         return measure(path)
 
 
