@@ -562,7 +562,7 @@ def s19():
     w = _wren_facing_kai(n)
     sh, seat = _shrimp_in_hands(k)
     shp, hinge, body = sh["shoulder"], sh["hinge"], sh["body"]
-    anim.key(shp, "rotation_euler", 1, (0.35, -1.95, 0))                 # the claw draped out over his fists, down
+    anim.key(shp, "rotation_euler", 1, (0.35, -2.2, 0))                  # the claw draped out over his fists, down
     anim.key(hinge, "rotation_euler", 1, (0.12, 0, 0))
     for f in range(1, n + 1, 24):                                        # breathing
         anim.squash(body, f, 0.0)
