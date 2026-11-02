@@ -12,3 +12,4 @@ reels still waiting when they ask for pending uploads.
 | reel04_hi (Hinglish voice, English captions) | Hindi page | Waiting. Needs the Hindi page's handle in the upload sheet |
 | reel05_hi (Sowmya's Hindi dub, her cloned voice) | Hindi page | Waiting (sent 25 Oct 2026) |
 | reel06_hi (Sowmya's Hindi dub, her cloned voice) | Hindi page | Waiting (sent 25 Oct 2026) |
+| reel07 (learning: "Make your mini you", photo to 3D in 4 steps, Manya) | English (@yours3dindia) | Waiting (sent 2 Nov 2026). Post Wed 4 Nov 7–9 PM IST; set the "3D" comment-to-DM first. Keep reel05 (same figurine) for week 3 |
