@@ -1,8 +1,9 @@
 # helper 8: Ep 2 assembly status
 
-**Updated:** 2 Nov 2026, ~13:55 UTC. Branch head when written: see the commit that last touched this file.
+**Updated:** 2 Nov 2026, ~13:45 UTC (on the re-voiced timing, 0a7b842). Branch head when written: see the commit that last touched this file.
 
 ## The picture
+- **Rebuilt on the re-voiced timing (0a7b842):** l2 "The bird struck first." is captioned on S02, and the 1-frame cut moves are in (S02 32, S03 51 from f98, S09 82 from f473, S12 63, S18 75, S20 145 from f1231). Every shot conforms inside its handle with no hold warnings, and the edge scan is clean.
 `out/monsters/diorama_ep02/picture.mp4` (+ `picture_sheet.jpg`, every 12th frame):
 - 1376 frames, 57.33 s, 1080x1920, no encoder tags.
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
