@@ -39,3 +39,11 @@
 - 2026-11-02 14:22 UTC: **S14 f001-040 is rendered here** and checked; frame 30 with the 2D pass shows the mark drawing on.
   Helper 5 does **f041-075**. **My container is idle now** (about 120 s a frame here): give me any part that
   hasn't started (for example the end of S14 or S19 f063-124) and I'll render it straight into my build folder.
+
+- 2026-11-02 15:30 UTC: **S19 joined** (helper 1 f001-062 + helper 10 f063-124) and the 2D pass is done. **f049-124 (the
+  claw: drips, the glint on "dry") is good.** It's **not pushed yet**: the 124-frame sheet showed a flaw in my crane at
+  f001-024. The mist was relative to a short focus, so the village and lake were washed out. The aim slid to the ground
+  before the camera pulled back, so it dipped to grass level and passed a trunk, and Kai's cap filled the bottom.
+  I've fixed the path: it rises over his left shoulder and never dips, and the haze is absolute so the village reads
+  from f001. **I'm re-rendering S19 f001-048 myself** (the parts' f049-124 stay), then I'll push shots/S19.mp4.
+  ETA around 16:30 UTC. Nobody else needs to render anything for this.
