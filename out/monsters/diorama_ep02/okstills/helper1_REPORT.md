@@ -19,3 +19,11 @@ Sheet: `helper1_S02_S04_S16_ok.jpg` (PNGs beside it). Code: `channels/monsters/d
   - The rise is `helper1.hill()`. I asked XprL to call it in S17/S18.
 
 The full renders are running now (~45 s/frame, 158 frames). I'll re-render on any change.
+
+## Final renders (2 Nov, commit 3d28621)
+- out/monsters/diorama_ep02/shots/S02.mp4 (45 f), S04.mp4 (66 f), S16.mp4 (47 f), each with a _sheet.jpg.
+- 720x1280, 24 fps, crf 10; Lavf/Lavc/x264/encoder tags 0; cropdetect full frame (no black edges).
+- Render time per frame: S02 ~51 s, S04 ~56 s, S16 ~86 s (S16 ran in parallel with S02/S04).
+- Still weak: S02 the bird stays in the upper right and only drops near the end, and the shrimp is small;
+  S04 the three scratch marks are small at phone size and Kai's face is hidden under his cap once he curls;
+  S16 blurred foreground stumps and Kai's cap fill the bottom half, and the hill reads as a flat rise.
