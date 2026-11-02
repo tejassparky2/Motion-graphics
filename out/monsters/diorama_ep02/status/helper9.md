@@ -85,3 +85,6 @@
   where cut 49, dry 90).
 - **All three of my shots are delivered: S14.mp4, S15.mp4, S19.mp4.** Fixes this round: helper9.py's anchors now span the
   shot's own length, and post_helper9's join accepts _v2 part names.
+
+- 2026-11-02 20:40 UTC: **GO S20bot v2 received.** Rendering S20bot f141-160 with helper 4's builder (331ab9c), as a raw part to
+  `parts/S20bot_v2_f141-160.mp4` (crf 6 yuv444p, bitexact, start_number 141, stream-copy remux, 0 tags). ETA around 21:30 UTC.

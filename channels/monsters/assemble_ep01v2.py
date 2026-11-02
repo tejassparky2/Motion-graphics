@@ -132,8 +132,9 @@ S24_FOCUS_VERSION = {"diorama_v3": [(W / 2, H / 4), (W / 2, 860)],
 # card centres per version (default fx2d_ab.A_POS / B_POS); v3's B moves right of the bird at the pond's top-left
 AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)},
                   # ep02's S20 halves are full of Kai, Wren, the net and the shrimp: both cards straddle the divider,
-                  # A over Kai's shins and the stump, B in the B half's sky between Kai's cap and Wren's hood
-                  "diorama_ep02": {"A": (124, 585), "B": (370, 715)}}
+                  # A over Kai's shins and the stump, B (SHOW MARK, 422 px wide at 85%) at x 286 so it stays in frame: in the sky
+                  # right of Kai's cap, above his raised glowing arm and Wren's face (S20bot v2 stills, 2 Nov)
+                  "diorama_ep02": {"A": (124, 585), "B": (286, 715)}}
 AB_SCALE_VERSION = {"diorama_ep02": 0.85}
 # Frames whose black edges are drawn on purpose, per version: {shot: (first, last) frame in the shot, why}. The scan
 # reports them as intended instead of as a problem; re-check the range if the shot is re-rendered.
