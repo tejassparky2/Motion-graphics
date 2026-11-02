@@ -25,5 +25,5 @@ Status: idle. I'm checking git for QA notes.
   hands). S16 has no shrimp object. Fixed: only top-level smoke puffs are cleared now.
 - S02 is being reframed so the shrimp sits clearly at the puddle edge above the caption band. The drop starts sooner
   (the wings snap shut at f7, and the drop curve is less delayed). The bird and its shadow converge on the shrimp.
-- Plan: re-render S02 (45 f) and then **S04 (66 f)** too, with the shrimp visible in his hands. Both get a new
+- S02 is now 44 render frames ("The bird struck first.", timing e6a1dbb). Plan: re-render S02 (44 f) and then **S04 (66 f)** too, with the shrimp visible in his hands. Both get a new
   mp4 + sheet. S19 f001-062 keeps running; it will use the crf 10 yuv420p spec, as the coordinator asked.
