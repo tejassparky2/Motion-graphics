@@ -24,3 +24,9 @@
 - 2026-11-02 13:05 UTC: render times are about 120 s a frame here and about 350 s for XprL. **S15 is now split:** XprL does
   f001-040 (part), and I do f041-080 right after S14. Expected: S14 done around 15:20, S15 41-80 around 16:40, and
   XprL's S15_f001-040 part around 16:45. S19 is still with helpers 1 (f001-062) and 10 (f063-124).
+
+- 2026-11-02 13:10 UTC: **New split, from the coordinator.** I render **S14 f001-040** (at f009 now, about 120 s a frame, done
+  around 14:15) and stop there. **Helper 5: S14 f041-075.** S15: XprL f001-020, helper 2 f021-040, helper 3 f041-060,
+  helper 6 f061-080. **I render no S15.** All parts use the spec above (raw, libx264 crf 10 yuv420p 24 fps, CLEAN,
+  `-start_number A`, `parts/<SHOT>_fAAA-BBB.mp4`). Use helper9.py at 9c14cb8 or later; the full shot's frame number is the
+  part's first frame. I'll join S14, S15 and S19, then run the 2D pass and the final encode.
