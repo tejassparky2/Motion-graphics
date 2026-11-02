@@ -219,16 +219,26 @@ def sheet(frames_dir, n, path):
     out.save(path, quality=88)
 
 
+def _src(shot):
+    """The Blender frames folder: build/.../<SHOT>/, or H9_SRC (a fresh folder for a re-join, so stale frames from an
+    earlier join never mix in)."""
+    return os.environ.get("H9_SRC") or os.path.join(BUILD, shot)
+
+
 def join(shot, n):
     """Fill build/.../<SHOT>/NNNN.png from the raw parts other helpers rendered (parts/<SHOT>_fAAA-BBB.mp4, frame A
     first) wherever this container has no Blender frame; then check that every frame 1..n is there."""
     import glob
     import re
-    src_dir = os.path.join(BUILD, shot)
+    src_dir = _src(shot)
     os.makedirs(src_dir, exist_ok=True)
-    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_f*.mp4"))):
-        m = re.search(r"_f(\d+)-(\d+)\.mp4$", part)
-        a, b = int(m.group(1)), int(m.group(2))
+    def rng(path):
+        m = re.search(r"_f(\d+)-(\d+)\.mp4$", path)
+        return int(m.group(1)), int(m.group(2))
+    # the shortest parts first: a re-render of a few frames (S19 f017-048 after the crane fix) beats the long
+    # part it replaces, which then only fills what is still missing
+    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_f*.mp4")), key=lambda p: (rng(p)[1] - rng(p)[0], p)):
+        a, b = rng(part)
         if all(os.path.exists(os.path.join(src_dir, f"{f:04d}.png")) for f in range(a, b + 1)):
             continue
         tmp = os.path.join(BUILD, f"{shot}_join")
@@ -258,7 +268,7 @@ def run(shot):
         meta["beats"] = [round((w["start"] - s["start"]) * 24) + 1 for ln in from_words["lines"]
                          if ln.get("scene") == "S15" for w in ln["words"] if w["w"].strip(".,").lower() in
                          ("same", "shape")]
-    src_dir, out_frames = os.path.join(BUILD, shot), os.path.join(BUILD, f"{shot}_post")
+    src_dir, out_frames = _src(shot), os.path.join(BUILD, f"{shot}_post")
     shutil.rmtree(out_frames, ignore_errors=True)
     os.makedirs(out_frames)
     n = max(A)
