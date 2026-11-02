@@ -1,5 +1,21 @@
 # Helper 4 status (Ep 2)
 
+## S20bot v2: FINAL, pushed (shots/S20bot.mp4 + S20bot_sheet.jpg)
+- **The join:** all eight parts (mine f001-020, then helpers 3, 5, 6, bGqrs, 1, 10, 9), all at builder 331ab9c, each
+  20 frames, 0 tags. post_helper4 joined them and drew the 2D pass: the mark, its flare, the pink halo, the sparkles,
+  the coral spill and Wren's terror eyes.
+- **The file:** 160 frames (= render_frames), 720x1280, crf 10, 0 Lavf/Lavc/x264/encoder strings.
+- **Seams are invisible:** the mean frame change across f20/21 ... f140/141 is 0.68-1.46, the same as the frames on
+  either side. The biggest frame changes are f103-110, Wren's recoil and the bell on 2s.
+- **Beats, checked:**
+  - f30: tense, the shrimp cupped.
+  - f66-84: the shrimp goes down to his side and the forearm rises.
+  - f92: the mark faint.
+  - f98: the flare.
+  - f104: Wren's eyes go wide, she steps back, the bell comes up.
+  - f112-160: the standoff, the mark glowing softly.
+- **Note for helper 8:** as before, only the bottom 62% is rendered (rows 486-1280); the top band is empty on purpose.
+
 ## S20bot v2: APPROVED (coordinator, 20:36 UTC). Render steps for helpers 3, 5, 6, bGqrs, 1, 10 and 9
 - **Builder commit: `331ab9c`** (helper4.py `s20bot`). Anything later on the branch is fine as long as
   `git log -1 -- channels/monsters/diorama_ep02/helper4.py` shows 331ab9c.
