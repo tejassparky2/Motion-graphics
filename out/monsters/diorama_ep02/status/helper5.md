@@ -25,4 +25,4 @@ Nothing past f78 was rendered (helper 3 has f079-104).
 CLEAN flags + remux, 0 tags, no 2D pass. **Last frame: f057** (helper 3 f058-066, helper 6 f067-075).
 helper9.py builder, every frame on 1s. About 250-290 s/frame here.
 
-Idle; waiting for QA notes or the next job.
+**2026-11-02 16:47 UTC: Episode 2 delivered to the owner (coordinator). Nothing more needed on Ep 2; idle.**
