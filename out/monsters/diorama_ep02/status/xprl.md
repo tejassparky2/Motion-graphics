@@ -13,6 +13,6 @@
 - **Rendering:** nothing more is rendering on my side.
 
 **2 Nov 2026, 12:55 UTC: S15 (helper 9's builder) is rendering here at the coordinator's request.**
-- Frames 1-80, one Blender. The result will be a single raw part at out/monsters/diorama_ep02/parts/S15_f001-080.mp4 (crf 6, yuv444p, no tags).
-- Helper 9 was rendering S15 too, in parallel with S14/S19. I've asked it to drop S15 so its other two run faster; it does the 2D pass on S15 from my part.
+- Frames 1-80, one Blender, from helper9.py at 9c14cb8 or later. The result will be a single RAW part at out/monsters/diorama_ep02/parts/S15_f001-080.mp4, encoded to helper 9's spec: libx264 crf 10, yuv420p, 24 fps, the CLEAN flags, no 2D pass.
+- Helper 9 stopped its own S15 (0 frames) and is doing S14 now. It joins my part and runs the 2D pass.
 - I'll update this note when the part is pushed.
