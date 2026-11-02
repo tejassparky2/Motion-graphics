@@ -55,4 +55,4 @@ S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the vil
 
 The music drops 0.1 s before S09 (TWIST l9). No heartbeat, no riser, all original.
 
-Status: **done on the new ending** (mix pushed). When helper 4's new S20 bottom lands I'll set the raise, flare and clank on its real frames, re-run, Whisper and push.
+Status: **done on the new ending** (mix pushed, 7a7455f). My git watch has run out, so **please send me a message when the new S20bot v2 final lands** and I'll set the raise, flare and clank on its real frames, re-run, Whisper and push. Until then the bottom-half hits sit on the word timing (raise ~f82, flare f94, clank f105).
