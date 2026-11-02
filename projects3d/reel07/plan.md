@@ -1,6 +1,6 @@
 # Reel 07 plan: "How to make a photo into a 3D figurine" (learning reel, ~60 s)
 
-**Status: draft, waiting for the owner's approval.** Owner (2 Nov 2026) replaced the first footage with Manya's
+**Status: approved (owner, 2 Nov 2026: "auto approved"; line 1 short so the hook doesn't drag, "3D figurine" moved to line 11).** Owner (2 Nov 2026) replaced the first footage with Manya's
 figurine (the reel 04 figurine; the sister's consent of 19 Oct 2026 covers her photo and name): new ChatGPT and
 Snapmaker Orca screen recordings from 2 Nov plus the October print and reveal clips (`footage.md`). The boy figurine
 footage is not used. Owner (2 Nov 2026): lines 1, 3, 11 and 12 in their words ("mini you", semi-realistic not cartoon, "make it
@@ -10,7 +10,7 @@ Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen
 
 | # | Voice | On screen |
 |---|---|---|
-| 1 | How to make your own custom mini you 3D figurine, from your own photo. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** Manya's photo in a phone frame beside the figurine, a "HOW TO" tag, "YOUR MINI YOU: PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Slicer · Print + finish) and a "SAVE IT" bookmark. No subtitle on this line (the title is the subtitle) |
+| 1 | How to make your own custom mini you, from your own photo. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** Manya's photo in a phone frame beside the figurine, a "HOW TO" tag, "YOUR MINI YOU: PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Slicer · Print + finish) and a "SAVE IT" bookmark. No subtitle on this line (the title is the subtitle) |
 | 2 | This figurine started as one phone photo. Here's exactly how we make it, in four steps. | Photo → figurine, slow turn |
 | 3 | Step one. We upload the photo to ChatGPT, and ask for a semi-realistic 3D design. | ChatGPT recording: photo attached, the prompt (shown), the first design. From here on a "STEP n OF 4" bar and the tool's name in a gold tag |
 | 4 | Not right the first time? Just ask for changes. We asked: make her standing. And remove the ball in her hand. | The owner's real edits: "Make Her standing", "Remove white ball in her hand", sitting → standing |
@@ -20,7 +20,7 @@ Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen
 | 8 | Step four. We print it on the Snapmaker U one. Eleven hours. Nine hundred and fifty colour changes. | Sliced view with the filament table and "11h3m", then the U1 printing (013732, 013746, 013800) |
 | 9 | Then the supports come off, and we sand it by hand. | Finished print in its supports (184635, 184656) → the clean figurine |
 | 10 | And here's the result. | The figurine turning (182700), Sowmya holding it (IMG_4135) |
-| 11 | Want to make your own mini you? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
+| 11 | Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
 | 12 | Or make it yourself. Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" |
 
 The comment-to-DM keyword is "3D"; the DM sends the full prompt and the guide (PDF, to write once the owner sends the

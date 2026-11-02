@@ -1,0 +1,23 @@
+How to make your own custom mini you, from your own photo.
+
+This figurine started as one phone photo. Here's exactly how we make it, in four steps.
+
+Step one. We upload the photo to Chat G P T, and ask for a semi-realistic 3D design.
+
+Not right the first time? Just ask for changes. We asked: make her standing. And remove the ball in her hand.
+
+Same face. Same dress. Same little bow. Just cuter.
+
+Step two. We give that design to Tripo 3D, and it builds a full 3D model.
+
+The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes.
+
+Step four. We print it on the Snapmaker U one. Eleven hours. Nine hundred and fifty colour changes.
+
+Then the supports come off, and we sand it by hand.
+
+And here's the result.
+
+Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you.
+
+Or make it yourself. Comment 3D, to get the full prompt and guide in your DM.
