@@ -4,7 +4,7 @@ PDF (9:16 pages, big type), with the owner's real screens (ChatGPT, Tripo, Snapm
   python3 projects3d/reel07/guide.py "out/3d/reel07/raw2/Photo to 3d" "out/3d/reel04/raw/Raw videos"
   -> out/3d/reel07/guide/Yours3D_mini_you_guide.pdf  (out/3d is not in git: it has Manya's photo)
 
-Manya's photo and name are shown with her mother's consent (19 Oct 2026). PROMPT below: the first lines are the
+Manya's photo and name are shown with her mother's consent (19 Oct 2026). Tripo settings: the owner's (2 Nov 2026: "pbr off and remove lighting on"). PROMPT below: the first lines are the
 owner's (read off the 2 Nov screen recording); the rest is a draft until the owner sends the exact text.
 """
 import io
@@ -249,7 +249,7 @@ def main():
     fig = jpeg(cover_crop(still(r4dir, "183012").crop((700, 600, 3000, 3900)), 0.75), 700)
     s_prompt = jpeg(frame(chat, 12.0).crop((0, 180, 1080, 1000)))
     s_change = jpeg(frame(chat, 57.5).crop((0, 140, 1080, 1250)))
-    s_settings = jpeg(frame(tripo, 9.0).crop((0, 90, 900, 1025)))
+    s_settings = jpeg(frame(tripo, 14.5).crop((0, 90, 900, 1025)))     # panel closed: its PBR/lighting differ
     s_model = jpeg(frame(tripo, 48.0).crop((440, 120, 1240, 1025)))
     s_paint = jpeg(frame(orca, 62.0).crop((520, 70, 1880, 1030)))
     s_table = jpeg(frame(orca2, 30.0).crop((1395, 85, 1835, 530)))
@@ -346,7 +346,7 @@ def main():
                 "When the model appears, turn it around and check the back. Then tap Export and choose 3MF (the direct 'send to slicer' button sends STL only, with no colours)."],
                12)
     p.box(["Ultra Mesh Quality ......... ON", "AI Complete ................ OFF", "Texture .................... ON",
-           "Texture Quality ............ 4K", "Remove Lighting ............ OFF", "PBR ........................ ON",
+           "Texture Quality ............ 4K", "Remove Lighting ............ ON", "PBR ........................ OFF",
            "Topology ................... Triangle", "Polycount .................. 200000"], 10.2,
           title="OUR TRIPO SETTINGS")
     half = (PW - 2 * M - 10) / 2
@@ -420,7 +420,7 @@ def main():
     p = Page(c, 8)
     p.title("Quick checklist")
     p.bullets(["Photo: sharp, face visible, good light, their OK", "ChatGPT: our prompt, then ask for changes",
-               "Tripo: HD Model, 4K texture, PBR, Triangle, 200000", "Slicer: open the 3MF, paint the eyes, supports on, slice",
+               "Tripo: HD Model, 4K texture, Remove Lighting on, PBR off", "Slicer: open the 3MF, paint the eyes, supports on, slice",
                "Print, supports off slowly, sand by hand"], mark="✓")
     p.image(s_table, h=min(250, p.y - 60))
     p.text("The slicer's own summary for this print (Snapmaker Orca).", 10, GREY)
