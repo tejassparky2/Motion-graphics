@@ -175,11 +175,11 @@ def mark20():
         if lvl <= 0 or g.get("z", 1) <= 0:
             return
         geo = P9._on_arm(g)
-        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=2.0)
+        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=3.0)
         x, y = geo["c"]
         size = math.hypot(*geo["ey"])
         t0 = (fg + 3 - 1) / FPS                                             # the flare's peak
-        fx2d.glow_burst(cr, t, t0, x, y, r=size * 1.8, col=P9.CORAL_HOT, dur=0.5, rays=10, seed=3)
+        fx2d.glow_burst(cr, t, t0, x, y, r=size * 2.4, col=P9.CORAL_HOT, dur=0.5, rays=10, seed=3)
         fx2d.sparkles(cr, t, t0 + 0.04, x, y, n=8, radius=size * 1.0, size=size * 0.17,
                       cols=((1, 0.8, 0.7, 1), fx2d.WHITE, (1, 0.6, 0.5, 1)), life=1.1, seed=5)
         if f >= fe:                                                         # a few soft sparkles in the hold
@@ -188,9 +188,29 @@ def mark20():
     return draw
 
 
+def wren_fear():
+    """S20bot: Wren's wide, pin-prick eyes (fx2d_anime.terror_eyes, the blue shock lines included) from the moment she
+    sees the mark flare, tracked to her eyes (S20bot_mark.json's w_eye_l / w_eye_r)."""
+    with open(os.path.join(BUILD, "S20bot_mark.json")) as fh:
+        d = json.load(fh)
+    meta, A = d["meta"], {int(f): v for f, v in d["frames"].items()}
+
+    def draw(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        (lx, ly, _), (rx, ry, _) = A[f]["w_eye_l"], A[f]["w_eye_r"]
+        dd = math.hypot(rx - lx, ry - ly)
+        tilt = math.atan2(ry - ly, rx - lx)
+        if abs(tilt) > math.pi / 2:
+            tilt -= math.copysign(math.pi, tilt)
+        fx2d_anime.terror_eyes(cr, t, start, x=(lx + rx) / 2, y=(ly + ry) / 2, size=dd * 2.6, end=end,
+                               eyes=((lx, ly), (rx, ry)), er=0.34 * dd, tilt=tilt)
+    return draw, (meta["f_fear"] - 1) / FPS, (max(A) - 1) / FPS
+
+
 def overlays(shot):
     if shot == "S20bot":
-        return [(mark20(), dict(start=0.0))]
+        fear, t0, t1 = wren_fear()
+        return [(mark20(), dict(start=0.0)), (fear, dict(start=t0, end=t1))]
     if shot not in ("S05", "S06"):
         return []
     a = anchors(shot)

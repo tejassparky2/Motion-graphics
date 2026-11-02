@@ -380,7 +380,8 @@ def s20bot():
     forearm toward her ("show her"); on "glowing mark" the coral zigzag on it (helper 9's S14 mark, drawn by
     post_helper4 from S20bot_mark.json) flares, lighting his arm (a real coral point light). Wren's eyes go wide,
     she steps back half a step and raises the bell up in front of her like a ward; the standoff holds to the end,
-    the mark glowing softly. Framed in the bottom band; a slow push-in on 1s, the characters on 2s."""
+    the mark glowing softly. Her wide eyes are 2D (S05's terror eyes, from her eye anchors in S20bot_mark.json): her
+    3D eye keys don't read at this size. Framed in the bottom band; a slow push-in on 1s, the characters on 2s."""
     from channels.monsters.diorama_ep02 import helper9 as H9
     n = _frames("S20", 160)
     W = _words("l20")
@@ -423,7 +424,7 @@ def s20bot():
             r = ward * over
             wren.hold_bell(PW, 1.0, shake=2.5 * math.sin(f * 1.3) if f > f_ward1 else 0.0)
             PW.aim("upper_arm.R", (-0.10, -0.55 - 0.25 * r, -1 + 1.25 * r))      # up past chest height: a ward
-            PW.aim("forearm.R", (-0.04, -0.75 - 0.2 * r, -0.2 + 1.2 * r))
+            PW.aim("forearm.R", (-0.04, -0.85 - 0.2 * r, -0.2 + 0.8 * r))
             PW.aim("hand.R", (-0.04, -0.3, -1))                    # the bell still hangs upright
         else:
             wren.hold_bell(PW, 0.25)
@@ -533,7 +534,8 @@ def s20bot():
         lt.keyframe_insert("location", frame=f)
         ld.energy = S20B_LIGHT * mark_level(f)
         ld.keyframe_insert("energy", frame=f)
-        marks[f] = dict(H9._mark_geo(k, cam), level=round(mark_level(f), 3))
+        marks[f] = dict(H9._mark_geo(k, cam), level=round(mark_level(f), 3),
+                        w_eye_l=H9._px(cam, s3d.kai_point(w, "eye_l")), w_eye_r=H9._px(cam, s3d.kai_point(w, "eye_r")))
     os.makedirs(BUILD, exist_ok=True)                              # the 2D pass's mark (post_helper4)
     with open(os.path.join(BUILD, "S20bot_mark.json"), "w") as fh:
         json.dump(dict(meta=dict(f_show=f_show, f_glow=f_glow, f_mark_end=f_mark_end, f_fear=f_fear), frames=marks), fh)
