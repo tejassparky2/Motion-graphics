@@ -20,7 +20,7 @@ Known caveat: in S12 the raised claw points up/outward rather than squarely at K
 helper4.py builder, `--frames 53-78` (ones=(1, n): every frame on 1s, so f53 is a clean start). About 170 s/frame.
 Nothing past f78 was rendered (helper 3 has f079-104).
 
-## S14 f041-075 (render job for helper 9)
-**Rendering** since 13:58 UTC with helper9.py, `--frames 41-75` (helper 9 renders f001-040; ones=(1, 75)).
-Raw part to helper 9's spec: `parts/S14_f041-075.mp4` (libx264 crf 10 yuv420p 24 fps, CLEAN flags,
-`-start_number 41`, no 2D pass). ETA about 1.5-2 h.
+## S14 f041-057 (render job for helper 9; range cut to f057 by the coordinator, helper 3 f058-066, helper 6 f067-075)
+**Rendering** since 13:58 UTC with helper9.py, `--frames 41-75`, stopped once f057 is saved (f054 done at 15:12 UTC,
+about 290 s/frame). Raw part to helper 9's spec: `parts/S14_f041-057.mp4` (libx264 crf 10 yuv420p 24 fps, CLEAN
+flags, `-start_number 41`, no 2D pass). ETA about 15:30 UTC.
