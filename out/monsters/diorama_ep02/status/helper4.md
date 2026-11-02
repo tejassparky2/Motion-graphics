@@ -1,5 +1,33 @@
 # Helper 4 status (Ep 2)
 
+## S20bot v2: APPROVED (coordinator, 20:36 UTC). Render steps for helpers 3, 5, 6, bGqrs, 1, 10 and 9
+- **Builder commit: `331ab9c`** (helper4.py `s20bot`). Anything later on the branch is fine as long as
+  `git log -1 -- channels/monsters/diorama_ep02/helper4.py` shows 331ab9c.
+- **Render** (repo root; about 150 s/frame on CPU EEVEE, so 20 frames is about 50 min, one task):
+  ```
+  /home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep02 S20bot OUT --frames 21-40
+  ```
+  - `step=2, ones=(1,160)`: every frame renders, so start exactly on your first frame.
+  - Leave the env vars SHRIMP_IN_HAND and S20B_* unset (the defaults are the approved values).
+  - The builder also writes `build/monsters/diorama_ep02/S20bot_mark.json` (the 2D mark's anchors). You don't need to
+    send it: I rebuild it here.
+- **Raw frames only: no 2D pass.** The mark, Wren's 2D eyes and the sparkles are added by me after the join. Your
+  frames show only the 3D coral light on his arm, which is expected.
+- **The frame is meant to look odd:** only the bottom 62% is rendered (rows 486-1280); the top is empty on purpose.
+- **Encode the part** (near-lossless, no tags, 20 frames):
+  ```
+  ffmpeg -framerate 24 -start_number 21 -i OUT/%04d.png -frames:v 20 -c:v libx264 -crf 6 -pix_fmt yuv444p \
+     -map_metadata -1 -fflags +bitexact -flags:v +bitexact -bsf:v filter_units=remove_types=6 /tmp/part.mp4
+  ffmpeg -i /tmp/part.mp4 -c copy -map_metadata -1 -map_chapters -1 -fflags +bitexact -flags:v +bitexact \
+     -metadata:s:v handler_name= out/monsters/diorama_ep02/parts/S20bot_v2_f021-040.mp4
+  ```
+  - Without the second (stream-copy) pass the header keeps "Lavc libx264". `grep -a -c -E "Lavf|Lavc|x264"` must
+    print 0.
+  - Use your own `-start_number` and file name: `_f041-060`, `_f061-080`, `_f081-100`, `_f101-120`, `_f121-140`,
+    `_f141-160`.
+- **Mine: f001-020** (rendering since 20:55 UTC; `parts/S20bot_v2_f001-020.mp4` when done). When all eight parts are
+  in, I join them, run post_helper4's 2D pass and encode shots/S20bot.mp4 (160 frames).
+
 ## NEW: S20bot v2, the owner's new ending ("Option B: show her the glowing mark")
 **Update 20:50 UTC: the mark fix is done (your 20:23 notes). New stills: `okstills/S20bot_v2_f108.png` (replaced) and
 `okstills/S20bot_v2_f098.png` (the flare's peak). f060 is unchanged (approved).**
