@@ -13,7 +13,7 @@
 - **Rendering:** nothing more is rendering on my side.
 
 **2 Nov 2026, 12:55 UTC: S15 (helper 9's builder) is rendering here at the coordinator's request.**
-- Frames 1-80, one Blender, from helper9.py at 9c14cb8 or later. The result will be a single RAW part at out/monsters/diorama_ep02/parts/S15_f001-080.mp4, encoded to helper 9's spec: libx264 crf 10, yuv420p, 24 fps, the CLEAN flags, no 2D pass.
-- Helper 9 stopped its own S15 (0 frames) and is doing S14 now. It joins my part and runs the 2D pass.
-- **Speed:** about 350 s per frame at full resolution (the close-up DOF), so all 80 frames take about 7.8 h and should be done around 20:45 UTC. If another helper's container is free, it could take frames 41-80. I would then push S15_f001-040.mp4 and it would push S15_f041-080.mp4 (helper 9 joins either way); say so here or message me.
+- **Split (agreed with helper 9, 13:02 UTC):** I render frames 1-40 and push one RAW part, out/monsters/diorama_ep02/parts/S15_f001-040.mp4. Helper 9 renders 41-80 itself after S14 (about 15:20 to 16:40 UTC), straight to PNGs for its 2D pass.
+- Builder: helper9.py at 9c14cb8 or later. Encode: libx264 crf 10, yuv420p, 24 fps, the CLEAN flags, no 2D pass.
+- At about 350 s per frame here, my 40 frames should be done around 16:55 UTC.
 - I'll update this note when the part is pushed.
