@@ -45,7 +45,11 @@ S11_HUFF, S11_STOMP = 70, 74      # it glares, huffs and turns f70-72, then stom
 S12_RAISE = 14             # helper 5 S12: it turns in his palm f7, the claw comes up f14-17
 S13_TAP = 15               # helper 5 S13: the claw touches his nose f15
 S17_STEPS, S17_STOP = 0, 45       # XprL S17: Wren marches in from the cut and stops stern in front of Kai ~f45
-S20_SPLIT = 0              # placeholder: the split screen opens on the cut
+S20_SPLIT = 0              # S20top/S20bot: both halves open on the cut, so the split whoosh sits on f0
+S20_TURN, S20_BELL = 55, 61        # S20bot: Wren turns her back f55-65 (on 2s), the bell at her hip on the turn
+S20_COLLAR, S20_SLIP = 81, 89      # Kai's hands go to his collar f81, the shrimp slips inside f89-92
+S20_BULGE = 97                     # the teal bulge pops on his chest f97 (on "shirt")
+S20_GLANCE, S20_AWAY = 115, 139    # Wren glances back f115-121, then turns away again f139-145
 
 
 # ---------------------------------------------------------------- Episode 2 effects (original, seeded)
@@ -170,6 +174,25 @@ def footstep(seed=0, weight=1.0):
     thud = _lp(r.uniform(-1, 1, n), 300) * np.exp(-t / 0.03) * weight
     crunch = _bp(r.uniform(-1, 1, n), 1500, 6000) * np.exp(-t / 0.05) * 0.35
     return thud + crunch
+
+
+def cloth_swish(dur=0.35, seed=0):
+    """A body turning or hands at a collar: a soft rise and fall of cloth rustle."""
+    r = _rng("swish", seed)
+    n = _n(dur)
+    env = np.sin(np.pi * np.linspace(0, 1, n)) ** 2
+    grain = 0.7 + 0.3 * np.abs(_lp(r.uniform(-1, 1, n), 30)) * 4
+    return _bp(r.uniform(-1, 1, n), 700, 5000) * env * np.minimum(grain, 1.3) * 0.5
+
+
+def bulge_pop(seed=0):
+    """The shrimp settling under his shirt: a soft rubbery bloop with a cloth flick."""
+    r = _rng("bulge", seed)
+    n = _n(0.35)
+    t = _t(n)
+    bloop = np.sin(2 * np.pi * (380 * np.exp(-t / 0.05) + 170) * t) * np.minimum(1, t / 0.004) * np.exp(-t / 0.07)
+    flick = _bp(r.uniform(-1, 1, n), 1500, 6000) * np.exp(-t / 0.02) * 0.25
+    return bloop * 0.8 + flick
 
 
 def lake(dur, seed=0):
@@ -297,6 +320,15 @@ def build(timing, n, v):
     b_t = [w["start"] for w in words if w["w"].strip(".,:?!").upper() == "B"][0]
     comment = next(w["start"] for w in words if w["w"].lower().startswith("comment"))
     hit(sfx.whoosh(), c.f("S20", S20_SPLIT) + 0.02, -10)
+    # the bottom half: Wren turns her back (bell at her hip), Kai hides the shrimp, Wren glances back and away
+    hit(cloth_swish(0.42, 1), c.f("S20", S20_TURN), -22, 0.3)
+    hit(hand_bell(91, 3) * 0.6, c.f("S20", S20_BELL), -24, 0.3)
+    hit(cloth_swish(0.3, 2), c.f("S20", S20_COLLAR), -21, -0.3)
+    hit(cloth_swish(0.2, 3), c.f("S20", S20_SLIP), -22, -0.3)
+    hit(bulge_pop(), c.f("S20", S20_BULGE), -17, -0.3)
+    hit(cloth_swish(0.3, 4), c.f("S20", S20_GLANCE), -23, 0.3)
+    hit(hand_bell(93, 4) * 0.4, c.f("S20", S20_GLANCE) + 0.1, -27, 0.3)
+    hit(cloth_swish(0.3, 5), c.f("S20", S20_AWAY), -23, 0.3)
     hit(v3.option_sting("A"), a_t, -12, -0.15)
     hit(v3.option_sting("B"), b_t, -12, 0.15)
     hit(sfx.ui_select(5), comment, -20)

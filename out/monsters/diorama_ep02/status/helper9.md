@@ -30,3 +30,12 @@
   helper 6 f061-080. **I render no S15.** All parts use the spec above (raw, libx264 crf 10 yuv420p 24 fps, CLEAN,
   `-start_number A`, `parts/<SHOT>_fAAA-BBB.mp4`). Use helper9.py at 9c14cb8 or later; the full shot's frame number is the
   part's first frame. I'll join S14, S15 and S19, then run the 2D pass and the final encode.
+
+- 2026-11-02 14:15 UTC: S15_f061-080 (20 frames) and S19_f001-062 (62 frames) are checked: the frame counts and size
+  are right, they're 24 fps, and they match the builder. My S14 is at f037 and stops at f040. post_helper9.py now joins the
+  parts by itself. Waiting on: S14 f041-075 (helper 5), S15 f001-020 (XprL), f021-030 (bGqrs), f031-040 (helper 4),
+  f041-060 (helper 3), and S19 f063-124 (helper 10).
+
+- 2026-11-02 14:22 UTC: **S14 f001-040 is rendered here** and checked; frame 30 with the 2D pass shows the mark drawing on.
+  Helper 5 does **f041-075**. **My container is idle now** (about 120 s a frame here): give me any part that
+  hasn't started (for example the end of S14 or S19 f063-124) and I'll render it straight into my build folder.
