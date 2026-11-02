@@ -10,15 +10,18 @@ in [brackets] come from the owner.
 | 2 | This figurine started as one phone photo. Here's exactly how we make it, in four steps. | Photo next to the figurine, slow turn |
 | 3 | Step one. We upload the photo to ChatGPT, and ask for a cute, cartoon-style 3D design. | ChatGPT screen recording. From here on a "STEP n OF 4" bar at the top and the tool's name in a gold tag; zooms follow the cursor to each click |
 | 4 | Same face. Same outfit. Same pose. Just cuter. | Photo vs design split |
+| 4b | *(suggested, not yet approved)* Tip. Don't have that filament colour? Just ask it to change it. We didn't have that blue, so we made the shirt black. | The owner typing "Make the shirt black we don't have that blue color", navy → black |
 | 5 | Step two. We give that design to [Tripo] 3D, and in [a few minutes], it builds a full 3D model. | Tripo screen, model spinning |
 | 6 | The colours aren't perfect yet. So, step three. In Bambu Studio, we paint the parts it missed: eyes, hair, and outfit details. | Colour painting, sped up |
 | 7 | Step four. We print it. Full colour, layer by layer. | Printer clips / timelapse |
 | 8 | Then we remove the supports, and sand it by hand. | Hands finishing, before / after |
 | 9 | And here's the result. | Reveal, 360° turn, face close-up |
-| 10 | Want the full step-by-step guide? Comment GUIDE. | "COMMENT GUIDE" card |
-| 11 | Or skip the work. Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
-| 12 | Would you try making one yourself? Tell me below. | Figurine |
+| 10 | Don't want to make it yourself? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
+| 11 | Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" (owner, 2 Nov 2026: the last line) |
 
 Mock-up of frame 1 and a step frame (reel 04 stills standing in): sent to the owner 30 Oct 2026.
+
+Owner (2 Nov 2026): the ChatGPT prompt can be shown on screen (no blur). The comment-to-DM keyword is "3D"; the DM
+sends the full prompt and the guide.
 
 Voice spellings: "Chat G P T" for ChatGPT; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
