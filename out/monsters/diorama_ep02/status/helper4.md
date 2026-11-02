@@ -6,7 +6,7 @@ Updated 2 Nov 2026.
 |---|---|---|
 | S05 | **Final, pushed.** 99 frames, 720x1280, crf 10, no tags. Approved look (hands f34, terror face f72). Hands with the dripping claw, one drop falls; cut at f50 up to his face, with 2D terror eyes and a sweat drop on "In my". | shots/S05.mp4 + S05_sheet.jpg |
 | S06 | **Final, pushed.** 98 frames. The claw in profile on the light cyc; on "Straight" (f67) a tapered white arrow-jet with an ink outline shoots straight right and stops inside the frame. The floating-finger bug is fixed. | shots/S06.mp4 + S06_sheet.jpg |
-| S20bot | **Split six ways (coordinator, 2 Nov).** I render **f001-026 only**: f001-012 are done, and f013-026 are rendering (done by about 13:55 UTC). **I have no frames past f026**, so nobody else needs to skip any. When all five parts are in, I join them (steps below). | shots/S20bot.mp4 (pending) |
+| S20bot | **Split six ways.** My **f001-026 are done** and pushed as `parts/S20bot_f001-026.mp4` (crf 6, yuv444p, 26 frames, 0 tags). I have nothing past f026. Waiting for f027-052 (helper 2), f053-078 (helper 5), f079-104 (helper 3), f105-130 (bGqrs) and f131-156 (helper 6); then I join all six into shots/S20bot.mp4. | shots/S20bot.mp4 (pending) |
 
 Render cost on this container (CPU EEVEE): S05 about 145 s/frame, S06 about 40 s/frame.
 
@@ -27,13 +27,16 @@ the final encode.
   ```
   ffmpeg -framerate 24 -start_number 27 -i OUT/%04d.png -frames:v 26 -c:v libx264 -crf 6 -pix_fmt yuv444p \
      -map_metadata -1 -fflags +bitexact -flags:v +bitexact -bsf:v filter_units=remove_types=6 \
-     out/monsters/diorama_ep02/parts/S20bot_f027-052.mp4
+     /tmp/part.mp4
+  ffmpeg -i /tmp/part.mp4 -c copy -map_metadata -1 -map_chapters -1 -fflags +bitexact -flags:v +bitexact \
+     -metadata:s:v handler_name= out/monsters/diorama_ep02/parts/S20bot_f027-052.mp4
   ```
-  Change `-start_number` and the name to your range (`S20bot_f053-078.mp4`, `_f079-104`, `_f105-130`, `_f131-156`),
+  The second (stream-copy) pass is needed: without it the mp4 header keeps "Lavc libx264" as the compressor name.
+  Check with `grep -a -c -E "Lavf|Lavc|x264"` (it must print 0). Change `-start_number` and the name to your range (`S20bot_f053-078.mp4`, `_f079-104`, `_f105-130`, `_f131-156`),
   push, and note it in your status file.
 - **The join** (mine, once all five parts are in):
   ```
-  python channels/monsters/diorama/join_parts.py --ep02 S20bot build/monsters/diorama_ep02/render/S20bot:1-26 \
+  python channels/monsters/diorama/join_parts.py --ep02 S20bot out/monsters/diorama_ep02/parts/S20bot_f001-026.mp4 \
      out/monsters/diorama_ep02/parts/S20bot_f027-052.mp4 ... out/monsters/diorama_ep02/parts/S20bot_f131-156.mp4
   ```
   This gives shots/S20bot.mp4 + sheet at crf 10 with no tags, checked at 156 frames.
