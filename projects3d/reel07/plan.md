@@ -15,8 +15,8 @@ Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen
 | 3 | Step one. We upload the photo to ChatGPT, and ask for a semi-realistic 3D design. | ChatGPT recording: photo attached, the prompt (shown), the first design. From here on a "STEP n OF 4" bar and the tool's name in a gold tag |
 | 4 | Not right the first time? Just ask for changes. We asked for a standing pose. And no ball in her hand. | The owner's real edits: "Make Her standing", "Remove white ball in her hand", sitting → standing |
 | 5 | Same face. Same dress. Same little bow. Just cuter. | Photo vs final design split (IMG_20261014_140855) |
-| 6 | Step two. We give that design to Tripo 3D, and in [a few minutes], it builds a full 3D model. | **Needs a Tripo recording of Manya's design** |
-| 7 | The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes. | Snapmaker Orca: model on the plate, zoom to the face, painting the eyes |
+| 6 | Step two. We give that design to Tripo, and it builds a full 3D model. | The 3D model turning (Tripo recording of Manya's design to swap in when the owner sends one) |
+| 7 | The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes and eyebrows. | Snapmaker Orca: model on the plate, zoom to the face, painting the eyes |
 | 8 | Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes. | Sliced view with the filament table and "11h3m", then the U1 printing (013732, 013746, 013800) |
 | 9 | Then the supports come off, and we sand it by hand. | Finished print in its supports (184635, 184656) → the clean figurine |
 | 10 | And here's the result. | The figurine turning (182700), Sowmya holding it (IMG_4135) |
@@ -24,5 +24,5 @@ Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen
 | 12 | Or make it yourself. Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" |
 
 The comment-to-DM keyword is "3D"; the DM sends the full prompt and the guide (PDF, to write once the owner sends the
-prompt text). Line 8 reworded (2 Nov 2026): "We print it on" ran together as "printed on" in every take; line 4 too ("make her standing" heard as "make a standing"). Voice spellings: "Chat G P T"; "U one"; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
+prompt text). Line 8 reworded (2 Nov 2026): "We print it on" ran together as "printed on" in every take; line 4 too ("make her standing" heard as "make a standing"); with the faster read, line 6 "Tripo 3D" was heard as "triple 3D" and line 7 "the eyes" as "the ice" in the mix. Voice spellings: "Chat G P T"; "U one"; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
 Spread the Manya reels: 04 posted; 07 on Wed 4 Nov; 05 (Sowmya's testimonial) no earlier than week 3.

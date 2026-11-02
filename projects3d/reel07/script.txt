@@ -8,9 +8,9 @@ Not right the first time? Just ask for changes. We asked for a standing pose. An
 
 Same face. Same dress. Same little bow. Just cuter.
 
-Step two. We give that design to Tripo 3D, and it builds a full 3D model.
+Step two. We give that design to Tripo, and it builds a full 3D model.
 
-The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes.
+The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes and eyebrows.
 
 Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes.
 
