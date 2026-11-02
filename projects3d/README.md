@@ -14,6 +14,8 @@ Owner's standing preferences for every video made here (keep them unless the own
   `tools/voiceover.py SCRIPT NAME --engine turbo --flow --gap 0.9 --polish` (owner picked Chatterbox Turbo at its
   natural speed, 12 Oct 2026: "the speed is good in ab_T"; sample `out/voiceover/ab_T3.mp3`). Whisper-checked retakes.
   No `--even` for Turbo (the owner preferred its own speed); `--even` stays available for the older Chatterbox voice.
+  **Faster read (owner, 2 Nov 2026: "make voice faster so it won't feel boring"):** `--gap 0.35 --tempo 1.12` (every
+  take sped up 12%, pitch kept; reel 07). Use this for new reels unless the owner says otherwise; re-check with Whisper.
 - **Workflow:** look at the uploads, send the plan + script, wait for approval, then make it. Keep the owner's words;
   flag words the clone may mishear (write websites and numbers the way they should be spoken, e.g.
   "yours 3D India dot com", "zero point two"; captions show the written form).

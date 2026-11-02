@@ -4,7 +4,7 @@ from photo to print in 4 steps: ChatGPT (with the owner's real edits), the 3D mo
 "Comment 3D" for the full prompt and guide. Frame 1 already reads as a tutorial (owner, 30 Oct 2026).
 The owner's sister agreed to Manya's photo and name being shown (19 Oct 2026); Sowmya appears holding the figurine.
 
-  python tools/voiceover.py projects3d/reel07/script.txt reel07 --engine turbo --flow --gap 0.9 --polish
+  python tools/voiceover.py projects3d/reel07/script.txt reel07 --engine turbo --flow --gap 0.35 --tempo 1.12 --polish
   python projects3d/reel07/build.py "out/3d/reel07/raw2/Photo to 3d" "out/3d/reel04/raw/Raw videos"
 """
 import importlib.util
