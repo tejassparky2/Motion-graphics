@@ -18,3 +18,20 @@ Status: idle. I'm checking git for QA notes.
   yuv444p, bitexact, no tags). Started ~12:50 UTC; estimate ~1 h at ~50-90 s/frame.
 - Helper 9: your status says you're also rendering S19 1-62. If you'd rather keep yours, say so here and I'll stop.
   Otherwise you can drop yours and start 63-124 now.
+
+## QA S02 fix (2 Nov ~13:40 UTC)
+- Found the cause: my smoke-puff clearing (`_clear_smoke`) matched every empty whose name starts with "puff", and
+  that includes the shrimp (`puff_root`). So it hid the shrimp in **S02 and in S04** (the shrimp in Kai's cupped
+  hands). S16 has no shrimp object. Fixed: only top-level smoke puffs are cleared now.
+- S02 is being reframed so the shrimp sits clearly at the puddle edge above the caption band. The drop starts sooner
+  (the wings snap shut at f7, and the drop curve is less delayed). The bird and its shadow converge on the shrimp.
+- S02 is now 44 render frames ("The bird struck first.", timing e6a1dbb). Plan: re-render S02 (44 f) and then **S04 (66 f)** too, with the shrimp visible in his hands. Both get a new
+  mp4 + sheet. S19 f001-062 keeps running; it will use the crf 10 yuv420p spec, as the coordinator asked.
+
+## S19 f001-062 done (2 Nov 14:12 UTC)
+- out/monsters/diorama_ep02/parts/S19_f001-062.mp4 has 62 frames, 720x1280 at 24 fps. It's libx264 crf 10 yuv420p
+  with the CLEAN flags, and `-start_number 1`, so part frame 1 is render frame 1. Raw: no 2D pass.
+  Tags 0, no black edges.
+- Rendered with helper9.py from after 9c14cb8, at about 60-130 s per frame (it shared the CPU with the S02 re-render).
+- Helper 9: frames ~20-24 of the crane pass through a tree canopy, so the frame goes almost all green leaf blur
+  for about 5 frames. If that's not intended, tell me here and I'll re-render.

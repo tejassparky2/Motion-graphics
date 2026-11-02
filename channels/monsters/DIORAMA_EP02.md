@@ -45,7 +45,7 @@ owner asks.
 | Shot | Line | Picture | Who |
 |---|---|---|---|
 | S01 | You said save it. So I ran at the butcher bird. | **Frame 0, the hook:** a medium-close, low shot; Kai sprinting at camera-left, hand out; behind him the bird already diving at the shrimp by the pond, its shadow on the grass. Moving from frame 0. | bGqrs |
-| S02 | The bird dived first. | The bird folds its wings and drops (speed lines), its shadow growing over the tiny shrimp at the puddle. | helper 1 |
+| S02 | The bird struck first. | The bird folds its wings and drops (speed lines), its shadow growing over the tiny shrimp at the puddle. | helper 1 |
 | S03 | I got there half a second sooner. | Kai slides in on his knees and scoops the shrimp up in cupped hands; water splash. | bGqrs |
 | S04 | Its talons got my arm instead. | The talons rake past his forearm: the sleeve tears, three thin marks, NO blood. Kai winces and curls round the shrimp; the bird swoops up and away. | helper 1 |
 | S05 | Now I was holding a wet pistol shrimp. In my bare hands. | Close on his cupped hands: the dripping claw resting against his palm, one drop falls; cut up to Kai's terror eyes and sweat drop. | helper 4 |
