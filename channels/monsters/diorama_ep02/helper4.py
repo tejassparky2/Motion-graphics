@@ -551,7 +551,7 @@ def s20bot():
     sc.render.use_border = True
     sc.render.use_crop_to_border = False
     sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
-    sc.render.border_min_y, sc.render.border_max_y = 0.0, 0.58
+    sc.render.border_min_y, sc.render.border_max_y = 0.0, 0.62   # rows 486-1280: helper 8 shows plate rows 518-1200
     X._cam_move("S20Bcam", n, (tgt, 15.0, 6.0, yaw + 18.0, 34.0, 0.27), (tgt, 13.6, 6.0, yaw + 18.0, 34.0, 0.27))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
                 beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
