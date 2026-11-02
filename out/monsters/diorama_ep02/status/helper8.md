@@ -7,7 +7,7 @@
 - 1376 frames, 57.33 s, 1080x1920, no encoder tags.
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
 
-**Shots in (16 + the S20 top half):** S01-S13, S16-S18, and S20top (XprL, d584790). They're 720 renders scaled to 1080 with lanczos; there are no ESRGAN versions yet (say if Ep 2 should get them, as Ep 1 v3 did).
+**Shots in (16 + the S20 top half):** S01-S13, S16-S18, and S20top (XprL, d584790). **ESRGAN (approved 2 Nov):** the 17 landed shots are being upscaled now to `shots_1080/`, next to the 720 renders. It runs as two queues of `--threads 2` on the fast path, ~25-30 min. The assembler takes `shots_1080/<SHOT>.mp4` whenever it exists, so the final picture is built from the ESRGAN versions. S14, S15, S19, S20bot and the re-rendered S02 get the same treatment as they land.
 
 **Placeholders (numbered cards):** S14, S15, S19 and S20bot.
 
