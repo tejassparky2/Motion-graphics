@@ -1,6 +1,6 @@
 # helper 8: Ep 2 assembly status
 
-**Updated:** 2 Nov 2026, ~13:45 UTC (on the re-voiced timing, 0a7b842). Branch head when written: see the commit that last touched this file.
+**Updated:** 2 Nov 2026, ~14:40 UTC (on the re-voiced timing, 0a7b842). Branch head when written: see the commit that last touched this file.
 
 ## The picture
 - **Rebuilt on the re-voiced timing (0a7b842):** l2 "The bird struck first." is captioned on S02, and the 1-frame cut moves are in (S02 32, S03 51 from f98, S09 82 from f473, S12 63, S18 75, S20 145 from f1231). Every shot conforms inside its handle with no hold warnings, and the edge scan is clean.
@@ -8,9 +8,9 @@
 - 1376 frames, 57.33 s, 1080x1920, no encoder tags.
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
 
-**Shots in (16 + the S20 top half):** S01-S13, S16-S18, and S20top (XprL, d584790). **ESRGAN (approved 2 Nov): done for all 17 landed shots** (S01-S13, S16-S18, S20top) in `shots_1080/`, next to the 720 renders. It ran as two queues of `--threads 2` on the fast path, ~3.5 s/frame each, 45 min in all. picture.mp4 is now built from them: every landed shot is `[1080]` and none uses lanczos. The assembler takes `shots_1080/<SHOT>.mp4` whenever it exists, so the final picture is built from the ESRGAN versions. S14, S15, S19, S20bot and the re-rendered S02 get the same treatment as they land.
+**Shots in (16 + both S20 halves):** S01-S13, S16-S18, S20top (XprL, d584790) and S20bot (helper 4, 8a9a5d4). All are at ESRGAN 1080. **ESRGAN (approved 2 Nov): done for all 17 landed shots** (S01-S13, S16-S18, S20top) in `shots_1080/`, next to the 720 renders. It ran as two queues of `--threads 2` on the fast path, ~3.5 s/frame each, 45 min in all. picture.mp4 is now built from them: every landed shot is `[1080]` and none uses lanczos. The assembler takes `shots_1080/<SHOT>.mp4` whenever it exists, so the final picture is built from the ESRGAN versions. S14, S15, S19, S20bot and the re-rendered S02 get the same treatment as they land.
 
-**Placeholders (numbered cards):** S14, S15, S19 and S20bot.
+**Placeholders (numbered cards):** S14, S15 and S19.
 
 ## Checks on the real frames
 - **The hook is on frame 0:** I SAVED / THE SHRIMP / THAT TRIED / TO KILL ME (the last line red), shown until line 1 ends (f63).
@@ -41,6 +41,10 @@
   - B · HIDE at (370, 715), in the sky between Kai's cap and Wren's hood.
   - Their timing: A on "Option A", B on "Option B", both pulse on "Comment".
 - XprL and helper 4 have the zones to keep clear; their stills fit.
+- **S20bot final (8a9a5d4):** checked in the split.
+  - Kai holds the shrimp at his chest, then slips it into his shirt; Wren stays on the right.
+  - The B card stays in the sky, clear of his cap, his raised hand and Wren.
+  - There's no sliver above its render band.
 - **S20top final (d584790):** checked in the split.
   - The captions sit under the net; the shrimp is above it, then at the rim.
   - Kai's and Wren's faces are clear.
