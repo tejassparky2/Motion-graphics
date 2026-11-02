@@ -20,3 +20,7 @@
 - 2026-11-02 12:45 UTC: **S15 handed to XprL.** I stopped my S15 chunk with **0 frames rendered**. I'm rendering only
   **S14** (1-75). The S19 part spec above applies to S15 too (a raw part, libx264 crf 10 yuv420p 24 fps, CLEAN
   flags, no 2D pass). I have the S15 and S19 anchors here already, and I'll join the parts and run the 2D pass when they land.
+
+- 2026-11-02 13:05 UTC: render times are about 120 s a frame here and about 350 s for XprL. **S15 is now split:** XprL does
+  f001-040 (part), and I do f041-080 right after S14. Expected: S14 done around 15:20, S15 41-80 around 16:40, and
+  XprL's S15_f001-040 part around 16:45. S19 is still with helpers 1 (f001-062) and 10 (f063-124).
