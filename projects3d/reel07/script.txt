@@ -12,7 +12,7 @@ Step two. We give that design to Tripo 3D, and it builds a full 3D model.
 
 The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes.
 
-Step four. We print it on the Snapmaker U one. Eleven hours. Nine hundred and fifty colour changes.
+Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes.
 
 Then the supports come off, and we sand it by hand.
 

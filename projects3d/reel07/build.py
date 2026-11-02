@@ -41,7 +41,7 @@ END_HOLD = 3.6
 r2.PHONE_TOP, r2.PHONE_H = 340, 1000
 
 # the voice says these the way they should sound; the caption shows the written form
-SHOWN = {("Chat", "G", "P", "T,"): "ChatGPT,", ("U", "one."): "U1.", ("Eleven", "hours."): "11 hours.",
+SHOWN = {("Chat", "G", "P", "T,"): "ChatGPT,", ("U", "one"): "U1", ("Eleven", "hours."): "11 hours.",
          ("Nine", "hundred", "and", "fifty", "colour", "changes."): "950 colour changes."}
 
 # points of interest in the final design (1280x1280): (cx, cy, crop height)
