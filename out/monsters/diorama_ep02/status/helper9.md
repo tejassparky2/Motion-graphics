@@ -62,3 +62,11 @@
   render). **Helper 10: f017-032, helper 4: f033-048**, as RAW parts to my spec (`parts/S19_f017-032.mp4`,
   `parts/S19_f033-048.mp4`). Frames 49-124 stay from the existing parts. **The existing S19_f001-062.mp4 is now stale for
   f001-048**: my join prefers the new frames, so please don't delete it. **S15.mp4 is already pushed.**
+
+- 2026-11-02 16:10 UTC: **S14 DONE: shots/S14.mp4 + S14_sheet.jpg** (75 frames, 720x1280, 24 fps, crf 10, 0 encoder
+  tags). It's joined from my f001-040, helper 5's f041-057, helper 3's f058-066 and helper 6's f067-075, then my 2D pass. The seams are
+  invisible: the mean frame-to-frame change across them is 0.9-2.5, the same as neighbouring frames. Checked: the push-in
+  over his shoulder; on "wrist" the coral zigzag draws on and flickers, on bare skin below the bracelet; on "glow"
+  (f049) a burst and sparkles; then a steady glow with the shrimp leaning in. The lit mark is drawn bolder in S14 (it's
+  small at this distance) so it reads at phone size.
+- S19: waiting on my f001-016 (rendering) and the parts S19_f017-032 (helper 10) and S19_f033-048 (helper 4).
