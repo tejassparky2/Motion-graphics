@@ -6,40 +6,42 @@ Updated 2 Nov 2026.
 |---|---|---|
 | S05 | **Final, pushed.** 99 frames, 720x1280, crf 10, no tags. Approved look (hands f34, terror face f72). Hands with the dripping claw, one drop falls; cut at f50 up to his face, with 2D terror eyes and a sweat drop on "In my". | shots/S05.mp4 + S05_sheet.jpg |
 | S06 | **Final, pushed.** 98 frames. The claw in profile on the light cyc; on "Straight" (f67) a tapered white arrow-jet with an ink outline shoots straight right and stops inside the frame. The floating-finger bug is fixed. | shots/S06.mp4 + S06_sheet.jpg |
-| S20bot | **Split three ways (coordinator, 2 Nov).** I render **f001-052**: f001-011 are done, f012-052 are rendering now (about 140 s/frame, done around 15:15 UTC). I have **no frames past f052**, so helper 5 (f053-104) and bGqrs (f105-156) start from scratch. When the parts land I join them (steps below). | shots/S20bot.mp4 (pending) |
+| S20bot | **Split six ways (coordinator, 2 Nov).** I render **f001-026 only**: f001-012 are done, and f013-026 are rendering (done by about 13:55 UTC). **I have no frames past f026**, so nobody else needs to skip any. When all five parts are in, I join them (steps below). | shots/S20bot.mp4 (pending) |
 
 Render cost on this container (CPU EEVEE): S05 about 145 s/frame, S06 about 40 s/frame.
 
-## S20bot parts: exact steps for helper 5 (f053-104) and bGqrs (f105-156)
+## S20bot parts: steps for helpers 2, 5, 3, bGqrs and 6 (f027-052, f053-078, f079-104, f105-130, f131-156)
 My pipeline takes raw parts as they are. S20bot has **no 2D pass** (post_helper4 adds nothing to it), so the join *is*
 the final encode.
 - **Any start frame is safe.** S20bot is `step=2, ones=(1,156)`: the camera moves on 1s, so render_shot.py renders
-  every frame, and the characters hold on 2s through their STEPPED modifiers, which depend only on the frame number.
-  Start at exactly f053 / f105; you don't need the step-multiple lead-in.
-- **Render** (from the repo root; split into chunks under 2 h, about 140 s/frame on CPU EEVEE, so at most about 45
-  frames per task):
+  every frame, and the characters hold on 2s through STEPPED modifiers, which depend only on the frame number.
+  Start exactly on your first frame.
+- **Render** (repo root, about 140 s/frame on CPU EEVEE, so 26 frames is about 1 h, one task):
   ```
-  /home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep02 S20bot OUT --frames 53-104
+  /home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep02 S20bot OUT --frames 27-52
   ```
-  (bGqrs: `--frames 105-156`). Frames land as OUT/0053.png ... Leave the env var SHRIMP_IN_HAND unset (it defaults to 0.6).
-- **The frame is meant to look odd:** the render border covers only the bottom 62% (rows 486-1280). The top is empty or
-  transparent on purpose, because helper 8 crops the bottom panel. Don't "fix" it.
-- **Encode the part** (near-lossless, no tags):
+  Frames land as OUT/0027.png ... Leave the env var SHRIMP_IN_HAND unset (it defaults to 0.6).
+- **The frame is meant to look odd:** the render border covers only the bottom 62% (rows 486-1280). The top is empty on
+  purpose, because helper 8 crops the bottom panel. Don't "fix" it.
+- **Encode the part** (near-lossless, no tags; 26 frames each):
   ```
-  ffmpeg -framerate 24 -start_number 53 -i OUT/%04d.png -frames:v 52 -c:v libx264 -crf 6 -pix_fmt yuv444p \
+  ffmpeg -framerate 24 -start_number 27 -i OUT/%04d.png -frames:v 26 -c:v libx264 -crf 6 -pix_fmt yuv444p \
      -map_metadata -1 -fflags +bitexact -flags:v +bitexact -bsf:v filter_units=remove_types=6 \
-     out/monsters/diorama_ep02/parts/S20bot_f053-104.mp4
+     out/monsters/diorama_ep02/parts/S20bot_f027-052.mp4
   ```
-  (bGqrs: `-start_number 105 ... S20bot_f105-156.mp4`, also 52 frames). Push the part and say so in your status file.
-- **The join** (mine, once both parts are in):
+  Change `-start_number` and the name to your range (`S20bot_f053-078.mp4`, `_f079-104`, `_f105-130`, `_f131-156`),
+  push, and note it in your status file.
+- **The join** (mine, once all five parts are in):
   ```
-  python channels/monsters/diorama/join_parts.py --ep02 S20bot build/monsters/diorama_ep02/render/S20bot:1-52 \
-     out/monsters/diorama_ep02/parts/S20bot_f053-104.mp4 out/monsters/diorama_ep02/parts/S20bot_f105-156.mp4
+  python channels/monsters/diorama/join_parts.py --ep02 S20bot build/monsters/diorama_ep02/render/S20bot:1-26 \
+     out/monsters/diorama_ep02/parts/S20bot_f027-052.mp4 ... out/monsters/diorama_ep02/parts/S20bot_f131-156.mp4
   ```
   This gives shots/S20bot.mp4 + sheet at crf 10 with no tags, checked at 156 frames.
-- **Look checks** for the parts: on "Option B" (about f66) Wren turns away and rings her bell. On "hide it" (about
-  f84) Kai's hands go to his collar; the shrimp is inside by about f97, then the teal bulge pops on his chest. On
-  "Comment" (about f114) Wren glances back; Kai smiles rigidly with his hands behind his back.
+- **What each part should show:**
+  - On "Option B" (about f66) Wren turns away and rings her bell.
+  - On "hide it" (about f84) Kai's hands go to his collar; the shrimp is inside by about f97, then the teal bulge pops
+    on his chest.
+  - On "Comment" (about f114) Wren glances back; Kai smiles rigidly with his hands behind his back.
 
 ## QA (S01-S04, S06-S13, S16-S18), 2 Nov 2026
 
@@ -54,13 +56,37 @@ the final encode.
 | Shot | Who | Finding |
 |---|---|---|
 | S01 | bGqrs | The brief asks for "the bird already diving at the shrimp by the pond, its shadow on the grass", on a medium-close, low shot. In the render the bird hovers at the thorn tree and drifts down toward Kai's outstretched hand; it never dives at the shrimp, and there's no bird shadow on the grass. The camera is eye-level and medium-wide. Kai sprinting in from the left, the hand out, and the shrimp by the pond above the caption band are all fine. |
-| S02 | helper 1 | The shadow grows "over the tiny shrimp at the puddle", but **the shrimp isn't visible in any frame**. The shadow spreads over empty grass and clover next to the pond. Dive, speed lines and the growing shadow are fine. |
+| S02 | helper 1 | **The shrimp is not rendered at all** (details and fix below). The shadow grows over empty grass by the pond. Dive, speed lines and the growing shadow are fine. |
 | S12 | helper 5 | The brief: "raises its claw at his face: the frame-0 threat again". The claw rises high, but its tip points right, away from Kai and out toward the frame edge, so the "aimed at his face" threat reads weakly. The turn in his palm, the sweat drop and his wary eyes are fine. |
 | S18 | XprL | The brief: "a villager's net is held ready behind her". Only the pole shows; the net head is cut off above the top of the frame. Wren's mouth flaps and stern face are fine. Minor. |
 
-**OK against the brief:** S03, S04, S06, S07, S08, S09, S10, S11, S13, S16, S17.
+| S04 | helper 1 | **The same bug: the shrimp is not rendered.** His cupped hands are empty from f1, while S03 ends with the shrimp in them and S05 opens on it. The rake, the torn sleeve, the three thin marks (**no blood**), the wince and the bird swooping off are fine. |
+
+### S02 / S04: why the shrimp is missing, and the one-line fix (for helper 1)
+- **What I checked:** I built S02 and S04 here with the committed code (`channels/monsters/diorama_ep02/helper1.py`)
+  and inspected the scene.
+  - In S02 the shrimp is at `bgqrs.SHRIMP` (4.2, -0.1, 0). It projects to about (258, 736) px at f10, and a ray from
+    the camera reaches it unblocked.
+  - But **every `puff_*` object has `hide_render=True`**: 46 of 46 in S04, and the same in S02. The rendered S02
+    frames show empty grass at that spot; see S02 f10/f40.
+- **Cause:** `_clear_smoke` (helper1.py:305) picks the smoke spheres by
+  `o.name.startswith("puff") and o.type == "EMPTY"`. **The shrimp's rig empties are named `puff_root`, `puff_body`,
+  ...**, so the shrimp counts as a "smoke puff". It sits nearer than the target, so the function hides it along with
+  all its children.
+  - S02 (line 159) and S04 (line 504) call it.
+  - S16 (line 373) calls it too but has no shrimp, so it's unaffected.
+- **Fix** (helper1.py:305):
+  ```
+  puffs = [o for o in sc.objects if o.name.startswith("puff") and not o.name.startswith("puff_") and o.type == "EMPTY"]
+  ```
+  The smoke spheres are `puff`, `puff.001`, ... Then re-render S02 and S04.
+  - The S02 camera already frames the shrimp at (258, ~736) px, above the caption band's bottom edge (930) but inside
+    the band (845-930) only if it drifts. Check it stays clear.
+  - In S04, check that the shrimp shows in his cupped hands.
+- Other helpers' builders don't use `_clear_smoke`, as far as I can see (grep finds it only in helper1.py).
+
+**OK against the brief:** S03, S06, S07, S08, S09, S10, S11, S13, S16, S17.
 - **S03:** slide in on his knees, a splash, the scoop.
-- **S04:** the rake, a torn sleeve and three thin marks, **no blood**; he curls round the shrimp and the bird swoops away.
 - **S07:** he turns the shrimp outward, a bomb-tech face; the shrimp is confused.
 - **S08:** the two-hand pistol aim with the bird wheeling in the background. It's closer to eye-level than "heroic low", which is minor.
 - **S09:** the eye close-up, then the held wind-up (f14-33, about 0.8 s), then SNAP. Its impact frames are f34 (a black/white negative) and f35 (a red silhouette) rather than *white* frames, followed by the shockwave ring and the bird blasted back. That's a stylistic choice that reads strongly; I'm not flagging it.
