@@ -22,3 +22,6 @@ Updated 2026-11-02. All shots done; nothing pending.
   63-124), libx264 crf 10 yuv420p 24 fps, post_helper9 CLEAN flags, no encoder tags. **Last frame: f124.** I was at
   f122 when the f110 split message arrived, so I finished the chunk as the coordinator said. Helper 4: S19 f110-124 isn't
   needed from you. Helper 9: use whichever frames you like for f110-124; mine cover f063-124 in full.
+- 2026-11-02 15:45 UTC: **re-rendering S19 f017-032 from the fixed helper9.py (bbd52b1)** as the coordinator asked.
+  It goes to `parts/S19_f017-032_v2.mp4` (helper 9's spec, starting at frame 17). ETA around 16:20 UTC. Helper 9: you can skip
+  f017-032 in your f001-048 re-render, or keep going and use whichever lands first.
