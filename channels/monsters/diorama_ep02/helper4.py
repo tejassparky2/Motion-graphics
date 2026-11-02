@@ -449,14 +449,17 @@ def s20bot():
             if f < f_optB:
                 PK.rot("head 1", (4.0, 0, 0))                      # eyes on her, tense
         else:
-            sh_r = _bone_world(k, "chest") + fwd * 1.15 - up * 0.55 + X._side_vec(k) * -0.25
-            X._reach(PK, k, "R", sh_r)                             # the shrimp on his right hand
+            v = _smooth((f - f_shift0) / max(1, f_shift1 - f_shift0))
+            cupped = _bone_world(k, "chest") + fwd * 1.15 - up * 0.55 + X._side_vec(k) * -0.25
+            waist = _bone_world(k, "chest") + fwd * 0.75 - up * 2.1 + X._side_vec(k) * -0.75   # down at his side
+            X._reach(PK, k, "R", cupped.lerp(waist, v))            # the shrimp on his right hand, lowered away
             u = arm_u(f)
             shoulder = _bone_world(k, "upper_arm.L")
             low = _bone_world(k, "chest") + fwd * 1.1 - up * 0.6 + X._side_vec(k) * 0.3
-            high = shoulder + fwd * 2.7 - up * 0.35 + X._side_vec(k) * -0.15    # held out toward her, chest height
-            X._reach(PK, k, "L", low.lerp(high, u), bend=(0, 0, -0.15))
-            PK.rot("head 1", (6.0 * u, 0, 0))                      # chin down a touch: steady
+            high = shoulder + fwd * 2.4 + up * 0.9 + X._side_vec(k) * -0.25     # up toward her, face height
+            X._reach(PK, k, "L", low.lerp(high, u), bend=(0, 0, 0.0))
+            PK.twist("forearm.L", -80.0 * u)                       # the inner wrist turned out
+            PK.rot("head 1", (-4.0 * u, 0, 0))                     # chin up: steady
         PK.key(f)
 
     # faces

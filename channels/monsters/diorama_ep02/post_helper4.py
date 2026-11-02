@@ -157,6 +157,10 @@ def jet(a):
 
 
 # ---------------------------------------------------------------------------------------------------------- S20bot
+MARK20_K = 2.0                                                              # S20bot's mark: 2x S14's on screen
+PINK = (1.0, 0.62, 0.74)
+
+
 def mark20():
     """S20bot (the owner's new ending, "show her the glowing mark"): helper 9's S14 wrist mark (post_helper9.mark, the
     same zigzag, colours and bloom), on his raised left forearm from S20bot_mark.json: faint once the arm is up, the
@@ -175,9 +179,18 @@ def mark20():
         if lvl <= 0 or g.get("z", 1) <= 0:
             return
         geo = P9._on_arm(g)
-        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=3.0)
+        geo = dict(geo, ex=[v * MARK20_K for v in geo["ex"]], ey=[v * MARK20_K for v in geo["ey"]])   # 2x the S14 size
         x, y = geo["c"]
         size = math.hypot(*geo["ey"])
+        halo = min(1.0, lvl)
+        fx2d._glow(cr, x, y, size * 1.25, PINK, 0.45 * halo)             # the soft pink halo round the wrist
+        if f >= fg:                                                         # the flare: a white-hot bloom
+            fl = max(0.0, 1.0 - abs(f - (fg + 3)) / 6.0)
+            fx2d._glow(cr, x, y, size * 0.8, (1.0, 0.93, 0.88), 0.55 * fl)
+        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=3.2)
+        (lx, ly, _), (rx, ry, _) = g["w_eye_l"], g["w_eye_r"]                 # a faint coral spill on Wren's face
+        fx2d._glow(cr, (lx + rx) / 2, (ly + ry) / 2 + 10, math.hypot(rx - lx, ry - ly) * 3.2, P9.CORAL,
+                   0.16 * halo)
         t0 = (fg + 3 - 1) / FPS                                             # the flare's peak
         fx2d.glow_burst(cr, t, t0, x, y, r=size * 2.4, col=P9.CORAL_HOT, dur=0.5, rays=10, seed=3)
         fx2d.sparkles(cr, t, t0 + 0.04, x, y, n=8, radius=size * 1.0, size=size * 0.17,
