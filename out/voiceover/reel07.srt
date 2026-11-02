@@ -1,0 +1,48 @@
+1
+00:00:00,150 --> 00:00:03,321
+How to make your own custom mini you, from your own photo.
+
+2
+00:00:04,221 --> 00:00:09,338
+This figurine started as one phone photo. Here's exactly how we make it, in four steps.
+
+3
+00:00:10,238 --> 00:00:15,614
+Step one. We upload the photo to Chat G P T, and ask for a semi-realistic 3D design.
+
+4
+00:00:16,514 --> 00:00:23,360
+Not right the first time? Just ask for changes. We asked: make her standing. And remove the ball in her hand.
+
+5
+00:00:24,260 --> 00:00:28,200
+Same face. Same dress. Same little bow. Just cuter.
+
+6
+00:00:29,100 --> 00:00:34,298
+Step two. We give that design to Tripo 3D, and it builds a full 3D model.
+
+7
+00:00:35,198 --> 00:00:42,661
+The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes.
+
+8
+00:00:43,561 --> 00:00:49,302
+Step four. We print it on the Snapmaker U one. Eleven hours. Nine hundred and fifty colour changes.
+
+9
+00:00:50,202 --> 00:00:52,959
+Then the supports come off, and we sand it by hand.
+
+10
+00:00:53,859 --> 00:00:54,739
+And here's the result.
+
+11
+00:00:55,639 --> 00:01:00,854
+Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you.
+
+12
+00:01:01,754 --> 00:01:06,292
+Or make it yourself. Comment 3D, to get the full prompt and guide in your DM.
+
