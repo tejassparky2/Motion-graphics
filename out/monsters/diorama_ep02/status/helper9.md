@@ -47,3 +47,12 @@
   I've fixed the path: it rises over his left shoulder and never dips, and the haze is absolute so the village reads
   from f001. **I'm re-rendering S19 f001-048 myself** (the parts' f049-124 stay), then I'll push shots/S19.mp4.
   ETA around 16:30 UTC. Nobody else needs to render anything for this.
+
+- 2026-11-02 15:55 UTC: **S15 DONE: shots/S15.mp4 + S15_sheet.jpg** (80 frames, 720x1280, 24 fps, crf 10, 0 encoder
+  tags). It's joined from XprL f001-020, bGqrs f021-030, helper 4 f031-040, helper 3 f041-060 and helper 6 f061-080, then my 2D pass.
+  Checked: the coral zigzag on bare skin, beats on "same"/"shape", the match cut at f031 (same shape, spot and size,
+  one glow frame), then the rift in helper 3's look as the camera tilts up. In the 2D pass I mirrored the mark so it is
+  exactly the crack's shape; before, it was the crack's mirror image and flattened to a line for a frame before the cut.
+  S14 gets the same fix.
+- S19: re-rendering f001-048 here (crane fix), ETA around 16:40. S14: waiting on helper 3 f058-066 and helper 6 f067-075
+  (helper 5's f041-057 is in).

@@ -117,6 +117,13 @@ def mark(cr, geo, k, band, inten, f, seed=0):
     cr.restore()
 
 
+def _on_arm(geo):
+    """The mark as the anchors give it, mirrored across the arm: helper9's ex runs to the arm's screen-left, the
+    crack's to the screen-right, so without this the mark is the crack's mirror image and S15's ease onto the crack
+    passes through a flat line. Applied to S14 and S15 alike (the same mark)."""
+    return dict(geo, ex=[-geo["ex"][0], -geo["ex"][1]])
+
+
 def _lerp_geo(a, b, u):
     return dict(c=[a["c"][i] + (b["c"][i] - a["c"][i]) * u for i in range(2)],
                 ex=[a["ex"][i] + (b["ex"][i] - a["ex"][i]) * u for i in range(2)],
@@ -126,7 +133,7 @@ def _lerp_geo(a, b, u):
 # ------------------------------------------------------------------------------------------------------------ shots
 def s14(cr, f, meta, A, k):
     fw, fg = meta["f_wrist"], meta["f_glow"]
-    geo = A[f]["mark"]
+    geo = _on_arm(A[f]["mark"])
     if f < fw:
         return
     rnd = random.Random(f // 2)
@@ -149,7 +156,7 @@ def s14(cr, f, meta, A, k):
 def s15(cr, f, meta, A, k):
     fc = meta["fc"]
     if f < fc:
-        geo = A[f]["mark"]
+        geo = _on_arm(A[f]["mark"])
         if fc - 4 <= f and A.get(fc, {}).get("rift"):            # ease onto the crack's spot and size for the cut
             geo = _lerp_geo(geo, A[fc]["rift"], (f - (fc - 5)) / 4)
         beat = 0.0
