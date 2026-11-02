@@ -42,4 +42,4 @@ S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the vil
 
 The music drops 0.1 s before S09 (TWIST l9). No heartbeat, no riser, all original.
 
-Status: done on the shots that have landed. Waiting for S05/S14/S19 (and the re-rendered S02/S04, which keep their beats unless the action moves); I'll re-run, re-check and push when they land.
+Status: done on the shots that have landed. Waiting for S05/S14/S19 (the re-rendered S02 and S04 are checked); I'll re-run, re-check and push when they land.
