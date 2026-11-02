@@ -12,7 +12,10 @@ Meta Business Suite (desktop) → Inbox → Automations → **Comment to message
 > Want us to make your mini you instead? Send 1 clear photo on WhatsApp for 2 free previews in 1–2 minutes:
 > https://wa.me/919164748401
 
-The guide PDF needs the owner's full ChatGPT prompt as text.
+The guide: `out/3d/reel07/guide/Yours3D_mini_you_guide.pdf` (9 phone-size pages; `projects3d/reel07/guide.py`).
+Instagram DMs can't attach a PDF from the automation: upload it to Google Drive, set "Anyone with the link",
+and put that link in the DM. The prompt in it starts with the owner's own lines; the rest is a draft until the owner
+sends the exact text.
 
 ## Caption
 How to make your own mini you, from one photo 📸➡️🧸 Save this for later.
