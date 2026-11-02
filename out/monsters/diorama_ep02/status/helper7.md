@@ -25,11 +25,16 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 | S12 | the claw comes up f14 | a low creak; the tense second held |
 | S13 | the claw touches his nose f15 | the "tink" (the tense bed stops on it) |
 | S17 | Wren marches in from f0, stops ~f45 | her steps every 0.36 s, her hand bell on the stop |
+| S20 | both halves open on the cut f0 (S20top + S20bot) | the split whoosh |
+| S20bot | Wren turns her back f55-65, bell at her hip f61 | cloth swish (right), a small bell ring |
+| S20bot | Kai's hands to collar f81, shrimp slips in f89, teal bulge pops f97 ("shirt") | two cloth rustles (left), a soft rubbery "bloop" |
+| S20bot | Wren glances back f115-121, turns away again f139-145 | swish + a faint bell jingle, swish |
 
+**S20bot landed (8a9a5d4) and is now scored** (beats read by frame diffs on its two halves and a contact sheet).
 Still placeholders, because those shots haven't landed: S05 drip (f40), S14 glow chime (on "glow"), S15 sky-crack sting
-(on "crack"), S19 lake and the drip on "dry", and S20 split whoosh (f0). The A/B stingers sit on the spoken letters.
+(on "crack"), S19 lake and the drip on "dry" (helper 1's raw S19 f001-062 part is in, but not the final shot). The A/B stingers sit on the spoken letters.
 S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the villagers come over the hill from the cut).
 
 The music drops 0.1 s before S09 (TWIST l9). No heartbeat, no riser, all original.
 
-Status: done on the shots that have landed. Waiting for S05/S14/S15/S19/S20; I'll re-run, re-check and push when they land.
+Status: done on the shots that have landed. Waiting for S05/S14/S15/S19 (and the re-rendered S02/S04, which keep their beats unless the action moves); I'll re-run, re-check and push when they land.
