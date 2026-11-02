@@ -107,9 +107,45 @@ def _wren(at, yaw):
 
 
 # ------------------------------------------------------------------------------------------------------------ S17
+def _villagers_s17(n, s16_frames=None):
+    """helper 1's villagers (S16) carrying on down the path behind Wren: from where S16 leaves them they keep
+    marching (0.3 units a frame), slowing to a stop as a loose group well behind her; bells still swinging."""
+    from channels.monsters.diorama_ep02 import helper1 as h1
+    from channels.monsters.mk import anim
+    n16 = s16_frames or _frames("S16", 47)
+    out = []
+    for i, (dx, y0, delay, has_net, bell) in enumerate(h1.VILLAGERS):
+        v = h1.villager(i, 11 + i * 7, net=has_net, bell=bell)
+        x0 = diorama._path_x(y0) + dx
+        target = Vector((KAI_AT.x + dx * 0.4, KAI_AT.y - 6.0, 0))
+        d = (target - Vector((x0, y0, 0))).normalized()
+        v["root"].rotation_euler.z = math.atan2(d.x, -d.y)
+        t_s16 = max(0, n16 - delay)                                # how far S16 walked it
+        stop_at = 16.0 + 2.2 * i                                   # units short of Wren's stop (a loose group)
+        max_walk = max(0.0, (target - Vector((x0, y0, 0))).length - stop_at)
+        for f in range(1, n + 1, 2):
+            # 0.3 units a frame, easing to a halt over the shot's first ~40 frames
+            u = min(1.0, f / 30.0)                                 # they stop on the rise, watching her go on
+            extra = 0.3 * 30.0 * (u - u * u / 2)
+            walk = min(max_walk, 0.3 * t_s16 + extra)
+            p = Vector((x0, y0, 0)) + d * walk
+            p.z = h1.hill_height(p.x, p.y)
+            anim.key(v["root"], "location", f, tuple(p), "CONSTANT")
+            ph = (t_s16 + f) * 0.42 * (1 - u * 0.8) + i
+            anim.key(v["body"], "location", f, (0, 0, 0.22 * abs(math.sin(ph)) * (1 - u * 0.7)), "CONSTANT")
+            if v["bell"] is not None:
+                anim.key(v["bell"], "rotation_euler", f, (0.55 * math.sin((n16 + f) * 1.3 + i) * (1 - u * 0.6), 0, 0),
+                         "CONSTANT")
+        out.append(v)
+    return out
+
+
 def s17():
     n = _frames("S17", 84)
     _world(n)
+    from channels.monsters.diorama_ep02 import helper1 as h1
+    h1.hill()
+    _villagers_s17(n)
     k = _kai()
     PK = x3.Pose(k)
     for f in range(1, n + 1, 2):                                     # Kai holds still, breathing (his back to us)
@@ -257,13 +293,14 @@ def s18():
     v2._twos([w["arm"]])
     back = (KAI_AT - WREN_STOP).normalized()                           # toward Kai (the camera side)
     side = Vector((back.y, -back.x, 0))
-    nr = net("S18net", length=7.5)
-    nr.location = WREN_STOP - back * 6.5 - side * 3.4 + Vector((0, 0, -1.5))  # behind her shoulder, hoop low
-    yaw_net = math.atan2(back.x, -back.y)
-    for f in range(1, n + 1, 4):                                       # held up, ready, swaying a little
-        nr.rotation_euler = (math.radians(-8 + 2 * math.sin(f / 9.0)), math.radians(-16 + 2 * math.sin(f / 13.0)),
-                             yaw_net)
-        nr.keyframe_insert("rotation_euler", frame=f)
+    from channels.monsters.diorama_ep02 import helper1 as h1
+    from channels.monsters.mk import anim
+    h1.hill()
+    v = h1.villager(1, 18, net=True, bell=False)                       # S16/S17's net-carrier, right behind her
+    v["root"].location = WREN_STOP - back * 8.0 - side * 6.0          # behind her, off her shoulder, in view
+    v["root"].rotation_euler.z = math.atan2(back.x, -back.y)
+    for f in range(1, n + 1, 2):                                       # a ready, slightly impatient sway
+        anim.key(v["body"], "rotation_euler", f, (0, 0.04 * math.sin(f / 7.0), 0), "CONSTANT")
     tgt = WREN_STOP + Vector((0, 0, 6.6))
     yaw = math.degrees(math.atan2(-back.x, -back.y)) + 20.0           # a three-quarter view, her right side to us
     _cam_move("S18cam", n, (tuple(tgt), 8.6, 4.0, yaw, 45.0, 0.0), (tuple(tgt), 7.6, 4.0, yaw, 45.0, 0.0))

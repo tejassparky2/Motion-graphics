@@ -322,7 +322,7 @@ def _hide_from(f, objs):
 
 # ------------------------------------------------------------------------------------------------------------ S14
 def _s14_cam(mark, seat):
-    return mark.lerp(seat, 0.45), _az(-0.3, 0.9)          # over his left shoulder, looking down at his hands
+    return mark.lerp(seat, 0.3), _az(-0.3, 0.9)           # over his left shoulder, looking down at his hands
 
 
 def s14():
@@ -346,8 +346,8 @@ def s14():
     _mark_light(k, f_wrist, f_glow, n, _orbit(tgt, 5.0, 55.0, yaw)[0])
     cam = _new_cam("S14cam")
     for f in range(1, n + 1):                                           # a slow push-in on 1s
-        loc, rot = _orbit(tgt, 5.4 - 0.8 * _smooth((f - 1) / (n - 1)), 55.0, yaw)
-        _key_cam(cam, f, loc, rot, 50.0, (tgt - loc).length, blur=4.0, haze=(3.0, 3.0))
+        loc, rot = _orbit(tgt, 6.2 - 0.8 * _smooth((f - 1) / (n - 1)), 55.0, yaw)
+        _key_cam(cam, f, loc, rot, 50.0, (tgt - loc).length, shift_y=-0.1, blur=4.0, haze=(3.0, 3.0))   # mark ~y 560
     _linear(cam, cam.data, bpy.context.scene.world)
     X.v2._twos([k["arm"]])
     LAST.update(k=k, sh=sh, mark=mark, seat=seat)
@@ -562,7 +562,7 @@ def s19():
     w = _wren_facing_kai(n)
     sh, seat = _shrimp_in_hands(k)
     shp, hinge, body = sh["shoulder"], sh["hinge"], sh["body"]
-    anim.key(shp, "rotation_euler", 1, (0.35, -1.95, 0))                 # the claw draped out over his fists, down
+    anim.key(shp, "rotation_euler", 1, (0.35, -2.2, 0))                  # the claw draped out over his fists, down
     anim.key(hinge, "rotation_euler", 1, (0.12, 0, 0))
     for f in range(1, n + 1, 24):                                        # breathing
         anim.squash(body, f, 0.0)
@@ -581,7 +581,11 @@ def s19():
     tip = _claw_tip(sh)
     from channels.monsters.mk import meadow
     before = set(bpy.data.objects)
-    meadow.drips(tip, fc - 10, n + 2, every=8, fall=2.4, seed=4)
+    meadow.drips(tip, fc - 10, fc + 22, every=8, fall=2.4, seed=4)      # from the tip before it turns...
+    sc.frame_set(fc + 24)
+    bpy.context.view_layer.update()
+    meadow.drips(_claw_tip(sh), fc + 22, n + 2, every=8, fall=2.4, seed=5)   # ...and after (body turn at fc+22)
+    sc.frame_set(fc)
     drops = sorted(set(bpy.data.objects) - before, key=lambda o: o.name)
     for i, o in enumerate(drops):
         o.name = f"h9_drop{i}"
@@ -609,7 +613,7 @@ def s19():
     for f in range(fc, n + 1):
         u = _smooth((f - fc) / (n - fc))
         loc, rot = _orbit(aim, 4.6 - 0.5 * u, 6.0, yaw)
-        _key_cam(close, f, loc, rot, 55.0, (aim - loc).length, blur=10.0, haze=(3.0, 3.0))
+        _key_cam(close, f, loc, rot, 55.0, (aim - loc).length, shift_y=-0.08, blur=10.0, haze=(3.0, 3.0))  # tip above the captions
     _linear(crane, crane.data, close, close.data, sc.world)
     LAST.update(k=k, sh=sh, w=w, fc=fc, tip=tip, lake=lake)
 
