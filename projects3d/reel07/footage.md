@@ -31,4 +31,6 @@ In `out/3d/reel07/raw2/Photo to 3d/`. Also in the folder: reel 04's own media an
 | `IMG_4135.MOV` (iPhone, 6 s) | Sowmya holding the figurine (one of her reel 05 takes) | "gifting", reveal | Her voice not used |
 | `20261014_190334.jpg`, `20261014_214940.jpg`, `20261014_202953.jpg`, `IMG_20261016_003110_245.jpg`, `Screenshot_20261102_141341_Gallery.jpg` | First layers on the bed, the U1 printing, the slicer on the laptop, a slicer screenshot, the photo in the gallery | Stills / B-roll | — |
 
-Missing: a Tripo recording of Manya's design (step 2) and how long it took; the full prompt text for the DM guide.
+| `Screen Recording 2026-11-02 180351.mp4` (PC, 68 s; added 2 Nov) | Tripo: Manya's design uploaded, settings, Generate, the model building, then turning | Step 2 | 0–5 s: the file picker (file names); crop the account bar and the side panel of other models |
+
+Missing: the full prompt text for the DM guide.

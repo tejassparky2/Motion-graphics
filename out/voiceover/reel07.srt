@@ -19,30 +19,30 @@ Not right the first time? Just ask for changes. We asked for a standing pose. An
 Same face. Same dress. Same little bow. Just cuter.
 
 6
-00:00:23,327 --> 00:00:27,976
-Step two. We give that design to Tripo 3D, and it builds a full 3D model.
+00:00:23,327 --> 00:00:27,474
+Step two. We give that design to Tripo, and it builds a full 3D model.
 
 7
-00:00:28,326 --> 00:00:34,990
-The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes.
+00:00:27,824 --> 00:00:34,544
+The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes and eyebrows.
 
 8
-00:00:35,340 --> 00:00:40,606
+00:00:34,894 --> 00:00:40,160
 Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes.
 
 9
-00:00:40,956 --> 00:00:43,386
+00:00:40,510 --> 00:00:42,940
 Then the supports come off, and we sand it by hand.
 
 10
-00:00:43,736 --> 00:00:44,531
+00:00:43,290 --> 00:00:44,085
 And here's the result.
 
 11
-00:00:44,881 --> 00:00:49,505
+00:00:44,435 --> 00:00:49,059
 Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you.
 
 12
-00:00:49,855 --> 00:00:53,901
+00:00:49,409 --> 00:00:53,454
 Or make it yourself. Comment 3D, to get the full prompt and guide in your DM.
 

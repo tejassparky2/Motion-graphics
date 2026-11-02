@@ -36,7 +36,7 @@ HALF = r4.HALF
 
 NAME = "reel07"
 CAP = 1440                  # caption centre in the phone / screen scenes (below the card, above the Reels UI)
-REVEAL_HOLD = 0.8           # extra beat after "And here's the result."
+HOLDS = {5: 1.0, 9: 0.8}    # extra beats after line 6 (the Tripo model turning) and "And here's the result."
 END_HOLD = 3.0             # keeps the reel under 1:10 (owner, 27 Oct 2026)
 r2.PHONE_TOP, r2.PHONE_H = 340, 1000
 
@@ -250,20 +250,22 @@ def main():
     md = lambda key: v1.media(mdir, key)          # noqa: E731
     still = lambda d, key: ImageOps.exif_transpose(Image.open(v1.media(d, key))).convert("RGB")   # noqa: E731
     photo, design, fig = still(r4dir, "808397810"), still(mdir, "IMG_20261014_140855"), still(r4dir, "183012")
-    chat, orca, orca2 = md("141710_ChatGPT"), md("150551"), md("150840")
+    chat, orca, orca2, tripo = md("141710_ChatGPT"), md("150551"), md("150840"), md("180351")
 
     vo = os.path.join(ROOT, "out", "voiceover", NAME)
     voice, sr = soundfile.read(vo + ".wav")
     cues = v1.read_srt(vo + ".srt")
     words = v2.word_timings(vo + ".wav", cues)
     assert len(cues) == 12, len(cues)
-    # hold the reveal: a beat of silence after "And here's the result."
-    cut = (cues[9][1] + cues[10][0]) / 2
-    k = int(cut * sr)
-    voice = np.concatenate([voice[:k], np.zeros(int(REVEAL_HOLD * sr)), voice[k:], np.zeros(int(END_HOLD * sr))])
-    shift = lambda x: x + REVEAL_HOLD if x > cut else x     # noqa: E731
-    cues = [(shift(a), shift(b), s) for a, b, s in cues]
-    words = [[(w, shift(a), shift(b)) for w, a, b in ws] for ws in words]
+    # beats of silence after some lines (HOLDS), latest first so earlier cut points stay valid
+    for i in sorted(HOLDS, reverse=True):
+        cut, hold = (cues[i][1] + cues[i + 1][0]) / 2, HOLDS[i]
+        k = int(cut * sr)
+        voice = np.concatenate([voice[:k], np.zeros(int(hold * sr)), voice[k:]])
+        shift = lambda x, c=cut, h=hold: x + h if x > c else x     # noqa: E731
+        cues = [(shift(a), shift(b), s) for a, b, s in cues]
+        words = [[(w, shift(a), shift(b)) for w, a, b in ws] for ws in words]
+    voice = np.concatenate([voice, np.zeros(int(END_HOLD * sr))])
     words = [display_words(ws) for ws in words]
     sent = [r4.groups(ws) for ws in words]
     total = len(voice) / sr
@@ -325,7 +327,12 @@ def main():
             yield fr
 
     def model(n):
-        return screen_card(orca2, n, 2.5, 9.0, (800, 120, 1520, 960))
+        """Tripo (owner's recording of Manya's design): the design uploaded and Generate, the model building, then
+        the model turning. Cropped clear of the file picker, the account bar and the side panel of other models."""
+        a, b = int(n * 0.22), int(n * 0.18)
+        yield from screen_card(tripo, a, 8.0, 15.5, (0, 95, 900, 1025))
+        yield from screen_card(tripo, b, 20.0, 41.0, (400, 95, 1340, 1025))
+        yield from screen_card(tripo, n - a - b, 44.0, 68.0, (440, 120, 1240, 1025))
 
     def paint(n):
         return screen_card(orca, n, 34.0, 80.0, (520, 70, 1460, 1030))
