@@ -5,6 +5,7 @@ Updated 2 Nov 2026.
 | Shot | State | File |
 |---|---|---|
 | S01 | **Final, pushed** (9f77411). 78/78 frames, 720x1280 at 24 fps, crf 10, 0 encoder tags. A long-lens race: Kai sprints with his hand out from frame 0; the dark bird dives head-on from the thorn tree, its shadow a streak on the grass, and ends beside his hand. The shrimp sits at the pond edge, above the caption band. | shots/S01.mp4 + S01_sheet.jpg |
+| S20bot f105-130 | **Rendering** (for helper 4; started 12:50 UTC). The range was cut to f105-130 (helper 6 takes f131-156); the render stops once f130 is saved, and nothing past f130 gets rendered. Helper 4's builder, from f104 (the chunk rule), about 180 s/frame here, so done around 14:15 UTC. Frame 105 matches the approved look. The raw part (crf 6, yuv444p, no tags) follows. | parts/S20bot_f105-130.mp4 (pending) |
 | S03 | **Final, pushed** (01a7aba). 62/62 frames, crf 10, 0 encoder tags. A knee slide, a cupped-hand scoop with a splash, and a hunch over the shrimp. Only the bird's shadow appears, sweeping over him from about f44; the strike is helper 1's S04. | shots/S03.mp4 + S03_sheet.jpg |
 
 - Builder: channels/monsters/diorama_ep02/bgqrs.py. Encoder: post_bgqrs.py.
@@ -16,4 +17,4 @@ Known weak points (I'll fix them if QA wants):
 - S01: Kai is about 35% of the frame height. A tighter shot on him would cut the shrimp or the bird out of the portrait frame.
 - S01: the long lens flattens the dive, so the bird reads as coming at the lens more than falling.
 
-Status: idle. I'm checking git for QA notes.
+Status: rendering S20bot f105-130. I'm checking git for QA notes.
