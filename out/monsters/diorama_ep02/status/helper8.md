@@ -1,5 +1,15 @@
 # helper 8: Ep 2 assembly status
 
+**FINAL v2 PUSHED (2 Nov ~22:05 UTC, the new ending):** the final `picture.mp4` is in.
+- S20bot v2 (fe5a3f0, 160 f) is at ESRGAN 1080. The two old S20bot parts were cleared from `parts/` before the join.
+- The timing is 78c1cad.
+- 1379 frames, 57.46 s, 53.2 MB, 1080x1920.
+- Tag check: no encoder or tool tags.
+- The edge scan is clean; S09 f34 is allowed.
+- The B card SHOW MARK is at (286, 715). Checked on the real frames: it's clear of Kai's cap, his raised glowing arm and Wren's face.
+- The cover is unchanged.
+
+
 **Ending change (2 Nov ~19:40 UTC, the coordinator's note):** Option B is now "show her the glowing mark". S20 becomes 148 frames.
 - The B label in the assembler is now **SHOW MARK**. At 85% that card is 422 px wide from its centre, so the B card has to move left from x 370 to x ≤ 286 to stay in frame. "SHOW IT" (320 px) would fit where B is now.
 - **Placed (21:15 UTC) on helper 4's v2 stills (f060, f098, f108): SHOW MARK at (286, 715).** It's in the sky right of Kai's cap, above his raised glowing arm, Wren's face and the flare. It's fully in frame. A stays at (124, 585).
