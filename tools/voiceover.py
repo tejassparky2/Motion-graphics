@@ -104,6 +104,17 @@ def turbo_takes(texts, tries=3):
     return chosen
 
 
+def sped(path, tempo):
+    """A faster copy of a Turbo take (owner, 2 Nov 2026: "make voice faster so it won't feel boring"): rubberband in
+    crisp mode, pitch and formants kept. Stay at or below voice.TEMPO_MAX so short words don't smear."""
+    out = path[:-4] + f".tempo{tempo:g}.wav"
+    if not os.path.exists(out):
+        subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", path, "-filter:a",
+                        f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
+                        "formant=preserved:pitchq=quality", out], check=True)
+    return out
+
+
 def stamp(t):
     ms = int(round(t * 1000))
     return f"{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}"
@@ -123,7 +134,10 @@ def main():
     ap.add_argument("--phrases", action="store_true", help="one take per phrase, same pace (short phrases can drawl)")
     ap.add_argument("--even", type=float, default=0, metavar="SYL_PER_S",
                     help="even out the speed inside each take: stretch every phrase to this rate (e.g. 5.4)")
+    ap.add_argument("--tempo", type=float, default=1.0,
+                    help="turbo: speed every take up by this factor, pitch kept (e.g. 1.12; max %s)" % voice.TEMPO_MAX)
     a = ap.parse_args()
+    assert 0.8 <= a.tempo <= voice.TEMPO_MAX, a.tempo
 
     text = open(a.script, encoding="utf-8").read()
     if a.phrases:
@@ -143,6 +157,8 @@ def main():
     track, cues, t = [np.zeros(int(LEAD * sr))], [], LEAD
     for s, pause in lines:
         path = takes[s] if a.engine == "turbo" else voice._clone_process(s, a.pace)[0]
+        if a.engine == "turbo" and abs(a.tempo - 1) > 0.005:
+            path = sped(path, a.tempo)
         if a.even:
             from even_pace import even
             evened = path[:-4] + f".even{a.even}.wav"
