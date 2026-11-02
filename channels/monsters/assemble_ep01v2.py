@@ -68,9 +68,10 @@ CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "
 HOOK = [("THIS SHRIMP", ()), ("ERASED", ("ERASED",)), ("A FOREST", ())]
 HOOK_Y = 170                 # top baseline: high in the frame, over the sliced trees, above Kai's face
 HOOK_SIZE = 108
-# Episode 2's frame-0 hook: four short lines, the threat in red; placed against S01 when it lands
+# Episode 2's frame-0 hook: four short lines, the threat in red. S01 keeps Kai's face and the diving bird in the top
+# third and the shrimp at y 745+, so the hook sits in the middle band (over his legs and the tree trunk).
 HOOK_VERSION = {"diorama_ep02": dict(lines=[("I SAVED", ()), ("THE SHRIMP", ()), ("THAT TRIED", ()),
-                                            ("TO KILL ME", ("TO KILL ME",))], y=150, size=92)}
+                                            ("TO KILL ME", ("TO KILL ME",))], y=480, size=80)}
 NO_CAPTIONS = {"S15"}        # Episode 1's snap; Episode 2's wordless S09 has no words to caption anyway
 NO_CAPTIONS_VERSION = {"diorama_ep02": set()}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
@@ -106,7 +107,11 @@ CAP_Y_VERSION["diorama_v3"].update({
 # S22: the tree close-up keeps the band; after the pull-back, the grass between the tree and Kai at the puddle.
 # S23c: between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in.
 # Episode 2: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
-CAP_Y_VERSION["diorama_ep02"] = {}
+CAP_Y_VERSION["diorama_ep02"] = {
+    "S10": 600,              # above the upside-down bird in the thorn bush (its masked face is in the 71% band)
+    "S20": 520,              # the B half puts Kai's face in the 71% band and the hide at chest height: the captions go
+                             # in the A half, under the net (the shrimp is high, then inside it) and above the A card
+}
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
@@ -119,9 +124,16 @@ SHOTS_HI = None              # the 1080 shots folder, preferred over SHOTS when 
 S02_WHITE = (0.85, 0.60)     # the rewind's closing flash stays dimmer than the snap (the episode's brightest moment)
 S24_FOCUS = [(W / 2, H / 4), (W / 2, H * 3 / 4)]   # the plates are framed as halves: each shows in place
 # v3's B plate: Kai's cap and raised hand start ~20 px under the divider, so the plate drops 100 px instead of 60
-S24_FOCUS_VERSION = {"diorama_v3": [(W / 2, H / 4), (W / 2, 860)]}
+S24_FOCUS_VERSION = {"diorama_v3": [(W / 2, H / 4), (W / 2, 860)],
+                     # ep02's S20bot renders only the bottom 58% (rows 538+): the plate drops 80 px, not 60, so the
+                     # divider's lowest jag (screen ~598) shows plate rows from 518 - a 20 px margin
+                     "diorama_ep02": [(W / 2, H / 4), (W / 2, 880)]}
 # card centres per version (default fx2d_ab.A_POS / B_POS); v3's B moves right of the bird at the pond's top-left
-AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)}}
+AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)},
+                  # ep02's S20 halves are full of Kai, Wren, the net and the shrimp: both cards straddle the divider,
+                  # A over Kai's shins and the stump, B in the B half's sky between Kai's cap and Wren's hood
+                  "diorama_ep02": {"A": (124, 585), "B": (370, 715)}}
+AB_SCALE_VERSION = {"diorama_ep02": 0.85}   # the cards' size per version (1 = fx2d_ab's 168 px badge)
 
 
 # ---------------------------------------------------------------- decoding shots
@@ -398,6 +410,8 @@ def main():
     ap.add_argument("--res", type=int, choices=(720, 1080), default=None,
                     help="output width (default: 1080 for diorama_v3, else 720); 720 is quicker for animatics")
     ap.add_argument("--crf", type=int, default=14, help="x264 crf (default 14)")
+    ap.add_argument("--only", nargs="+", default=None, metavar="SHOT",
+                    help="placement tests: render only these shots (a short picture; not for delivery)")
     ap.add_argument("--max-mb", type=float, default=None,
                     help="size cap in MB (default 95 above 720 wide, so the file goes through git under GitHub's "
                          "100 MB limit); an oversized encode is redone from a lossless copy at the lowest crf "
@@ -416,6 +430,7 @@ def main():
     CAP_Y_SHOT = CAP_Y_VERSION[a.version]
     S24_FOCUS_SHOT = S24_FOCUS_VERSION.get(a.version, S24_FOCUS)
     AB_POS_SHOT = AB_POS_VERSION.get(a.version, {})
+    ab_scale = AB_SCALE_VERSION.get(a.version, 1.0)
     AB_LABELS = AB_LABELS_VERSION.get(a.version, ("SAVE", "RUN"))
     NO_CAPTIONS = NO_CAPTIONS_VERSION.get(a.version, NO_CAPTIONS)
     if a.version in HOOK_VERSION:
@@ -460,6 +475,10 @@ def main():
     s01 = None
     frame_no = 0
     for shot in shots:
+        if a.only and shot.name not in a.only:
+            continue
+        if a.only:
+            frame_no = shot.first                             # episode time stays right for captions and cards
         if rewind and shot.name == "S02":
             frames = build_s02(shot, s01, warn) if s01 is not None else None
             if frames is None:
@@ -494,8 +513,15 @@ def main():
             if ab and shot.name == split:                       # helper 7's vote cards, under the captions
                 t0 = shot.first / FPS
                 for letter, label, at in (("A", AB_LABELS[0], ab[0]), ("B", AB_LABELS[1], ab[1])):
-                    fx2d_ab.ab_card(cr, t - t0, at - t0, letter, label, pos=AB_POS_SHOT.get(letter),
-                                    pulse_at=ab[2] - t0)
+                    if ab_scale == 1.0:
+                        fx2d_ab.ab_card(cr, t - t0, at - t0, letter, label, pos=AB_POS_SHOT.get(letter),
+                                        pulse_at=ab[2] - t0)
+                        continue
+                    cr.save()                                  # a smaller card, scaled about its own centre
+                    cr.translate(*(AB_POS_SHOT.get(letter) or (fx2d_ab.A_POS if letter == "A" else fx2d_ab.B_POS)))
+                    cr.scale(ab_scale, ab_scale)
+                    fx2d_ab.ab_card(cr, t - t0, at - t0, letter, label, pos=(0, 0), pulse_at=ab[2] - t0)
+                    cr.restore()
             if shot.name not in NO_CAPTIONS:
                 draw_caption(cr, t, chunks, tj["total"], CAP_Y_SHOT.get(shot.name, CAP_Y), shot.first / FPS)
             s.flush()

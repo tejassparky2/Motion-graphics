@@ -291,8 +291,9 @@ def s06():
     # the shrimp turned so its right side (the claw) faces the camera on -X, its front (-Y) to screen right
     origin = Vector((0.0, -20.0, 0.0))
     _backdrop(S06_BG).location = origin
-    sh = puffshrimp.build(tuple(origin))
-    s3d._fix_pivots(sh)
+    sh = puffshrimp.build((0, 0, 0))                                # at the origin: _fix_pivots assumes it
+    s3d._fix_pivots(sh)                                             # (built elsewhere, it moved the finger's hinge
+    sh["root"].location = origin                                    # 20 units off and the finger came loose)
     bpy.context.view_layer.update()
     ahead = origin + Vector((0, -40.0, 2.6))                        # straight ahead, at the claw's height
     rest = s3d.aim_claw(sh, ahead)
@@ -514,11 +515,11 @@ def s20bot():
     bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=1.0)
     bulge = bpy.context.object
     bulge.name = "s20b_bulge"
-    bulge.data.materials.append(_shirt_mat(k))
+    bulge.data.materials.append(look.toon("s20b_shirt", look.hexc("#1aa59a")))   # his teal jacket
     for p_ in bulge.data.polygons:
         p_.use_smooth = True
     look.outline(bulge, 0.02)
-    bulge.location = _bone_world(k, "chest") + fwd * 0.42 - up * 0.15
+    bulge.location = _bone_world(k, "chest") + fwd * 0.5 - up * 0.2
     bulge.rotation_euler = (0, 0, math.radians(X.KAI_YAW))
     bpy.context.view_layer.update()
     mw = bulge.matrix_world.copy()
@@ -526,7 +527,7 @@ def s20bot():
     bulge.parent_bone = "chest"
     bpy.context.view_layer.update()
     bulge.matrix_world = mw
-    base = Vector((0.62, 0.42, 0.55))
+    base = Vector((0.78, 0.55, 0.66)) / k["arm"].scale.x            # bone-parented: the armature's scale applies
     for f, s_ in ((f_in - 1, 0.001), (f_in, 0.7), (f_in + 2, 1.15), (f_in + 4, 0.95), (f_in + 6, 1.0),
                   (f_in + 22, 1.0), (f_in + 24, 1.08), (f_in + 26, 0.97), (f_in + 28, 1.0),
                   (f_back0 + 3, 1.0), (f_back0 + 5, 1.1), (f_back0 + 7, 1.0)):
@@ -540,13 +541,19 @@ def s20bot():
 
     # camera: from the south-east, a 3/4 on Kai's front-left with Wren nearer at frame left; the pair in the
     # bottom band (shift the frame up); a slow push-in on 1s
-    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.45)
-    tgt = tuple(mid + Vector((0, 0, 5.0)))
+    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.4)
+    tgt = tuple(mid + Vector((0, 0, 5.4)))
     left = Vector((fwd.y * -1.0, fwd.x, 0)) * -1.0                  # Kai's left in the world
     cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     del left
-    X._cam_move("S20Bcam", n, (tgt, 16.5, 6.0, yaw, 32.0, 0.21), (tgt, 15.0, 6.0, yaw, 32.0, 0.21))
+    # render only the bottom band (helper 8 crops it under the divider; the jagged divider reaches ~45 px above the
+    # middle, so the band goes to 58% of the height): about 40% less render time, the top of the frame left empty
+    sc.render.use_border = True
+    sc.render.use_crop_to_border = False
+    sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
+    sc.render.border_min_y, sc.render.border_max_y = 0.0, 0.62   # rows 486-1280: helper 8 shows plate rows 518-1200
+    X._cam_move("S20Bcam", n, (tgt, 15.0, 6.0, yaw + 18.0, 34.0, 0.27), (tgt, 13.6, 6.0, yaw + 18.0, 34.0, 0.27))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
                 beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
 
