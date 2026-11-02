@@ -513,7 +513,7 @@ def s20bot():
     # the bottom band; a slow push-in on 1s
     # from Kai's right side, a little behind him: Kai at frame left in profile, Wren at frame right turned 3/4 to us
     # (her face carries the beat); the raised forearm between them
-    cdir = (fwd * float(os.environ.get("S20B_FWD", "-0.3")) + Vector((-fwd.y, fwd.x, 0)) * -1.0).normalized()
+    cdir = (fwd * float(os.environ.get("S20B_FWD", "-0.85")) + Vector((-fwd.y, fwd.x, 0)) * -1.0).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     mid = X.KAI_AT.lerp(X.WREN_STOP, float(os.environ.get("S20B_MID", "0.5")))
     tgt = tuple(mid + Vector((0, 0, 5.4)))
