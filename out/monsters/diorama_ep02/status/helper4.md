@@ -1,7 +1,24 @@
 # Helper 4 status (Ep 2)
 
-## NEW: S20bot v2, the owner's new ending ("Option B: show her the glowing mark"): OK stills, waiting for your OK
-- **Stills:** `okstills/S20bot_v2_f060.png` and `okstills/S20bot_v2_f108.png` (half-scale render, upscaled; the 2D
+## NEW: S20bot v2, the owner's new ending ("Option B: show her the glowing mark")
+**Update 20:50 UTC: the mark fix is done (your 20:23 notes). New stills: `okstills/S20bot_v2_f108.png` (replaced) and
+`okstills/S20bot_v2_f098.png` (the flare's peak). f060 is unchanged (approved).**
+- **Separated:** after "Option B" the shrimp goes down to his right hand at waist level, at his side, away from the
+  raised arm.
+- **Wrist presented:** his left forearm rises to face height toward Wren, the inner wrist turned out (a forearm
+  twist), palm open, clear of his body and the shrimp.
+- **The mark, 2x S14's size:**
+  - Same zigzag and colours (`post_helper9.mark`), bolder.
+  - A white-hot core inside a coral line.
+  - A soft pink halo round the wrist.
+  - On the flare (f95-101), a white-hot bloom, the burst and sparkles.
+  - From f108, a steady glow with a gentle pulse and a few soft sparkles.
+  - A faint coral spill on Wren's face (2D) while it glows, plus the real coral point light on his arm.
+- **f108 reads at phone size:** the glowing zigzag sits on his forearm between them, and Wren's 2D shocked eyes and
+  the bell ward are as before.
+- **Ready for the 160-frame split as soon as you OK it.**
+
+- **First stills (19:50):** `okstills/S20bot_v2_f060.png` and the first f108 (now replaced) (half-scale render, upscaled; the 2D
   pass included; bottom 62% only, as before).
 - **Builder:** `helper4.py` `s20bot()` (same name), 160 render frames from the new timing (78c1cad).
 - **Beats** (shot frames, 1-based): "Option B" f60, "show" f84, "glowing" f95, "mark" ends f108, "Comment" f117.
