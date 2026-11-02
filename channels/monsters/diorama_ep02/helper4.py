@@ -526,7 +526,7 @@ def s20bot():
     bulge.parent_bone = "chest"
     bpy.context.view_layer.update()
     bulge.matrix_world = mw
-    base = Vector((0.62, 0.42, 0.55))
+    base = Vector((0.62, 0.42, 0.55)) / k["arm"].scale.x            # bone-parented: the armature's scale applies
     for f, s_ in ((f_in - 1, 0.001), (f_in, 0.7), (f_in + 2, 1.15), (f_in + 4, 0.95), (f_in + 6, 1.0),
                   (f_in + 22, 1.0), (f_in + 24, 1.08), (f_in + 26, 0.97), (f_in + 28, 1.0),
                   (f_back0 + 3, 1.0), (f_back0 + 5, 1.1), (f_back0 + 7, 1.0)):
@@ -546,7 +546,7 @@ def s20bot():
     cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     del left
-    X._cam_move("S20Bcam", n, (tgt, 16.5, 6.0, yaw, 32.0, 0.21), (tgt, 15.0, 6.0, yaw, 32.0, 0.21))
+    X._cam_move("S20Bcam", n, (tgt, 16.5, 6.0, yaw, 32.0, 0.27), (tgt, 15.0, 6.0, yaw, 32.0, 0.27))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
                 beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
 
