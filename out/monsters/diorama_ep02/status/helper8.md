@@ -1,16 +1,22 @@
 # helper 8: Ep 2 assembly status
 
-**Updated:** 2 Nov 2026, ~14:40 UTC (on the re-voiced timing, 0a7b842). Branch head when written: see the commit that last touched this file.
+**Updated:** 2 Nov 2026, ~16:20 UTC (on the re-voiced timing, 0a7b842). **Status: 20 of 21 pieces are in and at ESRGAN 1080. Only S19 is a slate. The final cut plus the cover follow as soon as S19 lands.** Branch head when written: see the commit that last touched this file.
 
 ## The picture
 - **Rebuilt on the re-voiced timing (0a7b842):** l2 "The bird struck first." is captioned on S02, and the 1-frame cut moves are in (S02 32, S03 51 from f98, S09 82 from f473, S12 63, S18 75, S20 145 from f1231). Every shot conforms inside its handle with no hold warnings, and the edge scan is clean.
 `out/monsters/diorama_ep02/picture.mp4` (+ `picture_sheet.jpg`, every 12th frame):
-- 1376 frames, 57.33 s, 1080x1920, no encoder tags.
+- 1376 frames, 57.33 s, 1080x1920, 47.7 MB. Tag check: no encoder or tool tags. The only fields are the standard MP4 container ones: brand, handler, language.
+- Edge scan: clean apart from S09 f34, which is allowed (see below).
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
 
-**Shots in (16 + both S20 halves):** S01-S13, S16-S18, S20top (XprL, d584790) and S20bot (helper 4, 8a9a5d4). All are at ESRGAN 1080. **ESRGAN (approved 2 Nov): done for all 17 landed shots** (S01-S13, S16-S18, S20top) in `shots_1080/`, next to the 720 renders. It ran as two queues of `--threads 2` on the fast path, ~3.5 s/frame each, 45 min in all. picture.mp4 is now built from them: every landed shot is `[1080]` and none uses lanczos. The assembler takes `shots_1080/<SHOT>.mp4` whenever it exists, so the final picture is built from the ESRGAN versions. S14, S15, S19, S20bot and the re-rendered S02 get the same treatment as they land.
+**Shots in (all but S19):**
+- S01-S18, plus S20top and S20bot.
+- Every one is at ESRGAN 1080 in `shots_1080/`. None uses lanczos.
+- The latest ESRGAN runs were on 2 Nov:
+  - the re-rendered **S02** (44 f, helper 1) and **S04** (66 f, the shrimp in Kai's hands, fd9f12b), both with `--force`. Their old ESRGANs were stale.
+  - **S14** (75 f, helper 9's final, 87a245a) and **S15** (80 f).
 
-**Placeholders (numbered cards):** S14, S15 and S19.
+**Placeholder:** S19 is a numbered card until helper 9's fixed version lands.
 
 ## Checks on the real frames
 - **The hook is on frame 0:** I SAVED / THE SHRIMP / THAT TRIED / TO KILL ME (the last line red), shown until line 1 ends (f63).
@@ -23,11 +29,13 @@
   - **Everything else stays at the 71% band (905).**
     - S01: over the grass, above the shrimp.
     - S02: grass under the diving bird.
-    - S03/S04: under his hands, so the scratched forearm stays visible.
+    - S03/S04: under his hands, so the scratched forearm stays visible. On the S04 re-render the band is on his knees, under the shrimp curled in his hands.
     - S05: under the dripping claw in the hands shot. In the terror-eyes close-up it crosses the back of the shrimp's fluff: no face is covered, and his face fills the top.
     - S06: under the profile shrimp on the plain ground.
     - S08/S12/S13: on his body.
     - S11: under the puffball.
+    - S14: on his legs, below the glowing wrist mark and the shrimp.
+    - S15: under the glowing scar in the close-up, then under the crack in the sky.
     - S16: the blurred foreground.
     - S17/S18: below Wren's face.
   - S09 has no words, so no captions.
@@ -60,5 +68,9 @@
 None of them repeats the title.
 
 ## Next
-- Re-check each placeholder shot as it lands.
-- The final cut (no --animatic) and the cover when all 20 shots are in.
+- When S19 lands:
+  - ESRGAN it (~6 min, as two halves);
+  - check its captions;
+  - build the final cut with no --animatic;
+  - re-pick the cover frames on the real renders: `ep01v2_cover.py --ep02`;
+  - push, and update this note.
