@@ -19,6 +19,7 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 | S02 | after "first" ends, into the cut to S03 | the dive whoosh, peaking across the cut |
 | S03 | knees down f8, scoop splash f27, bird's shadow f44 | knee slide, splash, shadow whoosh |
 | S04 | talons cross the arm f11, bird climbs away f16 | talon swipe + sleeve tear, two wing beats |
+| S05 | the drop leaves the claw tip f31; cut up to his terror face f49 | the drip plink; a tight sour "dink" as his eyes go wide |
 | S09 | wind-up cut f14, impact frames f33-35, ring f36 | claw cock + hush f14-33, THE SNAP f33, shockwave f36 |
 | S10 | bird already in the thorns on the cut, f0 | thorn crash, dazed tweets and stars |
 | S11 | drop f18, puffball f43, huff f70, stomp-off f74-104 | plop, the "poomf", huff, five stomps |
@@ -27,6 +28,7 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 | S17 | Wren marches in from f0, stops ~f45 | her steps every 0.36 s, her hand bell on the stop |
 | S14 | the mark draws on and flickers from "wrist" ~f24, the burst f48 ("glow") | faint warm glints that speed up, the glow chime on the burst |
 | S15 | the wrist mark's match cut: one glow frame f30, the sky crack from f31 | a glint on the glow frame, the eerie sting on the cut (0.15 s before "crack"), a low rift hum with a dry crackle under the sky |
+| S19 | crane over the lake f0-47, cut to the dripping claw f48, drops every 8 frames, sparkle + big eyes on "dry" f89 | the lake bed; quiet plinks on the drop schedule from f54; a glint on f89; the louder drip after "dry" |
 | S20 | both halves open on the cut f0 (S20top + S20bot) | the split whoosh |
 | S20bot | Wren turns her back f55-65, bell at her hip f61 | cloth swish (right), a small bell ring |
 | S20bot | Kai's hands to collar f81, shrimp slips in f89, teal bulge pops f97 ("shirt") | two cloth rustles (left), a soft rubbery "bloop" |
@@ -40,9 +42,12 @@ frame by ~f16, the same beats as before (the swipe starts f11, its fibre snaps l
 **S15 landed (fb8f49f) and is now scored** on its match cut; re-mixed, -13.99 LUFS, Whisper 19/19.
 **S14 landed (87a245a) and is now scored** (the chime moved 0.03 s onto the burst frame); re-mixed, -14.00 LUFS,
 -1.35 dBTP, Whisper 19/19.
-Still placeholders, because those shots haven't landed: S05 drip (f40), S19 lake and the drip on "dry" (helper 1's raw S19 f001-062 part is in, but not the final shot). The A/B stingers sit on the spoken letters.
+**S19 landed (6fe098d) and is now scored**; re-mixed, -14.00 LUFS, -1.35 dBTP, Whisper 19/19.
+**S05 (helper 4, 0974629, in since 12:41; I had missed it) is now scored too:** the drip moved from the f40 placeholder to
+f31, where the drop actually leaves the claw. **No placeholders left:** every shot is in and every picture beat is read
+from the final shots. The A/B stingers sit on the spoken letters, by design.
 S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the villagers come over the hill from the cut).
 
 The music drops 0.1 s before S09 (TWIST l9). No heartbeat, no riser, all original.
 
-Status: done on the shots that have landed. Waiting for S05/S19 (the re-rendered S02 and S04 are checked); I'll re-run, re-check and push when they land.
+Status: **done.** All 20 shots scored from the final picture; mix.wav -13.99 LUFS, -1.34 dBTP, Whisper medium.en 19/19. I'll still re-run, re-check and push if the takes, the timing or a shot changes.

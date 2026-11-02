@@ -36,7 +36,7 @@ base._whisper_line = lambda x: x          # Episode 1's line 1 was whispered; Ep
 S03_SLIDE, S03_SCOOP = 8, 27      # bGqrs S03: the knees hit the grass and slide f8; the scoop splash shows from f27
 S03_SHADOW = 44            # bGqrs S03: the bird's shadow sweeps over him from ~f44 (its strike is S04)
 S04_SWIPE, S04_UP = 11, 16        # helper 1 S04: the talons cross his arm f11-12; the bird climbs away from f16
-S05_DROP = 40              # placeholder: one drop falls from the claw (the wet drip)
+S05_DROP, S05_FACE = 31, 49       # helper 4 S05: the drop leaves the claw tip f31; the cut up to his terror face f49
 S09_COCK, S09_SNAP, S09_RING = 14, 33, 36   # helper 10 S09: the cut to the wind-up f14; impact frames f33-35 (white,
                                             # black, red); the shockwave ring from f36
 S10_CRASH = 0              # helper 10 S10: the bird is already upside down in the thorns on the cut
@@ -47,6 +47,8 @@ S13_TAP = 15               # helper 5 S13: the claw touches his nose f15
 S17_STEPS, S17_STOP = 0, 45       # XprL S17: Wren marches in from the cut and stops stern in front of Kai ~f45
 S14_DRAW, S14_BURST = 24, 48      # helper 9 S14: the mark draws on and flickers from "wrist" ~f24; the burst f48 ("glow")
 S15_CUT = 30               # helper 9 S15: the wrist mark's match cut to the sky crack, one glow frame f30, the sky f31-79
+S19_CUT, S19_DRY = 48, 89         # helper 9 S19: the crane rises over the lake f0-47, cuts to the claw f48; drops leave
+S19_DROPS = 8                      # the tip every 8 frames (meadow.drips every=8); sparkle + eyes go big on "dry" f89
 S20_SPLIT = 0              # S20top/S20bot: both halves open on the cut, so the split whoosh sits on f0
 S20_TURN, S20_BELL = 55, 61        # S20bot: Wren turns her back f55-65 (on 2s), the bell at her hip on the turn
 S20_COLLAR, S20_SLIP = 81, 89      # Kai's hands go to his collar f81, the shrimp slips inside f89-92
@@ -197,6 +199,15 @@ def bulge_pop(seed=0):
     return bloop * 0.8 + flick
 
 
+def eyes_wide(seed=0):
+    """Kai's eyes going wide: a tight, slightly sour double ping with a quick wobble."""
+    n = _n(0.7)
+    t = _t(n)
+    wob = 1 + 0.012 * np.sin(2 * np.pi * 9 * t)
+    ping = np.sin(2 * np.pi * 1568 * wob * t) + 0.7 * np.sin(2 * np.pi * 1661 * wob * t)
+    return ping * np.minimum(1, t / 0.003) * np.exp(-t / 0.18) * 0.5
+
+
 def mark_flicker(dur, seed=0):
     """The wrist mark drawing on: faint warm glints and ticks that come faster as it brightens."""
     r = _rng("flicker", seed)
@@ -291,6 +302,7 @@ def build(timing, n, v):
     snap_shot = c.t("S09")
     music_at(base.tense_tone(snap_shot - c.t("S05") + 0.3, 2), c.t("S05"), snap_shot - 0.1, -19, 0.6, 0.06)
     hit(base.drip(3), c.f("S05", S05_DROP), -16, 0.1)
+    hit(eyes_wide(), c.f("S05", S05_FACE), -21, 0.0)                    # his eyes go wide (before "In my")
     hit(v3.water_jet(0.5, 4), c.word("l6", "Straight"), -20, 0.3)   # the 2D jet straight ahead
     hit(v3.startle(4), c.word("l7", "around", "end") + 0.05, -24, 0.0)   # the shrimp lets him, confused
 
@@ -345,10 +357,16 @@ def build(timing, n, v):
     hit(hand_bell(86, 2), stop + 0.05, -16, -0.1)
     music_at(base.tense_tone(c.t("S19") - c.t("S17") + 0.3, 4), c.t("S17"), c.t("S19") + 0.2, -21, 0.5, 0.4)
 
-    # --- S19: the lake: water, depth and a breeze; the claw drips on "dry"
+    # --- S19: the lake: water, depth and a breeze; after the cut the claw drips, a sparkle on "dry"
     amb(lambda d, s: lake(d, s), c.t("S19"), c.t("S20") + 0.4, -20, 0.5, 0.4)
     music_at(base.soft_pad(c.t("S20") - c.t("S19") + 0.6, (50, 57, 62, 65), 0.08, 5), c.t("S19"), c.t("S20"),
              -19, 0.6, 0.3)
+    f, k = S19_CUT + 6, 0                     # small plinks on the drop schedule, under the voice
+    while c.f("S19", f) < c.end("S19") - 0.1:
+        if abs(f - S19_DRY) > 4:
+            hit(base.drip(k), c.f("S19", f), -29 + 2 * (k % 2), 0.1)
+        f, k = f + S19_DROPS, k + 1
+    hit(nose_tink(3), c.f("S19", S19_DRY), -21, 0.1)                    # the sparkle; its eyes go big
     hit(base.drip(4), c.word("l19", "dry", "end") + 0.05, -16, 0.1)
 
     # --- S20: the split opens; the A and B stingers on the letters; "Comment" blip; cut on the picture
