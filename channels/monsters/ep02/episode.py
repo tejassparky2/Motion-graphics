@@ -37,7 +37,8 @@ SCRIPT = [
     dict(id="l18", scene="S18", text="Step away from the snapper. It goes in the lake.", gap=0.5,
          speaker="wren", speaker_from="Step"),
     dict(id="l19", scene="S19", text="The lake. Deep water. Where a pistol shrimp never runs dry.", gap=0.7),
-    dict(id="l20", scene="S20", text="Option A: hand it over. Option B: hide it in my shirt. Comment A or B.", gap=0.8),
+    dict(id="l20", scene="S20", text="Option A: hand it over. Option B: show her the glowing mark. Comment A or B.",
+         gap=0.8),   # owner, 2 Nov: B was "hide it in my shirt" (impossible with Wren face to face)
 ]
 
 SPLITS = []        # (shot, line, the word the second shot opens on): none yet
@@ -53,7 +54,7 @@ METADATA = dict(
 His only weapon is still what he knows.
 
 Cute Things Kill Here, Episode 2.
-Comment A to HAND the shrimp over, or B to HIDE it in his shirt. The letter in more comments decides Episode 3.
+Comment A to HAND the shrimp over, or B to SHOW her the glowing mark. The letter in more comments decides Episode 3.
 
 The real fact:
 - A pistol shrimp's claw shoots a fast jet of water straight forward, and that jet makes the bubble that snaps
@@ -64,6 +65,6 @@ Hero base model: Seed-san by VirtualCast, Inc. (VRM Public License 1.0)""",
     hashtags=["#anime", "#isekai", "#Shorts"],
     tags=["original anime", "isekai", "reincarnated", "anime short", "2.5d anime", "cute monsters", "pistol shrimp",
           "butcher bird", "shrike", "animal facts", "cute things kill here", "episode 2", "choose the ending"],
-    pinned_comment="A or B? 🦐 A = hand the shrimp over to Wren. B = hide it in his shirt. The letter in more comments "
+    pinned_comment="A or B? 🦐 A = hand the shrimp over to Wren. B = show her the glowing mark. The letter in more comments "
                    "within 48 hours of this video going up decides Episode 3.",
 )

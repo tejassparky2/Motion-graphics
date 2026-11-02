@@ -1,6 +1,6 @@
 # ep02: exact timing (from the voice takes)
 
-Total **57.33 s = 1376 frames** at 24 fps. Made by `channels/monsters/ep01v2_timing.py`;
+Total **57.46 s = 1379 frames** at 24 fps. Made by `channels/monsters/ep01v2_timing.py`;
 the numbers here win over the estimates in EP01V2_SHOTS.md.
 
 - **frames** is the shot's length in the cut. Render **frames + 12** (the tail handle).
@@ -28,4 +28,4 @@ the numbers here win over the estimates in EP01V2_SHOTS.md.
 | S17 | 983 | 62 | 2.58 | 74 | 0.30 | 2.30 | A girl with a bell marched right up to me. |
 | S18 | 1045 | 75 | 3.12 | 87 | 0.30 | 2.63 | Step away from the snapper. It goes in the lake. |
 | S19 | 1120 | 111 | 4.62 | 123 | 0.30 | 3.99 | The lake. Deep water. Where a pistol shrimp never runs dry. |
-| S20 | 1231 | 145 | 6.04 | 157 | 0.30 | 5.50 | Option A: hand it over. Option B: hide it in my shirt. Comment A or B. |
+| S20 | 1231 | 148 | 6.17 | 160 | 0.30 | 5.64 | Option A: hand it over. Option B: show her the glowing mark. Comment A or B. |

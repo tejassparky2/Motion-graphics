@@ -63,7 +63,7 @@ owner asks.
 | S17 | A girl with a bell marched right up to me. | Wren (new) marches up, bell in hand, stern, and stops in front of Kai. | XprL |
 | S18 | (Wren) Step away from the snapper. It goes in the lake. | Close on Wren speaking (mouth flaps); a villager's net is held ready behind her. | XprL |
 | S19 | The lake. Deep water. Where a pistol shrimp never runs dry. | Kai looks past the village to a huge deep-blue lake; cut to the shrimp's claw dripping in his hand. | helper 9 |
-| S20 | Option A: hand it over. Option B: hide it in my shirt. Comment A or B. | Split screen with a jagged divider. **Top (A):** Kai lowers the shrimp into Wren's net. **Bottom (B):** Kai slips the shrimp into his shirt as Wren turns away. The A/B letters (A · HAND OVER, B · HIDE) are added by the assembler. | XprL (top + Wren in bottom), helper 4 (bottom) |
+| S20 | Option A: hand it over. Option B: show her the glowing mark. Comment A or B. | Split screen with a jagged divider. **Top (A):** Kai lowers the shrimp into Wren's net. **Bottom (B):** Kai raises his wrist and the glowing mark flares; Wren steps back, shocked (owner, 2 Nov: B is "show her the glowing mark"; hiding it was impossible face to face). The A/B letters (A · HAND OVER, B · SHOW MARK) are added by the assembler. | XprL (top + Wren in bottom), helper 4 (bottom) |
 
 ## New assets
 - **Wren** (XprL; push her first so others can stage around her): `mk/wren.py`.

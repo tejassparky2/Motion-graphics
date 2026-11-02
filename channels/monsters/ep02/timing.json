@@ -1,7 +1,7 @@
 {
  "fps": 24,
- "total": 57.325,
- "total_frames": 1376,
+ "total": 57.461,
+ "total_frames": 1379,
  "handle": 12,
  "lines": [
   {
@@ -862,9 +862,9 @@
   {
    "id": "l20",
    "scene": "S20",
-   "text": "Option A: hand it over. Option B: hide it in my shirt. Comment A or B.",
+   "text": "Option A: hand it over. Option B: show her the glowing mark. Comment A or B.",
    "start": 51.606,
-   "end": 56.975,
+   "end": 57.111,
    "words": [
     {
      "w": "Option",
@@ -902,49 +902,49 @@
      "end": 54.228
     },
     {
-     "w": "hide",
+     "w": "show",
      "start": 54.751,
-     "end": 54.971
+     "end": 54.951
     },
     {
-     "w": "it",
-     "start": 54.971,
-     "end": 55.111
+     "w": "her",
+     "start": 54.951,
+     "end": 55.091
     },
     {
-     "w": "in",
-     "start": 55.111,
-     "end": 55.191
+     "w": "the",
+     "start": 55.091,
+     "end": 55.231
     },
     {
-     "w": "my",
-     "start": 55.191,
-     "end": 55.331
+     "w": "glowing",
+     "start": 55.231,
+     "end": 55.491
     },
     {
-     "w": "shirt.",
-     "start": 55.331,
-     "end": 55.611
+     "w": "mark.",
+     "start": 55.491,
+     "end": 55.751
     },
     {
      "w": "Comment",
-     "start": 56.009,
-     "end": 56.249
+     "start": 56.144,
+     "end": 56.384
     },
     {
      "w": "A",
-     "start": 56.249,
-     "end": 56.529
+     "start": 56.384,
+     "end": 56.664
     },
     {
      "w": "or",
-     "start": 56.529,
-     "end": 56.649
+     "start": 56.664,
+     "end": 56.784
     },
     {
      "w": "B.",
-     "start": 56.649,
-     "end": 56.809
+     "start": 56.784,
+     "end": 56.944
     }
    ]
   }
@@ -1106,9 +1106,9 @@
    "shot": "S20",
    "start": 51.306,
    "first_frame": 1231,
-   "frames": 145,
-   "seconds": 6.042,
-   "render_frames": 157
+   "frames": 148,
+   "seconds": 6.167,
+   "render_frames": 160
   }
  ]
 }
