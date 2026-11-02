@@ -11,6 +11,13 @@ import sys
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 sys.path.insert(0, ROOT)
 
+try:
+    import imageio_ffmpeg  # noqa: F401  (helper10.encode finds ffmpeg through it)
+except ImportError:                     # no imageio_ffmpeg here: hand it the system ffmpeg instead
+    import shutil
+    import types
+    sys.modules["imageio_ffmpeg"] = types.SimpleNamespace(get_ffmpeg_exe=lambda: shutil.which("ffmpeg"))
+
 from channels.monsters.diorama_ep02.helper10 import encode  # noqa: E402
 
 if __name__ == "__main__":
