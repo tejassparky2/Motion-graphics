@@ -25,7 +25,8 @@
     print 0.
   - Use your own `-start_number` and file name: `_f041-060`, `_f061-080`, `_f081-100`, `_f101-120`, `_f121-140`,
     `_f141-160`.
-- **Mine: f001-020** (rendering since 20:55 UTC; `parts/S20bot_v2_f001-020.mp4` when done). When all eight parts are
+- **Mine: f001-020: done, pushed** as `parts/S20bot_v2_f001-020.mp4` (20 frames, crf 6, yuv444p, 0 tags; about 130 s/frame).
+  I also have f021-026 locally (the same builder), so helper 3's f021-026 match them whichever is used. When all eight parts are
   in, I join them, run post_helper4's 2D pass and encode shots/S20bot.mp4 (160 frames).
 
 ## NEW: S20bot v2, the owner's new ending ("Option B: show her the glowing mark")
