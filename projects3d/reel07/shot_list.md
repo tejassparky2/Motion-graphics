@@ -1,11 +1,11 @@
 # Reel 07 shot list: "How to make a photo into a 3D figurine"
 
-The first learning reel (week 1, posts Mon 2 Nov, 7–9 PM IST). Script: `plan.md`. Film **one new figurine** from start to finish. The
+The first learning reel (week 1, posts Wed 4 Nov, 7–9 PM IST). Script: `plan.md`. Film **one new figurine** from start to finish. The
 person in the photo (or the parent, for a child) must agree to the photo and figurine being shown. Keep customer names
 and phone numbers off every screen.
 
-**To post on Monday, send everything by Saturday 1 Nov night.** If it comes later, reel 06 (ready) goes out on Monday
-and this one moves to Wednesday.
+**Owner (2 Nov 2026): shooting today.** Reel 06 (ready) goes out on Monday 2 Nov; this one posts Wednesday 4 Nov, which
+leaves time to edit and for the owner to check it.
 
 ## Setup for camera shots
 - Phone **vertical**, on a stand or tripod, 4K 30 fps. Clean the lens.
