@@ -36,8 +36,8 @@ HALF = r4.HALF
 
 NAME = "reel07"
 CAP = 1440                  # caption centre in the phone / screen scenes (below the card, above the Reels UI)
-REVEAL_HOLD = 1.0           # extra beat after "And here's the result."
-END_HOLD = 3.6
+REVEAL_HOLD = 0.8           # extra beat after "And here's the result."
+END_HOLD = 3.0             # keeps the reel under 1:10 (owner, 27 Oct 2026)
 r2.PHONE_TOP, r2.PHONE_H = 340, 1000
 
 # the voice says these the way they should sound; the caption shows the written form
@@ -117,11 +117,15 @@ def screen_card(path, n, start, end, box, top=340, maxw=1000, maxh=1000):
         yield out
 
 
+PHONE_BOX = (0, 160, 1080, 1460)       # the middle of the phone screen: no status bar, little keyboard
+
+
 def phone_parts(path, parts):
-    """Several windows of a phone screen recording, back to back: parts = [(start, end, frames)]."""
-    for s, e, k in parts:
+    """Windows of a phone screen recording, back to back, cropped to what matters so it reads on a phone:
+    parts = [(start, end, frames[, crop box])]."""
+    for s, e, k, *box in parts:
         if k > 0:
-            yield from r2.phone_frames(path, k, s, e)
+            yield from screen_card(path, k, s, e, box[0] if box else PHONE_BOX)
 
 
 def still_frame(path, at):
@@ -176,6 +180,7 @@ def chips(fr, y0, ages, lit=None):
 
 def step_head(fr, step, age, label=None):
     """Progress bar of the 4 steps, 'STEP n OF 4' and the tool's name (or `label`)."""
+    shade(fr, 0, 340, top=True, alpha=170)       # readable over bright footage too
     d = ImageDraw.Draw(fr)
     x0, x1, y, gap = 70, W - 70, 150, 14
     seg = (x1 - x0 - gap * 3) / 4
@@ -199,14 +204,16 @@ def hook_overlay(fr, photo_inset):
     d.rounded_rectangle((px, py, px + pw, py + ph), radius=44, fill=(10, 10, 12), outline=(70, 70, 74), width=4)
     fr.paste(photo_inset, (px + 14, py + 14))
     d = ImageDraw.Draw(fr)
-    d.ellipse((px + pw + 16, py + ph / 2 - 44, px + pw + 104, py + ph / 2 + 44), fill=GOLD)
-    d.text((px + pw + 60, py + ph / 2 - 4), "→", font=font(70), fill=INK, anchor="mm")
+    cx, cy = px + pw + 60, py + ph / 2
+    d.ellipse((cx - 44, cy - 44, cx + 44, cy + 44), fill=GOLD)
+    d.polygon([(cx - 24, cy - 8), (cx + 2, cy - 8), (cx + 2, cy - 22), (cx + 26, cy), (cx + 2, cy + 22),
+               (cx + 2, cy + 8), (cx - 24, cy + 8)], fill=INK)      # (the serif font has no arrow glyph)
     pill_at(d, 70, 300, "HOW TO", font(50), GOLD)
     bookmark(d, W - 270, 272, 34, WHITE)
     d.text((W - 70, 300), "SAVE IT", font=font(40), fill=WHITE, anchor="rm")
     d.text((W / 2, 430), "MAKE YOUR MINI YOU", font=font(88), fill=WHITE, anchor="mm", stroke_width=6,
            stroke_fill=INK)
-    d.text((W / 2, 532), "photo → 3D figurine · 4 steps", font=font(54), fill=GOLD_LIGHT, anchor="mm",
+    d.text((W / 2, 532), "photo to 3D figurine · 4 steps", font=font(54), fill=GOLD_LIGHT, anchor="mm",
            stroke_width=5, stroke_fill=INK)
 
 
@@ -294,8 +301,9 @@ def main():
         c = n - b
         a, b = max(1, min(a, n - 3)), max(2, min(b, n - 2))
         c = n - b
-        return phone_parts(chat, [(46.0, 52.0, a), (55.0, 60.5, (b - a) // 2), (85.0, 89.0, b - a - (b - a) // 2),
-                                  (91.0, 96.0, c // 2), (103.8, 108.5, c - c // 2)])
+        return phone_parts(chat, [(46.0, 52.0, a), (55.0, 60.5, (b - a) // 2),
+                                  (85.6, 86.6, b - a - (b - a) // 2, (0, 300, 1080, 1600)),
+                                  (91.0, 96.0, c // 2), (103.6, 104.6, c - c // 2, (0, 560, 1080, 1760))])
 
     def compare(n):
         """'Same face. Same dress. Same little bow. Just cuter.' -- photo on top, design below."""
@@ -317,7 +325,7 @@ def main():
             yield fr
 
     def model(n):
-        return screen_card(orca2, n, 2.5, 9.0, (700, 60, 1500, 1030))
+        return screen_card(orca2, n, 2.5, 9.0, (800, 120, 1520, 960))
 
     def paint(n):
         return screen_card(orca, n, 34.0, 80.0, (520, 70, 1460, 1030))
@@ -347,7 +355,7 @@ def main():
         ws = words[8]
         k_and = next((i for i, w in enumerate(ws) if w[0].startswith("and") and i > 2), len(ws) // 2)
         k2 = int(round((ws[k_and][1] - L[8]) * FPS))
-        yield from r2.clip(md("184635"), k2, 2.0, speed=1.0)
+        yield from r2.clip(md("184635"), k2, 4.5, speed=1.0)
         yield from v1.image_frames(fig, n - k2, zoom=(1.0, 1.06))
 
     def reveal(n):
