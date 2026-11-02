@@ -17,12 +17,12 @@ Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen
 | 5 | Same face. Same dress. Same little bow. Just cuter. | Photo vs final design split (IMG_20261014_140855) |
 | 6 | Step two. We give that design to Tripo, and it builds a full 3D model. | Tripo (owner's recording): Manya's design uploaded → Generate → building → the model turning, plus a 1 s hold |
 | 7 | The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes and eyebrows. | Snapmaker Orca: model on the plate, zoom to the face, painting the eyes |
-| 8 | Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes. | Sliced view with the filament table and "11h3m", then the U1 printing (013732, 013746, 013800) |
+| 8 | Step four. The print takes eleven hours. With nine hundred and fifty colour changes. | Sliced view with the filament table and "11h3m", then the U1 printing (013732, 013746, 013800) |
 | 9 | Then the supports come off, and we sand it by hand. | Finished print in its supports (184635, 184656) → the clean figurine |
 | 10 | And here's the result. | The figurine turning (182700), Sowmya holding it (IMG_4135) |
 | 11 | Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
 | 12 | Or make it yourself. Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" |
 
 The comment-to-DM keyword is "3D"; the DM sends the full prompt and the guide (PDF, to write once the owner sends the
-prompt text). Line 8 reworded (2 Nov 2026): "We print it on" ran together as "printed on" in every take; line 4 too ("make her standing" heard as "make a standing"); with the faster read, line 6 "Tripo 3D" was heard as "triple 3D" and line 7 "the eyes" as "the ice" in the mix. Voice spellings: "Chat G P T"; "U one"; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
+prompt text). Line 8 reworded (2 Nov 2026): "We print it on" ran together as "printed on" in every take; line 4 too ("make her standing" heard as "make a standing"); with the faster read, line 6 "Tripo 3D" was heard as "triple 3D" and line 7 "the eyes" as "the ice" in the mix; "Snapmaker U one" as "Snapmaker you want" and "Our Snapmaker" as "ArtSnap Maker", so line 8 names no printer (the tag still shows SNAPMAKER U1). Voice spellings: "Chat G P T"; "U one"; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
 Spread the Manya reels: 04 posted; 07 on Wed 4 Nov; 05 (Sowmya's testimonial) no earlier than week 3.

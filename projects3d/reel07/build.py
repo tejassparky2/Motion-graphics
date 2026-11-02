@@ -41,8 +41,8 @@ END_HOLD = 3.0             # keeps the reel under 1:10 (owner, 27 Oct 2026)
 r2.PHONE_TOP, r2.PHONE_H = 340, 1000
 
 # the voice says these the way they should sound; the caption shows the written form
-SHOWN = {("Chat", "G", "P", "T,"): "ChatGPT,", ("U", "one"): "U1", ("Eleven", "hours."): "11 hours.",
-         ("Nine", "hundred", "and", "fifty", "colour", "changes."): "950 colour changes."}
+SHOWN = {("Chat", "G", "P", "T,"): "ChatGPT,", ("eleven", "hours."): "11 hours.",
+         ("nine", "hundred", "and", "fifty", "colour", "changes."): "950 colour changes."}
 
 # points of interest in the final design (1280x1280): (cx, cy, crop height)
 DESIGN = {"face": (640, 470, 560), "dress": (630, 900, 600), "bow": (767, 190, 420), "full": (640, 640, 1280)}
@@ -273,6 +273,11 @@ def main():
     E = [c[1] for c in cues]
     t_end = E[11] + 0.45
 
+    def word_at(i, prefix, default):
+        return next((a for w, a, _ in words[i] if w.startswith(prefix)), default)
+
+    T11, T950 = word_at(7, "11", L[7] + 1.6), word_at(7, "950", L[7] + 3.0)
+
     def at(i, j, default=None):
         """Start of sentence j of cue i."""
         return sent[i][j][0] if len(sent[i]) > j else default
@@ -346,8 +351,7 @@ def main():
 
     def printing(n):
         """Step four on the U1, then the slicer's own numbers: 11 hours, 950 colour changes."""
-        s2 = at(7, 2, L[7] + 3.0)
-        k2 = int(round((s2 - L[7]) * FPS))
+        k2 = int(round((T11 - L[7]) * FPS))
         yield from r2.clip(md("013746"), k2, 0.0, speed=1.0)
         for fr in dimmed(r2.clip(md("013732"), n - k2, 0.0, speed=1.0)):
             fr = fr.copy()
@@ -428,9 +432,9 @@ def main():
                 tag(fr, "PHOTO", 190, t - L[4] - 0.1, size=34)
                 tag(fr, "3D DESIGN", HALF + 80, t - L[4] - 0.2, size=34)
             if si == 7:
-                s2, s3 = at(7, 2, L[7] + 3.0), at(7, 3, L[7] + 4.2)
+                s2, s3 = T11, T950
                 if t < s2:
-                    tag(fr, "SNAPMAKER U1", 1300, t - at(7, 1, L[7] + 0.8) - 0.1, size=40)
+                    tag(fr, "SNAPMAKER U1", 1300, t - L[7] - 0.4, size=40)
                 else:
                     row_box(fr, TY + int(405 * TS), t - s2 - 0.1, TX + 20, TX + table.width - 20)
                     v2.stat_card(fr, 290, 1250, 11, "HOURS", t - s2)
@@ -499,7 +503,7 @@ def main():
     for c in cuts:
         add(synth.sfx("whoosh", 0.45), c / FPS - 0.22, 0.2)
     pops = [L[1] + 0.2, s_four + 0.25, L[2] + 0.1, L[3] + 0.2, L[5] + 0.1, L[6] + 0.1, L[7] + 0.1, t_end + 1.9]
-    pops += [s + 0.35 for s, _ in sent[4][:3]] + [s for s, _ in sent[7][2:]] + [s for s, _ in sent[10][1:]]
+    pops += [s + 0.35 for s, _ in sent[4][:3]] + [T11, T950] + [s for s, _ in sent[10][1:]]
     pops += [s for s, _ in sent[11][1:]]
     for p in pops:
         add(synth.sfx("pop", 0.15), p, 0.15)

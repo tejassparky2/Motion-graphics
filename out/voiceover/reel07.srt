@@ -27,22 +27,22 @@ Step two. We give that design to Tripo, and it builds a full 3D model.
 The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes and eyebrows.
 
 8
-00:00:34,894 --> 00:00:40,160
-Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes.
+00:00:34,894 --> 00:00:38,854
+Step four. The print takes eleven hours. With nine hundred and fifty colour changes.
 
 9
-00:00:40,510 --> 00:00:42,940
+00:00:39,204 --> 00:00:41,633
 Then the supports come off, and we sand it by hand.
 
 10
-00:00:43,290 --> 00:00:44,085
+00:00:41,983 --> 00:00:42,779
 And here's the result.
 
 11
-00:00:44,435 --> 00:00:49,059
+00:00:43,129 --> 00:00:47,753
 Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you.
 
 12
-00:00:49,409 --> 00:00:53,454
+00:00:48,103 --> 00:00:52,148
 Or make it yourself. Comment 3D, to get the full prompt and guide in your DM.
 
