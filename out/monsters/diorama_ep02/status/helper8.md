@@ -1,13 +1,22 @@
 # helper 8: Ep 2 assembly status
 
-**Updated:** 2 Nov 2026, ~16:20 UTC (on the re-voiced timing, 0a7b842). **Status: 20 of 21 pieces are in and at ESRGAN 1080. Only S19 is a slate. The final cut plus the cover follow as soon as S19 lands.** Branch head when written: see the commit that last touched this file.
+**FINAL PUSHED (2 Nov ~16:55 UTC):** the final `picture.mp4` is in.
+- Built with no --animatic, from all 21 pieces at ESRGAN 1080. S19 is helper 9's final (6fd32f1d).
+- The timing is 0a7b842, which includes e6a1dbb.
+- 1376 frames, 57.33 s, 52.7 MB.
+- Tag check: no encoder or tool tags.
+- The edge scan is clean; S09 f34 is allowed.
+- The cover is `cover.jpg`: "fear", S05 f70, I SAVED / MY KILLER. It has no metadata.
+
+
+**Updated:** 2 Nov 2026, ~16:20 UTC (on the re-voiced timing, 0a7b842). **Status: final. All 21 pieces are at 1080, nothing is slated.** Branch head when written: see the commit that last touched this file.
 
 ## The picture
 - **Rebuilt on the re-voiced timing (0a7b842):** l2 "The bird struck first." is captioned on S02, and the 1-frame cut moves are in (S02 32, S03 51 from f98, S09 82 from f473, S12 63, S18 75, S20 145 from f1231). Every shot conforms inside its handle with no hold warnings, and the edge scan is clean.
 `out/monsters/diorama_ep02/picture.mp4` (+ `picture_sheet.jpg`, every 12th frame):
 - 1376 frames, 57.33 s, 1080x1920, 47.7 MB. Tag check: no encoder or tool tags. The only fields are the standard MP4 container ones: brand, handler, language.
 - Edge scan: clean apart from S09 f34, which is allowed (see below).
-- Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
+- Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --check` (final, no --animatic).
 
 **Shots in (all but S19):**
 - S01-S18, plus S20top and S20bot.
@@ -16,7 +25,10 @@
   - the re-rendered **S02** (44 f, helper 1) and **S04** (66 f, the shrimp in Kai's hands, fd9f12b), both with `--force`. Their old ESRGANs were stale.
   - **S14** (75 f, helper 9's final, 87a245a) and **S15** (80 f).
 
-**Placeholder:** S19 is a numbered card until helper 9's fixed version lands.
+**S19 (helper 9's final, 123 f):** ESRGAN in two halves, then joined. Captions checked:
+- "The lake." crosses Wren's chest under her face.
+- The close-up lines sit on Kai's belt under the shrimp.
+- No face is covered.
 
 ## Checks on the real frames
 - **The hook is on frame 0:** I SAVED / THE SHRIMP / THAT TRIED / TO KILL ME (the last line red), shown until line 1 ends (f63).
@@ -60,17 +72,16 @@
   - Kai's cap sits near the top edge (the plate shifts up 60 px) but isn't cut.
 
 ## Cover
-`python channels/monsters/ep01v2_cover.py --ep02` makes the candidates plus a phone grid. The frames get picked once the shots are final:
-- **hook (the pick):** I SAVED / MY KILLER, S01;
-- **aim:** NATURE'S / PISTOL, S08;
-- **tap:** IT TAPPED / MY NOSE, S13.
+`out/monsters/diorama_ep02/cover.jpg` (1080x1920), made by `python channels/monsters/ep01v2_cover.py --ep02`. The candidates and the phone grid are in `covers/`.
+- **Pick: "fear", S05 f70: I SAVED / MY KILLER.** It's the terror-eyes close-up. The words sit on his cap, his eyes are clear under them, and the shrimp is at his chest.
+- At phone size it reads better than the old placeholder pick (S01 f30, where his head hid under the words and the shrimp was tiny).
+- **Other candidates:**
+  - **aim:** S08, NATURE'S / PISTOL;
+  - **tap:** S13, IT TAPPED / MY NOSE;
+  - **rake:** S04 f12;
+  - **hook:** S01 f30.
 
 None of them repeats the title.
 
 ## Next
-- When S19 lands:
-  - ESRGAN it (~6 min, as two halves);
-  - check its captions;
-  - build the final cut with no --animatic;
-  - re-pick the cover frames on the real renders: `ep01v2_cover.py --ep02`;
-  - push, and update this note.
+- Nothing left on my side: the picture and the cover are final. The final mux and the Whisper check are the coordinator's.

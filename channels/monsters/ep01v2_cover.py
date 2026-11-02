@@ -39,13 +39,15 @@ PICK = "hook"
 # v3 (coordinator, 31 Oct): the frame-0 hook text in full; three shorter lines so they stay above Kai's face
 V3 = ("S01", 24, [("THIS SHRIMP", WHITE), ("ERASED", HOT), ("A FOREST", WHITE)])
 # Episode 2 (DIORAMA_EP02.md): 2-3 words each, never the title ("I Saved the Shrimp That Tried to Kill Me") repeated.
-# Frames are placeholders until the shots land: re-pick them on the real renders.
+# Frames re-picked on the final renders (2 Nov).
 EP02 = {
     "hook": ("S01", 30, [("I SAVED", WHITE), ("MY KILLER", HOT)]),        # the sprint at the diving bird
     "aim": ("S08", 40, [("NATURE'S", WHITE), ("PISTOL", HOT)]),           # Kai aiming the shrimp like a pistol
     "tap": ("S13", 24, [("IT TAPPED", WHITE), ("MY NOSE", HOT)]),          # the nose tap, his dot eyes
+    "fear": ("S05", 70, [("I SAVED", WHITE), ("MY KILLER", HOT)]),        # terror-eyes close-up, shrimp at his chest
+    "rake": ("S04", 12, [("I SAVED", WHITE), ("MY KILLER", HOT)]),        # Kai with the shrimp, the bird raking in
 }
-EP02_PICK = "hook"
+EP02_PICK = "fear"   # re-picked on the real renders (2 Nov): his terror eyes clear under the words, the shrimp in front
 TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 
 
