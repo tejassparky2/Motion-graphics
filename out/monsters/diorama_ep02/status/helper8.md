@@ -2,7 +2,10 @@
 
 **Ending change (2 Nov ~19:40 UTC, the coordinator's note):** Option B is now "show her the glowing mark". S20 becomes 148 frames.
 - The B label in the assembler is now **SHOW MARK**. At 85% that card is 422 px wide from its centre, so the B card has to move left from x 370 to x ≤ 286 to stay in frame. "SHOW IT" (320 px) would fit where B is now.
-- I'll place it on helper 4's new S20bot: SHOW MARK if x ~286 is clear of Kai and Wren, else SHOW IT.
+- **Placed (21:15 UTC) on helper 4's v2 stills (f060, f098, f108): SHOW MARK at (286, 715).** It's in the sky right of Kai's cap, above his raised glowing arm, Wren's face and the flare. It's fully in frame. A stays at (124, 585).
+- Checked on the new timing (78c1cad, S20 = 148 f, total 1379), on a test split built from those stills:
+  - A lands on "Option A" at S20 f14, B on "Option B" at f65, and both pulse on "Comment" at f116.
+  - The captions stay at y 520, and the edge scan is clean.
 - The assembler reads S20's length and the word beats from timing.json, so no code changes are needed for 148 frames. I'll rebuild when the new timing and S20bot land.
 
 
