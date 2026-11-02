@@ -2,7 +2,7 @@
 with the sound (helper 7's ep01v2_sound.py -> out/monsters/ep01v2/mix.wav), then checks it the way the channel rules
 ask before anything goes to the owner:
 
-    /home/user/.venv-main/bin/python channels/monsters/deliver_ep01v2.py [--version diorama|diorama_v3] [--no-whisper]
+    /home/user/.venv-main/bin/python channels/monsters/deliver_ep01v2.py [--version diorama|diorama_v3|diorama_ep02] [--no-whisper]
 
 writes out/monsters/ep01v2.mp4, ep01v2_preview.mp4 (small, for a phone), ep01v2_cover.jpg (frame 0, the hook
 frame), ep01v2_metadata.md (the upload sheet) and ep01v2_check.md (the QA report):
@@ -36,7 +36,9 @@ CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "
 VERSION = sys.argv[sys.argv.index("--version") + 1] if "--version" in sys.argv else "ep01v2"
 DIORAMA = VERSION == "diorama"
 V3 = VERSION == "diorama_v3"             # Episode 1 v3, 2.5D (DIORAMA_EP01_V3.md): its own script, timing and mix
-EPDIR = "ep01v3" if V3 else "ep01v2"
+EP2 = VERSION == "diorama_ep02"          # Episode 2, 2.5D (DIORAMA_EP02.md): the SAVE branch
+EPDIR = "ep02" if EP2 else ("ep01v3" if V3 else "ep01v2")
+EPNUM = 2 if EP2 else 1
 D = os.path.join(ROOT, "out", "monsters", "ep01v2")
 OUT = os.path.join(ROOT, "out", "monsters", "ep01v2.mp4")
 picture, mix = os.path.join(D, "picture.mp4"), os.path.join(D, "mix.wav")
@@ -52,12 +54,17 @@ if V3:
     OUT = os.path.join(ROOT, "out", "monsters", "ep01v3_diorama.mp4")
     picture, cover_src = os.path.join(DD, "picture.mp4"), os.path.join(DD, "cover.jpg")
     mix = os.path.join(ROOT, "out", "monsters", "ep01v3", "mix.wav")
+if EP2:
+    DD = os.path.join(ROOT, "out", "monsters", "diorama_ep02")
+    OUT = os.path.join(ROOT, "out", "monsters", "ep02_diorama.mp4")
+    picture, cover_src = os.path.join(DD, "picture.mp4"), os.path.join(DD, "cover.jpg")
+    mix = os.path.join(ROOT, "out", "monsters", "ep02", "mix.wav")
 timing = json.load(open(os.path.join(ROOT, "channels", "monsters", EPDIR, "timing.json")))
 spec = importlib.util.spec_from_file_location("ep01_episode", os.path.join(ROOT, "channels", "monsters", EPDIR,
                                                                            "episode.py"))
 ep = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ep)
-report = [("# Episode 1 v3 (2.5D)" if V3 else "# Episode 1 v2" + (" (diorama 2.5D)" if DIORAMA else ""))
+report = [("# Episode 2 (2.5D)" if EP2 else "# Episode 1 v3 (2.5D)" if V3 else "# Episode 1 v2" + (" (diorama 2.5D)" if DIORAMA else ""))
           + ": delivery check", ""]
 
 
@@ -128,7 +135,7 @@ say(f"- trademark terms in the upload sheet: {hits or 'none'}")
 
 # 5. the upload sheet
 with open(OUT[:-4] + "_metadata.md", "w") as f:
-    f.write("# Upload sheet: Cute Things Kill Here, Episode 1\n\n")
+    f.write(f"# Upload sheet: Cute Things Kill Here, Episode {EPNUM}\n\n")
     f.write(f"**Title** ({len(m['title'])} characters)\n```\n{m['title']}\n```\n\n")
     f.write("**Alternative titles to test**\n" + "".join(f"- `{x}`\n" for x in m["alt_titles"]) + "\n")
     f.write("**Description**\n```\n" + m["description"].strip() + "\n\n" + " ".join(m["hashtags"]) + "\n```\n\n")
@@ -137,7 +144,7 @@ with open(OUT[:-4] + "_metadata.md", "w") as f:
     f.write(f"**Video facts:** {timing['total']:.1f} s. Narrated with Chatterbox Turbo (synthetic voice; nobody real "
             "is cloned). Music and sound effects are original. Made for kids: **No** (comments stay on for the vote). "
             "Altered or synthetic content: **No** (fully animated fantasy). "
-            f"Cover: {os.path.basename(cover)} (S01 with \"{'THIS SHRIMP ERASED A FOREST' if V3 else 'IT ERASED A FOREST'}\"); where the app can't take a custom "
+            f"Cover: {os.path.basename(cover)} (S01 with \"{'I SAVED THE SHRIMP THAT TRIED TO KILL ME' if EP2 else 'THIS SHRIMP ERASED A FOREST' if V3 else 'IT ERASED A FOREST'}\"); where the app can't take a custom "
             "Shorts cover, pick frame 0, the hook frame.\n")
 say(f"- wrote {os.path.relpath(OUT[:-4] + '_metadata.md', ROOT)}")
 
