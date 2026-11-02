@@ -6,9 +6,40 @@ Updated 2 Nov 2026.
 |---|---|---|
 | S05 | **Final, pushed.** 99 frames, 720x1280, crf 10, no tags. Approved look (hands f34, terror face f72). Hands with the dripping claw, one drop falls; cut at f50 up to his face, with 2D terror eyes and a sweat drop on "In my". | shots/S05.mp4 + S05_sheet.jpg |
 | S06 | **Final, pushed.** 98 frames. The claw in profile on the light cyc; on "Straight" (f67) a tapered white arrow-jet with an ink outline shoots straight right and stops inside the frame. The floating-finger bug is fixed. | shots/S06.mp4 + S06_sheet.jpg |
-| S20bot | **Rendering** (11/156 frames at 13:45 UTC). 156 frames at about 140 s/frame, about 6 h. Approved look (hide f92, glance f124). It renders the bottom 62% of the frame (rows 486-1280); the top is empty on purpose for helper 8's split. | shots/S20bot.mp4 (pending) |
+| S20bot | **Split three ways (coordinator, 2 Nov).** I render **f001-052**: f001-011 are done, f012-052 are rendering now (about 140 s/frame, done around 15:15 UTC). I have **no frames past f052**, so helper 5 (f053-104) and bGqrs (f105-156) start from scratch. When the parts land I join them (steps below). | shots/S20bot.mp4 (pending) |
 
 Render cost on this container (CPU EEVEE): S05 about 145 s/frame, S06 about 40 s/frame.
+
+## S20bot parts: exact steps for helper 5 (f053-104) and bGqrs (f105-156)
+My pipeline takes raw parts as they are. S20bot has **no 2D pass** (post_helper4 adds nothing to it), so the join *is*
+the final encode.
+- **Any start frame is safe.** S20bot is `step=2, ones=(1,156)`: the camera moves on 1s, so render_shot.py renders
+  every frame, and the characters hold on 2s through their STEPPED modifiers, which depend only on the frame number.
+  Start at exactly f053 / f105; you don't need the step-multiple lead-in.
+- **Render** (from the repo root; split into chunks under 2 h, about 140 s/frame on CPU EEVEE, so at most about 45
+  frames per task):
+  ```
+  /home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep02 S20bot OUT --frames 53-104
+  ```
+  (bGqrs: `--frames 105-156`). Frames land as OUT/0053.png ... Leave the env var SHRIMP_IN_HAND unset (it defaults to 0.6).
+- **The frame is meant to look odd:** the render border covers only the bottom 62% (rows 486-1280). The top is empty or
+  transparent on purpose, because helper 8 crops the bottom panel. Don't "fix" it.
+- **Encode the part** (near-lossless, no tags):
+  ```
+  ffmpeg -framerate 24 -start_number 53 -i OUT/%04d.png -frames:v 52 -c:v libx264 -crf 6 -pix_fmt yuv444p \
+     -map_metadata -1 -fflags +bitexact -flags:v +bitexact -bsf:v filter_units=remove_types=6 \
+     out/monsters/diorama_ep02/parts/S20bot_f053-104.mp4
+  ```
+  (bGqrs: `-start_number 105 ... S20bot_f105-156.mp4`, also 52 frames). Push the part and say so in your status file.
+- **The join** (mine, once both parts are in):
+  ```
+  python channels/monsters/diorama/join_parts.py --ep02 S20bot build/monsters/diorama_ep02/render/S20bot:1-52 \
+     out/monsters/diorama_ep02/parts/S20bot_f053-104.mp4 out/monsters/diorama_ep02/parts/S20bot_f105-156.mp4
+  ```
+  This gives shots/S20bot.mp4 + sheet at crf 10 with no tags, checked at 156 frames.
+- **Look checks** for the parts: on "Option B" (about f66) Wren turns away and rings her bell. On "hide it" (about
+  f84) Kai's hands go to his collar; the shrimp is inside by about f97, then the teal bulge pops on his chest. On
+  "Comment" (about f114) Wren glances back; Kai smiles rigidly with his hands behind his back.
 
 ## QA (S01-S04, S06-S13, S16-S18), 2 Nov 2026
 
