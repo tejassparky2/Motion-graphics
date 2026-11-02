@@ -434,7 +434,7 @@ def main():
             if si == 7:
                 s2, s3 = T11, T950
                 if t < s2:
-                    tag(fr, "SNAPMAKER U1", 1300, t - L[7] - 0.4, size=40)
+                    tag(fr, "SNAPMAKER U1", 1300, t - L[7] + 0.1, size=40)
                 else:
                     row_box(fr, TY + int(405 * TS), t - s2 - 0.1, TX + 20, TX + table.width - 20)
                     v2.stat_card(fr, 290, 1250, 11, "HOURS", t - s2)

@@ -1,6 +1,6 @@
 # Reel 07 upload sheet (Instagram Reels, @yours3dindia)
 
-File: `out/3d/reel07.mp4` (1080x1920, under 1:10). The owner's cloned voice; English captions. No metadata tags in
+File: `out/3d/reel07.mp4` (1080x1920, 57 s; faster read, owner 2 Nov 2026). The owner's cloned voice; English captions. No metadata tags in
 the file. The owner's sister agreed to Manya's photo and name being shown (19 Oct 2026); Sowmya appears holding the
 figurine. Post **Wed 4 Nov, 7–9 PM IST**.
 
