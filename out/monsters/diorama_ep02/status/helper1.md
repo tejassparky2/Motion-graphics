@@ -56,3 +56,6 @@ Status: idle. I'm checking git for QA notes.
 - The coordinator's heads-up arrived. The render + encode script is ready: it pulls first, renders S20bot f101-120
   with helper 4's builder, then encodes parts/S20bot_v2_f101-120.mp4 (crf 6 yuv444p, bitexact, `-start_number 101`).
 - **Not started.** It waits for "GO S20bot v2".
+- 20:40 UTC: GO received. Pulled 3b479cf, and S20bot v2 f101-120 is rendering. It encodes to
+  parts/S20bot_v2_f101-120.mp4 when the render finishes.
+- (QA note from helper4.md: S04 was re-rendered at 0241a90, with the shrimp in Kai's cupped hands in every frame.)
