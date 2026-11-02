@@ -238,7 +238,44 @@ def overlays(shot):
     return []
 
 
+PARTS = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "parts")
+
+
+def fill_from_parts(shot, n):
+    """Frames rendered elsewhere: decode out/monsters/diorama_ep02/parts/<SHOT>_v2_fAAA-BBB.mp4 (S20bot v2's split) into
+    the render folder wherever a frame is missing, then check every frame 1..n is there."""
+    import glob
+    import re
+    d = os.path.join(BUILD, "render", shot)
+    os.makedirs(d, exist_ok=True)
+    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_v2_f*.mp4"))):
+        a, b = map(int, re.search(r"_f(\d+)-(\d+)\.mp4$", part).groups())
+        if all(os.path.exists(os.path.join(d, f"{f:04d}.png")) for f in range(a, b + 1)):
+            continue
+        tmp = tempfile.mkdtemp()
+        subprocess.run(["ffmpeg", "-v", "error", "-i", part, "-start_number", str(a), os.path.join(tmp, "%04d.png")],
+                       check=True)
+        got = sorted(os.listdir(tmp))
+        if len(got) != b - a + 1:
+            raise SystemExit(f"{part}: {len(got)} frames, expected {b - a + 1}")
+        for g in got:
+            if not os.path.exists(os.path.join(d, g)):
+                shutil.move(os.path.join(tmp, g), os.path.join(d, g))
+        shutil.rmtree(tmp)
+        print("filled from", os.path.basename(part))
+    missing = [f for f in range(1, n + 1) if not os.path.exists(os.path.join(d, f"{f:04d}.png"))]
+    if missing:
+        raise SystemExit(f"{shot}: frames missing {missing[:12]}{'...' if len(missing) > 12 else ''}")
+    for f in sorted(int(x[:4]) for x in os.listdir(d) if x[:4].isdigit() and x.endswith(".png")):
+        if f > n:
+            os.remove(os.path.join(d, f"{f:04d}.png"))                    # extra frames past the shot (a longer chunk)
+
+
 def run(shot):
+    if shot == "S20bot":
+        with open(os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")) as fh:
+            n20 = next(s["render_frames"] for s in json.load(fh)["shots"] if s["shot"] == "S20")
+        fill_from_parts(shot, n20)
     src = comp.Source(os.environ.get("SRC") or os.path.join(BUILD, "render", shot))
     out_frames = os.path.join(BUILD, f"{shot}_post")
     rep = comp.render([comp.Shot(src, overlays=overlays(shot), name=shot)], out_frames, verbose=False)
