@@ -68,9 +68,10 @@ CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "
 HOOK = [("THIS SHRIMP", ()), ("ERASED", ("ERASED",)), ("A FOREST", ())]
 HOOK_Y = 170                 # top baseline: high in the frame, over the sliced trees, above Kai's face
 HOOK_SIZE = 108
-# Episode 2's frame-0 hook: four short lines, the threat in red; placed against S01 when it lands
+# Episode 2's frame-0 hook: four short lines, the threat in red. S01 keeps Kai's face and the diving bird in the top
+# third and the shrimp at y 745+, so the hook sits in the middle band (over his legs and the tree trunk).
 HOOK_VERSION = {"diorama_ep02": dict(lines=[("I SAVED", ()), ("THE SHRIMP", ()), ("THAT TRIED", ()),
-                                            ("TO KILL ME", ("TO KILL ME",))], y=150, size=92)}
+                                            ("TO KILL ME", ("TO KILL ME",))], y=480, size=80)}
 NO_CAPTIONS = {"S15"}        # Episode 1's snap; Episode 2's wordless S09 has no words to caption anyway
 NO_CAPTIONS_VERSION = {"diorama_ep02": set()}
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
@@ -106,7 +107,9 @@ CAP_Y_VERSION["diorama_v3"].update({
 # S22: the tree close-up keeps the band; after the pull-back, the grass between the tree and Kai at the puddle.
 # S23c: between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in.
 # Episode 2: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
-CAP_Y_VERSION["diorama_ep02"] = {}
+CAP_Y_VERSION["diorama_ep02"] = {
+    "S10": 600,              # above the upside-down bird in the thorn bush (its masked face is in the 71% band)
+}
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
