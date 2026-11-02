@@ -178,8 +178,8 @@ def _anchors(shot, fn, meta=None):
         return {}
     sc = bpy.context.scene
     out = {}
-    for f in range(sc.frame_start, sc.frame_end + 1):
-        sc.frame_set(f)
+    for f in range(1, frames(shot) + 1):                          # the shot's own length (the scene's frame_end
+        sc.frame_set(f)                                            # isn't set yet inside render_shot's build)
         out[f] = fn(f, _active_cam(f))
     sc.frame_set(1)
     os.makedirs(BUILD, exist_ok=True)

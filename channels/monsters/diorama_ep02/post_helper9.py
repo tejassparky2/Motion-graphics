@@ -234,7 +234,7 @@ def join(shot, n):
     src_dir = _src(shot)
     os.makedirs(src_dir, exist_ok=True)
     def rng(path):
-        m = re.search(r"_f(\d+)-(\d+)\.mp4$", path)
+        m = re.search(r"_f(\d+)-(\d+)(?:_v\d+)?\.mp4$", path)   # a re-render may carry _v2
         return int(m.group(1)), int(m.group(2))
     # the shortest parts first: a re-render of a few frames (S19 f017-048 after the crane fix) beats the long
     # part it replaces, which then only fills what is still missing

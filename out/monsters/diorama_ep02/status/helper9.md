@@ -74,3 +74,14 @@
 - 2026-11-02 16:22 UTC: **S19 f001-016 rendered here** (new crane, about 140 s a frame). Waiting on S19_f017-032 (helper 10)
   and S19_f033-048 (helper 4). Then the join (in a fresh folder; the short parts go first, so the old f001-062 part only
   supplies f049-062), the 2D pass, and shots/S19.mp4.
+
+- 2026-11-02 16:40 UTC: **S19 DONE: shots/S19.mp4 + S19_sheet.jpg** (123 frames, which is S19's render_frames since the
+  13:06 re-voice; 720x1280, 24 fps, crf 10, 0 encoder tags). It's joined from my f001-016, helper 10's S19_f017-032_v2,
+  helper 4's S19_f033-048_v2, helper 1's f049-062 (from f001-062) and helper 10's f063-123 (from f063-124), then my 2D pass.
+  Checked: the crane opens over Kai's shoulder on Wren, the lake beyond the trees; it rises over the path (no dip, no
+  wash) to the high view of the village on the lake shore; at f049 it cuts to the claw draped over his fists; drops
+  fall from the tip with glints, a sparkle on "dry", and the shrimp's eyes go big. The seams at f016/017 and f032/033
+  are continuous; f048/049 is the cut. All my word cues still match the re-voiced timing (glow 49, crack cut 31,
+  where cut 49, dry 90).
+- **All three of my shots are delivered: S14.mp4, S15.mp4, S19.mp4.** Fixes this round: helper9.py's anchors now span the
+  shot's own length, and post_helper9's join accepts _v2 part names.
