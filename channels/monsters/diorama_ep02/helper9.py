@@ -600,16 +600,16 @@ def s19():
     for f in range(1, fc):
         u = _smooth((f - 1) / (f_end - 1))
         d = math.exp(math.log(a[1]) + (math.log(b[1]) - math.log(a[1])) * u)
-        w = (d - a[1]) / (b[1] - a[1])                                   # the aim moves only as the camera pulls back,
-        t = Vector(a[0]).lerp(Vector(b[0]), w)                           # so it rises over him and never dips
+        wt = (d - a[1]) / (b[1] - a[1])                                  # the aim moves only as the camera pulls back,
+        t = Vector(a[0]).lerp(Vector(b[0]), wt)                          # so it rises over him and never dips
         tl = a[2] + (b[2] - a[2]) * _smooth(min(1.0, u * 1.8))
         yw = a[3] + ((b[3] - a[3] + 180) % 360 - 180) * u
         ln = a[4] + (b[4] - a[4]) * u
         drift = 1 - 0.03 * max(0.0, (f - f_end) / 10)                    # keeps drifting in after the crane lands
         loc, rot = _orbit(t, d * drift, tl, yw)
         fd = d * drift
-        hs = hz_a[0] + (hz_b[0] - hz_a[0]) * w
-        hd = hz_a[1] + (hz_b[1] - hz_a[1]) * w
+        hs = hz_a[0] + (hz_b[0] - hz_a[0]) * wt
+        hd = hz_a[1] + (hz_b[1] - hz_a[1]) * wt
         _key_cam(crane, f, loc, rot, ln, fd, blur=BLUR + 6 * u, haze=(hs / fd, hd / fd))
     # part B: the claw in his hands, dripping; a slow push-in
     close = _new_cam("S19claw", fc)
