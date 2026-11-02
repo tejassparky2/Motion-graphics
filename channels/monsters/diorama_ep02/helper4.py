@@ -511,12 +511,14 @@ def s20bot():
 
     # camera: the same south-east 3/4 two-shot as before, nudged toward Wren so her face and the raised arm stay in
     # the bottom band; a slow push-in on 1s
-    cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
+    # from Kai's right side, a little behind him: Kai at frame left in profile, Wren at frame right turned 3/4 to us
+    # (her face carries the beat); the raised forearm between them
+    cdir = (fwd * float(os.environ.get("S20B_FWD", "-0.3")) + Vector((-fwd.y, fwd.x, 0)) * -1.0).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     mid = X.KAI_AT.lerp(X.WREN_STOP, float(os.environ.get("S20B_MID", "0.5")))
     tgt = tuple(mid + Vector((0, 0, 5.4)))
     dist0 = float(os.environ.get("S20B_DIST", "16.5"))
-    yoff = float(os.environ.get("S20B_YAW", "22.0"))
+    yoff = float(os.environ.get("S20B_YAW", "0.0"))
     sc.render.use_border = True
     sc.render.use_crop_to_border = False
     sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
