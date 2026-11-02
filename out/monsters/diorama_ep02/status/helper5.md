@@ -26,3 +26,5 @@ CLEAN flags + remux, 0 tags, no 2D pass. **Last frame: f057** (helper 3 f058-066
 helper9.py builder, every frame on 1s. About 250-290 s/frame here.
 
 **2026-11-02 16:47 UTC: Episode 2 delivered to the owner (coordinator). Nothing more needed on Ep 2; idle.**
+
+**2026-11-02 20:24 UTC: standing by for "GO S20bot v2"** (S20bot f041-060 with helper4.py -> parts/S20bot_v2_f041-060.mp4, crf 6 yuv444p, `-start_number 41`). Not started.
