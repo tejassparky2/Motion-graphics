@@ -20,7 +20,7 @@ from mathutils import Vector
 from channels.monsters.diorama_ep02 import xprl as X
 from channels.monsters.ep01v2 import bgqrs as s3d                 # kai_point, claw_tip, _drop, lock_on, _fix_pivots
 from channels.monsters.ep01v2 import xprl as x3                   # Pose
-from channels.monsters.mk import anim, hero, look, puffshrimp
+from channels.monsters.mk import anim, hero, look, puffshrimp, wren
 
 SHRIMP_IN_HAND = float(os.environ.get("SHRIMP_IN_HAND", "0.6"))   # root scale of the shrimp in his hands (shared)
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -348,4 +348,207 @@ def s06():
     return dict(frames=n, step=1, subject=[sh["root"]], beats=dict(fires=f_fires, streak=f_str))
 
 
-SHOTS = {"S05": s05, "S06": s06}
+# ------------------------------------------------------------------------------------------------------- S20 (B)
+def _shirt_mat(rig):
+    """Kai's jacket material (the 'huku' toon), so the bulge is his own shirt."""
+    for o in bpy.data.objects:
+        if o.type == "MESH" and o.find_armature() == rig["arm"]:
+            for m in o.data.materials:
+                if m and "huku" in m.name.lower() and "line" not in m.name.lower():
+                    return m
+    return look.toon("s20b_shirt", look.hexc("#1d9f94"))
+
+
+def _bone_world(rig, name, tail=False):
+    pb = rig["arm"].pose.bones[name]
+    return rig["arm"].matrix_world @ (pb.tail if tail else pb.head)
+
+
+def s20bot():
+    """Option B, the bottom panel (helper 8 crops it under the jagged divider): Kai and Wren as S17-S20A leave them.
+    On "Option B" Wren turns away, raises her bell and rings it for the villagers; Kai glances left, right... and on
+    "hide it in my shirt" slips the shrimp down his collar: it sinks in, a shirt-coloured bulge pops out on his chest
+    and the claw peeks out of the collar by his chin. Hands behind his back, an innocent smile. On "Comment" Wren
+    glances back over her shoulder, squinting; he holds the smile (the bulge wriggles); she turns away again.
+    Framed in the bottom band (y 680-1200); a slow push-in on 1s, the characters on 2s, from the south-east (S20A
+    looks from the west)."""
+    n = _frames("S20", 156)
+    W = _words("l20")
+    fw = {}
+    for i, (w, a, b) in enumerate(W):
+        fw.setdefault(w.strip(".:").lower(), []).append((a, b))
+    f_optB = fw["option"][1][0]                                    # 66
+    f_hide = fw["hide"][0][0]                                      # 84
+    f_shirt_end = fw["shirt"][0][1]                                # 104
+    f_comment = fw["comment"][0][0]                                # 114
+    X._world(n)
+    k = X._kai()
+    w = X._wren(X.WREN_STOP, X.WREN_YAW)
+    PK, PW = x3.Pose(k), x3.Pose(w)
+    feet = {"L": Vector((0.09, 0, 0)), "R": Vector((-0.09, 0, 0))}
+    up = Vector((0, 0, 1))
+    d = (X.WREN_STOP - X.KAI_AT).normalized()                      # Kai's facing (toward Wren)
+    fwd = Vector((d.x, d.y, 0)).normalized()
+
+    # beats
+    f_turn0, f_turn1 = f_optB - 6, f_optB + 6                      # Wren turns away on "Option B"
+    f_ring0, f_ring1 = f_turn1 + 2, f_turn1 + 22                   # ...and rings for the villagers
+    f_look_l, f_look_r = f_turn1 + 2, f_turn1 + 8                  # Kai glances left, right
+    f_lift, f_collar, f_in = f_hide - 2, f_hide + 6, f_hide + 13   # to the collar, then down inside
+    f_back0, f_back1 = f_comment + 2, f_comment + 8                # Wren glances back...
+    f_away = f_back1 + 18                                          # ...and turns away again
+    yaw_w = X.WREN_YAW
+    away = yaw_w + 155.0
+
+    def wren_body(f):
+        if f < f_turn0:
+            return yaw_w
+        if f < f_turn1:
+            u = (f - f_turn0) / (f_turn1 - f_turn0)
+            return yaw_w + (away - yaw_w) * (u * u * (3 - 2 * u)) * (1.06 if u > 0.7 else 1.0)  # a small overshoot
+        if f < f_back0:
+            return away
+        if f < f_away:
+            u = min(1.0, (f - f_back0) / (f_back1 - f_back0))
+            return away - 55.0 * (u * u * (3 - 2 * u))
+        u = min(1.0, (f - f_away) / 6)
+        return away - 55.0 * (1 - u)
+
+    for f in range(1, n + 1, 2):
+        # Wren
+        PW.reset()
+        for sd in ("L", "R"):
+            PW.leg(sd, feet[sd] + Vector((0, 0, PW.ankle_h)))
+        ringing = f_ring0 <= f <= f_ring1
+        wren.hold_bell(PW, 0.85 if ringing else 0.25, shake=(18 * math.sin(f * 1.6)) if ringing else 0.0)
+        PW.rot("chest", (-3 + 1.0 * math.sin(f / 20.0), 0, 0))
+        if f_back0 <= f < f_away:
+            PW.rot("head 1", (-4, 0, -35))                         # over her shoulder at him
+        else:
+            PW.rot("head 1", (-6, 0, 0))
+        PW.key(f)
+        w["arm"].rotation_euler = (0, 0, math.radians(wren_body(f)))
+        w["arm"].keyframe_insert("rotation_euler", frame=f)
+        # Kai
+        PK.reset()
+        for sd in ("L", "R"):
+            PK.leg(sd, feet[sd] + Vector((0, 0, PK.ankle_h)))
+        PK.rot("chest", (1.5 * math.sin(f / 20.0), 0, 0))
+        bpy.context.view_layer.update()
+        if f < f_lift:
+            X._cup(PK)
+        elif f < f_in + 2:
+            collar = _bone_world(k, "neck") + fwd * 0.55 - up * 0.2
+            u = min(1.0, (f - f_lift) / max(1, f_collar - f_lift))
+            v = max(0.0, (f - f_collar) / max(1, f_in - f_collar))
+            tgt = (_bone_world(k, "chest") + fwd * 1.3).lerp(collar, u) - up * 0.9 * v
+            for sd, s_ in (("L", 1), ("R", -1)):
+                X._reach(PK, k, sd, tgt + X._side_vec(k) * s_ * 0.3)
+        else:                                                       # hands behind his back: innocent
+            for sd, s_ in (("L", 1), ("R", -1)):
+                PK.aim(f"upper_arm.{sd}", (s_ * 0.14, 0.32, -1.0))
+                PK.aim(f"forearm.{sd}", (-s_ * 0.35, 0.55, -0.6))
+        if f_look_l <= f < f_look_r:
+            PK.rot("head 1", (0, 0, 28))
+        elif f_look_r <= f < f_lift:
+            PK.rot("head 1", (0, 0, -28))
+        elif f >= f_in + 2:
+            PK.rot("head 1", (-6, 4 * math.sin(f / 6.0), 0))       # chin up, a little whistling sway
+        PK.key(f)
+
+    # faces
+    hero.face(k, "sad", 1)
+    _face({"eye_zitome": 0.8, "mouth_short": 0.5}, f_look_l)        # shifty
+    _face({"eye_zitome": 0.5, "eye_brow_down": 0.4, "mouth_wide": 0.3}, f_lift)   # concentrating
+    _face({"face_happy": 1.0, "lip_u": 0.6}, f_in + 2)              # innocent: closed happy eyes, a whistle
+    _face({"face_happy": 1.0, "mouth_wide": 0.5}, f_back0 + 2)      # caught: the smile goes rigid
+    _face({"face_happy": 1.0, "lip_u": 0.6}, f_away + 2)
+    wren.face(w, "stern", 1)
+    wren.face(w, "stern", f_back0, value=1.0)
+    wren.grip(w, 1)
+    wren.ring(w, f_ring0, f_ring1)
+    wren.blink(w, 1, n, at=(40, f_away + 10))
+
+    # the shrimp: cupped until the lift, then to his collar and down inside; its body hides, the claw peeks out
+    sh = puffshrimp.build((0, 0, 0))
+    s3d._fix_pivots(sh)
+    sh["root"].scale = (SHRIMP_IN_HAND,) * 3
+    sh["root"].rotation_euler = (0, 0, math.radians(X.KAI_YAW + 180))   # facing him
+    sc = bpy.context.scene
+    collar0 = None
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        hands = (X._world_of(k, "hand.L") + X._world_of(k, "hand.R")) / 2 + up * 0.25
+        neck = _bone_world(k, "neck")
+        inside = _bone_world(k, "chest") + fwd * 0.15 - up * 0.35
+        if f <= f_lift:
+            p = hands
+        elif f <= f_collar:
+            collar0 = neck + fwd * 0.65 + up * 0.1
+            u = (f - f_lift) / (f_collar - f_lift)
+            p = hands.lerp(collar0, u * u * (3 - 2 * u))
+        elif f <= f_in:
+            u = (f - f_collar) / (f_in - f_collar)
+            p = (collar0 or neck).lerp(inside, u * u)
+        else:
+            p = inside
+        sh["root"].location = p
+        sh["root"].keyframe_insert("location", frame=f)
+    sc.frame_set(f_in)
+    claw_names = ("puff_claw", "puff_dactyl", "puff_bead")
+    for o in bpy.data.objects:
+        if o.name.startswith("puff") and o.type == "MESH" and not o.name.startswith(claw_names):
+            for f, hide in ((f_in - 1, False), (f_in, True)):
+                o.hide_render = hide
+                o.keyframe_insert("hide_render", frame=f)
+    peek = _bone_world(k, "neck") + fwd * 0.45 + up * 3.0           # the claw up out of the collar
+    anim.key(sh["shoulder"], "rotation_euler", 1, (0.55, 0.0, 0.0), "CONSTANT")
+    anim.key(sh["shoulder"], "rotation_euler", f_in, s3d.aim_claw(sh, peek), "CONSTANT")
+    anim.key(sh["hinge"], "rotation_euler", 1, (0.15, 0.0, 0.0), "CONSTANT")
+    for f, v in ((f_in + 10, 0.6), (f_in + 12, 0.15), (f_back0 + 4, 0.7), (f_back0 + 6, 0.15)):  # a little clack
+        anim.key(sh["hinge"], "rotation_euler", f, (v, 0.0, 0.0), "CONSTANT")
+    anim.blink(sh, 30)
+
+    # the bulge: his own shirt, popping out on his chest as it goes in (overshoot), wriggling now and then
+    sc.frame_set(f_in)
+    bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=1.0)
+    bulge = bpy.context.object
+    bulge.name = "s20b_bulge"
+    bulge.data.materials.append(look.toon("s20b_shirt", look.hexc("#1aa59a")))   # his teal jacket
+    for p_ in bulge.data.polygons:
+        p_.use_smooth = True
+    look.outline(bulge, 0.02)
+    bulge.location = _bone_world(k, "chest") + fwd * 0.42 - up * 0.15
+    bulge.rotation_euler = (0, 0, math.radians(X.KAI_YAW))
+    bpy.context.view_layer.update()
+    mw = bulge.matrix_world.copy()
+    bulge.parent, bulge.parent_type = k["arm"], "BONE"
+    bulge.parent_bone = "chest"
+    bpy.context.view_layer.update()
+    bulge.matrix_world = mw
+    base = Vector((0.62, 0.42, 0.55)) / k["arm"].scale.x            # bone-parented: the armature's scale applies
+    for f, s_ in ((f_in - 1, 0.001), (f_in, 0.7), (f_in + 2, 1.15), (f_in + 4, 0.95), (f_in + 6, 1.0),
+                  (f_in + 22, 1.0), (f_in + 24, 1.08), (f_in + 26, 0.97), (f_in + 28, 1.0),
+                  (f_back0 + 3, 1.0), (f_back0 + 5, 1.1), (f_back0 + 7, 1.0)):
+        bulge.scale = base * s_
+        bulge.keyframe_insert("scale", frame=f)
+    for fc in anim.all_fcurves(bulge.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    X.v2._twos([k["arm"], w["arm"], sh["body"], sh["hinge"]] + sh["eyes"])
+    sc.frame_set(1)
+
+    # camera: from the south-east, a 3/4 on Kai's front-left with Wren nearer at frame left; the pair in the
+    # bottom band (shift the frame up); a slow push-in on 1s
+    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.18)
+    tgt = tuple(mid + Vector((0, 0, 5.4)))
+    left = Vector((fwd.y * -1.0, fwd.x, 0)) * -1.0                  # Kai's left in the world
+    cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
+    yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
+    del left
+    X._cam_move("S20Bcam", n, (tgt, 12.5, 6.0, yaw - 12.0, 34.0, 0.27), (tgt, 11.2, 6.0, yaw - 12.0, 34.0, 0.27))
+    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
+                beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
+
+
+SHOTS = {"S05": s05, "S06": s06, "S20bot": s20bot}
