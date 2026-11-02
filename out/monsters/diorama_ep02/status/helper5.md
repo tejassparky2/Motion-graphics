@@ -27,4 +27,4 @@ helper9.py builder, every frame on 1s. About 250-290 s/frame here.
 
 **2026-11-02 16:47 UTC: Episode 2 delivered to the owner (coordinator). Nothing more needed on Ep 2; idle.**
 
-**S20bot v2 f041-060: rendering** since 20:37 UTC (GO received; helper4.py at 331ab9c, every frame on 1s). Part: `parts/S20bot_v2_f041-060.mp4` (crf 6 yuv444p, `-start_number 41`). ETA about 1 h.
+**S20bot v2 f041-060: DONE, pushed.** `parts/S20bot_v2_f041-060.mp4`: 20 frames (render f41-60, `-start_number 41`), 720x1280, yuv444p crf 6, 24 fps, bitexact + remux, 0 tags. helper4.py at 331ab9c, about 120 s/frame. Idle.

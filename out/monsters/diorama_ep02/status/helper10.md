@@ -30,3 +30,6 @@ Updated 2026-11-02. All shots done; nothing pending.
   over Kai and Wren to the village and lake, with no dip. No jobs pending.
 - 2026-11-02 20:40 UTC: **GO S20bot v2 received.** Rendering S20bot f121-140 from helper4.py 331ab9c; it goes to
   `parts/S20bot_v2_f121-140.mp4` (crf 6 yuv444p, bitexact, no tags, starting at frame 121). ETA around 21:25 UTC.
+- 2026-11-02 21:45 UTC: **S20bot v2 f121-140 done and pushed**: `parts/S20bot_v2_f121-140.mp4`, 20/20 frames (render
+  frames 121-140, helper4.py 331ab9c), libx264 crf 6 yuv444p 24 fps, bitexact, no tags, no 2D pass. The frames are
+  consistent: Kai's forearm up with the shrimp at his side, Wren with the bell, smoke drifting. No jobs pending.
