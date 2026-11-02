@@ -297,21 +297,26 @@ VILLAGERS = [   # (x offset from the path, start y behind the crest, delay in fr
 
 
 def _clear_smoke(cam, frames, target):
-    """The stumps' smoke puffs that would drift across the lens between Kai and `target` (the dollhouse cutaway):
-    hidden if in frame and nearer than the target at any of `frames`."""
+    """The stumps' smoke puffs that would drift across the lens between Kai and `target` (the dollhouse cutaway): a
+    whole puff is hidden if any of its spheres comes into frame nearer than the target (or behind the lens plane
+    around the camera) at any of `frames`."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
-    far = None
+    puffs = [o for o in sc.objects if o.name.startswith("puff") and o.type == "EMPTY"]
     hide = set()
     for f in frames:
         sc.frame_set(f)
         far = (target - cam.matrix_world.translation).length
-        for o in sc.objects:
-            if not o.name.startswith("puff"):
+        for o in puffs:
+            if o in hide:
                 continue
-            v = world_to_camera_view(sc, cam, o.matrix_world.translation)
-            if -0.3 < v.x < 1.3 and -0.3 < v.y < 1.3 and 0 < v.z < far:
-                hide.add(o)
+            for c in [o] + list(o.children_recursive):
+                pts = [world_to_camera_view(sc, cam, c.matrix_world @ Vector(v)) for v in
+                       (c.bound_box if c.type == "MESH" else [(0, 0, 0)])]
+                near = [p for p in pts if p.z < far]
+                if any(p.z <= 0 for p in pts) and near or any(-0.3 < p.x < 1.3 and -0.3 < p.y < 1.3 for p in near):
+                    hide.add(o)
+                    break
     for o in hide:
         for c in [o] + list(o.children_recursive):
             c.hide_render = True

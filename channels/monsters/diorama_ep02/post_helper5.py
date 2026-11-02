@@ -112,6 +112,8 @@ def tink(a):
 
 
 def overlays(shot):
+    if shot not in ("S07", "S12", "S13"):          # S11 has no 2D pass (and no anchors)
+        return []
     a = anchors(shot)
     n = max(a)
     if shot == "S07":
