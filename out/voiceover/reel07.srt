@@ -11,38 +11,38 @@ This figurine started as one phone photo. Here's exactly how we make it, in four
 Step one. We upload the photo to Chat G P T, and ask for a semi-realistic 3D design.
 
 4
-00:00:16,690 --> 00:00:23,536
-Not right the first time? Just ask for changes. We asked: make her standing. And remove the ball in her hand.
+00:00:16,690 --> 00:00:22,916
+Not right the first time? Just ask for changes. We asked for a standing pose. And no ball in her hand.
 
 5
-00:00:24,436 --> 00:00:28,376
+00:00:23,816 --> 00:00:27,756
 Same face. Same dress. Same little bow. Just cuter.
 
 6
-00:00:29,276 --> 00:00:34,474
+00:00:28,656 --> 00:00:33,854
 Step two. We give that design to Tripo 3D, and it builds a full 3D model.
 
 7
-00:00:35,374 --> 00:00:42,837
+00:00:34,754 --> 00:00:42,217
 The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes.
 
 8
-00:00:43,737 --> 00:00:49,516
+00:00:43,117 --> 00:00:49,046
 Step four. The Snapmaker U one prints it. Eleven hours. Nine hundred and fifty colour changes.
 
 9
-00:00:50,416 --> 00:00:53,173
+00:00:49,946 --> 00:00:52,702
 Then the supports come off, and we sand it by hand.
 
 10
-00:00:54,073 --> 00:00:54,952
+00:00:53,602 --> 00:00:54,482
 And here's the result.
 
 11
-00:00:55,852 --> 00:01:01,019
+00:00:55,382 --> 00:01:00,548
 Want to make your own mini you 3D figurine? Send us one photo on WhatsApp, and we'll make it for you.
 
 12
-00:01:01,919 --> 00:01:06,457
+00:01:01,448 --> 00:01:05,987
 Or make it yourself. Comment 3D, to get the full prompt and guide in your DM.
 
