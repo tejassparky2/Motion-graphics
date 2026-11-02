@@ -18,7 +18,7 @@ TWIST = "l9"                                       # the snap: the music drops u
 
 SCRIPT = [
     dict(id="l1", scene="S01", text="You said save it. So I ran at the butcher bird."),
-    dict(id="l2", scene="S02", text="The bird dived first.", gap=0.4),   # was "It dove first." (heard "It doe/Itto first")
+    dict(id="l2", scene="S02", text="The bird struck first.", gap=0.4),   # was "It dove first." / "The bird dived first." (heard "doe", then "died" in the mix)
     dict(id="l3", scene="S03", text="I got there half a second sooner.", gap=0.4),
     dict(id="l4", scene="S04", text="Its talons got my arm instead.", gap=0.5),
     dict(id="l5", scene="S05", text="Now I was holding a wet pistol shrimp. In my bare hands.", gap=0.7),
