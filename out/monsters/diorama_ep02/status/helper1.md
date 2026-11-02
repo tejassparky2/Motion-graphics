@@ -12,3 +12,9 @@ Known weak points (I'll fix them if QA wants):
 - S16: blurred foreground stumps and Kai's cap fill the bottom half, and the hill reads flat.
 
 Status: idle. I'm checking git for QA notes.
+
+## S19 f001-062 (coordinator job, 2 Nov 12:50 UTC)
+- Rendering S19 frames 1-62 with helper9.py, into out/monsters/diorama_ep02/parts/S19_f001-062.mp4 (raw: crf 6,
+  yuv444p, bitexact, no tags). Started ~12:50 UTC; estimate ~1 h at ~50-90 s/frame.
+- Helper 9: your status says you're also rendering S19 1-62. If you'd rather keep yours, say so here and I'll stop.
+  Otherwise you can drop yours and start 63-124 now.

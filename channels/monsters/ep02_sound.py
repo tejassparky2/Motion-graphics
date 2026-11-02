@@ -32,18 +32,20 @@ base.OUT = os.path.join(base.ROOT, "out", "monsters", "ep02")
 base._whisper_line = lambda x: x          # Episode 1's line 1 was whispered; Episode 2's is spoken in full
 
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
-# PLACEHOLDERS until the shot owners send their frames; each is where DIORAMA_EP02.md puts the beat.
-S02_DIVE_END = 33          # the dive whoosh peaks into the cut to S03 (the bird reaches the puddle)
-S03_SLIDE, S03_SCOOP = 4, 18      # Kai slides in on his knees; the hands scoop the shrimp out (splash)
-S04_SWIPE, S04_UP = 10, 30        # the talons rake his sleeve (swipe + tear); the bird swoops up and away
-S05_DROP = 40              # one drop falls from the claw (the wet drip)
-S09_COCK, S09_SNAP = 12, 36       # the claw cocks (the wind-up hush runs to the snap); SNAP: the white impact frames
-S10_CRASH = 3              # the bird lands in the thorn bush
-S11_POOF = 50              # it shakes itself into a puffball (the "poomf")
-S11_STOMP = 62             # it stomps off, offended (four little steps and a huff)
-S12_RAISE = 12             # the shrimp raises its claw at his face (a creak)
-S17_STEPS, S17_STOP = 0, 46       # Wren marches up from the cut and stops in front of Kai
-S20_SPLIT = 0              # the split screen opens
+# Read from the final shots in out/monsters/diorama_ep02/shots/ (2 Nov); "placeholder" = that shot hasn't landed yet.
+S03_SLIDE, S03_SCOOP = 8, 27      # bGqrs S03: the knees hit the grass and slide f8; the scoop splash shows from f27
+S03_SHADOW = 44            # bGqrs S03: the bird's shadow sweeps over him from ~f44 (its strike is S04)
+S04_SWIPE, S04_UP = 11, 16        # helper 1 S04: the talons cross his arm f11-12; the bird climbs away from f16
+S05_DROP = 40              # placeholder: one drop falls from the claw (the wet drip)
+S09_COCK, S09_SNAP, S09_RING = 14, 33, 36   # helper 10 S09: the cut to the wind-up f14; impact frames f33-35 (white,
+                                            # black, red); the shockwave ring from f36
+S10_CRASH = 0              # helper 10 S10: the bird is already upside down in the thorns on the cut
+S11_DROP, S11_POOF = 18, 43       # helper 5 S11: it drops out of the bush f18 (lands f19-20); the puffball f43-44
+S11_HUFF, S11_STOMP = 70, 74      # it glares, huffs and turns f70-72, then stomps off to the right f74-104
+S12_RAISE = 14             # helper 5 S12: it turns in his palm f7, the claw comes up f14-17
+S13_TAP = 15               # helper 5 S13: the claw touches his nose f15
+S17_STEPS, S17_STOP = 0, 45       # XprL S17: Wren marches in from the cut and stops stern in front of Kai ~f45
+S20_SPLIT = 0              # placeholder: the split screen opens on the cut
 
 
 # ---------------------------------------------------------------- Episode 2 effects (original, seeded)
@@ -217,12 +219,14 @@ def build(timing, n, v):
     music_at(base.bed("danger", c.t("S05") + 0.6, 5), 0.0, c.t("S05") + 0.3, -17, 0.02, 0.6)
     for k in range(7):                                               # Kai sprinting
         hit(footstep(k, 1.2), 0.08 + 0.3 * k, -24, -0.2)
-    dive_end = c.f("S02", S02_DIVE_END)
-    dive_from = c.word("l2", "dived", "end") + 0.02                # never under "dived" (Whisper heard "died")
-    hit(v3.dive_swoop(dive_end - dive_from, 2), dive_from, -12, 0.2)
+    gap = c.word("l1", "it", "end")                                  # S01: the bird dives head-on (between sentences)
+    hit(v3.shadow_whoosh(0.45, 1), gap + 0.02, -18, 0.3)
+    dive_from = c.word("l2", "first", "end") + 0.03                # after the line: under it "dived" read as "died"
+    hit(v3.shadow_whoosh(0.6, 2), dive_from, -12, 0.2)              # peaks across the cut into S03
     hit(_lp(np.random.default_rng(5).uniform(-1, 1, _n(0.5)), 900) * np.exp(-_t(_n(0.5)) / 0.12),
         c.f("S03", S03_SLIDE), -18, -0.1)                            # the knee slide on grass
     hit(v3.splash(3), c.f("S03", S03_SCOOP), -14, 0.0)
+    hit(v3.shadow_whoosh(0.7, 3), c.f("S03", S03_SHADOW), -18, -0.3)  # the shadow passes over (into the talons)
     swipe = c.f("S04", S04_SWIPE)
     hit(talon_swipe(), swipe, -9, 0.25)
     hit(cloth_tear(), swipe + 0.07, -12, 0.15)
@@ -240,7 +244,7 @@ def build(timing, n, v):
     hit(base.glass_tap(2), cock, -22, 0.0)
     hit(windup_hush(snap_t - cock), cock, -22, 0.0)
     hit(sfx.snap(4), snap_t, 0)
-    hit(sfx.shockwave(2), snap_t + 0.02, -1)
+    hit(sfx.shockwave(2), c.f("S09", S09_RING), -1)
     hit(sfx.whoosh(3), snap_t + 0.08, -10, 0.3)
     hit(base.ring_out(2.2), snap_t + 0.25, -18)
     hit(base.flutter(0.7, 5), snap_t + 0.3, -18, 0.5)
@@ -250,17 +254,18 @@ def build(timing, n, v):
     crash = c.f("S10", S10_CRASH)
     hit(thorn_crash(), crash, -9, 0.2)
     hit(dazed_tweets(c.end("S10") - crash - 0.4), crash + 0.35, -18, 0.25)
+    hit(footstep(30, 0.6), c.f("S11", S11_DROP + 1), -20, 0.15)      # it drops out of the bush onto the grass
     hit(poomf(), c.f("S11", S11_POOF), -10, 0.15)
+    hit(base.huff(1), c.f("S11", S11_HUFF), -20, 0.2)
     stomp0 = c.f("S11", S11_STOMP)
-    for k in range(4):
-        hit(base.stomp(k), stomp0 + 0.22 * k, -22, 0.1 + 0.15 * k)
-    hit(base.huff(1), stomp0 + 0.95, -20, 0.6)
+    for k in range(5):
+        hit(base.stomp(k), stomp0 + 0.25 * k, -22, 0.2 + 0.12 * k)
 
     # --- S12-S13: the shrimp looks at him, the claw comes up: a held tense second, then the nose tap
-    music_at(base.tense_tone(c.t("S14") - c.t("S12") + 0.3, 3), c.t("S12") + 0.2, c.word("l13", "tapped"), -22,
+    music_at(base.tense_tone(c.t("S14") - c.t("S12") + 0.3, 3), c.t("S12") + 0.2, c.f("S13", S13_TAP), -22,
              0.6, 0.08)
     hit(v3.aim(0.7, 6), c.f("S12", S12_RAISE), -22, 0.0)
-    hit(nose_tink(), c.word("l13", "tapped") + 0.12, -12, 0.0)
+    hit(nose_tink(), c.f("S13", S13_TAP), -12, 0.0)
 
     # --- S14-S15: the wrist glows (a wonder pad), the match cut to the crack in the sky
     music_at(base.soft_pad(c.t("S16") - c.t("S14") + 0.6, (62, 69, 74, 78), 0.1, 3), c.t("S14"), c.t("S16") + 0.2,
@@ -296,6 +301,15 @@ def build(timing, n, v):
     hit(v3.option_sting("B"), b_t, -12, 0.15)
     hit(sfx.ui_select(5), comment, -20)
     music_at(base.sting(total - opt_a), opt_a, total, -15, 0.25, 0.01)
+    # "The bird dived first.": everything under the line another 6 dB down (the duck comes on top of it)
+    l2 = c.line["l2"]
+    for tr in (music, *fx, *ambience):
+        i0, i1, r = int((l2["start"] - 0.08) * SR), int((l2["end"] + 0.05) * SR), _n(0.05)
+        g = np.ones(len(tr))
+        g[i0:i1] = base._db(-6)
+        g[i0 - r:i0] = np.linspace(1, base._db(-6), r)
+        g[i1:i1 + r] = np.linspace(base._db(-6), 1, r)
+        tr *= g
     return music, fx, ambience
 
 

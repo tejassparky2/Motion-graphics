@@ -108,6 +108,7 @@ CAP_Y_VERSION["diorama_v3"].update({
 # S23c: between the shrimp's antenna tips and its head fluff, which rises into 905 on the push-in.
 # Episode 2: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
 CAP_Y_VERSION["diorama_ep02"] = {
+    "S07": 150,              # in the sky above his cap: the turning claw fills the 71% band
     "S10": 600,              # above the upside-down bird in the thorn bush (its masked face is in the 71% band)
     "S20": 520,              # the B half puts Kai's face in the 71% band and the hide at chest height: the captions go
                              # in the A half, under the net (the shrimp is high, then inside it) and above the A card
@@ -133,7 +134,10 @@ AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)},
                   # ep02's S20 halves are full of Kai, Wren, the net and the shrimp: both cards straddle the divider,
                   # A over Kai's shins and the stump, B in the B half's sky between Kai's cap and Wren's hood
                   "diorama_ep02": {"A": (124, 585), "B": (370, 715)}}
-AB_SCALE_VERSION = {"diorama_ep02": 0.85}   # the cards' size per version (1 = fx2d_ab's 168 px badge)
+AB_SCALE_VERSION = {"diorama_ep02": 0.85}
+# Frames whose black edges are drawn on purpose, per version: {shot: (first, last) frame in the shot, why}. The scan
+# reports them as intended instead of as a problem; re-check the range if the shot is re-rendered.
+EDGE_OK_VERSION = {"diorama_ep02": {"S09": (28, 40, "the snap's ink impact frames (black ground, white speed lines)")}}   # the cards' size per version (1 = fx2d_ab's 168 px badge)
 
 
 # ---------------------------------------------------------------- decoding shots
@@ -552,6 +556,16 @@ def main():
         print("WARNING:", w)
     if missing:
         print(f"missing ({len(missing)}): {', '.join(missing)}")
+    ok = EDGE_OK_VERSION.get(a.version, {})
+    for name in list(edges):
+        if name in ok:
+            lo, hi, why = ok[name]
+            fine = [h for h in edges[name] if lo <= h[0] <= hi]
+            if fine:
+                print(f"edge bands: {name} frames {fine[0][0]}-{fine[-1][0]} black at the edges on purpose ({why})")
+            edges[name] = [h for h in edges[name] if not lo <= h[0] <= hi]
+            if not edges[name]:
+                del edges[name]
     if edges:
         for name, hits in edges.items():
             sides = sorted({e for _, b in hits for e in b})
