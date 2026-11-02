@@ -2,10 +2,17 @@
 
 Updated 2 Nov 2026.
 
-**Mix:** `out/monsters/ep02/mix.wav`, built by `channels/monsters/ep02_sound.py` from the cached ep02 takes (e6a1dbb's
-tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-13.99 LUFS, -1.34 dBTP**, no metadata.
+**Mix:** `out/monsters/ep02/mix.wav`, built by `channels/monsters/ep02_sound.py` from the cached ep02 takes (78c1cad's
+tar: l20 re-voiced "Option B: show her the glowing mark"; it refuses to synthesise). **57.461 s (1379 frames)**, 48 kHz
+stereo, **-13.99 LUFS, -1.34 dBTP**, no metadata.
 
-**Whisper medium.en, per line on the mix: 19/19 as written**, including l2 "The bird struck first." (heard exactly).
+**Whisper medium.en, per line on the mix: 19/19 as written**, including l2 "The bird struck first." and the new l20
+"Option A: hand it over. Option B: show her the glowing mark. Comment A or B." (both heard exactly).
+
+**2 Nov, the new ending (78c1cad):** the old S20bot sounds (Wren's turn, the collar, the shirt bulge, the glance back) are
+gone. The bottom half now gets the coordinator's cues: the glow chime on "glowing mark" (S20 f94) and Wren's startled
+bell clank ~f105. Kai's wrist raise (~f82, on "show") is my placeholder until helper 4's new bottom half lands; the A/B
+stingers and the "Comment" blip are word-anchored, so they follow the new timing.
 - The dive whoosh still starts after "first" ends, and the 6 dB dip under l2 stays; both are harmless now.
 - The 1-frame cut moves (S02 32, S03 from f98, S08 from f413, S09 from f473, S12 63, S18 75, S20 from f1231) need no
   constant changes: every picture beat is a frame offset inside its shot, added to that shot's start from timing.json,
@@ -30,9 +37,7 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 | S15 | the wrist mark's match cut: one glow frame f30, the sky crack from f31 | a glint on the glow frame, the eerie sting on the cut (0.15 s before "crack"), a low rift hum with a dry crackle under the sky |
 | S19 | crane over the lake f0-47, cut to the dripping claw f48, drops every 8 frames, sparkle + big eyes on "dry" f89 | the lake bed; quiet plinks on the drop schedule from f54; a glint on f89; the louder drip after "dry" |
 | S20 | both halves open on the cut f0 (S20top + S20bot) | the split whoosh |
-| S20bot | Wren turns her back f55-65, bell at her hip f61 | cloth swish (right), a small bell ring |
-| S20bot | Kai's hands to collar f81, shrimp slips in f89, teal bulge pops f97 ("shirt") | two cloth rustles (left), a soft rubbery "bloop" |
-| S20bot | Wren glances back f115-121, turns away again f139-145 | swish + a faint bell jingle, swish |
+| S20 bottom (B) | Kai raises his wrist on "show" ~f82; the mark flares on "glowing mark" f94-107; Wren starts back ~f105 | a sleeve swish and faint glints building, the glow chime on f94, a choked bell clank + a backward step f105 |
 
 **S20bot landed (8a9a5d4) and is now scored** (beats read by frame diffs on its two halves and a contact sheet).
 **S02 re-render (1cee315) checked:** the bird still dives through the whole shot with the speed lines building into
@@ -50,4 +55,4 @@ S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the vil
 
 The music drops 0.1 s before S09 (TWIST l9). No heartbeat, no riser, all original.
 
-Status: **done.** All 20 shots scored from the final picture; mix.wav -13.99 LUFS, -1.34 dBTP, Whisper medium.en 19/19. I'll still re-run, re-check and push if the takes, the timing or a shot changes.
+Status: **done on the new ending** (mix pushed). When helper 4's new S20 bottom lands I'll set the raise, flare and clank on its real frames, re-run, Whisper and push.

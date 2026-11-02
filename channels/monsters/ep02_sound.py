@@ -50,10 +50,9 @@ S15_CUT = 30               # helper 9 S15: the wrist mark's match cut to the sky
 S19_CUT, S19_DRY = 48, 89         # helper 9 S19: the crane rises over the lake f0-47, cuts to the claw f48; drops leave
 S19_DROPS = 8                      # the tip every 8 frames (meadow.drips every=8); sparkle + eyes go big on "dry" f89
 S20_SPLIT = 0              # S20top/S20bot: both halves open on the cut, so the split whoosh sits on f0
-S20_TURN, S20_BELL = 55, 61        # S20bot: Wren turns her back f55-65 (on 2s), the bell at her hip on the turn
-S20_COLLAR, S20_SLIP = 81, 89      # Kai's hands go to his collar f81, the shrimp slips inside f89-92
-S20_BULGE = 97                     # the teal bulge pops on his chest f97 (on "shirt")
-S20_GLANCE, S20_AWAY = 115, 139    # Wren glances back f115-121, then turns away again f139-145
+S20_RAISE = 82                     # S20 bottom (B, 2 Nov re-voice): Kai raises his wrist on "show" ~f82 (placeholder)
+S20_FLARE = 94                     # the mark flares on "glowing mark" f94-107 (coordinator)
+S20_CLANK = 105                    # Wren steps back, startled, her bell clanks ~f105 (coordinator)
 
 
 # ---------------------------------------------------------------- Episode 2 effects (original, seeded)
@@ -189,16 +188,6 @@ def cloth_swish(dur=0.35, seed=0):
     return _bp(r.uniform(-1, 1, n), 700, 5000) * env * np.minimum(grain, 1.3) * 0.5
 
 
-def bulge_pop(seed=0):
-    """The shrimp settling under his shirt: a soft rubbery bloop with a cloth flick."""
-    r = _rng("bulge", seed)
-    n = _n(0.35)
-    t = _t(n)
-    bloop = np.sin(2 * np.pi * (380 * np.exp(-t / 0.05) + 170) * t) * np.minimum(1, t / 0.004) * np.exp(-t / 0.07)
-    flick = _bp(r.uniform(-1, 1, n), 1500, 6000) * np.exp(-t / 0.02) * 0.25
-    return bloop * 0.8 + flick
-
-
 def eyes_wide(seed=0):
     """Kai's eyes going wide: a tight, slightly sour double ping with a quick wobble."""
     n = _n(0.7)
@@ -236,6 +225,22 @@ def rift_hum(dur, seed=0):
         _place(out, _hp(r.uniform(-1, 1, m), 3000) * np.exp(-_t(m) / 0.0015) * r.uniform(0.1, 0.35), at)
         at += r.exponential(0.07)
     return out * np.minimum(1, t / 0.15) * np.minimum(1, (dur - t) / 0.4)
+
+
+def bell_clank(seed=0):
+    """Wren's hand bell knocked as she starts back: one dull, choked strike and the clapper rattling."""
+    r = _rng("clank", seed)
+    n = _n(0.9)
+    t = _t(n)
+    out = np.zeros(n)
+    for f, a, tau in ((1175, 1.0, 0.16), (1690, 0.6, 0.09), (2830, 0.45, 0.05), (3910, 0.3, 0.03)):
+        out += np.sin(2 * np.pi * f * t) * a * np.exp(-t / tau)
+    out *= np.minimum(1, t / 0.002)
+    for k in range(4):                                                   # the clapper rattling, dying away
+        m = _n(0.02)
+        _place(out, _bp(r.uniform(-1, 1, m), 2000, 7000) * np.exp(-_t(m) / 0.004) * (0.5 - 0.1 * k),
+               0.05 + 0.045 * k + r.uniform(0, 0.01))
+    return _verb(out, 0.2)
 
 
 def lake(dur, seed=0):
@@ -376,20 +381,18 @@ def build(timing, n, v):
     b_t = [w["start"] for w in words if w["w"].strip(".,:?!").upper() == "B"][0]
     comment = next(w["start"] for w in words if w["w"].lower().startswith("comment"))
     hit(sfx.whoosh(), c.f("S20", S20_SPLIT) + 0.02, -10)
-    # the bottom half: Wren turns her back (bell at her hip), Kai hides the shrimp, Wren glances back and away
-    hit(cloth_swish(0.42, 1), c.f("S20", S20_TURN), -22, 0.3)
-    hit(hand_bell(91, 3) * 0.6, c.f("S20", S20_BELL), -24, 0.3)
-    hit(cloth_swish(0.3, 2), c.f("S20", S20_COLLAR), -21, -0.3)
-    hit(cloth_swish(0.2, 3), c.f("S20", S20_SLIP), -22, -0.3)
-    hit(bulge_pop(), c.f("S20", S20_BULGE), -17, -0.3)
-    hit(cloth_swish(0.3, 4), c.f("S20", S20_GLANCE), -23, 0.3)
-    hit(hand_bell(93, 4) * 0.4, c.f("S20", S20_GLANCE) + 0.1, -27, 0.3)
-    hit(cloth_swish(0.3, 5), c.f("S20", S20_AWAY), -23, 0.3)
+    # the bottom half (B): Kai raises his wrist, the mark flares on "glowing mark", Wren starts back, bell clanking
+    hit(cloth_swish(0.3, 2), c.f("S20", S20_RAISE), -22, -0.3)
+    flare = c.f("S20", S20_FLARE)
+    hit(mark_flicker(flare - c.f("S20", S20_RAISE) - 0.05, 2), c.f("S20", S20_RAISE) + 0.05, -26, -0.2)
+    hit(glow_chime(1), flare - 0.02, -14, -0.2)
+    hit(bell_clank(), c.f("S20", S20_CLANK), -19, 0.3)
+    hit(footstep(31, 0.8), c.f("S20", S20_CLANK) + 0.06, -22, 0.35)
     hit(v3.option_sting("A"), a_t, -12, -0.15)
     hit(v3.option_sting("B"), b_t, -12, 0.15)
     hit(sfx.ui_select(5), comment, -20)
     music_at(base.sting(total - opt_a), opt_a, total, -15, 0.25, 0.01)
-    # "The bird dived first.": everything under the line another 6 dB down (the duck comes on top of it)
+    # l2 ("The bird struck first."): everything under the line another 6 dB down (the duck comes on top of it)
     l2 = c.line["l2"]
     for tr in (music, *fx, *ambience):
         i0, i1, r = int((l2["start"] - 0.08) * SR), int((l2["end"] + 0.05) * SR), _n(0.05)
