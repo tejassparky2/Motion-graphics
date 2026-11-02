@@ -3,24 +3,25 @@
 **Status: draft, waiting for the owner's approval.** Owner (2 Nov 2026) replaced the first footage with Manya's
 figurine (the reel 04 figurine; the sister's consent of 19 Oct 2026 covers her photo and name): new ChatGPT and
 Snapmaker Orca screen recordings from 2 Nov plus the October print and reveal clips (`footage.md`). The boy figurine
-footage is not used. Owner (30 Oct 2026): the starting line; (2 Nov 2026): the last line, and the prompt may be shown.
+footage is not used. Owner (2 Nov 2026): lines 1, 3, 11 and 12 in their words ("mini you", semi-realistic not cartoon, "make it
+yourself"), and the prompt may be shown.
 Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen (Snapmaker Orca, 2 Nov 2026):
 11 h 3 m, 950 filament changes, 193.40 g in total.
 
 | # | Voice | On screen |
 |---|---|---|
-| 1 | How to make a photo into a 3D figurine, for your desktop or gifting. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** Manya's photo in a phone frame beside the figurine, a "HOW TO" tag, "PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Slicer · Print + finish) and a "SAVE IT" bookmark. "desktop": the figurine on the desk by the laptop (20261019_183012). "gifting": Sowmya holding it (IMG_4135). No subtitle on this line (the title is the subtitle) |
+| 1 | How to make your own custom mini you 3D figurine, from your own photo. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** Manya's photo in a phone frame beside the figurine, a "HOW TO" tag, "YOUR MINI YOU: PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Slicer · Print + finish) and a "SAVE IT" bookmark. No subtitle on this line (the title is the subtitle) |
 | 2 | This figurine started as one phone photo. Here's exactly how we make it, in four steps. | Photo → figurine, slow turn |
-| 3 | Step one. We upload the photo to ChatGPT, and ask for a cute, cartoon-style 3D design. | ChatGPT recording: photo attached, the prompt (shown), the first design. From here on a "STEP n OF 4" bar and the tool's name in a gold tag |
+| 3 | Step one. We upload the photo to ChatGPT, and ask for a semi-realistic 3D design. | ChatGPT recording: photo attached, the prompt (shown), the first design. From here on a "STEP n OF 4" bar and the tool's name in a gold tag |
 | 4 | Not right the first time? Just ask for changes. We asked: make her standing. And remove the ball in her hand. | The owner's real edits: "Make Her standing", "Remove white ball in her hand", sitting → standing |
 | 5 | Same face. Same dress. Same little bow. Just cuter. | Photo vs final design split (IMG_20261014_140855) |
 | 6 | Step two. We give that design to Tripo 3D, and in [a few minutes], it builds a full 3D model. | **Needs a Tripo recording of Manya's design** |
 | 7 | The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes. | Snapmaker Orca: model on the plate, zoom to the face, painting the eyes |
 | 8 | Step four. We print it on the Snapmaker U one. Eleven hours. Nine hundred and fifty colour changes. | Sliced view with the filament table and "11h3m", then the U1 printing (013732, 013746, 013800) |
 | 9 | Then the supports come off, and we sand it by hand. | Finished print in its supports (184635, 184656) → the clean figurine |
-| 10 | And here's the result. | The figurine turning (182700), Sowmya holding it |
-| 11 | Don't want to make it yourself? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
-| 12 | Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" |
+| 10 | And here's the result. | The figurine turning (182700), Sowmya holding it (IMG_4135) |
+| 11 | Want to make your own mini you? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
+| 12 | Or make it yourself. Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" |
 
 The comment-to-DM keyword is "3D"; the DM sends the full prompt and the guide (PDF, to write once the owner sends the
 prompt text). Voice spellings: "Chat G P T"; "U one"; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
