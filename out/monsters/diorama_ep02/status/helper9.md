@@ -70,3 +70,7 @@
   (f049) a burst and sparkles; then a steady glow with the shrimp leaning in. The lit mark is drawn bolder in S14 (it's
   small at this distance) so it reads at phone size.
 - S19: waiting on my f001-016 (rendering) and the parts S19_f017-032 (helper 10) and S19_f033-048 (helper 4).
+
+- 2026-11-02 16:22 UTC: **S19 f001-016 rendered here** (new crane, about 140 s a frame). Waiting on S19_f017-032 (helper 10)
+  and S19_f033-048 (helper 4). Then the join (in a fresh folder; the short parts go first, so the old f001-062 part only
+  supplies f049-062), the 2D pass, and shots/S19.mp4.
