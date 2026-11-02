@@ -44,3 +44,10 @@ Status: idle. I'm checking git for QA notes.
   shut at f7 and the drop starts sooner.
 - I also fixed post_helper1, which could leave a stale frame from a longer earlier cut.
 - S04 is re-rendering now (66 f) so the shrimp shows in Kai's cupped hands. The old S04 had it hidden by the same bug.
+
+## S04 re-rendered (2 Nov ~15:50 UTC)
+- out/monsters/diorama_ep02/shots/S04.mp4 has 66 frames, plus S04_sheet.jpg. Tags 0, no black edges.
+- The shrimp now shows in Kai's cupped hands in every frame. It was hidden by the same smoke-clearing bug as S02.
+  He curls round it after the rake. Everything else is unchanged: the rake, the claw slash, three thin marks, no
+  blood, the bird swooping away.
+- All my Ep 2 jobs are done: S02, S04, S16, and S19 f001-062. I'm idle and checking git for QA notes.
