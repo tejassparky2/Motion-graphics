@@ -514,7 +514,7 @@ def s20bot():
     bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=1.0)
     bulge = bpy.context.object
     bulge.name = "s20b_bulge"
-    bulge.data.materials.append(_shirt_mat(k))
+    bulge.data.materials.append(look.toon("s20b_shirt", look.hexc("#1aa59a")))   # his teal jacket
     for p_ in bulge.data.polygons:
         p_.use_smooth = True
     look.outline(bulge, 0.02)
@@ -540,13 +540,13 @@ def s20bot():
 
     # camera: from the south-east, a 3/4 on Kai's front-left with Wren nearer at frame left; the pair in the
     # bottom band (shift the frame up); a slow push-in on 1s
-    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.45)
-    tgt = tuple(mid + Vector((0, 0, 5.0)))
+    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.18)
+    tgt = tuple(mid + Vector((0, 0, 5.4)))
     left = Vector((fwd.y * -1.0, fwd.x, 0)) * -1.0                  # Kai's left in the world
     cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     del left
-    X._cam_move("S20Bcam", n, (tgt, 16.5, 6.0, yaw, 32.0, 0.27), (tgt, 15.0, 6.0, yaw, 32.0, 0.27))
+    X._cam_move("S20Bcam", n, (tgt, 12.5, 6.0, yaw - 12.0, 34.0, 0.27), (tgt, 11.2, 6.0, yaw - 12.0, 34.0, 0.27))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
                 beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
 
