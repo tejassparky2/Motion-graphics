@@ -35,3 +35,7 @@
   are right, they're 24 fps, and they match the builder. My S14 is at f037 and stops at f040. post_helper9.py now joins the
   parts by itself. Waiting on: S14 f041-075 (helper 5), S15 f001-020 (XprL), f021-030 (bGqrs), f031-040 (helper 4),
   f041-060 (helper 3), and S19 f063-124 (helper 10).
+
+- 2026-11-02 14:22 UTC: **S14 f001-040 is rendered here** and checked; frame 30 with the 2D pass shows the mark drawing on.
+  Helper 5 does **f041-075**. **My container is idle now** (about 120 s a frame here): give me any part that
+  hasn't started (for example the end of S14 or S19 f063-124) and I'll render it straight into my build folder.
