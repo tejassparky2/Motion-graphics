@@ -31,6 +31,8 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 | S20bot | Wren glances back f115-121, turns away again f139-145 | swish + a faint bell jingle, swish |
 
 **S20bot landed (8a9a5d4) and is now scored** (beats read by frame diffs on its two halves and a contact sheet).
+**S02 re-render (1cee315) checked:** the bird still dives through the whole shot with the speed lines building into
+the cut, so the dive whoosh (after "first", peaking across the cut) still fits; the mix is unchanged.
 Still placeholders, because those shots haven't landed: S05 drip (f40), S14 glow chime (on "glow"), S15 sky-crack sting
 (on "crack"), S19 lake and the drip on "dry" (helper 1's raw S19 f001-062 part is in, but not the final shot). The A/B stingers sit on the spoken letters.
 S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the villagers come over the hill from the cut).
