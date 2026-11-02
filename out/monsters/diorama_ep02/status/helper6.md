@@ -9,4 +9,6 @@ Updated 2 Nov 2026.
 
 Note: helper 4's status still lists bGqrs on f105-156; this part covers only f131-156.
 
-Idle: no other jobs queued for helper 6.
+S20bot f045-052: cancelled by the coordinator (helper 2 finished f027-052 in 0fd2683); no frames rendered, nothing pushed.
+
+Done with Ep 2: no jobs queued for helper 6.

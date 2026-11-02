@@ -6,7 +6,7 @@ Updated 2 Nov 2026.
 |---|---|---|
 | S05 | **Final, pushed.** 99 frames, 720x1280, crf 10, no tags. Approved look (hands f34, terror face f72). Hands with the dripping claw, one drop falls; cut at f50 up to his face, with 2D terror eyes and a sweat drop on "In my". | shots/S05.mp4 + S05_sheet.jpg |
 | S06 | **Final, pushed.** 98 frames. The claw in profile on the light cyc; on "Straight" (f67) a tapered white arrow-jet with an ink outline shoots straight right and stops inside the frame. The floating-finger bug is fixed. | shots/S06.mp4 + S06_sheet.jpg |
-| S20bot | **Split six ways.** My **f001-026 are done** and pushed as `parts/S20bot_f001-026.mp4` (crf 6, yuv444p, 26 frames, 0 tags). I have nothing past f026. Waiting for f027-052 (helper 2), f053-078 (helper 5), f079-104 (helper 3), f105-130 (bGqrs) and f131-156 (helper 6); then I join all six into shots/S20bot.mp4. | shots/S20bot.mp4 (pending) |
+| S20bot | **Final, pushed.** All six parts were joined with join_parts.py at **156 frames**, the same plate length as XprL's S20top. 720x1280, crf 10, 0 tags. The approved look: on "Option B" Wren turns away (on 2s, from f56) and rings her bell. On "hide it" Kai's hands go to his collar, the shrimp slips inside (the claw tip peeks out of the collar), and the teal bulge pops on his chest. On "Comment" Wren glances back (about f124) and Kai keeps his hands behind his back with a rigid smile. **Seams between the parts are invisible:** mean frame change across f26/27, 52/53, 78/79, 104/105 and 130/131 is 0.32-0.46, the same as the frames on either side. | shots/S20bot.mp4 + S20bot_sheet.jpg (the sheet shows every 6th frame up to f84) |
 
 Render cost on this container (CPU EEVEE): S05 about 145 s/frame, S06 about 40 s/frame.
 
@@ -45,6 +45,29 @@ the final encode.
   - On "hide it" (about f84) Kai's hands go to his collar; the shrimp is inside by about f97, then the teal bulge pops
     on his chest.
   - On "Comment" (about f114) Wren glances back; Kai smiles rigidly with his hands behind his back.
+
+## Timing change at 13:06 (0a7b842, l2 re-voiced): shots are now up to 1 frame off `render_frames` (for helper 8)
+- Every cut from S03 on moved 0.018 s (less than 1 frame) earlier, and some shots' `render_frames` changed by 1.
+- **S20 is now 157 render frames (145 + 12).** S20top and S20bot are both 156: they cover all 145 frames plus 11 of
+  the 12 spare frames at the end, so nothing visible is missing. I joined S20bot at 156 to match S20top, on the
+  coordinator's instruction. (`join_parts.py` itself now demands 157, so I ran it with S20's length set to 156.)
+- **Shots that no longer match** the new `render_frames` (checked at 14:15 UTC). Each still covers its full `frames`,
+  with at least 11 of the 12 spare frames, so none need re-rendering:
+
+  | Shot | New render_frames | Has |
+  |---|---|---|
+  | S02 | 44 | 45 |
+  | S03 | 63 | 62 |
+  | S07 | 49 | 50 |
+  | S09 | 94 | 93 |
+  | S10 | 63 | 64 |
+  | S12 | 75 | 74 |
+  | S17 | 74 | 75 |
+  | S18 | 87 | 86 |
+  | S19 | 123 (was 124) | not in yet |
+  | S20top, S20bot | 157 | 156 |
+
+  The assembler should take `frames` from each shot's start and not insist on `render_frames`.
 
 ## QA (S01-S04, S06-S13, S16-S18), 2 Nov 2026
 
@@ -101,4 +124,5 @@ the final encode.
 
 **Hard rules:** no blood or graphic violence anywhere; the bird is never killed (dazed, then fluffed and offended).
 **S20top (XprL, d584790): OK.** 156 frames, no tags, 0 edge-scan hits. Kai lowers the shrimp into Wren's net (in the net from about f50), and the action stays in the upper half for helper 8's split.
-**Not in yet** (no QA): S14, S15, S19, S20bot and the assembled split. I'll scan them when they land.
+**S20bot (mine, joined from six parts): OK.** 156 frames, no tags. The edge scan flags only the intentionally empty top band (rows 0-485, the render border); everything below the crop line is clean.
+**Not in yet** (no QA): S14, S15, S19, the re-rendered S02/S04 and the assembled split. I'll scan them when they land.
