@@ -155,6 +155,8 @@ def jet(a):
 
 
 def overlays(shot):
+    if shot not in ("S05", "S06"):
+        return []                                                         # S20bot: no 2D pass (3D only)
     a = anchors(shot)
     n = max(a)
     if shot == "S05":
