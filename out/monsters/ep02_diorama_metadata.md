@@ -16,7 +16,7 @@ You voted A, so Kai saved the shrimp that tried to kill him. With his bare hands
 His only weapon is still what he knows.
 
 Cute Things Kill Here, Episode 2.
-Comment A to HAND the shrimp over, or B to HIDE it in his shirt. The letter in more comments decides Episode 3.
+Comment A to HAND the shrimp over, or B to SHOW her the glowing mark. The letter in more comments decides Episode 3.
 
 The real fact:
 - A pistol shrimp's claw shoots a fast jet of water straight forward, and that jet makes the bubble that snaps
@@ -35,7 +35,7 @@ original anime, isekai, reincarnated, anime short, 2.5d anime, cute monsters, pi
 
 **Pinned comment**
 ```
-A or B? 🦐 A = hand the shrimp over to Wren. B = hide it in his shirt. The letter in more comments within 48 hours of this video going up decides Episode 3.
+A or B? 🦐 A = hand the shrimp over to Wren. B = show her the glowing mark. The letter in more comments within 48 hours of this video going up decides Episode 3.
 ```
 
-**Video facts:** 57.3 s. Narrated with Chatterbox Turbo (synthetic voice; nobody real is cloned). Music and sound effects are original. Made for kids: **No** (comments stay on for the vote). Altered or synthetic content: **No** (fully animated fantasy). Cover: ep02_diorama_cover.jpg (Kai's terrified close-up with the shrimp, "I SAVED / MY KILLER"); where the app can't take a custom Shorts cover, pick frame 0, the hook frame.
+**Video facts:** 57.5 s. Narrated with Chatterbox Turbo (synthetic voice; nobody real is cloned). Music and sound effects are original. Made for kids: **No** (comments stay on for the vote). Altered or synthetic content: **No** (fully animated fantasy). Cover: ep02_diorama_cover.jpg (Kai's terrified close-up with the shrimp, "I SAVED / MY KILLER"); where the app can't take a custom Shorts cover, pick frame 0, the hook frame.
