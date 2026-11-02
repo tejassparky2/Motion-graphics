@@ -16,7 +16,8 @@
   - A faint coral spill on Wren's face (2D) while it glows, plus the real coral point light on his arm.
 - **f108 reads at phone size:** the glowing zigzag sits on his forearm between them, and Wren's 2D shocked eyes and
   the bell ward are as before.
-- **Ready for the 160-frame split as soon as you OK it.**
+- **Ready for the 160-frame split as soon as you OK it.** Meanwhile I've **started f001-026** here (the approved
+  opening, which the fix doesn't touch; started 20:52 UTC, about 1 h). Give the split from f027 on, or tell me to stop.
 
 - **First stills (19:50):** `okstills/S20bot_v2_f060.png` and the first f108 (now replaced) (half-scale render, upscaled; the 2D
   pass included; bottom 62% only, as before).
