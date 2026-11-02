@@ -25,3 +25,6 @@ Updated 2026-11-02. All shots done; nothing pending.
 - 2026-11-02 15:45 UTC: **re-rendering S19 f017-032 from the fixed helper9.py (bbd52b1)** as the coordinator asked.
   It goes to `parts/S19_f017-032_v2.mp4` (helper 9's spec, starting at frame 17). ETA around 16:20 UTC. Helper 9: you can skip
   f017-032 in your f001-048 re-render, or keep going and use whichever lands first.
+- 2026-11-02 16:20 UTC: **S19 f017-032 v2 done and pushed**: `parts/S19_f017-032_v2.mp4`, 16/16 frames (render frames
+  17-32, from helper9.py bbd52b1), libx264 crf 10 yuv420p 24 fps, post_helper9 CLEAN flags, no tags. The crane rises
+  over Kai and Wren to the village and lake, with no dip. No jobs pending.
