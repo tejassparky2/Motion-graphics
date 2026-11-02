@@ -2,6 +2,8 @@
 
     S05 "...In my bare hands."  After the cut up to his face (f50) the anime sweat drop pops in beside his head on
         "In my" (fx2d_anime.sweat_drop, tracked to his eyes).
+    S20bot "Option B: show her the glowing mark."  The coral zigzag on his raised forearm (helper 9's S14 mark, via
+        post_helper9.mark) flares on "glowing mark" with a burst and sparkles, then glows softly to the end.
     S06 "...Straight ahead."  On "Straight", an arrow-like jet streak shoots straight out of the claw to the frame
         edge (the claw's own line, nothing in any other direction): a tapered white jet with an ink outline and an
         arrowhead front, two speed lines riding along it and a small pressure ring at the muzzle. No text.
@@ -154,9 +156,43 @@ def jet(a):
     return draw
 
 
+# ---------------------------------------------------------------------------------------------------------- S20bot
+def mark20():
+    """S20bot (the owner's new ending, "show her the glowing mark"): helper 9's S14 wrist mark (post_helper9.mark, the
+    same zigzag, colours and bloom), on his raised left forearm from S20bot_mark.json: faint once the arm is up, the
+    flare on "glowing mark" (a burst and sparkles), then a soft pulsing glow through the standoff."""
+    from channels.monsters import fx2d
+    from channels.monsters.diorama_ep02 import post_helper9 as P9
+    with open(os.path.join(BUILD, "S20bot_mark.json")) as fh:
+        d = json.load(fh)
+    meta, A = d["meta"], {int(f): v for f, v in d["frames"].items()}
+    fg, fe = meta["f_glow"], meta["f_mark_end"]
+
+    def draw(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        g = A[f]
+        lvl = g["level"]
+        if lvl <= 0 or g.get("z", 1) <= 0:
+            return
+        geo = P9._on_arm(g)
+        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=2.0)
+        x, y = geo["c"]
+        size = math.hypot(*geo["ey"])
+        t0 = (fg + 3 - 1) / FPS                                             # the flare's peak
+        fx2d.glow_burst(cr, t, t0, x, y, r=size * 1.8, col=P9.CORAL_HOT, dur=0.5, rays=10, seed=3)
+        fx2d.sparkles(cr, t, t0 + 0.04, x, y, n=8, radius=size * 1.0, size=size * 0.17,
+                      cols=((1, 0.8, 0.7, 1), fx2d.WHITE, (1, 0.6, 0.5, 1)), life=1.1, seed=5)
+        if f >= fe:                                                         # a few soft sparkles in the hold
+            fx2d.sparkles(cr, t, (fe - 1) / FPS, x, y, n=4, radius=size * 0.8, size=size * 0.11,
+                          cols=((1, 0.8, 0.7, 1), (1, 0.6, 0.5, 1)), life=1.6, seed=9)
+    return draw
+
+
 def overlays(shot):
+    if shot == "S20bot":
+        return [(mark20(), dict(start=0.0))]
     if shot not in ("S05", "S06"):
-        return []                                                         # S20bot: no 2D pass (3D only)
+        return []
     a = anchors(shot)
     n = max(a)
     if shot == "S05":
