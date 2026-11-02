@@ -291,8 +291,9 @@ def s06():
     # the shrimp turned so its right side (the claw) faces the camera on -X, its front (-Y) to screen right
     origin = Vector((0.0, -20.0, 0.0))
     _backdrop(S06_BG).location = origin
-    sh = puffshrimp.build(tuple(origin))
-    s3d._fix_pivots(sh)
+    sh = puffshrimp.build((0, 0, 0))                                # at the origin: _fix_pivots assumes it
+    s3d._fix_pivots(sh)                                             # (built elsewhere, it moved the finger's hinge
+    sh["root"].location = origin                                    # 20 units off and the finger came loose)
     bpy.context.view_layer.update()
     ahead = origin + Vector((0, -40.0, 2.6))                        # straight ahead, at the claw's height
     rest = s3d.aim_claw(sh, ahead)
