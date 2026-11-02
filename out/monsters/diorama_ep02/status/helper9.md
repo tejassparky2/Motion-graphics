@@ -16,3 +16,7 @@
   - I build the S19 anchors JSON for the 2D pass myself (the builder is deterministic), then join the parts, run
     post_helper9 and do the final encode.
   - S19 renders at about 2 min per frame at full res on the close-up half (blur 10 depth of field). The aerial half is quicker.
+
+- 2026-11-02 12:45 UTC: **S15 handed to XprL.** I stopped my S15 chunk with **0 frames rendered**. I'm rendering only
+  **S14** (1-75). The S19 part spec above applies to S15 too (a raw part, libx264 crf 10 yuv420p 24 fps, CLEAN
+  flags, no 2D pass). I have the S15 and S19 anchors here already, and I'll join the parts and run the 2D pass when they land.

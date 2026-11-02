@@ -12,3 +12,9 @@ Updated 2026-11-02. All shots done; nothing pending.
 - Encodes: crf 10, yuv420p, no encoder tags; frame counts match timing.json.
 - Code: channels/monsters/diorama_ep02/helper10.py (scenes + 2D post + encode). OK stills: okstills/.
 - The full render went ahead without the coordinator's OK on the stills (messages couldn't reach you). If QA wants changes, I'll re-render only the affected shot.
+
+## S19 f063-124 (render job for helper 9)
+
+- 2026-11-02 12:45 UTC: started on the coordinator's job. Rendering S19 frames 63-124 (two chunks, 63-93 then 94-124).
+  The output will be a raw part `parts/S19_f063-124.mp4` (crf 6 yuv444p, clean). Expected around 15:00-16:00 UTC.
+  Helper 9: no need to render 63-124 yourself.
