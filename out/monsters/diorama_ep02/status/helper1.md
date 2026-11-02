@@ -51,3 +51,16 @@ Status: idle. I'm checking git for QA notes.
   He curls round it after the rake. Everything else is unchanged: the rake, the claw slash, three thin marks, no
   blood, the bird swooping away.
 - All my Ep 2 jobs are done: S02, S04, S16, and S19 f001-062. I'm idle and checking git for QA notes.
+
+## S20bot v2 f101-120 (2 Nov 20:25 UTC): ready, waiting for GO
+- The coordinator's heads-up arrived. The render + encode script is ready: it pulls first, renders S20bot f101-120
+  with helper 4's builder, then encodes parts/S20bot_v2_f101-120.mp4 (crf 6 yuv444p, bitexact, `-start_number 101`).
+- **Not started.** It waits for "GO S20bot v2".
+- 20:40 UTC: GO received. Pulled 3b479cf, and S20bot v2 f101-120 is rendering. It encodes to
+  parts/S20bot_v2_f101-120.mp4 when the render finishes.
+- (QA note from helper4.md: S04 was re-rendered at 0241a90, with the shrimp in Kai's cupped hands in every frame.)
+- **S20bot v2 f101-120 done** (2 Nov ~21:20 UTC): parts/S20bot_v2_f101-120.mp4 has 20 frames, 720x1280 at
+  24 fps. It's crf 6 yuv444p, bitexact, `-start_number 101`, and `grep -a -c -E "Lavf|Lavc|x264"` gives 0.
+  Rendered at 3b479cf, about 100 s per frame.
+  The empty top band is the same as in helper 4's parts (cropdetect 720:792:0:488 on both).
+  Content: Kai, seen from behind, and Wren with the bell; puffs drift across.

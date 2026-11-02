@@ -365,23 +365,34 @@ def _bone_world(rig, name, tail=False):
     return rig["arm"].matrix_world @ (pb.tail if tail else pb.head)
 
 
+def _smooth(u):
+    u = max(0.0, min(1.0, u))
+    return u * u * (3 - 2 * u)
+
+
+S20B_LIGHT = 55.0                                # the mark's coral point light at full (S14's is 60)
+
+
 def s20bot():
-    """Option B, the bottom panel (helper 8 crops it under the jagged divider): Kai and Wren as S17-S20A leave them.
-    On "Option B" Wren turns away, raises her bell and rings it for the villagers; Kai glances left, right... and on
-    "hide it in my shirt" slips the shrimp down his collar: it sinks in, a shirt-coloured bulge pops out on his chest
-    and the claw peeks out of the collar by his chin. Hands behind his back, an innocent smile. On "Comment" Wren
-    glances back over her shoulder, squinting; he holds the smile (the bulge wriggles); she turns away again.
-    Framed in the bottom band (y 680-1200); a slow push-in on 1s, the characters on 2s, from the south-east (S20A
-    looks from the west)."""
-    n = _frames("S20", 156)
+    """Option B, the bottom panel (helper 8 crops it under the jagged divider), owner's new ending (2 Nov): "Option
+    B: show her the glowing mark." Kai and Wren face to face as S17-S20A leave them: Kai tense, the shrimp cupped;
+    Wren stern with her bell. On "Option B" he shifts the shrimp into his right hand and slowly raises his left
+    forearm toward her ("show her"); on "glowing mark" the coral zigzag on it (helper 9's S14 mark, drawn by
+    post_helper4 from S20bot_mark.json) flares, lighting his arm (a real coral point light). Wren's eyes go wide,
+    she steps back half a step and raises the bell up in front of her like a ward; the standoff holds to the end,
+    the mark glowing softly. Her wide eyes are 2D (S05's terror eyes, from her eye anchors in S20bot_mark.json): her
+    3D eye keys don't read at this size. Framed in the bottom band; a slow push-in on 1s, the characters on 2s."""
+    from channels.monsters.diorama_ep02 import helper9 as H9
+    n = _frames("S20", 160)
     W = _words("l20")
     fw = {}
-    for i, (w, a, b) in enumerate(W):
-        fw.setdefault(w.strip(".:").lower(), []).append((a, b))
-    f_optB = fw["option"][1][0]                                    # 66
-    f_hide = fw["hide"][0][0]                                      # 84
-    f_shirt_end = fw["shirt"][0][1]                                # 104
-    f_comment = fw["comment"][0][0]                                # 114
+    for w_, a_, b_ in W:
+        fw.setdefault(w_.strip(".:").lower(), []).append((a_, b_))
+    f_optB = fw["option"][1][0]                                    # 60
+    f_show = fw["show"][0][0]                                      # 84
+    f_glow = fw["glowing"][0][0]                                   # 95
+    f_mark_end = fw["mark"][0][1]                                  # 108
+    f_comment = fw["comment"][0][0]                                # 117
     X._world(n)
     k = X._kai()
     w = X._wren(X.WREN_STOP, X.WREN_YAW)
@@ -392,170 +403,148 @@ def s20bot():
     fwd = Vector((d.x, d.y, 0)).normalized()
 
     # beats
-    f_turn0, f_turn1 = f_optB - 6, f_optB + 6                      # Wren turns away on "Option B"
-    f_ring0, f_ring1 = f_turn1 + 2, f_turn1 + 22                   # ...and rings for the villagers
-    f_look_l, f_look_r = f_turn1 + 2, f_turn1 + 8                  # Kai glances left, right
-    f_lift, f_collar, f_in = f_hide - 2, f_hide + 6, f_hide + 13   # to the collar, then down inside
-    f_back0, f_back1 = f_comment + 2, f_comment + 8                # Wren glances back...
-    f_away = f_back1 + 18                                          # ...and turns away again
-    yaw_w = X.WREN_YAW
-    away = yaw_w + 155.0
+    f_shift0, f_shift1 = f_optB + 2, f_optB + 10                   # the shrimp into his right hand
+    f_arm0, f_arm1 = f_optB + 8, f_show + 8                        # the left forearm rises toward her, slowly
+    f_fear = f_glow + 6                                            # she sees it flare
+    f_back0, f_back1 = f_fear, f_fear + 8                          # half a step back (anticipation, overshoot)
+    f_ward0, f_ward1 = f_fear + 2, f_fear + 8                      # the bell up in front of her
+    back = fwd * 0.75                                              # her half step (world units; Kai is 5.8x scale)
 
-    def wren_body(f):
-        if f < f_turn0:
-            return yaw_w
-        if f < f_turn1:
-            u = (f - f_turn0) / (f_turn1 - f_turn0)
-            return yaw_w + (away - yaw_w) * (u * u * (3 - 2 * u)) * (1.06 if u > 0.7 else 1.0)  # a small overshoot
-        if f < f_back0:
-            return away
-        if f < f_away:
-            u = min(1.0, (f - f_back0) / (f_back1 - f_back0))
-            return away - 55.0 * (u * u * (3 - 2 * u))
-        u = min(1.0, (f - f_away) / 6)
-        return away - 55.0 * (1 - u)
+    def arm_u(f):
+        return _smooth((f - f_arm0) / max(1, f_arm1 - f_arm0))
 
     for f in range(1, n + 1, 2):
         # Wren
         PW.reset()
         for sd in ("L", "R"):
             PW.leg(sd, feet[sd] + Vector((0, 0, PW.ankle_h)))
-        ringing = f_ring0 <= f <= f_ring1
-        wren.hold_bell(PW, 0.85 if ringing else 0.25, shake=(18 * math.sin(f * 1.6)) if ringing else 0.0)
-        PW.rot("chest", (-3 + 1.0 * math.sin(f / 20.0), 0, 0))
-        if f_back0 <= f < f_away:
-            PW.rot("head 1", (-4, 0, -35))                         # over her shoulder at him
+        ward = _smooth((f - f_ward0) / max(1, f_ward1 - f_ward0))
+        if ward > 0:
+            over = 1.0 + 0.08 * math.sin(math.pi * min(1.0, (f - f_ward0) / 10.0)) if f >= f_ward1 else 1.0
+            r = ward * over
+            wren.hold_bell(PW, 1.0, shake=2.5 * math.sin(f * 1.3) if f > f_ward1 else 0.0)
+            PW.aim("upper_arm.R", (-0.10, -0.55 - 0.25 * r, -1 + 1.25 * r))      # up past chest height: a ward
+            PW.aim("forearm.R", (-0.04, -0.85 - 0.2 * r, -0.2 + 0.8 * r))
+            PW.aim("hand.R", (-0.04, -0.3, -1))                    # the bell still hangs upright
         else:
-            PW.rot("head 1", (-6, 0, 0))
+            wren.hold_bell(PW, 0.25)
+        recoil = _smooth((f - f_back0) / max(1, f_back1 - f_back0))
+        PW.rot("chest", (-3 + 1.0 * math.sin(f / 20.0) - 7.0 * recoil, 0, 0))   # leaning away
+        PW.rot("head 1", (-6 - 5.0 * recoil, 0, 0))
         PW.key(f)
-        w["arm"].rotation_euler = (0, 0, math.radians(wren_body(f)))
-        w["arm"].keyframe_insert("rotation_euler", frame=f)
+        hop = 0.0
+        if f_back0 <= f < f_back1:
+            hop = 0.12 * math.sin(math.pi * (f - f_back0) / (f_back1 - f_back0))
+        w["arm"].location = X.WREN_STOP + back * (recoil * (1.04 if f >= f_back1 - 2 else 1.0)) + up * hop
+        w["arm"].keyframe_insert("location", frame=f)
+
         # Kai
         PK.reset()
         for sd in ("L", "R"):
             PK.leg(sd, feet[sd] + Vector((0, 0, PK.ankle_h)))
         PK.rot("chest", (1.5 * math.sin(f / 20.0), 0, 0))
         bpy.context.view_layer.update()
-        if f < f_lift:
+        if f < f_shift0:
             X._cup(PK)
-        elif f < f_in + 2:
-            collar = _bone_world(k, "neck") + fwd * 0.55 - up * 0.2
-            u = min(1.0, (f - f_lift) / max(1, f_collar - f_lift))
-            v = max(0.0, (f - f_collar) / max(1, f_in - f_collar))
-            tgt = (_bone_world(k, "chest") + fwd * 1.3).lerp(collar, u) - up * 0.9 * v
-            for sd, s_ in (("L", 1), ("R", -1)):
-                X._reach(PK, k, sd, tgt + X._side_vec(k) * s_ * 0.3)
-        else:                                                       # hands behind his back: innocent
-            for sd, s_ in (("L", 1), ("R", -1)):
-                PK.aim(f"upper_arm.{sd}", (s_ * 0.14, 0.32, -1.0))
-                PK.aim(f"forearm.{sd}", (-s_ * 0.35, 0.55, -0.6))
-        if f_look_l <= f < f_look_r:
-            PK.rot("head 1", (0, 0, 28))
-        elif f_look_r <= f < f_lift:
-            PK.rot("head 1", (0, 0, -28))
-        elif f >= f_in + 2:
-            PK.rot("head 1", (-6, 4 * math.sin(f / 6.0), 0))       # chin up, a little whistling sway
+            if f < f_optB:
+                PK.rot("head 1", (4.0, 0, 0))                      # eyes on her, tense
+        else:
+            v = _smooth((f - f_shift0) / max(1, f_shift1 - f_shift0))
+            cupped = _bone_world(k, "chest") + fwd * 1.15 - up * 0.55 + X._side_vec(k) * -0.25
+            waist = _bone_world(k, "chest") + fwd * 0.75 - up * 2.1 + X._side_vec(k) * -0.75   # down at his side
+            X._reach(PK, k, "R", cupped.lerp(waist, v))            # the shrimp on his right hand, lowered away
+            u = arm_u(f)
+            shoulder = _bone_world(k, "upper_arm.L")
+            low = _bone_world(k, "chest") + fwd * 1.1 - up * 0.6 + X._side_vec(k) * 0.3
+            high = shoulder + fwd * 2.4 + up * 0.9 + X._side_vec(k) * -0.25     # up toward her, face height
+            X._reach(PK, k, "L", low.lerp(high, u), bend=(0, 0, 0.0))
+            PK.twist("forearm.L", -80.0 * u)                       # the inner wrist turned out
+            PK.rot("head 1", (-4.0 * u, 0, 0))                     # chin up: steady
         PK.key(f)
 
     # faces
-    hero.face(k, "sad", 1)
-    _face({"eye_zitome": 0.8, "mouth_short": 0.5}, f_look_l)        # shifty
-    _face({"eye_zitome": 0.5, "eye_brow_down": 0.4, "mouth_wide": 0.3}, f_lift)   # concentrating
-    _face({"face_happy": 1.0, "lip_u": 0.6}, f_in + 2)              # innocent: closed happy eyes, a whistle
-    _face({"face_happy": 1.0, "mouth_wide": 0.5}, f_back0 + 2)      # caught: the smile goes rigid
-    _face({"face_happy": 1.0, "lip_u": 0.6}, f_away + 2)
+    _face({"face_sad": 0.6, "eye_brow_up": 0.5}, 1)                 # tense, worried
+    _face({"face_sad": 0.3, "eye_brow_down": 0.5, "mouth_short": 0.4}, f_show)   # resolve
+    _face({"eye_brow_down": 0.7, "face_angry": 0.25}, f_glow)       # steady: this is mine
     wren.face(w, "stern", 1)
-    wren.face(w, "stern", f_back0, value=1.0)
+    wren.FACES["fear"] = {"face_surprise": 1.0, "eye_black_small": 0.8, "eye_brow_up": 1.0, "lip_o": 0.5}
+    wren.face(w, "fear", f_fear)
+    wren.face(w, "fear", f_fear + 14, value=0.85)
     wren.grip(w, 1)
-    wren.ring(w, f_ring0, f_ring1)
-    wren.blink(w, 1, n, at=(40, f_away + 10))
+    wren.blink(w, 1, f_fear - 4, at=(40,))
 
-    # the shrimp: cupped until the lift, then to his collar and down inside; its body hides, the claw peeks out
+    # the shrimp: cupped, then on his right hand, watching the mark
     sh = puffshrimp.build((0, 0, 0))
     s3d._fix_pivots(sh)
     sh["root"].scale = (SHRIMP_IN_HAND,) * 3
     sh["root"].rotation_euler = (0, 0, math.radians(X.KAI_YAW + 180))   # facing him
     sc = bpy.context.scene
-    collar0 = None
     for f in range(1, n + 1):
         sc.frame_set(f)
-        hands = (X._world_of(k, "hand.L") + X._world_of(k, "hand.R")) / 2 + up * 0.25
-        neck = _bone_world(k, "neck")
-        inside = _bone_world(k, "chest") + fwd * 0.15 - up * 0.35
-        if f <= f_lift:
-            p = hands
-        elif f <= f_collar:
-            collar0 = neck + fwd * 0.65 + up * 0.1
-            u = (f - f_lift) / (f_collar - f_lift)
-            p = hands.lerp(collar0, u * u * (3 - 2 * u))
-        elif f <= f_in:
-            u = (f - f_collar) / (f_in - f_collar)
-            p = (collar0 or neck).lerp(inside, u * u)
-        else:
-            p = inside
-        sh["root"].location = p
+        both = (X._world_of(k, "hand.L") + X._world_of(k, "hand.R")) / 2 + up * 0.25
+        right = X._world_of(k, "hand.R") + up * 0.3
+        u = _smooth((f - f_shift0) / max(1, f_shift1 - f_shift0))
+        sh["root"].location = both.lerp(right, u)
         sh["root"].keyframe_insert("location", frame=f)
-    sc.frame_set(f_in)
-    claw_names = ("puff_claw", "puff_dactyl", "puff_bead")
-    for o in bpy.data.objects:
-        if o.name.startswith("puff") and o.type == "MESH" and not o.name.startswith(claw_names):
-            for f, hide in ((f_in - 1, False), (f_in, True)):
-                o.hide_render = hide
-                o.keyframe_insert("hide_render", frame=f)
-    peek = _bone_world(k, "neck") + fwd * 0.45 + up * 3.0           # the claw up out of the collar
     anim.key(sh["shoulder"], "rotation_euler", 1, (0.55, 0.0, 0.0), "CONSTANT")
-    anim.key(sh["shoulder"], "rotation_euler", f_in, s3d.aim_claw(sh, peek), "CONSTANT")
     anim.key(sh["hinge"], "rotation_euler", 1, (0.15, 0.0, 0.0), "CONSTANT")
-    for f, v in ((f_in + 10, 0.6), (f_in + 12, 0.15), (f_back0 + 4, 0.7), (f_back0 + 6, 0.15)):  # a little clack
-        anim.key(sh["hinge"], "rotation_euler", f, (v, 0.0, 0.0), "CONSTANT")
+    anim.key(sh["body"], "rotation_euler", 1, (0, 0, 0), "CONSTANT")
+    anim.key(sh["body"], "rotation_euler", f_glow + 2, (0, 0, math.radians(-35)), "CONSTANT")   # it looks at the mark
     anim.blink(sh, 30)
 
-    # the bulge: his own shirt, popping out on his chest as it goes in (overshoot), wriggling now and then
-    sc.frame_set(f_in)
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, radius=1.0)
-    bulge = bpy.context.object
-    bulge.name = "s20b_bulge"
-    bulge.data.materials.append(look.toon("s20b_shirt", look.hexc("#1aa59a")))   # his teal jacket
-    for p_ in bulge.data.polygons:
-        p_.use_smooth = True
-    look.outline(bulge, 0.02)
-    bulge.location = _bone_world(k, "chest") + fwd * 0.5 - up * 0.2
-    bulge.rotation_euler = (0, 0, math.radians(X.KAI_YAW))
-    bpy.context.view_layer.update()
-    mw = bulge.matrix_world.copy()
-    bulge.parent, bulge.parent_type = k["arm"], "BONE"
-    bulge.parent_bone = "chest"
-    bpy.context.view_layer.update()
-    bulge.matrix_world = mw
-    base = Vector((0.78, 0.55, 0.66)) / k["arm"].scale.x            # bone-parented: the armature's scale applies
-    for f, s_ in ((f_in - 1, 0.001), (f_in, 0.7), (f_in + 2, 1.15), (f_in + 4, 0.95), (f_in + 6, 1.0),
-                  (f_in + 22, 1.0), (f_in + 24, 1.08), (f_in + 26, 0.97), (f_in + 28, 1.0),
-                  (f_back0 + 3, 1.0), (f_back0 + 5, 1.1), (f_back0 + 7, 1.0)):
-        bulge.scale = base * s_
-        bulge.keyframe_insert("scale", frame=f)
-    for fc in anim.all_fcurves(bulge.animation_data.action):
-        for kp in fc.keyframe_points:
-            kp.interpolation = "CONSTANT"
-    X.v2._twos([k["arm"], w["arm"], sh["body"], sh["hinge"]] + sh["eyes"])
-    sc.frame_set(1)
+    # the mark's light: a coral point light just off his forearm on the camera side, following the arm
+    ld = bpy.data.lights.new("s20b_mark_light", "POINT")
+    ld.color = H9.CORAL
+    ld.shadow_soft_size = 0.15
+    lt = bpy.data.objects.new("s20b_mark_light", ld)
+    sc.collection.objects.link(lt)
 
-    # camera: from the south-east, a 3/4 on Kai's front-left with Wren nearer at frame left; the pair in the
-    # bottom band (shift the frame up); a slow push-in on 1s
-    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.4)
-    tgt = tuple(mid + Vector((0, 0, 5.4)))
-    left = Vector((fwd.y * -1.0, fwd.x, 0)) * -1.0                  # Kai's left in the world
-    cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
+    def mark_level(f):
+        """0..~1.3: faint once the arm is up, the flare on "glowing mark", then a soft glow."""
+        if f < f_show:
+            return 0.0
+        if f < f_glow:
+            return 0.12 * _smooth((f - f_show) / 6)
+        if f < f_glow + 4:
+            return 0.12 + 1.18 * (f - f_glow) / 4
+        if f < f_mark_end:
+            return 1.3 - 0.15 * _smooth((f - f_glow - 4) / (f_mark_end - f_glow - 4))
+        return 1.15 - 0.45 * _smooth((f - f_mark_end) / 10) + 0.06 * math.sin(f / 5.0)
+
+    X.v2._twos([k["arm"], w["arm"], sh["body"], sh["hinge"]] + sh["eyes"])
+
+    # camera: the same south-east 3/4 two-shot as before, nudged toward Wren so her face and the raised arm stay in
+    # the bottom band; a slow push-in on 1s
+    # from Kai's right side, a little behind him: Kai at frame left in profile, Wren at frame right turned 3/4 to us
+    # (her face carries the beat); the raised forearm between them
+    cdir = (fwd * float(os.environ.get("S20B_FWD", "-0.85")) + Vector((-fwd.y, fwd.x, 0)) * -1.0).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
-    del left
-    # render only the bottom band (helper 8 crops it under the divider; the jagged divider reaches ~45 px above the
-    # middle, so the band goes to 58% of the height): about 40% less render time, the top of the frame left empty
+    mid = X.KAI_AT.lerp(X.WREN_STOP, float(os.environ.get("S20B_MID", "0.5")))
+    tgt = tuple(mid + Vector((0, 0, 5.4)))
+    dist0 = float(os.environ.get("S20B_DIST", "16.5"))
+    yoff = float(os.environ.get("S20B_YAW", "0.0"))
     sc.render.use_border = True
     sc.render.use_crop_to_border = False
     sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
     sc.render.border_min_y, sc.render.border_max_y = 0.0, 0.62   # rows 486-1280: helper 8 shows plate rows 518-1200
-    X._cam_move("S20Bcam", n, (tgt, 15.0, 6.0, yaw + 18.0, 34.0, 0.27), (tgt, 13.6, 6.0, yaw + 18.0, 34.0, 0.27))
-    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
-                beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
+    cam = X._cam_move("S20Bcam", n, (tgt, dist0, 6.0, yaw + yoff, 34.0, 0.27),
+                      (tgt, dist0 - 1.4, 6.0, yaw + yoff, 34.0, 0.27))
+    marks = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        m = H9._forearm(k, H9.MARK_U)
+        lt.location = m + (cam.matrix_world.translation - m).normalized() * 0.45
+        lt.keyframe_insert("location", frame=f)
+        ld.energy = S20B_LIGHT * mark_level(f)
+        ld.keyframe_insert("energy", frame=f)
+        marks[f] = dict(H9._mark_geo(k, cam), level=round(mark_level(f), 3),
+                        w_eye_l=H9._px(cam, s3d.kai_point(w, "eye_l")), w_eye_r=H9._px(cam, s3d.kai_point(w, "eye_r")))
+    os.makedirs(BUILD, exist_ok=True)                              # the 2D pass's mark (post_helper4)
+    with open(os.path.join(BUILD, "S20bot_mark.json"), "w") as fh:
+        json.dump(dict(meta=dict(f_show=f_show, f_glow=f_glow, f_mark_end=f_mark_end, f_fear=f_fear), frames=marks), fh)
+    sc.frame_set(1)
+    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]],
+                beats=dict(optB=f_optB, show=f_show, glow=f_glow, fear=f_fear, comment=f_comment))
 
 
 SHOTS = {"S05": s05, "S06": s06, "S20bot": s20bot}

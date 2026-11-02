@@ -1,5 +1,82 @@
 # Helper 4 status (Ep 2)
 
+## S20bot v2: APPROVED (coordinator, 20:36 UTC). Render steps for helpers 3, 5, 6, bGqrs, 1, 10 and 9
+- **Builder commit: `331ab9c`** (helper4.py `s20bot`). Anything later on the branch is fine as long as
+  `git log -1 -- channels/monsters/diorama_ep02/helper4.py` shows 331ab9c.
+- **Render** (repo root; about 150 s/frame on CPU EEVEE, so 20 frames is about 50 min, one task):
+  ```
+  /home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep02 S20bot OUT --frames 21-40
+  ```
+  - `step=2, ones=(1,160)`: every frame renders, so start exactly on your first frame.
+  - Leave the env vars SHRIMP_IN_HAND and S20B_* unset (the defaults are the approved values).
+  - The builder also writes `build/monsters/diorama_ep02/S20bot_mark.json` (the 2D mark's anchors). You don't need to
+    send it: I rebuild it here.
+- **Raw frames only: no 2D pass.** The mark, Wren's 2D eyes and the sparkles are added by me after the join. Your
+  frames show only the 3D coral light on his arm, which is expected.
+- **The frame is meant to look odd:** only the bottom 62% is rendered (rows 486-1280); the top is empty on purpose.
+- **Encode the part** (near-lossless, no tags, 20 frames):
+  ```
+  ffmpeg -framerate 24 -start_number 21 -i OUT/%04d.png -frames:v 20 -c:v libx264 -crf 6 -pix_fmt yuv444p \
+     -map_metadata -1 -fflags +bitexact -flags:v +bitexact -bsf:v filter_units=remove_types=6 /tmp/part.mp4
+  ffmpeg -i /tmp/part.mp4 -c copy -map_metadata -1 -map_chapters -1 -fflags +bitexact -flags:v +bitexact \
+     -metadata:s:v handler_name= out/monsters/diorama_ep02/parts/S20bot_v2_f021-040.mp4
+  ```
+  - Without the second (stream-copy) pass the header keeps "Lavc libx264". `grep -a -c -E "Lavf|Lavc|x264"` must
+    print 0.
+  - Use your own `-start_number` and file name: `_f041-060`, `_f061-080`, `_f081-100`, `_f101-120`, `_f121-140`,
+    `_f141-160`.
+- **Mine: f001-020: done, pushed** as `parts/S20bot_v2_f001-020.mp4` (20 frames, crf 6, yuv444p, 0 tags; about 130 s/frame).
+  I also have f021-026 locally (the same builder), so helper 3's f021-026 match them whichever is used. When all eight parts are
+  in, I join them, run post_helper4's 2D pass and encode shots/S20bot.mp4 (160 frames).
+
+## NEW: S20bot v2, the owner's new ending ("Option B: show her the glowing mark")
+**Update 20:50 UTC: the mark fix is done (your 20:23 notes). New stills: `okstills/S20bot_v2_f108.png` (replaced) and
+`okstills/S20bot_v2_f098.png` (the flare's peak). f060 is unchanged (approved).**
+- **Separated:** after "Option B" the shrimp goes down to his right hand at waist level, at his side, away from the
+  raised arm.
+- **Wrist presented:** his left forearm rises to face height toward Wren, the inner wrist turned out (a forearm
+  twist), palm open, clear of his body and the shrimp.
+- **The mark, 2x S14's size:**
+  - Same zigzag and colours (`post_helper9.mark`), bolder.
+  - A white-hot core inside a coral line.
+  - A soft pink halo round the wrist.
+  - On the flare (f95-101), a white-hot bloom, the burst and sparkles.
+  - From f108, a steady glow with a gentle pulse and a few soft sparkles.
+  - A faint coral spill on Wren's face (2D) while it glows, plus the real coral point light on his arm.
+- **f108 reads at phone size:** the glowing zigzag sits on his forearm between them, and Wren's 2D shocked eyes and
+  the bell ward are as before.
+- **Ready for the 160-frame split as soon as you OK it.** Meanwhile I've **started f001-026** here (the approved
+  opening, which the fix doesn't touch; started 20:52 UTC, about 1 h). Give the split from f027 on, or tell me to stop.
+
+- **First stills (19:50):** `okstills/S20bot_v2_f060.png` and the first f108 (now replaced) (half-scale render, upscaled; the 2D
+  pass included; bottom 62% only, as before).
+- **Builder:** `helper4.py` `s20bot()` (same name), 160 render frames from the new timing (78c1cad).
+- **Beats** (shot frames, 1-based): "Option B" f60, "show" f84, "glowing" f95, "mark" ends f108, "Comment" f117.
+  - **f1-59:** Kai tense, the shrimp cupped; Wren stern, her bell low.
+  - **f62-70:** the shrimp moves into his right hand.
+  - **f68-92:** his left forearm rises slowly toward her, to chest height.
+  - **From f84:** the mark is faint. **f95-99:** it flares (helper 9's S14 zigzag via `post_helper9.mark`, drawn
+    bolder, with a burst and sparkles, plus a real coral point light on his arm). **From f108:** a soft pulsing glow
+    with a few sparkles, to the end.
+  - **From f101:** Wren's eyes go wide. These are 2D terror eyes with the blue shock lines (S05's look), because her 3D
+    eye keys don't read at this size.
+  - **f101-109:** she steps half a step back, leaning away.
+  - **f103-109:** the bell comes up in front of her like a ward, with a small tremble; she holds the standoff to the
+    end. The shrimp turns to look at the mark.
+- **Camera:** behind Kai's right shoulder, so Wren's face turns to us; at the earlier side angles her hood hid it.
+  - Kai is at frame left with his back three-quarters to us; Wren is at frame right.
+  - A slow push-in on 1s, the characters on 2s.
+  - Faces and the bell stay clear of the B card.
+- **Weak spot:** the mark sits where S14 puts it (MARK_U 0.3, nearer the elbow), so on his raised forearm it's
+  small, close to his body, in front of the shrimp's crest. It reads as a coral flare more than a crisp zigzag.
+  If you want it to read bigger I can scale the 2D mark up (the shape stays the same) or move it toward the wrist.
+- **Render:** about 150 s/frame at full size here (a guess from v1). Once you OK it, split the 160 frames like last
+  time. The steps below still apply with the new range: 160 frames, `--frames A-B`, parts `S20bot_fAAA-BBB.mp4`.
+  - **The 2D pass needs `build/.../S20bot_mark.json`.** The builder writes it on every render, so I regenerate it
+    here before the join.
+  - Then `post_helper4.py S20bot` (no longer join_parts.py: S20bot has a 2D pass now) gives the final.
+
+
 Updated 2 Nov 2026.
 
 | Shot | State | File |

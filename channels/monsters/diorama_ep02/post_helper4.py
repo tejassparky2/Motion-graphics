@@ -2,6 +2,8 @@
 
     S05 "...In my bare hands."  After the cut up to his face (f50) the anime sweat drop pops in beside his head on
         "In my" (fx2d_anime.sweat_drop, tracked to his eyes).
+    S20bot "Option B: show her the glowing mark."  The coral zigzag on his raised forearm (helper 9's S14 mark, via
+        post_helper9.mark) flares on "glowing mark" with a burst and sparkles, then glows softly to the end.
     S06 "...Straight ahead."  On "Straight", an arrow-like jet streak shoots straight out of the claw to the frame
         edge (the claw's own line, nothing in any other direction): a tapered white jet with an ink outline and an
         arrowhead front, two speed lines riding along it and a small pressure ring at the muzzle. No text.
@@ -154,9 +156,76 @@ def jet(a):
     return draw
 
 
+# ---------------------------------------------------------------------------------------------------------- S20bot
+MARK20_K = 2.0                                                              # S20bot's mark: 2x S14's on screen
+PINK = (1.0, 0.62, 0.74)
+
+
+def mark20():
+    """S20bot (the owner's new ending, "show her the glowing mark"): helper 9's S14 wrist mark (post_helper9.mark, the
+    same zigzag, colours and bloom), on his raised left forearm from S20bot_mark.json: faint once the arm is up, the
+    flare on "glowing mark" (a burst and sparkles), then a soft pulsing glow through the standoff."""
+    from channels.monsters import fx2d
+    from channels.monsters.diorama_ep02 import post_helper9 as P9
+    with open(os.path.join(BUILD, "S20bot_mark.json")) as fh:
+        d = json.load(fh)
+    meta, A = d["meta"], {int(f): v for f, v in d["frames"].items()}
+    fg, fe = meta["f_glow"], meta["f_mark_end"]
+
+    def draw(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        g = A[f]
+        lvl = g["level"]
+        if lvl <= 0 or g.get("z", 1) <= 0:
+            return
+        geo = P9._on_arm(g)
+        geo = dict(geo, ex=[v * MARK20_K for v in geo["ex"]], ey=[v * MARK20_K for v in geo["ey"]])   # 2x the S14 size
+        x, y = geo["c"]
+        size = math.hypot(*geo["ey"])
+        halo = min(1.0, lvl)
+        fx2d._glow(cr, x, y, size * 1.25, PINK, 0.45 * halo)             # the soft pink halo round the wrist
+        if f >= fg:                                                         # the flare: a white-hot bloom
+            fl = max(0.0, 1.0 - abs(f - (fg + 3)) / 6.0)
+            fx2d._glow(cr, x, y, size * 0.8, (1.0, 0.93, 0.88), 0.55 * fl)
+        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=3.2)
+        (lx, ly, _), (rx, ry, _) = g["w_eye_l"], g["w_eye_r"]                 # a faint coral spill on Wren's face
+        fx2d._glow(cr, (lx + rx) / 2, (ly + ry) / 2 + 10, math.hypot(rx - lx, ry - ly) * 3.2, P9.CORAL,
+                   0.16 * halo)
+        t0 = (fg + 3 - 1) / FPS                                             # the flare's peak
+        fx2d.glow_burst(cr, t, t0, x, y, r=size * 2.4, col=P9.CORAL_HOT, dur=0.5, rays=10, seed=3)
+        fx2d.sparkles(cr, t, t0 + 0.04, x, y, n=8, radius=size * 1.0, size=size * 0.17,
+                      cols=((1, 0.8, 0.7, 1), fx2d.WHITE, (1, 0.6, 0.5, 1)), life=1.1, seed=5)
+        if f >= fe:                                                         # a few soft sparkles in the hold
+            fx2d.sparkles(cr, t, (fe - 1) / FPS, x, y, n=4, radius=size * 0.8, size=size * 0.11,
+                          cols=((1, 0.8, 0.7, 1), (1, 0.6, 0.5, 1)), life=1.6, seed=9)
+    return draw
+
+
+def wren_fear():
+    """S20bot: Wren's wide, pin-prick eyes (fx2d_anime.terror_eyes, the blue shock lines included) from the moment she
+    sees the mark flare, tracked to her eyes (S20bot_mark.json's w_eye_l / w_eye_r)."""
+    with open(os.path.join(BUILD, "S20bot_mark.json")) as fh:
+        d = json.load(fh)
+    meta, A = d["meta"], {int(f): v for f, v in d["frames"].items()}
+
+    def draw(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        (lx, ly, _), (rx, ry, _) = A[f]["w_eye_l"], A[f]["w_eye_r"]
+        dd = math.hypot(rx - lx, ry - ly)
+        tilt = math.atan2(ry - ly, rx - lx)
+        if abs(tilt) > math.pi / 2:
+            tilt -= math.copysign(math.pi, tilt)
+        fx2d_anime.terror_eyes(cr, t, start, x=(lx + rx) / 2, y=(ly + ry) / 2, size=dd * 2.6, end=end,
+                               eyes=((lx, ly), (rx, ry)), er=0.34 * dd, tilt=tilt)
+    return draw, (meta["f_fear"] - 1) / FPS, (max(A) - 1) / FPS
+
+
 def overlays(shot):
+    if shot == "S20bot":
+        fear, t0, t1 = wren_fear()
+        return [(mark20(), dict(start=0.0)), (fear, dict(start=t0, end=t1))]
     if shot not in ("S05", "S06"):
-        return []                                                         # S20bot: no 2D pass (3D only)
+        return []
     a = anchors(shot)
     n = max(a)
     if shot == "S05":
@@ -169,7 +238,44 @@ def overlays(shot):
     return []
 
 
+PARTS = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "parts")
+
+
+def fill_from_parts(shot, n):
+    """Frames rendered elsewhere: decode out/monsters/diorama_ep02/parts/<SHOT>_v2_fAAA-BBB.mp4 (S20bot v2's split) into
+    the render folder wherever a frame is missing, then check every frame 1..n is there."""
+    import glob
+    import re
+    d = os.path.join(BUILD, "render", shot)
+    os.makedirs(d, exist_ok=True)
+    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_v2_f*.mp4"))):
+        a, b = map(int, re.search(r"_f(\d+)-(\d+)\.mp4$", part).groups())
+        if all(os.path.exists(os.path.join(d, f"{f:04d}.png")) for f in range(a, b + 1)):
+            continue
+        tmp = tempfile.mkdtemp()
+        subprocess.run(["ffmpeg", "-v", "error", "-i", part, "-start_number", str(a), os.path.join(tmp, "%04d.png")],
+                       check=True)
+        got = sorted(os.listdir(tmp))
+        if len(got) != b - a + 1:
+            raise SystemExit(f"{part}: {len(got)} frames, expected {b - a + 1}")
+        for g in got:
+            if not os.path.exists(os.path.join(d, g)):
+                shutil.move(os.path.join(tmp, g), os.path.join(d, g))
+        shutil.rmtree(tmp)
+        print("filled from", os.path.basename(part))
+    missing = [f for f in range(1, n + 1) if not os.path.exists(os.path.join(d, f"{f:04d}.png"))]
+    if missing:
+        raise SystemExit(f"{shot}: frames missing {missing[:12]}{'...' if len(missing) > 12 else ''}")
+    for f in sorted(int(x[:4]) for x in os.listdir(d) if x[:4].isdigit() and x.endswith(".png")):
+        if f > n:
+            os.remove(os.path.join(d, f"{f:04d}.png"))                    # extra frames past the shot (a longer chunk)
+
+
 def run(shot):
+    if shot == "S20bot":
+        with open(os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")) as fh:
+            n20 = next(s["render_frames"] for s in json.load(fh)["shots"] if s["shot"] == "S20")
+        fill_from_parts(shot, n20)
     src = comp.Source(os.environ.get("SRC") or os.path.join(BUILD, "render", shot))
     out_frames = os.path.join(BUILD, f"{shot}_post")
     rep = comp.render([comp.Shot(src, overlays=overlays(shot), name=shot)], out_frames, verbose=False)
