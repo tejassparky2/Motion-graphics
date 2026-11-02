@@ -71,4 +71,5 @@ the final encode.
 - **S17:** Wren marches up with the bell and stops in front of Kai.
 
 **Hard rules:** no blood or graphic violence anywhere; the bird is never killed (dazed, then fluffed and offended).
-**Not in yet** (no QA): S14, S15, S19, S20 (top and the assembled split). I'll scan them when they land.
+**S20top (XprL, d584790): OK.** 156 frames, no tags, 0 edge-scan hits. Kai lowers the shrimp into Wren's net (in the net from about f50), and the action stays in the upper half for helper 8's split.
+**Not in yet** (no QA): S14, S15, S19, S20bot and the assembled split. I'll scan them when they land.
