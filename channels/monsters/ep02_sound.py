@@ -45,6 +45,8 @@ S11_HUFF, S11_STOMP = 70, 74      # it glares, huffs and turns f70-72, then stom
 S12_RAISE = 14             # helper 5 S12: it turns in his palm f7, the claw comes up f14-17
 S13_TAP = 15               # helper 5 S13: the claw touches his nose f15
 S17_STEPS, S17_STOP = 0, 45       # XprL S17: Wren marches in from the cut and stops stern in front of Kai ~f45
+S14_DRAW, S14_BURST = 24, 48      # helper 9 S14: the mark draws on and flickers from "wrist" ~f24; the burst f48 ("glow")
+S15_CUT = 30               # helper 9 S15: the wrist mark's match cut to the sky crack, one glow frame f30, the sky f31-79
 S20_SPLIT = 0              # S20top/S20bot: both halves open on the cut, so the split whoosh sits on f0
 S20_TURN, S20_BELL = 55, 61        # S20bot: Wren turns her back f55-65 (on 2s), the bell at her hip on the turn
 S20_COLLAR, S20_SLIP = 81, 89      # Kai's hands go to his collar f81, the shrimp slips inside f89-92
@@ -195,6 +197,36 @@ def bulge_pop(seed=0):
     return bloop * 0.8 + flick
 
 
+def mark_flicker(dur, seed=0):
+    """The wrist mark drawing on: faint warm glints and ticks that come faster as it brightens."""
+    r = _rng("flicker", seed)
+    out = np.zeros(_n(dur + 0.4))
+    at = 0.0
+    while at < dur:
+        x = at / dur
+        f = r.uniform(2200, 3600) * (1 + 0.4 * x)
+        m = _n(0.12)
+        tt = _t(m)
+        _place(out, np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.03) * (0.3 + 0.7 * x), at)
+        at += r.uniform(0.06, 0.14) * (1.2 - 0.6 * x)
+    return _verb(out, 0.3)
+
+
+def rift_hum(dur, seed=0):
+    """The crack in the sky: a low uneasy hum with a faint dry crackle at its edges."""
+    r = _rng("rift", seed)
+    n = _n(dur)
+    t = _t(n)
+    hum = (np.sin(2 * np.pi * 55 * t) + 0.5 * np.sin(2 * np.pi * 82.7 * t + 0.3 * np.sin(2 * np.pi * 0.7 * t))) * 0.4
+    out = hum * (0.8 + 0.2 * np.sin(2 * np.pi * 3.1 * t))
+    at = 0.0
+    while at < dur - 0.02:
+        m = _n(0.006)
+        _place(out, _hp(r.uniform(-1, 1, m), 3000) * np.exp(-_t(m) / 0.0015) * r.uniform(0.1, 0.35), at)
+        at += r.exponential(0.07)
+    return out * np.minimum(1, t / 0.15) * np.minimum(1, (dur - t) / 0.4)
+
+
 def lake(dur, seed=0):
     """A big still lake: small waves lapping the shore, a deep soft water hush, a breeze."""
     r = _rng("lake", seed)
@@ -293,8 +325,14 @@ def build(timing, n, v):
     # --- S14-S15: the wrist glows (a wonder pad), the match cut to the crack in the sky
     music_at(base.soft_pad(c.t("S16") - c.t("S14") + 0.6, (62, 69, 74, 78), 0.1, 3), c.t("S14"), c.t("S16") + 0.2,
              -18, 0.6, 0.4)
-    hit(glow_chime(), c.word("l14", "glow") - 0.05, -12, -0.1)
-    hit(base.eerie_sting(2), c.word("l15", "crack"), -20, 0.0)
+    hit(mark_flicker(c.f("S14", S14_BURST) - c.f("S14", S14_DRAW), 1), c.f("S14", S14_DRAW), -25, -0.1)
+    hit(glow_chime(), c.f("S14", S14_BURST) - 0.02, -12, -0.1)
+    # S15: the match cut from the wrist mark to the sky crack: a glint on the glow frame, the sting on the cut,
+    # then the rift's hum under the sky
+    hit(glow_chime(2), c.f("S15", S15_CUT) - 0.03, -19, 0.0)
+    hit(base.eerie_sting(2), c.f("S15", S15_CUT), -19, 0.0)
+    rift = c.end("S15") - c.f("S15", S15_CUT + 1)
+    hit(rift_hum(rift + 0.2, 1), c.f("S15", S15_CUT + 1), -24, 0.0)
 
     # --- S16-S18: the bells over the hill, Wren's march, her stern line (a low tense bed under Wren)
     hit(bell_peal(2.6, 1), c.word("l16", "bells") - 0.05, -16, 0.2)
