@@ -540,13 +540,13 @@ def s20bot():
 
     # camera: from the south-east, a 3/4 on Kai's front-left with Wren nearer at frame left; the pair in the
     # bottom band (shift the frame up); a slow push-in on 1s
-    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.32)
+    mid = X.KAI_AT.lerp(X.WREN_STOP, 0.4)
     tgt = tuple(mid + Vector((0, 0, 5.4)))
     left = Vector((fwd.y * -1.0, fwd.x, 0)) * -1.0                  # Kai's left in the world
     cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     del left
-    X._cam_move("S20Bcam", n, (tgt, 14.0, 6.0, yaw + 6.0, 34.0, 0.27), (tgt, 12.6, 6.0, yaw + 6.0, 34.0, 0.27))
+    X._cam_move("S20Bcam", n, (tgt, 15.0, 6.0, yaw + 18.0, 34.0, 0.27), (tgt, 13.6, 6.0, yaw + 18.0, 34.0, 0.27))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
                 beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
 
