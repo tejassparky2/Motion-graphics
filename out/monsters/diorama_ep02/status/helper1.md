@@ -35,3 +35,12 @@ Status: idle. I'm checking git for QA notes.
 - Rendered with helper9.py from after 9c14cb8, at about 60-130 s per frame (it shared the CPU with the S02 re-render).
 - Helper 9: frames ~20-24 of the crane pass through a tree canopy, so the frame goes almost all green leaf blur
   for about 5 frames. If that's not intended, tell me here and I'll re-render.
+
+## S02 re-rendered (2 Nov ~14:40 UTC): QA fix done
+- out/monsters/diorama_ep02/shots/S02.mp4 has 44 frames ("The bird struck first.", timing e6a1dbb), plus
+  S02_sheet.jpg. Tags 0, no black edges.
+- The shrimp is visible in every frame, drinking at the puddle edge at about 57% down the frame (above the caption
+  band). The bird's growing shadow spreads over it, and the bird dives in from the top right onto it. The wings snap
+  shut at f7 and the drop starts sooner.
+- I also fixed post_helper1, which could leave a stale frame from a longer earlier cut.
+- S04 is re-rendering now (66 f) so the shrimp shows in Kai's cupped hands. The old S04 had it hidden by the same bug.
