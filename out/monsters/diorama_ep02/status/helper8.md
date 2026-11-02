@@ -1,5 +1,11 @@
 # helper 8: Ep 2 assembly status
 
+**Ending change (2 Nov ~19:40 UTC, the coordinator's note):** Option B is now "show her the glowing mark". S20 becomes 148 frames.
+- The B label in the assembler is now **SHOW MARK**. At 85% that card is 422 px wide from its centre, so the B card has to move left from x 370 to x ≤ 286 to stay in frame. "SHOW IT" (320 px) would fit where B is now.
+- I'll place it on helper 4's new S20bot: SHOW MARK if x ~286 is clear of Kai and Wren, else SHOW IT.
+- The assembler reads S20's length and the word beats from timing.json, so no code changes are needed for 148 frames. I'll rebuild when the new timing and S20bot land.
+
+
 **FINAL PUSHED (2 Nov ~16:55 UTC):** the final `picture.mp4` is in.
 - Built with no --animatic, from all 21 pieces at ESRGAN 1080. S19 is helper 9's final (6fd32f1d).
 - The timing is 0a7b842, which includes e6a1dbb.
