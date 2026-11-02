@@ -117,6 +117,13 @@ def mark(cr, geo, k, band, inten, f, seed=0):
     cr.restore()
 
 
+def _on_arm(geo):
+    """The mark as the anchors give it, mirrored across the arm: helper9's ex runs to the arm's screen-left, the
+    crack's to the screen-right, so without this the mark is the crack's mirror image and S15's ease onto the crack
+    passes through a flat line. Applied to S14 and S15 alike (the same mark)."""
+    return dict(geo, ex=[-geo["ex"][0], -geo["ex"][1]])
+
+
 def _lerp_geo(a, b, u):
     return dict(c=[a["c"][i] + (b["c"][i] - a["c"][i]) * u for i in range(2)],
                 ex=[a["ex"][i] + (b["ex"][i] - a["ex"][i]) * u for i in range(2)],
@@ -126,7 +133,7 @@ def _lerp_geo(a, b, u):
 # ------------------------------------------------------------------------------------------------------------ shots
 def s14(cr, f, meta, A, k):
     fw, fg = meta["f_wrist"], meta["f_glow"]
-    geo = A[f]["mark"]
+    geo = _on_arm(A[f]["mark"])
     if f < fw:
         return
     rnd = random.Random(f // 2)
@@ -149,7 +156,7 @@ def s14(cr, f, meta, A, k):
 def s15(cr, f, meta, A, k):
     fc = meta["fc"]
     if f < fc:
-        geo = A[f]["mark"]
+        geo = _on_arm(A[f]["mark"])
         if fc - 4 <= f and A.get(fc, {}).get("rift"):            # ease onto the crack's spot and size for the cut
             geo = _lerp_geo(geo, A[fc]["rift"], (f - (fc - 5)) / 4)
         beat = 0.0
@@ -212,16 +219,26 @@ def sheet(frames_dir, n, path):
     out.save(path, quality=88)
 
 
+def _src(shot):
+    """The Blender frames folder: build/.../<SHOT>/, or H9_SRC (a fresh folder for a re-join, so stale frames from an
+    earlier join never mix in)."""
+    return os.environ.get("H9_SRC") or os.path.join(BUILD, shot)
+
+
 def join(shot, n):
     """Fill build/.../<SHOT>/NNNN.png from the raw parts other helpers rendered (parts/<SHOT>_fAAA-BBB.mp4, frame A
     first) wherever this container has no Blender frame; then check that every frame 1..n is there."""
     import glob
     import re
-    src_dir = os.path.join(BUILD, shot)
+    src_dir = _src(shot)
     os.makedirs(src_dir, exist_ok=True)
-    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_f*.mp4"))):
-        m = re.search(r"_f(\d+)-(\d+)\.mp4$", part)
-        a, b = int(m.group(1)), int(m.group(2))
+    def rng(path):
+        m = re.search(r"_f(\d+)-(\d+)\.mp4$", path)
+        return int(m.group(1)), int(m.group(2))
+    # the shortest parts first: a re-render of a few frames (S19 f017-048 after the crane fix) beats the long
+    # part it replaces, which then only fills what is still missing
+    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_f*.mp4")), key=lambda p: (rng(p)[1] - rng(p)[0], p)):
+        a, b = rng(part)
         if all(os.path.exists(os.path.join(src_dir, f"{f:04d}.png")) for f in range(a, b + 1)):
             continue
         tmp = os.path.join(BUILD, f"{shot}_join")
@@ -251,7 +268,7 @@ def run(shot):
         meta["beats"] = [round((w["start"] - s["start"]) * 24) + 1 for ln in from_words["lines"]
                          if ln.get("scene") == "S15" for w in ln["words"] if w["w"].strip(".,").lower() in
                          ("same", "shape")]
-    src_dir, out_frames = os.path.join(BUILD, shot), os.path.join(BUILD, f"{shot}_post")
+    src_dir, out_frames = _src(shot), os.path.join(BUILD, f"{shot}_post")
     shutil.rmtree(out_frames, ignore_errors=True)
     os.makedirs(out_frames)
     n = max(A)

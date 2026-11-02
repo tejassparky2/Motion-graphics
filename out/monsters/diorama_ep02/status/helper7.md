@@ -25,6 +25,7 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 | S12 | the claw comes up f14 | a low creak; the tense second held |
 | S13 | the claw touches his nose f15 | the "tink" (the tense bed stops on it) |
 | S17 | Wren marches in from f0, stops ~f45 | her steps every 0.36 s, her hand bell on the stop |
+| S15 | the wrist mark's match cut: one glow frame f30, the sky crack from f31 | a glint on the glow frame, the eerie sting on the cut (0.15 s before "crack"), a low rift hum with a dry crackle under the sky |
 | S20 | both halves open on the cut f0 (S20top + S20bot) | the split whoosh |
 | S20bot | Wren turns her back f55-65, bell at her hip f61 | cloth swish (right), a small bell ring |
 | S20bot | Kai's hands to collar f81, shrimp slips in f89, teal bulge pops f97 ("shirt") | two cloth rustles (left), a soft rubbery "bloop" |
@@ -33,10 +34,12 @@ tar, with l2 re-voiced; it refuses to synthesise). 57.325 s, 48 kHz stereo, **-1
 **S20bot landed (8a9a5d4) and is now scored** (beats read by frame diffs on its two halves and a contact sheet).
 **S02 re-render (1cee315) checked:** the bird still dives through the whole shot with the speed lines building into
 the cut, so the dive whoosh (after "first", peaking across the cut) still fits; the mix is unchanged.
-Still placeholders, because those shots haven't landed: S05 drip (f40), S14 glow chime (on "glow"), S15 sky-crack sting
-(on "crack"), S19 lake and the drip on "dry" (helper 1's raw S19 f001-062 part is in, but not the final shot). The A/B stingers sit on the spoken letters.
+**S04 re-render (fd9f12b) checked:** the talons reach the arm f11, the slash marks show f12-14 and the bird is out of
+frame by ~f16, the same beats as before (the swipe starts f11, its fibre snaps land ~f13); the mix is unchanged.
+**S15 landed (fb8f49f) and is now scored** on its match cut; re-mixed, -13.99 LUFS, Whisper 19/19.
+Still placeholders, because those shots haven't landed: S05 drip (f40), S14 glow chime (on "glow"), S19 lake and the drip on "dry" (helper 1's raw S19 f001-062 part is in, but not the final shot). The A/B stingers sit on the spoken letters.
 S16's bells sit on "bells" (40.28 s), which is right for helper 1's S16 (the villagers come over the hill from the cut).
 
 The music drops 0.1 s before S09 (TWIST l9). No heartbeat, no riser, all original.
 
-Status: done on the shots that have landed. Waiting for S05/S14/S15/S19 (and the re-rendered S02/S04, which keep their beats unless the action moves); I'll re-run, re-check and push when they land.
+Status: done on the shots that have landed. Waiting for S05/S14/S19 (the re-rendered S02 and S04 are checked); I'll re-run, re-check and push when they land.

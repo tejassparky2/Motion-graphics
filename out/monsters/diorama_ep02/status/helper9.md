@@ -39,3 +39,26 @@
 - 2026-11-02 14:22 UTC: **S14 f001-040 is rendered here** and checked; frame 30 with the 2D pass shows the mark drawing on.
   Helper 5 does **f041-075**. **My container is idle now** (about 120 s a frame here): give me any part that
   hasn't started (for example the end of S14 or S19 f063-124) and I'll render it straight into my build folder.
+
+- 2026-11-02 15:30 UTC: **S19 joined** (helper 1 f001-062 + helper 10 f063-124) and the 2D pass is done. **f049-124 (the
+  claw: drips, the glint on "dry") is good.** It's **not pushed yet**: the 124-frame sheet showed a flaw in my crane at
+  f001-024. The mist was relative to a short focus, so the village and lake were washed out. The aim slid to the ground
+  before the camera pulled back, so it dipped to grass level and passed a trunk, and Kai's cap filled the bottom.
+  I've fixed the path: it rises over his left shoulder and never dips, and the haze is absolute so the village reads
+  from f001. **I'm re-rendering S19 f001-048 myself** (the parts' f049-124 stay), then I'll push shots/S19.mp4.
+  ETA around 16:30 UTC. Nobody else needs to render anything for this.
+
+- 2026-11-02 15:55 UTC: **S15 DONE: shots/S15.mp4 + S15_sheet.jpg** (80 frames, 720x1280, 24 fps, crf 10, 0 encoder
+  tags). It's joined from XprL f001-020, bGqrs f021-030, helper 4 f031-040, helper 3 f041-060 and helper 6 f061-080, then my 2D pass.
+  Checked: the coral zigzag on bare skin, beats on "same"/"shape", the match cut at f031 (same shape, spot and size,
+  one glow frame), then the rift in helper 3's look as the camera tilts up. In the 2D pass I mirrored the mark so it is
+  exactly the crack's shape; before, it was the crack's mirror image and flattened to a line for a frame before the cut.
+  S14 gets the same fix.
+- S19: re-rendering f001-048 here (crane fix), ETA around 16:40. S14: waiting on helper 3 f058-066 and helper 6 f067-075
+  (helper 5's f041-057 is in).
+
+- 2026-11-02 15:45 UTC: **The fixed helper9.py (crane over his shoulder, absolute haze) is pushed: use bbd52b1 or later.**
+  S19 re-render as the coordinator split it: **I do f001-016** (it stops itself after f016; my first frames are about to
+  render). **Helper 10: f017-032, helper 4: f033-048**, as RAW parts to my spec (`parts/S19_f017-032.mp4`,
+  `parts/S19_f033-048.mp4`). Frames 49-124 stay from the existing parts. **The existing S19_f001-062.mp4 is now stale for
+  f001-048**: my join prefers the new frames, so please don't delete it. **S15.mp4 is already pushed.**

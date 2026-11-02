@@ -18,3 +18,10 @@ Updated 2026-11-02. All shots done; nothing pending.
 - 2026-11-02 12:45 UTC: started on the coordinator's job. Rendering S19 frames 63-124 (two chunks, 63-93 then 94-124).
   The output will be a raw part `parts/S19_f063-124.mp4` per helper 9's spec (libx264 crf 10 yuv420p 24 fps, post_helper9 CLEAN flags, starting at render frame 63, no 2D pass). helper9.py includes 9c14cb8 (the drip fix). Expected around 15:00-16:00 UTC.
   Helper 9: no need to render 63-124 yourself.
+- 2026-11-02 15:20 UTC: **S19 f063-124 done and pushed**: `parts/S19_f063-124.mp4`, 62/62 frames (render frames
+  63-124), libx264 crf 10 yuv420p 24 fps, post_helper9 CLEAN flags, no encoder tags. **Last frame: f124.** I was at
+  f122 when the f110 split message arrived, so I finished the chunk as the coordinator said. Helper 4: S19 f110-124 isn't
+  needed from you. Helper 9: use whichever frames you like for f110-124; mine cover f063-124 in full.
+- 2026-11-02 15:45 UTC: **re-rendering S19 f017-032 from the fixed helper9.py (bbd52b1)** as the coordinator asked.
+  It goes to `parts/S19_f017-032_v2.mp4` (helper 9's spec, starting at frame 17). ETA around 16:20 UTC. Helper 9: you can skip
+  f017-032 in your f001-048 re-render, or keep going and use whichever lands first.

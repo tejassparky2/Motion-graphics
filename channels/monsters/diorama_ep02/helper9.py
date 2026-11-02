@@ -593,19 +593,24 @@ def s19():
     # part A: crane out from behind his head to the high view south over the island (log distance, eased)
     crane = _new_cam("S19crane", 1)
     head = X.KAI_AT + Vector((0, 0, EYE + 0.6))
-    a = (head + X._d * 6.0, 9.0, 12.0, _az(-1.0, 0.0), 40.0)
+    a = (head + X._d * 6.0, 13.0, 16.0, _az(-1.0, 0.3), 40.0)        # over his left shoulder, past her, to the shore
     b = (VILLAGE + Vector((0, 20.0, 0)), 330.0, 33.0, 180.0, 34.0)
-    f_end = max(30, fc - 6)
+    hz_a, hz_b = (70.0, 260.0), (330.0 * 1.47, 330.0 * 2.75)            # haze start / depth (world units): the village
+    f_end = max(30, fc - 6)                                             # reads from frame 1, the far hills hazed
     for f in range(1, fc):
         u = _smooth((f - 1) / (f_end - 1))
-        t = Vector(a[0]).lerp(Vector(b[0]), u)
         d = math.exp(math.log(a[1]) + (math.log(b[1]) - math.log(a[1])) * u)
-        tl = a[2] + (b[2] - a[2]) * _smooth(min(1.0, u * 1.8))           # up over the trees before it pulls back
+        wt = (d - a[1]) / (b[1] - a[1])                                  # the aim moves only as the camera pulls back,
+        t = Vector(a[0]).lerp(Vector(b[0]), wt)                          # so it rises over him and never dips
+        tl = a[2] + (b[2] - a[2]) * _smooth(min(1.0, u * 1.8))
         yw = a[3] + ((b[3] - a[3] + 180) % 360 - 180) * u
         ln = a[4] + (b[4] - a[4]) * u
         drift = 1 - 0.03 * max(0.0, (f - f_end) / 10)                    # keeps drifting in after the crane lands
         loc, rot = _orbit(t, d * drift, tl, yw)
-        _key_cam(crane, f, loc, rot, ln, d * drift, blur=BLUR + 6 * u, haze=(0.97 + 0.5 * u, 0.55 + 2.2 * u))
+        fd = d * drift
+        hs = hz_a[0] + (hz_b[0] - hz_a[0]) * wt
+        hd = hz_a[1] + (hz_b[1] - hz_a[1]) * wt
+        _key_cam(crane, f, loc, rot, ln, fd, blur=BLUR + 6 * u, haze=(hs / fd, hd / fd))
     # part B: the claw in his hands, dripping; a slow push-in
     close = _new_cam("S19claw", fc)
     yaw = _az(1.0, -0.5)                                                 # in front of him, a little to the claw's side
