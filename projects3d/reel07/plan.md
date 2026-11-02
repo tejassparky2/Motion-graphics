@@ -1,27 +1,27 @@
 # Reel 07 plan: "How to make a photo into a 3D figurine" (learning reel, ~60 s)
 
-**Status: draft, waiting for the owner's approval.** Owner (30 Oct 2026): the starting line should be "how to make
-photo into 3d figurine for you desktop or gifting". Shots: `shot_list.md`. Voice: the owner's cloned voice. Numbers
-in [brackets] come from the owner.
+**Status: draft, waiting for the owner's approval.** Owner (2 Nov 2026) replaced the first footage with Manya's
+figurine (the reel 04 figurine; the sister's consent of 19 Oct 2026 covers her photo and name): new ChatGPT and
+Snapmaker Orca screen recordings from 2 Nov plus the October print and reveal clips (`footage.md`). The boy figurine
+footage is not used. Owner (30 Oct 2026): the starting line; (2 Nov 2026): the last line, and the prompt may be shown.
+Voice: the owner's cloned voice. Numbers come from the owner's own slicer screen (Snapmaker Orca, 2 Nov 2026):
+11 h 3 m, 950 filament changes, 193.40 g in total.
 
 | # | Voice | On screen |
 |---|---|---|
-| 1 | How to make a photo into a 3D figurine, for your desktop or gifting. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** the hook shot (phone photo left, figurine right) with a "HOW TO" tag, "PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Bambu Studio · Print + finish) and a "SAVE IT" bookmark. On "desktop" and "gifting", quick cuts to the desk and gift-box shots, title still on. No subtitle on this line (the title is the subtitle) |
-| 2 | This figurine started as one phone photo. Here's exactly how we make it, in four steps. | Photo next to the figurine, slow turn |
-| 3 | Step one. We upload the photo to ChatGPT, and ask for a cute, cartoon-style 3D design. | ChatGPT screen recording. From here on a "STEP n OF 4" bar at the top and the tool's name in a gold tag; zooms follow the cursor to each click |
-| 4 | Same face. Same outfit. Same pose. Just cuter. | Photo vs design split |
-| 4b | *(suggested, not yet approved)* Tip. Don't have that filament colour? Just ask it to change it. We didn't have that blue, so we made the shirt black. | The owner typing "Make the shirt black we don't have that blue color", navy → black |
-| 5 | Step two. We give that design to [Tripo] 3D, and in [a few minutes], it builds a full 3D model. | Tripo screen, model spinning |
-| 6 | The colours aren't perfect yet. So, step three. In Bambu Studio, we paint the parts it missed: eyes, hair, and outfit details. | Colour painting, sped up |
-| 7 | Step four. We print it. Full colour, layer by layer. | Printer clips / timelapse |
-| 8 | Then we remove the supports, and sand it by hand. | Hands finishing, before / after |
-| 9 | And here's the result. | Reveal, 360° turn, face close-up |
-| 10 | Don't want to make it yourself? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
-| 11 | Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" (owner, 2 Nov 2026: the last line) |
+| 1 | How to make a photo into a 3D figurine, for your desktop or gifting. | **Frame 1 (0 s, no fade-in) reads as a tutorial:** Manya's photo in a phone frame beside the figurine, a "HOW TO" tag, "PHOTO → 3D FIGURINE / in 4 easy steps", the 4 numbered steps (ChatGPT · Tripo 3D · Slicer · Print + finish) and a "SAVE IT" bookmark. "desktop": the figurine on the desk by the laptop (20261019_183012). "gifting": Sowmya holding it (IMG_4135). No subtitle on this line (the title is the subtitle) |
+| 2 | This figurine started as one phone photo. Here's exactly how we make it, in four steps. | Photo → figurine, slow turn |
+| 3 | Step one. We upload the photo to ChatGPT, and ask for a cute, cartoon-style 3D design. | ChatGPT recording: photo attached, the prompt (shown), the first design. From here on a "STEP n OF 4" bar and the tool's name in a gold tag |
+| 4 | Not right the first time? Just ask for changes. We asked: make her standing. And remove the ball in her hand. | The owner's real edits: "Make Her standing", "Remove white ball in her hand", sitting → standing |
+| 5 | Same face. Same dress. Same little bow. Just cuter. | Photo vs final design split (IMG_20261014_140855) |
+| 6 | Step two. We give that design to Tripo 3D, and in [a few minutes], it builds a full 3D model. | **Needs a Tripo recording of Manya's design** |
+| 7 | The colours aren't perfect yet. So, step three. In the slicer, we paint the parts it missed, like the eyes. | Snapmaker Orca: model on the plate, zoom to the face, painting the eyes |
+| 8 | Step four. We print it on the Snapmaker U one. Eleven hours. Nine hundred and fifty colour changes. | Sliced view with the filament table and "11h3m", then the U1 printing (013732, 013746, 013800) |
+| 9 | Then the supports come off, and we sand it by hand. | Finished print in its supports (184635, 184656) → the clean figurine |
+| 10 | And here's the result. | The figurine turning (182700), Sowmya holding it |
+| 11 | Don't want to make it yourself? Send us one photo on WhatsApp, and we'll make it for you. | WhatsApp card, "from ₹3,599" |
+| 12 | Comment 3D, to get the full prompt and guide in your DM. | "COMMENT 3D" card: "full prompt + guide in DM" |
 
-Mock-up of frame 1 and a step frame (reel 04 stills standing in): sent to the owner 30 Oct 2026.
-
-Owner (2 Nov 2026): the ChatGPT prompt can be shown on screen (no blur). The comment-to-DM keyword is "3D"; the DM
-sends the full prompt and the guide.
-
-Voice spellings: "Chat G P T" for ChatGPT; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
+The comment-to-DM keyword is "3D"; the DM sends the full prompt and the guide (PDF, to write once the owner sends the
+prompt text). Voice spellings: "Chat G P T"; "U one"; "Tripo" as the owner says it ("TRY-po" or "TRIP-oh", to confirm).
+Spread the Manya reels: 04 posted; 07 on Wed 4 Nov; 05 (Sowmya's testimonial) no earlier than week 3.
