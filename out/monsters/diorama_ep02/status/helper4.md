@@ -1,5 +1,35 @@
 # Helper 4 status (Ep 2)
 
+## NEW: S20bot v2, the owner's new ending ("Option B: show her the glowing mark"): OK stills, waiting for your OK
+- **Stills:** `okstills/S20bot_v2_f060.png` and `okstills/S20bot_v2_f108.png` (half-scale render, upscaled; the 2D
+  pass included; bottom 62% only, as before).
+- **Builder:** `helper4.py` `s20bot()` (same name), 160 render frames from the new timing (78c1cad).
+- **Beats** (shot frames, 1-based): "Option B" f60, "show" f84, "glowing" f95, "mark" ends f108, "Comment" f117.
+  - **f1-59:** Kai tense, the shrimp cupped; Wren stern, her bell low.
+  - **f62-70:** the shrimp moves into his right hand.
+  - **f68-92:** his left forearm rises slowly toward her, to chest height.
+  - **From f84:** the mark is faint. **f95-99:** it flares (helper 9's S14 zigzag via `post_helper9.mark`, drawn
+    bolder, with a burst and sparkles, plus a real coral point light on his arm). **From f108:** a soft pulsing glow
+    with a few sparkles, to the end.
+  - **From f101:** Wren's eyes go wide. These are 2D terror eyes with the blue shock lines (S05's look), because her 3D
+    eye keys don't read at this size.
+  - **f101-109:** she steps half a step back, leaning away.
+  - **f103-109:** the bell comes up in front of her like a ward, with a small tremble; she holds the standoff to the
+    end. The shrimp turns to look at the mark.
+- **Camera:** behind Kai's right shoulder, so Wren's face turns to us; at the earlier side angles her hood hid it.
+  - Kai is at frame left with his back three-quarters to us; Wren is at frame right.
+  - A slow push-in on 1s, the characters on 2s.
+  - Faces and the bell stay clear of the B card.
+- **Weak spot:** the mark sits where S14 puts it (MARK_U 0.3, nearer the elbow), so on his raised forearm it's
+  small, close to his body, in front of the shrimp's crest. It reads as a coral flare more than a crisp zigzag.
+  If you want it to read bigger I can scale the 2D mark up (the shape stays the same) or move it toward the wrist.
+- **Render:** about 150 s/frame at full size here (a guess from v1). Once you OK it, split the 160 frames like last
+  time. The steps below still apply with the new range: 160 frames, `--frames A-B`, parts `S20bot_fAAA-BBB.mp4`.
+  - **The 2D pass needs `build/.../S20bot_mark.json`.** The builder writes it on every render, so I regenerate it
+    here before the join.
+  - Then `post_helper4.py S20bot` (no longer join_parts.py: S20bot has a 2D pass now) gives the final.
+
+
 Updated 2 Nov 2026.
 
 | Shot | State | File |
