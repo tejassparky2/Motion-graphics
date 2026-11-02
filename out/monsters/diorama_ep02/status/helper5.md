@@ -15,7 +15,12 @@ Code: channels/monsters/diorama_ep02/helper5.py (3D), post_helper5.py (2D pass +
 
 Known caveat: in S12 the raised claw points up/outward rather than squarely at Kai's face.
 
-## S20bot f053-078 (render job for helper 4; range cut from f104 by the coordinator, helper 3 takes f079-104)
-**Rendering** since 2026-11-02 12:50 UTC: helper4.py builder, `--frames 53-78` (S20bot has ones=(1, n), so every
-frame renders on 1s and f53 is a clean chunk start). Raw part goes to `parts/S20bot_f053-078.mp4` (crf 6 yuv444p,
-bitexact, no tags). Restarted on the smaller range before any frame was saved, so nothing past f78 exists. ETA about 1-1.5 h.
+## S20bot f053-078 (render job for helper 4) — **DONE, pushed**
+`parts/S20bot_f053-078.mp4`: 26 frames (render f53-78), 720x1280, yuv444p crf 6, 24 fps, bitexact + remux, 0 tags.
+helper4.py builder, `--frames 53-78` (ones=(1, n): every frame on 1s, so f53 is a clean start). About 170 s/frame.
+Nothing past f78 was rendered (helper 3 has f079-104).
+
+## S14 f041-075 (render job for helper 9)
+**Rendering** since 13:58 UTC with helper9.py, `--frames 41-75` (helper 9 renders f001-040; ones=(1, 75)).
+Raw part to helper 9's spec: `parts/S14_f041-075.mp4` (libx264 crf 10 yuv420p 24 fps, CLEAN flags,
+`-start_number 41`, no 2D pass). ETA about 1.5-2 h.
