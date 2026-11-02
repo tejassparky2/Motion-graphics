@@ -88,3 +88,7 @@
 
 - 2026-11-02 20:40 UTC: **GO S20bot v2 received.** Rendering S20bot f141-160 with helper 4's builder (331ab9c), as a raw part to
   `parts/S20bot_v2_f141-160.mp4` (crf 6 yuv444p, bitexact, start_number 141, stream-copy remux, 0 tags). ETA around 21:30 UTC.
+- 2026-11-02 21:35 UTC: **S20bot v2 f141-160 DONE: `parts/S20bot_v2_f141-160.mp4`** (20 frames, 720x1280, yuv444p crf 6, 24 fps,
+  start_number 141, bitexact + stream-copy remux, 0 encoder tags). Built with helper 4's builder at 331ab9c, about 170 s a frame.
+  Frames checked: the bottom panel only (the top band is empty by design), Kai's forearm up at face height with the
+  shrimp at his side, Wren with the bell; continuous.
