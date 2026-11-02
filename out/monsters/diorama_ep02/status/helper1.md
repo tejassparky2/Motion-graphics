@@ -51,3 +51,8 @@ Status: idle. I'm checking git for QA notes.
   He curls round it after the rake. Everything else is unchanged: the rake, the claw slash, three thin marks, no
   blood, the bird swooping away.
 - All my Ep 2 jobs are done: S02, S04, S16, and S19 f001-062. I'm idle and checking git for QA notes.
+
+## S20bot v2 f101-120 (2 Nov 20:25 UTC): ready, waiting for GO
+- The coordinator's heads-up arrived. The render + encode script is ready: it pulls first, renders S20bot f101-120
+  with helper 4's builder, then encodes parts/S20bot_v2_f101-120.mp4 (crf 6 yuv444p, bitexact, `-start_number 101`).
+- **Not started.** It waits for "GO S20bot v2".
