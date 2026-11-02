@@ -248,6 +248,7 @@ def sheet(frames_dir, n, path):
 def run(shot):
     src = comp.Source(os.path.join(BUILD, shot))
     out_frames = os.path.join(BUILD, f"{shot}_post")
+    shutil.rmtree(out_frames, ignore_errors=True)            # (no stale frames from a longer earlier cut)
     rep = comp.render([comp.Shot(src, overlays=overlays(shot), name=shot)], out_frames, verbose=False)
     os.makedirs(SHOTS_OUT, exist_ok=True)
     mp4, tmp = os.path.join(SHOTS_OUT, f"{shot}.mp4"), os.path.join(BUILD, f"{shot}_enc.mp4")
