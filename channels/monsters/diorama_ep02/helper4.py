@@ -546,6 +546,12 @@ def s20bot():
     cdir = (fwd * 0.6 + Vector((-fwd.y, fwd.x, 0)) * -0.8).normalized()
     yaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     del left
+    # render only the bottom band (helper 8 crops it under the divider; the jagged divider reaches ~45 px above the
+    # middle, so the band goes to 58% of the height): about 40% less render time, the top of the frame left empty
+    sc.render.use_border = True
+    sc.render.use_crop_to_border = False
+    sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
+    sc.render.border_min_y, sc.render.border_max_y = 0.0, 0.58
     X._cam_move("S20Bcam", n, (tgt, 15.0, 6.0, yaw + 18.0, 34.0, 0.27), (tgt, 13.6, 6.0, yaw + 18.0, 34.0, 0.27))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"], bulge],
                 beats=dict(turn=f_turn0, hide=f_hide, inside=f_in, glance=f_back0))
