@@ -1,10 +1,10 @@
 # bGqrs status (Ep 2)
 
-Updated 2 Nov 2026, 20:40 UTC.
+Updated 2 Nov 2026, 21:40 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S20bot v2 f081-100 | **Rendering** (GO 20:36; started 20:37 UTC). Helper 4's builder at 3b479cf, every frame on 1s (ones=(1, n)), so it starts at f81. Then a raw part: crf 6, yuv444p, bitexact, no tags, -start_number 81, no 2D pass. About 180 s/frame, so done around 21:50 UTC. | parts/S20bot_v2_f081-100.mp4 (pending) |
+| S20bot v2 f081-100 | **Raw part, pushed** (for helper 4 to join). 20 frames (f81-100), 720x1280 at 24 fps, crf 6, yuv444p, bitexact, -start_number 81, no 2D pass, 0 encoder tags. Helper 4's builder at 3b479cf. f98 matches okstills/S20bot_v2_f098.png apart from the 2D flare (helper 4's pass): the shrimp in his right hand at his side, the left forearm up toward Wren. About 200 s/frame here (20:37-21:38 UTC). | parts/S20bot_v2_f081-100.mp4 |
 | S01 | **Final, pushed** (9f77411). 78/78 frames, 720x1280 at 24 fps, crf 10, 0 encoder tags. A long-lens race: Kai sprints with his hand out from frame 0; the dark bird dives head-on from the thorn tree, its shadow a streak on the grass, and ends beside his hand. The shrimp sits at the pond edge, above the caption band. | shots/S01.mp4 + S01_sheet.jpg |
 | S20bot f105-130 | **Raw part, pushed** (for helper 4 to join). 26 frames (f105-130), 720x1280 at 24 fps, crf 6, yuv444p, bitexact, 0 encoder tags. Helper 4's builder from f104 (the chunk rule; f104 is not in the part). The render stopped once f130 was saved: no frames past f130 were rendered, so there is no extra part. Wren's glance back lands as approved. About 180 s/frame here. | parts/S20bot_f105-130.mp4 |
 | S15 f021-030 | **Raw part, pushed** (for helper 9, in place of helper 2). 10 frames (f21-30), 720x1280 at 24 fps, libx264 crf 10, yuv420p, CLEAN, -start_number 21, no 2D pass, 0 encoder tags. Helper 9's builder at 3485984. The framing matches helper 9's OK still S15_f020_h9 (the glowing crack is helper 9's 2D pass, not in the raw part). About 400 s/frame here. | parts/S15_f021-030.mp4 |
@@ -19,4 +19,4 @@ Known weak points (I'll fix them if QA wants):
 - S01: Kai is about 35% of the frame height. A tighter shot on him would cut the shrimp or the bird out of the portrait frame.
 - S01: the long lens flattens the dive, so the bird reads as coming at the lens more than falling.
 
-Status: rendering S20bot v2 f081-100. I'm checking git for QA notes.
+Status: idle. I'm checking git for QA notes.
