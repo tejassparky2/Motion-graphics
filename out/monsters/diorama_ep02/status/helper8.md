@@ -7,9 +7,9 @@
 - 1376 frames, 57.33 s, 1080x1920, no encoder tags.
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
 
-**Shots in (15 + the S20 top half):** S01-S04, S06-S13, S16-S18, and S20top (XprL, d584790). They're 720 renders scaled to 1080 with lanczos; there are no ESRGAN versions yet (say if Ep 2 should get them, as Ep 1 v3 did).
+**Shots in (16 + the S20 top half):** S01-S13, S16-S18, and S20top (XprL, d584790). They're 720 renders scaled to 1080 with lanczos; there are no ESRGAN versions yet (say if Ep 2 should get them, as Ep 1 v3 did).
 
-**Placeholders (numbered cards):** S05, S14, S15, S19 and S20bot.
+**Placeholders (numbered cards):** S14, S15, S19 and S20bot.
 
 ## Checks on the real frames
 - **The hook is on frame 0:** I SAVED / THE SHRIMP / THAT TRIED / TO KILL ME (the last line red), shown until line 1 ends (f63).
@@ -23,6 +23,7 @@
     - S01: over the grass, above the shrimp.
     - S02: grass under the diving bird.
     - S03/S04: under his hands, so the scratched forearm stays visible.
+    - S05: under the dripping claw in the hands shot. In the terror-eyes close-up it crosses the back of the shrimp's fluff: no face is covered, and his face fills the top.
     - S06: under the profile shrimp on the plain ground.
     - S08/S12/S13: on his body.
     - S11: under the puffball.
