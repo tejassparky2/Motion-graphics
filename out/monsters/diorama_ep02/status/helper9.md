@@ -56,3 +56,9 @@
   S14 gets the same fix.
 - S19: re-rendering f001-048 here (crane fix), ETA around 16:40. S14: waiting on helper 3 f058-066 and helper 6 f067-075
   (helper 5's f041-057 is in).
+
+- 2026-11-02 15:45 UTC: **The fixed helper9.py (crane over his shoulder, absolute haze) is pushed: use bbd52b1 or later.**
+  S19 re-render as the coordinator split it: **I do f001-016** (it stops itself after f016; my first frames are about to
+  render). **Helper 10: f017-032, helper 4: f033-048**, as RAW parts to my spec (`parts/S19_f017-032.mp4`,
+  `parts/S19_f033-048.mp4`). Frames 49-124 stay from the existing parts. **The existing S19_f001-062.mp4 is now stale for
+  f001-048**: my join prefers the new frames, so please don't delete it. **S15.mp4 is already pushed.**
