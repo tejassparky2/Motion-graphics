@@ -1,13 +1,14 @@
 # helper 8: Ep 2 assembly status
 
-**Updated:** 2 Nov 2026, ~13:05 UTC. Branch head when written: see the commit that last touched this file.
+**Updated:** 2 Nov 2026, ~13:45 UTC (on the re-voiced timing, 0a7b842). Branch head when written: see the commit that last touched this file.
 
 ## The picture
+- **Rebuilt on the re-voiced timing (0a7b842):** l2 "The bird struck first." is captioned on S02, and the 1-frame cut moves are in (S02 32, S03 51 from f98, S09 82 from f473, S12 63, S18 75, S20 145 from f1231). Every shot conforms inside its handle with no hold warnings, and the edge scan is clean.
 `out/monsters/diorama_ep02/picture.mp4` (+ `picture_sheet.jpg`, every 12th frame):
 - 1376 frames, 57.33 s, 1080x1920, no encoder tags.
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep02 --animatic --check`.
 
-**Shots in (16 + the S20 top half):** S01-S13, S16-S18, and S20top (XprL, d584790). **ESRGAN (approved 2 Nov):** the 17 landed shots are being upscaled now to `shots_1080/`, next to the 720 renders. It runs as two queues of `--threads 2` on the fast path, ~25-30 min. The assembler takes `shots_1080/<SHOT>.mp4` whenever it exists, so the final picture is built from the ESRGAN versions. S14, S15, S19, S20bot and the re-rendered S02 get the same treatment as they land.
+**Shots in (16 + the S20 top half):** S01-S13, S16-S18, and S20top (XprL, d584790). **ESRGAN (approved 2 Nov): done for all 17 landed shots** (S01-S13, S16-S18, S20top) in `shots_1080/`, next to the 720 renders. It ran as two queues of `--threads 2` on the fast path, ~3.5 s/frame each, 45 min in all. picture.mp4 is now built from them: every landed shot is `[1080]` and none uses lanczos. The assembler takes `shots_1080/<SHOT>.mp4` whenever it exists, so the final picture is built from the ESRGAN versions. S14, S15, S19, S20bot and the re-rendered S02 get the same treatment as they land.
 
 **Placeholders (numbered cards):** S14, S15, S19 and S20bot.
 

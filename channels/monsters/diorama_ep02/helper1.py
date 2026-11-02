@@ -78,7 +78,8 @@ def _world(n):
 # ------------------------------------------------------------------------------------------------------------ S02
 DIVE = (0.74, 0.95)         # how far down bGqrs's dive line (thorn perch -> the shrimp's back) the bird is at the
                             # first and last frame: S01 ends at 0.74; S03 shows only its shadow; S04 has it on top
-F_FOLD = 10                 # the wings snap shut into a dart (spread and flared just before: the anticipation)
+S02_CAM = dict(toward=0.45, lift=0.6, dist=12.0, push=1.5, tilt=9.0, lens=35.0, shift=-0.04)
+F_FOLD = 7                  # the wings snap shut into a dart (spread and flared just before: the anticipation)
 
 
 def _fold(rig, n):
@@ -117,9 +118,9 @@ def _plunge(rig, n, perch):
     top = Vector((0.0, 0.0, perch.z / S))
     end = x3._local(rot, (to.x, to.y, 1.6), scale=S)
     p0, p1 = top.lerp(end, DIVE[0]), top.lerp(end, DIVE[1])
-    ctl = Vector((p1.x, p1.y, p0.z + 0.6))
+    ctl = Vector((p1.x, p1.y, p0.z + 0.2))                          # (QA: the drop starts sooner)
     for f in range(1, n + 3):
-        u = min(1.0, (f - 1) / max(1, n - 1)) ** 1.5
+        u = min(1.0, (f - 1) / max(1, n - 1)) ** 1.15
         q = (1 - u) ** 2 * p0 + 2 * u * (1 - u) * ctl + u * u * p1
         anim.key(lift, "location", f, tuple(q), "LINEAR")
 
@@ -149,9 +150,10 @@ def s02():
     bpy.context.scene.frame_set(n // 2)
     mid = lift.matrix_world.translation.copy()
     bpy.context.scene.frame_set(1)
-    tgt = shrimp.lerp(mid, 0.5) + Vector((0, 0, 0.6))
-    a = (tuple(tgt), 13.0, 9.0, yaw, 30.0, -0.08)
-    b = (tuple(tgt + Vector((0, 0, -0.2))), 11.0, 9.0, yaw + 2.0, 30.0, -0.08)
+    tgt = shrimp.lerp(mid, S02_CAM["toward"]) + Vector((0, 0, S02_CAM["lift"]))   # (QA: the shrimp big and clear)
+    c = S02_CAM
+    a = (tuple(tgt), c["dist"], c["tilt"], yaw, c["lens"], c["shift"])
+    b = (tuple(tgt + Vector((0, 0, -0.1))), c["dist"] - c["push"], c["tilt"], yaw + 2.0, c["lens"], c["shift"])
     cam = _cam_move("cam_s02", n, a, b)
     from channels.monsters.diorama_v3.helper1 import _clear_view
     keep = {bird["root"], *bird["root"].children_recursive, sh["root"], *sh["root"].children_recursive}
@@ -302,7 +304,8 @@ def _clear_smoke(cam, frames, target):
     around the camera) at any of `frames`."""
     from bpy_extras.object_utils import world_to_camera_view
     sc = bpy.context.scene
-    puffs = [o for o in sc.objects if o.name.startswith("puff") and o.type == "EMPTY"]
+    puffs = [o for o in sc.objects if o.name.startswith("puff") and o.type == "EMPTY" and o.parent is None
+             and not o.name.startswith("puff_root")]                 # (puff_root is the shrimp itself)
     hide = set()
     for f in frames:
         sc.frame_set(f)

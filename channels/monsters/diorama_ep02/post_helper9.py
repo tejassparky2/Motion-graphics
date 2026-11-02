@@ -15,7 +15,8 @@ The zigzag is the Ep 1 crack (helper 3's S09_spark.json "crack", the tank crack 
     /home/user/tools/postenv/bin/python channels/monsters/diorama_ep02/post_helper9.py S14            # mp4 + sheet
     /home/user/tools/postenv/bin/python channels/monsters/diorama_ep02/post_helper9.py S14 --still 52  # one frame
 
-Reads build/monsters/diorama_ep02/<SHOT>/0001.png ... (render_shot.py's OUT_DIR); writes <SHOT>_post/ there, then
+Reads build/monsters/diorama_ep02/<SHOT>/0001.png ... (render_shot.py's OUT_DIR), filling any frames rendered elsewhere
+from the raw parts in out/monsters/diorama_ep02/parts/<SHOT>_fAAA-BBB.mp4; writes <SHOT>_post/ there, then
 out/monsters/diorama_ep02/shots/<SHOT>.mp4 (crf 10, bitexact, stream-copy remux, no encoder strings) and
 <SHOT>_sheet.jpg.
 """
@@ -39,6 +40,7 @@ from channels.monsters.diorama_v3 import helper3_fx as h3fx  # noqa: E402
 
 BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep02")
 SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "shots")
+PARTS = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "parts")
 SPARK = os.path.join(ROOT, "out", "monsters", "diorama_v3", "shots", "S09_spark.json")
 CRACK = [[-0.1583, -0.5], [-0.1399, -0.347], [-0.0348, -0.2378], [0.0319, -0.0935], [0.0779, 0.0005],
          [-0.0014, 0.1177], [0.0614, 0.2237], [0.0758, 0.3353], [0.1583, 0.5]]      # S09_spark.json's, as a fallback
@@ -210,8 +212,39 @@ def sheet(frames_dir, n, path):
     out.save(path, quality=88)
 
 
+def join(shot, n):
+    """Fill build/.../<SHOT>/NNNN.png from the raw parts other helpers rendered (parts/<SHOT>_fAAA-BBB.mp4, frame A
+    first) wherever this container has no Blender frame; then check that every frame 1..n is there."""
+    import glob
+    import re
+    src_dir = os.path.join(BUILD, shot)
+    os.makedirs(src_dir, exist_ok=True)
+    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_f*.mp4"))):
+        m = re.search(r"_f(\d+)-(\d+)\.mp4$", part)
+        a, b = int(m.group(1)), int(m.group(2))
+        if all(os.path.exists(os.path.join(src_dir, f"{f:04d}.png")) for f in range(a, b + 1)):
+            continue
+        tmp = os.path.join(BUILD, f"{shot}_join")
+        shutil.rmtree(tmp, ignore_errors=True)
+        os.makedirs(tmp)
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", part, "-start_number", str(a),
+                        os.path.join(tmp, "%04d.png")], check=True)
+        got = sorted(os.listdir(tmp))
+        if len(got) != b - a + 1:
+            raise SystemExit(f"{part}: {len(got)} frames, expected {b - a + 1}")
+        for g in got:
+            if not os.path.exists(os.path.join(src_dir, g)):
+                shutil.move(os.path.join(tmp, g), os.path.join(src_dir, g))
+        shutil.rmtree(tmp)
+        print("joined", os.path.basename(part))
+    missing = [f for f in range(1, n + 1) if not os.path.exists(os.path.join(src_dir, f"{f:04d}.png"))]
+    if missing:
+        raise SystemExit(f"{shot}: missing frames {missing[0]}..{missing[-1]} ({len(missing)})")
+
+
 def run(shot):
     meta, A = anchors(shot)
+    join(shot, max(A))
     if shot == "S15":
         from_words = json.load(open(os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")))
         s = next(x for x in from_words["shots"] if x["shot"] == "S15")
