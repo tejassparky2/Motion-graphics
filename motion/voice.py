@@ -532,6 +532,7 @@ def clone_prefetch(texts):
     if ENGINE != "clone":
         return
     pairs = [t if isinstance(t, tuple) else (t, None) for t in texts]
+    pairs = [(t, w) for t, w in pairs if not _char(w)]   # Kokoro characters (e.g. Vex's gibberish) never use Turbo
     jobs = [[_voice_tags(_clone_say(t)), _clone_raw(t, w)] + ([_turbo_ref_wav(_turbo_char(w))] if _turbo_char(w) else [])
             for t, w in dict.fromkeys(pairs) if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w))]
     if not jobs:
@@ -611,7 +612,8 @@ def clone_check(takes, tries=3, slack=0.15):
     if CLONE_MODEL == "turbo":   # Turbo's pace varies with emotion; clarity and tag sounds stay strict, pace less so
         slack = max(slack, 0.3)
     tries = tries + 2 if any(_has_sound(t) for t, _, _ in takes) else tries
-    todo = [(t, p, w) for t, p, w in takes if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w) + ".ok")]
+    todo = [(t, p, w) for t, p, w in takes if t not in _EXTERNAL and not _char(w)
+            and not os.path.exists(_clone_raw(t, w) + ".ok")]
     if not todo:
         return
     if _checker is None:
