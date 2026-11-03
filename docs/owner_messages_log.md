@@ -293,3 +293,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-03** [image: ChatGPT-made baby vampire mascot, transparent PNG] Will go for vampire you need tripo 3d model or blender 3d model will it help?
 - **2026-11-03** But it's not matching our reference it seems high quality
 - **2026-11-03** [image: Vex redrawn in ChatGPT as a flat 2D cartoon sticker]
+- **2026-11-03** But it don't seems correctly standing on floor

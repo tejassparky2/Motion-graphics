@@ -22,5 +22,10 @@ Owner: "Can we make it that quality as him?" (the "Grim" mascot references, rese
   the ChatGPT image followed our "soft 3D vinyl-toy" prompt (glossy, many tones). New prompt: flat 2D cartoon sticker
   style; seen slightly from above for floor shots.- The owner regenerated Vex in the flat 2D style (`assets/mascot/vex/vex_flat_front.png`, 1159x1358): it now sits
   in the same visual family as the reference. `vex_test.py` points at this version (FOOT and EYES re-measured, flat
-  lid colour #ddcbec). The glossy version stays as `vex_front.png` for reference only.
+  lid colour #ddcbec). The glossy version stays as `vex_front.png` for reference only.- Owner: "it don't seems correctly standing on floor". `vex_ground.py` grounds him: a tight contact shadow under
+  each boot sole (found from the PNG's alpha), a soft occlusion pool, his own silhouette flattened onto the floor
+  as a faint cast shadow, ~0.6 px soft focus, a faint wash of the room's grey and the footage's grain. Tested at
+  Grim's exact spot and size in the reference floor shot (overlays patched out with floor from the same rows; the
+  frame is the other creator's and is not committed). The remaining gap is the camera angle: the floor is seen from
+  above, so the pose images should be drawn "seen slightly from above".
 
