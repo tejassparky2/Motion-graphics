@@ -300,3 +300,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-03** Giev prompts for what you want
 - **2026-11-03** You can't animate it??
 - **2026-11-03** Create 2.5 d or 2d moskot yourself which you can animate yourself
+- **2026-11-03** He doesn't look like biting atall

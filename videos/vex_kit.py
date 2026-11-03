@@ -561,3 +561,49 @@ def chef_hat(cr, x, y, s=1.0):
     for k in range(3):
         stroke_line(cr, [(-18 + k * 18, -10), (-18 + k * 18, 18)], 3, (0.75, 0.75, 0.8, 1), curve=False)
     cr.restore()
+
+
+def dish_back(cr, x, y, r):
+    """A shallow round pet water dish on the floor at (x, y): rim and water (draw the fish after this)."""
+    floor_shadow(cr, x, y + 4, r * 1.05, 0.3)
+    ellipse(cr, x, y - 6, r, r * 0.34)                     # outer wall
+    paint(cr, hexc("#5a8fd0"), INK, 5)
+    ellipse(cr, x, y - 14, r * 0.86, r * 0.26)             # water surface
+    cr.set_source(rad(x - r * 0.3, y - 20, r, [(0, (0.72, 0.9, 1.0, 1)), (1, (0.45, 0.72, 0.95, 1))]))
+    cr.fill()
+
+
+def dish_front(cr, x, y, r):
+    """The dish's front lip over the fish's lower half."""
+    cr.save()
+    cr.rectangle(x - r - 6, y - 14, 2 * r + 12, r)
+    cr.clip()
+    ellipse(cr, x, y - 6, r, r * 0.34)
+    paint(cr, hexc("#5a8fd0"), INK, 5)
+    ellipse(cr, x, y - 6, r * 0.78, r * 0.2)
+    cr.set_source_rgba(1, 1, 1, 0.25)
+    cr.fill()
+    cr.restore()
+    ellipse(cr, x, y - 14, r * 0.86, r * 0.26)
+    cr.set_source_rgba(*INK)
+    cr.set_line_width(4)
+    cr.stroke()
+
+
+def impact(cr, t, start, x, y, size=60):
+    """A white comic impact flash (bite, poke) popping and fading over 0.3 s."""
+    if not (start <= t < start + 0.3):
+        return
+    u = (t - start) / 0.3
+    k = math.sin(u * math.pi) * size
+    n = 8
+    for i in range(2 * n):
+        a = i * math.pi / n
+        r = k if i % 2 == 0 else k * 0.45
+        (cr.move_to if i == 0 else cr.line_to)(x + r * math.cos(a), y + r * math.sin(a))
+    cr.close_path()
+    paint(cr, (1, 1, 1, 0.95), INK, 4)
+    for i in range(5):
+        a = i * 2 * math.pi / 5 + 0.3
+        stroke_line(cr, [(x + math.cos(a) * k * 1.2, y + math.sin(a) * k * 1.2),
+                         (x + math.cos(a) * k * 1.7, y + math.sin(a) * k * 1.7)], 5, INK, curve=False)

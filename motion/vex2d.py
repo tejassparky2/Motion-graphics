@@ -237,7 +237,11 @@ def _arm(cr, t, side, arm, turn, hold=None, point=False):
     cr.translate(hx, hy)
     cr.rotate(ang)
     _path_fill(cr, _ell(14, 0, 45, 40), SKIN, SKIN_SH, lw=9)
-    if point:
+    if point == "claw":                              # three little grabbing fingers
+        for k in (-1, 0, 1):
+            _path_fill(cr, _poly([(40, k * 20 - 8), (74, k * 26 - 6), (78, k * 26 + 4), (40, k * 20 + 8)]),
+                       SKIN, SKIN_SH, lw=7)
+    elif point:
         _path_fill(cr, _poly([(36, -10), (82, -8), (84, 8), (36, 10)]), SKIN, SKIN_SH, lw=7)
     for k in (-1, 0, 1):
         _line(cr, [(36, k * 14 - 4), (48, k * 14), (38, k * 14 + 7)], 4)
@@ -349,6 +353,26 @@ def _mouth(cr, mx, my, mouth, talk, t):
             cr.set_line_width(5)
             cr.stroke()
         return
+    if mouth == "chomp":                           # jaws clamped shut on something, long fangs down, cheeks tight
+        cr.move_to(mx - w * 0.9, my - 6)
+        for k in range(7):
+            cr.line_to(mx - w * 0.9 + (k + 1) * w * 0.257, my - 6 + (7 if k % 2 == 0 else -3))
+        cr.set_source_rgba(*INK)
+        cr.set_line_width(10)
+        cr.stroke()
+        for fx in (mx - 30, mx + 30):
+            cr.move_to(fx - 13, my - 2)
+            cr.line_to(fx + 13, my - 2)
+            cr.line_to(fx, my + 44)
+            cr.close_path()
+            cr.set_source_rgba(*WHITE)
+            cr.fill_preserve()
+            cr.set_source_rgba(*INK)
+            cr.set_line_width(6)
+            cr.stroke()
+        for side in (-1, 1):                       # squeeze lines at the corners
+            _line(cr, [(mx + side * (w + 14), my - 22), (mx + side * (w + 26), my - 4)], 6, curve=False)
+        return
     if mouth == "frown":
         _line(cr, [(mx - w * 0.8, my + 14), (mx, my - 8), (mx + w * 0.8, my + 14)], 9)
         return
@@ -363,8 +387,9 @@ def _mouth(cr, mx, my, mouth, talk, t):
     if mouth == "o":
         _path_fill(cr, _ell(mx, my + 10, 26, 32), MOUTH_IN, None, lw=9)
         return
-    h = {"open": 48, "wide": 86, "grin": 58}.get(mouth, 48)
-    ww = w * (1.15 if mouth in ("grin", "wide") else 0.95)
+    h = {"open": 48, "wide": 86, "grin": 58, "bite": 118}.get(mouth, 48)
+    ww = w * (1.4 if mouth == "bite" else 1.15 if mouth in ("grin", "wide") else 0.95)
+    fang = 46 if mouth == "bite" else 26
     def shape(c):
         c.move_to(mx - ww, my - 4)
         c.curve_to(mx - ww * 0.4, my + 2, mx + ww * 0.4, my + 2, mx + ww, my - 4)
@@ -381,9 +406,9 @@ def _mouth(cr, mx, my, mouth, talk, t):
     cr.fill()
     cr.restore()
     for fx in (mx - ww * 0.48, mx + ww * 0.48):    # fangs
-        cr.move_to(fx - 11, my - 2)
-        cr.line_to(fx + 11, my - 2)
-        cr.line_to(fx, my + 26)
+        cr.move_to(fx - 11 - (4 if fang > 30 else 0), my - 2)
+        cr.line_to(fx + 11 + (4 if fang > 30 else 0), my - 2)
+        cr.line_to(fx, my + fang)
         cr.close_path()
         cr.set_source_rgba(*WHITE)
         cr.fill_preserve()
@@ -513,12 +538,14 @@ def floor_shadow(cr, x, y, s, lift=0.0, legs="stand"):
 def vex(cr, t, x, y, s=0.33, turn=0.0, lean=0.0, squash=0.0, tilt=0.0, look=(0.0, 0.0), eyes="open", brows=None,
         mouth="smirk", talk=None, arms=("rest", "rest"), hold=(None, None), point=(False, False), legs="stand",
         walk=None, cape=0.0, blink=0.0, blush=True, tears=False, lift=0.0, rot=0.0, pivot="feet", shadow=True,
-        flip=False):
-    """Draw Vex with his feet at (x, y)."""
+        flip=False, held=None):
+    """Draw Vex with his feet at (x, y). held(cr): draws something he holds in front of him (screen coordinates),
+    between his face and his hands, so his fingers grip it."""
     if shadow:
         floor_shadow(cr, x, y, s, lift, legs)
     bob = 0.012 * math.sin(t * 3.1)
     sit = 110 if legs == "sit" else 0
+    outer = cr.get_matrix()
     cr.save()
     cr.translate(x, y - lift)
     if pivot == "center":
@@ -544,11 +571,16 @@ def vex(cr, t, x, y, s=0.33, turn=0.0, lean=0.0, squash=0.0, tilt=0.0, look=(0.0
     hands = {}
     late = []
     for side, arm, hd, pt in ((-1, arms[0], hold[0], point[0]), (1, arms[1], hold[1], point[1])):
-        if isinstance(arm, str) and arm in OVER_HEAD:
+        if held or (isinstance(arm, str) and arm in OVER_HEAD):
             late.append((side, arm, hd, pt))
         else:
             hands[side] = _arm(cr, t, side, arm, turn, hd, pt)
     _head(cr, t, turn, tilt, eyes, brows, mouth, talk, look, blink, blush, tears)
+    if held:
+        inner = cr.get_matrix()
+        cr.set_matrix(outer)
+        held(cr)
+        cr.set_matrix(inner)
     for side, arm, hd, pt in late:
         hands[side] = _arm(cr, t, side, arm, turn, hd, pt)
     cr.restore()
