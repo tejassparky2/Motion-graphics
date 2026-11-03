@@ -26,11 +26,11 @@ voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.12, pitch=11, forma
 
 SCRIPT = [
     dict(id="b1", scene="floor", text="Snack?", speaker="vex"),
-    dict(id="b2", scene="floor", text="Vex, no. That's a pufferfish."),
+    dict(id="b2", scene="floor", text="Vex, no. That's a pufferfish.", gap=0.5),
     dict(id="b3", scene="floor", text="I'm a vampire. I bite everything.", speaker="vex"),
     dict(id="b4", scene="floor", text="Don't. When it's scared, it blows up into a spiky ball."),
     dict(id="b5", scene="floor", text="OW!", speaker="vex", gap=0.15),
-    dict(id="b6", scene="floor", text="Then I'll cook it first.", speaker="vex", gap=0.7),
+    dict(id="b6", scene="floor", text="Then I'll cook it first.", speaker="vex", gap=1.4),
     dict(id="b7", scene="floor", text="Cooking won't help. Its poison doesn't break down with heat. And there's no "
                                       "antidote."),
     dict(id="b8", scene="floor", text="Poison? Where does a tiny fish get poison?", speaker="vex"),
@@ -374,6 +374,7 @@ def draw(cr, t, tl):
                       ("b6", "then i'll cook it first"), ("b8", "poison?? where does a tiny fish get poison?"),
                       ("b10", "so a fish with clean food is safe to bite!"), ("b12", "i'll have juice.")):
         bb = tl.by_id[bid]
-        K.reply(cr, t, bb.start, bb.end + 0.45, x, VY - 1110 * S - (0 if bid != "b12" else -110 * S), text,
-                size=46 if len(text) > 26 else 54, font="Comic Neue")
+        lift_sub = 55 if bid in ("b6", "b8", "b10") else 0            # clear of the chef hat
+        K.reply(cr, t, bb.start, bb.end + 0.7, x, VY - 1110 * S - lift_sub - (0 if bid != "b12" else -110 * S), text,
+                size=50 if len(text) > 26 else 58, font="Comic Neue")
     K.comic_captions(cr, t, tl, skip="vex", y=880, size=54, line_chars=21)

@@ -11,6 +11,8 @@ for v in sys.argv[1:]:
     for b in tl.beats:
         if not b.units:          # silent beat (memes): nothing to hear
             continue
+        if b.speaker and voice.SPEAKERS.get(b.speaker, {}).get("babble"):   # gibberish on purpose (Vex): subtitles carry it
+            continue
         a = np.concatenate([np.zeros(int(0.6 * voice.SR)), b.audio, np.zeros(int(0.6 * voice.SR))])
         a16 = np.interp(np.arange(int(len(a)*16000/voice.SR))*voice.SR/16000, np.arange(len(a)), a).astype(np.float32)
         heard = " ".join(s.text.strip() for s in m.transcribe(a16, language="en", beam_size=5)[0])

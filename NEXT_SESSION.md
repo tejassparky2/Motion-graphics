@@ -30,6 +30,12 @@ also push here. The repo is **public**.
   (sprite grounded with contact shadows, blinks, squash, wobble, spins; photo push-in; inflating pufferfish, bowl,
   props). Episode 1 vex_ep1_pufferfish made (36.3 s, script out/scripts_vex_ep1.md, approved). Waiting for the
   owner's ChatGPT pose set (seen slightly from above) to swap in for better acting; add each to vex_kit.POSES.
+- **Vex series, how it works now (3 Nov 2026, after the owner rejected the first cut):** reference style only (one
+  close bright floor shot assets/mascot/photos/crops/close_living.png, no music MUSIC="none", no hook text/cards/buttons,
+  Comic Neue captions for the keeper, Vex's meaning as red handwriting). Vex is code-drawn (motion/vex2d.py) and speaks
+  gibberish (SPEAKERS babble=True: Kokoro af_heart +11 st formant-shifted ~394 Hz, like the reference's ~416 Hz).
+  Scripts are conversations: Vex asks or does the wrong thing, the keeper answers. Keeper = Turbo am_michael until
+  the owner records his lines. Episode 1 = videos/vex01_pufferfish.py (33.7 s).
 - **Downloads:** YouTube and Instagram block downloads from the cloud server; don't try to get around their bot
   checks. The owner's laptop is Windows (C:\Users\tejas\Documents\shorts research, Claude desktop app), which a
   cloud chat can't attach to; downloads run in the owner's local session there with yt-dlp.

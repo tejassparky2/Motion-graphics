@@ -192,12 +192,18 @@ def reply(cr, t, start, end, x, y, text, size=42, font="Kalam"):
     if k <= 0.01:
         return
     from motion.polish import text_width
-    half = text_width(cr, text, size, font) / 2 + size * 0.2
+    lines = [text]
+    if text_width(cr, text, size, font) > W - 70:          # too wide: two lines, split near the middle
+        words = text.split()
+        best = min(range(1, len(words)), key=lambda i: abs(len(" ".join(words[:i])) - len(" ".join(words[i:]))))
+        lines = [" ".join(words[:best]), " ".join(words[best:])]
+    half = max(text_width(cr, ln, size, font) for ln in lines) / 2 + size * 0.2
     x = min(max(x, half + 16), W - half - 16)          # keep the whole line on screen
     cr.save()
-    cr.translate(x, y + 3 * math.sin(t * 5))
+    cr.translate(x, y + 3 * math.sin(t * 5) - (len(lines) - 1) * size * 1.05)
     cr.scale(k, k)
-    bold_text(cr, text, 0, 0, size, RED, font=font, outline=(1, 1, 1, 1), ow=size * 0.17, shadow=0)
+    for i, ln in enumerate(lines):
+        bold_text(cr, ln, 0, i * size * 1.1, size, RED, font=font, outline=(1, 1, 1, 1), ow=size * 0.17, shadow=0)
     cr.restore()
 
 
