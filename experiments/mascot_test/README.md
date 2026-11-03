@@ -17,3 +17,8 @@ Owner: "Can we make it that quality as him?" (the "Grim" mascot references, rese
   drawn over the eyes (EYES = eye centres in the image), a red reply line. A pose set from ChatGPT gives the rest.
 - 3D (Tripo -> rig -> Blender) is not needed for this format: chibi proportions rig badly, the face needs its own
   expression controls, and Blender is not installed on this server. Worth it only for walking or turning shots.
+- Owner: "it's not matching our reference it seems high quality". Close-ups of the reference show why: it is a flat
+  2D cartoon (flat black/white/red/yellow, very light shading, clean outline, simple circle eyes, no gloss), while
+  the ChatGPT image followed our "soft 3D vinyl-toy" prompt (glossy, many tones). New prompt: flat 2D cartoon sticker
+  style; seen slightly from above for floor shots.
+
