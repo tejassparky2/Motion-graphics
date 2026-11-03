@@ -192,6 +192,43 @@ SPEAKERS = {}
 # name). Turbo copies the timbre of a short Kokoro clip in that voice (synthetic, nobody real is cloned).
 
 
+# nonsense syllable -> its sound in Kokoro's phoneme alphabet (misaki): made-up words have no dictionary entry
+BABBLE_SYL = {"nya": "njɑ", "mi": "mi", "bu": "bu", "pa": "pɑ", "meh": "mɛ", "ka": "kɑ", "pi": "pi", "po": "pO",
+              "nyu": "nju", "mah": "mɑ", "wa": "wɑ", "ba": "bɑ", "ni": "ni", "pu": "pu", "mo": "mO", "ya": "jɑ",
+              "ku": "ku", "bi": "bi", "nu": "nu", "pya": "pjɑ", "mu": "mu", "ki": "ki", "bo": "bO", "wi": "wi"}
+_SYL = list(BABBLE_SYL)
+BABBLE_KEEP = {"ow": ("owwie", "ˈWwi"), "ooh": ("oooh", "ˈu"), "no": ("nuu", "nˈu"), "nooo": ("nuuuu", "nˈuu"),
+               "yay": ("yaay", "jˈA"), "hmm": ("hmmm", "hˈʌm"), "oh": ("ooh", "ˈO"), "huh": ("huh", "hˈʌ"),
+               "wow": ("waah", "wˈɑ")}
+
+
+def babble(text, markup=False):
+    """Cute gibberish with the line's rhythm: one nonsense syllable per syllable of each word (same word -> same
+    sounds), punctuation kept so questions still rise and shouts still shout (owner, 3 Nov 2026: the reference
+    mascot "is not talking English it's just some cute sounds viewers get it from subs"). markup=True gives Kokoro
+    the sounds directly ("[nyapi](/njˈɑpi/)")."""
+    import zlib
+    out = []
+    for word in re.findall(r"[A-Za-z']+|[.,!?]+", strip_tags(text)):
+        if not word[0].isalpha():
+            if out:
+                out[-1] += word
+            continue
+        w = word.lower().replace("'", "")
+        if w in BABBLE_KEEP:
+            shown, ph = BABBLE_KEEP[w]
+        else:
+            n = max(1, min(3, len(re.findall(r"[aeiouy]+", w))))
+            h = zlib.crc32(w.encode())
+            syl = [_SYL[(h >> (5 * k)) % len(_SYL)] for k in range(n)]
+            shown = "".join(syl)
+            ph = "".join((("ˈ" if k == 0 else "") + BABBLE_SYL[x]) for k, x in enumerate(syl))
+            first = BABBLE_SYL[syl[0]]                 # stress goes before the vowel of the first syllable
+            ph = first[:-1] + "ˈ" + first[-1] + ph[len(first) + 1:] if len(first) > 1 else ph
+        out.append(f"[{shown}](/{ph}/)" if markup else shown)
+    return " ".join(out)
+
+
 def _char(who):
     spec = SPEAKERS.get(who) if (who and (ENGINE in ("kokoro", "elevenlabs") or CLONE_MODEL == "turbo")) else None
     return None if (spec and _turbo_char(who)) else spec
@@ -250,6 +287,8 @@ def _key(text, pace=1.0, who=None, tone=None):
         return _el_spec(text, pace, who, tone)[0]
     if spec:
         tag = f"{spec.get('voice')}|{spec.get('speed', 1.0)}|{spec.get('pitch', 0.0)}"
+        if spec.get("babble") or spec.get("formant"):
+            tag += f"|babble={spec.get('babble')}|formant={spec.get('formant')}"
         return hashlib.sha1(f"char|{tag}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
     if text in _EXTERNAL:   # lines cut from an uploaded narration are keyed by that file
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
@@ -358,12 +397,14 @@ def synth(text, pace=1.0, who=None, tone=None):
         if not os.path.exists(out):
             os.makedirs(os.path.dirname(out), exist_ok=True)
             raw = out + ".raw.wav"
-            _kokoro_wav(_pronounce(strip_tags(text)), SPEED * pace * spec.get("speed", 1.0), raw, spec.get("voice"))
+            say = babble(text, markup=True) if spec.get("babble") else _pronounce(strip_tags(text))
+            _kokoro_wav(say, SPEED * pace * spec.get("speed", 1.0), raw, spec.get("voice"))
             st = spec.get("pitch", 0.0)
-            if abs(st) > 0.01:   # pitch only (tempo kept), for a character's colour
+            if abs(st) > 0.01:   # pitch only (tempo kept), for a character's colour; formant "shifted" = smaller
                 import imageio_ffmpeg
+                fm = f":formant={spec['formant']}" if spec.get("formant") else ""
                 subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", raw, "-filter:a",
-                                f"rubberband=pitch={2 ** (st / 12):.5f}:pitchq=quality:transients=crisp", "-ar",
+                                f"rubberband=pitch={2 ** (st / 12):.5f}:pitchq=quality:transients=crisp{fm}", "-ar",
                                 str(SR), "-ac", "1", out], check=True)
                 os.remove(raw)
             else:

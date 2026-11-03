@@ -13,7 +13,7 @@ from videos import vex_kit as K
 NARRATOR = dict(turbo=True)
 TAIL = 0.6
 MUSIC = "none"
-voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.05, turbo_ref="af_heart+5", post_pitch=6)})   # ~400 Hz like Grim
+voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.12, pitch=11, formant="shifted", babble=True)})   # cute gibberish ~400 Hz like Grim; the red subtitles carry the meaning
 
 SCRIPT = [
     dict(id="v1", scene="floor", text="Vex, try and bite this pufferfish."),

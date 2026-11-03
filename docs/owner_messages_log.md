@@ -302,3 +302,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-03** Create 2.5 d or 2d moskot yourself which you can animate yourself
 - **2026-11-03** He doesn't look like biting atall
 - **2026-11-03** And make his voice cuter like that grim ripper
+- **2026-11-03** Grim is not talking English it's just some cute sounds viewers get it from subs and the reel should be like communicating vex asking questions or making wrong things I am answering making him write not one side explanation

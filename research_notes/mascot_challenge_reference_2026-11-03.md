@@ -63,3 +63,10 @@ Fix for the series: one close bright floor shot, no overlays, Comic Neue caption
 characters big in the middle, a script built as attempts (each a new pose + prop + one fact), all art from ChatGPT
 in the same style, and a real or casual keeper voice.
 
+# Owner's correction (3 Nov 2026)
+- The mascot doesn't speak English: cute gibberish sounds, with the meaning only in the red subtitles.
+- The reel is a conversation: the mascot asks questions or does the wrong thing, and the keeper answers and corrects
+  him. Facts come out as answers, never as a one-sided explanation.
+- Built: voice.babble() (one nonsense syllable per syllable, punctuation kept, Kokoro af_heart +11 st formant-shifted
+  ~ 394 Hz vs Grim ~416 Hz); script v2 out/scripts_vex_ep1_v2.md.
+
