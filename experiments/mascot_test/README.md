@@ -20,5 +20,7 @@ Owner: "Can we make it that quality as him?" (the "Grim" mascot references, rese
 - Owner: "it's not matching our reference it seems high quality". Close-ups of the reference show why: it is a flat
   2D cartoon (flat black/white/red/yellow, very light shading, clean outline, simple circle eyes, no gloss), while
   the ChatGPT image followed our "soft 3D vinyl-toy" prompt (glossy, many tones). New prompt: flat 2D cartoon sticker
-  style; seen slightly from above for floor shots.
+  style; seen slightly from above for floor shots.- The owner regenerated Vex in the flat 2D style (`assets/mascot/vex/vex_flat_front.png`, 1159x1358): it now sits
+  in the same visual family as the reference. `vex_test.py` points at this version (FOOT and EYES re-measured, flat
+  lid colour #ddcbec). The glossy version stays as `vex_front.png` for reference only.
 

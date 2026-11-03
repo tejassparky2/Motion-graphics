@@ -13,10 +13,10 @@ from motion.polish import appear, bold_text, rad  # noqa: E402
 D = "/tmp/claude-0/-home-user-Motion-graphics/f748781f-9eab-54dc-8b55-eb2264278477/scratchpad/mascot/"
 W, H, FPS = 720, 1280, 30
 bg = cairo.ImageSurface.create_from_png(D + "bg_25.2.png")
-vex = cairo.ImageSurface.create_from_png(D + "vex/vex_front.png")
+vex = cairo.ImageSurface.create_from_png(D + "vex/vex2_front.png")   # the flat 2D version
 VW, VH = vex.get_width(), vex.get_height()
-FOOT = (600, 1296)                     # boots' contact point in the image
-EYES = ((433, 508), (767, 508))        # eye centres in the image
+FOOT = (545, 1348)                     # boots' contact point in the image
+EYES = ((397, 570), (705, 590))        # eye centres in the image
 INK = (0.12, 0.05, 0.1, 1)
 
 
@@ -38,21 +38,21 @@ def blink_lids(cr, k):
     for ex, ey in EYES:
         cr.save()
         cr.translate(ex, ey)
-        cr.scale(114, 100)
+        cr.scale(110, 98)
         cr.arc(0, 0, 1, 0, 2 * math.pi)
         cr.restore()
         cr.save()
         cr.clip()
-        top = ey - 104
-        cr.rectangle(ex - 120, top, 240, 208 * k)
-        cr.set_source(rad(ex - 30, ey - 60, 200, [(0, (0.89, 0.83, 0.98, 1)), (1, (0.80, 0.73, 0.93, 1))]))
+        top = ey - 102
+        cr.rectangle(ex - 116, top, 232, 204 * k)
+        cr.set_source_rgba(0.867, 0.796, 0.925, 1)                      # flat skin, like the drawing
         cr.fill()
         cr.restore()
         if k > 0.85:                   # the closed eye: a soft curved lash line
             cr.move_to(ex - 92, ey + 8)
             cr.curve_to(ex - 40, ey + 46, ex + 40, ey + 46, ex + 92, ey + 8)
             cr.set_source_rgba(*INK)
-            cr.set_line_width(16)
+            cr.set_line_width(14)
             cr.set_line_cap(cairo.LINE_CAP_ROUND)
             cr.stroke()
 
@@ -107,12 +107,12 @@ def frame(t):
     for bt in (1.7, 3.45):
         if abs(t - bt) < 0.09:
             blink = 1 - abs(t - bt) / 0.09
-    shadow(cr, 350, 1062, 95, 1 - 0.5 * (1 - fall) if t < land else 1 + 0.15 * max(0, squash))
-    draw_vex(cr, t, 350, 1060 + yoff, 0.27, squash + breathe, wobble, min(1, blink * 1.6))
+    shadow(cr, 350, 1062, 80, 1 - 0.5 * (1 - fall) if t < land else 1 + 0.15 * max(0, squash))
+    draw_vex(cr, t, 350, 1060 + yoff, 0.21, squash + breathe, wobble, min(1, blink * 1.6))
     if t > 2.3:
         k = appear(t, 2.3, 0.3)
         cr.save()
-        cr.translate(350, 640)
+        cr.translate(350, 720)
         cr.scale(k, k)
         bold_text(cr, "i bite.", 0, 0, 52, (0.92, 0.12, 0.15, 1), font="Kalam", outline=(1, 1, 1, 1), ow=8, shadow=0)
         cr.restore()
@@ -122,11 +122,11 @@ def frame(t):
 ff = imageio_ffmpeg.get_ffmpeg_exe()
 p = subprocess.Popen([ff, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgra", "-s", f"{W}x{H}", "-r",
                       str(FPS), "-i", "-", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", "-map_metadata",
-                      "-1", "-fflags", "+bitexact", D + "vex/vex_test.mp4"], stdin=subprocess.PIPE)
+                      "-1", "-fflags", "+bitexact", D + "vex/vex2_test.mp4"], stdin=subprocess.PIPE)
 for f in range(int(4.2 * FPS)):
     p.stdin.write(bytes(frame(f / FPS).get_data()))
 p.stdin.close()
 p.wait()
 for name, tt in (("still", 3.0), ("blink", 1.7), ("land", 0.6)):
-    frame(tt).write_to_png(D + f"vex/vex_{name}.png")
+    frame(tt).write_to_png(D + f"vex/vex2_{name}.png")
 print("ok")
