@@ -28,4 +28,11 @@ Owner: "Can we make it that quality as him?" (the "Grim" mascot references, rese
   Grim's exact spot and size in the reference floor shot (overlays patched out with floor from the same rows; the
   frame is the other creator's and is not committed). The remaining gap is the camera angle: the floor is seen from
   above, so the pose images should be drawn "seen slightly from above".
+- Owner: "Create 2.5d or 2d mascot yourself which you can animate yourself". `motion/vex2d.py` draws Vex entirely in
+  code from the owner's design, so every part moves: head turn (2.5D: features slide, the far ear and eye tuck in),
+  9 eye states (open, happy, closed, angry, sad, shocked, dizzy, cry, sparkle), brows, 8 mouths plus lip sync from
+  the voice's loudness, arms by inverse kinematics to named hand targets (rest, up, point, out, hips, chin, front,
+  cheek, eyes, wave, reach), props in the fists, legs (stand, walk, sit, jump), a cape that billows and flares, tears,
+  blush, blinks, cel shading with a rim light. `vex2d_expressions.png` is the first sheet;
+  `videos/vex2d_demo.py` is episode 1's opening played by it in the reference's style.
 
