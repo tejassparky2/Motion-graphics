@@ -206,8 +206,8 @@ def draw(cr, t, tl):
     put_down = A("b12", end=True) + 0.25          # he sets the juice box on the floor ...
     sneak0, slurp0 = put_down + 0.35, b["b13"] - 0.7   # ... the fish sneaks over and drinks it
     slurp = seg(t, slurp0, slurp0 + 1.6)
-    BOX = (392, VY - 2)
-    straw_top = (BOX[0] + 30, BOX[1] - 118)
+    BOX = (382, VY - 2)
+    straw_end = (436, FY - 36)                     # a bendy straw from the box down into the fish's lips
     chomp, poke = A("b4", "scared"), b["b5"]
     grab2, freeze, puff2 = b["b11"], A("b11", "Not"), A("b11", "puff")
     drop_pan = A("b7", "antidote")
@@ -253,10 +253,10 @@ def draw(cr, t, tl):
         if puff2 + 0.25 <= t < puff2 + 0.6:
             u = seg(t, puff2 + 0.25, puff2 + 0.6)
             return lerp(mx + 6, in_dish[0], u), lerp(my + 66, in_dish[1], u * u)
-        if t >= sneak0:                             # leans out of the dish, lips on the straw
+        if t >= sneak0:                             # scoots to the dish's edge, lips on the straw
             u = ease_out(seg(t, sneak0, slurp0))
-            lip = straw_top[0] + (70 + 44 * puff) * fs * 0.96
-            return lerp(in_dish[0], lip, u), lerp(in_dish[1], straw_top[1] + 4 - 20 * puff, u)
+            lip = straw_end[0] + (70 + 44 * puff) * fs * 0.96
+            return lerp(in_dish[0], lip, u), lerp(in_dish[1], straw_end[1] - 10 * puff, u)
         return in_dish
 
     def draw_fish():
@@ -271,8 +271,9 @@ def draw(cr, t, tl):
         cr.translate(*BOX)
         cr.scale(1 - 0.15 * slurp, 1 - 0.35 * slurp)
         K.floor_shadow(cr, 0, 2, 34, 0.3)
-        stroke_line(cr, [(6, -60), (30, -118)], 7, INK, curve=False)
-        stroke_line(cr, [(6, -60), (30, -118)], 4, (1, 1, 1, 1), curve=False)
+        straw = [(6, -60), (14, -92), (straw_end[0] - BOX[0] - 6, straw_end[1] - BOX[1])]
+        stroke_line(cr, straw, 8, INK, curve=False)
+        stroke_line(cr, straw, 4, (1, 1, 1, 1), curve=False)
         rrect(cr, -22, -64, 44, 64, 7)
         paint(cr, (0.86, 0.16, 0.2, 1), INK, 4)
         rrect(cr, -15, -48, 30, 26, 5)
@@ -382,18 +383,18 @@ def draw(cr, t, tl):
                   eyes="dizzy" if v >= 1 else "cry", mouth="wobble", arms=("up", "up"), squash=land(t, puff2 + 0.45, 0.5),
                   tears=v >= 1)
     elif t < put_down:                              # "I'll have juice." sulking, sipping
-        x = 300
+        x = 250
         kw.update(legs="sit", eyes="sad", brows="sad", mouth="o", arms=("front", "front"), turn=0.0,
                   held=lambda c, x=x: juice_box(c, mouth_at(x, 0.0)[0], mouth_at(x, 0.0)[1] + 110 * S, t))
     elif t < b["b14"]:                              # sets it down, sulks ... then sees the fish drinking it
-        x = 300
+        x = 250
         sees = t >= A("b13", "Vex")
         shocked = t >= A("b13", "drinking")
         kw.update(legs="sit", turn=0.5 if sees else 0.0, look=(0.8, 0.3) if sees else (0.0, 0.6),
                   eyes="shocked" if shocked else ("open" if sees else "sad"), brows="up" if sees else "sad",
                   mouth="o" if shocked else "frown", arms=("cheek", "cheek") if shocked else ("down", "down"))
     else:                                           # "MY JUICE!" jumps up, crying
-        x = 300
+        x = 250
         j = seg(t, b["b14"], b["b14"] + 0.4)
         kw.update(lift=70 * math.sin(j * math.pi) if j < 1 else 0, legs="jump" if j < 1 else "stand",
                   squash=land(t, b["b14"] + 0.4, 0.6), turn=0.4, eyes="cry", brows="sad", tears=True,

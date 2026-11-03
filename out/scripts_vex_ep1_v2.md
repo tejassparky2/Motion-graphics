@@ -45,3 +45,14 @@ Alt titles: "My Vampire Found a Snack. It Was a Pufferfish. 🐡" / "Vex vs the 
 **Still to decide: the keeper's voice.**
 - **Best:** you record lines 2, 4, 7, 9, 11 and 13 on your phone, in your real voice.
 - **Otherwise:** a Turbo voice. Female (as now), or male like the reference's keeper.
+
+## Changes after the owner's feedback (3 Nov 2026: "Why changed the narrator voice and voice feeling robotic use tags
+... he see his ending its not match")
+- Keeper back to the channel's usual narrator (Turbo stock female); the male voice was my mistake.
+- Vex's gibberish now goes through Turbo with emotion tags ([laugh] on "Snack?", [sigh] on "I'll have juice.",
+  [sniff] on "MY JUICE!"), then +6 semitones with the formants moved (~350-440 Hz). The keeper gets [chuckle] and
+  [laugh].
+- Ending like the reference: a punchline, then cut. Line 13 is now "Uh, Vex? It's drinking your juice. [laugh]":
+  he set his juice box down, and the pufferfish drinks it through the straw, puffs up and turns tomato red.
+  Line 14, Vex: "MY JUICE!" Cut. The either/or question moves to the description and the pinned comment.
+

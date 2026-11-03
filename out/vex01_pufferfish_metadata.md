@@ -17,6 +17,8 @@ When a pufferfish gets scared, it blows up into a spiky ball. Cooking won't help
 
 Sources: UMEM Educational Pearls #2689; Hong Kong Centre for Food Safety, Food Safety Focus no. 178 (2021); Noguchi & Arakawa, "Tetrodotoxin: distribution and accumulation in aquatic organisms", Marine Drugs (2008); Singapore Food Agency, "Pufferfish 101".
 
+Then it drank his juice. 🧃
+
 💬 Would you eat pufferfish made by a licensed chef? Or never? 👇
 
 #Pufferfish #CuteVampire #Shorts
@@ -29,7 +31,7 @@ pufferfish, fugu, tetrodotoxin, cute vampire, vampire cartoon, weird animals, an
 
 **Pinned comment**
 ```
-Vex says the juice is fine, actually. Would YOU eat fugu from a licensed chef? 🐡👇
+Vex wants his juice back. Would YOU eat fugu from a licensed chef, or never? 🐡👇
 ```
 
-**Video facts:** 33.7 s, 101 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 38.6 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
