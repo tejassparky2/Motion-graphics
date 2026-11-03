@@ -384,12 +384,16 @@ GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "
 
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
-    bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; a "hush" cue silences bed and effects for its
+    bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; bed="none": no
+    music; a "hush" cue silences bed and effects for its
     duration (the sudden silence before a shock)."""
     import pyloudnorm
     n = int(total * SR)
     style = bed
-    bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
+    if bed == "none":       # home-video style (the Vex series): voices and effects only
+        bed = np.zeros(n)
+    else:
+        bed = (drone(total, seed) if bed == "thriller" else pad(total, seed) if bed == "pad" else music(total, seed))[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
     seen = set()

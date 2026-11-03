@@ -298,3 +298,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-03** Approved, keep photos in project
 - **2026-11-03** Lo it's very worst don't even matching 1% from reference
 - **2026-11-03** Giev prompts for what you want
+- **2026-11-03** You can't animate it??

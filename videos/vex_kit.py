@@ -184,7 +184,7 @@ def head_top(y, s, pose="front"):
     return y - _pose(pose)["foot"][1] * s
 
 
-def reply(cr, t, start, end, x, y, text, size=42):
+def reply(cr, t, start, end, x, y, text, size=42, font="Kalam"):
     """Vex's line in small red handwriting (Kalam) over his head, popping in at `start`, gone after `end`."""
     if t < start or t > end + 0.25:
         return
@@ -192,13 +192,54 @@ def reply(cr, t, start, end, x, y, text, size=42):
     if k <= 0.01:
         return
     from motion.polish import text_width
-    half = text_width(cr, text, size, "Kalam") / 2 + size * 0.2
+    half = text_width(cr, text, size, font) / 2 + size * 0.2
     x = min(max(x, half + 16), W - half - 16)          # keep the whole line on screen
     cr.save()
     cr.translate(x, y + 3 * math.sin(t * 5))
     cr.scale(k, k)
-    bold_text(cr, text, 0, 0, size, RED, font="Kalam", outline=(1, 1, 1, 1), ow=size * 0.17, shadow=0)
+    bold_text(cr, text, 0, 0, size, RED, font=font, outline=(1, 1, 1, 1), ow=size * 0.17, shadow=0)
     cr.restore()
+
+
+_chunks = {}
+
+
+def comic_captions(cr, t, tl, skip="vex", y=870, size=48, line_chars=22):
+    """The reference's captions: plain comic lettering (Comic Neue), white with a black outline, lower case, one or two
+    lines centred under the characters, a whole phrase at a time (no karaoke). Lines spoken by `skip` are left out
+    (they show as red handwriting over the speaker instead)."""
+    import re
+    key = id(tl)
+    if key not in _chunks:
+        out = []
+        for b in tl.beats:
+            if b.speaker == skip:
+                continue
+            words = [(re.sub(r"[^a-z0-9'?! ]", "", u.shown.lower()).strip(), u.start, u.end) for u in b.units]
+            words = [w for w in words if w[0]]
+            lines, cur = [], []
+            for w in words:
+                if cur and len(" ".join(x[0] for x in cur + [w])) > line_chars:
+                    lines.append(cur)
+                    cur = []
+                cur.append(w)
+                if w[0][-1] in "?!" or (cur and len(lines) == 0 and False):
+                    pass
+            if cur:
+                lines.append(cur)
+            for i in range(0, len(lines), 2):
+                grp = lines[i:i + 2]
+                out.append([[" ".join(x[0] for x in ln) for ln in grp], grp[0][0][1], grp[-1][-1][2], b.end])
+        for i, ch in enumerate(out):
+            nxt = out[i + 1][1] if i + 1 < len(out) else None
+            ch.append(min(nxt, ch[2] + 0.6) if nxt is not None and nxt - ch[2] < 0.6 else ch[2] + 0.35)
+        _chunks[key] = out
+    for lines, start, end, bend, stop in _chunks[key]:
+        if start - 0.05 <= t < stop:
+            for i, ln in enumerate(lines):
+                bold_text(cr, ln, W / 2, y + i * size * 1.12, size, (1, 1, 1, 1), font="Comic Neue",
+                          outline=(0, 0, 0, 1), ow=size * 0.16, shadow=0)
+            return
 
 
 # ---------------------------------------------------------------- the owner's photos
