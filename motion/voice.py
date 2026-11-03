@@ -508,7 +508,7 @@ def _clone_trim(a, thresh=0.006, pre=0.035, post=0.05):
 
 def _clone_raw(text, who=None):
     ref = _turbo_char(who)
-    key = f"{CLONE_MODEL}|{CLONE_VERSION}|{text}" + (f"|{ref}" if ref else "")
+    key = f"{CLONE_MODEL}|{CLONE_VERSION}|{text}" + (f"|{ref}" if ref else "") + ("|babble" if _is_babble(who) else "")
     return os.path.join(ROOT, "build", "clone_tts", hashlib.sha1(key.encode()).hexdigest()[:16] + ".wav")
 
 
@@ -526,6 +526,19 @@ def _clone_say(text):
     return text
 
 
+def _is_babble(who):
+    return bool(who and (SPEAKERS.get(who) or {}).get("babble"))
+
+
+def _turbo_text(text, who):
+    """What Turbo is asked to say: the line, or for a babble character its gibberish with the line's voice tags kept
+    (so a laugh or a sniff still comes out)."""
+    if not _is_babble(who):
+        return _clone_say(text)
+    tags = " ".join(_TAG.findall(text))
+    return (babble(text) + (" " + tags if tags else "")).strip()
+
+
 def clone_prefetch(texts):
     """Generate every missing sentence in one go (the clone model takes ~20 s to load).
     `texts`: sentences, or (sentence, character) pairs for characters that speak through Turbo."""
@@ -533,7 +546,7 @@ def clone_prefetch(texts):
         return
     pairs = [t if isinstance(t, tuple) else (t, None) for t in texts]
     pairs = [(t, w) for t, w in pairs if not _char(w)]   # Kokoro characters (e.g. Vex's gibberish) never use Turbo
-    jobs = [[_voice_tags(_clone_say(t)), _clone_raw(t, w)] + ([_turbo_ref_wav(_turbo_char(w))] if _turbo_char(w) else [])
+    jobs = [[_voice_tags(_turbo_text(t, w)), _clone_raw(t, w)] + ([_turbo_ref_wav(_turbo_char(w))] if _turbo_char(w) else [])
             for t, w in dict.fromkeys(pairs) if t not in _EXTERNAL and not os.path.exists(_clone_raw(t, w))]
     if not jobs:
         return
@@ -632,7 +645,7 @@ def clone_check(takes, tries=3, slack=0.15):
             words = [x for s in segs for x in s.words]
             probs = [x.probability for x in words]
             off = abs(rate / (CLONE_RATE * p) - 1)
-            score = (_heard_ok(t, heard), _sound_ok(t, a16, 16000, words), off <= slack, -off,
+            score = (_is_babble(w) or _heard_ok(t, heard), _sound_ok(t, a16, 16000, words), off <= slack, -off,
                      float(np.mean(probs)) if probs else 0.0)
             keep = f"{_clone_raw(t, w)}.try{attempt}.wav"
             shutil.copy(_clone_raw(t, w), keep)

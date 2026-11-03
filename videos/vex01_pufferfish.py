@@ -19,13 +19,14 @@ from motion.polish import ellipse, paint, rrect, stroke_line
 from motion.vex2d import vex
 from videos import vex_kit as K
 
-NARRATOR = dict(turbo=True, turbo_ref="am_michael")   # the keeper
+NARRATOR = dict(turbo=True)            # the keeper: the channel's usual narrator (Turbo stock female)
 TAIL = 0.6
 MUSIC = "none"
-voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.12, pitch=11, formant="shifted", babble=True)})
+# Vex: gibberish through Turbo (so tags like [laugh] come out), then +6 st with the formants moved: ~400 Hz like Grim
+voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.05, turbo_ref="af_heart+5", post_pitch=6, babble=True)})
 
 SCRIPT = [
-    dict(id="b1", scene="floor", text="Snack?", speaker="vex"),
+    dict(id="b1", scene="floor", text="Snack? [laugh]", speaker="vex"),
     dict(id="b2", scene="floor", text="Vex, no. That's a pufferfish.", gap=0.5),
     dict(id="b3", scene="floor", text="I'm a vampire. I bite everything.", speaker="vex"),
     dict(id="b4", scene="floor", text="Don't. When it's scared, it blows up into a spiky ball."),
@@ -36,9 +37,11 @@ SCRIPT = [
     dict(id="b8", scene="floor", text="Poison? Where does a tiny fish get poison?", speaker="vex"),
     dict(id="b9", scene="floor", text="From its food. Tiny bacteria make it, and it builds up inside the fish."),
     dict(id="b10", scene="floor", text="So a fish with clean food is safe to bite!", speaker="vex"),
-    dict(id="b11", scene="floor", text="Farmed ones carry far less. Not zero. And they still puff up.", gap=0.3),
-    dict(id="b12", scene="floor", text="I'll have juice.", speaker="vex", gap=0.6),
-    dict(id="b13", scene="floor", text="Would you eat pufferfish made by a licensed chef? Or never?", gap=0.3),
+    dict(id="b11", scene="floor", text="Farmed ones carry far less. Not zero. And they still puff up. [chuckle]",
+         gap=0.3),
+    dict(id="b12", scene="floor", text="I'll have juice. [sigh]", speaker="vex", gap=0.6),
+    dict(id="b13", scene="floor", text="Uh, Vex? It's drinking your juice. [laugh]", gap=1.3),
+    dict(id="b14", scene="floor", text="MY JUICE! [sniff]", speaker="vex", gap=0.2),
 ]
 
 METADATA = dict(
@@ -50,11 +53,13 @@ When a pufferfish gets scared, it blows up into a spiky ball. Cooking won't help
 
 Sources: UMEM Educational Pearls #2689; Hong Kong Centre for Food Safety, Food Safety Focus no. 178 (2021); Noguchi & Arakawa, "Tetrodotoxin: distribution and accumulation in aquatic organisms", Marine Drugs (2008); Singapore Food Agency, "Pufferfish 101".
 
+Then it drank his juice. 🧃
+
 💬 Would you eat pufferfish made by a licensed chef? Or never? 👇""",
     hashtags=["#Pufferfish", "#CuteVampire", "#Shorts"],
     tags=["pufferfish", "fugu", "tetrodotoxin", "cute vampire", "vampire cartoon", "weird animals", "animal facts",
           "funny animation", "science shorts", "interestingly strange"],
-    pinned_comment="Vex says the juice is fine, actually. Would YOU eat fugu from a licensed chef? 🐡👇",
+    pinned_comment="Vex wants his juice back. Would YOU eat fugu from a licensed chef, or never? 🐡👇",
 )
 
 
@@ -196,7 +201,13 @@ def draw(cr, t, tl):
     K.photo(cr, t, "close_living", 0.0, push=0.04, dur=40, focus=(380, 700))
     blink = K.auto_blink(t)
     tk = talk(tl, t)
-    b = {k: A(k) for k in ("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11", "b12", "b13")}
+    b = {k: A(k) for k in ("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11", "b12", "b13",
+                           "b14")}
+    put_down = A("b12", end=True) + 0.25          # he sets the juice box on the floor ...
+    sneak0, slurp0 = put_down + 0.35, b["b13"] - 0.7   # ... the fish sneaks over and drinks it
+    slurp = seg(t, slurp0, slurp0 + 1.6)
+    BOX = (392, VY - 2)
+    straw_top = (BOX[0] + 30, BOX[1] - 118)
     chomp, poke = A("b4", "scared"), b["b5"]
     grab2, freeze, puff2 = b["b11"], A("b11", "Not"), A("b11", "puff")
     drop_pan = A("b7", "antidote")
@@ -211,9 +222,11 @@ def draw(cr, t, tl):
         puff = 1 - ease_out(seg(t, b["b7"], b["b7"] + 1.2))
     elif t < puff2:
         puff = 0.0
-    else:
-        puff = 1 - 0.8 * seg(t, b["b12"] + 0.5, b["b13"] + 1.5)
+    elif t < slurp0:
+        puff = 1 - 0.85 * seg(t, b["b12"], put_down)
         puff = min(puff, ease_out(seg(t, puff2, puff2 + 0.25)))
+    else:                                         # drinking his juice: gulp, gulp, gulp, and it turns tomato red
+        puff = 0.15 + 0.85 * gulps(t, slurp0, slurp0 + 1.6)
     held1 = b["b4"] + 0.6 <= t < poke
     held2 = grab2 + 0.5 <= t < puff2 + 0.25
     shake = 5 * math.sin(t * 60) if (chomp <= t < chomp + 0.25 or poke <= t < poke + 0.3 or
@@ -240,14 +253,35 @@ def draw(cr, t, tl):
         if puff2 + 0.25 <= t < puff2 + 0.6:
             u = seg(t, puff2 + 0.25, puff2 + 0.6)
             return lerp(mx + 6, in_dish[0], u), lerp(my + 66, in_dish[1], u * u)
+        if t >= sneak0:                             # leans out of the dish, lips on the straw
+            u = ease_out(seg(t, sneak0, slurp0))
+            lip = straw_top[0] + (70 + 44 * puff) * fs * 0.96
+            return lerp(in_dish[0], lip, u), lerp(in_dish[1], straw_top[1] + 4 - 20 * puff, u)
         return in_dish
 
     def draw_fish():
         px, py = fish_pos()
-        K.pufferfish(cr, t, px + shake, py, fs, puff=puff, facing=-1, eyes="angry" if puff > 0.5 else "open",
-                     flap=not (held1 or held2))
+        K.pufferfish(cr, t, px + shake, py, fs, puff=puff, facing=-1,
+                     eyes="open" if t >= slurp0 else ("angry" if puff > 0.5 else "open"),
+                     flap=not (held1 or held2), tint=ease_out(slurp))
 
     holding = held1 or held2
+    if t >= put_down:                               # the juice box on the floor, crumpling as it's drunk
+        cr.save()
+        cr.translate(*BOX)
+        cr.scale(1 - 0.15 * slurp, 1 - 0.35 * slurp)
+        K.floor_shadow(cr, 0, 2, 34, 0.3)
+        stroke_line(cr, [(6, -60), (30, -118)], 7, INK, curve=False)
+        stroke_line(cr, [(6, -60), (30, -118)], 4, (1, 1, 1, 1), curve=False)
+        rrect(cr, -22, -64, 44, 64, 7)
+        paint(cr, (0.86, 0.16, 0.2, 1), INK, 4)
+        rrect(cr, -15, -48, 30, 26, 5)
+        paint(cr, (1, 1, 1, 1), None, 0)
+        ellipse(cr, 0, -35, 8, 7)
+        paint(cr, (0.92, 0.2, 0.2, 1), INK, 2)
+        cr.restore()
+        for k in range(3):
+            cue("pop", t, slurp0 + 0.15 + k * 0.5)
     if not holding:
         draw_fish()
     K.dish_front(cr, FX, FY, FR)
@@ -347,13 +381,23 @@ def draw(cr, t, tl):
         kw.update(rot=-1.45 * ease_out(v), pivot="center", lift=80 * math.sin(v * math.pi) if v < 1 else 0,
                   eyes="dizzy" if v >= 1 else "cry", mouth="wobble", arms=("up", "up"), squash=land(t, puff2 + 0.45, 0.5),
                   tears=v >= 1)
-    else:                                           # "I'll have juice." / the question: sitting, sipping
-        x = 230
-        sip = t if tk is None else 0
-        end_q = t >= A("b13", "Or")
-        kw.update(legs="sit", eyes="open" if end_q else "sad", brows="up" if end_q else "sad",
-                  mouth="o", arms=("front", "front"), turn=0.0, look=(0, 0),
-                  held=lambda c, x=x: juice_box(c, *mouth_at(x, 0.0, 0.0)[:1], mouth_at(x, 0.0)[1] + 110 * S, sip))
+    elif t < put_down:                              # "I'll have juice." sulking, sipping
+        x = 300
+        kw.update(legs="sit", eyes="sad", brows="sad", mouth="o", arms=("front", "front"), turn=0.0,
+                  held=lambda c, x=x: juice_box(c, mouth_at(x, 0.0)[0], mouth_at(x, 0.0)[1] + 110 * S, t))
+    elif t < b["b14"]:                              # sets it down, sulks ... then sees the fish drinking it
+        x = 300
+        sees = t >= A("b13", "Vex")
+        shocked = t >= A("b13", "drinking")
+        kw.update(legs="sit", turn=0.5 if sees else 0.0, look=(0.8, 0.3) if sees else (0.0, 0.6),
+                  eyes="shocked" if shocked else ("open" if sees else "sad"), brows="up" if sees else "sad",
+                  mouth="o" if shocked else "frown", arms=("cheek", "cheek") if shocked else ("down", "down"))
+    else:                                           # "MY JUICE!" jumps up, crying
+        x = 300
+        j = seg(t, b["b14"], b["b14"] + 0.4)
+        kw.update(lift=70 * math.sin(j * math.pi) if j < 1 else 0, legs="jump" if j < 1 else "stand",
+                  squash=land(t, b["b14"] + 0.4, 0.6), turn=0.4, eyes="cry", brows="sad", tears=True,
+                  talk=tk, mouth=None if tk is not None else "wobble", arms=("up", "up"), cape=0.6)
     vex(cr, t, x + (shake * 0.6 if holding else 0), VY, S, **kw)
     if holding and puff >= 0.5:                     # fully puffed: it fills his arms, in front of everything
         in_hands(cr)
@@ -372,9 +416,10 @@ def draw(cr, t, tl):
     K.grain(cr)
     for bid, text in (("b1", "snack?"), ("b3", "i'm a vampire. i bite everything."), ("b5", "OW!"),
                       ("b6", "then i'll cook it first"), ("b8", "poison?? where does a tiny fish get poison?"),
-                      ("b10", "so a fish with clean food is safe to bite!"), ("b12", "i'll have juice.")):
+                      ("b10", "so a fish with clean food is safe to bite!"), ("b12", "i'll have juice."),
+                      ("b14", "MY JUICE!")):
         bb = tl.by_id[bid]
         lift_sub = 55 if bid in ("b6", "b8", "b10") else 0            # clear of the chef hat
-        K.reply(cr, t, bb.start, bb.end + 0.7, x, VY - 1110 * S - lift_sub - (0 if bid != "b12" else -110 * S), text,
+        K.reply(cr, t, bb.start, bb.end + 0.7, x, VY - 1110 * S - lift_sub + (110 * S if bid == "b12" else 0), text,
                 size=50 if len(text) > 26 else 58, font="Comic Neue")
     K.comic_captions(cr, t, tl, skip="vex", y=880, size=54, line_chars=21)

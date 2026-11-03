@@ -295,8 +295,21 @@ FISH_BELLY = hexc("#fff4dc")
 FIN = hexc("#f0a040")
 
 
-def pufferfish(cr, t, x, y, s=1.0, puff=0.0, facing=1, eyes="open", flap=True):
-    """A cute pufferfish, centre (x, y), facing right; puff 0..1 blows it up into an angry spiky ball."""
+def pufferfish(cr, t, x, y, s=1.0, puff=0.0, facing=1, eyes="open", flap=True, tint=0.0):
+    """A cute pufferfish, centre (x, y), facing right; puff 0..1 blows it up into an angry spiky ball; tint 0..1
+    turns it tomato red (it drank Vex's juice)."""
+    global FISH, FISH_BELLY
+    base, belly = FISH, FISH_BELLY
+    if tint > 0:
+        mix = lambda a, b: tuple(a[i] + (b[i] - a[i]) * tint for i in range(3)) + (1,)
+        FISH, FISH_BELLY = mix(base, (0.9, 0.18, 0.2)), mix(belly, (1.0, 0.62, 0.6))
+    try:
+        _pufferfish(cr, t, x, y, s, puff, facing, eyes, flap)
+    finally:
+        FISH, FISH_BELLY = base, belly
+
+
+def _pufferfish(cr, t, x, y, s=1.0, puff=0.0, facing=1, eyes="open", flap=True):
     if s <= 0.01:
         return
     p = max(0.0, min(1.0, puff))
