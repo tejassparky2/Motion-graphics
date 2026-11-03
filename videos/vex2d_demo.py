@@ -13,7 +13,7 @@ from videos import vex_kit as K
 NARRATOR = dict(turbo=True)
 TAIL = 0.6
 MUSIC = "none"
-voice.SPEAKERS.update({"vex": dict(voice="am_puck", speed=1.05, turbo_ref="am_puck+5")})
+voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.05, turbo_ref="af_heart+5", post_pitch=6)})   # ~400 Hz like Grim
 
 SCRIPT = [
     dict(id="v1", scene="floor", text="Vex, try and bite this pufferfish."),
