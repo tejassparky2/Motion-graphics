@@ -200,6 +200,16 @@ def _char(who):
 NARRATOR_REF = None
 
 
+def _post_fx(who):
+    """A Turbo character's finishing pitch shift: SPEAKERS[who]["post_pitch"] semitones, with the formants moved too
+    ("post_formant": "shifted", the default) so the voice sounds smaller, like a cartoon creature (Vex, Nov 2026)."""
+    spec = SPEAKERS.get(who) if who else None
+    if not spec or not spec.get("post_pitch"):
+        return ""
+    st = spec["post_pitch"]
+    return f"rubberband=pitch={2 ** (st / 12):.5f}:formant={spec.get('post_formant', 'shifted')}:pitchq=quality,"
+
+
 def _turbo_char(who):
     """The character's (or, for who=None, the narrator's) Turbo reference voice, if it speaks through Turbo."""
     if not (ENGINE == "clone" and CLONE_MODEL == "turbo"):
@@ -245,6 +255,8 @@ def _key(text, pace=1.0, who=None, tone=None):
         return hashlib.sha1(f"ext|{EXTERNAL_TAG}|{text}".encode()).hexdigest()[:16]
     if ENGINE == "clone":
         ref = f"{_turbo_char(who)}|" if _turbo_char(who) else ""
+        post = _post_fx(who)
+        ref += f"{post}|" if post else ""
         return hashlib.sha1(f"clone|{CLONE_MODEL}|{CLONE_VERSION}|{CLONE_RATE}|{pace:.3f}|{ref}{text}".encode()).hexdigest()[:16]
     return hashlib.sha1(f"{ENGINE}|{VOICE}|{SPEED * pace:.3f}|{_pronounce(text)}".encode()).hexdigest()[:16]
 
@@ -439,7 +451,7 @@ def _clone_process(text, pace, who=None):
         stretch = (f"rubberband=tempo={tempo:.4f}:transients=crisp:detector=compound:phase=laminar:window=short:"
                    f"formant=preserved:pitchq=quality,") if abs(tempo - 1) > 0.005 else ""
         subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-y", "-loglevel", "error", "-i", _clone_raw(text, who),
-                        "-filter:a", stretch + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
+                        "-filter:a", stretch + _post_fx(who) + (CLONE_TONE if CLONE_MODEL == "owner" else "highpass=f=60,alimiter=limit=0.95"), "-ar", str(SR), "-ac", "1", out], check=True)
     return out, rate * tempo
 
 
