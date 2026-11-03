@@ -8,3 +8,12 @@ Owner: "Can we make it that quality as him?" (the "Grim" mascot references, rese
   the reference creator's own footage, used only for the private side-by-side and not committed or published;
   real videos use the owner's own photos.
 - Not approved yet: the owner picks the mascot first.
+
+## Vex, the baby vampire (owner's pick, 3 Nov 2026)
+- The owner made the character in ChatGPT (`assets/mascot/vex/vex_front.png`, transparent PNG, 1199x1312) and asked
+  whether a Tripo or Blender 3D model would help.
+- `vex_test.py` animates that single image as a 2D sprite: drop-in, squash on landing, a jelly wobble that leaves the
+  boots planted (pixel-aligned slices at the image's own size, then scaled once, so no seams), breathing, blinks
+  drawn over the eyes (EYES = eye centres in the image), a red reply line. A pose set from ChatGPT gives the rest.
+- 3D (Tripo -> rig -> Blender) is not needed for this format: chibi proportions rig badly, the face needs its own
+  expression controls, and Blender is not installed on this server. Worth it only for walking or turning shots.
