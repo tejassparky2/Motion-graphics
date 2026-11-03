@@ -48,3 +48,18 @@ Owner: "Can you make videos like this? Cute affordable and informative". The fil
 - For us: keep the escalating counter but make it teach something, e.g. a button that doubles the candy each press
   (exponential growth: 30 doublings = over a billion; the rice-on-a-chessboard legend), ending on an either/or
   ("a million today, or one rupee doubled every day for 30 days?"). Check every number before scripting.
+
+# Why Vex episode 1 missed (owner, 3 Nov 2026: "it's very worst don't even matching 1% from reference")
+Side by side with the tardigrade reference:
+1. Shot: his is ONE bright, warm, close floor shot (phone held low), the same all video; ours were wide, dim shots
+   from standing height that changed every few seconds, so Vex looked small and lost.
+2. Overlays: his has none (no hook text, cards, stamps, chip or buttons), only plain comic captions centred under
+   the characters; ours was our explainer template.
+3. Acting: Grim changes pose and prop every couple of seconds (scythe, flamethrower, radiation gun) and every
+   attempt carries one fact; Vex had one drawing.
+4. Art: the tardigrade and props are drawn in Grim's style; our fish and bowl were our own clip-art style.
+5. Voice: a real, casual human voice talking to his pet vs our narrator reading an explainer.
+Fix for the series: one close bright floor shot, no overlays, Comic Neue captions centred under the characters,
+characters big in the middle, a script built as attempts (each a new pose + prop + one fact), all art from ChatGPT
+in the same style, and a real or casual keeper voice.
+

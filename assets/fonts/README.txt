@@ -4,3 +4,5 @@ Fonts (all SIL Open Font License 1.1, from Google Fonts):
 - Luckiest Guy (Astigmatic), https://fonts.google.com/specimen/Luckiest+Guy
 - Anton (Vernon Adams), SIL OFL 1.1, https://fonts.google.com/specimen/Anton (thriller hook text and captions)
 - Permanent Marker (Font Diner), Apache License 2.0, https://fonts.google.com/specimen/Permanent+Marker (handwritten notes)
+- Comic Neue Bold (Craig Rozynski, Hrant Papazian), SIL Open Font License 1.1, from Google Fonts: the plain comic
+  captions of the Vex series (the reference's look)
