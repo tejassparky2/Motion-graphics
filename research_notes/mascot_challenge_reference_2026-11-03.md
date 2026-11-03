@@ -34,3 +34,17 @@ Owner: "Can you make videos like this? Cute affordable and informative". The fil
 - Real hands twice (pointing at the start, blocking the radiation gun: "watch where ur pointing that").
 - Twist: "well then I guess it would die-" as it's back in normal form, a slash flash, "OH MY GOD". Cut.
 - Simple animation: pose swaps, sticker-like cut-outs, small shakes. Caption font is comic-style, centred mid-frame.
+
+# Reference 3: the candy button (owner upload, 3 Nov 2026: "1 more reference")
+- 0:31, vertical. The mascot and a big red button on a tiled floor in the creator's own house (real phone footage,
+  sofa behind). Line 1 is the owner's rule: "Hit that button and one candy will appear, but one random person dies."
+- An escalating counter next to the button (1x -> 3x -> 9x -> 18x -> 67x); the mascot keeps pressing ("sory",
+  "sory again", "i like candy"); the owner: "Do NOT hit that button anymore, Grim. I'm serious."
+- Real POV footage mid-video: the owner walks to the front door to "check nobody we know is dead", opens it, a
+  neighbour cycles past ("oh hi Mark!"). Ending: a candy avalanche buries everything. No facts: pure dark comedy.
+- Pattern across all three: the same mascot, the creator's own home as the set (photos and phone clips: cheap and
+  original), an off-screen owner giving a one-line rule or dare, tiny red replies, an escalating number on screen,
+  one twist, under 45 s for the Shorts.
+- For us: keep the escalating counter but make it teach something, e.g. a button that doubles the candy each press
+  (exponential growth: 30 doublings = over a billion; the rice-on-a-chessboard legend), ending on an either/or
+  ("a million today, or one rupee doubled every day for 30 days?"). Check every number before scripting.
