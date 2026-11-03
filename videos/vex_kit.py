@@ -191,6 +191,9 @@ def reply(cr, t, start, end, x, y, text, size=42):
     k = appear(t, start, 0.3) * (1 - seg(t, end, end + 0.25))
     if k <= 0.01:
         return
+    from motion.polish import text_width
+    half = text_width(cr, text, size, "Kalam") / 2 + size * 0.2
+    x = min(max(x, half + 16), W - half - 16)          # keep the whole line on screen
     cr.save()
     cr.translate(x, y + 3 * math.sin(t * 5))
     cr.scale(k, k)
@@ -247,6 +250,8 @@ FIN = hexc("#f0a040")
 
 def pufferfish(cr, t, x, y, s=1.0, puff=0.0, facing=1, eyes="open", flap=True):
     """A cute pufferfish, centre (x, y), facing right; puff 0..1 blows it up into an angry spiky ball."""
+    if s <= 0.01:
+        return
     p = max(0.0, min(1.0, puff))
     rx, ry = 70 + 44 * p, 48 + 62 * p
     cr.save()
@@ -377,6 +382,8 @@ def floor_shadow(cr, x, y, w, a=0.35):
 
 
 def star(cr, x, y, r, col=(1, 0.85, 0.2, 1)):
+    if r <= 0.01:
+        return
     for k in range(10):
         a = -math.pi / 2 + k * math.pi / 5
         rr = r if k % 2 == 0 else r * 0.45
@@ -396,6 +403,8 @@ def dizzy(cr, t, x, y, start, end=None, r=60):
 
 
 def skull(cr, x, y, s=1.0):
+    if s <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
@@ -417,6 +426,8 @@ def skull(cr, x, y, s=1.0):
 
 
 def pan(cr, t, x, y, s=1.0):
+    if s <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
@@ -438,6 +449,8 @@ def pan(cr, t, x, y, s=1.0):
 
 
 def carrot(cr, x, y, s=1.0, rot=0.3):
+    if s <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.rotate(rot)
@@ -459,6 +472,8 @@ def carrot(cr, x, y, s=1.0, rot=0.3):
 
 
 def bacteria(cr, t, x, y, s=1.0):
+    if s <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
@@ -477,6 +492,8 @@ def bacteria(cr, t, x, y, s=1.0):
 
 
 def worm(cr, t, x, y, s=1.0):
+    if s <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)
@@ -490,6 +507,8 @@ def worm(cr, t, x, y, s=1.0):
 
 
 def chef_hat(cr, x, y, s=1.0):
+    if s <= 0.01:
+        return
     cr.save()
     cr.translate(x, y)
     cr.scale(s, s)

@@ -24,6 +24,12 @@ also push here. The repo is **public**.
   ~10x slower, would mean porting every character, so pycairo stays. Worth porting: motion blur (sub-frame
   averaging) and GSAP-style motion (elastic/wiggle eases, letter pops, follow-through); asked the owner. GSAP's and
   Remotion's official skills are installed in .claude/skills.
+- **Vex series (3 Nov 2026):** owner's references (a creator's "Grim" mascot on real home footage) led to our own
+  mascot, Vex the baby vampire: the owner made him in ChatGPT, flat 2D (assets/mascot/vex/vex_flat_front.png), and sent
+  photos of his home (assets/mascot/photos, metadata stripped; owner: "keep photos in project"). Kit: videos/vex_kit.py
+  (sprite grounded with contact shadows, blinks, squash, wobble, spins; photo push-in; inflating pufferfish, bowl,
+  props). Episode 1 vex_ep1_pufferfish made (36.3 s, script out/scripts_vex_ep1.md, approved). Waiting for the
+  owner's ChatGPT pose set (seen slightly from above) to swap in for better acting; add each to vex_kit.POSES.
 - **Downloads:** YouTube and Instagram block downloads from the cloud server; don't try to get around their bot
   checks. The owner's laptop is Windows (C:\Users\tejas\Documents\shorts research, Claude desktop app), which a
   cloud chat can't attach to; downloads run in the owner's local session there with yt-dlp.

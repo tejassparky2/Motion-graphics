@@ -112,6 +112,7 @@ Anything disputed gets left out, the way the Emu War kill counts were.
 | 80 | Sat Nov 7 | 7:30 PM | prayer_plan | She Prayed Before Her Exam. Her Brother Asked 1 Question 🙏 *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: answered, backfires on her (study too))* |
 | 81 | Sun Nov 8 | 4:30 PM | ai_art | She Won the Art Prize. A Computer Drew It. 🖼️ *(Mayank frame-0 rules; owner: "Make it" 29 Oct; Turbo female + tags; outcome: open debate)* |
 | 82 | Sun Nov 8 | 7:30 PM | kitten_evil | She Asked Her Dad 3 Questions About God 🐱 *(big question batch 2; owner approved 25 Oct; Turbo female + tags; made + packed 25 Oct; outcome: nobody wins (Dad has no answer))* |
+| 83 | Mon Nov 9 | 4:30 PM | vex_ep1_pufferfish | Never Let a Vampire Bite a Pufferfish 🐡 *(new mascot series: Vex the baby vampire on the owner's home photos; owner approved 3 Nov; Turbo female keeper + squeaky Vex; outcome: the animal wins (Vex loses twice))* |
 
 Rows 1–13 are already scheduled (3 a day). From row 14 on the channel posts **2 a day** (owner's call, 5 Oct 2026: 3 a day is riskier for reach and for YouTube's mass-produced-content rule); slot B (1:30 AM IST, 4 AM in the Philippines and night in India) was dropped. From row 7 on, the order follows the first results: the Last Bencher riddles got the most views and the paradoxes got the most likes and comments, so one of each goes out on most days, mixed with the other videos. Part 2 goes first, while viewers still remember the original Backbencher video.
 

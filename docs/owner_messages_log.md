@@ -295,3 +295,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-03** [image: Vex redrawn in ChatGPT as a flat 2D cartoon sticker]
 - **2026-11-03** But it don't seems correctly standing on floor
 - **2026-11-03** [photos: living-room tiles, workshop floor, swing corner, open palm, reaching hand] Approved ep 1
+- **2026-11-03** Approved, keep photos in project

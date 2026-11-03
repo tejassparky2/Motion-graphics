@@ -111,10 +111,10 @@ def scene_palm(cr, t, tl):
     z = K.photo(cr, t, "hand_palm", 0.0, focus=(380, 600))
     cr.save()
     K.zoom_at(cr, z, (380, 600))
-    K.floor_shadow(cr, 382, 612, 52, 0.3)
-    K.bowl_back(cr, 382, 612, 62)
-    K.pufferfish(cr, t, 382, 548, 0.42, puff=0.0, facing=-1)
-    K.bowl_front(cr, 382, 612, 62)
+    K.floor_shadow(cr, 382, 612, 64, 0.3)
+    K.bowl_back(cr, 382, 612, 80)
+    K.pufferfish(cr, t, 382, 530, 0.52, puff=0.0, facing=-1)
+    K.bowl_front(cr, 382, 612, 80)
     h0 = A("v2")
     lift = _hop(t, h0, 0.38, 80)
     K.vex(cr, t, 160, 880, 0.19, lift=lift, squash=_land(t, h0 + 0.38) - (0.3 if lift > 0 else 0),
@@ -198,6 +198,8 @@ def scene_corner(cr, t, tl):
     if A("v9", "food") <= t < chain_end + 0.2:
         out = 1 - seg(t, chain_end, chain_end + 0.2)
         k = appear(t, A("v9", "food"), 0.35) * out
+        rrect(cr, 40, 262, 640, 140, 30)                   # a light panel so the chain reads over the dark mat
+        paint(cr, (1, 1, 1, 0.82 * out), (0.1, 0.06, 0.08, 0.6 * out), 4)
         K.pufferfish(cr, t, 590, 330, 0.5 * k, facing=-1)
         if t >= A("v9", "starting"):
             K.worm(cr, t, 360, 335, appear(t, A("v9", "starting"), 0.35) * out)
@@ -210,7 +212,7 @@ def scene_corner(cr, t, tl):
         card(cr, t, A("v9", "raised"), 190, 330, 280, 230, "WILD", [], col=RED, title_size=40)
         card(cr, t, A("v9", "clean"), 530, 330, 280, 230, "FARMED", [], col=GREEN, title_size=40)
         K.skull(cr, 190, 375, appear(t, A("v9", "raised"), 0.35) * 1.15)
-        K.skull(cr, 530, 385, appear(t, A("v9", "clean"), 0.35) * 0.45)
+        K.skull(cr, 530, 385, appear(t, A("v9", "clean"), 0.35) * 0.55)
         if t >= A("v9", "less"):
             tag(cr, t, A("v9", "less"), 530, 500, "FAR LESS", col=GREEN, size=40)
 
@@ -254,10 +256,10 @@ def scene_end(cr, t, tl):
     K.zoom_at(cr, z, (380, 640))
     up = A("v12", "would")
     if t < up:
-        K.vex(cr, t, 150, 950, 0.19, rot=-1.45, pivot="center", blink=1.0)
-        K.dizzy(cr, t, 30, 890, s0)
+        K.vex(cr, t, 215, 950, 0.19, rot=-1.45, pivot="center", blink=1.0)
+        K.dizzy(cr, t, 95, 890, s0)
     else:
-        K.vex(cr, t, 150, 950, 0.19, lift=_hop(t, up, 0.4, 70), squash=_land(t, up + 0.4, 0.7),
+        K.vex(cr, t, 175, 950, 0.19, lift=_hop(t, up, 0.4, 70), squash=_land(t, up + 0.4, 0.7),
               wobble=_jelly(t, up + 0.4))
     cr.restore()
     if A("v12", "Japan") <= t < up:
