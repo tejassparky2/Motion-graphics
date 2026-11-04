@@ -114,6 +114,12 @@ every line, upload sheet. Sources go with every script, and health claims must b
   also the 1977 first-satellite test and NavIC's IRNSS-1A clock failures. Script and facts are in
   videos/head_time.py. "+45 / −7 / = 38" was merged into one "38 ahead" line to stay under 2 minutes. Pick topics
   most viewers have never heard of, not famous "how X works" facts.
+- **Video 9, coma: the patients who hear everything** (owner, 4 Nov 2026: "make video on koma", then "Approve" on
+  the script). Martin Pistorius, the "Ghost Boy", aware for years while doctors thought nobody was inside; coma vs
+  the vegetative state; Owen 2006 (imagine tennis, the same brain area lit up); Scott Routley's "not in pain" (2012);
+  Bodien 2024 (1 in 4 unresponsive patients followed commands on fMRI/EEG); Pape 2015 (family voices). Script and
+  facts in videos/coma.py. Stock photos of patients and a doctor are marked "SYMBOLIC PHOTO" on screen; Martin
+  himself is never shown, since no free-licence photo of him exists.
 - **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
   (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
   minutes, side facts are the first thing to drop.
