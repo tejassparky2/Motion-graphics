@@ -1,6 +1,9 @@
-"""Video 9 (science): "Doctors ne kaha ye kuch nahi samajhta... aur wo saalon tak sab sun raha tha" - coma, the
+"""Video 9 (science): "Socho, doctors ko lagta hai tum coma mein ho... par tum sab kuch sun rahe ho" - coma, the
 vegetative state, and the patients who are aware inside. Owner, 4 Nov 2026: "make video on koma", script approved
-("Approve"). Narration in Devanagari for the voice, numbers written as words.
+("Approve"); then hook v2 in the second person (owner: "socho tum koma me chalegaye sab sun to pate par hat be nahi
+hilisakte na bat karsakte tum jinda to ho par dead jese body me koi movement he nahi hota ... auto approved"). It
+says "doctors think you're in a coma", because in a true coma nobody is aware; the people who hear everything are
+the ones wrongly thought unaware. Narration in Devanagari for the voice, numbers written as words.
 Facts: Martin Pistorius (South Africa) fell ill at 12 in 1988 (believed cryptococcal meningitis); doctors told his
 parents to take him home and keep him comfortable until he died; awareness came back gradually from about 16 (full
 by about 19) while he could not move or speak; Barney reruns played at his care centre; at about 25 an aromatherapist,
@@ -26,12 +29,14 @@ from channel import ASSETS_ROOT, MUSIC, NARRATOR, NARRATOR_LABEL, REVEAL_GAP, TA
 from shots import T, asset_finder, draw_frame, pic, starts
 
 SCRIPT = [
-    dict(id="b1", text="सोचो, डॉक्टरों ने कहा, इस लड़के को अब कुछ समझ नहीं आता... और वो सालों तक, सब कुछ सुन रहा था।"),
-    dict(id="b2", text="साउथ अफ़्रीका में, बारह साल का मार्टिन अचानक बीमार पड़ा। और धीरे-धीरे उसका चलना, बोलना, "
-                       "सब बंद हो गया।"),
+    dict(id="b1", text="सोचो, डॉक्टरों को लगता है तुम कोमा में हो... पर तुम सब कुछ सुन रहे हो।"),
+    dict(id="b1b", text="तुम हाथ तक नहीं हिला सकते। बोल भी नहीं सकते। तुम ज़िंदा हो... पर शरीर एक लाश की तरह पड़ा है।",
+         gap=REVEAL_GAP),
+    dict(id="b1c", text="ये कोई फ़िल्म नहीं है। साउथ अफ़्रीका के एक लड़के के साथ, ये सच में हुआ।"),
+    dict(id="b2", text="बारह साल का मार्टिन अचानक बीमार पड़ा। और धीरे-धीरे उसका चलना, बोलना, सब बंद हो गया।"),
     dict(id="b3", text="डॉक्टरों ने उसके माँ-बाप से कहा: इसे घर ले जाओ, और आख़िरी दिनों तक आराम से रखो।"),
-    dict(id="b4", text="पर कुछ साल बाद, मार्टिन का दिमाग़ फिर से जागने लगा। वो सब सुनता था, सब समझता था... "
-                       "पर ना हिल सकता था, ना बोल सकता था।"),
+    dict(id="b4", text="पर कुछ साल बाद, मार्टिन का दिमाग़ फिर से जागने लगा। और उसके साथ ठीक वही हुआ, "
+                       "जो तुमने अभी सोचा।"),
     dict(id="b5", text="और किसी को पता ही नहीं था, कि वो अंदर है।", gap=REVEAL_GAP),
     dict(id="b6", text="ऐसा कैसे? कोमा में दिमाग़ का जागने वाला स्विच बंद हो जाता है। आँखें बंद, कोई होश नहीं। "
                        "और ये अक्सर कुछ हफ़्तों में ख़त्म हो जाता है।"),
@@ -58,14 +63,14 @@ SCRIPT = [
 ]
 
 METADATA = dict(
-    title="Doctors ne kaha kuch nahi samajhta, par wo sab sun raha tha",
-    caption="Doctors ne kaha is ladke ko ab kuch samajh nahi aata... aur wo saalon tak sab kuch sun raha tha 😳\n\n"
-            "Martin 12 saal ka tha jab beemar pada. Kuch saal baad uska dimaag jaag gaya, par wo na hil sakta tha, "
-            "na bol sakta tha. Aur kisi ko pata hi nahi tha ki wo andar hai.\n\n"
+    title="Doctors ko lagta hai tum coma mein ho, par tum sab sun rahe ho",
+    caption="Socho, doctors ko lagta hai tum coma mein ho... par tum sab kuch sun rahe ho 😳\n\n"
+            "Haath tak nahi hila sakte, bol bhi nahi sakte. South Africa ke Martin ke saath ye sach mein hua: kuch "
+            "saal baad uska dimaag jaag gaya, aur kisi ko pata hi nahi tha ki wo andar hai.\n\n"
             "2024 ki ek badi study: jo mareez bilkul jawab nahi dete, unmein se har 4 mein se 1 ka dimaag baat "
             "samajh raha tha.\n\n"
             "Tumhe pata tha ki behosh dikhne wala insaan bhi sab sun sakta hai? Comment mein YES ya NO likho 👇",
-    yt_title="Coma Jaisi Haalat, Par Wo Sab Sun Raha Tha 😳 | Ghost Boy",
+    yt_title="Coma Mein Ho, Par Sab Sunai De Raha Hai? 😳 | Ghost Boy",
     yt_description="South Africa ke Martin Pistorius ko doctors ne \"kuch nahi samajhta\" maan liya tha, par wo saalon "
                    "tak sab sun raha tha. Coma aur vegetative state ka fark, 2006 ka tennis wala brain scan, 12 saal "
                    "baad \"kya tumhe dard hota hai?\" ka jawab, aur 2024 ki study: jawab na dene wale har 4 mein se 1 "
@@ -413,27 +418,93 @@ def sun_moon(cr, x, y, r, t, alpha=1.0):
 BED = (W / 2, 1300, 880)        # the drawn bed: centre x, mattress top y, width
 
 
-def h_hook(cr, t, tl, t0):                               # b1 frame 0: "doctors said this boy understands nothing now..."
+def trapped_rows(cr, t, rows, x=150, y0=680, dy=170, size=90):
+    """The hook's checklist on slate: (label, time it shows, can or can't)."""
+    for i, (lab, ts, ok) in enumerate(rows):
+        y = y0 + dy * i
+        draw_text(cr, lab, x, y, size, CREAM, prog(t, ts - 0.1, 0.3), anchor="lm")
+        if ok:
+            tick(cr, 760, y, 90, prog(t, ts + 0.1, 0.3), color=GREEN)
+        else:
+            cross(cr, 810, y, 90, prog(t, ts + 0.1, 0.3), color=CORAL)
+
+
+def _beat(ph):
+    """One heartbeat of an ECG trace over phase 0..1 (P wave, the spike, T wave)."""
+    if 0.10 < ph < 0.14:
+        return 0.15 * math.sin((ph - 0.10) / 0.04 * math.pi)
+    if 0.18 < ph < 0.20:
+        return -0.15
+    if 0.20 <= ph < 0.23:
+        return 1.0 - abs(ph - 0.215) / 0.015
+    if 0.23 <= ph < 0.25:
+        return -0.3
+    if 0.32 < ph < 0.42:
+        return 0.25 * math.sin((ph - 0.32) / 0.10 * math.pi)
+    return 0.0
+
+
+def ecg(cr, x, y, w, h, t, alpha=1.0, color=(0.35, 0.95, 0.55)):
+    """A heart monitor: a dark screen with a green trace beating about once a second."""
+    if alpha <= 0:
+        return
+    rrect(cr, x + 8, y + 14, w, h, 24)
+    cr.set_source_rgba(0, 0, 0, 0.25 * alpha)
+    cr.fill()
+    rrect(cr, x, y, w, h, 24)
+    cr.set_source_rgba(0.08, 0.10, 0.11, alpha)
+    cr.fill()
+    step = 4
+    n = int((w - 60) / step)
+    for i in range(n + 1):
+        ph = ((i * step) / (w * 0.45) - t * 1.1) % 1
+        px, py = x + 30 + i * step, y + h * 0.6 - _beat(ph) * h * 0.4
+        (cr.move_to if i == 0 else cr.line_to)(px, py)
+    cr.set_source_rgba(*color, alpha)
+    cr.set_line_width(6)
+    cr.stroke()
+    draw_text(cr, "HEARTBEAT", x + 30, y + 26, 30, color, alpha, MONO_FONT, tracking=2)
+
+
+def h_you(cr, t, tl, t0):                                # b1 frame 0: "doctors think you're in a coma... but you hear everything"
     _pic(cr, "patient", W / 2, 1120, 0, t, -1, frame=(940, 627), rot=-0.015)
     symbolic(cr, W / 2, 1460)
-    ring(cr, 770, 1075, 150, 120, prog(t, T(tl, "b1", "लड़के"), 0.4))
-    headline(cr, t, "DOCTORS SAID HE UNDERSTANDS", "NOTHING", -1, min(1.8, T(tl, "b1", "समझ")), t_ghost=-1)
-
-
-def h_heard(cr, t, tl, t0):                              # b1 "...and for years, he heard everything" (slate)
     ts = T(tl, "b1", "सुन")
-    hx, hy = sickbed(cr, *BED, alpha=prog(t, t0, 0.3), mind=prog(t, ts - 0.2, 0.5))
-    incoming(cr, hx, hy, t, CORAL, prog(t, ts - 0.3, 0.3), a0=-math.pi * 0.3)
-    stamp(cr, t, "FOR YEARS", T(tl, "b1", "सालों"), 700, 820, 60, color=CORAL)
-    headline(cr, t, "BUT HE HEARD", "EVERYTHING", t0, ts, small_color=CREAM, big_color=CORAL)
+    ring(cr, 770, 1075, 150, 120, prog(t, T(tl, "b1", "कोमा"), 0.4))
+    incoming(cr, 770, 1075, t, RED, prog(t, ts - 0.2, 0.3), a0=-math.pi * 0.62, r0=160, r1=290)
+    stamp(cr, t, "DOCTORS: COMA", T(tl, "b1", "डॉक्टरों"), 330, 1580, 54)
+    headline(cr, t, "IN A COMA, BUT YOU", "HEAR EVERYTHING", -1, min(1.8, ts), t_ghost=-1)
 
 
-def m_africa(cr, t, tl, t0):                             # b2 "in South Africa, 12-year-old Martin suddenly fell ill"
-    world_pin(cr, t, t0, "south_africa", "SOUTH AFRICA", T(tl, "b2", "अफ़्रीका"))
-    counter(cr, t, T(tl, "b2", "बारह") - 0.1, 300, 1500, "12", 120)
-    draw_text(cr, "YEARS OLD", 420, 1500, 56, INK, prog(t, T(tl, "b2", "साल"), 0.3), anchor="lm")
-    card(cr, t, T(tl, "b2", "बीमार"), 330, 1630, ["SUDDENLY FELL ILL"], size=44, seed=5)
-    headline(cr, t, "SOUTH AFRICA:", "MARTIN", t0, T(tl, "b2", "मार्टिन"))
+def t_trapped(cr, t, tl, t0):                            # b1b "you can't even move a hand. can't speak either" (slate)
+    hx, hy = sickbed(cr, W / 2, 1480, 760, mind=1.0)
+    incoming(cr, hx, hy, t, CORAL, prog(t, t0, 0.3), a0=-math.pi * 0.3, r1=260)
+    trapped_rows(cr, t, (("HEAR", t0, True), ("MOVE", T(tl, "b1b", "हिला"), False),
+                         ("SPEAK", T(tl, "b1b", "बोल"), False)))
+    headline(cr, t, "AWAKE INSIDE, BUT", "TRAPPED", t0, T(tl, "b1b", "बोल"), small_color=CREAM, big_color=CORAL)
+
+
+def t_alive(cr, t, tl, t0):                              # b1b "...you're alive, but the body lies there like a corpse"
+    tz, tl_ = T(tl, "b1b", "ज़िंदा"), T(tl, "b1b", "लाश")
+    ecg(cr, 110, 620, 860, 330, t, prog(t, t0, 0.3))
+    stamp(cr, t, "ALIVE", tz, 800, 1060, 60, color=GREEN)
+    sickbed(cr, W / 2, 1420, 800, prog(t, t0 + 0.2, 0.3), mind=1.0)
+    card(cr, t, tl_ + 0.1, 290, 1640, ["MOVEMENT: ZERO"], size=48, seed=6)
+    headline(cr, t, "ALIVE, BUT THE BODY LIES", "LIKE A CORPSE", t0, tl_)
+
+
+def t_true(cr, t, tl, t0):                               # b1c "this is no film: it really happened to a boy in South Africa"
+    ts = T(tl, "b1c", "सच")
+    world_pin(cr, t, t0, "south_africa", "SOUTH AFRICA", T(tl, "b1c", "अफ़्रीका"))
+    stamp(cr, t, "IT REALLY HAPPENED", ts, W / 2, 1520, 60)
+    headline(cr, t, "THIS IS NOT A", "FILM", t0, T(tl, "b1c", "फ़िल्म"), strike_at=ts, struck=True)
+
+
+def m_age(cr, t, tl, t0):                                # b2 "12-year-old Martin suddenly fell ill"
+    counter(cr, t, T(tl, "b2", "बारह") - 0.1, W / 2, 980, "12", 220)
+    draw_text(cr, "YEARS OLD", W / 2, 1200, 70, INK, prog(t, T(tl, "b2", "साल"), 0.3), anchor="ct")
+    card(cr, t, T(tl, "b2", "बीमार"), 300, 1400, ["SUDDENLY FELL ILL", "1988, SOUTH AFRICA"], size=46, seed=5)
+    headline(cr, t, "A 12-YEAR-OLD BOY:", "MARTIN", t0, T(tl, "b2", "मार्टिन"))
 
 
 def m_fade(cr, t, tl, t0):                               # b2 "...slowly his walking, talking, everything stopped"
@@ -461,19 +532,11 @@ def w_wake(cr, t, tl, t0):                               # b4 "but a few years l
     headline(cr, t, "HIS BRAIN STARTED", "WAKING UP", t0, tj, small_color=CREAM, big_color=CORAL)
 
 
-def w_trapped(cr, t, tl, t0):                            # b4 "...he heard and understood all, but couldn't move or speak" (slate)
+def w_same(cr, t, tl, t0):                               # b4 "...and exactly what you just imagined happened to him" (slate)
     hx, hy = sickbed(cr, W / 2, 1480, 760, mind=1.0)
-    incoming(cr, hx, hy, t, CORAL, prog(t, T(tl, "b4", "सुनता"), 0.3), a0=-math.pi * 0.3, r1=260)
-    rows = (("HEARS", T(tl, "b4", "सुनता"), True), ("UNDERSTANDS", T(tl, "b4", "समझता"), True),
-            ("MOVES", T(tl, "b4", "हिल"), False), ("SPEAKS", T(tl, "b4", "बोल"), False))
-    for i, (lab, ts, ok) in enumerate(rows):
-        y = 620 + 145 * i
-        draw_text(cr, lab, 150, y, 80, CREAM, prog(t, ts - 0.1, 0.3), anchor="lm")
-        if ok:
-            tick(cr, 790, y, 80, prog(t, ts + 0.1, 0.3), color=GREEN)
-        else:
-            cross(cr, 830, y, 80, prog(t, ts + 0.1, 0.3), color=CORAL)
-    headline(cr, t, "AWAKE INSIDE, BUT", "TRAPPED", t0, T(tl, "b4", "हिल"), small_color=CREAM, big_color=CORAL)
+    incoming(cr, hx, hy, t, CORAL, prog(t, t0, 0.3), a0=-math.pi * 0.3, r1=260)
+    trapped_rows(cr, t, (("HEARS", t0 + 0.2, True), ("MOVES", t0 + 0.55, False), ("SPEAKS", t0 + 0.9, False)))
+    headline(cr, t, "EXACTLY WHAT YOU", "IMAGINED", t0, T(tl, "b4", "सोचा"), small_color=CREAM, big_color=CORAL)
 
 
 def n_noone(cr, t, tl, t0):                              # b5 "and nobody even knew that he was in there"
@@ -738,10 +801,12 @@ def e_question(cr, t, tl, t0):                           # b19 "did you know som
 
 
 SHOTS = [   # (line, cue where the shot starts, draw function, background)
-    ("b1", None, h_hook, "paper"), ("b1", "और", h_heard, "slate"),
-    ("b2", None, m_africa, "paper"), ("b2", "धीरे", m_fade, "paper"),
+    ("b1", None, h_you, "paper"),
+    ("b1b", None, t_trapped, "slate"), ("b1b", "ज़िंदा", t_alive, "paper"),
+    ("b1c", None, t_true, "paper"),
+    ("b2", None, m_age, "paper"), ("b2", "धीरे", m_fade, "paper"),
     ("b3", None, m_doctors, "paper"),
-    ("b4", None, w_wake, "slate"), ("b4", "वो", w_trapped, "slate"),
+    ("b4", None, w_wake, "slate"), ("b4", "और", w_same, "slate"),
     ("b5", None, n_noone, "paper"),
     ("b6", None, c_switch, "slate"), ("b6", "आँखें", c_eyes, "paper"), ("b6", "अक्सर", c_weeks, "paper"),
     ("b7", None, v_fork, "paper"), ("b7", "आँखें", v_state, "slate"),
@@ -769,6 +834,7 @@ def sfx(tl):
     answer, the re-hook and the closing line, typing under the laptop."""
     ev = [(s, "whoosh", 0.25) for s in starts(tl, SHOTS)[1:]]
     ev += [(T(tl, "b8", "नहीं"), "thud", 0.0), (T(tl, "b13", "नहीं"), "thud", 0.0), (T(tl, "b2", "बंद"), "thud", 0.0),
+           (T(tl, "b1b", "बोल"), "thud", 0.0), (T(tl, "b1c", None) - 0.35, "tick", 0.0),
            (T(tl, "b10", None) - 0.35, "tick", 0.0), (T(tl, "b13", None) - 0.35, "tick", 0.0),
            (T(tl, "b15", None) - 0.35, "tick", 0.0), (T(tl, "b19", None) - 0.35, "tick", 0.0),
            (T(tl, "b16", "कंप्यूटर"), "typing", 0.8), (T(tl, "b19", "यस"), "typing", 1.0)]

@@ -120,6 +120,11 @@ every line, upload sheet. Sources go with every script, and health claims must b
   Bodien 2024 (1 in 4 unresponsive patients followed commands on fMRI/EEG); Pape 2015 (family voices). Script and
   facts in videos/coma.py. Stock photos of patients and a doctor are marked "SYMBOLIC PHOTO" on screen; Martin
   himself is never shown, since no free-licence photo of him exists.
+  - Hook v2 in the second person (owner, 4 Nov: "socho tum koma me chalegaye sab sun to pate par hat be nahi
+    hilisakte na bat karsakte tum jinda to ho par dead jese body me koi movement he nahi hota ... auto approved"):
+    "doctors think you're in a coma... but you hear everything; you can't move a hand or speak; alive, but the body
+    lies like a corpse", then "this is no film" and Martin. It says "doctors *think*", because in a true coma
+    nobody is aware. Line b4 now calls back to it ("exactly what you just imagined").
 - **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
   (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
   minutes, side facts are the first thing to drop.
