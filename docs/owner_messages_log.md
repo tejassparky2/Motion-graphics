@@ -309,3 +309,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-05** He is videos always not information some times funny some times cute some time tasks
 - **2026-11-05** Make 1 video auto approved
 - **2026-11-05** Why so small and not looking real and actions also don't look real
+- **2026-11-05** [link: higgsfield.ai blog "I Kill My AI Character in Every Reel. 1.2M Views in 14 Days. Here's the Whole Recipe"] Can you do thie
