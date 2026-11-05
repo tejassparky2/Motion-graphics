@@ -313,3 +313,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-05** How much each videos will costs
 - **2026-11-05** I have google veo3 omni 1000 credits a month
 - **2026-11-05** Anyway to connect it to you can you can generate?
+- **2026-11-05** Option 2 (use the Flow credits through the laptop chat, not the paid Gemini API)
