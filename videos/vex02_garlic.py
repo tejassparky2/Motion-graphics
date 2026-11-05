@@ -16,7 +16,7 @@ from motion.vex2d import vex
 from videos import vex_kit as K
 
 NARRATOR = dict(turbo=True)            # the keeper: the channel's usual narrator (Turbo stock female)
-TAIL = 0.9                             # the faint lands, then a hard cut
+TAIL = 1.25                            # the faint lands, then a hard cut
 MUSIC = "none"
 voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.05, turbo_ref="af_heart+5", post_pitch=6, babble=True)})
 
@@ -30,7 +30,9 @@ SCRIPT = [
     dict(id="k4", scene="floor", text="Try a tiny bite.", gap=0.3),
     dict(id="v4", scene="floor", text="Tiny bite.", speaker="vex", gap=0.3),
     dict(id="v5", scene="floor", text="MORE!", speaker="vex", gap=1.0),
-    dict(id="k5", scene="floor", text="Uh, Vex? Your breath. [laugh]", gap=1.9),
+    dict(id="k4b", scene="floor", text="Vex! That was the whole plate!", gap=1.9),
+    dict(id="v5b", scene="floor", text="Sorry.", speaker="vex", gap=0.3),
+    dict(id="k5", scene="floor", text="Uh, Vex? Your breath. [laugh]", gap=0.5),
     dict(id="v6", scene="floor", text="Hah.", speaker="vex", gap=0.3),
 ]
 
@@ -240,13 +242,24 @@ def draw(out, t, tl):
                   arms=("front", "front"), point=("claw", "claw"))
         for k in range(8):
             cue("crunch", t, eat0 + k * 0.2)
-    elif t < b["v6"]:                               # full and happy ... "Uh, Vex? Your breath."
+    elif t < b["v5b"]:                              # full and happy ... "Vex! That was the whole plate!"
         x = HX
         sat = seg(t, eat1, eat1 + 0.3)
+        caught = t >= A("k4b", "whole")
+        kw.update(legs="sit" if sat > 0.5 else "stand", eyes="shocked" if caught else "happy",
+                  brows="up" if caught else None, mouth="o" if caught else "smirk", arms=("front", "front"),
+                  squash=land(t, eat1 + 0.15, 0.5), look=(0, 0))
+    elif t < b["k5"]:                               # "sorry" guilty, hands together, head tilted
+        x = HX
+        kw.update(legs="sit", eyes="sad", brows="sad", talk=tk, mouth=None if tk is not None else "frown",
+                  arms=("chin", "chin"), tilt=-0.12)
+    elif t < b["v6"]:                               # "Uh, Vex? Your breath."
+        x = HX
+        sat = 1.0
         puzzled = t >= A("k5", "breath")
-        kw.update(legs="sit" if sat > 0.5 else "stand", eyes="open" if puzzled else "happy",
+        kw.update(legs="sit", eyes="open" if puzzled else "happy",
                   brows="up" if puzzled else None, mouth="smirk", arms=("front", "front") if not puzzled else
-                  ("chin", "front"), squash=land(t, eat1 + 0.15, 0.5), tilt=0.1 if puzzled else 0)
+                  ("chin", "front"), tilt=0.1 if puzzled else 0)
     elif t < faint0:                                # "hah." breathes into his hand
         x = HX
         kw.update(legs="sit", eyes="open", talk=tk, mouth=None if tk is not None else "open", arms=("chin", "front"))
@@ -278,7 +291,7 @@ def draw(out, t, tl):
     if t >= faint0 + 0.7:
         K.dizzy(out, t, x - 40, VY - 60, faint0 + 0.7, r=45)
     for bid, text in (("v1", "GARLIC??"), ("v2", "im melting..."), ("v3", "smells good?"), ("v4", "tiny bite"),
-                      ("v5", "MORE"), ("v6", "hah")):
+                      ("v5", "MORE"), ("v5b", "sory"), ("v6", "hah")):
         bb = tl.by_id[bid]
         K.ref_reply(out, t, bb.start, bb.end, x, REPLY_Y, text)
     K.ref_captions(out, t, tl, skip="vex")

@@ -724,21 +724,22 @@ def ref_captions(cr, t, tl, skip="vex", size=62, line_chars=22, y1=925, y2=(894,
                     phrase.append((w, u.start, u.end))
                 end_here = stop or (comma and len(" ".join(x[0] for x in phrase)) > 12)
                 if end_here and phrase:
-                    chunks += _ref_split(phrase, line_chars)
+                    chunks += [c + (b.id,) for c in _ref_split(phrase, line_chars)]
                     phrase = []
             if phrase:
                 chunks += _ref_split(phrase, line_chars)
+            chunks = [c if len(c) == 4 else c + (b.id,) for c in chunks]
         merged = []                                          # a tiny phrase ("vex no") joins the next one
         for c in chunks:
-            if merged and len(" ".join(merged[-1][0])) <= 8 and len(merged[-1][0]) == 1 and \
-                    len(" ".join(merged[-1][0] + c[0])) <= 2 * line_chars and len(c[0]) == 1 and \
+            if merged and merged[-1][3] == c[3] and len(" ".join(merged[-1][0])) <= 8 and len(merged[-1][0]) == 1 \
+                    and len(" ".join(merged[-1][0] + c[0])) <= 2 * line_chars and len(c[0]) == 1 and \
                     c[1] - merged[-1][2] < 0.6:
                 joined = merged[-1][0][0] + " " + c[0][0]
                 lines = [joined] if len(joined) <= line_chars else [merged[-1][0][0], c[0][0]]
-                merged[-1] = (lines, merged[-1][1], c[2])
+                merged[-1] = (lines, merged[-1][1], c[2], c[3])
             else:
                 merged.append(c)
-        chunks = merged
+        chunks = [c[:3] for c in merged]
         out = []
         for i, (lines, st, en) in enumerate(chunks):
             off = en + 0.3
@@ -760,7 +761,13 @@ def ref_captions(cr, t, tl, skip="vex", size=62, line_chars=22, y1=925, y2=(894,
 def _ref_split(words, line_chars):
     """Words of one phrase -> chunks of at most two lines of `line_chars` characters: [(lines, start, end)]."""
     total = len(" ".join(w[0] for w in words))
-    if total > 2 * line_chars:                      # too long for one caption: split into balanced halves
+    greedy, cur = 1, 0
+    for w in words:
+        if cur and cur + 1 + len(w[0]) > line_chars:
+            greedy, cur = greedy + 1, len(w[0])
+        else:
+            cur = cur + (1 if cur else 0) + len(w[0])
+    if (total > 2 * line_chars or greedy > 2) and len(words) > 1:   # too long for one caption: two balanced halves
         acc, cut = 0, len(words) - 1
         for i, w in enumerate(words):
             acc += len(w[0]) + 1
