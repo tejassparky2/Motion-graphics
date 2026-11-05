@@ -20,28 +20,30 @@ from motion.vex2d import vex
 from videos import vex_kit as K
 
 NARRATOR = dict(turbo=True)            # the keeper: the channel's usual narrator (Turbo stock female)
-TAIL = 0.6
+TAIL = 0.2                             # hard cut right after the payoff, like the reference
 MUSIC = "none"
 # Vex: gibberish through Turbo (so tags like [laugh] come out), then +6 st with the formants moved: ~400 Hz like Grim
 voice.SPEAKERS.update({"vex": dict(voice="af_heart", speed=1.05, turbo_ref="af_heart+5", post_pitch=6, babble=True)})
 
-SCRIPT = [
+SCRIPT = [   # Vex's lines are 1-3 words of baby talk, like the reference's replies (deep study, 5 Nov 2026)
     dict(id="b1", scene="floor", text="Snack? [laugh]", speaker="vex"),
-    dict(id="b2", scene="floor", text="Vex, no. That's a pufferfish.", gap=0.5),
-    dict(id="b3", scene="floor", text="I'm a vampire. I bite everything.", speaker="vex"),
-    dict(id="b4", scene="floor", text="Don't. When it's scared, it blows up into a spiky ball."),
+    dict(id="b2", scene="floor", text="Vex, no. That's a pufferfish.", gap=0.35),
+    dict(id="b3", scene="floor", text="But I'm vampire.", speaker="vex", gap=0.3),
+    dict(id="b4", scene="floor", text="Don't. When it's scared, it blows up into a spiky ball.", gap=0.3),
     dict(id="b5", scene="floor", text="OW!", speaker="vex", gap=0.15),
-    dict(id="b6", scene="floor", text="Then I'll cook it first.", speaker="vex", gap=1.4),
+    dict(id="b5b", scene="floor", text="Told you. [laugh]", gap=0.25),
+    dict(id="b6", scene="floor", text="Ok, I cook it.", speaker="vex", gap=1.0),
     dict(id="b7", scene="floor", text="Cooking won't help. Its poison doesn't break down with heat. And there's no "
-                                      "antidote."),
-    dict(id="b8", scene="floor", text="Poison? Where does a tiny fish get poison?", speaker="vex"),
-    dict(id="b9", scene="floor", text="From its food. Tiny bacteria make it, and it builds up inside the fish."),
-    dict(id="b10", scene="floor", text="So a fish with clean food is safe to bite!", speaker="vex"),
-    dict(id="b11", scene="floor", text="Farmed ones carry far less. Not zero. And they still puff up. [chuckle]",
+                                      "antidote.", gap=0.3),
+    dict(id="b8", scene="floor", text="Poison? From where?", speaker="vex", gap=0.3),
+    dict(id="b9", scene="floor", text="From its food. Tiny bacteria make it, and it builds up inside the fish.",
          gap=0.3),
-    dict(id="b12", scene="floor", text="I'll have juice. [sigh]", speaker="vex", gap=0.6),
+    dict(id="b10", scene="floor", text="Clean one ok?", speaker="vex", gap=0.3),
+    dict(id="b11", scene="floor", text="Farmed ones on clean food? Far less poison. Not zero. And they still puff up. "
+                                       "[chuckle]", gap=0.3),
+    dict(id="b12", scene="floor", text="I have juice. [sigh]", speaker="vex", gap=0.5),
     dict(id="b13", scene="floor", text="Uh, Vex? It's drinking your juice. [laugh]", gap=1.3),
-    dict(id="b14", scene="floor", text="MY JUICE! [sniff]", speaker="vex", gap=0.2),
+    dict(id="b14", scene="floor", text="MY JUICE!", speaker="vex", gap=0.15),
 ]
 
 METADATA = dict(
@@ -63,15 +65,21 @@ Then it drank his juice. 🧃
 )
 
 
-VX, VY, S = 205, 742, 0.33           # Vex's home spot
-HX = 355                              # where he stands to bite
-FX, FY, FR = 480, 742, 78             # the fish's water dish
+# Layout from the deep study of the references (research_notes/vex_deep_*.md, 5 Nov 2026): toy-sized mascot
+# (~226 px of 1280), the pair centred on one floor line at y~752, one locked shot, captions at y 925.
+S = 0.21                              # Vex ~226 px tall
+KS = S / 0.33                         # scale for offsets first laid out at S = 0.33
+VX, VY = 262, 752                     # Vex's home spot (feet)
+FX, FY, FR = 478, 752, 62             # the fish's water dish
+HX = FX - 125 * KS                    # where he stands to bite
+FS = 0.46                             # fish size
+REPLY_Y = VY - 1076 * S - 45          # his lines: fixed baseline ~45 px over his head
 INK = (0.11, 0.06, 0.1, 1)
 _env = {}
 
 
 def talk(tl, t, who="vex"):
-    """Mouth opening 0..1 from the loudness of his voice right now; None when he isn't speaking."""
+    """Mouth opening from the loudness of his voice right now (kept small: the reference's mouths barely move)."""
     if not _env:
         for b in tl.beats:
             if b.speaker != who or b.audio is None:
@@ -83,7 +91,7 @@ def talk(tl, t, who="vex"):
     for st, env in _env.values():
         i = int((t - st) * 44100)
         if 0 <= i < len(env):
-            return float(min(1.0, env[i] * 1.1))
+            return float(min(0.5, env[i] * 0.55))
     return None
 
 
@@ -98,8 +106,8 @@ def land(t, t0, k=0.9):
     return k * math.exp(-9 * d) * math.cos(16 * d) if d > 0 else 0.0
 
 
-def mouth_at(x, turn, lift=0.0):
-    return x + turn * 58 * 0.9 * S, VY - lift - 492 * S
+def mouth_at(x, turn, lift=0.0, sit=False):
+    return x + turn * 58 * 0.9 * S, VY - lift - (492 - (110 if sit else 0)) * S
 
 
 def fangs(cr, mx, my):
@@ -126,11 +134,10 @@ def pan_prop(cr, hx, hy, ang):
     cr.restore()
 
 
-def pan_on_floor(cr, x, y, k=1.0):
+def pan_on_floor(cr, x, y):
     cr.save()
     cr.translate(x, y)
-    cr.scale(S * k, S * k)
-    K.floor_shadow(cr, 60, 6, 120, 0.3)
+    cr.scale(S, S)
     rrect(cr, -170, -14, 130, 24, 10)
     paint(cr, (0.36, 0.24, 0.16, 1), INK, 8)
     ellipse(cr, 60, 0, 100, 34)
@@ -138,82 +145,95 @@ def pan_on_floor(cr, x, y, k=1.0):
     cr.restore()
 
 
-def juice_box(cr, mx, my, sip):
-    bx, by = mx + 6, my + 70
-    stroke_line(cr, [(bx + 8, by - 40), (mx + 4, my + 6)], 7, INK, curve=False)          # straw
-    stroke_line(cr, [(bx + 8, by - 40), (mx + 4, my + 6)], 4, (1, 1, 1, 1), curve=False)
-    rrect(cr, bx - 26, by - 40, 52, 74, 8)
+def juice_box(cr, x, y, k=1.0, crumple=0.0, straw_to=None):
+    """A tomato-juice box standing at (x, y) (bottom centre); straw to `straw_to` (screen px) or straight up."""
+    cr.save()
+    cr.translate(x, y)
+    tip = (straw_to[0] - x, straw_to[1] - y) if straw_to else (10 * k, -70 * k)
+    straw = [(6 * k, -60 * k * (1 - 0.35 * crumple)), (14 * k, -84 * k), tip]
+    stroke_line(cr, straw, 7 * k + 1, INK, curve=False)
+    stroke_line(cr, straw, 3.5 * k + 0.5, (1, 1, 1, 1), curve=False)
+    cr.scale(k * (1 - 0.15 * crumple), k * (1 - 0.35 * crumple))
+    rrect(cr, -22, -64, 44, 64, 7)
     paint(cr, (0.86, 0.16, 0.2, 1), INK, 4)
-    rrect(cr, bx - 18, by - 22, 36, 30, 5)
+    rrect(cr, -15, -48, 30, 26, 5)
     paint(cr, (1, 1, 1, 1), None, 0)
-    ellipse(cr, bx, by - 7, 10, 9)
+    ellipse(cr, 0, -35, 8, 7)
     paint(cr, (0.92, 0.2, 0.2, 1), INK, 2)
-    stroke_line(cr, [(bx, by - 16), (bx + 4, by - 20)], 3, (0.3, 0.7, 0.3, 1), curve=False)
-    if sip:                                         # little sip bubbles
-        for k in range(2):
-            ellipse(cr, mx + 22 + 8 * k, my - 6 - ((sip * 2 + k * 0.5) % 1.0) * 20, 4, 4)
-            cr.set_source_rgba(1, 1, 1, 0.8)
-            cr.fill()
+    stroke_line(cr, [(0, -43), (4, -47)], 3, (0.3, 0.7, 0.3, 1), curve=False)
+    cr.restore()
 
 
 def thought(cr, t, tl):
     """b9: a thought bubble over the dish: bacteria -> worm -> fish."""
     A = tl.at
-    t0, t1 = A("b9", "food"), A("b10") + 0.2
-    if not (t0 <= t < t1 + 0.25):
+    t0, t1 = A("b9", "food"), A("b10") - 0.1
+    if not (t0 <= t < t1 + 0.2):
         return
-    k = ease_out(seg(t, t0, t0 + 0.3)) * (1 - seg(t, t1, t1 + 0.25))
+    k = ease_out(seg(t, t0, t0 + 0.3)) * (1 - seg(t, t1, t1 + 0.2))
     if k <= 0.01:
         return
-    cx, cy = 450, 470
-    for i, (dx, dy, r) in enumerate(((440, 640, 12), (445, 600, 18))):
+    cx, cy, z = 470, 440, 0.78
+    for dx, dy, r in ((FX - 30, FY - 120, 9), (FX - 26, FY - 150, 14)):
         ellipse(cr, dx, dy, r * k, r * k)
-        paint(cr, (1, 1, 1, 0.95), INK, 4)
+        paint(cr, (1, 1, 1, 0.95), INK, 3)
     cr.save()
     cr.translate(cx, cy)
-    cr.scale(k, k)
-    for bx, by, r in ((-120, 0, 70), (-50, -40, 80), (50, -40, 80), (120, 0, 70), (0, 30, 90)):
-        ellipse(cr, bx, by, r, r)
-        paint(cr, (1, 1, 1, 0.97), None, 0)
-    for bx, by, r in ((-120, 0, 70), (-50, -40, 80), (50, -40, 80), (120, 0, 70), (0, 30, 90)):
-        cr.save()
-        ellipse(cr, bx, by, r, r)
-        cr.set_source_rgba(*INK)
-        cr.set_line_width(4)
-        cr.stroke()
-        cr.restore()
-    for bx, by, r in ((-120, 0, 66), (-50, -40, 76), (50, -40, 76), (120, 0, 66), (0, 30, 86)):
+    cr.scale(k * z, k * z)
+    lobes = ((-120, 0, 70), (-50, -40, 80), (50, -40, 80), (120, 0, 70), (0, 30, 90))
+    for bx, by, r in lobes:
+        ellipse(cr, bx, by, r + 4, r + 4)
+        paint(cr, INK, None, 0)
+    for bx, by, r in lobes:
         ellipse(cr, bx, by, r, r)
         paint(cr, (1, 1, 1, 1), None, 0)
     cr.restore()
     if t >= A("b9", "bacteria"):
-        K.bacteria(cr, t, cx - 120, cy, 0.8 * ease_out(seg(t, A("b9", "bacteria"), A("b9", "bacteria") + 0.3)))
+        K.bacteria(cr, t, cx - 120 * z, cy, 0.8 * z * ease_out(seg(t, A("b9", "bacteria"), A("b9", "bacteria") + 0.3)))
     if t >= A("b9", "builds"):
         u = ease_out(seg(t, A("b9", "builds"), A("b9", "builds") + 0.3))
-        K.worm(cr, t, cx + 5, cy + 5, 0.6 * u)
-        K.pufferfish(cr, t, cx + 125, cy, 0.42 * u, facing=-1)
-        stroke_line(cr, [(cx - 75, cy), (cx - 50, cy)], 6, (0.9, 0.2, 0.2, u), curve=False)
-        stroke_line(cr, [(cx + 52, cy), (cx + 78, cy)], 6, (0.9, 0.2, 0.2, u), curve=False)
+        K.worm(cr, t, cx + 5 * z, cy + 5 * z, 0.6 * z * u)
+        K.pufferfish(cr, t, cx + 125 * z, cy, 0.42 * z * u, facing=-1)
+        stroke_line(cr, [(cx - 75 * z, cy), (cx - 50 * z, cy)], 6, (0.9, 0.2, 0.2, u), curve=False)
+        stroke_line(cr, [(cx + 52 * z, cy), (cx + 78 * z, cy)], 6, (0.9, 0.2, 0.2, u), curve=False)
 
 
-def draw(cr, t, tl):
+def dash(t, t_out, t_back, x_from, x_to):
+    """The reference's prop change: dash off-screen left (0.08 s), 0.25-0.3 s of empty floor, dash back in (0.12 s).
+    Returns (x or None while off screen, smear direction)."""
+    if t < t_out:
+        return x_from, 0
+    if t < t_out + 0.08:
+        return lerp(x_from, -160, (t - t_out) / 0.08), -1
+    if t < t_back:
+        return None, 0
+    if t < t_back + 0.12:
+        return lerp(-160, x_to, ease_out((t - t_back) / 0.12)), 1
+    return x_to, 0
+
+
+def draw(out, t, tl):
     A = tl.at
-    K.photo(cr, t, "close_living", 0.0, push=0.04, dur=40, focus=(380, 700))
+    K.photo(out, t, "close_living_ref", 0.0, push=0.0)      # one locked shot, like the reference
+    layer, cr = K.world_layer()
     blink = K.auto_blink(t)
     tk = talk(tl, t)
-    b = {k: A(k) for k in ("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11", "b12", "b13",
+    b = {k: A(k) for k in ("b1", "b2", "b3", "b4", "b5", "b5b", "b6", "b7", "b8", "b9", "b10", "b11", "b12", "b13",
                            "b14")}
-    put_down = A("b12", end=True) + 0.25          # he sets the juice box on the floor ...
-    sneak0, slurp0 = put_down + 0.35, b["b13"] - 0.7   # ... the fish sneaks over and drinks it
-    slurp = seg(t, slurp0, slurp0 + 1.6)
-    BOX = (382, VY - 2)
-    straw_end = (436, FY - 36)                     # a bendy straw from the box down into the fish's lips
+    e = {k: A(k, end=True) for k in b}
     chomp, poke = A("b4", "scared"), b["b5"]
-    grab2, freeze, puff2 = b["b11"], A("b11", "Not"), A("b11", "puff")
+    grab2, freeze, puff2 = A("b11", "less"), A("b11", "Not"), A("b11", "puff")
     drop_pan = A("b7", "antidote")
-    hat_on = b["b6"] - 0.35
+    hat_out, hat_back = b["b6"] - 0.75, b["b6"] - 0.42          # dash off, come back in a chef hat with a pan
+    juice_out, juice_back = e["b11"] - 0.05, b["b12"] - 0.2     # dash off, come back with a juice box
+    put_down = e["b12"] + 0.25
+    sneak0, slurp0 = put_down + 0.35, b["b13"] - 0.7
+    slurp = seg(t, slurp0, slurp0 + 1.6)
+    kd = FR / 78
+    BOX = (FX - 96 * kd, VY - 2)
+    straw_end = (FX - 44 * kd, FY - 30 * kd)
 
-    # ---- the fish: in the dish, held, puffed, dropped back, deflating
+    # ---- the fish: in the dish, held, puffed, dropped back, deflating, drinking
     if t < poke:
         puff = gulps(t, A("b4", "blows"), A("b4", "ball", end=True)) if t >= chomp else 0.0
     elif t < b["b7"]:
@@ -223,36 +243,33 @@ def draw(cr, t, tl):
     elif t < puff2:
         puff = 0.0
     elif t < slurp0:
-        puff = 1 - 0.85 * seg(t, b["b12"], put_down)
-        puff = min(puff, ease_out(seg(t, puff2, puff2 + 0.25)))
-    else:                                         # drinking his juice: gulp, gulp, gulp, and it turns tomato red
+        puff = min(1 - 0.85 * seg(t, b["b12"], put_down), ease_out(seg(t, puff2, puff2 + 0.25)))
+    else:
         puff = 0.15 + 0.85 * gulps(t, slurp0, slurp0 + 1.6)
     held1 = b["b4"] + 0.6 <= t < poke
-    held2 = grab2 + 0.5 <= t < puff2 + 0.25
+    held2 = grab2 + 0.35 <= t < puff2 + 0.25
     shake = 5 * math.sin(t * 60) if (chomp <= t < chomp + 0.25 or poke <= t < poke + 0.3 or
                                     puff2 <= t < puff2 + 0.3) else 0
-    fs = 0.55 + 0.05 * puff
-
-    K.dish_back(cr, FX, FY, FR)
+    fs = FS + 0.04 * puff
     turn_bite = 0.45
     mx, my = mouth_at(HX, turn_bite)
-    in_dish = (FX, FY - 34 - 30 * puff)
+    in_dish = (FX, FY - 27 * kd - 24 * kd * puff)
 
     def fish_pos():
         if held1:
             lift = ease_out(seg(t, b["b4"] + 0.6, chomp - 0.08))
             snap = seg(t, chomp - 0.06, chomp + 0.04)
-            hy = lerp(my + 62, my + 24, snap)
-            return lerp(FX, mx + 6, lift), lerp(FY - 34, hy, lift)
+            hy = lerp(my + 62 * KS, my + 24 * KS, snap)
+            return lerp(FX, mx + 6 * KS, lift), lerp(FY - 27 * kd, hy, lift)
         if held2:
-            lift = ease_out(seg(t, grab2 + 0.5, grab2 + 0.9))
-            return lerp(FX, mx + 6, lift), lerp(FY - 34, my + 66, lift)
+            lift = ease_out(seg(t, grab2 + 0.35, grab2 + 0.75))
+            return lerp(FX, mx + 6 * KS, lift), lerp(FY - 27 * kd, my + 66 * KS, lift)
         if poke <= t < poke + 0.35:                 # falling back into the dish
             u = seg(t, poke, poke + 0.35)
-            return lerp(mx + 6, in_dish[0], u), lerp(my + 24, in_dish[1], u * u)
+            return lerp(mx + 6 * KS, in_dish[0], u), lerp(my + 24 * KS, in_dish[1], u * u)
         if puff2 + 0.25 <= t < puff2 + 0.6:
             u = seg(t, puff2 + 0.25, puff2 + 0.6)
-            return lerp(mx + 6, in_dish[0], u), lerp(my + 66, in_dish[1], u * u)
+            return lerp(mx + 6 * KS, in_dish[0], u), lerp(my + 66 * KS, in_dish[1], u * u)
         if t >= sneak0:                             # scoots to the dish's edge, lips on the straw
             u = ease_out(seg(t, sneak0, slurp0))
             lip = straw_end[0] + (70 + 44 * puff) * fs * 0.96
@@ -266,21 +283,9 @@ def draw(cr, t, tl):
                      flap=not (held1 or held2), tint=ease_out(slurp))
 
     holding = held1 or held2
-    if t >= put_down:                               # the juice box on the floor, crumpling as it's drunk
-        cr.save()
-        cr.translate(*BOX)
-        cr.scale(1 - 0.15 * slurp, 1 - 0.35 * slurp)
-        K.floor_shadow(cr, 0, 2, 34, 0.3)
-        straw = [(6, -60), (14, -92), (straw_end[0] - BOX[0] - 6, straw_end[1] - BOX[1])]
-        stroke_line(cr, straw, 8, INK, curve=False)
-        stroke_line(cr, straw, 4, (1, 1, 1, 1), curve=False)
-        rrect(cr, -22, -64, 44, 64, 7)
-        paint(cr, (0.86, 0.16, 0.2, 1), INK, 4)
-        rrect(cr, -15, -48, 30, 26, 5)
-        paint(cr, (1, 1, 1, 1), None, 0)
-        ellipse(cr, 0, -35, 8, 7)
-        paint(cr, (0.92, 0.2, 0.2, 1), INK, 2)
-        cr.restore()
+    K.dish_back(cr, FX, FY, FR, shadow=False)
+    if t >= put_down:
+        juice_box(cr, BOX[0], BOX[1], kd, crumple=slurp, straw_to=straw_end)
         for k in range(3):
             cue("pop", t, slurp0 + 0.15 + k * 0.5)
     if not holding:
@@ -288,7 +293,7 @@ def draw(cr, t, tl):
     K.dish_front(cr, FX, FY, FR)
     if t >= drop_pan:                               # the dropped pan stays on the floor
         u = seg(t, drop_pan, drop_pan + 0.3)
-        pan_on_floor(cr, lerp(250, 150, u), lerp(560, VY + 30, u * u), 1.0)
+        pan_on_floor(cr, lerp(VX - 10, VX - 90, u), lerp(VY - 160, VY + 22, u * u))
         cue("thud", t, drop_pan + 0.3)
 
     def hands_on_fish(x):
@@ -300,127 +305,146 @@ def draw(cr, t, tl):
     def in_hands(c):
         draw_fish()
         if held1 and t >= chomp:
-            fangs(c, mx + shake * 0.6, my + 4)
+            fangs(c, mx + shake * 0.6, my + 4 * KS)
 
-    hat_x, hat_y, show_hat = None, None, hat_on <= t < puff2 + 0.2
-    kw = dict(blink=blink)
+    kw = dict(blink=blink, idle=0.0, shadow=False)
     x = VX
-    # ---- Vex, beat by beat
-    if t < b["b2"]:                                 # "Snack?"
-        x = VX
-        kw.update(turn=0.5, look=(0.8, 0.4), eyes="sparkle", brows=None, mouth="grin" if tk is None else None,
-                  talk=tk, lean=0.06)
+    hat = False
+    # ---- Vex, beat by beat: faces the camera when he talks, turns to the fish when he acts
+    if t < b["b2"]:                                 # "snack?"
+        kw.update(turn=0.5, look=(0.8, 0.4), eyes="sparkle", mouth="grin" if tk is None else None, talk=tk)
     elif t < b["b3"]:                               # "Vex, no. That's a pufferfish."
-        glance = seg(t, A("b2", "pufferfish"), A("b2", "pufferfish") + 0.3)
-        kw.update(turn=0.4 * glance, look=(0.8 * glance, 0.2 * glance), eyes="open", mouth="smirk",
-                  squash=0.15 * math.sin(seg(t, b["b2"], b["b2"] + 0.3) * math.pi))
-    elif t < b["b4"]:                               # "I'm a vampire. I bite everything."
-        big = seg(t, A("b3", "vampire") - 0.1, A("b3", "vampire") + 0.15)
-        claws = t >= A("b3", "bite")
-        kw.update(turn=0.1, eyes="angry", brows="angry", talk=tk, mouth=None if tk is not None else "smirk",
-                  arms=("up", "up") if claws else (("out", "out") if big > 0.5 else ("hips", "hips")),
-                  point=("claw", "claw") if claws else (False, False), cape=big, tilt=-0.05)
+        glance = seg(t, A("b2", "no"), A("b2", "no") + 0.25)
+        kw.update(turn=0.5 * (1 - glance), look=(0.8 * (1 - glance), 0.4 * (1 - glance)), eyes="open",
+                  brows="up" if glance > 0.5 else None, mouth="smirk")
+    elif t < b["b4"]:                               # "but im vampire": cape flares, claws up
+        big = seg(t, b["b3"], b["b3"] + 0.25)
+        kw.update(turn=0.0, eyes="angry", brows="angry", talk=tk, mouth=None if tk is not None else "smirk",
+                  arms=("up", "up") if big > 0.5 else ("hips", "hips"), point=("claw", "claw"), cape=big,
+                  squash=0.2 * math.sin(big * math.pi))
+        cue("whoosh", t, b["b3"])
     elif t < poke:                                  # "Don't." hop over, grab it, CHOMP on "scared"
         hop = seg(t, b["b4"], b["b4"] + 0.45)
         x = lerp(VX, HX, ease_out(hop))
         biting = t >= chomp
         arms = ("up", "up") if hop < 1 else hands_on_fish(x)
-        kw.update(turn=turn_bite, lift=70 * math.sin(hop * math.pi) if hop < 1 else 0,
-                  legs="jump" if 0 < hop < 1 else "stand", squash=0.4 * math.sin(seg(t, b["b4"] + 0.45,
-                                                                                      b["b4"] + 0.6) * math.pi),
+        kw.update(turn=turn_bite, lift=55 * math.sin(hop * math.pi) if hop < 1 else 0,
+                  legs="jump" if 0 < hop < 1 else "stand",
+                  squash=0.4 * math.sin(seg(t, b["b4"] + 0.45, b["b4"] + 0.6) * math.pi),
                   eyes=("cry" if puff > 0.8 else "shocked" if puff > 0.25 else "closed") if biting else "angry",
                   brows=("up" if puff > 0.25 else None) if biting else "angry",
                   mouth="chomp" if biting else "bite", arms=arms, point=("claw", "claw"), look=(0.6, 0.5),
-                  cape=0.3 if biting else 0.7, blink=0.0,
-                  held=in_hands if held1 and puff < 0.5 else None)
-    elif t < hat_on:                                # "OW!" spin back, sit, dizzy
+                  cape=0.3 if biting else 0.7, blink=0.0, held=in_hands if held1 and puff < 0.5 else None)
+        cue("whoosh", t, b["b4"])
+        cue("thud", t, b["b4"] + 0.45)
+    elif t < hat_out:                               # "OW!" spins back, sits dizzy; "Told you."
         v = seg(t, poke, poke + 0.5)
-        x = lerp(HX, 190, ease_out(v))
-        kw.update(rot=-2 * math.pi * ease_out(v), pivot="center", lift=130 * math.sin(v * math.pi) if v < 1 else 0,
+        x = lerp(HX, VX - 20, ease_out(v))
+        kw.update(rot=-2 * math.pi * ease_out(v), pivot="center", lift=100 * math.sin(v * math.pi) if v < 1 else 0,
                   legs="sit" if v >= 1 else "jump", eyes="dizzy" if v >= 1 else "cry", talk=tk,
                   mouth="wobble" if tk is None else None, arms=("up", "up") if v < 1 else ("out", "out"),
-                  squash=land(t, poke + 0.5), cape=0.5, tears=v >= 1)
-    elif t < b["b7"]:                               # "Then I'll cook it first." chef hat + pan
-        pop = seg(t, hat_on, hat_on + 0.35)
-        x = 190
-        kw.update(turn=0.2, lift=60 * math.sin(pop * math.pi) if pop < 1 else 0, squash=land(t, hat_on + 0.35, 0.6),
-                  eyes="happy" if tk is not None else "sparkle", talk=tk, mouth=None if tk is not None else "smirk",
-                  arms=("hips", "up"), hold=(None, pan_prop))
-    elif t < b["b8"]:                               # "Cooking won't help ... no antidote." smile fades, pan drops
-        x = 190
+                  squash=land(t, poke + 0.5), cape=0.5, tears=v >= 1, turn=0.0)
+        cue("thud", t, poke + 0.5)
+    elif t < b["b7"]:                               # dashes off ... back in a chef hat with a pan: "ok i cook it"
+        dx, smear = dash(t, hat_out, hat_back, VX - 20, VX)
+        x = dx
+        hat = t >= hat_back
+        kw.update(turn=0.0 if tk is not None else 0.2, eyes="happy" if tk is not None else "sparkle", talk=tk,
+                  mouth=None if tk is not None else "smirk", arms=("hips", "up"), hold=(None, pan_prop) if hat else
+                  (None, None), legs="sit" if t < hat_out + 0.02 else "jump" if smear else "stand",
+                  squash=land(t, hat_back + 0.12, 0.5))
+        cue("whoosh", t, hat_out)
+        cue("whoosh", t, hat_back)
+    elif t < b["b8"]:                               # "Cooking won't help ... no antidote." pan drops
+        hat = True
         shocked = t >= A("b7", "poison")
         dropped = t >= drop_pan
-        kw.update(turn=0.1, eyes="shocked" if shocked else "open", brows="up" if shocked else "flat",
+        kw.update(turn=0.0, eyes="shocked" if shocked else "open", brows="up" if shocked else "flat",
                   mouth="o" if dropped else ("frown" if shocked else "smirk"),
                   arms=("out", "out") if dropped else ("hips", "up"), hold=(None, None if dropped else pan_prop),
                   squash=land(t, drop_pan, 0.4) if dropped else 0)
-    elif t < b["b9"]:                               # "Poison? Where does a tiny fish get poison?"
-        x = 190
-        think = t >= A("b8", "Where")
-        kw.update(turn=0.3 if think else 0, eyes="shocked" if not think else "open", brows="up" if not think else "flat",
-                  talk=tk, mouth=None if tk is not None else "o", look=(0.6, 0.2) if think else (0, 0),
-                  arms=("chin", "hips") if think else ("cheek", "cheek"), tilt=0.08 if think else 0)
-    elif t < b["b10"]:                              # the keeper explains; Vex watches the bubble, nodding
-        x = 190
-        kw.update(turn=0.35, look=(0.7, -0.6), eyes="open", mouth="smirk", arms=("chin", "rest"),
-                  tilt=0.05 * math.sin(t * 6))
-    elif t < grab2:                                 # "So a fish with clean food is safe to bite!" tiptoes over
-        w = seg(t, b["b10"], A("b10", end=True) + 0.1)
-        x = lerp(190, HX, w)
-        kw.update(turn=0.5, eyes="sparkle", talk=tk, mouth=None if tk is not None else "grin", legs="walk",
-                  walk=t * 14, arms=("up", "up"), point=("claw", "claw"), lean=0.05)
-    elif t < puff2:                                 # "Farmed ones ... far less. Not zero." grabs it, freezes
+    elif t < b["b9"]:                               # "poison?? from wer"
+        hat = True
+        kw.update(turn=0.0, eyes="shocked", brows="up", talk=tk, mouth=None if tk is not None else "o",
+                  arms=("cheek", "cheek"))
+    elif t < b["b10"]:                              # the keeper explains; Vex watches the bubble, hand on chin
+        hat = True
+        kw.update(turn=0.4, look=(0.7, -0.6), eyes="open", mouth="smirk", arms=("chin", "rest"), tilt=0.06)
+    elif t < grab2:                                 # "clean one ok?" ... then tiptoes over to it
+        hat = True
+        asking = t < e["b10"] + 0.1
+        w = seg(t, e["b10"] + 0.1, grab2)
+        x = lerp(VX, HX, w)
+        kw.update(turn=0.0 if asking else 0.5, eyes="sparkle", talk=tk, mouth=None if tk is not None else "grin",
+                  legs="stand" if asking else "walk", walk=t * 14, arms=("chin", "chin") if asking else ("up", "up"),
+                  point=(False, False) if asking else ("claw", "claw"))
+    elif t < puff2:                                 # grabs it ... "Not zero." freezes, side-eye at the camera
+        hat = True
         x = HX
         frozen = t >= freeze
-        kw.update(turn=turn_bite if not frozen else 0.15, look=(-0.8, 0.0) if frozen else (0.6, 0.5),
+        kw.update(turn=0.15 if frozen else turn_bite, look=(-0.8, 0.0) if frozen else (0.6, 0.5),
                   eyes="open" if frozen else "angry", brows="flat" if frozen else "angry",
                   mouth="smirk" if frozen else "bite", arms=hands_on_fish(x), point=("claw", "claw"), blink=0.0,
                   held=in_hands if held2 else None)
-    elif t < b["b12"] - 0.35:                       # "And they still puff up." knocked flat
+    elif t < juice_out:                             # "And they still puff up." knocked flat
         v = seg(t, puff2, puff2 + 0.45)
-        x = lerp(HX, 230, ease_out(v))
-        kw.update(rot=-1.45 * ease_out(v), pivot="center", lift=80 * math.sin(v * math.pi) if v < 1 else 0,
-                  eyes="dizzy" if v >= 1 else "cry", mouth="wobble", arms=("up", "up"), squash=land(t, puff2 + 0.45, 0.5),
-                  tears=v >= 1)
-    elif t < put_down:                              # "I'll have juice." sulking, sipping
-        x = 250
-        kw.update(legs="sit", eyes="sad", brows="sad", mouth="o", arms=("front", "front"), turn=0.0,
-                  held=lambda c, x=x: juice_box(c, mouth_at(x, 0.0)[0], mouth_at(x, 0.0)[1] + 110 * S, t))
+        x = lerp(HX, VX + 10, ease_out(v))
+        kw.update(rot=-1.45 * ease_out(v), pivot="center", lift=70 * math.sin(v * math.pi) if v < 1 else 0,
+                  eyes="dizzy" if v >= 1 else "cry", mouth="wobble", arms=("up", "up"),
+                  squash=land(t, puff2 + 0.45, 0.5), tears=v >= 1)
+        cue("thud", t, puff2 + 0.45)
+    elif t < put_down:                              # dashes off, back with a juice box: "i have juice" (sigh)
+        dx, smear = dash(t, juice_out, juice_back, VX + 10, VX + 28)
+        x = dx
+        kw.update(legs="sit" if not smear and t >= juice_back else "jump", eyes="sad", brows="sad", mouth="o",
+                  arms=("front", "front"), turn=0.0,
+                  held=(lambda c, x=x: juice_box(c, mouth_at(x, 0.0, sit=True)[0] + 4,
+                                                 mouth_at(x, 0.0, sit=True)[1] + 82 * KS, KS * 0.9))
+                  if x is not None and t >= juice_back else None)
+        cue("whoosh", t, juice_out)
+        cue("whoosh", t, juice_back)
     elif t < b["b14"]:                              # sets it down, sulks ... then sees the fish drinking it
-        x = 250
+        x = VX + 28
         sees = t >= A("b13", "Vex")
         shocked = t >= A("b13", "drinking")
         kw.update(legs="sit", turn=0.5 if sees else 0.0, look=(0.8, 0.3) if sees else (0.0, 0.6),
                   eyes="shocked" if shocked else ("open" if sees else "sad"), brows="up" if sees else "sad",
                   mouth="o" if shocked else "frown", arms=("cheek", "cheek") if shocked else ("down", "down"))
-    else:                                           # "MY JUICE!" jumps up, crying
-        x = 250
-        j = seg(t, b["b14"], b["b14"] + 0.4)
-        kw.update(lift=70 * math.sin(j * math.pi) if j < 1 else 0, legs="jump" if j < 1 else "stand",
-                  squash=land(t, b["b14"] + 0.4, 0.6), turn=0.4, eyes="cry", brows="sad", tears=True,
+    else:                                           # "MY JUICE!" jumps up crying
+        x = VX + 28
+        j = seg(t, b["b14"], b["b14"] + 0.35)
+        kw.update(lift=60 * math.sin(j * math.pi) if j < 1 else 0, legs="jump" if j < 1 else "stand",
+                  squash=land(t, b["b14"] + 0.35, 0.6), turn=0.0, eyes="cry", brows="sad", tears=True,
                   talk=tk, mouth=None if tk is not None else "wobble", arms=("up", "up"), cape=0.6)
-    vex(cr, t, x + (shake * 0.6 if holding else 0), VY, S, **kw)
-    if holding and puff >= 0.5:                     # fully puffed: it fills his arms, in front of everything
-        in_hands(cr)
-    if show_hat and kw.get("rot", 0) == 0:
-        K.chef_hat(cr, x + kw.get("turn", 0) * 12 * S, VY - kw.get("lift", 0) - 1040 * S,
-                   1.25 * ease_out(seg(t, hat_on, hat_on + 0.3)))
-    if b["b5"] <= t < hat_on and t >= poke + 0.5:
-        K.dizzy(cr, t, 190, VY - 1000 * S + 20, poke + 0.5, r=80)
-    if puff2 + 0.45 <= t < b["b12"] - 0.35:
-        K.dizzy(cr, t, 150, VY - 300 * S, puff2 + 0.45, r=70)
-    K.impact(cr, t, chomp, mx + 8, my + 8, 70)
+    if x is not None:
+        smear = 0
+        if hat_out <= t < hat_back + 0.12 or juice_out <= t < juice_back + 0.12:
+            smear = -1 if (hat_out <= t < hat_out + 0.08 or juice_out <= t < juice_out + 0.08) else 1
+        for g in ((2, 1) if smear else ()):         # motion smear: two fading copies behind him
+            cr.push_group()
+            vex(cr, t, x - smear * 38 * g, VY, S, **kw)
+            cr.pop_group_to_source()
+            cr.paint_with_alpha(0.28 / g)
+        vex(cr, t, x + (shake * 0.6 if holding else 0), VY, S, **kw)
+        if holding and puff >= 0.5:                 # fully puffed: it fills his arms, in front of everything
+            in_hands(cr)
+        if hat and kw.get("rot", 0) == 0:
+            K.chef_hat(cr, x + kw.get("turn", 0) * 12 * S, VY - kw.get("lift", 0) - 1040 * S, 1.25 * KS)
+    K.composite(out, layer)
+    # effects and text over everything
+    if b["b5"] + 0.5 <= t < hat_out:
+        K.dizzy(out, t, VX - 20, VY - 900 * S, poke + 0.5, r=55)
+    if puff2 + 0.45 <= t < juice_out:
+        K.dizzy(out, t, VX - 40, VY - 260 * S, puff2 + 0.45, r=45)
+    K.impact(out, t, chomp, mx + 6, my + 6, 46)
     cue("hit", t, chomp)
-    K.impact(cr, t, poke, mx + 6, my + 10, 60)
-    K.impact(cr, t, puff2, mx + 6, my + 50, 60)
-    thought(cr, t, tl)
-    K.grain(cr)
-    for bid, text in (("b1", "snack?"), ("b3", "i'm a vampire. i bite everything."), ("b5", "OW!"),
-                      ("b6", "then i'll cook it first"), ("b8", "poison?? where does a tiny fish get poison?"),
-                      ("b10", "so a fish with clean food is safe to bite!"), ("b12", "i'll have juice."),
-                      ("b14", "MY JUICE!")):
+    K.impact(out, t, poke, mx + 4, my + 8, 40)
+    K.impact(out, t, puff2, mx + 4, my + 34, 40)
+    cue("hit", t, puff2)
+    thought(out, t, tl)
+    for bid, text in (("b1", "snack?"), ("b3", "but im vampire"), ("b5", "OWWIE"), ("b6", "ok i cook it"),
+                      ("b8", "poison?? from wer"), ("b10", "clean one ok?"), ("b12", "i have juice"),
+                      ("b14", "MY JUICE")):
         bb = tl.by_id[bid]
-        lift_sub = 55 if bid in ("b6", "b8", "b10") else 0            # clear of the chef hat
-        K.reply(cr, t, bb.start, bb.end + 0.7, x, VY - 1110 * S - lift_sub + (110 * S if bid == "b12" else 0), text,
-                size=50 if len(text) > 26 else 58, font="Comic Neue")
-    K.comic_captions(cr, t, tl, skip="vex", y=880, size=54, line_chars=21)
+        K.ref_reply(out, t, bb.start, bb.end, x if x is not None else VX, REPLY_Y, text)
+    K.ref_captions(out, t, tl, skip="vex")

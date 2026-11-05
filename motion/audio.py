@@ -423,14 +423,14 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         if not loud.any():       # a silent meme: no voice at all, so music + effects only
             clips = None
     bed *= _lowpass(hush, 400)
-    room = room_tone(total, seed)[:n] if style == "pad" else None
+    room = room_tone(total, seed)[:n] if style in ("pad", "none") else None
     if clips:
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps
         bed *= (v_rms * 10 ** ((-15 if style == "pad" else -10) / 20)) / rms(bed)   # the pad sits softer
         mix = voice + bed * (1 - 0.75 * speaking) + fx * (1 - 0.3 * speaking)
-        if room is not None:                                      # ~32 dB under the voice, never ducked
-            mix += room * (v_rms * 10 ** (-32 / 20)) / rms(room)
+        if room is not None:     # ~32 dB under the voice, never ducked (~30 dB for "none": a phone in a quiet room)
+            mix += room * (v_rms * 10 ** ((-30 if style == "none" else -32) / 20)) / rms(room)
     else:
         mix = bed + fx
     # very short fades so the Short loops cleanly

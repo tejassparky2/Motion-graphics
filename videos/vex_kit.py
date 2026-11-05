@@ -582,9 +582,10 @@ def chef_hat(cr, x, y, s=1.0):
     cr.restore()
 
 
-def dish_back(cr, x, y, r):
+def dish_back(cr, x, y, r, shadow=True):
     """A shallow round pet water dish on the floor at (x, y): rim and water (draw the fish after this)."""
-    floor_shadow(cr, x, y + 4, r * 1.05, 0.3)
+    if shadow:
+        floor_shadow(cr, x, y + 4, r * 1.05, 0.3)
     ellipse(cr, x, y - 6, r, r * 0.34)                     # outer wall
     paint(cr, hexc("#5a8fd0"), INK, 5)
     ellipse(cr, x, y - 14, r * 0.86, r * 0.26)             # water surface
@@ -626,3 +627,138 @@ def impact(cr, t, start, x, y, size=60):
         a = i * 2 * math.pi / 5 + 0.3
         stroke_line(cr, [(x + math.cos(a) * k * 1.2, y + math.sin(a) * k * 1.2),
                          (x + math.cos(a) * k * 1.7, y + math.sin(a) * k * 1.7)], 5, INK, curve=False)
+
+
+# ---------------------------------------------------------------- the reference look (deep study, 5 Nov 2026)
+# research_notes/vex_deep_tardigrade.md and vex_deep_candy.md: one locked floor shot, characters with a thick dark
+# outer rim and one soft shadow falling down-right, comic captions one phrase at a time, the mascot's line in coral
+# at a fixed spot over its head, hard on/off, never on screen together with a caption.
+CORAL = (242 / 255, 66 / 255, 73 / 255, 1)
+REF_FONT = "Comic Neue"
+
+
+def world_layer():
+    """A transparent full-frame layer for everything standing on the floor (characters, props)."""
+    layer = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    return layer, cairo.Context(layer)
+
+
+def composite(cr, layer, rim=3.5, shadow=(46, 38, 40, 0.24), warm=(0.16, 0.09, 0.04)):
+    """Put the world layer on the background: first its soft drop shadow (offset dx, dy px down-right, blurred
+    sigma px, peak darkening k), then the layer with a dark outer rim `rim` px wide."""
+    from scipy.ndimage import gaussian_filter
+    from scipy.ndimage import shift as nd_shift
+    layer.flush()
+    a = np.ndarray((H, W, 4), np.uint8, layer.get_data(), strides=(layer.get_stride(), 4, 1))[..., 3]
+    dx, dy, sig, k = shadow
+    small = a[::4, ::4].astype(np.float32) / 255.0
+    b = nd_shift(gaussian_filter(small, sig / 4.0), (dy / 4.0, dx / 4.0), order=1)
+    b = np.clip(b * 1.6, 0, 1) * k
+    hs, ws = b.shape
+    sh = cairo.ImageSurface(cairo.FORMAT_ARGB32, ws, hs)
+    arr = np.ndarray((hs, ws, 4), np.uint8, sh.get_data(), strides=(sh.get_stride(), 4, 1))
+    al = (b * 255).astype(np.float32)
+    arr[..., 3] = al.astype(np.uint8)
+    arr[..., 2] = (al * warm[0]).astype(np.uint8)          # premultiplied, a warm dark brown like the reference
+    arr[..., 1] = (al * warm[1]).astype(np.uint8)
+    arr[..., 0] = (al * warm[2]).astype(np.uint8)
+    sh.mark_dirty()
+    cr.save()
+    cr.scale(4, 4)
+    cr.set_source_surface(sh, 0, 0)
+    cr.get_source().set_filter(cairo.FILTER_GOOD)
+    cr.paint()
+    cr.restore()
+    if rim > 0:
+        rimmed = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+        rc = cairo.Context(rimmed)
+        rc.set_source_rgba(*INK)
+        for i in range(12):
+            ang = i * math.pi / 6
+            rc.mask_surface(layer, rim * math.cos(ang), rim * math.sin(ang))
+        rc.set_source_surface(layer, 0, 0)
+        rc.paint()
+        cr.set_source_surface(rimmed, 0, 0)
+    else:
+        cr.set_source_surface(layer, 0, 0)
+    cr.paint()
+
+
+def _ref_text(cr, text, x, y, size, fill):
+    bold_text(cr, text, x, y, size, fill, font=REF_FONT, outline=(0, 0, 0, 1), ow=size * 0.16, shadow=0)
+
+
+def ref_reply(cr, t, start, end, x, y, text, size=62):
+    """The mascot's line: coral comic lettering with a black outline, fixed spot (baseline y) over its head, cut on
+    0.1 s before the voice and off 0.15 s after it, no pop, no bob."""
+    if not (start - 0.1 <= t < end + 0.15):
+        return
+    from motion.polish import text_width
+    half = text_width(cr, text, size, REF_FONT) / 2 + 12
+    _ref_text(cr, text, min(max(x, half + 14), W - half - 14), y, size, CORAL)
+
+
+_ref_chunks = {}
+
+
+def ref_captions(cr, t, tl, skip="vex", size=62, line_chars=22, y1=925, y2=(894, 958)):
+    """The keeper's captions like the reference: lower case txt-speak (no commas or full stops, no apostrophes), one
+    phrase at a time, one line (baseline y1) or two (baselines y2), hard cut on at the first word and off 0.3 s after
+    the last, never while the mascot's line is up."""
+    import re
+    key = id(tl)
+    if key not in _ref_chunks:
+        vex_starts = sorted(b.start for b in tl.beats if b.speaker == skip)
+        chunks = []
+        for b in tl.beats:
+            if b.speaker == skip:
+                continue
+            phrase = []
+            for u in b.units:
+                w = re.sub(r"\[[^\]]*\]", "", u.shown).strip()
+                if not w:
+                    continue
+                end_here = bool(re.search(r"[.,?!]$", w))
+                w = re.sub(r"[^a-z0-9?! ]", "", w.lower().replace("'", "").replace("-", " ")).strip()
+                if w:
+                    phrase.append((w, u.start, u.end))
+                if end_here and phrase:
+                    chunks += _ref_split(phrase, line_chars)
+                    phrase = []
+            if phrase:
+                chunks += _ref_split(phrase, line_chars)
+        out = []
+        for i, (lines, st, en) in enumerate(chunks):
+            off = en + 0.3
+            if i + 1 < len(chunks):
+                off = min(off, chunks[i + 1][1] - 0.02)
+            nxt = [v for v in vex_starts if v > st]
+            if nxt:
+                off = min(off, nxt[0] - 0.12)
+            out.append((lines, st - 0.03, off))
+        _ref_chunks[key] = out
+    for lines, on, off in _ref_chunks[key]:
+        if on <= t < off:
+            ys = [y1] if len(lines) == 1 else list(y2)
+            for ln, y in zip(lines, ys):
+                _ref_text(cr, ln, W / 2, y, size, (1, 1, 1, 1))
+            return
+
+
+def _ref_split(words, line_chars):
+    """Words of one phrase -> chunks of at most two lines of `line_chars` characters: [(lines, start, end)]."""
+    lines, cur = [], []
+    for w in words:
+        if cur and len(" ".join(x[0] for x in cur + [w])) > line_chars:
+            lines.append(cur)
+            cur = []
+        cur.append(w)
+    if cur:
+        lines.append(cur)
+    if len(lines) == 2 and len(lines[1]) == 1 and len(lines[0]) > 2:   # don't strand one word on line 2
+        lines = [lines[0][:-1], [lines[0][-1]] + lines[1]]
+    out = []
+    for i in range(0, len(lines), 2):
+        grp = lines[i:i + 2]
+        out.append(([" ".join(x[0] for x in ln) for ln in grp], grp[0][0][1], grp[-1][-1][2]))
+    return out

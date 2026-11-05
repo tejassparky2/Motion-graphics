@@ -538,12 +538,12 @@ def floor_shadow(cr, x, y, s, lift=0.0, legs="stand"):
 def vex(cr, t, x, y, s=0.33, turn=0.0, lean=0.0, squash=0.0, tilt=0.0, look=(0.0, 0.0), eyes="open", brows=None,
         mouth="smirk", talk=None, arms=("rest", "rest"), hold=(None, None), point=(False, False), legs="stand",
         walk=None, cape=0.0, blink=0.0, blush=True, tears=False, lift=0.0, rot=0.0, pivot="feet", shadow=True,
-        flip=False, held=None):
+        flip=False, held=None, idle=1.0):
     """Draw Vex with his feet at (x, y). held(cr): draws something he holds in front of him (screen coordinates),
     between his face and his hands, so his fingers grip it."""
     if shadow:
         floor_shadow(cr, x, y, s, lift, legs)
-    bob = 0.012 * math.sin(t * 3.1)
+    bob = 0.012 * math.sin(t * 3.1) * idle         # idle=0: dead still between moves (the reference's holds)
     sit = 110 if legs == "sit" else 0
     outer = cr.get_matrix()
     cr.save()
@@ -557,7 +557,7 @@ def vex(cr, t, x, y, s=0.33, turn=0.0, lean=0.0, squash=0.0, tilt=0.0, look=(0.0
     cr.scale(s * (1 + 0.12 * squash - bob * 0.3) * (-1 if flip else 1), s * (1 - 0.14 * squash + bob))
     cr.rotate(lean)
     cr.translate(0, sit)
-    sway = 10 * math.sin(t * 2.4) + (24 * math.sin(t * 9) if legs == "walk" or lift > 5 else 0)
+    sway = 10 * math.sin(t * 2.4) * idle + (24 * math.sin(t * 9) if legs == "walk" or lift > 5 else 0)
     _cape(cr, t, turn, cape, sway)
     _collar(cr, turn, cape)
     if legs == "sit":
