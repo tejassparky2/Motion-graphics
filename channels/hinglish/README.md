@@ -125,6 +125,11 @@ every line, upload sheet. Sources go with every script, and health claims must b
     "doctors think you're in a coma... but you hear everything; you can't move a hand or speak; alive, but the body
     lies like a corpse", then "this is no film" and Martin. It says "doctors *think*", because in a true coma
     nobody is aware. Line b4 now calls back to it ("exactly what you just imagined").
+- **Video 10, Krakatoa: the sound that went round the Earth** (owner, 5 Nov 2026: "Next video", then "Approved").
+  The 1883 eruption: eardrums burst 64 km away, 172 dB at 160 km, heard in the Andaman Islands and 4,800 km away on
+  Rodrigues; then only barometers caught it (Kolkata at 6 h 47 min), returning every ~34 hours for 5 days. The
+  hook says "more than three times", not the "7 times" some sites claim (7 passes = about 3.5 laps). Script and facts
+  in videos/krakatoa.py; places on the zoomed map use measured percent positions (WP, ASIA).
 - **Speaker cut to 1:33** (owner, 30 Oct: "make it little shorter the viewers should not feel bored"): the side facts
   (1925 inventors, frequency numbers, phone speaker size, speaker as microphone, smartwatch) are in `CUT`. Over 2
   minutes, side facts are the first thing to drop.
