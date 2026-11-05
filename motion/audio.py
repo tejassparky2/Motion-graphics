@@ -110,6 +110,20 @@ def music(total, seed=None):
 
 
 def sfx(name, dur):
+    if name == "crunch":                       # a bite of something crisp: a few dry crackles (Vex ep. 2)
+        n = int(0.32 * SR)
+        out = np.zeros(n)
+        for k in range(5):
+            i = int(_rng.uniform(0, 0.2) * SR)
+            m = int(_rng.uniform(0.015, 0.04) * SR)
+            burst = np.diff(_rng.uniform(-1, 1, m + 1)) * np.exp(-np.arange(m) / (0.008 * SR))
+            out[i:i + m] += burst[: n - i] * _rng.uniform(0.5, 1.0)
+        return out * 0.55
+    if name == "poof":                         # a soft puff of air (a breath cloud)
+        n = int(0.6 * SR)
+        noise = _rng.uniform(-1, 1, n)
+        lp = np.convolve(noise, np.ones(90) / 90, mode="same")
+        return lp * np.sin(np.linspace(0, np.pi, n)) ** 0.6 * np.exp(-np.linspace(0, 3, n)) * 8.0
     if name == "pop":
         n = int(0.12 * SR)
         f = np.linspace(900, 300, n)
@@ -379,7 +393,7 @@ def pad(total, seed=None):
 
 
 GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "scribble": 0.4, "thud": 0.6, "typing": 0.5, "ding": 0.45, "whoosh": 0.6, "engine": 0.7, "kaching": 0.8, "hit": 1.0,
-         "fall": 0.8, "laugh": 0.0}
+         "fall": 0.8, "laugh": 0.0, "crunch": 0.9, "poof": 0.7}
 
 
 def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):

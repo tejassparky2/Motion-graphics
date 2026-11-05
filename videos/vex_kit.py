@@ -747,7 +747,7 @@ def ref_captions(cr, t, tl, skip="vex", size=62, line_chars=22, y1=925, y2=(894,
             nxt = [v for v in vex_starts if v > st]
             if nxt:
                 off = min(off, nxt[0] - 0.12)
-            out.append((lines, st - 0.03, off))
+            out.append((lines, 0.0 if st < 0.3 else st - 0.03, off))     # the first caption is up at frame 0
         _ref_chunks[key] = out
     for lines, on, off in _ref_chunks[key]:
         if on <= t < off:
