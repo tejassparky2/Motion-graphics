@@ -34,4 +34,4 @@ pufferfish, fugu, tetrodotoxin, cute vampire, vampire cartoon, weird animals, an
 Vex wants his juice back. Would YOU eat fugu from a licensed chef, or never? 🐡👇
 ```
 
-**Video facts:** 38.6 s, 98 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.
+**Video facts:** 35.8 s, 87 words of narration, Chatterbox Turbo voices with voice tags (synthetic; nobody real is cloned). Made for kids: **No**.

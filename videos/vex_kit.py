@@ -643,7 +643,7 @@ def world_layer():
     return layer, cairo.Context(layer)
 
 
-def composite(cr, layer, rim=3.5, shadow=(46, 38, 40, 0.24), warm=(0.16, 0.09, 0.04)):
+def composite(cr, layer, rim=3.5, shadow=(54, 44, 40, 0.34), warm=(0.16, 0.09, 0.04)):
     """Put the world layer on the background: first its soft drop shadow (offset dx, dy px down-right, blurred
     sigma px, peak darkening k), then the layer with a dark outer rim `rim` px wide."""
     from scipy.ndimage import gaussian_filter
@@ -685,13 +685,13 @@ def composite(cr, layer, rim=3.5, shadow=(46, 38, 40, 0.24), warm=(0.16, 0.09, 0
 
 
 def _ref_text(cr, text, x, y, size, fill):
-    bold_text(cr, text, x, y, size, fill, font=REF_FONT, outline=(0, 0, 0, 1), ow=size * 0.16, shadow=0)
+    bold_text(cr, text, x, y, size, fill, font=REF_FONT, outline=(0, 0, 0, 1), ow=size * 0.2, shadow=0)
 
 
 def ref_reply(cr, t, start, end, x, y, text, size=62):
     """The mascot's line: coral comic lettering with a black outline, fixed spot (baseline y) over its head, cut on
     0.1 s before the voice and off 0.15 s after it, no pop, no bob."""
-    if not (start - 0.1 <= t < end + 0.15):
+    if not (max(0.0, start - 0.1) - (0.2 if start < 0.3 else 0) <= t < end + 0.15):   # the first line is up at frame 0
         return
     from motion.polish import text_width
     half = text_width(cr, text, size, REF_FONT) / 2 + 12
@@ -718,15 +718,27 @@ def ref_captions(cr, t, tl, skip="vex", size=62, line_chars=22, y1=925, y2=(894,
                 w = re.sub(r"\[[^\]]*\]", "", u.shown).strip()
                 if not w:
                     continue
-                end_here = bool(re.search(r"[.,?!]$", w))
+                stop, comma = bool(re.search(r"[.?!]$", w)), bool(re.search(r",$", w))
                 w = re.sub(r"[^a-z0-9?! ]", "", w.lower().replace("'", "").replace("-", " ")).strip()
                 if w:
                     phrase.append((w, u.start, u.end))
+                end_here = stop or (comma and len(" ".join(x[0] for x in phrase)) > 12)
                 if end_here and phrase:
                     chunks += _ref_split(phrase, line_chars)
                     phrase = []
             if phrase:
                 chunks += _ref_split(phrase, line_chars)
+        merged = []                                          # a tiny phrase ("vex no") joins the next one
+        for c in chunks:
+            if merged and len(" ".join(merged[-1][0])) <= 8 and len(merged[-1][0]) == 1 and \
+                    len(" ".join(merged[-1][0] + c[0])) <= 2 * line_chars and len(c[0]) == 1 and \
+                    c[1] - merged[-1][2] < 0.6:
+                joined = merged[-1][0][0] + " " + c[0][0]
+                lines = [joined] if len(joined) <= line_chars else [merged[-1][0][0], c[0][0]]
+                merged[-1] = (lines, merged[-1][1], c[2])
+            else:
+                merged.append(c)
+        chunks = merged
         out = []
         for i, (lines, st, en) in enumerate(chunks):
             off = en + 0.3
@@ -747,6 +759,15 @@ def ref_captions(cr, t, tl, skip="vex", size=62, line_chars=22, y1=925, y2=(894,
 
 def _ref_split(words, line_chars):
     """Words of one phrase -> chunks of at most two lines of `line_chars` characters: [(lines, start, end)]."""
+    total = len(" ".join(w[0] for w in words))
+    if total > 2 * line_chars:                      # too long for one caption: split into balanced halves
+        acc, cut = 0, len(words) - 1
+        for i, w in enumerate(words):
+            acc += len(w[0]) + 1
+            if acc >= total / 2:
+                cut = i + 1
+                break
+        return _ref_split(words[:cut], line_chars) + _ref_split(words[cut:], line_chars)
     lines, cur = [], []
     for w in words:
         if cur and len(" ".join(x[0] for x in cur + [w])) > line_chars:

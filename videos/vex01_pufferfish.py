@@ -70,9 +70,9 @@ Then it drank his juice. 🧃
 S = 0.21                              # Vex ~226 px tall
 KS = S / 0.33                         # scale for offsets first laid out at S = 0.33
 VX, VY = 262, 752                     # Vex's home spot (feet)
-FX, FY, FR = 478, 752, 62             # the fish's water dish
-HX = FX - 125 * KS                    # where he stands to bite
-FS = 0.46                             # fish size
+FX, FY, FR = 470, 752, 82             # the fish's water dish: the co-star about as big as Vex
+HX = FX - 128                         # where he stands to bite
+FS = 0.58                             # fish size
 REPLY_Y = VY - 1076 * S - 45          # his lines: fixed baseline ~45 px over his head
 INK = (0.11, 0.06, 0.1, 1)
 _env = {}
@@ -167,7 +167,7 @@ def juice_box(cr, x, y, k=1.0, crumple=0.0, straw_to=None):
 def thought(cr, t, tl):
     """b9: a thought bubble over the dish: bacteria -> worm -> fish."""
     A = tl.at
-    t0, t1 = A("b9", "food"), A("b10") - 0.1
+    t0, t1 = A("b9", "food"), A("b10") - 0.4
     if not (t0 <= t < t1 + 0.2):
         return
     k = ease_out(seg(t, t0, t0 + 0.3)) * (1 - seg(t, t1, t1 + 0.2))
@@ -394,7 +394,7 @@ def draw(out, t, tl):
                   squash=land(t, puff2 + 0.45, 0.5), tears=v >= 1)
         cue("thud", t, puff2 + 0.45)
     elif t < put_down:                              # dashes off, back with a juice box: "i have juice" (sigh)
-        dx, smear = dash(t, juice_out, juice_back, VX + 10, VX + 28)
+        dx, smear = dash(t, juice_out, juice_back, VX + 10, VX - 5)
         x = dx
         kw.update(legs="sit" if not smear and t >= juice_back else "jump", eyes="sad", brows="sad", mouth="o",
                   arms=("front", "front"), turn=0.0,
@@ -404,14 +404,14 @@ def draw(out, t, tl):
         cue("whoosh", t, juice_out)
         cue("whoosh", t, juice_back)
     elif t < b["b14"]:                              # sets it down, sulks ... then sees the fish drinking it
-        x = VX + 28
+        x = VX - 5
         sees = t >= A("b13", "Vex")
         shocked = t >= A("b13", "drinking")
         kw.update(legs="sit", turn=0.5 if sees else 0.0, look=(0.8, 0.3) if sees else (0.0, 0.6),
                   eyes="shocked" if shocked else ("open" if sees else "sad"), brows="up" if sees else "sad",
                   mouth="o" if shocked else "frown", arms=("cheek", "cheek") if shocked else ("down", "down"))
     else:                                           # "MY JUICE!" jumps up crying
-        x = VX + 28
+        x = VX - 5
         j = seg(t, b["b14"], b["b14"] + 0.35)
         kw.update(lift=60 * math.sin(j * math.pi) if j < 1 else 0, legs="jump" if j < 1 else "stand",
                   squash=land(t, b["b14"] + 0.35, 0.6), turn=0.0, eyes="cry", brows="sad", tears=True,

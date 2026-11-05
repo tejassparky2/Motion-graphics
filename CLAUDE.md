@@ -97,6 +97,20 @@ platforms; the hits (2.3M-11.2M) differ from the flops (84K-147K) in their openi
   better on Instagram than on YouTube.
 - Don't copy his 2-3 minute length; the 40-50 s rule comes from this channel's own YouTube data.
 
+## Vex series: copy the reference's craft (owner, 5 Nov 2026: "watch both reference video again deeply ... apply it")
+Measured frame by frame in research_notes/vex_deep_tardigrade.md, vex_deep_candy.md (and our ep1 in vex_deep_vex01.md).
+These override the channel's explainer rules for Vex videos only:
+- One locked floor shot (no push-in, no cuts), warm grade (mean luma ~150, R:G:B ~1.15:1:0.87), no added grain.
+- Toy scale: Vex ~226 px tall (S=0.21), feet on one line y~752, the co-star about as big as him, pair centred.
+- Everything on the floor gets a thick dark outer rim and one soft shadow falling down-right (vex_kit.composite).
+- Smooth moves, then dead-still holds (idle=0); the mouth barely moves; he faces the camera when he talks and turns
+  to the co-star when he acts; props arrive by a dash off-screen and back with a whoosh.
+- Keeper captions: Comic Neue ~62 px, white, black outline, lower case txt-speak, one phrase at a time, y 925
+  (two lines 894/958), hard cut on/off. Vex's lines: 1-3 words of baby talk, coral #F24249 with a black outline at a
+  fixed spot over his head, hard on/off; never on screen with a caption. No hook text, cards, buttons or chips.
+- No music; room tone, a sound effect on every action; end on the payoff and hard-cut ~0.2 s after it.
+- Still missing vs the reference: a real hand in frame (needs the owner's footage) and real floor video.
+
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in
   one second with something already wrong or tense ("A kid in the last row raises his hand…", "A teacher finds a pack
