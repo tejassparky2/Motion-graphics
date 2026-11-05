@@ -109,7 +109,87 @@ def music(total, seed=None):
     return (out * swell)[: int(total * SR)] * 0.16
 
 
+def myth_sfx(name, dur):
+    """Sounds for the mythology channel (6 Nov 2026), synthesised: a temple bell, a conch (shankh), a divine shimmer
+    and a damaru (hand drum). None otherwise."""
+    if name == "bell":                         # struck bronze: inharmonic partials, slow beating, long ring
+        n = int(2.6 * SR)
+        tt = np.arange(n) / SR
+        out = np.zeros(n)
+        for ratio, amp, dec in ((1.0, 1.0, 1.4), (2.0, 0.5, 0.9), (2.76, 0.45, 0.7), (5.4, 0.25, 0.35),
+                                (8.93, 0.12, 0.2)):
+            f = 640 * ratio
+            out += amp * np.sin(2 * np.pi * f * tt) * (1 + 0.15 * np.sin(2 * np.pi * 2.3 * tt)) * np.exp(-tt / dec)
+        strike = _rng.uniform(-1, 1, int(0.01 * SR)) * np.exp(-np.arange(int(0.01 * SR)) / (0.002 * SR))
+        out[: len(strike)] += strike * 0.6
+        return out * 0.22
+    if name == "conch":                        # shankh: a breathy horn swelling up, slight vibrato, then dying away
+        n = int(1.9 * SR)
+        tt = np.arange(n) / SR
+        f0 = 293.7 * (1 + 0.012 * np.sin(2 * np.pi * 5.2 * tt)) * (1 + 0.03 * np.clip(tt / 0.25, 0, 1))
+        ph = 2 * np.pi * np.cumsum(f0) / SR
+        tone = sum(a * np.sin(k * ph) for k, a in ((1, 1.0), (2, 0.55), (3, 0.35), (4, 0.2), (5, 0.12)))
+        breath = np.convolve(_rng.uniform(-1, 1, n), np.ones(30) / 30, mode="same") * 0.35
+        env = np.clip(tt / 0.35, 0, 1) * np.clip((1.9 - tt) / 0.6, 0, 1)
+        return (tone + breath) * env * 0.18
+    if name == "shimmer":                      # divine glow: a cloud of high bell-like sparkles
+        n = int(1.6 * SR)
+        tt = np.arange(n) / SR
+        out = np.zeros(n)
+        rng = np.random.default_rng(11)
+        for k in range(14):
+            i0 = int(rng.uniform(0, 0.7) * SR)
+            f = float(rng.choice([1760, 2093, 2349, 2637, 3136, 3520]))
+            m = n - i0
+            out[i0:] += np.sin(2 * np.pi * f * tt[:m]) * np.exp(-tt[:m] / 0.35) * rng.uniform(0.3, 1)
+        return out * np.clip(tt / 0.05, 0, 1) * 0.05
+    if name == "damaru":                       # two quick skin hits with a falling pitch, a rattle in between
+        n = int(0.5 * SR)
+        out = np.zeros(n)
+        for at, f1, f2 in ((0.0, 260, 150), (0.13, 300, 170), (0.26, 260, 150)):
+            i0 = int(at * SR)
+            m = int(0.16 * SR)
+            tt = np.arange(m) / SR
+            f = np.linspace(f1, f2, m)
+            hit = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-tt / 0.05)
+            hit[: int(0.004 * SR)] += _rng.uniform(-1, 1, int(0.004 * SR)) * 0.5
+            out[i0:i0 + m] += hit[: n - i0]
+        return out * 0.45
+    return None
+
+
+def tanpura(total, seed=None):
+    """A calm tanpura drone for the mythology channel: four strings (Pa, Sa', Sa', Sa) plucked in turn every ~1.2 s,
+    each a bright, slowly decaying tone with the buzzing overtones of the jivari bridge, over a soft low Sa. Voiced so
+    phone speakers carry it; it never stops, like a storyteller's accompaniment."""
+    rng = np.random.default_rng(zlib.crc32(("tanpura" + str(seed)).encode()))
+    sa = 138.6 * 2 ** (int(rng.integers(-2, 3)) / 12)            # around C#3, a little different per video
+    n = int(total * SR) + 3 * SR
+    out = np.zeros(n)
+    strings = [sa * 1.5 / 2 * 2, sa * 2, sa * 2, sa]               # Pa (below Sa'), Sa', Sa', Sa
+    step = float(rng.choice([1.15, 1.25, 1.35]))
+    m = int(4.5 * SR)
+    tt = np.arange(m) / SR
+    k = 0
+    while k * step < total + 1:
+        f = strings[k % 4] * (1 + rng.uniform(-0.0015, 0.0015))
+        tone = np.zeros(m)
+        for h in range(1, 13):                                    # jivari: strong upper partials that bloom late
+            bloom = np.clip(tt / (0.25 + 0.05 * h), 0, 1)
+            tone += np.sin(2 * np.pi * f * h * tt + rng.uniform(0, 6.3)) * (0.9 / h ** 0.8) * bloom
+        tone *= np.exp(-tt / 2.6) * (0.9 if k % 4 else 1.0)
+        i0 = int(k * step * SR)
+        out[i0:i0 + m] += tone[: n - i0]
+        k += 1
+    t = np.arange(n) / SR
+    out += np.sin(2 * np.pi * sa / 2 * t) * 0.35 + np.sin(2 * np.pi * sa * t) * 0.15
+    return out[: int(total * SR)]
+
+
 def sfx(name, dur):
+    m = myth_sfx(name, dur)
+    if m is not None:
+        return m
     if name == "pop":
         n = int(0.12 * SR)
         f = np.linspace(900, 300, n)
@@ -434,7 +514,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
     import pyloudnorm
     n = int(total * SR)
     style = bed
-    beds = {"thriller": drone, "pad": pad, "doc": doc}
+    beds = {"thriller": drone, "pad": pad, "doc": doc, "tanpura": tanpura}
     bed = beds.get(bed, music)(total, seed)[:n]
     hush = np.ones(n)
     fx = np.zeros(n)
@@ -471,7 +551,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps; the
         # documentary bed sits ~16 dB under in gaps and ~20 dB under while speaking (ducked ~4 dB), like the reference
-        level, duck = {"pad": (-15, 0.75), "doc": (-16, 0.35)}.get(style, (-10, 0.75))
+        level, duck = {"pad": (-15, 0.75), "doc": (-16, 0.35), "tanpura": (-18, 0.4)}.get(style, (-10, 0.75))
         bed *= (v_rms * 10 ** (level / 20)) / rms(bed)
         mix = voice + bed * (1 - duck * speaking) + fx * (1 - 0.3 * speaking)
         if room is not None:                                      # ~32 dB under the voice, never ducked

@@ -18,18 +18,19 @@ _HI_VOICES = os.path.join(ROOT, "mayank", "voice", "f5_refs")
 _KN_VOICES = os.path.join(ASSETS_ROOT, "voice", "kn_refs")
 KN_REF_TEXT = ("ಯೋಚಿಸಿ, ಸಾವಿರಾರು ವರ್ಷಗಳಿಂದ ಜನ ಹೇಳುತ್ತಾ ಬಂದಿರುವ ಒಂದು ಕಥೆ. "
                "ಆದರೆ ಅದರ ಒಂದು ಭಾಗ, ಹೆಚ್ಚಿನವರಿಗೆ ಗೊತ್ತೇ ಇಲ್ಲ.")
-KN_VOICE = os.environ.get("MYTH_KN_VOICE", "kn_narrator")    # file stem in _KN_VOICES; set once the owner picks
+KN_VOICE = os.environ.get("MYTH_KN_VOICE", "suresh_s42")    # file stem in _KN_VOICES (6 Nov 2026: Suresh, until the owner picks)
 
 NARRATORS = {
-    "hi": dict(engine="f5", studio="v3", tempo=1.15,
+    # owner, 6 Nov 2026: "i want voice to be clear calm and we'll understandable": a gentler speed-up than Socho's 1.15
+    "hi": dict(engine="f5", studio="v3", tempo=1.05,
                ref_audio=os.path.join(_HI_VOICES, "named_aman_s3_ref.wav"),
                ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।"),
-    "kn": dict(engine="f5", studio="v3", tempo=1.10,
+    "kn": dict(engine="f5", studio="v3", tempo=1.0,
                ref_audio=os.path.join(_KN_VOICES, f"{KN_VOICE}.wav"), ref_text=KN_REF_TEXT),
 }
 VOICE_REFS = {k: v["ref_audio"] for k, v in NARRATORS.items()}
 NARRATOR_LABEL = ("synthetic narrators: Indic Parler-TTS named speakers (Apache-2.0; datasets CC BY 4.0) as voice "
                   "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain; nobody is cloned")   # records only
-MUSIC = "doc"
+MUSIC = "tanpura"   # calm drone for story narration (motion/audio.py tanpura), ~18 dB under the voice
 TAIL = 0.9
 REVEAL_GAP = 0.6       # the longer pause before a reveal

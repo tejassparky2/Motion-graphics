@@ -5,7 +5,29 @@ reels in hindi and kannada for hindi the voice you already have and we try to ma
 chat". This channel has its own chat and its own branch, `ccr-56282fe5-evehq4-mythology`, in its own worktree
 (`<shorts research>/Motion-graphics-myth`). Don't switch the branch of the shared `Motion-graphics` checkout.
 
-**Owner decisions, still open:** art route, channel name(s), first story, Kannada voice. See Status.
+**Owner decisions, still open:** channel name(s); Kannada voice (Suresh in use, Vidya the alternative). See Status.
+
+## Owner instructions, 6 Nov 2026 (night)
+- "make me three 60 seconds or more videos all 3 with different approach animation scene etc in both kannada and
+  hindi ... i want all videos ready till morning"; "3 videos with different approach different hook different
+  animation". Built without script approval because the owner asked for them ready by morning.
+- Kannada: "normal everyday speaking kannada kanglish and standard kannada only city peoples taking kannada":
+  Bengaluru-style spoken Kannada with common English words, written in Kannada script (ಟೈಮ್, ಸ್ಟೋರಿ, ಶಾಕ್).
+- Voice: "clear calm and well understandable": tempo 1.05 (Hindi) and 1.0 (Kannada), clarity retakes only.
+- "Download everything is auto approved until my next message": SDXL checkpoint, Real-ESRGAN, ComfyUI's CUDA
+  environment and the parallax helpers were downloaded under that approval. The Civitai miniature LoRA needs a login,
+  so it was skipped (no logins).
+- Another session also uses the GPU: voice_all.py waits until it is free.
+
+## The three approaches (from the 2D playbook and the research report, myth_out/research/)
+| Video | Approach | Hook style |
+|---|---|---|
+| kakudmi | A: code-drawn chibi cast (`myth_cast.py`: crowns, jewellery, dhoti, saree, three-headed Brahma) on SDXL background plates (`plates.py`) with light rays, petals, counters | second person: "imagine you waited a few moments..." |
+| brahma_calves | B: living manuscript: CC0 Cleveland Museum miniatures cut into layers, multiplane parallax, glow and petals (`scenes_brahma_calves.py`) | a character's impossible question (Brahma's) |
+| jarasandha | C: Togalu Gombeyaata leather shadow puppets drawn in code on a lamp-lit screen (`scenes_jarasandha.py`) | a staccato list: "one eye. one hand. one leg. half a face." |
+
+Sound: `motion/audio.py` gained bell, conch, shimmer and damaru effects and a `tanpura` drone bed (channel MUSIC).
+Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the upload pack and the Drive copy.
 
 ## Standing rules (from the owner; never break these)
 - The repo is **public** (tejassparky2/Motion-graphics). Never commit chat files, downloaded videos, keys or anything

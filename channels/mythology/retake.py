@@ -19,7 +19,19 @@ from asr import whisper  # noqa: E402
 from channel import NARRATORS, WHISPER_LANG  # noqa: E402
 from render_myth import wer, words  # noqa: E402
 
-MAX_WER, MIN_SIM = 0.30, 0.85
+MAX_WER, MIN_SIM = {"hi": 0.30, "kn": 0.35}, 0.85
+
+
+def kn_chars(s):
+    return [c for c in s if "ಀ" <= c <= "೿"]
+
+
+def error(lang, text, heard):
+    """Hindi: word error rate. Kannada: character error rate over Kannada letters, because Whisper splits and joins
+    long Kannada words unpredictably and every candidate scored ~100% WER in the voice search."""
+    if lang == "kn":
+        return wer(kn_chars(text), kn_chars(heard))
+    return wer(words(text), words(heard))
 
 
 def main():
@@ -44,7 +56,7 @@ def main():
         y = librosa.resample(a.astype(np.float32), orig_sr=narrate.SR, target_sr=16000)
         heard = " ".join(s.text for s in model.transcribe(y, language=WHISPER_LANG[lang], beam_size=5)[0])
         sim = float(np.dot(enc.embed_utterance(preprocess_wav(y, source_sr=16000)), ref_emb))
-        return wer(words(text), words(heard)), sim, heard.strip()
+        return error(lang, text, heard), sim, heard.strip()
 
     key, extra = "take", [1, 2]                           # IndicF5 samples fresh noise each run: a take is a new run
     base = cfg.get(key, 0)
@@ -55,7 +67,7 @@ def main():
             continue                                       # already decided for this exact text
         w, s, heard = score(narrate._raw_path(line["text"], cfg), line["text"])
         print(f"{line['id']:>4} take {base}: WER {w:4.0%} sim {s:.2f}  {heard[:70]}", flush=True)
-        if w > MAX_WER or "--all" in sys.argv:
+        if w > MAX_WER[lang] or "--all" in sys.argv:
             todo.append((line, w, s))
         else:
             log[line["id"]] = dict(text=line["text"], take=base, wer=w, sim=s)

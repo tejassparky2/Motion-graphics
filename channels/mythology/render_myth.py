@@ -50,13 +50,32 @@ def narrator(mod, lang):
     return getattr(mod, "NARRATORS", NARRATORS)[lang]
 
 
+DRY = bool(os.environ.get("MYTH_DRY"))   # estimated timings, no voice: stills and sheets while voices are being made
+
+
 def _tl_path(name, lang):
-    return os.path.join(BUILD, f"{name}_{lang}_timeline.json")
+    return os.path.join(BUILD, f"{name}_{lang}{'_dry' if DRY else ''}_timeline.json")
+
+
+def dry_timeline(script, tail):
+    """Line timings estimated from text length (~13 characters a second), with no audio: lets the scene code be
+    drawn and checked (--still / --sheet) before the narration exists, without starting the voice model."""
+    tl = narrate.Timeline.__new__(narrate.Timeline)
+    tl.beats, t = [], narrate.LEAD
+    for i, line in enumerate(script):
+        d = max(0.8, len(line["text"]) / 13.0)
+        tl.beats.append(narrate.Beat(line["id"], line["text"], t, d, None, ""))
+        t += d + (tail if i == len(script) - 1 else line.get("gap", narrate.GAP))
+    tl.by_id, tl.total, tl._clips = {b.id: b for b in tl.beats}, t, []
+    return tl
 
 
 def build_timeline(name, lang):
     mod = load_module(name)
-    tl = narrate.Timeline(mod.SCRIPTS[lang], narrator(mod, lang), tail=getattr(mod, "TAIL", narrate.TAIL))
+    if DRY:
+        tl = dry_timeline(mod.SCRIPTS[lang], getattr(mod, "TAIL", narrate.TAIL))
+    else:
+        tl = narrate.Timeline(mod.SCRIPTS[lang], narrator(mod, lang), tail=getattr(mod, "TAIL", narrate.TAIL))
     tl.lang = lang
     os.makedirs(BUILD, exist_ok=True)
     json.dump(tl.to_json(), open(_tl_path(name, lang), "w", encoding="utf-8"), ensure_ascii=False)
