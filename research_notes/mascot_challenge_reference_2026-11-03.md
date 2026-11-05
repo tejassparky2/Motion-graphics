@@ -70,3 +70,14 @@ in the same style, and a real or casual keeper voice.
 - Built: voice.babble() (one nonsense syllable per syllable, punctuation kept, Kokoro af_heart +11 st formant-shifted
   ~ 394 Hz vs Grim ~416 Hz); script v2 out/scripts_vex_ep1_v2.md.
 
+
+# Reference 4: "Grim, pet that feral cat. You have 3 tries." (owner upload, 5 Nov 2026: "See how good hand movement
+body movement are all good in this reference")
+- 0:50 vertical, real wooden deck outside a door; a tries counter top-left (three circles, a red X per failed try).
+- Task format: three attempts (just pet it: scratched; food bowl: works until he reaches; "first i kill the cat",
+  keeper: "Grim, no killing whatsoever"; pretends to be a cat: "meow"), then the keeper says give up, Grim ignores
+  the cat, and the cat comes to him ("All you had to do was ignore it"). Last beat: the cat sits on him, "Get off!"
+- The motion the owner likes (full-body acting, hands, the cat leaping, ears and tails moving, faces changing mid-
+  move) is AI image-to-video: whole-body deformation and in-betweens no cut-out rig can do. It confirms the Veo plan.
+- Ideas to keep for Vex: a visible tries counter, a "3 tries" task, the keeper's veto line ("no killing whatsoever"),
+  a true-behaviour payoff (cats approach people who don't stare at them), a final physical gag.
