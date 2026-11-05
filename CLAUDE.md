@@ -110,6 +110,9 @@ These override the channel's explainer rules for Vex videos only:
   fixed spot over his head, hard on/off; never on screen with a caption. No hook text, cards, buttons or chips.
 - No music; room tone, a sound effect on every action; end on the payoff and hard-cut ~0.2 s after it.
 - Still missing vs the reference: a real hand in frame (needs the owner's footage) and real floor video.
+- **Mix the episode types** (owner, 5 Nov 2026: "his videos always not information some times funny some times cute
+  some time tasks"): rotate funny skits, cute moments, tasks/challenges (a dare, a rule, a test with a meter) and only
+  sometimes a fact episode. Never two of the same type in a row; a fact, when there is one, rides inside the gag.
 
 ## Hooks: people must stay, not swipe (owner, 11 Oct 2026)
 - From our own analytics (Sep 29–Oct 11): the openings that kept 75–78% drop the viewer into a scene they can picture in

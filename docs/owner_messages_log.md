@@ -306,3 +306,4 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-03** Approved (script v2, the conversation)
 - **2026-11-03** Why changed the narrator voice and voice feeling robotic use tags try to matcg close with reference video and he see his ending its not march
 - **2026-11-05** Watch both reference video again deeply with agents pixel by pixel every steps learn and apply it to this video
+- **2026-11-05** He is videos always not information some times funny some times cute some time tasks
