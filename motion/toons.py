@@ -371,7 +371,8 @@ def person(cr, t, x, y, s=1.0, who="kid", facing=1, eyes="open", mouth="smile", 
     c = dict(CAST.get(who, CAST["kid"]))
     c.update(kw)
     b = BUILDS[c.get("build", "kid")]
-    skin = SKIN.get(c.get("skin"), hexc("#f8cfa8"))
+    skin = SKIN.get(c.get("skin"), hexc("#f8cfa8")) if isinstance(c.get("skin"), str) or c.get("skin") is None \
+        else c.get("skin")
     hr, hy, sy, py, sw, pw, lw, aw = (b[k] for k in ("hr", "hy", "sy", "py", "sw", "pw", "lw", "aw"))
     ph = seed * 1.3
     breathe = math.sin(t * 2.2 + ph) if bob else 0.0

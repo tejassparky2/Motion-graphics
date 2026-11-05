@@ -1,5 +1,8 @@
-# Branch ccr-56282fe5-evehq4-hinglish = the new Hinglish mini-documentary channel
-On this branch, follow **channels/hinglish/README.md** (format, workflow, status). The Interestingly Strange rules
+# Branch ccr-56282fe5-evehq4-mythology = the Indian mythology 2D animation channel (Hindi + Kannada)
+On this branch, follow **channels/mythology/README.md** (rules, format, voices, workflow, status). It was branched
+from `ccr-56282fe5-evehq4-hinglish` (Socho with Tejas) on 6 Nov 2026 and lives in its own worktree,
+`<shorts research>/Motion-graphics-myth`; never switch the branch of the shared `Motion-graphics` checkout.
+Don't make Socho with Tejas videos here; that channel keeps its own chat and branch. The Interestingly Strange rules
 below are kept for reference; their voice, privacy and script-first rules still apply here, but the channel's
 format, length and posting rules do not.
 

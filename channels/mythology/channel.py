@@ -1,0 +1,35 @@
+"""Settings shared by every mythology video: one narrator per language, the reveal pause and where files live.
+
+One video module serves both languages: SCRIPTS = {"hi": [...], "kn": [...]} with the same line ids, so the shots and
+on-screen pictures are shared and only the voice and its timing change."""
+import os
+
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+ROOT = os.path.dirname(REPO)                                   # <shorts research>, outside the public repo
+ASSETS_ROOT = os.path.join(ROOT, "myth_assets")
+OUT_ROOT = os.path.join(ROOT, "myth_out")
+LANGS = ("hi", "kn")
+WHISPER_LANG = {"hi": "hi", "kn": "kn"}
+
+# Hindi: the existing "Aman" narrator of Socho with Tejas (owner, 6 Nov 2026: "for hindi the voice you already have").
+# Indic Parler-TTS's named speaker 'Aman' made the prompt; AI4Bharat IndicF5 speaks every line in that synthetic voice.
+_HI_VOICES = os.path.join(ROOT, "mayank", "voice", "f5_refs")
+# Kannada: the same recipe with an Indic Parler-TTS Kannada speaker (kn_voice_search.py, kn_voice_pick.py).
+_KN_VOICES = os.path.join(ASSETS_ROOT, "voice", "kn_refs")
+KN_REF_TEXT = ("ಯೋಚಿಸಿ, ಸಾವಿರಾರು ವರ್ಷಗಳಿಂದ ಜನ ಹೇಳುತ್ತಾ ಬಂದಿರುವ ಒಂದು ಕಥೆ. "
+               "ಆದರೆ ಅದರ ಒಂದು ಭಾಗ, ಹೆಚ್ಚಿನವರಿಗೆ ಗೊತ್ತೇ ಇಲ್ಲ.")
+KN_VOICE = os.environ.get("MYTH_KN_VOICE", "kn_narrator")    # file stem in _KN_VOICES; set once the owner picks
+
+NARRATORS = {
+    "hi": dict(engine="f5", studio="v3", tempo=1.15,
+               ref_audio=os.path.join(_HI_VOICES, "named_aman_s3_ref.wav"),
+               ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।"),
+    "kn": dict(engine="f5", studio="v3", tempo=1.10,
+               ref_audio=os.path.join(_KN_VOICES, f"{KN_VOICE}.wav"), ref_text=KN_REF_TEXT),
+}
+VOICE_REFS = {k: v["ref_audio"] for k, v in NARRATORS.items()}
+NARRATOR_LABEL = ("synthetic narrators: Indic Parler-TTS named speakers (Apache-2.0; datasets CC BY 4.0) as voice "
+                  "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain; nobody is cloned")   # records only
+MUSIC = "doc"
+TAIL = 0.9
+REVEAL_GAP = 0.6       # the longer pause before a reveal
