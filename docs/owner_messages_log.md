@@ -310,3 +310,5 @@ Added 18 Oct from the full chat export the owner uploaded to the next chat (the 
 - **2026-11-05** Make 1 video auto approved
 - **2026-11-05** Why so small and not looking real and actions also don't look real
 - **2026-11-05** [link: higgsfield.ai blog "I Kill My AI Character in Every Reel. 1.2M Views in 14 Days. Here's the Whole Recipe"] Can you do thie
+- **2026-11-05** How much each videos will costs
+- **2026-11-05** I have google veo3 omni 1000 credits a month
