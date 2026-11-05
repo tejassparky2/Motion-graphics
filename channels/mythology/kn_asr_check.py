@@ -10,7 +10,7 @@ from transformers import pipeline
 
 
 def kn(s):
-    return [c for c in s if "ಀ" <= c <= "೿"]
+    return [c for c in s if "ಀ" <= c <= "೿" or "ऀ" <= c <= "ॿ"]
 
 
 def cer(ref, hyp):
@@ -35,6 +35,6 @@ for path in sys.argv[1:]:
             import librosa
             a = librosa.resample(a, orig_sr=sr, target_sr=16000)
         heard = asr({"raw": a, "sampling_rate": 16000},
-                    generate_kwargs={"language": "kannada", "task": "transcribe"})["text"].strip()
+                    generate_kwargs={"language": "hindi" if "_hi_" in path else "kannada", "task": "transcribe"})["text"].strip()
         c = cer(kn(b["text"]), kn(heard))
         print(f"{'!!' if c > 0.45 else 'ok'} {b['id']:>5} CER {c:4.0%}  {heard}", flush=True)

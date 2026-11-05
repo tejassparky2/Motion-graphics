@@ -93,6 +93,14 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - Masters: x264 crf 14, AAC 256k. The phone copy is a separate two-pass encode under 29 MB
   (`<shorts research>/channel_tools/phone_copy.py`).
 
-## Status (6 Nov 2026)
-- Scaffold made: channel settings, narration, renderer, retakes and the Kannada voice search, all language-aware.
-- Waiting on the owner: art route, channel name(s), first story, Kannada voice.
+## Status (6 Nov 2026, morning)
+- Six reels finished: kakudmi (1:44 hi / 2:00 kn), brahma_calves (1:22 / 1:30), jarasandha (1:22 / 1:28), each with
+  master, phone copy (< 29 MB), cover and upload pack in `myth_out/upload_<video>_<lang>/`, and on Drive under
+  `My Drive/Mythology reels/`. Owner's summary: `myth_out/MORNING_REPORT.md`.
+- Clarity: every line checked with Whisper large-v3-turbo (`kn_asr_check.py`, CPU): Kannada 0-19% letter errors,
+  Hindi all under 33% except one line where turbo writes numbers as digits. Whisper medium is too weak in Kannada:
+  use turbo for Kannada (`fix_line.py` re-voices one line and keeps the take turbo hears best).
+- Lessons: IndicF5 drops or garbles very short staccato lines ("एक आँख। एक हाथ।"); commas work ("एक आंख, एक हाथ,
+  एक पैर... और आधा चेहरा।"). SDXL drew pagodas for "heavenly court", so heaven is a lotus lake of light with no
+  buildings; check every plate by eye. Real-ESRGAN ncnn picks the Intel GPU by default (use -g 1 for the NVIDIA).
+- Waiting on the owner: channel names, Kannada voice (Suresh or Vidya), which look to make more of.

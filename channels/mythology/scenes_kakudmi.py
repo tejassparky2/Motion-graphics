@@ -344,7 +344,7 @@ def s_suitors(cr, t, tl, t0):                                # b4: no groom on E
     b = tl["b4"]
     for i in range(5):                                       # two staggered rows, big enough to read on a phone
         ts = b.start + b.dur * (0.12 + 0.16 * i)
-        x, fy, sc = [(250, 1180, 0.85), (540, 1180, 0.85), (830, 1180, 0.85), (390, 1720, 1.0), (700, 1720, 1.0)][i]
+        x, fy, sc = [(250, 1500, 0.8), (540, 1500, 0.8), (830, 1500, 0.8), (390, 1800, 0.95), (700, 1800, 0.95)][i]
         if t < ts - 0.25:
             continue
         figure(cr, t, x, fy + 18 * (1 - back(clamp((t - ts + 0.25) / 0.3))), sc, "suitor", seed=i,
@@ -566,9 +566,40 @@ def s_small(cr, t, tl, t0):                                  # b16: people had b
     tag(cr, t, b.start + b.dur * 0.2, "VISHNU PURANA 4.1", 540, 760, 34)
 
 
+def terrace(cr, y=1640):
+    """A carved sandstone terrace across the bottom of the Dwaraka shots, so characters stand on stone, not water."""
+    g = cairo.LinearGradient(0, y, 0, H)
+    g.add_color_stop_rgb(0, 0.86, 0.68, 0.46)
+    g.add_color_stop_rgb(1, 0.55, 0.38, 0.24)
+    cr.rectangle(0, y, W, H - y)
+    cr.set_source(g)
+    cr.fill()
+    cr.rectangle(0, y, W, 14)
+    cr.set_source_rgba(0.98, 0.86, 0.62, 1)
+    cr.fill()
+    for k in range(12):                                       # carved lotus band
+        x = 45 + k * 90
+        cr.arc(x, y + 60, 22, 0, 2 * math.pi)
+        cr.set_source_rgba(0.45, 0.30, 0.18, 0.55)
+        cr.set_line_width(4)
+        cr.stroke()
+        cr.arc(x, y + 60, 8, 0, 2 * math.pi)
+        cr.fill()
+    cr.rectangle(0, y + 100, W, 6)
+    cr.set_source_rgba(0.40, 0.26, 0.16, 0.5)
+    cr.fill()
+    for x in (20, W - 20):                                    # railing posts at the edges
+        cr.rectangle(x - 18, y - 120, 36, 120)
+        cr.set_source_rgba(0.80, 0.62, 0.42, 1)
+        cr.fill()
+        cr.arc(x, y - 128, 22, 0, 2 * math.pi)
+        cr.fill()
+
+
 def s_dwaraka(cr, t, tl, t0):                                # b17: Kushasthali was now Dwaraka
     b = tl["b17"]
     plate(cr, t, "dwaraka", t0)
+    terrace(cr)
     p = prog(t, t0, 0.35)
     cr.save()
     cr.translate(540, 520)
@@ -606,6 +637,7 @@ def ruler(cr, x, y0, y1, a=1.0):
 def s_tall(cr, t, tl, t0):                                   # b18: old-age Revati is much taller than Balarama
     b = tl["b18"]
     plate(cr, t, "dwaraka", t0, dim=0.15)
+    terrace(cr)
     tr = b.start + b.dur * 0.55
     k = prog(t, tr, 0.6)
     figure(cr, t, 330, 1760, 1.05, "balarama", arms=("hold", "down"), hold=plough, seed=4, lookdir=(0.5, -0.6))
@@ -618,6 +650,7 @@ def s_tall(cr, t, tl, t0):                                   # b18: old-age Reva
 def s_shrink(cr, t, tl, t0):                                 # b19: Balarama shortens her with the tip of his plough
     b = tl["b19"]
     plate(cr, t, "dwaraka", t0, dim=0.15)
+    terrace(cr)
     tt = b.start + b.dur * 0.45
     k = prog(t, tt, 0.9)
     figure(cr, t, 330, 1760, 1.05, "balarama", arms=("point", "down"), hold=plough, seed=4, lookdir=(0.5, -0.6),
