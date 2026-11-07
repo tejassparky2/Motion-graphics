@@ -39,6 +39,7 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
+S06_CLOSE, S06_EYESPOTS = 34, (40, 42, 44)            # S06 (helper 6): the close moth, its eye-spots opening
 S13_DIP, S13_FLAT, S13_ARM, S13_BLOOM = 3, 13, 17, 26   # S13 (bGqrs): 1-based shot frames
 # S14, the flip (helper 10, channels/monsters/diorama_ep03/S14_landings.json; 1-based shot frames, tail handle):
 # f1-12 the held beat, f12-40 the wave of rolls and stalls, hero plops f32/38/44, the patter f46-66.
@@ -263,6 +264,16 @@ def drop_to_grass(seed=0):
     return out
 
 
+def eyespot_open(seed=0):
+    """A wing eye-spot blinking open: a tiny soft upward pip with a fluffy breath under it."""
+    r = _rng("eyespot", seed)
+    n = _n(0.16)
+    t = _t(n)
+    f = r.uniform(900, 1200) * (1 + 0.6 * np.minimum(1, t / 0.06))
+    pip = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.minimum(1, t / 0.008) * np.exp(-t / 0.045)
+    return pip + _bp(r.uniform(-1, 1, n), 2000, 7000) * np.exp(-t / 0.03) * 0.15
+
+
 def plop(seed=0):
     """One moth landing on its back in the grass: a soft comic plop with a tiny puff."""
     r = _rng("plop", seed)
@@ -399,7 +410,10 @@ def build(timing, n, v):
 
     # --- S06-S09: the swarm comes down the hill, growing; wing dust; the scratch; every bell rings
     bed(swarm(s("S10") - s("S06") + 0.5, (0.15, 0.7), 1), s("S06"), -20, 0.1)
-    hit(base.flutter(0.5, 6), w("l6", "fluffmoths"), -20, 0.2)           # close on one: its eye-spots open
+    # S06 (helper 6, final): the swarm pours down, one moth swoops in close f34, its wing eye-spots open f40/42/44
+    hit(base.flutter(0.5, 6), fr("S06", S06_CLOSE) - 0.1, -20, 0.2)
+    for k, (f, pan) in enumerate(zip(S06_EYESPOTS, (-0.3, 0.3, 0.0))):
+        hit(eyespot_open(k), fr("S06", f), -25 + 2 * k, pan)
     bed(glitter(s("S08") - s("S07"), 2), s("S07"), -28, 0.0)
     hit(scratch(4, 1), w("l7", "stings"), -20, 0.4)
     hit(e2.cloth_swish(0.4, 7), w("l7", "nettles"), -22, -0.3)           # Wren pulls her cape over her face
