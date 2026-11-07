@@ -1,6 +1,6 @@
 # helper 7 status (Ep 3 sound)
 
-Updated 7 Nov 2026, after S01 and S19top landed.
+Updated 7 Nov 2026, after S04 landed.
 
 ## Coordinator
 - **S14 render part 3 (f043-063): I can't take it.** This session has no Blender (not installed, and the disk
@@ -102,4 +102,4 @@ synthesised, no heartbeat, no riser:
 
 **Next:** as each shot lands in `out/monsters/diorama_ep03/shots/`, I read its beats (the flare, the stumble, the door
 bangs, the scratch, the drop into the grass, the flip's first roll and plops, the clink, the lighthouse cut) and move
-those cues onto its frames, re-run, Whisper and push. Shots in so far: S01 (retimed), S02 (retimed), S03 (retimed), S05 (a smooth push-in with no hit frames: the night ambience and the chime on "light" stay), S06 (retimed), S08 (retimed), S09 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S16 (retimed), S19top (retimed), S19bot (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
+those cues onto its frames, re-run, Whisper and push. Shots in so far: S01 (retimed), S02 (retimed), S03 (retimed), S04 (a smooth fade to dusk across the whole cut, so the dusk ambience and the chime on "down" stay; the night settles at f38, in the tail), S05 (a smooth push-in with no hit frames: the night ambience and the chime on "light" stay), S06 (retimed), S08 (retimed), S09 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S16 (retimed), S19top (retimed), S19bot (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
