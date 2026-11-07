@@ -437,8 +437,9 @@ def lighthouse(at=LIGHTHOUSE_AT, scale=1.5, glow=1.0, name="h9_lighthouse"):
     rock = look.toon(f"{name}_rock", _hex("#6f6a66"))
     moss = look.toon(f"{name}_moss", _hex("#4f7a3c"))
     dark = look.flat(f"{name}_dark", (0.015, 0.015, 0.03, 1))
-    glow_m = look.flat(f"{name}_glow", (1.0, 0.40, 0.18, 1), strength=4.0 * glow)   # coral after the night tint
-    halo_m = _halo_mat(f"{name}_halo", (1.0, 0.36, 0.2, 1), 1.6 * glow)
+    glow_m = look.flat(f"{name}_glow", (1.0, 0.40, 0.18, 1), strength=6.5 * glow)   # coral after the night tint
+    core_m = look.flat(f"{name}_core", (1.0, 0.72, 0.5, 1), strength=14.0 * glow)    # the hot core: near-white
+    halo_m = _halo_mat(f"{name}_halo", (1.0, 0.36, 0.2, 1), 2.4 * glow)
 
     def obj(nm, bm, mat, line=0.06):
         me = bpy.data.meshes.new(nm)
@@ -546,6 +547,11 @@ def lighthouse(at=LIGHTHOUSE_AT, scale=1.5, glow=1.0, name="h9_lighthouse"):
     bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, top + 2.2 * S)))
     lamp = obj(f"{name}_lamp", bm, glow_m, 0.0)
     lamp.visible_shadow = False
+    bm = bmesh.new()                                           # a hot near-white core inside the lens
+    bmesh.ops.create_icosphere(bm, subdivisions=2, radius=0.75 * S)
+    bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, -0.6 * S, top + 2.4 * S)))
+    core = obj(f"{name}_corelamp", bm, core_m, 0.0)
+    core.visible_shadow = False
     bm = bmesh.new()
     bmesh.ops.create_uvsphere(bm, u_segments=48, v_segments=24, radius=6.5 * S)
     bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, top + 2.6 * S)))
