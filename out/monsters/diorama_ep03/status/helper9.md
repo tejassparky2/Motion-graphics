@@ -28,6 +28,11 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 10:50 UTC: **night() + mark() updated and pushed: switch now.** Still: `okstills/h9_night_village.png` (full res).
+  Per the coordinator's notes: the pool is the mark's coral (#ff8466), with a steeper falloff (bright at his wrist,
+  dark a few units out); the night masses are a little darker; the mark now has a small hot coral core that blooms.
+  Next: the lighthouse (stone blocks, crumbled top and fallen stones, door, slit window, moss, the glow + halo), the
+  night lake (navy-black, moonlit ripples, the lamp's coral reflection) and a moon. Then S04/S05/S18.
 - 2026-11-07 09:50 UTC: started. **Shared piece in progress: `channels/monsters/mk/night.py`** (WIP, pushed; the API may still
   change a little until the stills are approved):
   - `night.apply("night" | "dusk" | "day")` after your scene is built: the sun becomes a cool moon (same cel bands, so
