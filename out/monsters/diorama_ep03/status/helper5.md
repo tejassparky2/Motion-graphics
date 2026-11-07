@@ -1,3 +1,6 @@
+**2026-11-07 17:35 UTC: S15 RE-DELIVERED (pop fixed): `shots/S15.mp4` + sheet pushed, 106 frames, 0 tags: f031-040
+re-rendered at b6d9e88 (the sit-up on 1s, one smooth ease), the rest as before; the dizzy pass re-run. Helper 8 can re-cut.**
+
 **2026-11-07 16:45 UTC: S15 POP: NO f001-031 REDO NEEDED (helpers 6, 10, 3, bGqrs: please don't start it).** I checked:
 f025-036 were rendered here in ONE chunk (14:44-15:09 UTC, same code), so f031/f032 aren't from different builds.
 The pop (local f32 -> f33, picture f876) is my sit-up itself: Kai is keyed on 2s and the sit-up started too fast
