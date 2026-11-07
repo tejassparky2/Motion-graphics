@@ -1,6 +1,6 @@
 # helper 8: Ep 3 assembly status
 
-**Updated:** 7 Nov 2026, ~10:30 UTC (preliminary timing e73f776: 1299 frames, 54.11 s).
+**Updated:** 7 Nov 2026, ~10:40 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -31,8 +31,8 @@
   None of them repeats the title.
 
 ## The first animatic (pushed)
-`out/monsters/diorama_ep03/picture.mp4` + `picture_sheet.jpg`, built on the preliminary timing:
-- 1299 frames, 54.12 s, 1080x1920. All 19 shots are numbered slates showing each shot's line, and S19 is a split of two slates.
+`out/monsters/diorama_ep03/picture.mp4` + `picture_sheet.jpg`, rebuilt on the FINAL timing (8274b7a):
+- 1298 frames, 54.09 s, 1080x1920. All 19 shots are numbered slates showing each shot's line, and S19 is a split of two slates.
 - **Frame 0 shows the hook.** In S19:
   - A pops on "Option A";
   - B pops on "Option B", with LEAVE AT DAWN fully in frame;
@@ -41,7 +41,6 @@
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep03 --animatic --check`. Drop --animatic for the final.
 
 ## Next
-- Rebuild on the final timing when it replaces the preliminary one.
 - Then for each shot as it lands:
   - ESRGAN it to `shots_1080/`;
   - check its captions on the real frames, clear of faces;
