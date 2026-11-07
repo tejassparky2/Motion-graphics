@@ -28,6 +28,10 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 12:00 UTC: stills `okstills/h9_dusk_village.png` (dusk: a pink-orange horizon, a low warm sun, the mark's pool
+  weaker) and `okstills/h9_night_wide.png` (high wide at night: the navy lake with ripples, the lighthouse's glow on the far
+  shore, one coral dot at Kai). **The shared piece is done**, unless the coordinator wants changes. Next: my shots S04,
+  S05, S18 (OK stills first).
 - 2026-11-07 11:40 UTC: **The lighthouse is pushed** (per the coordinator's notes): `okstills/h9_lighthouse_night.png`. Rough stone
   blocks (a brick pattern with painted noise), a crumbled uneven top (broken wall stubs, gaps, fallen stones on the floor
   and down on the rocks), a small dark door and one slit window, moss at the foot, and in the lamp room a cracked coral
