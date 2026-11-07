@@ -32,6 +32,18 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 14:40 UTC: **S18 OK stills** in `okstills/`: `h9_S18_f026.png` (Wren leans in and whispers, hand cupped;
+  Kai in the foreground over his shoulder, the shrimp on it, the mark glowing on his wrist), `h9_S18_f050.png` (on
+  "left" she points across the dark lake; the ruined lighthouse's small coral glow sits on the far shore in the same
+  direction) and `h9_S18_f080.png` (after the cut on "at": the lighthouse on its rocks, the coral lamp room, its
+  reflection running to us, a small moon up-left; the glow swells on "lighthouse"). Camera A is now from the NNW over
+  Kai's shoulder (from the ENE, Wren had her back to us and the point was hidden; NNE put a porch post in frame).
+  **S18 full render starts when you OK this.** Render parts for helpers who are free: S18 f001-053 (the two-shot) /
+  f054-107 (the lighthouse); tell me in "Coordinator" who takes which.
+  **S05:** the first full render had flickering green streaks on the lake in f1-22 (the lake z-fighting the ground
+  under it with the camera 470 m away). Fixed (camera clip start 0.05 -> 20; the S18 lighthouse camera got the same
+  fix); f1-24 re-rendered (f9-12 match the old frames exactly). `shots/S05.mp4` goes up within the hour.
+  **S04:** full render running (16/44).
 - 2026-11-07 13:45 UTC: **OK stills for S04 and S05** are in `okstills/`: `h9_S04_f006.png` (day: S03's end, Kai alone in the lane facing
   us), `h9_S04_f022.png` (dusk on "down"), `h9_S04_f040.png` (night, the mark lights the lane coral), and `h9_S05_f060.png`
   (the dark island, the one coral dot with its bloom). The S04 sun disc is being moved into frame (it sat just off the

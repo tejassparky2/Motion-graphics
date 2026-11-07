@@ -267,22 +267,9 @@ def s18():
                 P.rot("chest", (0, 0, 3.0 * math.sin(math.pi * (f - f_point1) / 6)))
             P.key(f)
 
-    # wren.point's chest turn swings the arm off the aim (~38 deg here): measure the hand's heading once the point
-    # has settled and pre-turn the aim by the error (twice), so her finger really lines up with the lamp room
-    aim = to_lh.copy()
-    want = lh["top"]
-    for _ in range(2):
-        key_wren(aim)
-        sc.frame_set(f_point1 + 8)
-        hb = w["arm"].pose.bones["hand.L"]
-        h, t = w["arm"].matrix_world @ hb.head, w["arm"].matrix_world @ hb.tail
-        got, des = (t - h), (want - h)
-        err = math.atan2(des.y, des.x) - math.atan2(got.y, got.x)
-        err = (err + math.pi) % (2 * math.pi) - math.pi
-        aim = (Matrix.Rotation(err, 3, "Z") @ aim).normalized()
-        print("S18 point heading error", round(math.degrees(err), 1))
-    key_wren(aim)
-    sc.frame_set(1)
+    # (her point goes across her body to screen right over the lake; aiming truly at the lamp room, behind her right
+    # shoulder, twists the left arm backwards, so it's cheated: the cut shows where she means)
+    key_wren(to_lh)
     wren.grip(w, 1)
     wren.face(w, "whisper", 1)
     wren.face(w, "worried", f_point0 + 2)

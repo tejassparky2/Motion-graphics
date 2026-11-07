@@ -39,6 +39,8 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
+S08_STRIKES = list(range(8, 66, 4))                   # S08 (XprL): Wren's clapper strikes (wren.ring f6-f66, beat 4)
+S08_PORCH = 12                                         # the first porch bell joins (V.ring_bell from f_ring + 6)
 S02_CRACK, S02_ECHO = 36, 53                          # S02 (helper 3): the cut to the crack, the mark's echo
 # S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
 S03_HUTS = [(12, 18, -0.6, True), (16, 24, 0.6, True), (21, 27, 0.35, False), (23, 29, -0.35, False),
@@ -231,15 +233,18 @@ def scratch(strokes=4, seed=0):
     return out
 
 
-def all_bells(dur, seed=0):
-    """Every bell in the village ringing: Wren's close and loud, the porch bells round about, far ones roomier."""
-    out = e2.bell_peal(dur, seed) * 0.7
-    at = 0.0
-    k = 0
-    while at < dur:
+def all_bells(dur, seed=0, strikes=None, peal_in=0.0, peal_ramp=1.0):
+    """Every bell in the village ringing: Wren's close and loud (one hand-bell hit per clapper strike, `strikes` in
+    seconds from the start), the porch bells joining in one by one from `peal_in`, far ones roomier."""
+    n = _n(dur)
+    peal = e2.bell_peal(dur, seed)[:n] * 0.7
+    ramp = np.clip((_t(len(peal)) - peal_in) / peal_ramp, 0, 1)
+    out = np.zeros(n + _n(1.0))
+    out[:len(peal)] += peal * ramp
+    if strikes is None:
+        strikes = np.arange(0.0, dur, 0.24)
+    for k, at in enumerate(strikes):
         _place(out, e2.hand_bell(86 + (k % 2) * 2, seed + k), at)           # Wren, both hands, hard
-        at += 0.24
-        k += 1
     return out
 
 
@@ -424,8 +429,12 @@ def build(timing, n, v):
     bed(glitter(s("S08") - s("S07"), 2), s("S07"), -28, 0.0)
     hit(scratch(4, 1), w("l7", "stings"), -20, 0.4)
     hit(e2.cloth_swish(0.4, 7), w("l7", "nettles"), -22, -0.3)           # Wren pulls her cape over her face
-    bells_from = w("l8", "Ring")
-    bed(all_bells(s("S10") - bells_from + 0.6, 3), bells_from, -17, 0.15)  # still ringing as the moths pass
+    # S08 (XprL, final): Wren's clapper strikes every 4 frames f8-f64 (wren.ring from f6); the porch bells join one by
+    # one from f12; they all keep ringing through S09 as the moths pass
+    bells_from = fr("S08", S08_STRIKES[0])
+    strikes = [fr("S08", f) - bells_from for f in S08_STRIKES]
+    bed(all_bells(s("S10") - bells_from + 0.6, 3, strikes, fr("S08", S08_PORCH) - bells_from, 1.4),
+        bells_from, -17, 0.15)
     hit(base.ring_out(2.0), s("S10") - 0.1, -26, 0.15)
 
     # --- S10-S13: the orbit; the backs to the light; Kai drops into the grass
