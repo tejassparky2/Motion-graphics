@@ -132,5 +132,8 @@ synthesised, no heartbeat, no riser:
   glow chime on "lighthouse";
 - S19: the split whoosh, the A/B stingers on the letters, the "Comment" blip; the sting bed from the first "Option".
 
-**Next:** nothing pending. If a shot is re-rendered, or the takes or timing change, I re-time, re-run, Whisper and
-push. Shots in: all 19 (S01-S18, S19top, S19bot), each checked; the retimed ones are listed above.
+**Delivered:** Ep3 went out at 6ccd650 with out/monsters/ep03/mix.wav (the MIX FINAL @ 5d4ca76, 54.09 s), 18/18
+Whisper. Nothing changed in the takes, timing, landings or shots after that, so there's no re-mix.
+
+**Next:** nothing pending on Ep3. If a shot is re-rendered, or the takes or timing change, I re-time, re-run, Whisper and
+push. Ep2: I retime S20 (S20_RAISE, S20_FLARE, S20_CLANK in ep02_sound.py) when S20bot v2 lands.
