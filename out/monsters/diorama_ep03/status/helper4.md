@@ -8,7 +8,7 @@
   |---|---|---|
   | f001-027 | helper 4 | DONE, pushed `parts/S01_f001-027.mp4` (crf 6 yuv444p, 0 tags) |
   | f028-045 | helper 4 | rendering (started 13:52 UTC, about 85 min) |
-  | f046-062 | helper 10 | **claimed, rendering from bb5be5d** (started 14:01 UTC; test still f46 OK; full size, ~1.5 h) -> `parts/S01_f046-062.mp4` |
+  | f046-062 | helper 10 | **DONE, pushed** `parts/S01_f046-062.mp4` (from bb5be5d; 17/17 frames, crf 6 yuv444p, start_number 46, 0 tags; checked: smooth push-in, no jump at the f54/55 chunk seam) |
   When f046-062 lands, I join the parts, run the 2D pass (the mark, the evening grade, sparkles), encode and push
   `shots/S01.mp4`.
 - **S01: your 11:44 tweaks are in** (frame 1 checked: the evening grade, brows down, eyes to Wren, the mark brightest):
@@ -44,6 +44,9 @@
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
 - **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
+- **S07 for helper 5: split with XprL (their offer, 14:42).** I render f041-050 (rendering) as
+  `parts/S07_f041-050.mp4`; XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
+  helper5.md's S07 row.
 - **QA, round 1 (S02, S03, S06, S12, S13, S14 as landed; S11 is mine, already checked):**
   - **Files:** all 720x1280; frames S02 79, S03 67, S06 63, S12 79, S13 57, S14 84; 0 Lavf/Lavc/x264 strings each.
   - **Edge-band scan:** every 2nd frame of each shot; no unpainted black at any edge.

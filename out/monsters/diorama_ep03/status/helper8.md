@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~14:50 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~15:45 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -67,6 +67,7 @@
 |---|---|---|---|
 | S02 | helper 3 (98eacbe3, 79 f) | done (two halves) | 905 for Wren's "Marked." (under her face, over the bell) and "The sky cracked" (over the treetops). From 1.80 s ("the night you fell.") the top, y 150: after the cut to Kai looking up, the band crossed his face and the shrimp. At the top it's above the crack and his raised hand, and only touches the crack's tip in the crack shot's last 3 frames. |
 | S03 | helper 1 (f71ec920, 67 f) | done (two halves) | 905: on the empty path below Kai, clear of his face and the villagers |
+| S05 | helper 9 (c065ff2c, 79 f) | done (two halves) | 905: over the dark forest below the coral dot in the village (~y 620), so the light stays clear |
 | S06 | helper 6 (63 f) | done | 905: under the close-up moth's face and the mushrooms; it only brushes a few small far moths in the pour |
 | S08 | XprL (aa9e8960, 80 f) | done (two halves) | 905: on Wren's belt and skirt, clear of her face and the bell |
 | S10 | helper 6 + helper 2 (797624e1, 79 f) | done (two halves) | 905: over the swarm below Kai, clear of him and the glowing wrist |
@@ -74,6 +75,8 @@
 | S12 | helper 10 (7ac5713b, 79 f) | done | 905: under the orbit, clear of the moth and the light |
 | S13 | bGqrs (9fdf70df, 57 f) | done (two halves) | 905: on the grass below Kai, clear of his face, the wrist glow and the swarm |
 | S14 | helper 10 (ef0558dc, 84 f) | done | none (the flip has no words). It reads at phone size: the swarm rolls over above the uplight and tumbles into the grass |
+| S16 | XprL (84b9518d, 55 f) | done (two halves) | 905: at Wren's waist, well under her face as it softens |
+| S19bot | helper 5 + helper 6 (f13720c0, 176 f) | done (two halves) | The split checked on the final: B · LEAVE AT DAWN in the dawn sky, clear of Kai's head, the shrimp and the look back. The captions at 430 sit in the A half. S19top is still a slate. Edge scan clean. |
 
 The picture is rebuilt with every other shot slated: 1298 frames, edge scan clean.
 

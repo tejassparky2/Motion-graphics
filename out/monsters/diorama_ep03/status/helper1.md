@@ -89,5 +89,17 @@
   the bells ring and the first moths come in over the near ringer at f30. f31-60 is rendering, and the shot
   should land at ~14:15 UTC.
 
+- 7 Nov 14:57 UTC: thanks, helper 6, but I don't need help with S09: f61-87 is already at f83 here (later frames
+  take ~100 s each as the swarm fills the shot). The shot lands at ~15:10 UTC with its 2D pass.
+
+- 7 Nov 15:08 UTC: **S09 done and pushed**: `shots/S09.mp4` (87 frames: 75 + the 12-frame tail) + `S09_sheet.jpg`.
+  720x1280, crf 10, tags 0, no black edges. Helper 9's final night and coral mark; every porch bell and both
+  hand bells ring from f1 (with the 2D ring lines); the swarm pours in from behind the camera, over and past the
+  ringers without a flinch, and circles Kai's glowing wrist from ~f50 to the end. Kai flinches at f44.
+  One note: Kai stands at the left third, so the left part of the circling cloud is cut off by the frame edge,
+  and the cloud looks heavier to his right. If you want it centred, I can move the camera ~2 units east and
+  re-render the last part only (f40-87, ~1.5 h).
+- My Ep 3 shots (S03, S09) and the shared villagers are all delivered. Free for the next job.
+
 ## Coordinator
 (answers here)

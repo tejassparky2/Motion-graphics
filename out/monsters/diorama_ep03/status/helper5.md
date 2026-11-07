@@ -1,17 +1,12 @@
 # Helper 5: Ep3 status (S07, S15, S19 bottom)
 
-**2026-11-07 14:42 UTC: RENDER RANGES (for helper 4 / XprL)** — all from commit **2872e3e** or later (helper5.py
-unchanged since): `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 SHOT DIR --frames A-B` (every
-frame renders on 1s: no step-multiple start). Raw part: libx264 crf 10, yuv420p, 24 fps, the CLEAN flags,
-`-start_number A`, no 2D pass, to `parts/SHOT_fAAA-BBB.mp4`. Write your claim here.
+**2026-11-07 14:50 UTC: RENDER PLAN (fixed; sorry for the doubled S19bot work)**
 
-| Shot | Done here (14:42) | My running chunk stops at | **Free to claim** | Speed here (3 renders at once) |
-|---|---|---|---|---|
-| S19bot (176) | f001-144 | f159 | **f160-176** | ~100 s/frame |
-| S07 (60) | f001-029 | f040 | **f041-060 CLAIMED by helper 4 (14:45 UTC)**: rendering now at the head, as raw part `parts/S07_f041-060.mp4` (your spec). Please stop at f040. | ~170 s/frame |
-| S15 (106) | f001-023 | **f036** (bGqrs claimed f037-070, thanks) | none (bGqrs f037-070, helper 2 f071-106) | ~4-5 min/frame |
-
-If nobody claims a range by the time my chunk reaches it, I'll render it myself and say so here.
+| Shot | Mine (done / rendering) | Others | Then |
+|---|---|---|---|
+| S19bot (176) | **FINAL, pushed: `shots/S19bot.mp4` + `S19bot_sheet.jpg`** (15:10 UTC): my f001-132 + helper 6's f133-176, 176 frames, 720x1280 (bottom band, top empty for helper 8's split), crf 10, 0 tags | helper 6 f133-176 (thanks) | - |
+| S07 (60) | f001-029 done, rendering to **f040** (stops there) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4** (rendering, `parts/S07_f041-050.mp4`); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
+| S15 (106) | f001-023 done, rendering to **f036** (stops there) | bGqrs f037-070, helper 2 f071-106 (both pushed/rendering) | I join + the 2D pass (dizzy stars/spirals) |
 
 **2026-11-07 10:10 UTC**
 - **S19bot: FULL RENDER RUNNING** (since 10:58 UTC, 176 frames, ~3 min/frame at full size here, so ~9 h; chunks
@@ -23,13 +18,11 @@ If nobody claims a range by the time my chunk reaches it, I'll render it myself 
   - **Render parts welcome:** anyone free can take a range (e.g. f089-132 or f133-176): render with `--frames A-B`
     (every frame on 1s, no step-multiple start), raw part crf 10 yuv420p 24 fps, CLEAN flags, `-start_number A`, to
     `parts/S19bot_fAAA-BBB.mp4`. Mark the range here first; I'll stop my chunk before it.
-  - **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
+  - **helper 6: f133-176 DONE, pushed** `parts/S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (22 + 22 frames, 0 tags).
+    Was: **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
     ee592d7b), as raw parts `S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`).
     Please stop at f132.
-  - **CLAIMED by bGqrs (14:50 UTC, the coordinator's ask): S19bot f089-132**, starting ~15:20 UTC after my S15 f037-070 part, at the
-    current head (s19bot and everything it imports unchanged since your ee592d7). Rendered top half first, as two raw parts
-    `S19bot_f111-132.mp4` then `S19bot_f089-110.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`). **Please stop at f088.**
-    If your chunk is already past f088, write the last frame you'll render in Coordinator and I'll start after it.
+  - ~~bGqrs's S19bot f089-132 claim~~: **withdrawn** (your f001-132 is done; nothing of it was rendered).
 - **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING**: I render f001-070 (f016 done at 14:10 UTC; a container restart cost ~1 h),
   **helper 2 renders f071-106** (parts/S15_f071-088.mp4 pushed, f089-106 rendering). **CLAIMED by helper 2 (13:28 UTC): f071-106**, rendering now at the current head, as two raw parts `S15_f071-088.mp4` + `S15_f089-106.mp4` (your spec: crf 10 yuv420p, CLEAN). Please stop at f070. Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
   2D pass):
