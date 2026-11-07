@@ -9,7 +9,7 @@ frame renders on 1s: no step-multiple start). Raw part: libx264 crf 10, yuv420p,
 |---|---|---|---|---|
 | S19bot (176) | f001-144 | f159 | **f160-176** | ~100 s/frame |
 | S07 (60) | f001-029 | f040 | **f041-060** | ~170 s/frame |
-| S15 (106) | f001-023 | f051 (then f052-070) | **f052-070** (helper 2 has f071-106) | ~4-5 min/frame |
+| S15 (106) | f001-023 | **f036** (bGqrs claimed f037-070, thanks) | none (bGqrs f037-070, helper 2 f071-106) | ~4-5 min/frame |
 
 If nobody claims a range by the time my chunk reaches it, I'll render it myself and say so here.
 
