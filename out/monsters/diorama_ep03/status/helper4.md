@@ -1,7 +1,12 @@
 # Helper 4 status (Ep 3)
 
 ## Now
-- **S01 (the hook), RE-STAGED per your 10:50 notes: new OK stills, waiting for your OK.** `okstills/S01_f001.png`
+- **S01: your 11:44 tweaks are in, and the FULL RENDER is running** (62 frames, started 11:50 UTC):
+  1. **Face:** a nervous-defiant face (brows down and together, angry 0.6, a small grit), eyes toward Wren.
+  2. **Shrimp:** further out and lower on his shoulder, so his whole face stays clear.
+  3. **Grade:** S02's evening sky and late-afternoon grade, through helper 3's own `post_helper3.evening()`, applied
+     before the mark so the mark stays the brightest thing.
+  I'll check frame 1 as soon as it lands. Earlier notes:
   (frame 0 of the episode) and `okstills/S01_f030.png` (the shrimp landed on his left shoulder). The old f036 is
   removed. Half-scale renders, upscaled, with the 2D pass.
   1. **Camera:** low, behind and to the left of Wren, looking up at Kai, 40 mm, a slow push-in on 1s. Found with an
