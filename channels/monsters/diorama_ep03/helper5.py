@@ -498,9 +498,10 @@ def s15():
         theta = a[2] + (b[2] - a[2]) * u
         v = a[3] + (b[3] - a[3]) * u
         look = 0.0
-        if f > f_up + 14:                                               # looking round: left, right, then front
-            t = f - (f_up + 14)
-            look = 0.55 * math.sin(min(1.0, t / 40.0) * 2 * math.pi) * (1 - _ease((t - 40) / 12))
+        if f > f_up + 12:                                               # looks round: left, right, then to us
+            t = f - (f_up + 12)
+            look = 0.55 * math.sin(min(1.0, t / 30.0) * 2 * math.pi) * (1 - _ease((t - 28) / 6))
+            look += -0.6 * _ease((t - 30) / 8)                           # ends facing the lens (for the grin)
         r = Euler((math.radians(theta), 0, yaw)).to_matrix()
         s15p._pose(k, [x for x in spec if x[0] != "left_hand"], (0, 0, 0), (math.radians(theta), 0, yaw))
         B._twist(k, "left_lower_arm", twist * v + sit_roll * (1 - v))   # palm (the mark) up, lying or sitting
@@ -622,7 +623,7 @@ def s15():
     acting.face_keys(k, 1, eye_brow_down=0.55, face_angry=0.2, face_surprise=0.0, face_happy=0.0, eye_zitome=0.0,
                      eye_brow_up=0.0, eye_open=0.0)
     acting.face_keys(k, f_up + 4, eye_brow_down=0.0, face_angry=0.0, face_surprise=1.0, eye_brow_up=0.8, eye_open=0.6)
-    g0 = f_up + 34
+    g0 = f_up + 44
     for j, f in enumerate(range(g0, g0 + 22, 2)):
         u = (j + 1) / 11.0
         acting.face_keys(k, f, face_surprise=1.0 - u, eye_brow_up=0.8 * (1 - u), eye_open=0.6 * (1 - u),

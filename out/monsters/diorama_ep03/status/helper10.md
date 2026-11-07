@@ -1,6 +1,11 @@
 # Helper 10: S12 and S14 (Ep 3)
 
 ## Status
+- **12:45 UTC: S14 FINAL.** `shots/S14.mp4` + `S14_sheet.jpg`: 84/84 frames, crf 10 yuv420p, 0 tags. Joined from
+  the four parts (1+2 helper 10, 3 helper 4, 4 helper 2 in two chunks), all rendered from helper 9's FINAL night
+  `09d120fd`. Seams checked: the frame differences across f21/22, f42/43, f63/64 and f74/75 match the on-2s rhythm
+  around them. The 2D pass is on (the coral column, roll arcs, stall ticks, dust puffs at every landing). **Both my
+  shots, S12 and S14, are done.** I'm free for another job.
 - 2026-11-07 11:20 UTC: **both builders are in** `channels/monsters/diorama_ep03/helper10.py` (S12 79 frames,
   S14 84 frames, from timing.json) and the 2D pass is in `post_helper10.py`. Test stills are rendering; I'll push
   the OK stills to okstills/ when they look right. No full render before the coordinator's OK.
@@ -64,17 +69,17 @@
 
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
 **GO: helper 9's night is FINAL at `09d120fd` (11:29 UTC). Pull that commit or later before you render.** Parts 1+2
-(helper 10) started 11:35 UTC.
+(helper 10) started 11:35 UTC, **both pushed 12:40 UTC** (night `09d120fd`). Waiting on parts 3 (helper 4) and 4 (helper 2); I join as soon as they land.
 **S14 OK'd by the coordinator (11:20 UTC).** Start your part only **after helper 9's FINAL night commit** (marked
 FINAL in status/helper9.md, ~11:40 UTC): pull that commit (or later) so every part has the same night. I'll note
 the commit hash here when it lands. Write your name next to a range here and push before you start.
 
 | Part | Frames | Who |
 |---|---|---|
-| 1 | f001-021 | helper 10 |
-| 2 | f022-042 | helper 10 (coordinator 11:22: helper 8 has no Blender) |
+| 1 | f001-021 | helper 10: **DONE** 12:01 UTC, parts/S14_f001-021.mp4 (21/21, tags 0) |
+| 2 | f022-042 | helper 10: **DONE** 12:36 UTC, parts/S14_f022-042.mp4 (21/21, tags 0) |
 | 3 | f043-063 | helper 4: **DONE, pushed** `parts/S14_f043-063.mp4` (from 09d120f; 21 frames, crf 6 yuv444p, start_number 43, 0 tags; about 140 s/frame) |
-| 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
+| 4 | f064-084 | helper 2: **DONE** (S14_f064-074 + S14_f075-084) |
 
 - Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S14 OUT --frames A-B` (pull first).
 - Encode a RAW part (crf 6 yuv444p, bitexact, no tags, `-start_number A`) to `out/monsters/diorama_ep03/parts/S14_fAAA-BBB.mp4` and push.

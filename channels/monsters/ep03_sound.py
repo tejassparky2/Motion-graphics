@@ -39,6 +39,8 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
+S06_CLOSE, S06_EYESPOTS = 34, (40, 42, 44)            # S06 (helper 6): the close moth, its eye-spots opening
+S13_DIP, S13_FLAT, S13_ARM, S13_BLOOM = 3, 13, 17, 26   # S13 (bGqrs): 1-based shot frames
 # S14, the flip (helper 10, channels/monsters/diorama_ep03/S14_landings.json; 1-based shot frames, tail handle):
 # f1-12 the held beat, f12-40 the wave of rolls and stalls, hero plops f32/38/44, the patter f46-66.
 S14_LANDINGS = os.path.join(base.ROOT, "channels", "monsters", "diorama_ep03", "S14_landings.json")
@@ -262,6 +264,16 @@ def drop_to_grass(seed=0):
     return out
 
 
+def eyespot_open(seed=0):
+    """A wing eye-spot blinking open: a tiny soft upward pip with a fluffy breath under it."""
+    r = _rng("eyespot", seed)
+    n = _n(0.16)
+    t = _t(n)
+    f = r.uniform(900, 1200) * (1 + 0.6 * np.minimum(1, t / 0.06))
+    pip = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.minimum(1, t / 0.008) * np.exp(-t / 0.045)
+    return pip + _bp(r.uniform(-1, 1, n), 2000, 7000) * np.exp(-t / 0.03) * 0.15
+
+
 def plop(seed=0):
     """One moth landing on its back in the grass: a soft comic plop with a tiny puff."""
     r = _rng("plop", seed)
@@ -351,7 +363,8 @@ def build(timing, n, v):
 
     s = c.t
     twist = s("S14")
-    f14 = lambda f: c.shot["S14"]["first_frame"] / 24 + (f - 1) / 24   # S14's picture frame f (1-based)
+    fr = lambda shot, f: c.shot[shot]["first_frame"] / 24 + (f - 1) / 24   # a shot's picture frame f (1-based)
+    f14 = lambda f: fr("S14", f)
 
     # --- the ambience: evening village S01-S03, the dusk S04, night from S05 (crickets; the hush in S14)
     amb(lambda d, k: base.meadow_wind(d, k), 0.0, s("S04"), -27, 0.02, 0.4)
@@ -397,7 +410,10 @@ def build(timing, n, v):
 
     # --- S06-S09: the swarm comes down the hill, growing; wing dust; the scratch; every bell rings
     bed(swarm(s("S10") - s("S06") + 0.5, (0.15, 0.7), 1), s("S06"), -20, 0.1)
-    hit(base.flutter(0.5, 6), w("l6", "fluffmoths"), -20, 0.2)           # close on one: its eye-spots open
+    # S06 (helper 6, final): the swarm pours down, one moth swoops in close f34, its wing eye-spots open f40/42/44
+    hit(base.flutter(0.5, 6), fr("S06", S06_CLOSE) - 0.1, -20, 0.2)
+    for k, (f, pan) in enumerate(zip(S06_EYESPOTS, (-0.3, 0.3, 0.0))):
+        hit(eyespot_open(k), fr("S06", f), -25 + 2 * k, pan)
     bed(glitter(s("S08") - s("S07"), 2), s("S07"), -28, 0.0)
     hit(scratch(4, 1), w("l7", "stings"), -20, 0.4)
     hit(e2.cloth_swish(0.4, 7), w("l7", "nettles"), -22, -0.3)           # Wren pulls her cape over her face
@@ -414,7 +430,11 @@ def build(timing, n, v):
     bed(swarm(orb_t1 - orb_t0 + 0.6, (0.7, 1.0), 2), orb_t0, -21, 0.0)
     hit(base.flutter(0.4, 11), w("l11", "backs"), -24, 0.2)
     bed(swarm(twist - orb_t1 + 0.2, (1.0, 1.1), 3), orb_t1, -21, 0.0)
-    hit(drop_to_grass(), w("l13", "put"), -14, 0.0)
+    # S13 (bGqrs, final): dip f3, flat on his back f13 (a small bounce), arm out f17-25, the bloom on "below" f26
+    hit(e2.cloth_swish(0.4, 7), fr("S13", S13_DIP), -24, 0.0)
+    hit(drop_to_grass(), fr("S13", S13_FLAT) - 0.05, -14, 0.0)               # the thud sits 0.05 s into the effect
+    hit(e2.cloth_swish(0.38, 8) * 0.7, fr("S13", S13_ARM), -26, -0.2)  # the arm swept out over the grass
+    hit(flare(3), fr("S13", S13_BLOOM), -16, -0.1)                         # the mark blooms up through the grass
 
     # --- S14: THE FLIP (TWIST): a held hush, then plop-plop-plop on helper 10's landing frames, then dazed trills
     land = json.load(open(S14_LANDINGS))
