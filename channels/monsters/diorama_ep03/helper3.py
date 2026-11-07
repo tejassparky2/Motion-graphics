@@ -244,7 +244,7 @@ def s02():
     k_face = _bone_world(k, "head 1") + up * 0.55
     # A: over his left shoulder, his raised forearm soft in the foreground at frame left, her face 3/4
     camA = H9._new_cam("S02a", 1)
-    pa = k_face - fwd * 3.0 + left * 2.4 + up * 0.2
+    pa = k_face - fwd * 3.0 + left * 3.3 + up * 0.9                 # high and wide of his shoulder (and the shrimp)
     for f in range(1, fb):
         e = _smooth((f - 1) / max(1, fb - 2))
         loc = pa.lerp(w_face, 0.10 * e)                             # a slow push in on her
