@@ -507,10 +507,14 @@ def s15():
     UP = S15_SIT
     lie = B._with_arm(B.LIE, 1.0)
     # (frame, spec, theta (90 = flat on his back), arm-out amount)
-    keys = [(1, lie, 90.0, 1.0), (f_up, lie, 90.0, 1.0), (f_up + 6, B._blend(lie, UP, 0.7), 40.0, 0.4),
-            (f_up + 10, UP, 2.0, 0.0), (f_up + 14, UP, 10.0, 0.0), (n, UP, 10.0, 0.0)]
+    # the sit-up: one smooth ease over 10 frames, keyed on 1s (on 2s it popped from lying to a quarter up between two
+    # drawings: coordinator QA, 7 Nov); the overshoot and settle after it as before, on 2s
+    keys = [(1, lie, 90.0, 1.0), (f_up, lie, 90.0, 1.0), (f_up + 10, UP, 2.0, 0.0), (f_up + 14, UP, 10.0, 0.0),
+            (n, UP, 10.0, 0.0)]
+    ONES = set(range(f_up + 1, f_up + 11))                               # the sit-up frames, keyed on 1s
+    key_frames = sorted(set(range(1, n + 1, 2)) | ONES)
     back = 3.0                                                           # the hips stay where S13 laid them
-    for f in range(1, n + 1, 2):
+    for f in key_frames:
         i = max(j for j in range(len(keys)) if keys[j][0] <= f)
         if i + 1 < len(keys):
             a, b = keys[i], keys[i + 1]
@@ -548,7 +552,7 @@ def s15():
     s3d._fix_pivots(sh)
     base = SHRIMP_SHOULDER
     f_peek = f_up + 16
-    for f in range(1, n + 1, 2):
+    for f in key_frames:
         sc.frame_set(f)
         side = (k["arm"].matrix_world.to_3x3() @ Vector((1, 0, 0))).normalized()
         up = _ease((f - f_up) / 12.0)
@@ -586,7 +590,7 @@ def s15():
     lu = bpy.data.objects.new("s15_mark_up", up)
     sc.collection.objects.link(lu)
     lu.rotation_euler = (math.pi, 0, 0)                                  # pointing straight up
-    for f in range(1, n + 1, 2):
+    for f in key_frames:
         sc.frame_set(f)
         lu.location = lt.matrix_world.translation
         lu.keyframe_insert("location", frame=f)
