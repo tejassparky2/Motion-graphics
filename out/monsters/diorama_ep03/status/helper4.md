@@ -1,6 +1,12 @@
 # Helper 4 status (Ep 3)
 
 ## Now
+- **S01: FINAL, pushed** (`shots/S01.mp4` + `S01_sheet.jpg`). It joins my f001-045 and helper 10's f046-062 (thanks),
+  with the 2D pass: the evening sky and grade, the blazing mark, the halo, the bloom and the sparkles.
+  - **File:** 62 frames (= render_frames), 720x1280, crf 10, 0 Lavf/Lavc/x264 strings.
+  - **Checks:** no black edges (every frame scanned) and no frame jumps; the f045/f046 seam is smooth.
+  - **Frame 0:** Wren stumbling back past the lens with her bell up, Kai's wrist blazing, the villagers behind.
+  - **By f30:** the shrimp has landed on his left shoulder, and his face stays clear to the end.
 - **S01 parts from bb5be5d** (split per the coordinator, 13:49 UTC). Run
   `render_shot.py -- diorama_ep03 S01 OUT --frames A-B` at full size (720x1280, about 4.8 min a frame), raw 3D only;
   the 2D pass is mine at the join.
