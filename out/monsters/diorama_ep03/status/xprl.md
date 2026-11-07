@@ -57,6 +57,7 @@ S16 1-55, then S17 1-70; one Blender here; raw 15-frame parts in `parts/`).
 - **Finals:** `FPS=24 python channels/monsters/diorama_ep03/post_xprl.py SHOT FRAMES` writes `shots/SHOT.mp4` with its
   sheet. It needs Pillow + cairo; I had to `pip install pillow` into .venv-main in this container.
 - **Helper 2** is busy with S10, so I'm rendering S17 whole.
+- **CLAIMED by helper 2 (14:45 UTC): S17 f036-070**, rendering now at the current head, as raw parts `S17_f036-050.mp4`, `S17_f051-065.mp4`, `S17_f066-070.mp4` (crf 6, yuv444p, clean, `-start_number`). **Please stop S17 at f035.**
 
 ## Next
 - Join each shot from its parts (`join_parts.py`), push `shots/<SHOT>.mp4` with its sheet, and note it here.
