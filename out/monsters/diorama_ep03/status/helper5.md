@@ -18,7 +18,8 @@
   looks round at them, bewildered, then a small amazed half-smile; the shrimp on his left shoulder peeks out and
   stares. Camera low 3/4 from his right-front, slow push-in. ~2 min/frame at half size here, so ~5-6 min at full:
   **render parts welcome** once you OK it (f001-035 / f036-070 / f071-106; mark the range here).
-- **S07 (60 frames): OK still pushed: `okstills/S07_f010_f030_f050.jpg`** (half scale, helper 9's FINAL night).
+- **S07 (60 frames): OK'd (12:50), FULL RENDER RUNNING** (since ~12:55 UTC); the 2D pass adds helper 1's itch
+  squiggles by the scratching arm from "stings" (post_helper1.itch, on 2s). Still: `okstills/S07_f010_f030_f050.jpg` (half scale, helper 9's FINAL night).
   A medium two-shot of helper 1's lane hut #3's porch: Wren and a villager sheltering on it side by side, lit coral
   by Kai's mark (a 6000 W coral point like N9.mark, off screen in the lane at LANE_AT). Glittering wing dust (gold,
   pink, white, ice-blue flakes, twinkling on 2s) drifts down in front of them from five fluffmoths fluttering over the

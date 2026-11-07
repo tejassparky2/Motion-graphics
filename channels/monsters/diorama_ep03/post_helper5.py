@@ -4,7 +4,9 @@
         little dizzy stars (yellow and white 4-point sparkles) circling above each one on 2s, and a turning spiral
         over each of its two wing eye-spots, so "on its back, dazed" reads at phone size. From frame 1 to the end,
         each moth's loop out of step with the others.
-    S07, S19bot: no 2D pass (the shots are final as rendered); this script only encodes them.
+    S07 "Their wing dust stings like nettles."  Helper 1's comic itch squiggles (post_helper1.itch) round the
+        villager's red blotch from "stings" on (2-3 small zigzag marks re-dealt on 2s), from S07_anchors.json.
+    S19bot: no 2D pass (final as rendered); this script only encodes it.
 
     FPS=24 python channels/monsters/diorama_ep03/post_helper5.py S15 [S07 S19bot]          (the shot: mp4 + sheet)
     FPS=24 python channels/monsters/diorama_ep03/post_helper5.py S15 --still 60 STILL.png OUT.png  (a preview)
@@ -33,6 +35,7 @@ from motion.engine import FPS, cairo  # noqa: E402
 BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep03")
 SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama_ep03", "shots")
 INK = (0.06, 0.05, 0.10, 1.0)
+STING = 22                                   # S07: "stings" (helper5._word("l7", "stings")); the itch starts
 
 
 def heroes(shot):
@@ -93,6 +96,11 @@ def dizzy(a):
 
 
 def overlays(shot):
+    if shot == "S07":
+        from channels.monsters.diorama_ep03.post_helper1 import itch
+        with open(os.path.join(BUILD, "S07_anchors.json")) as fh:
+            a = {int(k): v for k, v in json.load(fh).items()}
+        return [(itch(a, "blotch", size=1.2), dict(start=(STING - 1) / FPS))]
     if shot != "S15":
         return []
     a = heroes(shot)
