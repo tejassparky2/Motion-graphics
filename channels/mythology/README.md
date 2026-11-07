@@ -45,9 +45,10 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - The repo is **public** (tejassparky2/Motion-graphics). Never commit chat files, downloaded videos, keys or anything
   private. Pull before pushing. Commit messages end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 - Keys live in `<shorts research>/.env`. Never read or print them; the scripts load them.
-- **Voice cloning: only the two consented Kannada voices.** On 7 Nov 2026 the owner approved clones of their own
-  voice ("this is mine") and their brother's ("the first one was from my brother and he agress") for the Kannada
-  reels. Nobody else is ever cloned (no famous narrator, no TV-serial voice). Hindi stays the synthetic Aman voice.
+- **Voice cloning: only the consented Kannada voices.** On 7 Nov 2026 the owner approved clones of their own
+  voice ("this is mine"), their brother's ("the first one was from my brother and he agress") and their friend
+  Darshan's ("Clone this voice it's my friend's and he agrees", "Copy the same narration style from this voice") for
+  the Kannada reels. Nobody else is ever cloned (no famous narrator, no TV-serial voice). Hindi stays synthetic Aman.
   The recordings and references stay in `myth_assets/voice/` and never go in the repo. Suggested to the owner (not
   yet decided): on upload, answer YouTube's "altered or synthetic content" question with yes and turn on Instagram's
   AI label. Those are upload settings, not caption words, so the no-AI-wording rule still holds.
@@ -110,6 +111,11 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   up to 44%). Sent as A `aman_orig_s11` (most pitch movement), B `aman_hindi` (the Hindi voice itself, 0.88 like
   Aman), C `aman_calm_s42` (calmer, flatter). More pitch movement reads as more human.
   **The owner picked A ("A", 7 Nov 2026): `design_aman_orig_s11` is the Kannada narrator** (channel.py default).
+- **Darshan clone (7 Nov 2026)**: the owner's friend, with consent; "Copy the same narration style from this voice".
+  His recording (65 s, music 13 dB under him, removed with HTDemucs) is fast continuous speech with only 0.1-0.2 s
+  breaths. Reference `darshan_v1` = his first 9.5 s, cut at breaths (exact words in .txt). IndicF5 keeps his pace:
+  13.7 letters/s against his real 13.5 (voice A: 12.6). Likeness 0.92, turbo errors 13% mean, 23% worst. A 4 s
+  reference (`darshan_short`) came out too fast (17.9 letters/s) and less clear. Waiting on the owner's pick.
 - Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best

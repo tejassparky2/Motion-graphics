@@ -21,7 +21,9 @@ KN_REF_TEXT = ("ಯೋಚಿಸಿ, ಸಾವಿರಾರು ವರ್ಷಗಳ�
 # Owner's pick, 7 Nov 2026 ("A"): designed voice A, Indic Parler's speaker Aman reading Kannada with the Hindi
 # narrator's own description, seed 11 (kn_voice_design.py), as the IndicF5 prompt. Was Suresh s42 on 6 Nov.
 KN_VOICE = os.environ.get("MYTH_KN_VOICE", "design_aman_orig_s11")    # file stem in _KN_VOICES
-CLONED = {"tejas_v2", "brother_v1"}                                    # consented clones, never the default
+# consented clones: the owner, the owner's brother, and (7 Nov 2026, "Clone this voice it's my friend's and he
+# agrees") the owner's friend Darshan; his reference keeps his own delivery ("Copy the same narration style")
+CLONED = {"tejas_v2", "brother_v1", "darshan_v1"}
 # 7 Nov 2026 the owner rejected both synthetic Kannada voices ("The both kannada voice is not good") and asked for
 # clones of two real voices with consent: their own ("this is mine") and their brother's ("he agress"). Those
 # references live only in _KN_VOICES (never in the repo), each with its exact words in <stem>.txt beside it:
