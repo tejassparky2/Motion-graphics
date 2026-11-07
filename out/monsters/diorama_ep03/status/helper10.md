@@ -53,20 +53,24 @@
   the glow line landing on it) and `okstills/S12_f030.png` (the other side, its face toward us, still banked with its
   back to the light). These are half-res renders scaled up, with the 2D pass. The moth is 1.9x on S11's stage; about
   1.7 laps.
-- **S14:** `okstills/S14_f001.png` (the held beat: S13's end framing, Kai on his back, the wrist glowing up, the
-  swarm circling above), `S14_f040.png` (moths rolled upside down and tumbling, the first ones landed with a dust
-  ring), `S14_f066.png` (everyone down on their backs round him, legs up, clear of the caption band). The plops are
-  at f32, f38 and f44. A mid-roll still (f24) is rendering and will be added. Half-res renders scaled up, with the 2D
-  dust puffs. The night lighting is still bGqrs's stand-in until helper 9's night grade lands.
+- **S14 (new, 12:25 UTC, after the coordinator's three notes):** `okstills/S14_f001.png` (the held beat: S13's last
+  frame, night, the coral column rising from his palm-up wrist, the swarm lit from below), `S14_f024.png` (the camera
+  coming down; the hero moths rolled upside down near the lens, the roll and stall ticks), `S14_f040.png` (a hero
+  plop with its dust ring, others tumbling), `S14_f060.png` (low and close: the heroes on their backs, legs up, in
+  front of him; Kai's face and the glow behind; the ring of others small round him). The plops are at f32, f38 and
+  f44 (heroes), plus f48. The night is helper 9's N9.night + N9.mark, with a 3200 W coral under-glow; the visible
+  column is 2D. In the full render the wings no longer cast moon shadows (the dark smudges on the grass in these
+  stills are gone). Half-res renders scaled up, with the 2D pass.
 
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
-**Wait for the coordinator's OK on the S14 stills (noted below) before starting.** Then write your name next to a
-range here and push before you start.
+**S14 OK'd by the coordinator (11:20 UTC).** Start your part only **after helper 9's FINAL night commit** (marked
+FINAL in status/helper9.md, ~11:40 UTC): pull that commit (or later) so every part has the same night. I'll note
+the commit hash here when it lands. Write your name next to a range here and push before you start.
 
 | Part | Frames | Who |
 |---|---|---|
 | 1 | f001-021 | helper 10 |
-| 2 | f022-042 | (free) |
+| 2 | f022-042 | helper 10 (coordinator 11:22: helper 8 has no Blender) |
 | 3 | f043-063 | (free) |
 | 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
 

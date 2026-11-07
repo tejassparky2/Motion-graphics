@@ -221,14 +221,14 @@ def _uplight(cr, g, f):
     if z <= 0:
         return
     breathe = 0.9 + 0.1 * math.sin(f / 4.0)
-    H = math.hypot(tx - wx, ty - wy)
-    w0 = max(18.0, H * 0.16)
+    H = 1.5 * math.hypot(tx - wx, ty - wy)                       # ~5 units up
+    w0 = max(18.0, H * 0.12)
     cr.save()
     cr.set_operator(cairo.OPERATOR_ADD)
     ang = math.atan2(ty - wy, tx - wx)
     cr.translate(wx, wy)
-    cr.rotate(ang - math.pi / 2)                                  # +y now runs down the column, away from the top
-    for wscale, a in ((2.2, 0.10), (1.4, 0.16), (0.8, 0.22)):
+    cr.rotate(ang + math.pi / 2)                                  # local -y now runs up the column, to its top
+    for wscale, a in ((2.2, 0.17), (1.4, 0.27), (0.8, 0.38)):
         grad = cairo.LinearGradient(0, 0, 0, -H)
         grad.add_color_stop_rgba(0.0, *CORAL, a * breathe)
         grad.add_color_stop_rgba(0.5, *CORAL, a * 0.45 * breathe)
@@ -245,7 +245,7 @@ def _uplight(cr, g, f):
     for k in range(5):                                           # faint rays through the blades
         x = rnd.uniform(-w0, w0)
         grad = cairo.LinearGradient(0, 0, 0, -H * 0.8)
-        grad.add_color_stop_rgba(0.0, *HOT, 0.18 * breathe)
+        grad.add_color_stop_rgba(0.0, *HOT, 0.3 * breathe)
         grad.add_color_stop_rgba(1.0, *HOT, 0.0)
         cr.new_path()
         cr.move_to(x - 2, 0)
