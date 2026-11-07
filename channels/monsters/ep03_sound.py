@@ -67,6 +67,24 @@ def voice_track(tl, n):
 
 base.voice_track = voice_track
 
+# Whisper spells two words its own way: the name "Wren" as "Ren" (a homophone) and "fluffmoths" as two words.
+# Those are spelling, not mishearing, so the check treats them as the same words; anything else still fails.
+_norm_words0 = base._norm_words
+
+
+def _norm_words(s):
+    out = []
+    for x in _norm_words0(s):
+        x = "wren" if x == "ren" else x
+        if out and out[-1] == "fluff" and x == "moths":
+            out[-1] = "fluffmoths"
+            continue
+        out.append(x)
+    return out
+
+
+base._norm_words = _norm_words
+
 
 # ---------------------------------------------------------------- effects (original, seeded)
 
