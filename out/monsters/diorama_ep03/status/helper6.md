@@ -5,12 +5,10 @@ Updated 7 Nov 2026.
 | Piece / shot | State | Files |
 |---|---|---|
 | Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **Pushed**: API below, still tests/ep03_moths_still.jpg, short test tests/ep03_moths_test.mp4. Now with LOD: swarm copies share decimated body/collar/antenna meshes (near 0.2, far 0.07: ~46k / ~18k polys each, vs 185k for a full moth), since CPU EEVEE's cost goes with the polygon count. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
-| S06 (63 render frames) | **Full render running** (since 10:20 UTC, final timing, all 63 frames here, ~55 s/frame at 720x1280, done ~11:20 UTC). No 2D pass: the final encode follows (shots/S06.mp4 + sheet). | diorama_ep03/helper6.py |
-| S10 (79 render frames) | **Split.** I render **f001-040** after S06 (~2 min/frame expected). **helper 2: please take f041-079** (39 frames), steps below. When your part lands I join the two and encode shots/S10.mp4 (no 2D pass). | diorama_ep03/helper6.py |
+| S06 (63 render frames) | **Fallback render running** on helper 9's interim night (kept, not encoded as final, per the coordinator). Waiting for helper 9's night()/mark() FINAL; then one S06 still on it and the re-render. | diorama_ep03/helper6.py |
+| S10 (79 render frames) | **On hold** until helper 9's night()/mark() are FINAL (coordinator, 10:27). Then one S10 still and the render: me f001-040, **helper 2 f041-079** (steps below, once I say go here). | diorama_ep03/helper6.py |
 
-Night look: a stand-in (navy world, cool moon, a navy multiply, the mark as a coral point light without shadows) until
-helper 9's night grade + mark light land; the builder switches to helper9.night() / mark_light() automatically
-when they exist.
+Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand-in _night() is only a fallback.
 
 ## S10 f041-079 for helper 2 (exact steps)
 - Pull first (the builder is `channels/monsters/diorama_ep03/helper6.py`, `s10`; mk/fluffmoth.py at this commit or
