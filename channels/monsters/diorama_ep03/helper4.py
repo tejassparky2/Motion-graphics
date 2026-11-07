@@ -34,6 +34,7 @@ BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep03")
 TIMING = os.path.join(ROOT, "channels", "monsters", "ep03", "timing.json")
 FPS = 24
 _smooth = E2._smooth
+LAST = {}                                       # the last build's rigs (for framing probes)
 
 
 def _timing():
@@ -263,6 +264,7 @@ def s01():
     sc.frame_set(1)
     X.v2._twos([k["arm"], w["arm"], sh["body"], sh["hinge"]] + sh["eyes"])
 
+    LAST.update(k=k, w=w, sh=sh, fwd=fwd, up=up, w0=w0)
     # camera: low and close behind Kai's left side, looking up past the raised wrist at Wren; a slow push-in on 1s
     sc.frame_set(1)
     bpy.context.view_layer.update()
@@ -343,10 +345,11 @@ def s11():
 
     m = fm.build((0, 0, 0), name="s11moth")
     fm.flight_mode(m)
+    m["root"].scale = (1.3,) * 3                                     # read big on a wider frame
     fm.flap(m)
     # its path: level flight to screen right; from "They" its back tilts to the light (amount 0 -> 1 by "backs"+6)
     # and the tilt turns it: the heading swings round the light (an orbit starting)
-    pos = P(-6.6, 2.4)
+    pos = P(-5.5, 2.4)
     speed = 0.17
     heading = Vector((0, -1, 0))                                     # screen right
     prev = None
@@ -376,13 +379,13 @@ def s11():
     fm.spot_blink(m, 30) if hasattr(fm, "spot_blink") else None
 
     # the camera: side-on from -X, level, a long lens, a slow push-in on 1s; everything above the caption band
-    tgt = P(-0.6, 5.0)
+    tgt = P(0.7, 4.4)
     bpy.ops.object.camera_add(location=tgt + Vector((-52.0, 0.0, 0.0)))
     cam = bpy.context.object
     cam.name = "S11cam"
     cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
-    cam.data.lens = float(os.environ.get("S11_LENS", "95"))
-    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.12"))
+    cam.data.lens = float(os.environ.get("S11_LENS", "57"))
+    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.15"))
     cam.data.clip_end = 400
     sc.camera = cam
     c0 = cam.location.copy()
