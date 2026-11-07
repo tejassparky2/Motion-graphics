@@ -7,7 +7,14 @@
 - **Tag check:** 0 x264/Lavf/Lavc/encoder/c2pa/jumb strings. Only the standard MP4 container fields are present.
 - **Edge scan:** clean in every frame.
 - **Cover:** `cover.jpg` (swarm, THEY CIRCLED / MY WRIST).
-- `deliver_ep01v2.py --version diorama_ep03` is ready for the mux once `out/monsters/ep03/mix.wav` lands.
+- **The delivery script is tested.** `deliver_ep01v2.py --version diorama_ep03 --no-whisper` ran against the current `ep03/mix.wav`:
+  - the picture is 1298 frames and the sound 54.09 s, both matching the timing;
+  - the delivered file and the preview keep all 1298 frames;
+  - frame 0 brightness is 133/255;
+  - 0 tags;
+  - no trademark terms in the upload sheet.
+  - The cut lands 0.52 s after the last word (rule: about 0.5 s). That's the timing's TAIL.
+  - I deleted the test outputs and left the real mux plus the Whisper check to you.
 
 
 **For the coordinator (7 Nov ~11:25 UTC): I can't take the S14 render part (part 2, f022-042).**
