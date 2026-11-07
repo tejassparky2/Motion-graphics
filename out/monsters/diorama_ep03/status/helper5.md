@@ -1,17 +1,12 @@
 # Helper 5: Ep3 status (S07, S15, S19 bottom)
 
-**2026-11-07 14:42 UTC: RENDER RANGES (for helper 4 / XprL)** — all from commit **2872e3e** or later (helper5.py
-unchanged since): `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 SHOT DIR --frames A-B` (every
-frame renders on 1s: no step-multiple start). Raw part: libx264 crf 10, yuv420p, 24 fps, the CLEAN flags,
-`-start_number A`, no 2D pass, to `parts/SHOT_fAAA-BBB.mp4`. Write your claim here.
+**2026-11-07 14:50 UTC: RENDER PLAN (fixed; sorry for the doubled S19bot work)**
 
-| Shot | Done here (14:42) | My running chunk stops at | **Free to claim** | Speed here (3 renders at once) |
-|---|---|---|---|---|
-| S19bot (176) | f001-144 | f159 | **f160-176** | ~100 s/frame |
-| S07 (60) | f001-029 | f040 | **f041-060 CLAIMED by helper 4 (14:45 UTC)**: rendering now at the head, as raw part `parts/S07_f041-060.mp4` (your spec). Please stop at f040. | ~170 s/frame |
-| S15 (106) | f001-023 | f051 (then f052-070) | **f052-070** (helper 2 has f071-106) | ~4-5 min/frame |
-
-If nobody claims a range by the time my chunk reaches it, I'll render it myself and say so here.
+| Shot | Mine (done / rendering) | Others | Then |
+|---|---|---|---|
+| S19bot (176) | **f001-132 done** (my chunk stopped at 14:48) | helper 6 f133-176 (`S19bot_f133-154.mp4` pushed, f155-176 rendering) | I join + encode (no 2D pass) |
+| S07 (60) | f001-029 done, rendering to **f040** (stops there) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4** (rendering, `parts/S07_f041-050.mp4`); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
+| S15 (106) | f001-023 done, rendering to **f036** (stops there) | bGqrs f037-070, helper 2 f071-106 (both pushed/rendering) | I join + the 2D pass (dizzy stars/spirals) |
 
 **2026-11-07 10:10 UTC**
 - **S19bot: FULL RENDER RUNNING** (since 10:58 UTC, 176 frames, ~3 min/frame at full size here, so ~9 h; chunks
