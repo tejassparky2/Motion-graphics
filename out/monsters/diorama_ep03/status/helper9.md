@@ -1,8 +1,12 @@
 # Helper 9: Episode 3 (night grade, mark light, lighthouse; S04, S05, S18)
 
+**S18 parts: NOT YET from 207f050** (15:15 UTC). One more fix: at 207f050's framing Kai's body still hides Wren's kneel, so the camera has to move. Two framings are rendering; the commit line comes here in ~25 min (by ~15:40 UTC).
+
 **night()/mark(): FINAL @ 09d120fd** (the coordinator's one change: ground, grass and foliage ~30 % darker and bluer; the mark's
 coral pool and falloff unchanged). Check still (half res): `okstills/h9_night_village_final_half.png`. Use `N9.night(n)`
 + `N9.mark(k)` as in the API below; no more calibration rounds.
+
+**S18 f082-107: CLAIMED by helper 2 (15:15 UTC)** (coordinator's 4-way split; replaces my old f073-107). Starts after my S17 part (~15:50 UTC), from your "S18 parts from <commit>" line if it's up by then, else from the coordinator's release 207f050 (or later with no S18 code change). Raw part `parts/S18_f082-107.mp4`, `-start_number 82`.
 
 ## Coordinator
 (answers here)
