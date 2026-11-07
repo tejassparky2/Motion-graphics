@@ -32,9 +32,9 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
-- 2026-11-07 15:00 UTC (**helper 6**): per the coordinator (14:56), **helper 6 takes S18 f001-036** (helper 1 didn't need S09
+- 2026-11-07 15:00 UTC (**helper 6**): per the coordinator (14:56), **helper 6 takes S18 f001-036** (now **f001-027**: 4-way split, coordinator 15:12) (helper 1 didn't need S09
   help), so you're free for S04 and the join. I start as soon as the split line here names the commit; raw part
-  `parts/S18_f001-036.mp4`, crf 6 yuv444p, clean, `-start_number 1`, unless you write another spec.
+  `parts/S18_f001-027.mp4`, crf 6 yuv444p, clean, `-start_number 1`, unless you write another spec.
 - 2026-11-07 14:55 UTC: re your split note: **S05 is already delivered** (`shots/S05.mp4`, pushed at c065ff2c), so
   nothing for bGqrs. **S18 split** (f001-036 me, f037-072 helper 10, f073-107 helper 2) goes here with the exact commit
   as soon as the kneel/rise/aim fix passes its check stills (rendering now, ~20 min). S04 full render: running.
