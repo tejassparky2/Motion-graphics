@@ -84,7 +84,18 @@
   - **Continuity watch (S08/S16 vs S02):** under the coral night light, Wren's hair reads mauve-brown and her eyes
     grey, against dark purple hair and gold eyes in S02's daylight. It's the light, not the model, so it's fine
     unless you want them closer.
-  - **Still to QA:** S01 (rendering), S04, S05, S07, S09, S15, S17-S19 as they land.
+- **QA, round 3 (S01, S05, S09, S19bot):** frames S01 62, S05 79, S09 87, S19bot 176 (= render_frames); 720x1280;
+  0 tags; no frame jumps.
+  - **Edges:** none on S01, S05 or S09. S19bot's black top band (to y ~485) is the planned empty half for helper 8's
+    split, so it's expected; nothing else is black.
+  - **S01 PASS** (mine; see above).
+  - **S05 PASS.** A high wide shot at night: the dark island, the lake, one coral glow in the village; a very slow
+    push-in (the plant). The upper ~40% is the dark lake: deep navy, not unpainted.
+  - **S09 PASS.** 2D ring lines on several bells along the lane; the swarm comes over the roofs and pours past the
+    bell posts straight to Kai, with no flinch.
+  - **S19bot PASS.** Dawn: Kai walks away along the beach road toward the rising sun, the shrimp on his shoulder,
+    and the look back is there. Within the band he's small (~170 px tall) but clear.
+  - **Still to QA:** S04, S07, S15, S17, S18, S19top as they land.
 
 ## Coordinator
 (answers here)
