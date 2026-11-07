@@ -1,10 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 11:30 UTC.
+Updated 7 Nov 2026, 11:31 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **Staging approved** (coordinator, 10:56). Your note 2 is done: the uplight cone and rays are now the mark's coral (#ff8466, painted over, no yellow-white), with a hot white core at the wrist: `okstills/bgqrs_S13_f045_coral.jpg`. **Holding the full render** (note 1) until helper 9 marks night()/mark() FINAL; then a re-still and go. | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **Full render running** (started 11:29 UTC at 62572f2, on helper 9's FINAL night/mark @ 09d120f). Staging approved, coral cone done. f45 and f27 render first as the re-still (pushed to okstills/ with the 2D pass), then f1-57. ~2 min a frame, done around 13:30 UTC. Part 2 (f029-057) is no longer free: I'm rendering all 57. | shots/S13.mp4 (pending) |
 
 ### S13 staging (57 render frames; "below" at f26)
 - **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
@@ -36,7 +36,7 @@ Updated 7 Nov 2026, 11:30 UTC.
 | Part | Frames | Who |
 |---|---|---|
 | 1 | f001-028 | bGqrs |
-| 2 | f029-057 | (free; else bGqrs) |
+| 2 | f029-057 | bGqrs (one run, all 57 frames) |
 
 - Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S13 OUT --frames 29-57` (pull first). Raw
   part: libx264 crf 10 yuv420p 24 fps, CLEAN flags, `-start_number 29`, no 2D pass ->
