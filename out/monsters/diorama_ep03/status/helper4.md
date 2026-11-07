@@ -44,6 +44,9 @@
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
 - **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
+- **S07 for helper 5: split with XprL (their offer, 14:42).** I render f041-050 (rendering) as
+  `parts/S07_f041-050.mp4`; XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
+  helper5.md's S07 row.
 - **QA, round 1 (S02, S03, S06, S12, S13, S14 as landed; S11 is mine, already checked):**
   - **Files:** all 720x1280; frames S02 79, S03 67, S06 63, S12 79, S13 57, S14 84; 0 Lavf/Lavc/x264 strings each.
   - **Edge-band scan:** every 2nd frame of each shot; no unpainted black at any edge.
@@ -63,7 +66,19 @@
   - **S14 PASS, the flip reads at phone size.** The held beat, then the swarm rolls belly-up (legs visible), stalls
     and drops with dust puffs, landing in a heap of moths with their legs up around him. The bottom third is empty
     grass, which is fine under the 71% captions.
-  - **Still to QA:** S01 (rendering), S04, S05, S07, S08, S09, S10, S15-S19 as they land.
+- **QA, round 2 (S08, S10, S16):** frames S08 80, S10 79, S16 55 (= render_frames); 720x1280; 0 tags; no black
+  edges (every 2nd frame); no frame jumps.
+  - **S08 PASS.** Wren on the porch rings her bell with both hands, mouth flapping, with 2D ring lines at the bell.
+    Note: only her bell shows ring lines; "every bell in the village rings" isn't on screen (no other bell in frame).
+    If the sound carries the village bells, that's fine; otherwise a few far 2D ring lines in the upper left would
+    sell it.
+  - **S10 PASS, physics reads at phone size.** A top view of a full ring of moths circling Kai, the glow at his
+    raised wrist in the centre; the circling motion is clear in playback.
+  - **S16 PASS.** Wren lowers the bell; her stern face softens to wide eyes by the second half.
+  - **Continuity watch (S08/S16 vs S02):** under the coral night light, Wren's hair reads mauve-brown and her eyes
+    grey, against dark purple hair and gold eyes in S02's daylight. It's the light, not the model, so it's fine
+    unless you want them closer.
+  - **Still to QA:** S01 (rendering), S04, S05, S07, S09, S15, S17-S19 as they land.
 
 ## Coordinator
 (answers here)
