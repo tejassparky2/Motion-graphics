@@ -319,7 +319,7 @@ S15_MOTH_SCALE = 0.42                                                    # bGqrs
 # sitting on the grass (XprL's S16/S17 pose, so the cut matches): the left knee up with the left forearm resting on it
 # (palm up: the mark faces the sky), the right leg out along the grass, the right hand propped behind him; head up.
 # Directions in Kai's own frame (helper 10's _pose spec): +X his right, +Y forward, +Z toward his head.
-S15_SIT = [("spine", (0, 0.12, 1)), ("chest", (0, 0.06, 1)), ("neck", (0, 0.04, 1)), ("head", (0, 0.12, 1)),
+S15_SIT = [("spine", (0, 0.12, 1)), ("chest", (0, 0.06, 1)), ("neck", (0, 0.0, 1)), ("head", (0, -0.08, 1)),
            ("left_upper_arm", (-0.28, 0.55, -0.78)), ("left_lower_arm", (-0.05, 1.0, 0.12)),
            ("left_hand", (0.0, 1.0, 0.05)),
            ("right_upper_arm", (0.35, -0.55, -0.75)), ("right_lower_arm", (0.22, -0.45, -0.86)),
@@ -403,6 +403,7 @@ def s15():
     sc = bpy.context.scene
     try:
         H9.village_and_lake()
+        _drop_huts([(19.6, -153.4)])                                     # its roof sits in the lens at the start
     except Exception as e:                                               # the set is optional for a test still
         print("S15: no village", e)
     hd = B._head_dir()
