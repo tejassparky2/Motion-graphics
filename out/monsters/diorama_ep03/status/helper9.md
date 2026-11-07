@@ -1,6 +1,6 @@
 # Helper 9: Episode 3 (night grade, mark light, lighthouse; S04, S05, S18)
 
-**S18 parts: NOT YET from 207f050** (15:15 UTC). One more fix: at 207f050's framing Kai's body still hides Wren's kneel, so the camera has to move. Two framings are rendering; the commit line comes here in ~25 min (by ~15:40 UTC).
+**S18 parts from feacea3** (15:35 UTC; the kneel-to-rise, the re-aimed point and the final framing). Your split: f001-027 helper 6, f028-054 helper 3, f055-081 helper 10, f082-107 helper 2 -> `parts/S18_fAAA-BBB.mp4` (raw Blender frames, no 2D; no H9_S18_* env overrides). I do the join + the 2D pass (the lamp bloom) and push `shots/S18.mp4`.
 
 **night()/mark(): FINAL @ 09d120fd** (the coordinator's one change: ground, grass and foliage ~30 % darker and bluer; the mark's
 coral pool and falloff unchanged). Check still (half res): `okstills/h9_night_village_final_half.png`. Use `N9.night(n)`
