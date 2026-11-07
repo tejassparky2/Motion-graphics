@@ -44,7 +44,7 @@ NARRATORS = {
 VOICE_REFS = {k: v["ref_audio"] for k, v in NARRATORS.items()}
 NARRATOR_LABEL = ("synthetic narrators: Indic Parler-TTS named speakers (Apache-2.0; datasets CC BY 4.0) as voice "
                   "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain" +
-                  ("; Kannada: a consented clone of the owner's or the owner's brother's voice"
+                  (f"; Kannada: a consented clone of a real voice ({KN_VOICE})"
                    if KN_VOICE in CLONED else "; nobody is cloned"))   # records only
 MUSIC = "tanpura"   # calm drone for story narration (motion/audio.py tanpura), ~18 dB under the voice
 TAIL = 0.9
