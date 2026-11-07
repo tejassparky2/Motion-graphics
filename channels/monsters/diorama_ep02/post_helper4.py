@@ -304,17 +304,18 @@ def s11_pass():
         cr.restore()
 
     def trail(cr, f):
-        """The last ~1 s of its flight as faint soft dots (straight, then bending round the light)."""
-        for j in range(24, 2, -2):
+        """Its flight so far as faint soft dots, older ones dimmer: the long straight run, then the bend round the
+        light (the moth is big, so a short trail would hide under its own wings)."""
+        for j in range(f - 1, 5, -4):
             g0 = A.get(f - j)
             if g0 is None:
                 continue
             x, y = g0["body"][:2]
-            a = 0.28 * (1 - j / 26.0)
-            fx2d._glow(cr, x, y, 7.0, (0.85, 0.88, 1.0), a)
+            a = 0.18 + 0.35 * (1 - min(1.0, j / 60.0))
+            fx2d._glow(cr, x, y, 12.0, (0.85, 0.88, 1.0), a)
             cr.new_path()
-            cr.arc(x, y, 2.4, 0, 2 * math.pi)
-            cr.set_source_rgba(0.9, 0.92, 1.0, a * 1.6)
+            cr.arc(x, y, 4.0, 0, 2 * math.pi)
+            cr.set_source_rgba(0.9, 0.92, 1.0, min(1.0, a * 1.8))
             cr.fill()
 
     def draw(cr, t, start, end=None):
