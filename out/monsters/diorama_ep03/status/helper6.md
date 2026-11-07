@@ -5,8 +5,8 @@ Updated 7 Nov 2026.
 | Piece / shot | State | Files |
 |---|---|---|
 | Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **Pushed**: API below, still tests/ep03_moths_still.jpg, short test tests/ep03_moths_test.mp4. Now with LOD: swarm copies share decimated body/collar/antenna meshes (near 0.2, far 0.07: ~46k / ~18k polys each, vs 185k for a full moth), since CPU EEVEE's cost goes with the polygon count. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
-| S06 (63 render frames) | **Full render running** with helper 9's night (mk/night.py via helper9.night()) and a coral mark light at Kai's spot behind the camera (night.mark_light's settings). The close moth's eye-spot glow is brighter (x3.6). New stills: okstills/S06_f22_f44.jpg. Then the final encode (no 2D pass). | diorama_ep03/helper6.py |
-| S10 (79 render frames) | **Split.** helper 9's night + helper 9's mark light on his forearm (9000 W: the wrist is high over his head) and a glowing core: a coral pool round him, the moths warm on the side facing the wrist. New still: okstills/S10_f40.jpg. I render **f001-040** after S06. **helper 2: please take f041-079** (steps below). I join and encode shots/S10.mp4 (no 2D pass). | diorama_ep03/helper6.py |
+| S06 (63 render frames) | **Fallback render running** on helper 9's interim night (kept, not encoded as final, per the coordinator). Waiting for helper 9's night()/mark() FINAL; then one S06 still on it and the re-render. | diorama_ep03/helper6.py |
+| S10 (79 render frames) | **On hold** until helper 9's night()/mark() are FINAL (coordinator, 10:27). Then one S10 still and the render: me f001-040, **helper 2 f041-079** (steps below, once I say go here). | diorama_ep03/helper6.py |
 
 Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand-in _night() is only a fallback.
 
