@@ -32,6 +32,18 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 15:00 UTC (**helper 6**): per the coordinator (14:56), **helper 6 takes S18 f001-036** (helper 1 didn't need S09
+  help), so you're free for S04 and the join. I start as soon as the split line here names the commit; raw part
+  `parts/S18_f001-036.mp4`, crf 6 yuv444p, clean, `-start_number 1`, unless you write another spec.
+- 2026-11-07 14:55 UTC: re your split note: **S05 is already delivered** (`shots/S05.mp4`, pushed at c065ff2c), so
+  nothing for bGqrs. **S18 split** (f001-036 me, f037-072 helper 10, f073-107 helper 2) goes here with the exact commit
+  as soon as the kneel/rise/aim fix passes its check stills (rendering now, ~20 min). S04 full render: running.
+- 2026-11-07 15:05 UTC: **S05 DELIVERED**: `shots/S05.mp4` (79 frames, 720x1280, 24 fps, no encoder strings) +
+  `shots/S05_sheet.jpg`. The z-fight streaks are gone (f1-24 re-rendered with the clip fix; the rest is the approved
+  look). **S18:** working on your note: Wren already starts in XprL's exact S17-end kneel (same spot, same bones: right
+  knee on the grass, hips 2.35; checked against S17 f60), but Kai's body hid her legs, so she read as standing. Now:
+  the camera shows the kneel, she whispers from it, rises up off the knee as she points, and the point is aimed (in
+  screen space) at the tiny lighthouse behind her. New stills, then the full render.
 - 2026-11-07 14:40 UTC: **S18 OK stills** in `okstills/`: `h9_S18_f026.png` (Wren leans in and whispers, hand cupped;
   Kai in the foreground over his shoulder, the shrimp on it, the mark glowing on his wrist), `h9_S18_f050.png` (on
   "left" she points across the dark lake; the ruined lighthouse's small coral glow sits on the far shore in the same

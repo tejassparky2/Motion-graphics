@@ -220,6 +220,7 @@ def s05():
 S18_AZ = float(os.environ.get("H9_S18_AZ", 160.0))
 S18_D = float(os.environ.get("H9_S18_D", 11.0))
 S18_EL = float(os.environ.get("H9_S18_EL", 8.0))
+S18_MID = float(os.environ.get("H9_S18_MID", 0.45))
 
 
 def s18():
@@ -252,10 +253,29 @@ def s18():
     to_lh = (M_inv @ (lh["top"] - (XP.WREN_KNEEL + Vector((0, 0, 6.0))))).normalized()
     words_, t0 = XP._line_words("S18")
 
+    # part A's camera first: the point is aimed on screen through it
+    camA = H2._new_cam("S18a", 1)
+    mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, S18_MID) + Vector((0, 0, 5.0))
+    for f in range(1, f_cut):
+        u = _smooth((f - 1) / (f_cut - 2))
+        loc, rot = H2._orbit(mid, S18_D - 1.0 * u, S18_EL, S18_AZ)  # from the NNW over his shoulder: she faces us,
+                                                                    # kneeling, the lighthouse small on the far shore
+        H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
+    ah = P.ankle_h
+
     def key_wren(aim):
         for f in range(1, n + 1, 2):
             P.reset()
-            wren.kneel(P, front="L", depth=1.0)
+            wren.kneel(P, front="L", depth=1.0)                            # XprL's S17-end kneel, exactly
+            rise = _smooth((f - f_point0 + 2) / 9.0)                         # up off the back knee with the point
+            if f_point1 - 1 <= f < f_point1 + 7:                               # a little overshoot, then settle
+                rise += 0.12 * math.sin(math.pi * (f - f_point1 + 1) / 8)
+            if rise > 0.01:
+                P.hips((0, -0.05 * rise, 0.2 * rise))
+                P.leg("L", (0.11, -0.26, ah))                                  # the front foot stays planted
+                P.leg("R", (-0.1, 0.30, ah + (0.04 - ah) * 0.4))               # the back knee lifts off the grass
+                P.aim("foot.R", (0, 0.55, -0.85))
+                wren.kneel_arms(P, "L", 1.0)
             lean = _smooth((f - f_lean0) / (f_lean1 - f_lean0)) * (1 - _smooth((f - f_point0) / 6))
             pt = _smooth((f - f_point0) / (f_point1 - f_point0))
             if pt > 0.01:
@@ -263,13 +283,44 @@ def s18():
             if lean > 0.01:
                 wren.whisper(P, lean, toward=to_kai)
             P.rot("chest", (0.8 * math.sin(f / 8.0), 0, 0))
-            if f_point1 <= f < f_point1 + 6:                                   # a small overshoot on the point
-                P.rot("chest", (0, 0, 3.0 * math.sin(math.pi * (f - f_point1) / 6)))
+            if pt > 0.01:                                                      # re-aim the arm after every chest
+                e = _smooth(pt)                                                # turn, so it lies exactly on `aim`
+                a = Vector((0.17, 0.04, -1)).normalized().lerp(aim, e).normalized()
+                for bn in ("upper_arm.L", "forearm.L", "hand.L"):
+                    P.aim(bn, a)
             P.key(f)
 
-    # (her point goes across her body to screen right over the lake; aiming truly at the lamp room, behind her right
-    # shoulder, twists the left arm backwards, so it's cheated: the cut shows where she means)
-    key_wren(to_lh)
+    # aim the point ON SCREEN at the tiny lighthouse behind her (the eye runs down her arm to it before the cut): at a
+    # point on the camera's sight line to the lamp room at her shoulder's depth, so the arm lies side-on and lines up
+    # with the lamp in the picture (the true direction is behind her right shoulder and would twist the arm backwards)
+    from bpy_extras.object_utils import world_to_camera_view as w2c
+
+    def scr(p):
+        v = w2c(sc, camA, p)
+        return Vector((v.x * 720, v.y * 1280))
+    aim = to_lh.copy()
+    fm = f_point1 + 8
+    for _ in range(2):                                     # (twice: the rise moves the shoulder a little with the aim)
+        key_wren(aim)
+        sc.frame_set(fm)
+        ab = w["arm"].pose.bones
+        sh = w["arm"].matrix_world @ ab["upper_arm.L"].head
+        hd = w["arm"].matrix_world @ ab["hand.L"].tail
+        got, des = scr(hd) - scr(sh), scr(lh["top"]) - scr(sh)
+        err = math.atan2(des.y, des.x) - math.atan2(got.y, got.x)
+        print("S18 point screen error", round(math.degrees((err + math.pi) % (2 * math.pi) - math.pi), 1))
+        eye = camA.matrix_world.translation
+        ray = (lh["top"] - eye).normalized()
+        T = eye + ray * ((sh - eye).length + 1.0)                          # on the lamp sight line, just past her (arm side-on, reads)
+        aim = (M_inv @ (T - sh)).normalized()
+    key_wren(aim)
+    sc.frame_set(fm)
+    ab = w["arm"].pose.bones
+    sh = w["arm"].matrix_world @ ab["upper_arm.L"].head
+    got = scr(w["arm"].matrix_world @ ab["hand.L"].tail) - scr(sh)
+    des = scr(lh["top"]) - scr(sh)
+    print("S18 point screen error (final)", round(math.degrees(got.angle_signed(des)) if hasattr(got, "angle_signed") else 0, 1))
+    sc.frame_set(1)
     wren.grip(w, 1)
     wren.face(w, "whisper", 1)
     wren.face(w, "worried", f_point0 + 2)
@@ -278,14 +329,6 @@ def s18():
     wren.blink(w, 1, n, every=(200, 201), at=(f_point0 - 2,))
     wren.contact_shadows(w)
     hero.blink(k, 1, n) if hasattr(hero, "blink") else None
-    # part A: a close two-shot from the east (Kai facing us, Wren side-on, leaning to him); a slow push-in
-    camA = H2._new_cam("S18a", 1)
-    mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
-    for f in range(1, f_cut):
-        u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, S18_D - 1.0 * u, S18_EL, S18_AZ)  # from the NNW over his shoulder: she faces us,
-                                                                            # the lighthouse small on the far shore behind her
-        H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)
     camB.data.clip_start = 5.0                       # far over the water: no lake/ground z-fighting

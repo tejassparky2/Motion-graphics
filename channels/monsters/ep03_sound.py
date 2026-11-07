@@ -41,6 +41,9 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
 S08_STRIKES = list(range(8, 66, 4))                   # S08 (XprL): Wren's clapper strikes (wren.ring f6-f66, beat 4)
 S08_PORCH = 12                                         # the first porch bell joins (V.ring_bell from f_ring + 6)
+S19BOT_STEPS = (23, 44, 66, 87, 148, 157, 166)       # S19 bottom (helper 5): footfalls (x3._walk), cut at 164
+S19BOT_LOOK = 107                                      # the look back starts ("like" - 4)
+S16_REST = 32                                          # S16 (XprL): wren.lower_bell ends at "bell" + 6
 S02_CRACK, S02_ECHO = 36, 53                          # S02 (helper 3): the cut to the crack, the mark's echo
 # S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
 S03_HUTS = [(12, 18, -0.6, True), (16, 24, 0.6, True), (21, 27, 0.35, False), (23, 29, -0.35, False),
@@ -466,7 +469,7 @@ def build(timing, n, v):
     bed(dazed_trills(s("S16") - f14(50) + 0.5, 1), f14(50), -26, 0.1)
 
     # --- S16-S18: the bell lowered (a last clink), Wren kneels, whispers; the lighthouse
-    hit(last_clink(), w("l16", "bell", "end") + 0.1, -21, 0.2)
+    hit(last_clink(), fr("S16", S16_REST), -21, 0.2)                       # the bell comes to rest (XprL f32)
     hit(lighthouse_chime(), w("l18", "lighthouse"), -19, 0.2)
 
     # --- S19: the A and B stingers on the letters; "Comment" blip
@@ -478,6 +481,10 @@ def build(timing, n, v):
     hit(v3.option_sting("A"), a_t, -12, -0.15)
     hit(v3.option_sting("B"), b_t, -12, 0.15)
     hit(sfx.ui_select(5), comment, -20)
+    # S19 bottom (helper 5, final): Kai's footfalls on the dawn road, a stop and a look back over his shoulder
+    for k, f in enumerate(f for f in S19BOT_STEPS if f <= c.shot["S19"]["frames"]):
+        hit(e2.footstep(120 + k, 0.8), fr("S19", f), -28, 0.1 * (1 if k % 2 else -1))
+    hit(e2.cloth_swish(0.45, 9), fr("S19", S19BOT_LOOK), -27, 0.0)
 
     # --- the whisper (l18): the world draws back 5 dB more so she sounds close
     l = c.line[WHISPER]
