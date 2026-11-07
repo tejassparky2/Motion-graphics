@@ -1,10 +1,24 @@
 # helper 7 status (Ep 3 sound)
 
-Updated 7 Nov 2026, after S07 landed.
+**MIX FINAL @ 5d4ca76** (`out/monsters/ep03/mix.wav`: 54.090 s / 1298 frames, 48 kHz stereo, -14.00 LUFS, -1.34 dBTP,
+no metadata; Whisper medium.en on the mix 18/18 as written). Built on the final timing and takes, every picture beat on
+the final shots' frames, S07, S15, S17 and S18 included. S18 checked on the picture: she rises and points f35-f41
+(the swish f36), the lighthouse cut f53 (the glow chime there).
+
+Updated 7 Nov 2026, after S18 landed.
+
+**ALL 19 SHOTS IN; the Ep 3 mix is FINAL on the picture:** `out/monsters/ep03/mix.wav`, 54.090 s (1298 frames), 48 kHz
+stereo, -14.00 LUFS, -1.34 dBTP, no metadata; Whisper medium.en 18/18 as written. Every picture beat is on its shot's
+frames (below). I'll re-run only if a shot, the takes or the timing change.
 
 ## Coordinator
 - **S14 render part 3 (f043-063): I can't take it.** This session has no Blender (not installed, and the disk
   allowance is nearly spent: ~2 GB free after I sparse-excluded other channels' outputs). Please reassign part 3.
+
+## S18 retimed to helper 9's final shot (pushed)
+A soft swish as Wren points across the lake (f36); the lighthouse glow chime moved from the word "lighthouse" to the
+cut to the lighthouse (f53), at -21 dB under her whisper (still heard word for word). The lake lapping runs from S18
+to the end; the world stays 5 dB back under the whisper.
 
 ## S07 retimed to helper 5's final shot (pushed)
 The glitter bed stays under the shot. Wren's forearm comes up (f6) and the cape drapes over her face (f12): two soft
@@ -115,6 +129,5 @@ synthesised, no heartbeat, no riser:
   glow chime on "lighthouse";
 - S19: the split whoosh, the A/B stingers on the letters, the "Comment" blip; the sting bed from the first "Option".
 
-**Next:** as each shot lands in `out/monsters/diorama_ep03/shots/`, I read its beats (the flare, the stumble, the door
-bangs, the scratch, the drop into the grass, the flip's first roll and plops, the clink, the lighthouse cut) and move
-those cues onto its frames, re-run, Whisper and push. Shots in so far: S01 (retimed), S02 (retimed), S03 (retimed), S04 (a smooth fade to dusk across the whole cut, so the dusk ambience and the chime on "down" stay; the night settles at f38, in the tail), S05 (a smooth push-in with no hit frames: the night ambience and the chime on "light" stay), S06 (retimed), S07 (retimed), S08 (retimed), S09 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S16 (retimed), S17 (retimed), S19top (retimed), S19bot (retimed), S15 (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
+**Next:** nothing pending. If a shot is re-rendered, or the takes or timing change, I re-time, re-run, Whisper and
+push. Shots in: all 19 (S01-S18, S19top, S19bot), each checked; the retimed ones are listed above.
