@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~16:45 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~17:00 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -45,10 +45,16 @@
     - the mix is `out/monsters/ep03/mix.wav`;
     - the cover is `out/monsters/diorama_ep03/cover.jpg`;
   - the outputs: `out/monsters/ep03_diorama.mp4`, the preview, the cover, the upload sheet headed "Episode 3", and the check (frames, tags, Whisper medium.en).
-- **Cover:** `python channels/monsters/ep01v2_cover.py --ep03` makes the candidates, a phone grid and `cover.jpg`. The frames are placeholders until the shots land.
-  - **swarm (the pick):** S10, THEY CIRCLED / MY WRIST. It's the top view of the spiral round his glowing wrist.
-  - **flip:** S15, EVERY MOTH / FLIPPED. It's the field of upside-down moths.
-  - **hook:** S01, THE VILLAGE / RAN.
+- **Cover (made on the final renders): `out/monsters/diorama_ep03/cover.jpg` = "situp", S15 f95: EVERY MOTH / FLIPPED.**
+  - Kai sits up among the dizzy upside-down moths with the shrimp on his shoulder. The words are in the night sky above, and his face is clear.
+  - It shows the payoff without spoiling how, and it doesn't repeat the title. It has no metadata.
+  - The other candidates and a phone grid are in `covers/`:
+    - **swarm:** S10, the top view. At phone size Kai is tiny in it.
+    - **flip:** S15 f30, Kai lying down. It reads dark.
+    - **hook:** S01. It's a clear read, but there are no moths in it.
+    - **uplight:** S13.
+    - **tumble:** S14.
+  - Remake it with `python channels/monsters/ep01v2_cover.py --ep03`. The upload sheet's cover line (deliver_ep01v2.py) says S15 with EVERY MOTH / FLIPPED.
 
   None of them repeats the title.
 
