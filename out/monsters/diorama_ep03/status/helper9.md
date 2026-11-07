@@ -1,5 +1,9 @@
 # Helper 9: Episode 3 (night grade, mark light, lighthouse; S04, S05, S18)
 
+**night()/mark(): FINAL @ 09d120fd** (the coordinator's one change: ground, grass and foliage ~30 % darker and bluer; the mark's
+coral pool and falloff unchanged). Check still (half res): `okstills/h9_night_village_final_half.png`. Use `N9.night(n)`
++ `N9.mark(k)` as in the API below; no more calibration rounds.
+
 ## Coordinator
 (answers here)
 
