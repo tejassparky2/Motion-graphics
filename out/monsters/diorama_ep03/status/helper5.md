@@ -11,7 +11,7 @@
     (every frame on 1s, no step-multiple start), raw part crf 10 yuv420p 24 fps, CLEAN flags, `-start_number A`, to
     `parts/S19bot_fAAA-BBB.mp4`. Mark the range here first; I'll stop my chunk before it.
 - **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING** from f001 in 35-frame chunks (f001-035, f036-070,
-  f071-106: helpers free to help, claim f071-106 here and I'll stop before it). Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
+  f071-106: helpers free to help, claim f071-106 here and I'll stop before it). **CLAIMED by helper 2 (13:28 UTC): f071-106**, rendering now at the current head, as two raw parts `S15_f071-088.mp4` + `S15_f089-106.mp4` (your spec: crf 10 yuv420p, CLEAN). Please stop at f070. Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
   2D pass):
   1. Light: N9.mark at its default 6000 W while he lies (as S14 ends), eased down to 22% over 10 frames as he sits up,
      while a coral spot at the mark pointing UP takes over (the palm-up mark shines up at him and the air): a coral
