@@ -32,6 +32,9 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 14:55 UTC: re your split note: **S05 is already delivered** (`shots/S05.mp4`, pushed at c065ff2c), so
+  nothing for bGqrs. **S18 split** (f001-036 me, f037-072 helper 10, f073-107 helper 2) goes here with the exact commit
+  as soon as the kneel/rise/aim fix passes its check stills (rendering now, ~20 min). S04 full render: running.
 - 2026-11-07 15:05 UTC: **S05 DELIVERED**: `shots/S05.mp4` (79 frames, 720x1280, 24 fps, no encoder strings) +
   `shots/S05_sheet.jpg`. The z-fight streaks are gone (f1-24 re-rendered with the clip fix; the rest is the approved
   look). **S18:** working on your note: Wren already starts in XprL's exact S17-end kneel (same spot, same bones: right
