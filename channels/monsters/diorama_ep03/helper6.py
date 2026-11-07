@@ -36,6 +36,9 @@ MOTH_K = 0.42                      # a moth's size next to Kai (~a head across, 
 MARK_U = 0.3                       # helper 9's mark spot on the forearm (elbow -> wrist)
 S10_K = 0.5                        # S10's moths, a little bigger (close to the camera)
 S10_TILT = 0.5                     # how far each back leans in to the light (0 level .. 1 square to it)
+S10_MARK_W = 9000.0                # the mark light in S10 (helper 9's night default 6000): his wrist is high over
+                                   # his head here, and its light has to reach the ring and the grass round him
+HERO_GLOW = 3.6                    # S06's close moth: its open eye-spots light up this bright (the material's 1.8)
 
 
 # ------------------------------------------------------------------------------------------------------- shared
@@ -115,16 +118,19 @@ def _night_look():
     return _night()
 
 
-def _mark_light(at, energy=1400.0, name="h6_mark_light"):
-    """Kai's mark as a coral point light (helper 9's mark_light() if it has landed)."""
+def _mark_light(at, energy=6000.0, name="h6_mark_light"):
+    """Kai's mark as a coral point light at a world point, for shots without his rig (S06: he is behind the camera):
+    helper 9's mark light settings (mk/night.mark_light: its CORAL, no shadows, soft falloff), so the night grade
+    brings its light back warm."""
     try:
-        from channels.monsters.diorama_ep03 import helper9 as H9
-        if hasattr(H9, "mark_light"):
-            return H9.mark_light(at)
+        from channels.monsters.mk import night as NG
+        col = NG.CORAL
     except ImportError:
-        pass
+        col = look.hexc(CORAL)[:3]
     ld = bpy.data.lights.new(name, "POINT")
-    ld.color, ld.energy, ld.shadow_soft_size = look.hexc(CORAL)[:3], energy, 0.25
+    ld.color, ld.energy, ld.shadow_soft_size = col, energy, 0.25
+    if hasattr(ld, "use_soft_falloff"):
+        ld.use_soft_falloff = True
     ld.use_shadow = False                      # (a point light's shadow cube over a whole swarm costs minutes a frame)
     o = bpy.data.objects.new(name, ld)
     bpy.context.scene.collection.objects.link(o)
@@ -251,6 +257,10 @@ def s06():
         fm.spot_lid(hero, f_open + d - 1, 0.0, [s], prop="glow")
         fm.spot_lid(hero, f_open + d + 6, 1.0, [s], prop="glow")
     anim.on_twos(hero["spots"] + hero["eyes"], 2)
+    for m in {s_.data.materials[0] for s_ in hero["spots"]}:            # the creepy beat: a brighter iris glow
+        for nd in m.node_tree.nodes:
+            if nd.type == "MIX" and nd.blend_type == "MULTIPLY" and tuple(nd.inputs[7].default_value)[:3] == (1.8, 1.8, 1.8):
+                nd.inputs[7].default_value = (HERO_GLOW, HERO_GLOW, HERO_GLOW, 1)
     anim.blink(hero, min(n - 4, f_open + 24))
     # camera: A low by Kai's spot looking up the rise at the crest (a slow push-in); B close on the hero moth
     tA = crest + Vector((0.0, 6.0, -2.5))
@@ -291,7 +301,11 @@ def s10():
     PK.key(1)
     bpy.context.view_layer.update()
     mark = H9e2._forearm(k, MARK_U)
-    _mark_light(mark + Vector((0, 0, 0.3)), energy=900.0)
+    try:
+        from channels.monsters.diorama_ep03 import helper9 as N9
+        N9.mark(k, energy=S10_MARK_W)                                  # helper 9's mark light, on his forearm bone
+    except (ImportError, AttributeError):
+        _mark_light(mark + Vector((0, 0, 0.3)), energy=S10_MARK_W)
     _glow(mark)
     sh = h3._shoulder_shrimp(k, n, name="ep03_shrimp_s10")
     # the spiral: rings round the wrist, a little below it so every back leans up and in to the light
