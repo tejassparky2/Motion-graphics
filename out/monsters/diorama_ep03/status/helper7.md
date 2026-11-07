@@ -4,6 +4,9 @@
 no metadata; Whisper medium.en on the mix 18/18 as written). Built on the final timing and takes, every picture beat on
 the final shots' frames, S07, S15, S17 and S18 included. S18 checked on the picture: she rises and points f35-f41
 (the swish f36), the lighthouse cut f53 (the glow chime there).
+- S15 re-delivered (e78ca74, the sit-up pop fixed): checked. The sit-up still starts at f30 ("landed" - 3) and now
+  eases over f30-f40 on 1s; my swish (f30, 0.5 s) and the shrimp's peek (f46) still sit on it. **No re-mix: MIX FINAL
+  stays @ 5d4ca76.**
 
 Updated 7 Nov 2026, after S18 landed.
 
