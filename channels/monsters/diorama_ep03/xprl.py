@@ -145,7 +145,10 @@ def _village_backdrop(shut=None):
     if shut is not None:
         for h in huts:
             V.set_door(h, shut, 0.0)
-            V.set_shutters(h, shut, CRACK)
+            if hasattr(V, "peek"):                                        # helper 1's cracked shutters (~7 degrees)
+                V.bang_shutters(h, shut - 11, crack=0.06)
+            else:
+                V.set_shutters(h, shut, CRACK)
     return huts
 
 
@@ -353,9 +356,13 @@ def s17():
     n = frames("S17")
     _night(n)
     huts = _village_backdrop(shut=1)
+    V = _optional("village")
     for i, h in enumerate(huts):                                   # the village peeking through its shutters
         if (h["root"].location - KAI_SIT).length < 45:
-            _peeking_eyes(h, n, seed=i)
+            if V is not None and hasattr(V, "peek"):
+                V.peek(h, 1, n, blinks=(9 + 7 * i, 40 + 5 * i))
+            else:
+                _peeking_eyes(h, n, seed=i)
     k = _kai_sitting(n, look_at=WREN_KNEEL + Vector((0, 0, 5.0)))
     _shoulder_shrimp(k, n)
     hero.face(k, "worried", 1) if "worried" in hero.FACES else hero.face(k, "sad", 1)
@@ -402,7 +409,7 @@ def s17():
 
 
 # ------------------------------------------------------------------------------------------------------------ S08
-PORCH_HUT = 3                       # helper 1's lane: hut 3 (west side, its porch facing the lane, near Kai's spot)
+PORCH_HUT = 2                       # helper 1's lane: hut 2 (east side, the porch nearest Kai's spot; helper 1)
 
 
 def s08():
@@ -414,6 +421,8 @@ def s08():
         h = huts[PORCH_HUT]
         face = Vector(h["face"])
         spot = Vector(h["doorstep"]) + face * 0.7 + Vector((0, 0, 0.5))       # on the deck, near the door
+        if hasattr(V, "porch"):                                               # helper 1's porch(): deck height
+            spot.z = V.porch(PORCH_HUT)[2]
         kai_at = V.LANE_AT
     else:                                                                     # no lane yet: a spot by the track
         face = Vector((1.0, 0.0, 0.0))
