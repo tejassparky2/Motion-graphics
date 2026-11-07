@@ -379,13 +379,16 @@ def s11():
     fm.spot_blink(m, 30) if hasattr(fm, "spot_blink") else None
 
     # the camera: side-on from -X, level, a long lens, a slow push-in on 1s; everything above the caption band
-    tgt = P(0.7, 4.4)
-    bpy.ops.object.camera_add(location=tgt + Vector((-52.0, 0.0, 0.0)))
+    tgt = P(1.4, 4.4)
+    az = math.radians(float(os.environ.get("S11_AZ", "30")))          # swung toward the moth's front: the wings
+    el = math.radians(float(os.environ.get("S11_EL", "8")))           # show their faces, not edge-on
+    bpy.ops.object.camera_add(location=tgt + 52.0 * Vector((-math.cos(az) * math.cos(el), -math.sin(az) * math.cos(el),
+                                                             math.sin(el))))
     cam = bpy.context.object
     cam.name = "S11cam"
     cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
-    cam.data.lens = float(os.environ.get("S11_LENS", "57"))
-    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.15"))
+    cam.data.lens = float(os.environ.get("S11_LENS", "52"))
+    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.10"))
     cam.data.clip_end = 400
     sc.camera = cam
     c0 = cam.location.copy()
