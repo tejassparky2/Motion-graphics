@@ -1,6 +1,6 @@
 """Finish a rendered mythology video in one language: cover, phone copy (< 29 MB), upload pack, Drive copy.
 
-  python -I -X utf8 channels/mythology/finish.py <video> <lang> <number> [--cover-at 2.6] [--no-drive]
+  python -I -X utf8 channels/mythology/finish.py <video> <lang> <number> [--cover-at 2.6] [--no-drive] [--pack-only]
 
 Inputs: myth_out/<video>_<lang>.mp4 (the master from render_myth.py). Outputs in myth_out/upload_<video>_<lang>/:
 the master, <video>_<lang>_phone.mp4, cover.jpg, UPLOAD_VIDEO<N>_<NAME>_<LANG>.md. The pack follows the owner's
@@ -84,7 +84,7 @@ def pack(mod, name, lang, n, folder, dur, files):
         "Settings: Made for kids: No. Category: Entertainment. Altered or synthetic content: No (this is clearly "
         "animated, so YouTube does not ask for it).", "",
         "## First hour",
-        "- Reply to the first comments with a question back (" + ("\"ನಿಮಗೆ ಯಾವ ಭಾಗ ತುಂಬಾ ಶಾಕ್ ಅನಿಸ್ತು?\"" if lang == "kn"
+        "- Reply to the first comments with a question back (" + ("\"Nimge yaava bhaaga tumba shock anistu?\"" if lang == "kn"
                                                                  else "\"Tumhe kaunsa part sabse ajeeb laga?\"") + ").",
         "- Pin the comment above as soon as the reel is live.",
         "- Share it to your story with a poll sticker: YES / NO.",
@@ -101,17 +101,19 @@ def main():
     master = os.path.join(OUT_ROOT, f"{name}_{lang}.mp4")
     folder = os.path.join(OUT_ROOT, f"upload_{name}_{lang}")
     os.makedirs(folder, exist_ok=True)
-    shutil.copy2(master, os.path.join(folder, os.path.basename(master)))
     phone = os.path.join(folder, f"{name}_{lang}_phone.mp4")
-    subprocess.run([PY, "-I", "-X", "utf8", PHONE, master, phone], check=True)
-    cover(name, lang, cover_at, os.path.join(folder, "cover.jpg"))
+    pack_only = "--pack-only" in sys.argv          # rewrite only the upload sheet (captions/titles changed)
+    if not pack_only:
+        shutil.copy2(master, os.path.join(folder, os.path.basename(master)))
+        subprocess.run([PY, "-I", "-X", "utf8", PHONE, master, phone], check=True)
+        cover(name, lang, cover_at, os.path.join(folder, "cover.jpg"))
     files = [os.path.basename(master), os.path.basename(phone), "cover.jpg"]
     p = pack(mod, name, lang, n, folder, duration(master), files)
     print("pack:", p, flush=True)
     if "--no-drive" not in sys.argv and os.path.isdir(DRIVE):
         dst = os.path.join(DRIVE, CHANNEL_DIR, f"Video {n} {name.replace('_', ' ').title()} {LANG_NAME[lang]}")
         os.makedirs(dst, exist_ok=True)
-        for f in os.listdir(folder):
+        for f in [os.path.basename(p)] if pack_only else os.listdir(folder):
             shutil.copy2(os.path.join(folder, f), os.path.join(dst, f))
         print("drive:", dst, flush=True)
 

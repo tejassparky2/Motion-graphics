@@ -20,6 +20,11 @@ chat". This channel has its own chat and its own branch, `ccr-56282fe5-evehq4-my
   English verb + ಮಾಡು (ಇಮ್ಯಾಜಿನ್ ಮಾಡಿ, ವೇಟ್ ಮಾಡಿ, ಸೆಲೆಕ್ಟ್ ಮಾಡಿ), and no ಜಸ್ಟ್, ಸ್ಟೋರಿ, ಪ್ರಾಮಿಸ್, ಫ್ಯಾಮಿಲಿ, ಹೈಟ್,
   ಪ್ರಾಬ್ಲಮ್. Hook "ಯೋಚಿಸಿ..."; ending "ಹೌದಾ ಇಲ್ವಾ, ಕಾಮೆಂಟ್ ಮಾಡಿ ಹೇಳಿ." When a Kannada word changes, change its
   cue word in the scene code too (cues are `{"hi": ..., "kn": ...}` or `C(tl, id, hi, kn, frac)`).
+- **Upload text in Kanglish** (owner, 7 Nov 2026: "I want captions titles also in kanglish", "I said caption and
+  titles for Instagram and youtu not in videos"): Kannada METADATA (titles, captions, descriptions, pinned comments)
+  is Kannada written in English letters, like the Hindi METADATA: "Neevu hogteera? Houda illva, comment maadi 👇".
+  The spoken script stays in Kannada script (the voice reads it). `finish.py ... --pack-only` rebuilds just the
+  upload sheet and copies it to Drive.
 - Voice: "clear calm and well understandable": tempo 1.05 (Hindi) and 1.0 (Kannada), clarity retakes only.
 - "Download everything is auto approved until my next message": SDXL checkpoint, Real-ESRGAN, ComfyUI's CUDA
   environment and the parallax helpers were downloaded under that approval. The Civitai miniature LoRA needs a login,

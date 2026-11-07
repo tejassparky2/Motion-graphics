@@ -98,18 +98,18 @@ METADATA = {
         pinned_comment="Tum Bali ki jagah hote, toh vachan nibhate? YES ya NO? 👇",
         sources=_SOURCES),
     "kn": dict(
-        title="ದೇವರು ಎಲ್ಲಾ ತಗೊಂಡ್ರು, ಆಮೇಲೆ ಸ್ವರ್ಗದ ರಾಜ ಆಗ್ತೀಯ ಅಂತ ಮಾತು ಕೊಟ್ರು",
-        caption="ಯೋಚಿಸಿ: ದೇವರು ಒಬ್ಬ ರಾಜನ ಹತ್ರ ಇದ್ದದ್ದೆಲ್ಲಾ ತಗೊಂಡ್ರು... ಆಮೇಲೆ ಹೇಳಿದ್ರು: ನೀನೇ ಸ್ವರ್ಗದ ರಾಜ "
-                "ಆಗ್ತೀಯ 😳\n\nಭಾಗವತ ಪುರಾಣ: ಬಲಿ ಚಕ್ರವರ್ತಿ ವಾಮನನಿಗೆ ಮೂರು ಹೆಜ್ಜೆ ಜಾಗ ಕೊಟ್ಟ. ಎರಡು ಹೆಜ್ಜೆಯಲ್ಲಿ ಭೂಮಿ, "
-                "ಆಕಾಶ; ಮೂರನೇ ಹೆಜ್ಜೆ ಬಲಿಯ ತಲೆ ಮೇಲೆ. ಬಲಿ ಪಾಡ್ಯಮಿ ದಿನ ಬಲಿ ತನ್ನ ಜನರನ್ನ ನೋಡೋಕೆ ಬರ್ತಾನೆ ಅನ್ನೋ ನಂಬಿಕೆ.\n\n"
-                "ನೀವು ಮಾತು ಉಳಿಸ್ಕೊಳ್ತಿದ್ರಾ? ಹೌದಾ ಇಲ್ವಾ, ಕಾಮೆಂಟ್ ಮಾಡಿ 👇",
-        yt_title="ದೇವರು ಎಲ್ಲಾ ತಗೊಂಡ್ರು, ಆಮೇಲೆ ಸ್ವರ್ಗದ ರಾಜನ ವಚನ 😳 | ಬಲಿ ಪಾಡ್ಯಮಿ | ವಾಮನ",
-        yt_description="ಬಲಿ ಚಕ್ರವರ್ತಿ ವಾಮನನಿಗೆ ಮೂರು ಹೆಜ್ಜೆ ಜಾಗ ದಾನ ಕೊಟ್ಟ. ಶುಕ್ರಾಚಾರ್ಯರು ತಡೆದ್ರೂ, ಬಲಿ ಮಾತಿಂದ "
-                       "ಹಿಂದೆ ಸರಿಯಲಿಲ್ಲ. ಎರಡು ಹೆಜ್ಜೆಯಲ್ಲಿ ಭೂಮಿ ಆಕಾಶ, ಮೂರನೇ ಹೆಜ್ಜೆ ಬಲಿಯ ತಲೆ ಮೇಲೆ. ದೇವರು ಬಲಿಗೆ ಸುತಲ "
-                       "ಲೋಕ ಕೊಟ್ಟು, ಸಾವರ್ಣಿ ಮನುವಿನ ಕಾಲದಲ್ಲಿ ಸ್ವರ್ಗದ ರಾಜ ಆಗ್ತೀಯ ಅಂತ ಮಾತು ಕೊಟ್ರು. ಬಲಿ ಪಾಡ್ಯಮಿ ಇದರ "
-                       "ನೆನಪಿಗೆ.",
+        title="Devaru ella tagondru, aamele swargada raja aagteeya anta maatu kottru",
+        caption="Yochisi: devaru obba rajana hatra iddiddella tagondru... aamele helidru: neene swargada raja "
+                "aagteeya 😳\n\nBhagavata Purana: Bali Chakravarti Vamananige mooru hejje jaaga kotta. Eradu hejjeyalli "
+                "bhoomi, aakaasha; mooraneya hejje Baliya tale mele. Bali Padyami dina Bali tanna janaranna nodoke "
+                "bartaane anno nambike.\n\nNeevu maatu uliskoltidra? Houda illva, comment maadi 👇",
+        yt_title="Devaru Ella Tagondru, Aamele Swargada Rajana Vachana 😳 | Bali Padyami | Vamana",
+        yt_description="Bali Chakravarti Vamananige mooru hejje jaaga daana kotta. Shukracharyaru tadedru, Bali maatinda "
+                       "hinde sariyalilla. Eradu hejjeyalli bhoomi aakaasha, mooraneya hejje Baliya tale mele. Devaru "
+                       "Balige Sutala loka kottu, Savarni Manuvina kaaladalli swargada raja aagteeya anta maatu kottru. "
+                       "Bali Padyami idara nenapige.",
         hashtags=["#kannada", "#balipadyami", "#deepavali", "#vamana", "#kannadastory"],
-        pinned_comment="ನೀವು ಬಲಿ ಜಾಗದಲ್ಲಿ ಇದ್ದಿದ್ರೆ, ಮಾತು ಉಳಿಸ್ಕೊಳ್ತಿದ್ರಾ? ಹೌದಾ ಇಲ್ವಾ? 👇",
+        pinned_comment="Neevu Bali jaagadalli iddidre, maatu uliskoltidra? Houda illva? 👇",
         sources=_SOURCES),
 }
 

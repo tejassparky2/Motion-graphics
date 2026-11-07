@@ -93,17 +93,17 @@ METADATA = {
         pinned_comment="Tum Brahmalok jaate, ye jaante hue bhi ki lautkar koi apna nahi milega? YES ya NO? 👇",
         sources=_SOURCES),
     "kn": dict(
-        title="ಬ್ರಹ್ಮಲೋಕದಲ್ಲಿ ಕೆಲವೇ ಕ್ಷಣ, ಭೂಮಿಯಲ್ಲಿ 11 ಕೋಟಿ ವರ್ಷ",
-        caption="ಯೋಚಿಸಿ: ಕೆಲವೇ ಕ್ಷಣ ಕಾದ್ರಿ... ಹೊರಗೆ ಬಂದ್ರೆ 11 ಕೋಟಿ ವರ್ಷ ಕಳೆದುಹೋಗಿದೆ 😳\n\n"
-                "ಭಾಗವತ ಪುರಾಣ: ರಾಜ ಕಕುದ್ಮಿ ಮಗಳು ರೇವತಿಗೆ ವರ ಕೇಳೋಕೆ ಬ್ರಹ್ಮಲೋಕಕ್ಕೆ ಹೋದ್ರು. ಗಂಧರ್ವರ ಹಾಡು "
-                "ಮುಗಿಯೋವರೆಗೂ ಕಾದ್ರು. ಬ್ರಹ್ಮದೇವರು ನಕ್ಕು ಹೇಳಿದ್ರು: ಭೂಮಿ ಮೇಲೆ 27 ಚತುರ್ಯುಗ ಕಳೆದಿದೆ.\n\n"
-                "ನೀವು ಹೋಗ್ತೀರಾ? ಹೌದಾ ಇಲ್ವಾ, ಕಾಮೆಂಟ್ ಮಾಡಿ 👇",
-        yt_title="ಬ್ರಹ್ಮಲೋಕದಲ್ಲಿ ಕೆಲವೇ ಕ್ಷಣ, ಭೂಮಿಯಲ್ಲಿ 11 ಕೋಟಿ ವರ್ಷ 😳 | ಭಾಗವತ ಪುರಾಣ",
-        yt_description="ರಾಜ ಕಕುದ್ಮಿ ಮಗಳು ರೇವತಿಗೆ ವರ ಕೇಳೋಕೆ ಬ್ರಹ್ಮದೇವರ ಹತ್ರ ಹೋದ್ರು. ಅಲ್ಲಿ ಕೆಲವೇ ಕ್ಷಣ ಕಾದ್ರು, ಭೂಮಿ "
-                       "ಮೇಲೆ 27 ಚತುರ್ಯುಗ (11 ಕೋಟಿಗಿಂತ ಜಾಸ್ತಿ ವರ್ಷ) ಕಳೆದುಹೋಯ್ತು. ವಾಪಸ್ ಬಂದಾಗ ಜನ ಚಿಕ್ಕೋರಾಗಿದ್ರು, "
-                       "ಕುಶಸ್ಥಲಿ ದ್ವಾರಕೆ ಆಗಿತ್ತು, ರೇವತಿಯ ಮದುವೆ ಬಲರಾಮನ ಜೊತೆ ಆಯ್ತು.",
+        title="Brahmalokadalli kelave kshana, bhoomiyalli 11 koti varsha",
+        caption="Yochisi: neevu kelave kshana kaadri... horage bandre 11 koti varsha kaledu hogide 😳\n\nBhagavata "
+                "Purana: Raja Kakudmi magalu Revatige vara keloke Brahmalokakke hodru. Gandharvara haadu "
+                "mugiyovaregu kaadru. Brahmadevaru nakku helidru: bhoomi mele 27 chaturyuga kaledide.\n\nNeevu "
+                "hogteera? Houda illva, comment maadi 👇",
+        yt_title="Brahmalokadalli Kelave Kshana, Bhoomiyalli 11 Koti Varsha 😳 | Bhagavata Purana",
+        yt_description="Raja Kakudmi magalu Revatige vara keloke Brahmadevara hatra hodru. Alli kelave kshana kaadru, "
+                       "bhoomi mele 27 chaturyuga (11 kotiginta jaasti varsha) kaledu hoytu. Vaapas bandaaga jana "
+                       "chikkoragidru, Kushasthali Dwarake aagittu, Revati maduve Balaramana jothe aaytu.",
         hashtags=["#kannada", "#mythology", "#bhagavatapurana", "#kannadastory", "#balarama"],
-        pinned_comment="ನೀವು ಬ್ರಹ್ಮಲೋಕಕ್ಕೆ ಹೋಗ್ತೀರಾ, ವಾಪಸ್ ಬಂದಾಗ ನಿಮ್ಮೋರು ಯಾರೂ ಇರಲ್ಲ ಅಂತ ಗೊತ್ತಿದ್ರೂ? ಹೌದಾ ಇಲ್ವಾ? 👇",
+        pinned_comment="Neevu Brahmalokakke hogteera, vaapas bandaaga nimmoru yaaru irolla anta gottiddru? Houda illva? 👇",
         sources=_SOURCES),
 }
 

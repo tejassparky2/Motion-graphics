@@ -81,17 +81,16 @@ METADATA = {
         pinned_comment="Agar tum us gaanv mein hote, toh kya pehchaan paate? YES ya NO? 👇",
         sources=_SOURCES),
     "kn": dict(
-        title="ಒಂದು ವರ್ಷ ಪ್ರತಿ ಮನೇಲಿ ಕೃಷ್ಣನೇ ಇದ್ದ",
-        caption="\"ಈ ಮಕ್ಕಳನ್ನ ನಾನೇ ಬಚ್ಚಿಟ್ಟಿದ್ದೆ... ಮತ್ತೆ ಇವ್ರು ಇಲ್ಲಿ ಹೇಗೆ ಆಡ್ತಿದ್ದಾರೆ?\" 😳\n\n"
-                "ಭಾಗವತ ಪುರಾಣ: ಬ್ರಹ್ಮದೇವರು ಗೋಪಾಲಕರನ್ನೂ ಕರುಗಳನ್ನೂ ಬಚ್ಚಿಟ್ರು. ಕೃಷ್ಣನೇ ಪ್ರತಿ ಹುಡುಗ, ಪ್ರತಿ ಕರು "
-                "ಆದ, ಒಂದು ಇಡೀ ವರ್ಷ. ಯಾವ ಅಮ್ಮನಿಗೂ ಗೊತ್ತಾಗ್ಲಿಲ್ಲ.\n\n"
-                "ನೀವು ಕಂಡುಹಿಡೀತಿದ್ರಾ? ಹೌದಾ ಇಲ್ವಾ, ಕಾಮೆಂಟ್ ಮಾಡಿ 👇",
-        yt_title="ಒಂದು ವರ್ಷ ಪ್ರತಿ ಮನೇಲಿ ಕೃಷ್ಣನೇ ಇದ್ದ 😳 | ಭಾಗವತ ಪುರಾಣ",
-        yt_description="ಬ್ರಹ್ಮದೇವರು ಕೃಷ್ಣನ ಸ್ನೇಹಿತರನ್ನ ಮತ್ತು ಕರುಗಳನ್ನ ಬಚ್ಚಿಟ್ರು. ಕೃಷ್ಣನೇ ಪ್ರತಿ ಹುಡುಗ, ಪ್ರತಿ ಕರು ಆದ: "
-                       "ಅದೇ ಮುಖ, ಅದೇ ಬಟ್ಟೆ, ಅದೇ ಕೊಳಲು. ಒಂದು ಇಡೀ ವರ್ಷ ಯಾರಿಗೂ ಗೊತ್ತಾಗ್ಲಿಲ್ಲ. ಬ್ರಹ್ಮದೇವರಿಗೆ ಕಳೆದಿದ್ದು "
-                       "ಒಂದೇ ಕ್ಷಣ. Paintings: Cleveland Museum of Art (CC0).",
+        title="Ondu varsha prati maneli Krishnane idda",
+        caption="\"Ee makkalanna naane bachchittidde... matte ivru illi hege aadtiddaare?\" 😳\n\nBhagavata Purana: "
+                "Brahmadevaru gopalakarannu karugalannu bachchittru. Krishnane prati huduga, prati karu aada, ondu "
+                "idee varsha. Yaava ammangu gottaaglilla.\n\nNeevu kandu hidiyuttidra? Houda illva, comment maadi 👇",
+        yt_title="Ondu Varsha Prati Maneli Krishnane Idda 😳 | Bhagavata Purana",
+        yt_description="Brahmadevaru Krishnana snehitarannu mattu karugalannu bachchittru. Krishnane prati huduga, prati "
+                       "karu aada: ade mukha, ade batte, ade kolalu. Ondu idee varsha yaarigu gottaaglilla. Brahmadevarige "
+                       "kaledaddu bari ondu kshana. Paintings: Cleveland Museum of Art (CC0).",
         hashtags=["#kannada", "#krishna", "#bhagavatapurana", "#kannadastory", "#mythology"],
-        pinned_comment="ನೀವು ಆ ಊರಲ್ಲಿ ಇದ್ದಿದ್ರೆ, ಕಂಡುಹಿಡೀತಿದ್ರಾ? ಹೌದಾ ಇಲ್ವಾ? 👇",
+        pinned_comment="Neevu aa ooralli iddidre, kandu hidiyuttidra? Houda illva? 👇",
         sources=_SOURCES),
 }
 

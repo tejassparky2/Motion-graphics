@@ -85,17 +85,18 @@ METADATA = {
         pinned_comment="Kya tumhe Jarasandh ke janm ki ye kahani pata thi? YES ya NO? 👇",
         sources=_SOURCES),
     "kn": dict(
-        title="ಇಬ್ಬರು ಅಮ್ಮಂದಿರಿಗೆ ಹುಟ್ಟಿದ ಒಂದು ಮಗು: ಜರಾಸಂಧ",
-        caption="ಒಂದು ಕಣ್ಣು. ಒಂದು ಕೈ. ಒಂದು ಕಾಲು. ಅರ್ಧ ಮುಖ. 😳\n\n"
-                "ಮಹಾಭಾರತ, ಸಭಾ ಪರ್ವ: ರಾಜ ಬೃಹದ್ರಥನ ಇಬ್ರು ರಾಣಿಯರು ಒಂದು ಮಗುವಿನ ಅರ್ಧ ಅರ್ಧ ಭಾಗಕ್ಕೆ ಜನ್ಮ ಕೊಟ್ರು. "
-                "ಜರಾ ಅನ್ನೋ ರಾಕ್ಷಸಿ ಎರಡನ್ನೂ ಸೇರಿಸಿದ್ಳು, ಹೆಸರು ಜರಾಸಂಧ. ಕೊನೆಗೆ ಭೀಮ ಅವನನ್ನ ಎರಡು ತುಂಡು ಮಾಡಿದ.\n\n"
-                "ಈ ಕಥೆ ನಿಮಗೆ ಗೊತ್ತಿತ್ತಾ? ಹೌದಾ ಇಲ್ವಾ, ಕಾಮೆಂಟ್ ಮಾಡಿ 👇",
-        yt_title="ಇಬ್ಬರು ಅಮ್ಮಂದಿರಿಗೆ ಹುಟ್ಟಿದ ಒಂದು ಮಗು 😳 | ಜರಾಸಂಧನ ಕಥೆ | ಮಹಾಭಾರತ",
-        yt_description="ಮಗಧದ ರಾಜ ಬೃಹದ್ರಥನ ಇಬ್ರು ರಾಣಿಯರು ಒಂದು ಮಗುವಿನ ಎರಡು ಅರ್ಧ ಭಾಗಗಳಿಗೆ ಜನ್ಮ ಕೊಟ್ರು. ರಾಕ್ಷಸಿ "
-                       "ಜರಾ ಅವನ್ನ ಸೇರಿಸಿದ್ಳು, ಅದಕ್ಕೇ ಹೆಸರು ಜರಾಸಂಧ. ಅವನು 86 ರಾಜರನ್ನ ಜೈಲಲ್ಲಿ ಹಾಕಿದ; ಭೀಮನ ಜೊತೆ 13 "
-                       "ದಿನ ಹಗಲು ರಾತ್ರಿ ಕುಸ್ತಿ ನಡೀತು. ಎರಡು ತುಂಡು ಸೇರಿ ಹುಟ್ಟಿದವನು, ಎರಡು ತುಂಡಾಗಿಯೇ ಮುಗಿದ.",
+        title="Ibbaru ammandirige huttida ondu magu: Jarasandha",
+        caption="Ondu kannu. Ondu kai. Ondu kaalu. Ardha mukha. 😳\n\nMahabharata, Sabha Parva: Raja Brihadrathana "
+                "ibbaru raniyaru ondu maguvina ardha ardha bhaagakke janma kottru. Jara anno rakshasi eradannu "
+                "serisidlu, hesaru Jarasandha. Konege Bheema avanannu eradu tundu maadida.\n\nEe kathe nimge "
+                "gottittaa? Houda illva, comment maadi 👇",
+        yt_title="Ibbaru Ammandirige Huttida Ondu Magu 😳 | Jarasandhana Kathe | Mahabharata",
+        yt_description="Magadhada raja Brihadrathana ibbaru raniyaru ondu maguvina eradu ardha bhaagagalige janma kottru. "
+                       "Rakshasi Jara avannu serisidlu, adakke hesaru Jarasandha. Avanu 86 rajarannu jailalli haakida; "
+                       "Bheemana jothe 13 dina hagalu raatri kusti nadeetu. Eradu tundu seri huttidavanu, eradu tundaagiye "
+                       "mugida.",
         hashtags=["#kannada", "#mahabharata", "#jarasandha", "#kannadastory", "#mythology"],
-        pinned_comment="ಜರಾಸಂಧನ ಹುಟ್ಟಿನ ಈ ಕಥೆ ನಿಮಗೆ ಗೊತ್ತಿತ್ತಾ? ಹೌದಾ ಇಲ್ವಾ? 👇",
+        pinned_comment="Jarasandhana huttina ee kathe nimge gottittaa? Houda illva? 👇",
         sources=_SOURCES),
 }
 
