@@ -384,7 +384,21 @@ def _s15_landings(B, wrist, hips, hd, n_moths=34, seed=15):
     return out
 
 
-S15_HEROES = [(5.5, -4.6), (8.0, 3.8), (3.6, 5.6), (9.5, -0.6)]   # (toward the lens, across) from his middle
+S15_HEROES = [(120, 830), (640, 800), (190, 1010), (560, 1030)]  # where the hero moths lie on the 720x1280 frame (f60)
+
+
+def _ground_at_px(cam, x, y, W=720, H=1280):
+    """The ground point (z 0) seen at pixel (x, y) of the frame, at the current frame."""
+    sc = bpy.context.scene
+    fr = cam.data.view_frame(scene=sc)                                   # tr, br, bl, tl in camera space
+    u, v = x / W, y / H
+    top = fr[3].lerp(fr[0], u)
+    bot = fr[2].lerp(fr[1], u)
+    p = cam.matrix_world @ top.lerp(bot, v)
+    o = cam.matrix_world.translation
+    d = p - o
+    t = -o.z / d.z if abs(d.z) > 1e-6 else 0.0
+    return o + d * t
 
 
 def _hero_anchors(shot, n, rigs):
@@ -538,7 +552,21 @@ def s15():
 
     # the mark: helper 9's coral key on his left forearm at its default (as S13/S14 end), nothing else: a coral pool
     # round his wrist that falls off to dark
-    N9.mark(k)
+    lt = N9.mark(k, key=[(1, N9.MARK_W), (f_up, N9.MARK_W), (f_up + 10, N9.MARK_W * 0.22)])
+    up = bpy.data.lights.new("s15_mark_up", "SPOT")                      # sitting, the palm-up mark shines UP:
+    up.color = H9.CORAL                                                  # it lights him and the air, not the field
+    up.spot_size = math.radians(80)
+    up.spot_blend = 0.6
+    up.use_shadow = False
+    lu = bpy.data.objects.new("s15_mark_up", up)
+    sc.collection.objects.link(lu)
+    lu.rotation_euler = (math.pi, 0, 0)                                  # pointing straight up
+    for f in range(1, n + 1, 2):
+        sc.frame_set(f)
+        lu.location = lt.matrix_world.translation
+        lu.keyframe_insert("location", frame=f)
+        up.energy = 9000.0 * _ease((f - f_up) / 10.0)
+        up.keyframe_insert("energy", frame=f)
     sc.frame_set(1)
     wrist = H9._forearm(k, 1.0)
     hips = s15p._world(k, "hips")
@@ -550,13 +578,19 @@ def s15():
     # the field of moths on their backs (one built, linked copies), legs waving
     spots = _s15_landings(B, wrist, hips, hd)
     spots += _s15_extra(spots, hips, hd)                                 # more on the camera side: a whole field
-    # four hero moths in the foreground, between the lens and him: big, legs waving hard (+ 2D dizzy stars/spirals)
+    # camera: low 3/4 from his right-front, the moths big in the foreground; a slow push-in on 1s
     mid = hips - hd * 1.2
     cy = math.degrees(math.atan2(hd.x, hd.y))                            # looking west, along his head direction
-    hdg = math.radians(cy + 38.0)
-    to_cam = -Vector((math.sin(hdg), math.cos(hdg), 0))
-    side = Vector((-to_cam.y, to_cam.x, 0))
-    heroes = [mid + to_cam * d + side * o for d, o in S15_HEROES]
+    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.4)), 18.0, 13.0, cy + 40.0),
+         (mid + Vector((0, 0, 3.8)), 14.5, 11.0, cy + 36.0), lens=35.0, blur=5.0, shift_y=-0.03)
+    # four hero moths in the foreground round him, placed by where they land on screen at the hold (f60): big, legs
+    # waving hard (+ 2D dizzy stars and spirals, post_helper5.py)
+    sc.frame_set(60)
+    heroes = [_ground_at_px(sc.camera, x, y) for x, y in S15_HEROES]
+    sc.frame_set(1)
+    to_cam = (sc.camera.matrix_world.translation - mid)
+    to_cam.z = 0
+    to_cam.normalize()
     spots = [q for q in spots if all((Vector((q[0], q[1], 0)) - Vector((h.x, h.y, 0))).length > 2.0 for h in heroes)]
     n_field = len(spots)
     spots += [(h.x, h.y, math.atan2(-to_cam.x, to_cam.y) + 0.5 * (i % 2 * 2 - 1), 0.52) for i, h in enumerate(heroes)]
@@ -596,8 +630,6 @@ def s15():
     acting.blink(k, 1, n, every=(40, 70), seed=8, at=(f_up + 26,))
 
     # camera: in front of him (east, toward his feet), low, the moths big in the foreground; a slow push-in on 1s
-    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.4)), 18.0, 13.0, cy + 40.0),
-         (mid + Vector((0, 0, 3.8)), 14.5, 11.0, cy + 36.0), lens=35.0, blur=5.0, shift_y=-0.03)
     _hero_anchors("S15", n, hero_rigs)
     LAST.update(k=k, sh=sh, moths=rigs)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + list(k.get("cap", [])))
