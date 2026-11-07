@@ -124,6 +124,16 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   complete sentences ("ನಾವು ಕಾರ್ ನೋಡಿದಾಗ..."). Turbo errors 5% mean / 11% worst (voice A: 5% / 18%), likeness 0.93,
   pitch movement 78 (= voice A), 11.5 letters/s. The 13.6 s reference (`hemanth_v2`) was less clear (16% / 28%).
   Lesson: a clean recording with pauses matters more than the tool. Waiting on the owner's ear.
+- **Continuous narration in Hemanth's style** (owner, 7 Nov 2026: "I want you to copy same style continuity
+  narration"): his reel has 0.23 s median pauses (longest 0.35 s) and wide pitch movement (96). Two changes copy it:
+  (1) gaps between lines of 0.20 s (+ ~0.07 s kept edges) instead of GAP 0.36; (2) voicing three lines in one take,
+  so the voice carries from sentence to sentence. On Kakudmi's first six lines both tools land on his pattern:
+  median pause 0.24 s, pitch movement 93-95, likeness 0.92, turbo errors 6-11%; 32 s (IndicF5) / 35 s (OmniVoice)
+  against voice A's 31 s. Line ends inside a multi-line take must be found again (pauses) for the visual cues.
+- **OmniVoice** (k2-fsa, Apache-2.0, 2026; owner: "And try omni voice because it is latest", taken as the download
+  approval for it alone): `tools/.venv-omni` (torch 2.14.1+cu126, omnivoice 0.2.1; model k2-fsa/OmniVoice, 3.1 GB in
+  the Hugging Face cache), runner `omni_say.py` (JSON job on stdin, like f5_say.py). fp16 on the 4 GB GPU used
+  2.7 GB. Its `generate()` also takes `language` and `instruct`. Kannada quality on par with IndicF5 here.
 - Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best
