@@ -317,6 +317,43 @@ def split_take(a, sr, texts, min_pause=0.08):
     return [a[edges[n]:edges[n + 1]] for n in range(len(texts))]
 
 
+def cut_at(a, sr, times, snap=0.35, min_pause=0.06):
+    """Cut a take at the given boundary times, each moved to the middle of the nearest pause within `snap` s."""
+    hop = int(0.01 * sr)
+    env = np.array([np.sqrt(np.mean(a[i:i + hop] ** 2)) for i in range(0, len(a) - hop, hop)])
+    quiet = env < max(1e-4, env.max() * 0.03)
+    runs, i = [], 0
+    while i < len(quiet):
+        if quiet[i]:
+            j = i
+            while j < len(quiet) and quiet[j]:
+                j += 1
+            if (j - i) * 0.01 >= min_pause:
+                runs.append((i + j) / 2 * 0.01)
+            i = j
+        else:
+            i += 1
+    cuts = []
+    for t in times:
+        near = min(runs, key=lambda c: abs(c - t)) if runs else t
+        cuts.append(near if abs(near - t) <= snap else t)
+    edges = [0] + [int(c * sr) for c in cuts] + [len(a)]
+    if any(e1 <= e0 for e0, e1 in zip(edges, edges[1:])):
+        return None
+    return [a[edges[n]:edges[n + 1]] for n in range(len(times) + 1)]
+
+
+def _align_times(groups_wavs):
+    """Line boundaries from Whisper word times (align_split.py in the IndicF5 venv): [[t, ...] or None, ...]."""
+    if not groups_wavs:
+        return []
+    lang = "hindi" if any("ऀ" <= c <= "ॿ" for g in groups_wavs for c in g[1][0]) else "kannada"
+    spec = {"lang": lang, "groups": [{"wav": w, "texts": t} for w, t in groups_wavs]}
+    p = subprocess.run([F5_PY, "-I", "-X", "utf8", "-W", "ignore", os.path.join(HERE, "align_split.py")],
+                       input=json.dumps(spec, ensure_ascii=False).encode("utf-8"), capture_output=True, check=True)
+    return json.loads(p.stdout.decode("utf-8").strip().splitlines()[-1])
+
+
 def _groups(script, size, max_letters=260):
     """Lines read together in one take: up to `size` lines, closed early after a line with its own pause (a reveal)."""
     out, cur = [], []
@@ -341,9 +378,14 @@ def _prefetch_groups(script, cfg):
     if jobs:
         BATCH[cfg["engine"]](jobs, cfg)
     single = []
-    for g in todo:
-        a, sr = sf.read(os.path.join(CACHE, f"group_{_hash(' '.join(g), cfg)}.wav"), dtype="float32")
-        parts = split_take(a, sr, g)
+    wavs = [os.path.join(CACHE, f"group_{_hash(' '.join(g), cfg)}.wav") for g in todo]
+    timed = _align_times([(w, g) for w, g in zip(wavs, todo) if len(g) > 1])
+    times = iter(timed)
+    for g, w in zip(todo, wavs):
+        a, sr = sf.read(w, dtype="float32")
+        t = next(times) if len(g) > 1 else None
+        # cut where Whisper heard one line end and the next begin; the letter-share guess is only the fallback
+        parts = (cut_at(a, sr, t) if t else None) or split_take(a, sr, g)
         if parts is None:                             # too few pauses: voice these lines one by one
             single += [(t, _raw_path(t, cfg)) for t in g]
             continue
@@ -355,6 +397,17 @@ def _prefetch_groups(script, cfg):
 
 def _hash(text, cfg):
     return hashlib.sha1(json.dumps([cfg, text], ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+
+
+def resplit(script, cfg):
+    """Cut the cached group takes again (after a better cutter): drop the lines' pieces, keep the takes."""
+    for g in _groups(script, cfg["group"]):
+        for t in g:
+            for p in (_raw_path(t, cfg), os.path.join(CACHE, f"{_hash(t, cfg)}.wav"),
+                      os.path.join(CACHE, f"{_hash(t, cfg)}.json")):
+                if os.path.exists(p):
+                    os.remove(p)
+    _prefetch_groups(script, cfg)
 
 
 def prefetch(script, cfg):
