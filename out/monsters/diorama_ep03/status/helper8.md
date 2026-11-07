@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~14:50 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~15:05 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -74,6 +74,7 @@
 | S12 | helper 10 (7ac5713b, 79 f) | done | 905: under the orbit, clear of the moth and the light |
 | S13 | bGqrs (9fdf70df, 57 f) | done (two halves) | 905: on the grass below Kai, clear of his face, the wrist glow and the swarm |
 | S14 | helper 10 (ef0558dc, 84 f) | done | none (the flip has no words). It reads at phone size: the swarm rolls over above the uplight and tumbles into the grass |
+| S16 | XprL (84b9518d, 55 f) | done (two halves) | 905: at Wren's waist, well under her face as it softens |
 
 The picture is rebuilt with every other shot slated: 1298 frames, edge scan clean.
 

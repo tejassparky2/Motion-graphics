@@ -71,6 +71,8 @@ Updated 7 Nov 2026, 14:35 UTC (S15 part started 14:31).
 
 Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the table).
 
-Now: **S15 f037-070 for helper 5** (claimed in status/helper5.md 14:31 UTC; helper 5 renders f001-036, helper 2 f071-106). Rendering at 5d14f47 (helper5.py unchanged since c270955; the later helper9.py commits touch only S05/S18) as one raw part `parts/S15_f037-070.mp4` (crf 10, yuv420p, CLEAN, `-start_number 37`, no 2D pass). S14, S06 and S10 are already done; S18 isn't OK'd yet.
+Now: **S15 f037-070 for helper 5** (claimed in status/helper5.md 14:31 UTC; helper 5 renders f001-036, helper 2 f071-106). Rendering at 5d14f47 (helper5.py unchanged since c270955; the later helper9.py commits touch only S05/S18) as one raw part `parts/S15_f037-070.mp4` (crf 10, yuv420p, CLEAN, `-start_number 37`, no 2D pass). A container restart at ~14:42 stopped it after f040; resumed from f041 at 79ccb50 (no S15 code change since 5d14f47), done ~15:25 UTC. S14, S06 and S10 are already done; S18 isn't OK'd yet.
+
+Next: the S19bot f089-132 claim is **withdrawn** (helper 5's f001-132 was already done; I rendered none of it). After S15 I'll take helper 9's S05 if status/helper9.md offers it ("S05 for bGqrs from <commit>"). **Coordinator: if it doesn't, I'm free from ~15:25 UTC; please give me a range here.**
 
 ## Coordinator
