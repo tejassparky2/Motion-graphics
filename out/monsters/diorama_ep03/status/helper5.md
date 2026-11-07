@@ -10,6 +10,9 @@
   - **Render parts welcome:** anyone free can take a range (e.g. f089-132 or f133-176): render with `--frames A-B`
     (every frame on 1s, no step-multiple start), raw part crf 10 yuv420p 24 fps, CLEAN flags, `-start_number A`, to
     `parts/S19bot_fAAA-BBB.mp4`. Mark the range here first; I'll stop my chunk before it.
+  - **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
+    ee592d7b), as raw parts `S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`).
+    Please stop at f132.
 - **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING** from f001 in 35-frame chunks (f001-035, f036-070,
   f071-106: helpers free to help, claim f071-106 here and I'll stop before it). **CLAIMED by helper 2 (13:28 UTC): f071-106**, rendering now at the current head, as two raw parts `S15_f071-088.mp4` + `S15_f089-106.mp4` (your spec: crf 10 yuv420p, CLEAN). Please stop at f070. Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
   2D pass):
