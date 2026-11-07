@@ -12,7 +12,7 @@
     helper 9's when it's in.
 - Next: push a still of it, then S03 and S09 (S09 waits for helper 6's swarm).
 
-- 7 Nov ~11:00 UTC: **villagers at night: pushed, still for OK** in
+- 7 Nov ~09:55 UTC: **villagers at night: pushed, still for OK** in
   `out/monsters/diorama_ep03/okstills/helper1_villagers_night_f30.jpg`. Left is the lane, wide; right is the
   scratcher's porch, close. Both are f30 of a test build `VN` (in helper1.py, not a shot).
   - **What's in the still:** the lane of six huts (the same cream walls and rust/brown roofs as helper 9's village)
@@ -32,7 +32,7 @@
     - `V.LANE_AT` is Kai's spot in the lane.
 - Next: S03 stills (the village backs away, doors slam, shutters bang, Kai alone). It's day, since dusk starts at S04.
 
-- 7 Nov ~13:30 UTC: **S03 stills for OK**: `okstills/helper1_S03_f1_f30_f50.jpg` (f1, f30, f50 at half scale, with the
+- 7 Nov ~11:20 UTC: **S03 stills for OK**: `okstills/helper1_S03_f1_f30_f50.jpg` (f1, f30, f50 at half scale, with the
   2D pass). The shot is 67 render frames (timing.json).
   - **Light:** late-afternoon daylight. Dusk only starts at S04.
   - **Camera:** high 3/4 from up the lane, with the square, the bell tower and the lake behind Kai, on a slow crane
@@ -48,7 +48,7 @@
 - S09 builder drafted (night, the bells ringing, the swarm streaming past the porch bell-ringers to Kai's wrist,
   using helper 6's `fluffmoth.swarm`, 40 moths). Test stills are rendering.
 
-- 7 Nov ~15:40 UTC: **S09 stills for OK**: `okstills/helper1_S09_f20_f40_f66.jpg` (half scale, with the 2D pass). The
+- 7 Nov 11:47 UTC: **S09 stills for OK**: `okstills/helper1_S09_f20_f40_f66.jpg` (half scale, with the 2D pass). The
   shot is 87 render frames. It uses **helper 9's `night()` + `mark()`** (the VN test now does too).
   - **Camera:** low, up the lane behind the nearest porch bell-ringer (foreground right, facing us 3/4, ringing
     hard), looking down the lane at Kai, with two more ringers on porches further down. A slow push-in.
@@ -61,6 +61,23 @@
   - **Render plan:** about 3 min per frame with the swarm. 87 frames are about 4.5 h, in parts:
     `parts/S09_f001-030`, `_f031-060`, `_f061-087`, each under 2 h.
 - **S03 full render starting now** (67 frames, about 1 h). I'll re-render if the coordinator wants changes.
+
+- 7 Nov 12:05 UTC: **the coordinator's notes are done** (pushed):
+  - **The scratcher:** the blotch is now a soft, rounded pink-red rash patch with a few small bumps (not a solid
+    red block). The face is annoyed and scrunched: squeezed slanted eyes, brows pinched down in a V and a tight
+    crooked mouth. The 2D pass adds comic itch squiggles. Still: `okstills/helper1_scratcher_v2_f30.jpg` (on
+    helper 9's final night).
+    - **For S07 (helper 5):** `sc = V.scratcher(v, f0, f1)` returns `sc["blotch"]`. Write its screen position as an
+      anchor, then use `post_helper1.itch(anchors, "blotch")` from `channels/monsters/diorama_ep03/post_helper1.py`
+      in your 2D pass.
+  - **Night:** S09 and the VN test now use helper 9's FINAL `night()` / `mark()` (09d120f), and my stand-in is no
+    longer used.
+  - **S03:** OK'd. Full render running (55 frames + 12 tail = 67). Its 2D pass now puts the whole frame through
+    helper 3's S02 grade (`post_helper3.late_afternoon`: greens -25% saturation, level -10%, peach highlights).
+  - **For XprL (S08/S17), new in village.py:**
+    - `V.porch(i) -> (loc, yaw, floor_z)`. Wren goes on hut 2, the nearest porch to Kai.
+    - `V.bang_shutters(hut, f, crack=0.06)` leaves a crack, and `V.peek(hut, f0, f1, blinks)` puts glowing eyes in it.
+- Next: S03 2D pass and push, then the S09 full render on helper 9's final night (in three parts).
 
 ## Coordinator
 (answers here)
