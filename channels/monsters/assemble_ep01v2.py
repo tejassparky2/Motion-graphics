@@ -74,13 +74,16 @@ CLEAN = ["-map_metadata", "-1", "-map_chapters", "-1", "-fflags", "+bitexact", "
 HOOK = [("THIS SHRIMP", ()), ("ERASED", ("ERASED",)), ("A FOREST", ())]
 HOOK_Y = 170                 # top baseline: high in the frame, over the sliced trees, above Kai's face
 HOOK_SIZE = 108
+HOOK_X = None                # centre x of the hook lines (default: the frame centre)
 # Episode 2's frame-0 hook: four short lines, the threat in red. S01 keeps Kai's face and the diving bird in the top
 # third and the shrimp at y 745+, so the hook sits in the middle band (over his legs and the tree trunk).
 HOOK_VERSION = {"diorama_ep02": dict(lines=[("I SAVED", ()), ("THE SHRIMP", ()), ("THAT TRIED", ()),
                                             ("TO KILL ME", ("TO KILL ME",))], y=480, size=80),
-                # Episode 3: three lines, the wrist in red; placed on S01's OK still / final when it lands
+                # Episode 3: three lines, the wrist in red. S01 (helper 4's OK stills f1/f36) brings Kai's head and
+                # the shrimp on his shoulder in from the top right (x 530+, from y 170) and his glowing arm across at
+                # y 560-650, so the hook sits in the open sky top left: centred at x 255, x ~15-495, y ~150-365
                 "diorama_ep03": dict(lines=[("THE VILLAGE", ()), ("RAN FROM", ()), ("MY WRIST", ("MY WRIST",))],
-                                     y=170, size=96)}
+                                     y=200, size=76, x=255)}
 NO_CAPTIONS = {"S15"}        # Episode 1's snap; Episode 2's wordless S09 has no words to caption anyway
 NO_CAPTIONS_VERSION = {"diorama_ep02": set(), "diorama_ep03": set()}   # ep03's S14 (the flip) has no words
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
@@ -382,7 +385,7 @@ def draw_hook(cr):
     for j, (line, red) in enumerate(HOOK):
         size = min(HOOK_SIZE, HOOK_SIZE * (W - 70) / text_width(cr, line, HOOK_SIZE, fx2d.ROUND))
         col = fx2d.RED if line in red else fx2d.WHITE
-        fx2d._text(cr, line, W / 2, HOOK_Y + HOOK_SHIFT + j * HOOK_SIZE * 1.02, size, col, fx2d.ROUND, "center",
+        fx2d._text(cr, line, HOOK_X if HOOK_X is not None else W / 2, HOOK_Y + HOOK_SHIFT + j * HOOK_SIZE * 1.02, size, col, fx2d.ROUND, "center",
                    outline=(0.05, 0.03, 0.06, 1), ow=size * 0.2, shadow=0.55)
 
 
@@ -421,7 +424,7 @@ def ab_times(lines, shot="S24"):
 # ---------------------------------------------------------------- main
 def main():
     global SHOTS, CAP_Y_SHOT, SCALE, OW, OH, SHOTS_HI, S24_FOCUS_SHOT, AB_POS_SHOT, AB_LABELS, NO_CAPTIONS
-    global HOOK, HOOK_Y, HOOK_SIZE
+    global HOOK, HOOK_Y, HOOK_SIZE, HOOK_X
     ap = argparse.ArgumentParser()
     ap.add_argument("--animatic", action="store_true")
     ap.add_argument("--check", action="store_true")
@@ -458,6 +461,7 @@ def main():
     if a.version in HOOK_VERSION:
         hv = HOOK_VERSION[a.version]
         HOOK, HOOK_Y, HOOK_SIZE = hv["lines"], hv["y"], hv["size"]
+        HOOK_X = hv.get("x")
     split = SPLIT_SHOT_VERSION.get(a.version, "S24")
     rewind = a.version in REWIND_VERSIONS
     if a.check:
