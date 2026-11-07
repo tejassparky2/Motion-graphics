@@ -518,15 +518,15 @@ def s19top():
     for f in range(1, n + 1):
         e = _smooth((f - 1) / max(1, n - 1))
         bc = boat_at(f) + Vector((0, 0, 3.2))
-        loc = bc - head * (31.0 - 3.0 * e) + side * 10.5 + Vector((0, 0, 7.5))
+        loc = bc - head * (31.0 - 3.0 * e) + side * 10.5 + Vector((0, 0, 6.0))
         tgt = bc + head * 10.0 + Vector((0, 0, 1.5))
-        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 27.0, (bc - loc).length, shift_y=-0.27, blur=4.0,
+        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 27.0, (bc - loc).length, shift_y=-0.249, blur=4.0,
                     haze=(6.0, 24.0))
     H9._linear(cam, cam.data)
     sc.render.use_border = True
     sc.render.use_crop_to_border = False
     sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
-    sc.render.border_min_y, sc.render.border_max_y = 0.46, 1.0                # rows 0-691: the top panel
+    sc.render.border_min_y, sc.render.border_max_y = 0.375, 1.0               # rows 0-800 (helper 8: the split shows 60-782)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]])
 
