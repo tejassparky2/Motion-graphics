@@ -46,6 +46,23 @@ SWARM_N = 28                             # helper 6's swarm (linked copies), dec
 SWARM_SCALE = 0.42                       # (helper 6's test uses 0.4)
 
 
+# ---------------------------------------------------------------- S13's staging as plain names (S14, S15, S16, S17 import
+# these; measured on S13's final pose with S13_AT = (12, -140), so they move with S13_AT)
+_OFF = S13_AT - Vector((12.0, -140.0, 0.0))
+HEAD_DIR = Vector((-1.0, 0.0, 0.0))                 # where his head points as he lies: west (compass S13_HEAD = 90)
+KAI_LIE = Vector((9.0, -140.0, 0.0)) + _OFF         # his hips on the grass (S13_AT + 3 x HEAD_DIR)
+KAI_HEAD = Vector((5.9, -140.0, 0.9)) + _OFF        # his head
+KAI_FEET = Vector((12.3, -140.2, 0.0)) + _OFF       # between his feet (the left knee is up)
+FACING = "on his back, face up to the swarm, turned a little toward his left (north)"
+LEFT_SIDE = Vector((0.0, 1.0, 0.0))                 # his left (the mark, the laid-out arm) faces NORTH, the meadow
+RIGHT_SIDE = Vector((0.0, -1.0, 0.0))               # his right faces SOUTH: the village (square at (6, -170))
+WRIST = Vector((5.88, -136.56, 0.25)) + _OFF        # the left hand on the grass, palm up
+MARK = Vector((6.06, -137.41, 0.47)) + _OFF         # the mark (H9._forearm(k, H9.MARK_U)): the light below them
+SWARM_CENTRE = MARK + Vector((0.4, -0.7, 0.0))      # the vertical the swarm circles (MARK + SWARM_SHIFT)
+SWARM_HEIGHT = (3.8, 10.0)                          # its moths' heights above the mark
+SWARM_RADIUS = 4.4                                  # its widest orbit across (east-west); x 0.38 north-south
+
+
 def _timing():
     with open(TIMING) as f:
         return json.load(f)
@@ -79,7 +96,7 @@ def _ease(u):
 
 
 # ------------------------------------------------------------------------------------------------------------ night
-def _night():
+def _night(n=None):
     """Helper 9's night grade if it has landed, else a stand-in: a deep-blue painted sky, a cool low moon (a dim sun)
     and a dark-blue far haze, so the coral mark is the key light."""
     try:
@@ -87,7 +104,7 @@ def _night():
         for name in ("night", "night_grade", "grade_night"):
             fn = getattr(N9, name, None)
             if fn:
-                return fn()
+                return fn(n)
     except ImportError:
         pass
     look.world(sky="#0b1430", horizon="#22336a", fill="#2c3d74", fill_strength=0.32)
@@ -165,7 +182,7 @@ LANDED = [("spine", (0, 0.1, 1)), ("chest", (0, 0.12, 1)), ("neck", (0, 0.35, 1)
           ("right_foot", (0.15, 0.4, -1))]
 # on his back: LYING_V3's legs (the left knee up, the right leg out), the right arm loose by his side, the head rolled
 # to his left (toward the wrist and the camera), chin up to watch the swarm; the left arm is set by _arm_out()
-LIE = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("neck", (-0.2, 0.15, 1)), ("head", (-0.8, 0.55, 1)),
+LIE = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("neck", (0, 0.1, 1)), ("head", (0, 0.22, 1)),
        ("left_upper_arm", (-0.45, 0.6, 0.3)), ("left_lower_arm", (0.1, 0.85, 0.4)), ("left_hand", (0.2, 0.7, 0.6)),
        ("right_upper_arm", (0.45, -0.12, -1)), ("right_lower_arm", (0.3, -0.08, -1)), ("right_hand", (0.25, 0, -1)),
        ("left_upper_leg", (-0.12, 0.85, -0.55)), ("left_lower_leg", (-0.05, -0.75, -0.7)),
@@ -174,6 +191,12 @@ LIE = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("neck", (-0.2, 0.15, 1)),
 ARM_IN = [("left_upper_arm", (-0.45, 0.6, 0.3)), ("left_lower_arm", (0.1, 0.85, 0.4)), ("left_hand", (0.2, 0.7, 0.6))]
 ARM_OUT = [("left_upper_arm", (-0.95, -0.2, 0.22)), ("left_lower_arm", (-0.78, -0.16, 0.6)),
            ("left_hand", (-0.62, -0.12, 0.78))]           # laid out on the grass beside his head, the hand flat
+
+
+def lie_spec():
+    """The lying spec of S13's end (LIE with the left arm laid out); then roll the forearm with
+    _twist_for_palm_up(k) and the head with _twist_face_to(k, FACE_TO), as _kai_drop does."""
+    return _with_arm(LIE, 1.0)
 
 
 def _blend(a, b, u):
@@ -233,6 +256,32 @@ def _twist_for_palm_up(k):
     return best
 
 
+FACE_TO = Vector((0.1, 0.62, 0.78))     # where his face turns once he lies: up at the swarm and toward the camera
+
+
+def _face_dir(k):
+    """Where his face points (the head bone's local +Z, as ep01v2/bgqrs.kai_point)."""
+    m = k["arm"].matrix_world @ s15._bone(k, "head").matrix
+    return (m.to_3x3() @ Vector((0, 0, 1))).normalized()
+
+
+def _twist_face_to(k, want):
+    """The head roll (degrees, about the neck) that turns his face most toward `want` (searched in 10-degree steps)."""
+    pb = s15._bone(k, "head")
+    q0 = pb.rotation_quaternion.copy()
+    best = (0, -9.0)
+    for deg in range(-90, 91, 10):
+        pb.rotation_quaternion = q0
+        bpy.context.view_layer.update()
+        _twist(k, "head", deg)
+        sc_ = _face_dir(k).dot(Vector(want).normalized())
+        if sc_ > best[1]:
+            best = (deg, sc_)
+    pb.rotation_quaternion = q0
+    bpy.context.view_layer.update()
+    return best
+
+
 def _head_dir():
     h = math.radians(S13_HEAD)
     return Vector((-math.sin(h), math.cos(h), 0.0))
@@ -255,6 +304,10 @@ def _kai_drop(k, n, beats):
     twist = _twist_for_palm_up(k)
     print("S13 palm-up roll", twist)
     twist = twist[0]
+    s15._pose(k, _with_arm(LIE, 1.0), (0, 0, 0), rot_lie)
+    face = _twist_face_to(k, FACE_TO)
+    print("S13 face roll", face)
+    face = face[0]
     for f in range(1, n + 1, 2):
         i = max(j for j in range(len(keys)) if keys[j][0] <= f)
         if i + 1 < len(keys):
@@ -274,6 +327,8 @@ def _kai_drop(k, n, beats):
         if v > 0:
             _twist(k, "left_lower_arm", twist * v)
         s15._aim(k, "left_hand", r @ Vector(dict(spec)["left_hand"]))
+        if f >= f_land:                                          # the face turns up to the swarm as he lands
+            _twist(k, "head", face * _ease((f - f_land) / max(1, f_settle - f_land)))
         hip = s15._world(k, "hips")
         target = S13_AT + hd * back
         k["arm"].location += Vector((target.x - hip.x, target.y - hip.y, 0))
@@ -461,7 +516,7 @@ def s13_beats():
 def s13():
     n, beats = s13_beats()
     X._world(n)
-    _night()
+    _night(n)
     sc = bpy.context.scene
     try:
         H9.village_and_lake()
@@ -489,11 +544,25 @@ def s13():
             return 0.55 + 0.85 * (f - beats["glow"]) / 4       # the bloom on "below"
         return 1.4 - 0.3 * _ease((f - beats["glow"] - 4) / 8) + 0.05 * math.sin(f / 5.0)
 
-    key = bpy.data.lights.new("s13_mark_key", "POINT")
-    key.color = H9.CORAL
-    key.shadow_soft_size = 0.2
-    lk = bpy.data.objects.new("s13_mark_key", key)
-    sc.collection.objects.link(lk)
+    # the coral key: helper 9's shared mark light (parented to his left forearm, 6000 W, the grade warms what it
+    # reaches) when it's in, keyed to the levels; else a stand-in point light following the mark
+    N9 = None
+    try:
+        from channels.monsters.diorama_ep03 import helper9 as N9
+    except ImportError:
+        pass
+    if N9 is not None and hasattr(N9, "mark"):
+        w0 = getattr(N9, "MARK_W", 6000.0)
+        N9.mark(k, key=[(f, w0 * level(f) / 1.2) for f in range(1, n + 1)])
+        lk = None
+    else:
+        key = bpy.data.lights.new("s13_mark_key", "POINT")
+        key.color = H9.CORAL
+        key.shadow_soft_size = 0.2
+        lk = bpy.data.objects.new("s13_mark_key", key)
+        sc.collection.objects.link(lk)
+    # the broad coral glow just above the wrist that lights the swarm's bellies once he lies (warm: the grade reads
+    # it as mark light)
     und = bpy.data.lights.new("s13_mark_under", "POINT")
     und.color = H9.CORAL
     und.shadow_soft_size = 1.5
@@ -507,10 +576,11 @@ def s13():
 
     for f in range(1, n + 1):
         m = mark_at(f)
-        lk.location = m + Vector((0, 0, 0.5))
-        lk.keyframe_insert("location", frame=f)
-        key.energy = S13_LIGHT * level(f)
-        key.keyframe_insert("energy", frame=f)
+        if lk is not None:
+            lk.location = m + Vector((0, 0, 0.5))
+            lk.keyframe_insert("location", frame=f)
+            lk.data.energy = S13_LIGHT * level(f)
+            lk.data.keyframe_insert("energy", frame=f)
         lu.location = m + Vector((0, 0, 1.6))
         lu.keyframe_insert("location", frame=f)
         und.energy = S13_UNDER * level(f) * (0.35 + 0.65 * _ease((f - beats["land"]) / 10))
