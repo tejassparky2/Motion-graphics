@@ -95,7 +95,11 @@
     bell posts straight to Kai, with no flinch.
   - **S19bot PASS.** Dawn: Kai walks away along the beach road toward the rising sun, the shrimp on his shoulder,
     and the look back is there. Within the band he's small (~170 px tall) but clear.
-  - **Still to QA:** S04, S07, S15, S17, S18, S19top as they land.
+  - **S19top PASS.** 176 frames, 0 tags, no jumps. Night: Kai and Wren in the rowing boat, his mark lighting a
+    coral pool on the water, the lighthouse with its coral glow on the far shore. The bottom half is black on
+    purpose (for the split). The edge scan skipped it, since the frame is dark overall. Note: the boat and the two
+    of them take up ~200 px, so it reads as a wide shot; fine for the A/B split.
+  - **Still to QA:** S04, S07, S15, S17, S18 as they land.
 
 ## Coordinator
 (answers here)
