@@ -18,7 +18,8 @@
   - **Render parts welcome:** anyone free can take a range (e.g. f089-132 or f133-176): render with `--frames A-B`
     (every frame on 1s, no step-multiple start), raw part crf 10 yuv420p 24 fps, CLEAN flags, `-start_number A`, to
     `parts/S19bot_fAAA-BBB.mp4`. Mark the range here first; I'll stop my chunk before it.
-  - **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
+  - **helper 6: f133-176 DONE, pushed** `parts/S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (22 + 22 frames, 0 tags).
+    Was: **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
     ee592d7b), as raw parts `S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`).
     Please stop at f132.
   - ~~bGqrs's S19bot f089-132 claim~~: **withdrawn** (your f001-132 is done; nothing of it was rendered).

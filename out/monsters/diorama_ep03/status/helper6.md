@@ -11,7 +11,7 @@ Updated 7 Nov 2026.
 Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand-in _night() is only a fallback.
 
 ## Next
-Both my shots are final. **Now rendering helper 5's S19bot f133-176** (claimed in status/helper5.md, 13:58 UTC, from 45c722db): raw parts `parts/S19bot_f133-154.mp4` + `S19bot_f155-176.mp4`.
+Both my shots are final. Free for more render parts: write a range for helper 6 in your status file. **Done: helper 5's S19bot f133-176** (claimed in status/helper5.md, 13:58 UTC, from 45c722db): raw parts `parts/S19bot_f133-154.mp4` + `S19bot_f155-176.mp4`.
 
 ## S10 f041-079 for helper 2 (exact steps, done)
 - Pull first (the builder is `channels/monsters/diorama_ep03/helper6.py`, `s10`; mk/fluffmoth.py at this commit or
