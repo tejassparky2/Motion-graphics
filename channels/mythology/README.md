@@ -115,7 +115,9 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   His recording (65 s, music 13 dB under him, removed with HTDemucs) is fast continuous speech with only 0.1-0.2 s
   breaths. Reference `darshan_v1` = his first 9.5 s, cut at breaths (exact words in .txt). IndicF5 keeps his pace:
   13.7 letters/s against his real 13.5 (voice A: 12.6). Likeness 0.92, turbo errors 13% mean, 23% worst. A 4 s
-  reference (`darshan_short`) came out too fast (17.9 letters/s) and less clear. Waiting on the owner's pick.
+  reference (`darshan_short`) came out too fast (17.9 letters/s) and less clear. **Rejected** (owner, 7 Nov 2026:
+  "New voice a only looks good the clone is not good"): voice A stays the Kannada narrator. All three clones (owner,
+  brother, Darshan) were judged worse than voice A by the owner's ear; don't offer clones again unless asked.
 - Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best
