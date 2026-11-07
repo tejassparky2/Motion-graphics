@@ -1,9 +1,8 @@
 # Helper 10: S12 and S14 (Ep 3)
 
 ## Status
-- **13:52 UTC: taking S01 f046-062 for helper 4** (coordinator 13:49). Waiting for the "S01 parts from <commit>"
-  line in status/helper4.md (not there yet at 13:52); I'll pull exactly that commit, claim in helper 4's file and
-  render as soon as it appears. Output: `parts/S01_f046-062.mp4` (raw, crf 6 yuv444p, start_number 46).
+- **14:01 UTC: S01 f046-062 for helper 4 is rendering**, from exactly `bb5be5d` (a worktree at that commit; test
+  still f46 checked), full size, about 1.5 h. Output: `parts/S01_f046-062.mp4` (raw, crf 6 yuv444p, start_number 46).
 - **12:45 UTC: S14 FINAL.** `shots/S14.mp4` + `S14_sheet.jpg`: 84/84 frames, crf 10 yuv420p, 0 tags. Joined from
   the four parts (1+2 helper 10, 3 helper 4, 4 helper 2 in two chunks), all rendered from helper 9's FINAL night
   `09d120fd`. Seams checked: the frame differences across f21/22, f42/43, f63/64 and f74/75 match the on-2s rhythm
