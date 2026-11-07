@@ -5,6 +5,7 @@
     python channels/monsters/ep01v2_cover.py --diorama    # the same from out/monsters/diorama/ -> diorama/cover.jpg
     python channels/monsters/ep01v2_cover.py --v3         # v3: the full hook on S01 -> diorama_v3/cover.jpg
     python channels/monsters/ep01v2_cover.py --ep02       # Episode 2: the candidates + phone grid -> diorama_ep02/
+    python channels/monsters/ep01v2_cover.py --ep03       # Episode 3: the candidates + phone grid -> diorama_ep03/
 
 The frame comes from the clean shot render out/monsters/ep01v2/shots/<SHOT>.mp4 when it exists (no captions or hook
 text burned in), else from out/monsters/ep01v2/picture.mp4 at the shot's first frame + `frame` (timing.json).
@@ -48,6 +49,14 @@ EP02 = {
     "rake": ("S04", 12, [("I SAVED", WHITE), ("MY KILLER", HOT)]),        # Kai with the shrimp, the bird raking in
 }
 EP02_PICK = "fear"   # re-picked on the real renders (2 Nov): his terror eyes clear under the words, the shrimp in front
+# Episode 3 (DIORAMA_EP03.md): Kai's glowing wrist with the swarm, or the field of upside-down moths; never the title
+# ("They Rang Every Bell. The Moths Didn't Care") repeated. Frames are placeholders: re-pick them on the real renders.
+EP03 = {
+    "swarm": ("S10", 40, [("THEY CIRCLED", WHITE), ("MY WRIST", HOT)]),   # top view: the spiral round his glowing wrist
+    "flip": ("S15", 30, [("EVERY MOTH", WHITE), ("FLIPPED", HOT)]),       # the field of upside-down moths, legs waving
+    "hook": ("S01", 12, [("THE VILLAGE", WHITE), ("RAN", HOT)]),          # the raised wrist blazing, Wren stumbling back
+}
+EP03_PICK = "swarm"
 TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 
 
@@ -118,18 +127,21 @@ def phone_grid(paths, out, w=160):
 
 def main(argv):
     global EP, PICK_PATH, TIMING_JSON
-    if "--ep02" in argv:
-        EP = os.path.join(ROOT, "out", "monsters", "diorama_ep02")
-        TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")
+    eps = {"--ep02": ("ep02", EP02, EP02_PICK), "--ep03": ("ep03", EP03, EP03_PICK)}
+    flag = next((a for a in argv if a in eps), None)
+    if flag:
+        epdir, cands, pick = eps[flag]
+        EP = os.path.join(ROOT, "out", "monsters", "diorama_" + epdir)
+        TIMING_JSON = os.path.join(ROOT, "channels", "monsters", epdir, "timing.json")
         made = []
-        for name, (shot, f, lines) in EP02.items():
+        for name, (shot, f, lines) in cands.items():
             p, src = cover(shot, f, lines, os.path.join(EP, "covers", f"cover_{name}.jpg"), size=200, top=170)
             print(f"{name:5} {shot} f{f} from {os.path.relpath(src, ROOT)} -> {os.path.relpath(p, ROOT)}")
             made.append((name, p))
         phone_grid(made, os.path.join(EP, "covers", "phone_grid.jpg"))
-        shot, f, lines = EP02[EP02_PICK]
+        shot, f, lines = cands[pick]
         cover(shot, f, lines, os.path.join(EP, "cover.jpg"), size=200, top=170)
-        print("pick:", EP02_PICK, "->", os.path.relpath(os.path.join(EP, "cover.jpg"), ROOT))
+        print("pick:", pick, "->", os.path.relpath(os.path.join(EP, "cover.jpg"), ROOT))
         return
     if "--v3" in argv:
         EP = os.path.join(ROOT, "out", "monsters", "diorama_v3")

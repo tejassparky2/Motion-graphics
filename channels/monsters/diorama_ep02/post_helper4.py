@@ -32,8 +32,9 @@ from channels.monsters import comp, fx2d_anime  # noqa: E402
 from channels.monsters.diorama_v3.post_helper1 import CLEAN, sheet  # noqa: E402
 from motion.engine import FPS, cairo  # noqa: E402
 
-BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep02")
-SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "shots")
+EP = os.environ.get("EP", "ep02")                       # EP=ep03 for Episode 3's shots (S01, S11)
+BUILD = os.path.join(ROOT, "build", "monsters", f"diorama_{EP}")
+SHOTS_OUT = os.path.join(ROOT, "out", "monsters", f"diorama_{EP}", "shots")
 S05_CUT = 50                                  # helper4.S05_CUT
 INK = (0.106, 0.094, 0.188, 1.0)              # puffshrimp INK #1b1830
 JET = (0.93, 0.98, 1.0, 1.0)
@@ -51,7 +52,7 @@ def at(a, t, name):
 
 
 def _words(line_id):
-    with open(os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")) as f:
+    with open(os.path.join(ROOT, "channels", "monsters", EP, "timing.json")) as f:
         d = json.load(f)
     ln = next(x for x in d["lines"] if x["id"] == line_id)
     s0 = next(s["start"] for s in d["shots"] if s["shot"] == ln["scene"])
@@ -220,7 +221,60 @@ def wren_fear():
     return draw, (meta["f_fear"] - 1) / FPS, (max(A) - 1) / FPS
 
 
+def mark_s01():
+    """Ep 3 S01 (the hook): the mark blazing on his wrist big in the foreground from frame 0: helper 9's zigzag
+    (post_helper9.mark) at its projected size, white-hot, a pink halo, a steady pulse and sparkles popping every
+    ~0.6 s; and Wren's terror eyes carrying on from Ep 2."""
+    from channels.monsters import fx2d
+    from channels.monsters.diorama_ep02 import post_helper9 as P9
+    with open(os.path.join(BUILD, "S01_mark.json")) as fh:
+        d = json.load(fh)
+    A = {int(f): v for f, v in d["frames"].items()}
+    k_size = float(os.environ.get("S01_MARK_K", "1.3"))
+
+    def draw(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        g = A[f]
+        if g.get("z", 1) <= 0:
+            return
+        geo = P9._on_arm(g)
+        geo = dict(geo, ex=[v * k_size for v in geo["ex"]], ey=[v * k_size for v in geo["ey"]])
+        x, y = geo["c"]
+        size = math.hypot(*geo["ey"])
+        lvl = g["level"]
+        fx2d._glow(cr, x, y, size * 1.4, PINK, 0.5)
+        fx2d._glow(cr, x, y, size * 0.7, (1.0, 0.93, 0.88), 0.25 + 0.1 * math.sin(f / 4.0))
+        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=2.6)
+        for j, t0 in enumerate(np_arange(-0.2, t + 0.01, 0.6)):
+            fx2d.sparkles(cr, t, t0, x, y, n=5, radius=size * 0.95, size=size * 0.14,
+                          cols=((1, 0.8, 0.7, 1), fx2d.WHITE, (1, 0.6, 0.5, 1)), life=1.0, seed=11 + j)
+
+    def eyes(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        (lx, ly, lz), (rx, ry, _) = A[f]["w_eye_l"], A[f]["w_eye_r"]
+        if lz <= 0:
+            return
+        dd = math.hypot(rx - lx, ry - ly)
+        tilt = math.atan2(ry - ly, rx - lx)
+        if abs(tilt) > math.pi / 2:
+            tilt -= math.copysign(math.pi, tilt)
+        fx2d_anime.terror_eyes(cr, t, -1.0, x=(lx + rx) / 2, y=(ly + ry) / 2, size=dd * 2.6, end=end,
+                               eyes=((lx, ly), (rx, ry)), er=0.34 * dd, tilt=tilt)
+    n = max(A)
+    return [(draw, dict(start=0.0)), (eyes, dict(start=0.0, end=(n - 1) / FPS))]
+
+
+def np_arange(a, b, step):
+    out, v = [], a
+    while v < b:
+        out.append(v)
+        v += step
+    return out
+
+
 def overlays(shot):
+    if EP == "ep03" and shot == "S01":
+        return mark_s01()
     if shot == "S20bot":
         fear, t0, t1 = wren_fear()
         return [(mark20(), dict(start=0.0)), (fear, dict(start=t0, end=t1))]
@@ -238,7 +292,7 @@ def overlays(shot):
     return []
 
 
-PARTS = os.path.join(ROOT, "out", "monsters", "diorama_ep02", "parts")
+PARTS = os.path.join(ROOT, "out", "monsters", f"diorama_{EP}", "parts")
 
 
 def fill_from_parts(shot, n):
@@ -273,7 +327,7 @@ def fill_from_parts(shot, n):
 
 def run(shot):
     if shot == "S20bot":
-        with open(os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")) as fh:
+        with open(os.path.join(ROOT, "channels", "monsters", EP, "timing.json")) as fh:
             n20 = next(s["render_frames"] for s in json.load(fh)["shots"] if s["shot"] == "S20")
         fill_from_parts(shot, n20)
     src = comp.Source(os.environ.get("SRC") or os.path.join(BUILD, "render", shot))
