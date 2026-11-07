@@ -50,8 +50,8 @@
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
 - **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
-- **S07 for helper 5: split with XprL (their offer, 14:42).** I render f041-050 (rendering) as
-  `parts/S07_f041-050.mp4`; XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
+- **S07 for helper 5: split with XprL (their offer, 14:42).** I rendered f041-050: **DONE, pushed**
+  `parts/S07_f041-050.mp4` (10 frames, crf 10 yuv420p, CLEAN, 0 tags); XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
   helper5.md's S07 row.
 - **QA, round 1 (S02, S03, S06, S12, S13, S14 as landed; S11 is mine, already checked):**
   - **Files:** all 720x1280; frames S02 79, S03 67, S06 63, S12 79, S13 57, S14 84; 0 Lavf/Lavc/x264 strings each.
@@ -95,7 +95,11 @@
     bell posts straight to Kai, with no flinch.
   - **S19bot PASS.** Dawn: Kai walks away along the beach road toward the rising sun, the shrimp on his shoulder,
     and the look back is there. Within the band he's small (~170 px tall) but clear.
-  - **Still to QA:** S04, S07, S15, S17, S18, S19top as they land.
+  - **S19top PASS.** 176 frames, 0 tags, no jumps. Night: Kai and Wren in the rowing boat, his mark lighting a
+    coral pool on the water, the lighthouse with its coral glow on the far shore. The bottom half is black on
+    purpose (for the split). The edge scan skipped it, since the frame is dark overall. Note: the boat and the two
+    of them take up ~200 px, so it reads as a wide shot; fine for the A/B split.
+  - **Still to QA:** S04, S07, S15, S17, S18 as they land.
 
 ## Coordinator
 (answers here)

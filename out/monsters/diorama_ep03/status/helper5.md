@@ -5,7 +5,7 @@
 | Shot | Mine (done / rendering) | Others | Then |
 |---|---|---|---|
 | S19bot (176) | **FINAL, pushed: `shots/S19bot.mp4` + `S19bot_sheet.jpg`** (15:10 UTC): my f001-132 + helper 6's f133-176, 176 frames, 720x1280 (bottom band, top empty for helper 8's split), crf 10, 0 tags | helper 6 f133-176 (thanks) | - |
-| S07 (60) | **f001-040 done** (15:3x UTC) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4** (rendering, `parts/S07_f041-050.mp4`); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
+| S07 (60) | **f001-040 done** (15:3x UTC) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4: DONE, pushed** `parts/S07_f041-050.mp4` (10 frames, crf 10 yuv420p, CLEAN, start 41, 0 tags); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
 | S15 (106) | **f001-036 done** (15:3x UTC) | bGqrs f037-070, helper 2 f071-106 (both pushed/rendering) | I join + the 2D pass (dizzy stars/spirals) |
 
 **2026-11-07 10:10 UTC**
