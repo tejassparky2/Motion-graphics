@@ -378,9 +378,9 @@ def s17():
         wren.kneel(P, front="L", depth=d)
         if f_back <= f < f_return + 4:                                            # the glance back at the village
             g = _ease((f - f_back) / 5) * (1 - _ease((f - f_return) / 4))
-            P.rot("chest", (0, 0, 10 * g))                                    # over her left shoulder (south)
-            P.rot("neck", (0, 0, 15 * g))
-            P.rot("head 1", (0, 0, 22 * g))
+            P.rot("chest", (0, 0, 5 * g))                                     # over her left shoulder (south):
+            P.rot("neck", (0, 0, 10 * g))                                     # a glance, her profile to us
+            P.rot("head 1", (0, 0, 20 * g))
         else:
             P.rot("head 1", (8, 0, 0))                                            # looking down at him
         P.key(f)
@@ -455,8 +455,8 @@ def s08():
     _offscreen_mark(Vector(kai_at) + Vector((0, 0, 3.0)), n)
     # low, in front of her and a little to the lane's north (her left): she fills the frame, the porch post and bell
     # and the lane's other porches beyond; a slow push-in
-    tgt = spot + Vector((0, 0, 6.6))
     side = Vector((-face.y, face.x, 0))
+    tgt = spot + Vector((0, 0, 6.6)) - side * 1.3                              # toward her bell hand (her right)
     cdir = (face * 0.9 + side * 0.44).normalized()                           # her bell side: her face stays clear
     cyaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     _cam("S08cam", n, (tgt, 12.0, -7, cyaw, 46, 0.0), (tgt, 10.8, -7, cyaw, 46, 0.0))
