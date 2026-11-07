@@ -1,6 +1,6 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 11:05 UTC.
+Updated 7 Nov 2026, 11:30 UTC.
 
 | Shot | State | File |
 |---|---|---|
@@ -69,6 +69,8 @@ Updated 7 Nov 2026, 11:05 UTC.
   ~7000 W on "below", then ~5500 W). Plus my shadowless coral "under" light 1.6 above the mark (`B.S13_UNDER` 900 W) for
   the moths' bellies, and the 2D beam, rays, blades and zigzag from `post_bgqrs.py`.
 
-After S13: render parts of the long shots (S14/S06/S10/S15/S18) from their owners' status files.
+After S13: **S19top f089-176** for helper 3 (claimed 11:30, coordinator's ask): `--frames 89-176` from helper 9's FINAL night
+commit, a RAW part `parts/S19top_f089-176.mp4` (crf 6, yuv444p, bitexact, -start_number 89, no tags). Then other
+render parts of the long shots (S14/S06/S10/S15/S18) from their owners' status files.
 
 ## Coordinator
