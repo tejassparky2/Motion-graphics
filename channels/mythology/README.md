@@ -5,8 +5,8 @@ reels in hindi and kannada for hindi the voice you already have and we try to ma
 chat". This channel has its own chat and its own branch, `ccr-56282fe5-evehq4-mythology`, in its own worktree
 (`<shorts research>/Motion-graphics-myth`). Don't switch the branch of the shared `Motion-graphics` checkout.
 
-**Owner decisions, still open:** Hindi channel name (Kannada is "Namma Purana"); which cloned Kannada voice (owner's
-or brother's) re-voices the four Kannada reels. See Voices and Status.
+**Owner decisions, still open:** Hindi channel name (Kannada is "Namma Purana"). Kannada voice: designed voice A
+(7 Nov 2026). See Voices and Status.
 
 ## Owner instructions, 6 Nov 2026 (night)
 - "make me three 60 seconds or more videos all 3 with different approach animation scene etc in both kannada and
@@ -97,7 +97,8 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   like Aman); descriptions with no named speaker came out as gibberish in Kannada; IndicF5 prompted straight from the
   Hindi Aman clip also speaks clear Kannada. Through IndicF5 the best samples scored 5-7% mean errors (the clones:
   up to 44%). Sent as A `aman_orig_s11` (most pitch movement), B `aman_hindi` (the Hindi voice itself, 0.88 like
-  Aman), C `aman_calm_s42` (calmer, flatter). The owner is choosing. More pitch movement reads as more human.
+  Aman), C `aman_calm_s42` (calmer, flatter). More pitch movement reads as more human.
+  **The owner picked A ("A", 7 Nov 2026): `design_aman_orig_s11` is the Kannada narrator** (channel.py default).
 - Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best

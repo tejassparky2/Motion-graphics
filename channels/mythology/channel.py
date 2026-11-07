@@ -18,7 +18,10 @@ _HI_VOICES = os.path.join(ROOT, "mayank", "voice", "f5_refs")
 _KN_VOICES = os.path.join(ASSETS_ROOT, "voice", "kn_refs")
 KN_REF_TEXT = ("ಯೋಚಿಸಿ, ಸಾವಿರಾರು ವರ್ಷಗಳಿಂದ ಜನ ಹೇಳುತ್ತಾ ಬಂದಿರುವ ಒಂದು ಕಥೆ. "
                "ಆದರೆ ಅದರ ಒಂದು ಭಾಗ, ಹೆಚ್ಚಿನವರಿಗೆ ಗೊತ್ತೇ ಇಲ್ಲ.")
-KN_VOICE = os.environ.get("MYTH_KN_VOICE", "suresh_s42")    # file stem in _KN_VOICES (6 Nov 2026: Suresh, until the owner picks)
+# Owner's pick, 7 Nov 2026 ("A"): designed voice A, Indic Parler's speaker Aman reading Kannada with the Hindi
+# narrator's own description, seed 11 (kn_voice_design.py), as the IndicF5 prompt. Was Suresh s42 on 6 Nov.
+KN_VOICE = os.environ.get("MYTH_KN_VOICE", "design_aman_orig_s11")    # file stem in _KN_VOICES
+CLONED = {"tejas_v2", "brother_v1"}                                    # consented clones, never the default
 # 7 Nov 2026 the owner rejected both synthetic Kannada voices ("The both kannada voice is not good") and asked for
 # clones of two real voices with consent: their own ("this is mine") and their brother's ("he agress"). Those
 # references live only in _KN_VOICES (never in the repo), each with its exact words in <stem>.txt beside it:
@@ -40,7 +43,7 @@ VOICE_REFS = {k: v["ref_audio"] for k, v in NARRATORS.items()}
 NARRATOR_LABEL = ("synthetic narrators: Indic Parler-TTS named speakers (Apache-2.0; datasets CC BY 4.0) as voice "
                   "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain" +
                   ("; Kannada: a consented clone of the owner's or the owner's brother's voice"
-                   if os.path.exists(_KN_TXT) else "; nobody is cloned"))   # records only
+                   if KN_VOICE in CLONED else "; nobody is cloned"))   # records only
 MUSIC = "tanpura"   # calm drone for story narration (motion/audio.py tanpura), ~18 dB under the voice
 TAIL = 0.9
 REVEAL_GAP = 0.6       # the longer pause before a reveal

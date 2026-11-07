@@ -22,8 +22,9 @@ def cer(ref, hyp):
     return d[-1] / max(1, len(ref))
 
 
-asr = pipeline("automatic-speech-recognition", model="openai/whisper-large-v3-turbo", device="cpu",
-               torch_dtype=torch.float32)
+GPU = torch.cuda.is_available()     # CUDA_VISIBLE_DEVICES=-1 keeps it on the CPU when another job holds the GPU
+asr = pipeline("automatic-speech-recognition", model="openai/whisper-large-v3-turbo",
+               device="cuda" if GPU else "cpu", torch_dtype=torch.float16 if GPU else torch.float32)
 for path in sys.argv[1:]:
     tl = json.load(open(path, encoding="utf-8"))
     print(f"== {path}", flush=True)

@@ -1,7 +1,8 @@
 """Voice every line of the given videos in both languages, then run the clarity retakes, one GPU job at a time.
 Waits while another program holds more than MAX_BUSY MiB of GPU memory (owner, 6 Nov 2026: another session also
 uses the GPU; run only when it is free).
-Usage: python -I -X utf8 channels/mythology/voice_all.py kakudmi brahma_calves jarasandha"""
+Usage: python -I -X utf8 channels/mythology/voice_all.py kakudmi brahma_calves jarasandha [--langs kn] [--no-retake]
+--no-retake skips retake.py (Whisper medium); for Kannada judge with kn_asr_check.py + fix_line.py."""
 import importlib.util, os, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -11,6 +12,8 @@ from channel import LANGS, NARRATORS  # noqa: E402
 
 PY = sys.executable
 MAX_BUSY = 600
+RUN_LANGS = sys.argv[sys.argv.index("--langs") + 1].split(",") if "--langs" in sys.argv else LANGS
+ARGS = [a for i, a in enumerate(sys.argv[1:], 1) if not a.startswith("--") and sys.argv[i - 1] != "--langs"]
 
 
 def gpu_used():
@@ -35,15 +38,15 @@ def load(name):
     return mod
 
 
-for lang in LANGS:                     # one IndicF5 load per language: all lines of all videos in one batch
+for lang in RUN_LANGS:                 # one IndicF5 load per language: all lines of all videos in one batch
     jobs = []
-    for name in sys.argv[1:]:
+    for name in ARGS:
         jobs += [l for l in load(name).SCRIPTS[lang]]
     wait_gpu()
     print(f"voicing {len(jobs)} {lang} lines", flush=True)
     narrate.prefetch(jobs, NARRATORS[lang])
-for name in sys.argv[1:]:
-    for lang in LANGS:
+for name in [] if "--no-retake" in sys.argv else ARGS:
+    for lang in RUN_LANGS:
         wait_gpu()
         print(f"retakes {name} {lang}", flush=True)
         subprocess.run([PY, "-I", "-X", "utf8", os.path.join(HERE, "retake.py"), name, lang])
