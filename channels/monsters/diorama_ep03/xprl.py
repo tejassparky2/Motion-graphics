@@ -315,7 +315,7 @@ def s16():
     _dazed_moths(n, [(WREN_S16.x - 2.2, WREN_S16.y + 2.0), (WREN_S16.x + 2.6, WREN_S16.y + 1.2),
                      (WREN_S16.x + 0.8, WREN_S16.y + 3.4)])
     # close (chest-up), from Kai's side (north-west of her), a slow push-in
-    tgt = WREN_S16 + Vector((-0.4, 0, 6.3))
+    tgt = WREN_S16 + Vector((1.0, 0, 6.3))                                    # her bell side (east) in frame
     yaw = 176.0
     _cam("S16cam", n, (tgt, 9.2, 3, yaw, 44, 0.0), (tgt, 8.2, 3, yaw, 44, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
@@ -367,8 +367,8 @@ def s17():
                      (KAI_SIT.x + 2.4, KAI_SIT.y + 5.0)])
     # over Kai's left shoulder from the north (the shrimp in the soft foreground): Wren facing us, kneeling on the
     # village side, the huts behind her; on "village" she looks back at them. A slow push-in.
-    mid = KAI_SIT.lerp(WREN_KNEEL, 0.68) + Vector((0, 0, 4.2))
-    yaw = 171.0
+    mid = KAI_SIT.lerp(WREN_KNEEL, 0.75) + Vector((0, 0, 4.2))
+    yaw = 150.0                                                               # from the north-west: Wren clear of his head
     _cam("S17cam", n, (mid, 14.5, 7, yaw, 40, 0.0), (mid, 13.0, 7, yaw, 40, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 

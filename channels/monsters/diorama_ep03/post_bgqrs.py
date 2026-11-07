@@ -54,7 +54,7 @@ def _ground_glow(cr, x, y, lv, f):
     cr.save()
     cr.translate(x, y)
     cr.scale(1.0, 0.45)
-    fx2d._glow(cr, 0, 0, 230 * lv, CORAL, 0.42 * min(1.0, lv))
+    fx2d._glow(cr, 0, 0, 230 * lv, CORAL, 0.24 * min(1.0, lv))
     cr.restore()
     fx2d._glow(cr, x, y, 90 * lv, CORAL_HOT, 0.55 * min(1.0, lv))
     fx2d._glow(cr, x, y, 26 * lv, PINK_WHITE, 0.8 * min(1.0, lv))
