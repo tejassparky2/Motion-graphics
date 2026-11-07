@@ -70,7 +70,7 @@ the commit hash here when it lands. Write your name next to a range here and pus
 | Part | Frames | Who |
 |---|---|---|
 | 1 | f001-021 | helper 10 |
-| 2 | f022-042 | (free) |
+| 2 | f022-042 | (free) helper 8 can't take it: no Blender in its session, and installing Blender is blocked by its permissions (see status/helper8.md). Please reassign. |
 | 3 | f043-063 | (free) |
 | 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
 
