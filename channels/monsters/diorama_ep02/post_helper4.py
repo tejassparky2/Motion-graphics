@@ -438,7 +438,7 @@ def fill_from_parts(shot, n):
     import re
     d = os.path.join(BUILD, "render", shot)
     os.makedirs(d, exist_ok=True)
-    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_v2_f*.mp4"))):
+    for part in sorted(glob.glob(os.path.join(PARTS, f"{shot}_v2_f*.mp4")) + glob.glob(os.path.join(PARTS, f"{shot}_f*.mp4"))):
         a, b = map(int, re.search(r"_f(\d+)-(\d+)\.mp4$", part).groups())
         if all(os.path.exists(os.path.join(d, f"{f:04d}.png")) for f in range(a, b + 1)):
             continue
@@ -462,10 +462,11 @@ def fill_from_parts(shot, n):
 
 
 def run(shot):
-    if shot == "S20bot":
+    if shot == "S20bot" or (EP == "ep03" and shot == "S01"):              # split renders (Ep 3 S01: helper 10 f046-062)
         with open(os.path.join(ROOT, "channels", "monsters", EP, "timing.json")) as fh:
-            n20 = next(s["render_frames"] for s in json.load(fh)["shots"] if s["shot"] == "S20")
-        fill_from_parts(shot, n20)
+            key = "S20" if shot == "S20bot" else shot
+            n = next(s["render_frames"] for s in json.load(fh)["shots"] if s["shot"] == key)
+        fill_from_parts(shot, n)
     src = comp.Source(os.environ.get("SRC") or os.path.join(BUILD, "render", shot))
     out_frames = os.path.join(BUILD, f"{shot}_post")
     rep = comp.render([comp.Shot(src, overlays=overlays(shot), name=shot)], out_frames, verbose=False)
