@@ -1,10 +1,19 @@
 # helper 7 status (Ep 3 sound)
 
-Updated 7 Nov 2026, after S09 landed.
+Updated 7 Nov 2026, after S01 and S19top landed.
 
 ## Coordinator
 - **S14 render part 3 (f043-063): I can't take it.** This session has no Blender (not installed, and the disk
   allowance is nearly spent: ~2 GB free after I sparse-excluded other channels' outputs). Please reassign part 3.
+
+## S01 and S19top retimed to the final shots (pushed)
+- **S01 (helper 4):** the flare stays on frame 0; Wren's stumble now plants on her feet (scuffs f5 and f9 with the bell
+  knocked, steps f13 and f17); the shrimp's tiny effort chirp as it jumps from his hand (f20) and a soft landing on
+  his shoulder (f29; helper4.py: the hop runs from "So" f31 - 14).
+- **S19 top (helper 3):** Kai's oar strokes, one every 40 frames as his rig rows (blades in at f1, 41, 81, 121, 161:
+  a soft two-blade dip, the water swirling past, drips as they lift out 18 frames later). Low, under the A/B voice and
+  the lake lapping.
+Mix -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
 
 ## S09 retimed to helper 1's final shot (pushed)
 The bells ring on from S08. New: the swarm streams in over the camera from f8 (a close fluffy wing swell overhead,
@@ -15,7 +24,7 @@ Mix -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
 ## S19 bottom retimed to helper 5's final shot (pushed)
 Kai's soft footfalls on the dawn road on his walk's contact frames (helper 5's `x3._walk`: f23, f44, f66, f87, then
 after the stop f148, f157; f166 is in the tail handle), and a cloth swish as he turns to look back (f107). Low, under
-the A/B voice. The top (S19top) isn't in yet.
+the A/B voice. 
 Mix -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
 
 ## S16 retimed to XprL's final shot (pushed)
@@ -93,4 +102,4 @@ synthesised, no heartbeat, no riser:
 
 **Next:** as each shot lands in `out/monsters/diorama_ep03/shots/`, I read its beats (the flare, the stumble, the door
 bangs, the scratch, the drop into the grass, the flip's first roll and plops, the clink, the lighthouse cut) and move
-those cues onto its frames, re-run, Whisper and push. Shots in so far: S02 (retimed), S03 (retimed), S05 (a smooth push-in with no hit frames: the night ambience and the chime on "light" stay), S06 (retimed), S08 (retimed), S09 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S16 (retimed), S19bot (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
+those cues onto its frames, re-run, Whisper and push. Shots in so far: S01 (retimed), S02 (retimed), S03 (retimed), S05 (a smooth push-in with no hit frames: the night ambience and the chime on "light" stay), S06 (retimed), S08 (retimed), S09 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S16 (retimed), S19top (retimed), S19bot (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).

@@ -39,8 +39,11 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
+S01_STEPS = (5, 9, 13, 17) # S01 (helper 4): Wren's stumble back, each foot down (1-based shot frames)
+S01_HOP, S01_PERCH = 20, 29  # the shrimp jumps from his hand, lands on his shoulder ("So" f31 - 14 + 3, - 2)
 S08_STRIKES = list(range(8, 66, 4))                   # S08 (XprL): Wren's clapper strikes (wren.ring f6-f66, beat 4)
 S08_PORCH = 12                                         # the first porch bell joins (V.ring_bell from f_ring + 6)
+S19TOP_STROKE = 40                                    # S19 top (helper 3): one oar stroke (frames)
 S19BOT_STEPS = (23, 44, 66, 87, 148, 157, 166)       # S19 bottom (helper 5): footfalls (x3._walk), cut at 164
 S19BOT_LOOK = 107                                      # the look back starts ("like" - 4)
 S09_PASS, S09_SEE = 8, 44                             # S09 (helper 1): the swarm over the camera, Kai sees it
@@ -287,6 +290,29 @@ def eyespot_open(seed=0):
     return pip + _bp(r.uniform(-1, 1, n), 2000, 7000) * np.exp(-t / 0.03) * 0.15
 
 
+def oar_stroke(drive=0.75, seed=0):
+    """One rowing stroke: both blades dip in (a soft low plunge), the water swirls past through the drive, and a few
+    drips as the blades lift out at the finish (`drive` seconds later)."""
+    r = _rng("oar", seed)
+    out = np.zeros(_n(drive + 0.8))
+    k = _n(0.18)
+    t = _t(k)
+    for side in range(2):                                                 # the two blades, a hair apart
+        f = r.uniform(170, 230)
+        dip = np.sin(2 * np.pi * (f + 260 * np.exp(-t / 0.03)) * t) * np.exp(-t / 0.05) * np.minimum(1, t / 0.004)
+        _place(out, dip * 0.6 + _bp(r.uniform(-1, 1, k), 300, 2500) * np.exp(-t / 0.04) * 0.4, 0.012 * side)
+    m = _n(drive)
+    swirl = _bp(r.uniform(-1, 1, m), 250, 1800) * np.sin(np.pi * np.linspace(0, 1, m)) ** 1.5 * 0.25
+    _place(out, swirl, 0.03)
+    for j in range(int(r.integers(3, 6))):                                # drips off the blades
+        q = _n(0.05)
+        tq = _t(q)
+        ff = r.uniform(900, 1700)
+        _place(out, np.sin(2 * np.pi * ff * (1 + 1.5 * tq / tq[-1]) * tq) * np.exp(-tq / 0.012) * r.uniform(0.2, 0.45),
+               drive + r.uniform(0.0, 0.45))
+    return out
+
+
 def plop(seed=0):
     """One moth landing on its back in the grass: a soft comic plop with a tiny puff."""
     r = _rng("plop", seed)
@@ -389,7 +415,13 @@ def build(timing, n, v):
     # --- the mark: it blazes on frame 0 and hums under the whole night
     hit(flare(), c.f("S01", S01_FLARE), -12, -0.2)
     music_at(mark_hum(total, 1), 0.0, total, -30, 0.02, 0.3)              # under everything, quietly
-    hit(stumble(), c.f("S01", 0) + 0.25, -17, 0.3)                        # Wren stumbles back, bell knocked
+    # S01 (helper 4, final): Wren stumbles back past the lens (feet down f5, f9, f13, f17; her bell trembling), the
+    # shrimp crouches f17, hops f20 and lands on his left shoulder f29
+    hit(stumble(), fr("S01", S01_STEPS[0]), -17, 0.3)                      # scuffs f5, f9 (0.17 s) + her bell knocked
+    for k, f in enumerate(S01_STEPS[2:]):
+        hit(e2.footstep(70 + k, 1.0), fr("S01", f), -20 - 2 * k, 0.3)
+    hit(sfx.cute_chirp(2.2, 11) * 0.5, fr("S01", S01_HOP), -27, -0.2)      # a tiny effort chirp as it jumps
+    hit(plop(77), fr("S01", S01_PERCH), -27, -0.25)                        # the soft landing on his shoulder
     for k in range(6):                                                    # villagers scattering, nets dropped
         hit(e2.footstep(60 + k, 0.7), 0.35 + 0.22 * k, -27, 0.5 - 0.15 * k)
 
@@ -488,6 +520,9 @@ def build(timing, n, v):
     hit(v3.option_sting("A"), a_t, -12, -0.15)
     hit(v3.option_sting("B"), b_t, -12, 0.15)
     hit(sfx.ui_select(5), comment, -20)
+    # S19 top (helper 3, final): Kai rows, one stroke every 40 frames (blades in at f1, 41 ..., out 18 frames later)
+    for k, f in enumerate(range(1, c.shot["S19"]["frames"] + 1, S19TOP_STROKE)):
+        hit(oar_stroke(18 / 24, 30 + k), fr("S19", f), -26, -0.05)
     # S19 bottom (helper 5, final): Kai's footfalls on the dawn road, a stop and a look back over his shoulder
     for k, f in enumerate(f for f in S19BOT_STEPS if f <= c.shot["S19"]["frames"]):
         hit(e2.footstep(120 + k, 0.8), fr("S19", f), -28, 0.1 * (1 if k % 2 else -1))
