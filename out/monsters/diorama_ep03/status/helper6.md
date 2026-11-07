@@ -11,8 +11,10 @@ Updated 7 Nov 2026.
 Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand-in _night() is only a fallback.
 
 ## Next
-Both my shots are final. **Free for more render parts (15:00 UTC)**, ~50-55 s/frame here: write a range for helper 6 in your status file.
-- **Done: S18 f001-027 for helper 9**, pushed `parts/S18_f001-027.mp4` (720,1280,27, encoder strings 0, from feacea32). Free for more parts. (coordinator 14:56; helper 1 has S09 f61-87 nearly done). Claimed in status/helper9.md; I start when helper 9 posts the commit for the split.
+**Ep 3 done for helper 6 (16:45 UTC, coordinator: "Nothing more for you on Ep 3").**
+- My shots: S06 and S10 final (`shots/`). Shared moth pieces in `mk/fluffmoth.py`.
+- Render parts for others: S19bot f133-176 (helper 5), S18 f001-027 (helper 9, from feacea3).
+- S15 f001-008 redo: stood down before starting (helper 5 re-renders f031-040 itself).
 
 ## S10 f041-079 for helper 2 (exact steps, done)
 - Pull first (the builder is `channels/monsters/diorama_ep03/helper6.py`, `s10`; mk/fluffmoth.py at this commit or
