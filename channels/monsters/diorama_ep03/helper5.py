@@ -1,7 +1,11 @@
 """Episode 3, 2.5D diorama (channels/monsters/DIORAMA_EP03.md): helper 5's shots (comedy and acting).
 
-    S07 "Their wing dust stings like nettles."  (to come: needs helper 6's swarm, helper 1's night villagers, XprL's
-        cape pose and helper 9's night grade)
+    S07 "Their wing dust stings like nettles."  Night in helper 1's lane, looking down it from just behind Kai (off
+        screen; his mark is the coral key light from behind the camera). Glittering wing dust drifts down through the
+        whole frame from a few fluffmoths fluttering over the roofs. On the left porch a villager looks up, and on
+        "stings" starts scratching a red blotch on the forearm (V.scratcher: eyes squeezed, comic, not gross); on the
+        right porch Wren throws her cape over her face (wren.shield + cape_up), shocked. Slow push-in on 1s;
+        characters on 2s; the dust on 1s.
     S15 "Every single moth landed on its back."  The laugh hold, straight on from S14's end: the grass round Kai
         is a field of fluffmoths on their backs (helper 6's upside_down: legs waving on 2s, eye-spots dazed and
         blinking out of step, a wriggle now and then). Kai lies as bGqrs's S13 left him (on his back, head west, the
@@ -144,6 +148,154 @@ def _path_strip(name, pts, width=2.6, z=0.05):
     bpy.context.scene.collection.objects.link(o)
     o.data.materials.append(bpy.data.materials.get("h9_dirt") or look.toon("h5_dirt", look.hexc("#c9a873")))
     return o
+
+
+# ------------------------------------------------------------------------------------------------------ S07
+S07_WREN_HUT, S07_SCRATCH_HUT = 2, 3       # helper 1's lane huts: Wren on #2's porch (east), the scratcher on #3's
+
+
+def _dust(n, box_lo, box_hi, count=220, seed=7, light=None):
+    """Glittering wing dust: tiny bright flakes (gold, pink, white) drifting down through the box on 1s, each swaying
+    and twinkling on 2s (scale flicker). One shared emissive material per colour."""
+    import random
+    rnd = random.Random(seed)
+    cols = [("#ffe6a0", 7.0), ("#ffc2d6", 6.0), ("#ffffff", 8.0), ("#bff2ff", 6.0)]
+    mats = []
+    for j, (hx, st) in enumerate(cols):
+        m = bpy.data.materials.new(f"h5_dust{j}")
+        m.use_nodes = True
+        nt = m.node_tree
+        for nd in list(nt.nodes):
+            nt.nodes.remove(nd)
+        em = nt.nodes.new("ShaderNodeEmission")
+        em.inputs["Color"].default_value = look.hexc(hx)
+        em.inputs["Strength"].default_value = st
+        out = nt.nodes.new("ShaderNodeOutputMaterial")
+        nt.links.new(em.outputs[0], out.inputs["Surface"])
+        mats.append(m)
+    me = bpy.data.meshes.new("h5_flake")
+    import bmesh
+    bm = bmesh.new()
+    bmesh.ops.create_icosphere(bm, subdivisions=1, radius=1.0)
+    bm.to_mesh(me)
+    me.materials.append(mats[0])
+    flakes = []
+    lo, hi = Vector(box_lo), Vector(box_hi)
+    for i in range(count):
+        o = bpy.data.objects.new(f"h5_flake{i}", me)                     # one shared mesh, the colour per object
+        bpy.context.scene.collection.objects.link(o)
+        o.material_slots[0].link = "OBJECT"
+        o.material_slots[0].material = mats[i % len(mats)]
+        flakes.append(o)
+    for i, o in enumerate(flakes):
+        o.visible_shadow = False
+        x, y = rnd.uniform(lo.x, hi.x), rnd.uniform(lo.y, hi.y)
+        z0 = rnd.uniform(lo.z, hi.z) + rnd.uniform(0, hi.z - lo.z) * 0.6
+        fall = rnd.uniform(0.07, 0.16)                                   # units a frame: a slow drift down
+        sway, ph, per = rnd.uniform(0.15, 0.5), rnd.uniform(0, 6.3), rnd.uniform(18, 34)
+        size = rnd.uniform(0.05, 0.12)
+        for f in range(1, n + 1):
+            z = z0 - fall * f
+            while z < lo.z:
+                z += hi.z - lo.z
+            o.location = (x + sway * math.sin(f / per * 6.283 + ph), y + 0.5 * sway * math.cos(f / per * 4.0 + ph), z)
+            o.keyframe_insert("location", frame=f)
+            if f % 2 == 1:
+                tw = 1.0 if rnd.random() > 0.25 else rnd.choice((0.35, 1.8))
+                o.scale = (size * tw,) * 3
+                o.keyframe_insert("scale", frame=f)
+        for fc in anim.all_fcurves(o.animation_data.action):
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
+    return flakes
+
+
+def s07():
+    from channels.monsters.diorama_ep03 import bgqrs as B
+    from channels.monsters.diorama_ep03 import village as V
+    from channels.monsters.mk import fluffmoth, wren
+    n = _frames("S07", 60)
+    f_sting = _word("l7", "stings", shot="S07")
+    X._world(n)
+    B._night()
+    sc = bpy.context.scene
+    try:
+        H9.village_and_lake()
+    except Exception as e:
+        print("S07: no village", e)
+    huts = V.lane()
+    hw, hs = huts[S07_WREN_HUT], huts[S07_SCRATCH_HUT]
+    kai_at = V.LANE_AT                                                   # Kai, off screen behind the camera
+    # the mark light: coral, from Kai's raised wrist behind the camera
+    key = bpy.data.lights.new("s07_mark", "POINT")
+    key.color = H9.CORAL
+    key.energy = 900.0
+    key.shadow_soft_size = 0.4
+    lk = bpy.data.objects.new("s07_mark", key)
+    sc.collection.objects.link(lk)
+    lk.location = kai_at + Vector((0, 0, 9.5)) - V.LANE_DIR * 2.0
+
+    # Wren on her porch, facing the lane (and the light): standing with the bell low, then the cape over her face
+    w = X._wren(Vector((0, 0, 0)), 0.0)
+    w["arm"].location = hw["porch"] + Vector((0, 0, 0.5))
+    face = (kai_at - hw["porch"])
+    face.z = 0
+    w["arm"].rotation_euler = (0, 0, math.atan2(face.x, -face.y) + math.radians(-15))
+    P = x3.Pose(w)
+    f_c0, f_c1 = 6, 15
+    for f in range(1, n + 1, 2):
+        P.reset()
+        t = _ease((f - f_c0) / (f_c1 - f_c0))
+        if t <= 0:
+            wren.hold_bell(P, 0.15)
+            P.rot("head 1", (-10 * _ease(f / 6.0), 0, 0))                 # looking up at the glitter
+        else:
+            wren.shield(P, min(1.0, t * 1.08) if f < f_c1 + 2 else 1.0)
+        if f >= f_c1:                                                    # a little cringe under the cape
+            P.rot("chest", (2 * math.sin((f - f_c1) / 3.0), 0, 0))
+        P.key(f)
+    wren.cape_up(w, 1, False)
+    wren.cape_up(w, f_c0 + 6, True)
+    wren.grip(w, 1)
+    wren.face(w, "stern", 1)
+    wren.face(w, "shocked", f_c0)
+    wren.blink(w, 1, n, at=(4,))
+
+    # the villager on the other porch: looks up at the glitter, then the itch hits on "stings"
+    v = V.villager(7, 71, net=False)
+    v["root"].location = hs["porch"] + Vector((0, 0, 0.5))
+    fv = (kai_at - hs["porch"])
+    v["root"].rotation_euler = (0, 0, math.atan2(fv.x, -fv.y) + math.radians(20))
+    anim.key(v["body"], "rotation_euler", 1, (math.radians(-6), 0, 0), "CONSTANT")
+    anim.key(v["body"], "rotation_euler", f_sting - 6, (math.radians(-14), 0, 0), "CONSTANT")   # head back, looking up
+    V.scratcher(v, f_sting, n)
+
+    # a few moths fluttering over the roofs, shedding the dust
+    top = (hw["porch"] + hs["porch"]) / 2
+    rigs = fluffmoth.swarm(6, lambda i, rnd: (top + Vector((rnd.uniform(-9, 9), rnd.uniform(-6, 10), rnd.uniform(15, 22))),
+                                              0.42 * rnd.uniform(0.8, 1.1)), name="m07_", seed=7)
+    import random
+    rnd = random.Random(70)
+    for i, r in enumerate(rigs):
+        p0 = r["root"].location.copy()
+        drift = Vector((rnd.uniform(-1, 1), rnd.uniform(-0.6, 0.6), 0)).normalized() * rnd.uniform(5, 9)
+        for f in range(1, n + 1, 2):
+            u = f / n
+            r["root"].location = p0 + drift * u + Vector((0, 0, 0.6 * math.sin(f / 5.0 + i)))
+            r["root"].keyframe_insert("location", frame=f)
+        fluffmoth.face(r, 1, drift)
+
+    # the dust: through the whole frame between the porches and the lens
+    lo = Vector((min(hw["porch"].x, hs["porch"].x) - 6, min(hw["porch"].y, hs["porch"].y, kai_at.y) - 4, 0.3))
+    hi = Vector((max(hw["porch"].x, hs["porch"].x) + 6, max(hw["porch"].y, hs["porch"].y, kai_at.y) + 2, 16.0))
+    _dust(n, lo, hi)
+
+    # camera: low, just behind Kai's spot, looking down the lane at the two porches; a slow push-in on 1s
+    tgt = (hw["porch"] + hs["porch"]) / 2 + Vector((0, 0, 6.0))
+    cy = math.degrees(math.atan2(V.LANE_DIR.x, V.LANE_DIR.y))
+    _cam("cam_s07", 1, n, (tgt, 30.0, 9.0, cy), (tgt, 26.0, 8.0, cy), lens=26.0, blur=3.5)
+    LAST.update(w=w, v=v)
+    return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"], v["root"]])
 
 
 # ------------------------------------------------------------------------------------------------------ S15
@@ -327,8 +479,8 @@ def s15():
     # camera: in front of him (east, toward his feet), low, the moths big in the foreground; a slow push-in on 1s
     mid = hips - hd * 1.2
     cy = math.degrees(math.atan2(hd.x, hd.y))                            # looking west, along his head direction
-    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.8)), 30.0, 22.0, cy + 18.0),
-         (mid + Vector((0, 0, 4.2)), 25.0, 20.0, cy + 14.0), lens=40.0, blur=4.5, shift_y=-0.04)
+    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.2)), 19.0, 20.0, cy + 16.0),
+         (mid + Vector((0, 0, 3.6)), 15.5, 18.0, cy + 12.0), lens=35.0, blur=5.0, shift_y=-0.03)
     LAST.update(k=k, sh=sh, moths=rigs)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + list(k.get("cap", [])))
 
@@ -492,4 +644,4 @@ def s19bot():
     return dict(frames=n, step=2, ones=(1, n), subject=[arm, sh["root"]])
 
 
-SHOTS = {"S15": s15, "S19bot": s19bot}
+SHOTS = {"S07": s07, "S15": s15, "S19bot": s19bot}
