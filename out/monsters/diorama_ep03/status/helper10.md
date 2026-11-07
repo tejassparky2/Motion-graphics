@@ -30,6 +30,18 @@
 - 10:35 UTC: **S12 OK'd (coordinator 10:22). The full render is running** (79 frames, two chunks). Then the 2D pass,
   then `shots/S12.mp4` + sheet.
 
+- 11:05 UTC: **S14: working on the coordinator's three notes (10:36).** Parts stay on hold until the new stills are OK'd.
+  1. Night: switched to helper 9's shared `N9.night(n)` and `N9.mark(k)` (not marked FINAL yet; I'll re-check
+     when it is).
+  2. The light below: N9.mark's 6000 W key, a 3200 W coral under-glow above the wrist that lights the swarm from
+     below, and a visible soft coral cone rising from the palm-up wrist through the grass, plus a glowing disc at
+     its foot.
+  3. The flip at phone size: four hero moths (the plops at f32, f38 and f44, plus f48) drift low over the foreground,
+     roll over big near the lens (2D curved roll arcs), wobble in the stall (2D shock ticks) and drop onto their
+     backs in front of the wrist. The camera moves from S13's last frame (bGqrs's `camera_at(45)`) down and in to a
+     low, close view of that spot by f30, so we see them land legs-up. The other 24 land small in the ring.
+  - It also uses bGqrs's new `swarm_layout()`/`swarm_at()` (28 moths), so S14 continues S13's circles exactly.
+
 ## OK stills
 - **S12:** `okstills/S12_f010.png` (the moth on one side of the ring, seen from behind: its back tilted to the light,
   the glow line landing on it) and `okstills/S12_f030.png` (the other side, its face toward us, still banked with its
