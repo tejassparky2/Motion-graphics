@@ -59,12 +59,12 @@ def dizzy(a):
             s = max(6.0, m["size"])                                      # px per moth unit
             # the stars: three, on a tilted ellipse above the body, one full turn a second
             ph = f2 / FPS * 2 * math.pi + i * 1.7
-            rx, ry = s * 1.25, s * 0.42
-            oy = cy - s * 1.25
+            rx, ry = s * 1.7, s * 0.55
+            oy = cy - s * 1.6
             for j in range(3):
                 a_ = ph + j * 2 * math.pi / 3
                 x, y = cx + rx * math.cos(a_), oy + ry * math.sin(a_)
-                r = s * (0.26 if j % 2 == 0 else 0.2) * (0.85 + 0.25 * math.sin(a_))
+                r = s * (0.48 if j % 2 == 0 else 0.38) * (0.85 + 0.25 * math.sin(a_))
                 fx2d._star4(cr, x, y, r, rot=a_ * 0.5, waist=0.22)
                 cr.set_source_rgba(*(fx2d.YELLOW if j != 1 else fx2d.WHITE))
                 cr.fill_preserve()
@@ -75,7 +75,7 @@ def dizzy(a):
             for k, (sx, sy, sd) in enumerate(m["spots"]):
                 if sd <= 0:
                     continue
-                rr = s * 0.24
+                rr = s * 0.38
                 turn = (1 if k == 0 else -1) * (f2 / FPS * 2 * math.pi * 1.5 + i)
                 for q in range(41):
                     v = q / 40
@@ -84,10 +84,10 @@ def dizzy(a):
                     (cr.move_to if q == 0 else cr.line_to)(x, y)
                 cr.set_line_cap(cairo.LINE_CAP_ROUND)
                 cr.set_source_rgba(1, 1, 1, 0.95)
-                cr.set_line_width(max(2.5, s * 0.075))
+                cr.set_line_width(max(3.0, s * 0.1))
                 cr.stroke_preserve()
                 cr.set_source_rgba(*INK)
-                cr.set_line_width(max(1.2, s * 0.035))
+                cr.set_line_width(max(1.6, s * 0.05))
                 cr.stroke()
     return draw
 
