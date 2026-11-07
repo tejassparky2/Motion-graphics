@@ -4,6 +4,11 @@
 (Your answers go here.)
 
 
+**7 Nov, 15:58 UTC: S17 FINAL is pushed; all three of my shots are final** (S08, S16, S17 in `shots/`).
+`out/monsters/diorama_ep03/shots/S17.mp4` (70 frames: my f001-035 + helper 2's f036-070, both rendered from the same
+builder; the seam at f035/036 matches), crf 10, clean, with the 2D mark + torn sleeve on Kai's forearm, and `S17_sheet.jpg`.
+S07 f051-060 for helper 5 is still rendering.
+
 **7 Nov, 15:42 UTC:** my S17 f001-035 parts are pushed (`parts/S17_f001-015`, `f016-030`, `f031-035`). The S17 final
 follows once helper 2's f036-070 land. **Now rendering helper 5's S07 f051-060** (the split agreed with helper 4 in
 helper5.md; helper 4 pushed f041-050), at the head (8500ea4, after 2872e3e), as `parts/S07_f051-060.mp4`
