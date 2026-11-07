@@ -43,7 +43,6 @@ SKY_KEY = (183, 219, 244)                  # the flat colour the compositor's ha
 # the evening sky by elevation (deg): peach low, rose, lilac, deeper blue up top (S04's sunset is the next line)
 SKY_STOPS = ((0, (255, 192, 142)), (7, (250, 168, 128)), (18, (226, 158, 166)), (32, (160, 146, 200)),
              (52, (92, 112, 192)), (80, (54, 74, 152)))
-WARM = (1.0, 0.97, 0.92)                   # a light late-day cast over the whole frame
 
 
 def anchors(shot, still=False):
@@ -158,9 +157,20 @@ def _clouds(surf, clouds, k):
                 cr.restore()
 
 
+def late_afternoon(rgb):
+    """The coordinator's grade, flowing into helper 9's S04 sunset: greens ~25% less saturated, the level ~10% down,
+    the highlights warmed toward peach."""
+    lum = rgb @ np.array([0.299, 0.587, 0.114], np.float32)
+    g_dom = np.clip((rgb[..., 1] - np.maximum(rgb[..., 0], rgb[..., 2])) / 50.0, 0, 1)[..., None]
+    rgb = rgb + 0.25 * g_dom * (lum[..., None] - rgb)
+    rgb = rgb * 0.9
+    hi = (np.clip((lum - 120.0) / 135.0, 0, 1) ** 1.5)[..., None]
+    return rgb + hi * np.array([16.0, 5.0, -12.0], np.float32)
+
+
 def evening(surf, sky, k):
     """Key out the flat 3D sky and paint the evening sky behind everything (a soft key, so blurred treetops blend);
-    then a light warm cast over the whole frame."""
+    then the late-afternoon grade over the whole frame."""
     surf.flush()
     h, w = surf.get_height(), surf.get_width()
     arr = np.ndarray((h, w, 4), np.uint8, buffer=surf.get_data(), strides=(surf.get_stride(), 4, 1))
@@ -178,7 +188,7 @@ def evening(surf, sky, k):
             crgb = ca[..., 2::-1].astype(np.float32)                 # premultiplied
             paint = paint * (1 - cal) + crgb
             rgb = rgb + a * (paint - np.array(SKY_KEY, np.float32))
-    rgb = rgb * np.array(WARM, np.float32)
+    rgb = late_afternoon(rgb)
     arr[..., 2::-1] = np.clip(rgb, 0, 255).astype(np.uint8)
     surf.mark_dirty()
 

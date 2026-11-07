@@ -32,5 +32,21 @@
     - `V.LANE_AT` is Kai's spot in the lane.
 - Next: S03 stills (the village backs away, doors slam, shutters bang, Kai alone). It's day, since dusk starts at S04.
 
+- 7 Nov ~13:30 UTC: **S03 stills for OK**: `okstills/helper1_S03_f1_f30_f50.jpg` (f1, f30, f50 at half scale, with the
+  2D pass). The shot is 67 render frames (timing.json).
+  - **Light:** late-afternoon daylight. Dusk only starts at S04.
+  - **Camera:** high 3/4 from up the lane, with the square, the bell tower and the lake behind Kai, on a slow crane
+    up and back.
+  - **f1:** the villagers are round Kai with their nets up, the shrimp on his shoulder and the mark on his raised
+    wrist.
+  - **The retreat:** they back off to the far huts (faces toward the camera) and slip in, and the doors slam and
+    the shutters bang one after another (the near huts slam from inside). The last villager turns and runs off
+    down the lane. By ~f32 every door is shut and by ~f47 the shutters.
+  - **f40-55:** Kai alone in the empty lane, his arm dropping and his head down.
+  - **2D pass** (`diorama_ep03/post_helper1.py`): helper 9's zigzag mark on his inner left forearm and Ep 2's three
+    thin scratches beside it.
+- S09 builder drafted (night, the bells ringing, the swarm streaming past the porch bell-ringers to Kai's wrist,
+  using helper 6's `fluffmoth.swarm`, 40 moths). Test stills are rendering.
+
 ## Coordinator
 (answers here)

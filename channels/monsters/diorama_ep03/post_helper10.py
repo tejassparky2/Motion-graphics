@@ -213,7 +213,56 @@ def _wobble_ticks(cr, x, y, r, f, alpha):
         cr.stroke()
 
 
-def _s14(cr, f, land, plops, heroes=None):
+def _uplight(cr, g, f):
+    """The light below, made visible: a soft coral column of glow rising from the palm-up wrist through the grass
+    (additive, brightest at the wrist, fading by ~3.4 units up), a hot core at the wrist and a few faint rays."""
+    cairo = _cairo()
+    wx, wy, tx, ty, z = g
+    if z <= 0:
+        return
+    breathe = 0.9 + 0.1 * math.sin(f / 4.0)
+    H = math.hypot(tx - wx, ty - wy)
+    w0 = max(18.0, H * 0.16)
+    cr.save()
+    cr.set_operator(cairo.OPERATOR_ADD)
+    ang = math.atan2(ty - wy, tx - wx)
+    cr.translate(wx, wy)
+    cr.rotate(ang - math.pi / 2)                                  # +y now runs down the column, away from the top
+    for wscale, a in ((2.2, 0.10), (1.4, 0.16), (0.8, 0.22)):
+        grad = cairo.LinearGradient(0, 0, 0, -H)
+        grad.add_color_stop_rgba(0.0, *CORAL, a * breathe)
+        grad.add_color_stop_rgba(0.5, *CORAL, a * 0.45 * breathe)
+        grad.add_color_stop_rgba(1.0, *CORAL, 0.0)
+        cr.new_path()
+        cr.move_to(-w0 * wscale * 0.5, 0)
+        cr.line_to(-w0 * wscale * 1.3, -H)
+        cr.line_to(w0 * wscale * 1.3, -H)
+        cr.line_to(w0 * wscale * 0.5, 0)
+        cr.close_path()
+        cr.set_source(grad)
+        cr.fill()
+    rnd = random.Random(5)
+    for k in range(5):                                           # faint rays through the blades
+        x = rnd.uniform(-w0, w0)
+        grad = cairo.LinearGradient(0, 0, 0, -H * 0.8)
+        grad.add_color_stop_rgba(0.0, *HOT, 0.18 * breathe)
+        grad.add_color_stop_rgba(1.0, *HOT, 0.0)
+        cr.new_path()
+        cr.move_to(x - 2, 0)
+        cr.line_to(x * 1.8 - 1, -H * 0.8)
+        cr.line_to(x * 1.8 + 1, -H * 0.8)
+        cr.line_to(x + 2, 0)
+        cr.close_path()
+        cr.set_source(grad)
+        cr.fill()
+    cr.restore()
+    _glow(cr, wx, wy, w0 * 3.2, CORAL, 0.38 * breathe)            # the pool at its foot
+    _glow(cr, wx, wy, w0 * 1.1, HOT, 0.45 * breathe)
+
+
+def _s14(cr, f, land, plops, heroes=None, wrist=None):
+    if wrist and str(f) in wrist:
+        _uplight(cr, wrist[str(f)], f)
     for i, h in (heroes or {}).items():
         g = h["px"].get(str(f - f % 2)) or h["px"].get(str(f))
         if g is None:
@@ -246,7 +295,9 @@ def _drawer(shot):
             d = json.load(fh)
         hp = os.path.join(BUILD, "S14_heroes.json")
         heroes = json.load(open(hp)) if os.path.exists(hp) else {}
-        return lambda cr, f: _s14(cr, f, d["landings"], set(d.get("heroes", d["plops"])), heroes)
+        wp = os.path.join(BUILD, "S14_wrist.json")
+        wrist = json.load(open(wp)) if os.path.exists(wp) else {}
+        return lambda cr, f: _s14(cr, f, d["landings"], set(d.get("heroes", d["plops"])), heroes, wrist)
     return None
 
 
