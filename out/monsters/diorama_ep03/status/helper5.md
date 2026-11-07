@@ -10,15 +10,22 @@
   - **Render parts welcome:** anyone free can take a range (e.g. f089-132 or f133-176): render with `--frames A-B`
     (every frame on 1s, no step-multiple start), raw part crf 10 yuv420p 24 fps, CLEAN flags, `-start_number A`, to
     `parts/S19bot_fAAA-BBB.mp4`. Mark the range here first; I'll stop my chunk before it.
-- **S15 (106 frames): OK still pushed: `okstills/S15_f020_f050_f090.jpg`** (half scale, helper 9's FINAL night +
-  N9.mark). f20 Kai on his back as S13/S14 leave him (head west, the left arm out palm up), the moths on their backs
-  at helper 10's `S14_landings.json` spots (+12 more on the camera side so the foreground is a field of legs in the
-  air), legs waving on 2s, eye-spots dazed; on "landed" (f~30) he sits up IN PLACE (hips at (9.0, -140), XprL
-  matched S16/S17 to it) into XprL's sitting pose (left knee up, left forearm on it palm up, right hand behind),
-  looks round at them, bewildered, then a small amazed half-smile; the shrimp on his left shoulder peeks out and
-  stares. Camera low 3/4 from his right-front, slow push-in. ~2 min/frame at half size here, so ~5-6 min at full:
-  **render parts welcome** once you OK it (f001-035 / f036-070 / f071-106; mark the range here).
-- **S07 (60 frames): OK still pushed: `okstills/S07_f010_f030_f050.jpg`** (half scale, helper 9's FINAL night).
+- **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING** from f001 in 35-frame chunks (f001-035, f036-070,
+  f071-106: helpers free to help, claim f071-106 here and I'll stop before it). Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
+  2D pass):
+  1. Light: N9.mark at its default 6000 W while he lies (as S14 ends), eased down to 22% over 10 frames as he sits up,
+     while a coral spot at the mark pointing UP takes over (the palm-up mark shines up at him and the air): a coral
+     pool round him that falls off to dark, no flood across the field.
+  2. Face: set and tense on his back; on the sit-up wide surprised eyes (brows up); he looks round (left, right), then
+     turns to the lens and a slow, slightly smug grin creeps in over ~20 frames by the hold (half-lidded). The shrimp
+     looks round at the moths too.
+  3. Four hero moths in the foreground round him (placed by screen position), legs waving big on 2s, with 2D dizzy
+     stars circling over each and a spiral turning on each wing eye-spot (`diorama_ep03/post_helper5.py`).
+  Raw part spec for helpers: `--frames A-B` (every frame on 1s), crf 10 yuv420p 24 fps, CLEAN flags,
+  `-start_number A`, to `parts/S15_fAAA-BBB.mp4`, no 2D pass (I run post_helper5 after joining; it needs
+  build/monsters/diorama_ep03/S15_heroes.json, which my builder writes).
+- **S07 (60 frames): OK'd (12:50), FULL RENDER RUNNING** (since ~12:55 UTC); the 2D pass adds helper 1's itch
+  squiggles by the scratching arm from "stings" (post_helper1.itch, on 2s). Still: `okstills/S07_f010_f030_f050.jpg` (half scale, helper 9's FINAL night).
   A medium two-shot of helper 1's lane hut #3's porch: Wren and a villager sheltering on it side by side, lit coral
   by Kai's mark (a 6000 W coral point like N9.mark, off screen in the lane at LANE_AT). Glittering wing dust (gold,
   pink, white, ice-blue flakes, twinkling on 2s) drifts down in front of them from five fluffmoths fluttering over the

@@ -216,6 +216,11 @@ def s05():
 
 
 # ------------------------------------------------------------------------------------------------------------ S18
+S18_AZ = float(os.environ.get("H9_S18_AZ", 247.5))
+S18_D = float(os.environ.get("H9_S18_D", 9.6))
+S18_EL = float(os.environ.get("H9_S18_EL", 8.0))
+
+
 def s18():
     """"But the last marked one left something at the old lighthouse." XprL's S17 staging: Kai sitting in the grass
     (the shrimp on his shoulder), Wren kneeling at his side. She leans in and whispers (her hand cupped), then on
@@ -271,7 +276,7 @@ def s18():
     mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
     for f in range(1, f_cut):
         u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, 9.6 - 1.0 * u, 8.0, 247.5)              # from the ENE: her point to the lighthouse
+        loc, rot = H2._orbit(mid, S18_D - 1.0 * u, S18_EL, S18_AZ)              # from the ENE: her point to the lighthouse
                                                                             # crosses the frame (screen left), clear of him
         H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
