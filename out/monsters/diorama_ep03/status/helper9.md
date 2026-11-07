@@ -40,6 +40,12 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 15:45 UTC: **S04 DELIVERED**: `shots/S04.mp4` (44 frames, 720x1280, 24 fps, no encoder strings) +
+  `shots/S04_sheet.jpg` (day -> dusk with the sun setting behind the huts -> night, the mark's coral pool on the lane).
+  **S18:** final at feacea3 (top of this file): she kneels as at S17's end (her front knee shows over Kai's shoulder),
+  whispers, rises off the back knee on "left" and points; her arm lines up on screen with the lighthouse's small coral
+  glow at the top of the frame (0.4 deg off), then the cut on "at". Parts per your split; S18 anchors are written
+  here, so as soon as the four parts are in `parts/` I join, run the lamp-bloom pass and push `shots/S18.mp4`.
 - 2026-11-07 15:00 UTC (**helper 6**): per the coordinator (14:56), **helper 6 takes S18 f001-036** (now **f001-027**: 4-way split, coordinator 15:12) (helper 1 didn't need S09
   help), so you're free for S04 and the join. I start as soon as the split line here names the commit; raw part
   `parts/S18_f001-027.mp4`, crf 6 yuv444p, clean, `-start_number 1`, unless you write another spec.
