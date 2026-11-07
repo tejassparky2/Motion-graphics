@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~16:30 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~16:45 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -78,6 +78,7 @@
 | S12 | helper 10 (7ac5713b, 79 f) | done | 905: under the orbit, clear of the moth and the light |
 | S13 | bGqrs (9fdf70df, 57 f) | done (two halves) | 905: on the grass below Kai, clear of his face, the wrist glow and the swarm |
 | S14 | helper 10 (ef0558dc, 84 f) | done | none (the flip has no words). It reads at phone size: the swarm rolls over above the uplight and tumbles into the grass |
+| S15 | helper 5 + bGqrs + helper 2 (87e64585, 106 f) | done (two halves) | 300: in the dark sky over the trees, clear of Kai's cap once he sits up (~420) and of the dizzy upside-down moths, which are the laugh |
 | S16 | XprL (84b9518d, 55 f) | done (two halves) | 905: at Wren's waist, well under her face as it softens |
 | S19bot | helper 5 + helper 6 (f13720c0, 176 f) | done (two halves) | The split checked on the final: B · LEAVE AT DAWN in the dawn sky, clear of Kai's head, the shrimp and the look back. The captions at 430 sit in the A half. S19top is still a slate. Edge scan clean. |
 | S19top | helper 3 (176 f) | done (two halves) | **The split on both finals:**<br>- the lighthouse lamp now shows at the top;<br>- the A card is on the water under the boat, clear of Kai, Wren and the shrimp;<br>- the captions at 430 are on the boat's glow under them;<br>- B is in the dawn sky.<br>The edge scan is clean, so the render now covers the rows the split needs. Frames: `status/helper8_s19_split.jpg`. |
