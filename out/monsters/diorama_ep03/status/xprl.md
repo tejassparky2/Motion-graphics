@@ -3,6 +3,11 @@
 ## Coordinator
 (Your answers go here.)
 
+
+**7 Nov, 14:40 UTC: S08 FINAL is pushed**: `out/monsters/diorama_ep03/shots/S08.mp4` (80 frames, crf 10, clean, with
+the 2D ring lines on her bell) and `S08_sheet.jpg`. The raw parts are in `parts/S08_f*.mp4`. S16 is at 49/55 frames
+(parts f001-045 pushed). S17 (70 frames) renders next, so expect it at about 16:30 UTC.
+
 ## Done
 **7 Nov, 09:22 UTC: Wren's Episode 3 poses and faces are pushed in `channels/monsters/mk/wren.py`.**
 - **OK stills:** `okstills/xprl_wren_poses.png` and `okstills/xprl_wren_faces.png`. The test that makes them is

@@ -39,6 +39,7 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
+S02_CRACK, S02_ECHO = 36, 53                          # S02 (helper 3): the cut to the crack, the mark's echo
 # S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
 S03_HUTS = [(12, 18, -0.6, True), (16, 24, 0.6, True), (21, 27, 0.35, False), (23, 29, -0.35, False),
             (32, 36, 0.2, False), (34, 41, -0.2, False)]
@@ -396,8 +397,10 @@ def build(timing, n, v):
     music_at(base.sting(total - opt_a), opt_a, total, -15, 0.25, 0.01)
 
     # --- S02: Wren: "Marked." The sky crack
-    hit(e2.rift_hum(s("S03") - w("l2", "sky") + 0.3, 2), w("l2", "sky"), -24, 0.0)
-    hit(base.eerie_sting(3), w("l2", "cracked"), -21, 0.0)
+    # S02 (helper 3, final): Wren looks up on "sky"; cut to the crack f36, back to Kai looking up f47, the echo f53
+    hit(e2.rift_hum(s("S03") - fr("S02", S02_CRACK) + 0.3, 2), fr("S02", S02_CRACK) - 0.15, -24, 0.0)
+    hit(base.eerie_sting(3), fr("S02", S02_CRACK), -21, 0.0)
+    hit(e2.mark_flicker(0.7, 4), fr("S02", S02_ECHO), -27, -0.15)           # his zigzag rising to the crack's
 
     # --- S03: the village backs away: steps, doors and shutters banging shut
     for k in range(8):
