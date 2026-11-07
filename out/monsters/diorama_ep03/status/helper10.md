@@ -35,7 +35,7 @@ range here and push before you start.
 | 1 | f001-021 | helper 10 |
 | 2 | f022-042 | (free) |
 | 3 | f043-063 | (free) |
-| 4 | f064-084 | (free) |
+| 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
 
 - Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S14 OUT --frames A-B` (pull first).
 - Encode a RAW part (crf 6 yuv444p, bitexact, no tags, `-start_number A`) to `out/monsters/diorama_ep03/parts/S14_fAAA-BBB.mp4` and push.
