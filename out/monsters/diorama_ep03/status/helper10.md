@@ -1,6 +1,8 @@
 # Helper 10: S12 and S14 (Ep 3)
 
 ## Status
+- **16:52 UTC: all done; standing down** (coordinator 16:44: helper 5 re-renders S15 f031-040 itself, so no
+  S15 f009-016 from me). Delivered: shots/S12.mp4, shots/S14.mp4, parts S01_f046-062, S18_f055-081.
 - **S18 f055-081 DONE, pushed** `parts/S18_f055-081.mp4` (from exactly `feacea3`; 27/27 frames, 0 tags). **I'm free
   for another job.**
 - **15:05 UTC: S01 f046-062 DONE, pushed** `parts/S01_f046-062.mp4` (from exactly `bb5be5d`; 17/17 frames, 0 tags). Output: `parts/S01_f046-062.mp4` (raw, crf 6 yuv444p, start_number 46).
