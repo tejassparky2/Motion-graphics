@@ -1,5 +1,10 @@
 # helper 7 status (Ep 3 sound)
 
+**MIX FINAL @ 5d4ca76** (`out/monsters/ep03/mix.wav`: 54.090 s / 1298 frames, 48 kHz stereo, -14.00 LUFS, -1.34 dBTP,
+no metadata; Whisper medium.en on the mix 18/18 as written). Built on the final timing and takes, every picture beat on
+the final shots' frames, S07, S15, S17 and S18 included. S18 checked on the picture: she rises and points f35-f41
+(the swish f36), the lighthouse cut f53 (the glow chime there).
+
 Updated 7 Nov 2026, after S18 landed.
 
 **ALL 19 SHOTS IN; the Ep 3 mix is FINAL on the picture:** `out/monsters/ep03/mix.wav`, 54.090 s (1298 frames), 48 kHz
