@@ -1,13 +1,19 @@
 # Helper 4 status (Ep 3)
 
 ## Now
+- **S01: FINAL, pushed** (`shots/S01.mp4` + `S01_sheet.jpg`). It joins my f001-045 and helper 10's f046-062 (thanks),
+  with the 2D pass: the evening sky and grade, the blazing mark, the halo, the bloom and the sparkles.
+  - **File:** 62 frames (= render_frames), 720x1280, crf 10, 0 Lavf/Lavc/x264 strings.
+  - **Checks:** no black edges (every frame scanned) and no frame jumps; the f045/f046 seam is smooth.
+  - **Frame 0:** Wren stumbling back past the lens with her bell up, Kai's wrist blazing, the villagers behind.
+  - **By f30:** the shrimp has landed on his left shoulder, and his face stays clear to the end.
 - **S01 parts from bb5be5d** (split per the coordinator, 13:49 UTC). Run
   `render_shot.py -- diorama_ep03 S01 OUT --frames A-B` at full size (720x1280, about 4.8 min a frame), raw 3D only;
   the 2D pass is mine at the join.
   | Part | Who | State |
   |---|---|---|
   | f001-027 | helper 4 | DONE, pushed `parts/S01_f001-027.mp4` (crf 6 yuv444p, 0 tags) |
-  | f028-045 | helper 4 | rendering (started 13:52 UTC, about 85 min) |
+  | f028-045 | helper 4 | DONE, pushed `parts/S01_f028-045.mp4` (18 frames, crf 6 yuv444p, 0 tags) |
   | f046-062 | helper 10 | **DONE, pushed** `parts/S01_f046-062.mp4` (from bb5be5d; 17/17 frames, crf 6 yuv444p, start_number 46, 0 tags; checked: smooth push-in, no jump at the f54/55 chunk seam) |
   When f046-062 lands, I join the parts, run the 2D pass (the mark, the evening grade, sparkles), encode and push
   `shots/S01.mp4`.
@@ -44,8 +50,8 @@
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
 - **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
-- **S07 for helper 5: split with XprL (their offer, 14:42).** I render f041-050 (rendering) as
-  `parts/S07_f041-050.mp4`; XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
+- **S07 for helper 5: split with XprL (their offer, 14:42).** I rendered f041-050: **DONE, pushed**
+  `parts/S07_f041-050.mp4` (10 frames, crf 10 yuv420p, CLEAN, 0 tags); XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
   helper5.md's S07 row.
 - **QA, round 1 (S02, S03, S06, S12, S13, S14 as landed; S11 is mine, already checked):**
   - **Files:** all 720x1280; frames S02 79, S03 67, S06 63, S12 79, S13 57, S14 84; 0 Lavf/Lavc/x264 strings each.
@@ -78,7 +84,22 @@
   - **Continuity watch (S08/S16 vs S02):** under the coral night light, Wren's hair reads mauve-brown and her eyes
     grey, against dark purple hair and gold eyes in S02's daylight. It's the light, not the model, so it's fine
     unless you want them closer.
-  - **Still to QA:** S01 (rendering), S04, S05, S07, S09, S15, S17-S19 as they land.
+- **QA, round 3 (S01, S05, S09, S19bot):** frames S01 62, S05 79, S09 87, S19bot 176 (= render_frames); 720x1280;
+  0 tags; no frame jumps.
+  - **Edges:** none on S01, S05 or S09. S19bot's black top band (to y ~485) is the planned empty half for helper 8's
+    split, so it's expected; nothing else is black.
+  - **S01 PASS** (mine; see above).
+  - **S05 PASS.** A high wide shot at night: the dark island, the lake, one coral glow in the village; a very slow
+    push-in (the plant). The upper ~40% is the dark lake: deep navy, not unpainted.
+  - **S09 PASS.** 2D ring lines on several bells along the lane; the swarm comes over the roofs and pours past the
+    bell posts straight to Kai, with no flinch.
+  - **S19bot PASS.** Dawn: Kai walks away along the beach road toward the rising sun, the shrimp on his shoulder,
+    and the look back is there. Within the band he's small (~170 px tall) but clear.
+  - **S19top PASS.** 176 frames, 0 tags, no jumps. Night: Kai and Wren in the rowing boat, his mark lighting a
+    coral pool on the water, the lighthouse with its coral glow on the far shore. The bottom half is black on
+    purpose (for the split). The edge scan skipped it, since the frame is dark overall. Note: the boat and the two
+    of them take up ~200 px, so it reads as a wide shot; fine for the A/B split.
+  - **Still to QA:** S04, S07, S15, S17, S18 as they land.
 
 ## Coordinator
 (answers here)
