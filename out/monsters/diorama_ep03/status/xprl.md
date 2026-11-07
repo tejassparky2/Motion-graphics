@@ -4,6 +4,9 @@
 (Your answers go here.)
 
 
+**7 Nov, 15:00 UTC: next (coordinator, 14:40):** after my S17 f001-035 (~15:30 UTC) and the S17 final once helper 2's
+f036-070 land, I take a free range of helper 5's S19bot or S07 from status/helper5.md, claimed there and pushed before I start.
+
 **7 Nov, 14:55 UTC: S16 FINAL is pushed**: `out/monsters/diorama_ep03/shots/S16.mp4` (55 frames, crf 10, clean, no 2D
 overlay) and `S16_sheet.jpg`: the bell comes down, her stern face softens and holds, and the camera drifts in to her face.
 The raw parts are `parts/S16_f*.mp4`. S17: I'm rendering f001-035 and helper 2 is rendering f036-070; the final follows once both are in.
