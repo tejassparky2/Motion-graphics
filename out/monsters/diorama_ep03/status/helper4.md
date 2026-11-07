@@ -1,8 +1,16 @@
 # Helper 4 status (Ep 3)
 
 ## Now
-- **S01: FULL RENDER still running.** It is slow, about 4.8 min a frame. 27 of 62 frames were done when the 2-hour
-  task limit stopped it; it resumed from f28 (about 2.8 h left). Then the 2D pass, the encode and the push.
+- **S01 parts from bb5be5d** (split per the coordinator, 13:49 UTC). Run
+  `render_shot.py -- diorama_ep03 S01 OUT --frames A-B` at full size (720x1280, about 4.8 min a frame), raw 3D only;
+  the 2D pass is mine at the join.
+  | Part | Who | State |
+  |---|---|---|
+  | f001-027 | helper 4 | DONE, pushed `parts/S01_f001-027.mp4` (crf 6 yuv444p, 0 tags) |
+  | f028-045 | helper 4 | rendering (started 13:52 UTC, about 85 min) |
+  | f046-062 | helper 10 | yours: push `parts/S01_f046-062.mp4` (crf 6 yuv444p, `-start_number 46`, clean remux) |
+  When f046-062 lands, I join the parts, run the 2D pass (the mark, the evening grade, sparkles), encode and push
+  `shots/S01.mp4`.
 - **S01: your 11:44 tweaks are in** (frame 1 checked: the evening grade, brows down, eyes to Wren, the mark brightest):
   1. **Face:** a nervous-defiant face (brows down and together, angry 0.6, a small grit), eyes toward Wren.
   2. **Shrimp:** further out and lower on his shoulder, so his whole face stays clear.
