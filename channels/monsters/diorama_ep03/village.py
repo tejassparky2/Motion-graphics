@@ -160,6 +160,18 @@ def _find(i):
                 doorstep=root.location + face * (r + 0.6), window=win.matrix_world.translation.copy())
 
 
+def porch(i):
+    """(loc, yaw, floor_z) of hut i's porch: the world spot to stand a character on its deck (in front of the door,
+    where the villagers stand), the yaw (radians, the characters' convention: they face their own -Y) that faces the
+    lane, and the deck's top height. Hut 2 is the nearest porch to Kai's spot (V.LANE_AT), on the east side; hut 3
+    on the west side is next."""
+    s, along, r = HUTS[i][0], HUTS[i][1], HUTS[i][2]
+    at = LANE_AT + LANE_DIR * along + _side(s) * (LANE_HALF + r)
+    face = -_side(s)
+    loc = at + face * (r + 1.6)
+    return Vector((loc.x, loc.y, 0.5)), math.atan2(face.x, -face.y), 0.5
+
+
 # ------------------------------------------------------------------------------------------------ doors, shutters
 def set_door(hut, f, open_, interp="CONSTANT"):
     """Key the door `open_` (1 = swung out against the wall, 0 = shut) at frame f."""
@@ -180,12 +192,33 @@ def slam_door(hut, f, swing=4):
     set_door(hut, f + 4, 0.0)
 
 
-def bang_shutters(hut, f, gap=2):
-    """Both shutters slam shut (left at f, right `gap` frames later), each bouncing once."""
+def bang_shutters(hut, f, gap=2, crack=0.0):
+    """Both shutters slam shut (left at f, right `gap` frames later), each bouncing once. `crack` > 0 leaves them that
+    far open (0.06 ~ a 7-degree gap down the middle: room for eyes peeking out, see peek())."""
     for k, (sx, sp) in enumerate(hut["shutters"]):
         g = f + k * gap
-        for df, o in ((-4, 1.0), (-2, 0.5), (0, -0.04), (2, 0.08), (4, 0.0)):
+        for df, o in ((-4, 1.0), (-2, 0.5), (0, -0.04), (2, 0.08), (4, crack)):
             anim.key(sp, "rotation_euler", g + df, (0, 0, sx * math.radians(OPEN_SHUTTER) * o), "CONSTANT")
+
+
+def peek(hut, f0, f1=None, blinks=(), side=0.0):
+    """Two glowing eyes in the dark crack between hut's shutters (close them with bang_shutters(..., crack=0.06)):
+    small white emissive dots (they stay bright at night: the bloom catches them), from f0 (to f1), blinking at the
+    frames in `blinks`; `side` slides them a little along the crack (-1..1). Returns the eyes' empty."""
+    win = bpy.data.objects[f"{hut['root'].name}_win"]
+    e = _pivot(f"{hut['root'].name}_peek", win, (side * 0.15, 0.02, 0.05))
+    glow = look.flat("vil_peek_eye", (1.0, 0.97, 0.88, 1.0), 6.0)
+    for sx in (-1, 1):
+        e2._prim("uv_sphere", f"{hut['root'].name}_peek{sx}", glow, (sx * 0.16, 0, 0), (1, 0.5, 1.3), parent=e,
+                 line=0.0, radius=0.07, segments=10, ring_count=6)
+    anim.key(e, "scale", 1, (0.001,) * 3, "CONSTANT")
+    anim.key(e, "scale", f0, (1, 1, 1), "CONSTANT")
+    for b in blinks:
+        anim.key(e, "scale", b, (1, 0.05, 1), "CONSTANT")       # (a quick squash: a blink)
+        anim.key(e, "scale", b + 2, (1, 1, 1), "CONSTANT")
+    if f1 is not None:
+        anim.key(e, "scale", f1, (0.001,) * 3, "CONSTANT")
+    return e
 
 
 def ring_bell(hut, f0, f1, amp=28.0, period=6, seed=0):
@@ -256,7 +289,6 @@ def scratcher(v, f0, f1, rate=4):
     P = e2._prim
     cloak = bpy.data.materials[f"vil_cloak{i}"]
     skin = bpy.data.materials[f"vil_skin{i}"]
-    red = look.toon("vil_blotch", look.hexc("#e04a4a"), shade=0.8, rim=0.1)
     fore = _pivot(f"vil{i}_scr_fore", body, (0.9, -1.25, h * 0.55), (0, 0, math.radians(-8)))
     P("cylinder", f"vil{i}_scr_sleeve", cloak, (0.9, 0, 0), (1, 1, 1), rot=(0, math.radians(90), 0), parent=fore,
       radius=0.42, depth=1.1, vertices=12)
@@ -264,8 +296,14 @@ def scratcher(v, f0, f1, rate=4):
       radius=0.33, depth=1.7, vertices=12)
     P("uv_sphere", f"vil{i}_scr_lhand", skin, (-1.45, 0, 0.05), parent=fore, radius=0.36, segments=12,
       ring_count=8)
-    P("cylinder", f"vil{i}_scr_blotch", red, (0.05, -0.3, 0.05), (1.25, 1.0, 0.9), rot=(math.radians(90), 0, 0),
-      parent=fore, line=0.0, radius=0.32, depth=0.06, vertices=16)
+    # a soft rash patch (not a wound): a flat rounded pink-red blush with a few small raised bumps on it
+    rash = look.toon("vil_rash", look.hexc("#ec8a86"), shade=0.85, rim=0.1)
+    bump = look.toon("vil_rash_bump", look.hexc("#e2605e"), shade=0.85, rim=0.1)
+    blotch = P("uv_sphere", f"vil{i}_scr_blotch", rash, (0.05, -0.3, 0.05), (0.42, 0.06, 0.32), parent=fore,
+               line=0.0, radius=1.0, segments=20, ring_count=10)
+    for j, (bx, bz) in enumerate(((-0.15, 0.08), (0.12, 0.12), (0.2, -0.1), (-0.05, -0.12), (0.0, 0.02))):
+        P("uv_sphere", f"vil{i}_scr_bump{j}", bump, (0.05 + bx, -0.36, 0.05 + bz), (1, 0.6, 1), parent=fore,
+          line=0.0, radius=0.06, segments=8, ring_count=5)
     hx, hy, hz = 0.2, -1.78, h * 0.55 + 0.12                           # the rubbing hand, beside the blotch
     hand = _pivot(f"vil{i}_scr_hand", body, (hx, hy, hz))
     P("uv_sphere", f"vil{i}_scr_rhand", skin, (0, 0, 0), (1.0, 0.8, 0.9), parent=hand, radius=0.4, segments=12,
@@ -278,7 +316,15 @@ def scratcher(v, f0, f1, rate=4):
         anim.key(hand, "location", f, (hx + dx, hy, hz + 0.06 * (k % 2)), "CONSTANT")
         anim.key(body, "rotation_euler", f, (math.radians(4), 0, math.radians(4 * (1 if k < 2 else -1))),
                  "CONSTANT")
-    for sx in (-1, 1):                                    # eyes squeezed into lines: the itch face
+    for sx in (-1, 1):                                    # the annoyed, scrunched itch face: squeezed, slanted in
         e = bpy.data.objects[f"vil{i}_eye{sx}"]
-        anim.key(e, "scale", f0, (1.6, 0.5, 0.28), "CONSTANT")
-    return dict(hand=hand, fore=fore)
+        anim.key(e, "scale", f0, (1.7, 0.5, 0.42), "CONSTANT")
+        anim.key(e, "rotation_euler", f0, (0, math.radians(-24 * sx), 0), "CONSTANT")
+    ink = bpy.data.materials["vil_ink"]
+    head_z = h * 0.8
+    for sx in (-1, 1):                                    # brows pinched down toward the nose
+        P("cube", f"vil{i}_brow{sx}", ink, (sx * h * 0.05, -h * 0.118, head_z + h * 0.04), (h * 0.03, 0.03, 0.05),
+          rot=(0, math.radians(-30 * sx), 0), parent=body, line=0.0, size=1.0)
+    P("cube", f"vil{i}_grimace", ink, (0, -h * 0.117, head_z - h * 0.05), (h * 0.035, 0.03, 0.035),
+      rot=(0, math.radians(8), 0), parent=body, line=0.0, size=1.0)     # a tight, crooked mouth
+    return dict(hand=hand, fore=fore, blotch=blotch)

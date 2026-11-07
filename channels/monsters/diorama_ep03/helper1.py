@@ -331,7 +331,7 @@ def vn():
     v = V.villager(1, 41, net=False)                                    # scratching on hut 2's porch
     anim.key(v["root"], "location", 1, tuple(huts[2]["porch"] + V.LANE_DIR * 1.2), "CONSTANT")
     anim.key(v["root"], "rotation_euler", 1, (0, 0, V._yaw_to(huts[2]["porch"], VN_EYE)), "CONSTANT")
-    V.scratcher(v, 1, n)
+    scr = V.scratcher(v, 1, n)
     vs.append(v)
     for j, hi in enumerate((4, 0)):                                      # hand bells rung on porches
         v = V.villager(2 + j, 42 + j, net=False, bell=True)
@@ -357,6 +357,9 @@ def vn():
         a = _cam_pose(eye, tgt, 35.0, 0.0)
         b = _cam_pose(eye + (tgt - eye) * 0.08, tgt, 35.0, 0.0)
     cam = X._cam_move("cam_vn", n, a, b)
+    V.bang_shutters(huts[3], 8, crack=0.06)                             # a cracked shutter with eyes peeking out
+    V.peek(huts[3], 14, blinks=(26,))
+    _anchors("VN", n, lambda f, c: dict(blotch=_px(c, scr["blotch"].matrix_world.translation)))
     N9.night(n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + [v["root"] for v in vs])
 
