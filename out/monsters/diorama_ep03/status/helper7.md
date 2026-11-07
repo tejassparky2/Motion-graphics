@@ -1,10 +1,15 @@
 # helper 7 status (Ep 3 sound)
 
-Updated 7 Nov 2026, 11:45 UTC.
+Updated 7 Nov 2026, after S13 landed.
 
 ## Coordinator
 - **S14 render part 3 (f043-063): I can't take it.** This session has no Blender (not installed, and the disk
   allowance is nearly spent: ~2 GB free after I sparse-excluded other channels' outputs). Please reassign part 3.
+
+## S13 retimed to bGqrs's final shot (pushed)
+On S13's frames (1-based; bGqrs's beats): a cloth swish on the dip (f3); **the thud and grass swish as he lands flat
+on f13**; the arm swept out over the grass (f17); the mark's bloom up through the grass on f26 ("below").
+Mix still -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
 
 ## S14 retimed to helper 10's landings (pushed)
 The flip now follows `channels/monsters/diorama_ep03/S14_landings.json` (1-based S14 frames; S14 f1 = cut frame 772):
@@ -49,4 +54,4 @@ synthesised, no heartbeat, no riser:
 
 **Next:** as each shot lands in `out/monsters/diorama_ep03/shots/`, I read its beats (the flare, the stumble, the door
 bangs, the scratch, the drop into the grass, the flip's first roll and plops, the clink, the lighthouse cut) and move
-those cues onto its frames, re-run, Whisper and push. Shots in so far: S11, S12 (no cue beats of their own beyond the orbit whoosh); S14 timed from its landings file.
+those cues onto its frames, re-run, Whisper and push. Shots in so far: S11, S12 (no cue beats of their own beyond the orbit whoosh), S13 (retimed); S14 timed from its landings file.
