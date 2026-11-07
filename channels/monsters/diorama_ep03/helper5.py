@@ -2,7 +2,13 @@
 
     S07 "Their wing dust stings like nettles."  (to come: needs helper 6's swarm, helper 1's night villagers, XprL's
         cape pose and helper 9's night grade)
-    S15 "Every single moth landed on its back."  (to come: needs helper 6's upside_down pose)
+    S15 "Every single moth landed on its back."  The laugh hold, straight on from S14's end: the grass round Kai
+        is a field of fluffmoths on their backs (helper 6's upside_down: legs waving on 2s, eye-spots dazed and
+        blinking out of step, a wriggle now and then). Kai lies as bGqrs's S13 left him (on his back, head west, the
+        left wrist laid out palm up, the mark glowing), then on "landed" sits up among them, a little overshoot, and
+        looks round at them, bewildered, then a small amazed half-smile; the shrimp on his left shoulder peeks out
+        and stares. Camera low in front of him (east, toward his feet), the moths big in the foreground; a slow
+        push-in on 1s; characters on 2s.
     S19bot "Option B: leave at sunrise, like they said."  The bottom panel of the split (rows 486-1280 rendered, as
         Ep 2's S20bot; helper 8 crops it under the jagged divider). Dawn: the low sun just up in the east, long
         shadows, a pink-gold sky. Kai walks away from us up the dirt track out of the bell-keepers' village (helper 9's
@@ -15,7 +21,7 @@
 import math
 
 import bpy
-from mathutils import Vector
+from mathutils import Euler, Matrix, Vector
 
 from channels.monsters.diorama_ep02 import helper9 as H9              # village_and_lake, VILLAGE, _shore
 from channels.monsters.diorama_ep02 import xprl as X                  # SCALE, _world, Kai
@@ -138,6 +144,193 @@ def _path_strip(name, pts, width=2.6, z=0.05):
     return o
 
 
+# ------------------------------------------------------------------------------------------------------ S15
+S15_MOTH_SCALE = 0.42                                                    # bGqrs's S13 swarm size
+
+
+def _s15_landings(B, wrist, hips, hd, n_moths=34, seed=15):
+    """Where the moths lie: helper 10's S14 landing spots if they are in (build/monsters/diorama_ep03/
+    S14_landings.json), else a rough ring round Kai within ~1.5-9 units of his wrist and body, with a few big ones
+    toward the camera (east, past his feet). Returns [(x, y, yaw, scale)]."""
+    import json
+    import os
+    import random
+    pth = os.path.join(B.BUILD, "S14_landings.json")
+    if os.path.exists(pth):
+        with open(pth) as fh:
+            d = json.load(fh)
+        pts = d.get("landings", d) if isinstance(d, dict) else d
+        out = []
+        for q in pts:
+            if isinstance(q, dict):
+                out.append((q["x"], q["y"], q.get("yaw", 0.0), q.get("scale", S15_MOTH_SCALE)))
+            else:
+                out.append((q[0], q[1], q[2] if len(q) > 2 else 0.0, q[3] if len(q) > 3 else S15_MOTH_SCALE))
+        return out
+    rnd = random.Random(seed)
+    feet = hips - hd * 4.5                                               # his feet: east of the hips
+    out = []
+    tries = 0
+    while len(out) < n_moths and tries < 5000:
+        tries += 1
+        c = rnd.choice((wrist, wrist, hips, feet))
+        a = rnd.uniform(0, 2 * math.pi)
+        r = rnd.uniform(1.6, 7.5)
+        p = c + Vector((math.cos(a) * r, math.sin(a) * r, 0))
+        if (p - hips).length < 2.2 or (p - (hips + hd * 2.8)).length < 1.8:  # not on his body or head
+            continue
+        if any((p - Vector((q[0], q[1], 0))).length < 1.7 for q in out):
+            continue
+        out.append((p.x, p.y, rnd.uniform(-math.pi, math.pi), S15_MOTH_SCALE * rnd.uniform(0.85, 1.12)))
+    return out
+
+
+def s15():
+    from channels.monsters.diorama_ep03 import bgqrs as B
+    from channels.monsters.ep01v2 import helper10 as s15p
+    from channels.monsters.mk import fluffmoth
+    n = _frames("S15", 106)
+    f_up = _word("l15", "landed", shot="S15") - 3                        # he sits up on "landed"
+    X._world(n)
+    B._night()
+    sc = bpy.context.scene
+    try:
+        H9.village_and_lake()
+    except Exception as e:                                               # the set is optional for a test still
+        print("S15: no village", e)
+    hd = B._head_dir()
+    yaw = math.pi + math.radians(B.S13_HEAD)
+    k = hero.load((0, 0, 0), scale=X.SCALE, outfit="world")
+    k["arm"].rotation_mode = "XYZ"
+    rot_lie = (math.radians(90.0), 0, yaw)
+    s15p._pose(k, B._with_arm(B.LIE, 1.0), (0, 0, 0), rot_lie)
+    twist = B._twist_for_palm_up(k)[0]
+    UP = [(nm, d) for nm, d in B.SIT if not nm.startswith("left_upper_arm") and not nm.startswith("left_lower_arm")
+          and nm != "left_hand"] + [("left_upper_arm", (-0.45, 0.55, -0.35)), ("left_lower_arm", (-0.2, 0.9, 0.1)),
+                                    ("left_hand", (-0.1, 0.9, 0.2))]   # sitting up, the left hand on his knee
+    lie = B._with_arm(B.LIE, 1.0)
+    # (frame, spec, theta (90 = flat on his back), arm-out amount)
+    keys = [(1, lie, 90.0, 1.0), (f_up, lie, 90.0, 1.0), (f_up + 6, B._blend(lie, UP, 0.7), 40.0, 0.4),
+            (f_up + 10, UP, 2.0, 0.0), (f_up + 14, UP, 10.0, 0.0), (n, UP, 10.0, 0.0)]
+    back = 3.0                                                           # the hips stay where S13 laid them
+    for f in range(1, n + 1, 2):
+        i = max(j for j in range(len(keys)) if keys[j][0] <= f)
+        if i + 1 < len(keys):
+            a, b = keys[i], keys[i + 1]
+            u = _ease((f - a[0]) / max(1, b[0] - a[0]))
+        else:
+            a = b = keys[-1]
+            u = 1.0
+        spec = B._blend(a[1], b[1], u)
+        theta = a[2] + (b[2] - a[2]) * u
+        v = a[3] + (b[3] - a[3]) * u
+        look = 0.0
+        if f > f_up + 14:                                               # looking round: left, right, then front
+            t = f - (f_up + 14)
+            look = 0.55 * math.sin(min(1.0, t / 40.0) * 2 * math.pi) * (1 - _ease((t - 40) / 12))
+        r = Euler((math.radians(theta), 0, yaw)).to_matrix()
+        s15p._pose(k, [x for x in spec if x[0] != "left_hand"], (0, 0, 0), (math.radians(theta), 0, yaw))
+        if v > 0:
+            B._twist(k, "left_lower_arm", twist * v)
+        s15p._aim(k, "left_hand", r @ Vector(dict(spec)["left_hand"]))
+        if look:
+            hb = k["arm"].pose.bones.get("head 1") or s15p._bone(k, "head")
+            if hb is not None:
+                hb.matrix = hb.matrix @ Matrix.Rotation(look, 4, "Y")
+                bpy.context.view_layer.update()
+        hip = s15p._world(k, "hips")
+        target = B.S13_AT + hd * back
+        k["arm"].location += Vector((target.x - hip.x, target.y - hip.y, 0))
+        s15p._ground(k)
+        bpy.context.view_layer.update()
+        s15p._key_pose(k, f)
+    s15p._flush_keys(k)
+
+    # the shrimp on his left shoulder: flat and squeezed as S13 left it, it peeks out once he is up, and stares
+    sh = puffshrimp.build((0, 0, 0), name="ep03_shrimp_s15")
+    s3d._fix_pivots(sh)
+    base = SHRIMP_SHOULDER
+    f_peek = f_up + 16
+    for f in range(1, n + 1, 2):
+        sc.frame_set(f)
+        side = (k["arm"].matrix_world.to_3x3() @ Vector((1, 0, 0))).normalized()
+        up = _ease((f - f_up) / 12.0)
+        sq = 0.62 if f < f_peek else 1.0
+        pt = B._bone_world(k, "upper_arm.L") + Vector((0, 0, 0.55 * sq)) + side * 0.25
+        sh["root"].location = pt
+        sh["root"].keyframe_insert("location", frame=f)
+        sh["root"].rotation_euler = (-0.55 * (1 - up), 0, yaw + math.pi + (0.5 if f >= f_peek + 20 else 0.0))
+        sh["root"].keyframe_insert("rotation_euler", frame=f)
+        sh["root"].scale = (base * (1.18 if sq < 1 else 1.0), base * (1.18 if sq < 1 else 1.0), base * sq)
+        sh["root"].keyframe_insert("scale", frame=f)
+    sc.frame_set(1)
+    for fc in anim.all_fcurves(sh["root"].animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    anim.key(sh["shoulder"], "rotation_euler", 1, (0.55, 0.0, 0.0), "CONSTANT")
+    anim.key(sh["hinge"], "rotation_euler", 1, (0.15, 0.0, 0.0), "CONSTANT")
+    for e in sh["eyes"]:
+        anim.key(e, "scale", 1, (1, 1, 0.08), "CONSTANT")              # still squeezed shut from S13's duck
+        anim.key(e, "scale", f_peek, (1.15, 1.15, 1.15), "CONSTANT")   # eyes wide at the field of moths
+        anim.key(e, "scale", f_peek + 10, (1, 1, 1), "CONSTANT")
+    anim.blink(sh, f_peek + 30)
+
+    # the mark: the coral key at his wrist, as S13 left it (dimmer once he sits up and it's off the grass)
+    key = bpy.data.lights.new("s15_mark_key", "POINT")
+    key.color = H9.CORAL
+    key.shadow_soft_size = 0.2
+    lk = bpy.data.objects.new("s15_mark_key", key)
+    sc.collection.objects.link(lk)
+    und = bpy.data.lights.new("s15_mark_fill", "POINT")                  # the glow over the field of moths
+    und.color = H9.CORAL
+    und.shadow_soft_size = 3.0
+    und.use_shadow = False
+    lu = bpy.data.objects.new("s15_mark_fill", und)
+    sc.collection.objects.link(lu)
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        m = H9._forearm(k, H9.MARK_U)
+        lk.location = m + Vector((0, 0, 0.5))
+        lk.keyframe_insert("location", frame=f)
+        key.energy = B.S13_LIGHT * (1.1 + 0.05 * math.sin(f / 5.0))
+        key.keyframe_insert("energy", frame=f)
+        lu.location = m + Vector((0, 0, 3.0))
+        lu.keyframe_insert("location", frame=f)
+        und.energy = B.S13_UNDER * 0.7
+        und.keyframe_insert("energy", frame=f)
+    sc.frame_set(1)
+    wrist = H9._forearm(k, 1.0)
+    hips = s15p._world(k, "hips")
+    hips = Vector((hips.x, hips.y, 0.0))
+    wrist = Vector((wrist.x, wrist.y, 0.0))
+    B._grass_at(wrist)
+    acting.grass_round(hips, hd)
+
+    # the field of moths on their backs (one built, linked copies), legs waving
+    spots = _s15_landings(B, wrist, hips, hd)
+    rigs = fluffmoth.swarm(len(spots), lambda i, rnd: (Vector((spots[i][0], spots[i][1], 1.0)), spots[i][3]),
+                           name="m15_", seed=15, far=lambda i, loc, scl: False)
+    for i, (rig, q) in enumerate(zip(rigs, spots)):
+        for w in rig["wings"]:                                           # no flight beat: they lie still
+            w.animation_data_clear()
+        rig["root"].rotation_euler = (0, 0, q[2])
+        fluffmoth.upside_down(rig, 1, n, land_at=(q[0], q[1], 0.0), seed=100 + i)
+
+    # Kai's face: dazed, then bewildered as he looks round, then a small amazed half-smile; eyes on the moths
+    acting.face_keys(k, 1, eye_brow_down=0.5, face_angry=0.15)
+    acting.face_keys(k, f_up + 8, eye_brow_down=0.0, face_angry=0.0, face_surprise=0.7)
+    acting.face_keys(k, f_up + 40, face_surprise=0.35, face_happy=0.35)
+    acting.blink(k, 1, n, every=(40, 70), seed=8, at=(f_up + 12,))
+
+    # camera: in front of him (east, toward his feet), low, the moths big in the foreground; a slow push-in on 1s
+    mid = hips - hd * 1.2
+    cy = math.degrees(math.atan2(hd.x, hd.y))                            # looking west, along his head direction
+    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.8)), 30.0, 22.0, cy + 18.0),
+         (mid + Vector((0, 0, 4.2)), 25.0, 20.0, cy + 14.0), lens=40.0, blur=4.5, shift_y=-0.04)
+    LAST.update(k=k, sh=sh, moths=rigs)
+    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + list(k.get("cap", [])))
+
+
 # ----------------------------------------------------------------------------------------------------- dawn
 DAWN_SUN = "#ffb487"            # a low peach-gold sun
 DAWN_SKY = ("#8fb6e6", "#ffd2b0", "#ffd9c4")   # zenith, horizon, fill
@@ -239,4 +432,4 @@ def s19bot():
     return dict(frames=n, step=2, ones=(1, n), subject=[arm, sh["root"]])
 
 
-SHOTS = {"S19bot": s19bot}
+SHOTS = {"S15": s15, "S19bot": s19bot}
