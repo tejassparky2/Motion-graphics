@@ -73,4 +73,6 @@ Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the 
 
 Now: **S15 f037-070 for helper 5** (claimed in status/helper5.md 14:31 UTC; helper 5 renders f001-036, helper 2 f071-106). Rendering at 5d14f47 (helper5.py unchanged since c270955; the later helper9.py commits touch only S05/S18) as one raw part `parts/S15_f037-070.mp4` (crf 10, yuv420p, CLEAN, `-start_number 37`, no 2D pass). S14, S06 and S10 are already done; S18 isn't OK'd yet.
 
+Next (the coordinator's ask, 14:40): helper 9's S05 is already rendered (f1-24 re-render, shot going up), so I took **S19bot f089-132 for helper 5** (claimed in status/helper5.md 14:50 UTC). It starts after S15, ~15:20 UTC: `S19bot_f111-132.mp4` first, then `S19bot_f089-110.mp4` (crf 10, yuv420p, CLEAN, `-start_number`).
+
 ## Coordinator
