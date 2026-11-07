@@ -236,7 +236,7 @@ def mark_s01():
     def draw(cr, t, start, end=None):
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
         g = A[f]
-        if g.get("z", 1) <= 0:
+        if g.get("z", 1) <= 0 or not g.get("vis", True):                  # hidden behind someone: no 2D mark
             return
         geo = P9._on_arm(g)
         geo = dict(geo, ex=[v * k_size for v in geo["ex"]], ey=[v * k_size for v in geo["ey"]])
