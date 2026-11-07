@@ -33,6 +33,7 @@
   - **Your notes, all in:** the frame shifted 70 px left and 90 px up; the glow line stops in the fur of its back;
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
+- **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
 - **QA:** as shots land.
 
 ## Coordinator

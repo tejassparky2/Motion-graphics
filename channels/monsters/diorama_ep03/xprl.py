@@ -314,6 +314,30 @@ def _clear_near(cam, radius):
                 o.hide_render = True
 
 
+def _px(cam, p):
+    from bpy_extras.object_utils import world_to_camera_view
+    q = world_to_camera_view(bpy.context.scene, cam, p)
+    return [round(q.x * 720, 1), round((1 - q.y) * 1280, 1), round(q.z, 2)]
+
+
+def _write_anchors(shot, n, bells, extra=None):
+    """build/monsters/diorama_ep03/<shot>_anchors.json: per frame, each ringing bell's screen point (720x1280) and
+    its ring span ({"spans": {name: [f0, f1]}}), for the 2D ring lines (diorama_ep03/post_xprl.py)."""
+    sc = bpy.context.scene
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        bpy.context.view_layer.update()
+        out[f] = {nm: _px(sc.camera, o.matrix_world @ off) for nm, (o, off, a, b) in bells.items()}
+        if extra is not None:
+            out[f].update(extra(f, sc.camera))
+    sc.frame_set(1)
+    d = os.path.join(ROOT, "build", "monsters", "diorama_ep03")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, f"{shot}_anchors.json"), "w") as fh:
+        json.dump(dict(frames=out, spans={nm: [a, b] for nm, (o, off, a, b) in bells.items()}), fh)
+
+
 def _cam(name, n, a, b):
     """A slow camera move on 1s (X._cam_move: target, dist, tilt, yaw, lens, shift_y)."""
     return X._cam_move(name, n, a, b)
@@ -348,7 +372,8 @@ def s16():
     # close (chest-up), from Kai's side (north-west of her), a slow push-in
     tgt = WREN_S16 + Vector((1.0, 0, 6.3))                                    # her bell side (east) in frame
     yaw = 176.0
-    _cam("S16cam", n, (tgt, 9.2, 3, yaw, 44, 0.0), (tgt, 8.2, 3, yaw, 44, 0.0))
+    face_tgt = WREN_S16 + Vector((0.4, 0, 7.7))                                # ends closer, on her face
+    _cam("S16cam", n, (tgt, 9.2, 3, yaw, 44, 0.0), (face_tgt, 7.0, 3, yaw, 44, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 
@@ -406,6 +431,8 @@ def s17():
     yaw = 180.0                                                               # from the north: Wren clear of his head
     _cam("S17cam", n, (mid, 14.5, 7, yaw, 40, 0.0), (mid, 13.0, 7, yaw, 40, 0.0))
     _clear_near(bpy.context.scene.camera, 9.0)
+    _write_anchors("S17", n, {}, extra=lambda f, c: dict(mark=H9._mark_geo(k, c), elbow=_px(c, H9._forearm(k, 0.0)),
+                                                          wrist=_px(c, H9._forearm(k, 1.0))))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
 
@@ -445,6 +472,7 @@ def s08():
             s = 1 if ((f - f_ring) // 2) % 2 == 0 else -1
             P.hips((0, 0, -0.012 * (1 if s > 0 else 0)))
             wren.ring_hard(P, s, lift=1.0)
+            P.rot("spine", (6 if s > 0 else 2, 0, 0))                          # she leans into each swing
         else:
             u = _ease((f - f_stop) / 8)
             wren.ring_hard(P, 0, lift=1.0 - 0.3 * u)
@@ -455,6 +483,12 @@ def s08():
     wren.face(w, "stern", 1)
     wren.face(w, "shout", f_ring)
     wren.talk_words(w, words_, t0, first=1, amount=1.0)
+    head = w["head"]
+    for wd, a, b in words("S08"):                                             # RING, BELLS, DRIVE, OFF: wide open
+        if wd in ("ring", "bells", "drive", "off"):
+            for k, v in (("lip_a", 1.0), ("mouth_wide", 0.6), ("lip_i", 0.0), ("lip_u", 0.0), ("lip_o", 0.0),
+                         ("lip_e", 0.0), ("mouth_short", 0.0)):
+                wren._key(head, k, a, v)
     wren.face(w, "stern", f_stop + 2)
     wren.blink(w, 1, n, every=(200, 201), at=(f_stop + 6,))
     wren.contact_shadows(w)
@@ -471,6 +505,12 @@ def s08():
     cyaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     _cam("S08cam", n, (tgt, 12.0, -7, cyaw, 46, 0.0), (tgt, 10.8, -7, cyaw, 46, 0.0))
     _clear_near(bpy.context.scene.camera, 9.0)
+    bells = {"bell_wren": (w["bell"], Vector((0, 0, -0.07)), f_ring, f_stop)}
+    if V is not None and huts:
+        for i, h in enumerate(huts):
+            if i != PORCH_HUT and not any(c.hide_render for c in h["bell"].children):
+                bells[f"bell_hut{i}"] = (h["bell"], Vector((0, 0, -1.2)), f_ring + 6 + 5 * i, f_stop)
+    _write_anchors("S08", n, bells)
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 
