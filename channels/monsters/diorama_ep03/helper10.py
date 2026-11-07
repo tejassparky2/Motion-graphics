@@ -209,9 +209,12 @@ def build_s12():
 # ---------------------------------------------------------------- S14
 S14_HOLD = 12                        # the held beat: still circling, the hush
 S14_ROLL = 6                         # frames to roll upside down
-S14_STALL = 3                        # hanging upside down, wings fluttering, before the drop
-S14_PLOPS = (32, 38, 44)             # the first three clear landings (sound: plop, plop, plop)
+S14_STALL = 3                        # hanging upside down, a wobble, before the drop
+S14_PLOPS = (32, 38, 44)             # the first three clear landings (sound: plop, plop, plop): hero moths
+S14_HEROES = (32, 38, 44, 48)        # the four hero moths' landings (big, in the foreground)
 S13_CUT = 45                         # S13's length (its frames, without the tail): the swarm's circling continues
+S14_MOVE = (12, 30)                  # the camera's move from S13's framing down to the low, close landing view
+UNDER_W = 3200.0                     # the coral glow above the wrist that lights the swarm from below (no shadows)
 
 
 def _lie(k):
@@ -234,56 +237,127 @@ def _lie(k):
     return hd
 
 
-def _swarm_layout(n_moths, seed=13):
-    """bGqrs's S13 swarm, member by member (the same random sequence: scale, radius, height, start angle, turn rate),
-    so S14 continues S13's circling."""
-    rnd = random.Random(seed)
-    out = []
-    for _ in range(n_moths):
-        s = MOTH_S * rnd.uniform(0.75, 1.15)
-        r = rnd.uniform(2.2, 7.5)
-        h = rnd.uniform(4.5, 11.0)
-        a0 = rnd.uniform(0, 2 * math.pi)
-        w = rnd.choice((-1, 1)) * rnd.uniform(0.9, 1.6) * 2 * math.pi / (FPS * 6.0)
-        out.append(dict(s=s, r=r, h=h, a0=a0, w=w))
-    return out
-
-
-def _landing_spots(n_moths, wrist, hips, hd, cam, n, seed=14):
-    """Where each moth lands on its back: spread round the glowing wrist (1.5-8 units), none on Kai's body (the strip
-    from his feet to past his head), ~1.5 apart (their splayed wings), and on screen at the shot's end inside
-    x 50-670, y 430-820 (above the caption band at 845)."""
-    from bpy_extras.object_utils import world_to_camera_view
+def _night_set(n):
+    """X._world + helper 9's shared night (N9.night) and the Ep 2 village bGqrs's S13 uses."""
+    X._world(n)
+    try:
+        from channels.monsters.diorama_ep03 import helper9 as N9
+        N9.night(n)
+    except (ImportError, AttributeError) as e:
+        print("helper10: no shared night yet", e)
+        B._night()
+    try:
+        H9.village_and_lake()
+    except Exception as e:
+        print("helper10: no village", e)
     sc = bpy.context.scene
-    sc.frame_set(n)
+    sc.frame_start, sc.frame_end = 1, n
+
+
+def _glow_cone(at, height=4.2, r0=0.25, r1=1.9, name="h10_uplight"):
+    """The light below, made visible: a soft coral cone of glow rising from the palm-up wrist through the grass (an
+    additive, height-faded emission shell, no shadows), and a bright glowing disc on the grass at its foot."""
+    import bmesh
+    from channels.monsters.mk import look
+    me = bpy.data.meshes.new(name)
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=False, cap_tris=False, segments=32, radius1=r0, radius2=r1, depth=height)
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(o)
+    o.location = Vector(at) + Vector((0, 0, height / 2))
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    if hasattr(m, "surface_render_method"):
+        m.surface_render_method = "BLENDED"
+    else:
+        m.blend_method = "BLEND"
+    m.use_backface_culling = False
+    nt = m.node_tree
+    for nd in list(nt.nodes):
+        nt.nodes.remove(nd)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    add = nt.nodes.new("ShaderNodeAddShader")
+    em = nt.nodes.new("ShaderNodeEmission")
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    em.inputs["Color"].default_value = (*H9.CORAL, 1.0)
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    ramp = nt.nodes.new("ShaderNodeValToRGB")                 # bright at the foot, gone at the top
+    ramp.color_ramp.elements[0].position, ramp.color_ramp.elements[0].color = 0.0, (1.6, 1.6, 1.6, 1)
+    ramp.color_ramp.elements[1].position, ramp.color_ramp.elements[1].color = 1.0, (0, 0, 0, 1)
+    lw = nt.nodes.new("ShaderNodeLayerWeight")                # softer at the silhouette edges
+    lw.inputs["Blend"].default_value = 0.35
+    mul = nt.nodes.new("ShaderNodeMath")
+    mul.operation = "MULTIPLY"
+    inv = nt.nodes.new("ShaderNodeMath")
+    inv.operation = "SUBTRACT"
+    inv.inputs[0].default_value = 1.0
+    nt.links.new(tc.outputs["Generated"], sep.inputs[0])
+    nt.links.new(sep.outputs["Z"], ramp.inputs[0])
+    nt.links.new(lw.outputs["Facing"], inv.inputs[1])
+    nt.links.new(ramp.outputs[0], mul.inputs[0])
+    nt.links.new(inv.outputs[0], mul.inputs[1])
+    nt.links.new(mul.outputs[0], em.inputs["Strength"])
+    nt.links.new(em.outputs[0], add.inputs[0])
+    nt.links.new(tr.outputs[0], add.inputs[1])
+    nt.links.new(add.outputs[0], out.inputs["Surface"])
+    o.data.materials.append(m)
+    o.visible_shadow = False
+    disc = bpy.data.objects.new(name + "_foot", bpy.data.meshes.new(name + "_foot"))
+    bpy.context.scene.collection.objects.link(disc)
+    bm = bmesh.new()
+    bmesh.ops.create_circle(bm, cap_ends=True, segments=32, radius=1.1)
+    bm.to_mesh(disc.data)
+    bm.free()
+    disc.location = Vector(at) + Vector((0, 0, 0.04))
+    disc.data.materials.append(look.flat(name + "_foot", (*H9.CORAL, 1.0), strength=3.0))
+    disc.visible_shadow = False
+    return o
+
+
+def _hero_spots(wrist, cam_end):
+    """The four hero moths land in the foreground, between the camera's last position and the glowing wrist: a loose
+    row ~1.7 apart, the nearest a little toward the lens (the biggest), ~2.5 north of the wrist."""
+    to_cam = Vector((cam_end.x - wrist.x, cam_end.y - wrist.y, 0)).normalized()
+    side = Vector((-to_cam.y, to_cam.x, 0))
+    H = wrist + to_cam * 2.6
+    H.z = 0.0
+    return [H + side * -1.75, H + to_cam * -0.5, H + side * 1.8 + to_cam * 0.1, H + to_cam * 1.35 + side * 0.4], H
+
+
+def _ring_spots(n_spots, wrist, hips, hd, taken, cam_end, H, seed=14):
+    """The rest land in a loose ring round the wrist (2-8 units): none on Kai's body, ~1.4 apart (splayed wings), and
+    none in the view between the last camera and the heroes."""
     rnd = random.Random(seed)
     feet, crown = hips - hd * 4.2, hips + hd * 4.4
     ab = crown - feet
+    cv = Vector((cam_end.x - H.x, cam_end.y - H.y, 0))
     spots = []
-    for gap in (1.5, 1.25, 1.0):
+    for gap in (1.4, 1.15, 0.95):
         tries = 0
-        while len(spots) < n_moths and tries < 6000:
+        while len(spots) < n_spots and tries < 6000:
             tries += 1
             a = rnd.uniform(0, 2 * math.pi)
-            r = 1.5 + 6.5 * math.sqrt(rnd.random())
+            r = 2.0 + 6.0 * math.sqrt(rnd.random())
             p = Vector((wrist.x + r * math.cos(a), wrist.y + r * math.sin(a), 0.0))
             t = max(0.0, min(1.0, (p - feet).dot(ab) / ab.length_squared))
-            if (p - (feet + ab * t)).length < 1.8:               # on his body
+            if (p - (feet + ab * t)).length < 1.8:
                 continue
-            if any((p - q).length < gap for q in spots):
+            tc = max(0.0, min(1.0, (p - H).dot(cv) / cv.length_squared))
+            if (p - (H + cv * tc)).length < 2.2:                 # in front of the heroes
                 continue
-            v = world_to_camera_view(sc, cam, p)
-            if not (50 < v.x * 720 < 670 and 430 < (1 - v.y) * 1280 < 820) or v.z <= 0:
+            if any((p - q).length < gap for q in spots + taken):
                 continue
             spots.append(p)
-    sc.frame_set(1)
-    print("S14 landing spots", len(spots), "of", n_moths)
+    print("S14 ring spots", len(spots), "of", n_spots)
     return spots
 
 
 def build_s14():
     n = _frames("S14", 84)
-    _set(n)
+    _night_set(n)
     sc = bpy.context.scene
     k = hero.load((0, 0, 0), scale=B.SCALE, outfit="world")
     k["arm"].rotation_mode = "XYZ"
@@ -297,113 +371,179 @@ def build_s14():
     acting.grass_round(hips, hd)
     sh = _shrimp(k, n)
 
-    # the light below: the coral key at the mark and the broad glow above the wrist (S13's end levels)
-    key = _lamp("h10_s14_key", B.S13_LIGHT * 1.1, 0.2)
-    key.location = mark + Vector((0, 0, 0.5))
-    und = _lamp("h10_s14_under", B.S13_UNDER * 1.1, 1.5, shadow=False)
-    und.location = mark + Vector((0, 0, 1.6))
-    light = mark + Vector((0, 0, 0.3))                            # what the moths keep their backs to
+    # the light below: helper 9's mark key (6000 W, on the forearm), a strong coral glow above the wrist that lights
+    # the swarm from underneath (their backs once they roll), and the visible cone rising through the grass
+    try:
+        from channels.monsters.diorama_ep03 import helper9 as N9
+        N9.mark(k)
+    except (ImportError, AttributeError):
+        _lamp("h10_s14_key", B.S13_LIGHT * 2.0, 0.2).location = mark + Vector((0, 0, 0.5))
+    und = _lamp("h10_s14_under", UNDER_W, 1.2, shadow=False)
+    und.location = wrist + Vector((0, 0, 2.6))
+    _glow_cone(wrist)
+    light = Vector(mark)                                          # what the moths keep their backs to (S13's centre)
 
-    # camera: S13's end framing (north of him, toward his feet, looking south over the village; the light low, the
-    # swarm high), easing down and in to the grass as the moths fall; on 1s
-    body_mid = B.S13_AT + hd * 2.4
-    left = Vector((-hd.y, hd.x, 0)) * -1.0
-    c_dir = (left * 1.0 - hd * 0.32).normalized()
-    t0 = body_mid + hd * 0.4 + Vector((0, 0, 4.2))               # = S13's last frame (bGqrs's t1 / c1)
-    t1 = body_mid + hd * 0.6 + Vector((0, 0, 1.2))
-    c0 = t0 + c_dir * 21.0 + Vector((0, 0, 1.0))
-    c1 = t1 + c_dir * 19.0 + Vector((0, 0, 4.6))
-    cam = B._cam_from("S14cam", n, c0, c1, t0, t1, 30.0)
+    # camera: S13's last frame (bGqrs's camera_at(45)), then down and in to a low, close view of the landing spot in
+    # front of the wrist (S14_MOVE); a slow drift after
+    _, beats13 = B.s13_beats()
+    poses = B.camera_poses(B._frames("S13", 57), beats13)
+    c0, t0, lens0, _ = B.camera_at(S13_CUT, poses)
+    cam_end_guess = wrist + Vector((c0.x - wrist.x, c0.y - wrist.y, 0)).normalized() * 9.5
+    hero_spots, H = _hero_spots(wrist, cam_end_guess)
+    to_cam = Vector((c0.x - H.x, c0.y - H.y, 0)).normalized()
+    c1 = H + to_cam * 7.6 + Vector((0, 0, 2.1))
+    t1 = H.lerp(wrist, 0.35) + Vector((0, 0, 0.9))
+    c2 = H + to_cam * 7.0 + Vector((0, 0, 1.9))
+    t2 = H.lerp(wrist, 0.4) + Vector((0, 0, 0.8))
+    old_blur = X.v2.BLUR
+    X.v2.BLUR = 3.0
+    cam = None
+    ms = sc.world.mist_settings
+    for f in range(1, n + 1):
+        if f <= S14_MOVE[1]:
+            u = _ease((f - S14_MOVE[0]) / (S14_MOVE[1] - S14_MOVE[0]))
+            c, t, ln = c0.lerp(c1, u), t0.lerp(t1, u), lens0 + (26.0 - lens0) * u
+        else:
+            u = _ease((f - S14_MOVE[1]) / max(1, n - S14_MOVE[1]))
+            c, t, ln = c1.lerp(c2, u), t1.lerp(t2, u), 26.0
+        v = c - t
+        dist = v.length
+        tilt = math.degrees(math.asin(max(-1.0, min(1.0, v.z / dist))))
+        yaw = math.degrees(math.atan2(-v.x, -v.y))
+        cam = X.v2._cam("S14cam", f, tuple(t), dist, tilt, yaw, ln, (0.0, 0.0), cam)
+        ms.start, ms.depth = dist * 2.5, dist * 2.0
+        ms.keyframe_insert("start", frame=f)
+        ms.keyframe_insert("depth", frame=f)
+    X.v2.BLUR = old_blur
+    sc.camera = cam
     cam.data.clip_end = 600.0
 
-    lay = _swarm_layout(B.SWARM_N)
-    spots = _landing_spots(len(lay), wrist, hips, hd, cam, n)
-    rigs = fluffmoth.swarm(len(lay), lambda i, rnd: (Vector(light) + Vector((0, 0, lay[i]["h"])), lay[i]["s"]),
-                           name="m14", seed=14, far=lambda i, loc, s: s < MOTH_S * 0.85)
-
-    # who lands when: the three lowest moths give the clear plop-plop-plop, the rest follow by height
+    # the swarm: S13's members (bGqrs's layout), continuing their circles; the four lowest are the heroes
+    lay = B.swarm_layout()
     order = sorted(range(len(lay)), key=lambda i: lay[i]["h"])
-    t_land = {}
-    for j, i in enumerate(order):
-        if j < len(S14_PLOPS):
-            t_land[i] = S14_PLOPS[j]
-        else:
-            t_land[i] = int(46 + (j - 3) * 20 / max(1, len(order) - 4)) + random.Random(i).randint(-1, 1)
-    landings = []
+    heroes = order[:len(S14_HEROES)]
+    rest = order[len(S14_HEROES):]
+    ring = _ring_spots(len(rest), wrist, hips, hd, hero_spots, c2, H)
+    spot_of, t_land = {}, {}
+    for j, i in enumerate(heroes):
+        spot_of[i], t_land[i] = hero_spots[j], S14_HEROES[j]
+    for j, i in enumerate(rest):
+        spot_of[i] = ring[j % len(ring)]
+        t_land[i] = int(48 + j * 18 / max(1, len(rest) - 1)) + random.Random(i).randint(-1, 1)
+
+    def place(i, rnd):
+        return tuple(B.swarm_at(lay[i], S13_CUT + 1, light)), lay[i]["s"]
+    rigs = fluffmoth.swarm(len(lay), place, name="m14_", seed=13, far=lambda i, loc, s: i not in heroes)
+    if hasattr(B, "_decimate_shared"):
+        B._decimate_shared([o for o in bpy.data.objects if o.name.startswith("m14_")])
+
+    landings, hero_track = [], {}
     rnd = random.Random(15)
     for i, rig in enumerate(rigs):
         L = lay[i]
-        s, h = L["s"], L["h"]
-        fall = int(round(8 + 0.7 * h))
+        s = L["s"]
+        is_hero = i in heroes
+        spot = spot_of[i]
         f_land = t_land[i]
+        if is_hero:                                               # low over its spot, near the lens: a short fall
+            h_fall = 3.6
+            fall = 8
+        else:
+            h_fall = None
+            fall = int(round(8 + 0.6 * L["h"]))
         f_drop = f_land - fall
         f_stall = f_drop - S14_STALL
         f_roll = max(S14_HOLD, f_stall - S14_ROLL)
-        spot = spots[i % len(spots)]
         root = rig["root"]
         _clear_wings(rig)
-        prev = None
-        drop_from = None
-        heading = Vector((0, 1, 0))
-        spin_axis = rnd.choice((1, -1))
+        prev, drop_from = None, None
+        heading = B.swarm_heading(L, S13_CUT + 1)
+        spin = rnd.choice((1, -1))
+        track = {}
         for f in range(1, f_land, 2):
-            a = L["a0"] + L["w"] * (S13_CUT + f)
-            if f > f_stall:                                        # the stall: the circling dies away
-                slow = 1.0 - 0.8 * _ease((f - f_stall) / max(1, f_drop - f_stall))
-                a = L["a0"] + L["w"] * (S13_CUT + f_stall + (f - f_stall) * slow)
-            circ = Vector((light.x + L["r"] * math.cos(a), light.y + L["r"] * math.sin(a), light.z + h))
-            circ.z += 0.3 * math.sin(f / 9.0 + i)
-            heading = Vector((-math.sin(a), math.cos(a), 0.0)) * (1 if L["w"] > 0 else -1)
+            ff = S13_CUT + f
+            if f > f_stall:                                       # the stall: the circling dies away
+                ff = S13_CUT + f_stall + (f - f_stall) * 0.25
+            circ = B.swarm_at(L, ff, light)
+            heading = B.swarm_heading(L, ff)
+            if is_hero:                                           # drifts over to hang above its landing spot
+                over = Vector((spot.x, spot.y, h_fall))
+                circ = circ.lerp(over, _ease((f - 4) / max(1, f_roll - 2)))
             if f < f_drop:
-                p = circ
-                if f >= f_stall:                                   # hangs, sinking a little
-                    p = p - Vector((0, 0, 0.25 * (f - f_stall) / max(1, S14_STALL)))
+                p = circ.copy()
+                if f >= f_stall:
+                    p.z -= 0.25 * (f - f_stall) / max(1, S14_STALL)
                 drop_from = p.copy()
                 root.location = p
                 amt = 0.12 + 0.88 * _ease((f - f_roll) / S14_ROLL) if f >= f_roll else 0.12
                 prev = fluffmoth.back_to(rig, f, light, heading, amt, "CONSTANT", prev)
-            else:                                                  # the tumble: gravity, a flip, drifting to its spot
+                if f_stall <= f < f_drop:                         # the "!" wobble: a quick rock while it hangs
+                    w = 0.35 * (1 if (f - f_stall) % 4 < 2 else -1)
+                    e = Euler(prev)
+                    e.rotate(Euler((0, w, 0)))
+                    prev = e
+                    anim.key(root, "rotation_euler", f, tuple(e), "CONSTANT")
+            else:                                                 # the tumble: gravity, a flip, drifting to its spot
                 u = (f - f_drop) / max(1, fall)
                 q = drop_from.lerp(Vector((spot.x, spot.y, drop_from.z)), _ease(u))
                 q.z = drop_from.z + (fluffmoth.BACK_REST * s - drop_from.z) * u * u
                 root.location = q
-                base = fluffmoth._basis(Vector((0, 0, -1)), heading)              # upside down
-                m = base @ Matrix.Rotation(spin_axis * 2 * math.pi * (1 - u), 3, "X")
+                base = fluffmoth._basis(Vector((0, 0, -1)), heading)
+                m = base @ Matrix.Rotation(spin * 2 * math.pi * (1 - u), 3, "X")
                 e = m.to_euler("XYZ", prev) if prev is not None else m.to_euler("XYZ")
                 anim.key(root, "rotation_euler", f, tuple(e), "CONSTANT")
                 prev = e
             anim.key(root, "location", f, tuple(root.location), "CONSTANT")
-        # the wings: steady beats while circling, frantic in the stall, flailing in the fall
+            track[f] = root.location.copy()
         _wing_keys(rig, 1, f_stall - 1, phase=i % 4)
         _wing_keys(rig, f_stall, f_drop - 1, amp=1.35, phase=i % 4)
         _wing_keys(rig, f_drop, f_land - 1, amp=0.7, phase=i % 4, fold=0.2)
-        # the landing: on its back, legs waving (helper 6's pose; its rest height scaled to this moth); the plop squash
-        root.rotation_euler = Euler((0.0, math.pi, math.atan2(heading.x, -heading.y)))
+        yaw = math.atan2(heading.x, -heading.y)
+        root.rotation_euler = Euler((0.0, math.pi, yaw))
         fluffmoth.upside_down(rig, f_land, n, land_at=(spot.x, spot.y, 0.0), seed=30 + i)
         anim.key(root, "location", f_land, (spot.x, spot.y, fluffmoth.BACK_REST * s), "CONSTANT")
         anim.squash(rig["body"], f_land, -0.3, "CONSTANT")
         anim.squash(rig["body"], f_land + 2, 0.08, "CONSTANT")
         anim.squash(rig["body"], f_land + 4, 0.0, "CONSTANT")
         landings.append(dict(moth=i, frame=f_land, at=[round(spot.x, 3), round(spot.y, 3), 0.0], scale=round(s, 3),
-                             yaw=round(root.rotation_euler.z, 4)))
+                             yaw=round(yaw, 4), hero=is_hero))
+        if is_hero:
+            hero_track[i] = dict(roll=f_roll, stall=f_stall, drop=f_drop, land=f_land, s=s)
 
     # Kai: determined (S13's end), eyes on the swarm, then following them down; on the plops, a grin starts
     acting.face_keys(k, 1, eye_brow_down=0.65, face_angry=0.2, mouth_short=0.2, face_happy=0.12)
     acting.face_keys(k, S14_PLOPS[1], eye_brow_down=0.2, face_happy=0.45, mouth_short=0.0, face_angry=0.0)
     acting.look_at(k, light + Vector((0, 0, 7.0)), 1, S14_PLOPS[0] - 6, darts=True, seed=14)
-    acting.look_at(k, light + Vector((0, 0, 2.0)), S14_PLOPS[0] - 6, n, darts=True, seed=15)
+    acting.look_at(k, H + Vector((0, 0, 0.6)), S14_PLOPS[0] - 6, n, darts=True, seed=15)
     acting.blink(k, 1, n, every=(40, 64), seed=14, at=(S14_PLOPS[0] + 2,))
 
-    # for the 2D pass (dust puffs at each landing, on its frame), S15 (the landing spots) and the sound (plops)
+    # for the 2D pass (dust puffs; the heroes' roll arcs and stall wobble), S15 (the spots) and the sound (plops)
     os.makedirs(BUILD, exist_ok=True)
     for d in landings:
         sc.frame_set(d["frame"])
         d["px"] = H9._px(cam, Vector(d["at"]))
+    heroes_px = {}
+    for i, hdat in hero_track.items():
+        rows = {}
+        for f in range(1, hdat["land"] + 1):
+            sc.frame_set(f)
+            bpy.context.view_layer.update()
+            p = rigs[i]["root"].matrix_world.translation
+            c = H9._px(cam, p)
+            e = H9._px(cam, p + Vector((0, 0, 0.9 * hdat["s"])))   # ~the body's radius on screen
+            rows[f] = c[:2] + [round(math.hypot(e[0] - c[0], e[1] - c[1]), 1)]
+        heroes_px[i] = dict(hdat, px=rows)
     sc.frame_set(1)
-    data = dict(plops=list(S14_PLOPS), hold=S14_HOLD, landings=sorted(landings, key=lambda d: d["frame"]))
-    for path in (os.path.join(BUILD, "S14_landings.json"), LANDINGS):         # build/ isn't in git: a copy that is
+    data = dict(plops=list(S14_PLOPS), heroes=list(S14_HEROES), hold=S14_HOLD,
+                landings=sorted(landings, key=lambda d: d["frame"]))
+    for path in (os.path.join(BUILD, "S14_landings.json"), LANDINGS):
         with open(path, "w") as fh:
             json.dump(data, fh, indent=1)
+    with open(os.path.join(BUILD, "S14_heroes.json"), "w") as fh:
+        json.dump(heroes_px, fh)
+    for d in landings:
+        if d["hero"]:
+            print("S14 hero lands", d["frame"], "at px", d["px"])
     if not _still():
         _mark_json("S14", k, cam, n, lambda f: 1.1 + 0.05 * math.sin(f / 5.0))
     sc.frame_set(1)

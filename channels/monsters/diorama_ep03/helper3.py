@@ -117,8 +117,8 @@ def _shoulder_shrimp(k, n, name="ep03_shrimp_s02"):
         sc.frame_set(f)
         bpy.context.view_layer.update()
         fwd = (X.WREN_STOP - X.KAI_AT).normalized()
-        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.36)) + Vector((fwd.x, fwd.y, 0)).normalized() * 0.35 \
-            + X._side_vec(k) * 0.15                               # on the front of the shoulder, clear of the arm
+        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.34)) + Vector((fwd.x, fwd.y, 0)).normalized() * 0.1 \
+            + X._side_vec(k) * 0.5                                # on the outer edge of the shoulder: beside his face
         sh["root"].location = p
         sh["root"].keyframe_insert("location", frame=f)
     sc.frame_set(1)
@@ -244,7 +244,7 @@ def s02():
     k_face = _bone_world(k, "head 1") + up * 0.55
     # A: over his left shoulder, his raised forearm soft in the foreground at frame left, her face 3/4
     camA = H9._new_cam("S02a", 1)
-    pa = k_face - fwd * 3.0 + left * 2.4 + up * 0.2
+    pa = k_face - fwd * 3.0 + left * 3.3 + up * 0.9                 # high and wide of his shoulder (and the shrimp)
     for f in range(1, fb):
         e = _smooth((f - 1) / max(1, fb - 2))
         loc = pa.lerp(w_face, 0.10 * e)                             # a slow push in on her
@@ -262,7 +262,7 @@ def s02():
     # C: due south of Kai (her side; she's hidden for it), low, looking due north and up with a wide lens: his face
     # above the captions, the raised forearm (mark upright) beside it, the crack upright in the sky above him
     camC = H9._new_cam("S02c", fc)
-    pc = k_face + Vector((0, -7.0, -3.0)) + left * 1.7                # toward his left: the shrimp clear of his arm
+    pc = k_face + Vector((0, -7.0, -3.0)) + left * 1.1                # toward his left: the shrimp beside his face
     el_face = math.degrees(math.atan2(k_face.z - pc.z, (k_face - pc).xy.length))
     for f in range(fc, n + 1):
         e = _smooth((f - fc) / max(1, n - fc))
