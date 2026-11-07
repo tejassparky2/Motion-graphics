@@ -100,7 +100,7 @@ def overlays(shot):
         from channels.monsters.diorama_ep03.post_helper1 import itch
         with open(os.path.join(BUILD, "S07_anchors.json")) as fh:
             a = {int(k): v for k, v in json.load(fh).items()}
-        return [(itch(a, "blotch", size=1.2), dict(start=(STING - 1) / FPS))]
+        return [(itch(a, "blotch", size=1.6), dict(start=(STING - 1) / FPS))]
     if shot != "S15":
         return []
     a = heroes(shot)
