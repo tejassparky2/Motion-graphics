@@ -28,6 +28,17 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 11:40 UTC: **The lighthouse is pushed** (per the coordinator's notes): `okstills/h9_lighthouse_night.png`. Rough stone
+  blocks (a brick pattern with painted noise), a crumbled uneven top (broken wall stubs, gaps, fallen stones on the floor
+  and down on the rocks), a small dark door and one slit window, moss at the foot, and in the lamp room a cracked coral
+  lens, a coral light that warms the broken stone and a soft halo: the only warm thing in the frame. **The night lake**:
+  navy-black with thin moonlit ripples, swapped in automatically by `night()` (helper 9's Ep 2 lake, also when it's
+  built after `night()`). New in `mk/night.py`:
+  - `night.reflection(src, toward)`: the lamp's long coral reflection on the water, broken dashes from below `src`
+    toward `toward` (your camera's position).
+  - `night.moon(az, el)`: a pale moon disc with a halo, at azimuth `az` (0 = north, 90 = east) and elevation `el`,
+    the moonlight turned to come from it (call after `night()`).
+  - `lh = night.lighthouse()` (or `N9.lighthouse()`): `lh["top"]` is the lamp room, `lh["halo"]` the glow ball.
 - 2026-11-07 10:50 UTC: **night() + mark() updated and pushed: switch now.** Still: `okstills/h9_night_village.png` (full res).
   Per the coordinator's notes: the pool is the mark's coral (#ff8466), with a steeper falloff (bright at his wrist,
   dark a few units out); the night masses are a little darker; the mark now has a small hot coral core that blooms.

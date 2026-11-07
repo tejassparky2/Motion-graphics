@@ -38,7 +38,7 @@ MODES = {
     "day": dict(zenith="#7cc3f0", horizon="#e4f3fb", sun="#ffdcae", sun_e=4.2, sun_el=34.0, fill="#c4e2ff", fill_s=0.65,
                 haze="#d9ecf6", tint=(1.0, 1.0, 1.0), key=0.0),
     "dusk": dict(zenith="#3b4f9a", horizon="#ff9a5c", sun="#ff9b5e", sun_e=3.6, sun_el=6.0, fill="#9db4ff",
-                 fill_s=0.5, haze="#c99aa8", tint=(0.86, 0.68, 0.72), key=0.55),
+                 fill_s=0.5, haze="#c99aa8", tint=(0.74, 0.56, 0.62), key=0.3),
     "night": dict(zenith="#1a2c63", horizon="#3d5596", sun="#9eb6ff", sun_e=3.2, sun_el=48.0, fill="#9eb6ff",
                   fill_s=0.45, haze="#36507f", tint=(0.26, 0.31, 0.56), key=1.0),
 }
@@ -219,8 +219,13 @@ def _set(mode, frame=None, azim=None):
     return g
 
 
+_MODE = {"mode": "day"}
+
+
 def _on_render(*_args):
     _tag_materials()
+    if _MODE["mode"] == "night":
+        lake_night()
 
 
 def _hook():
@@ -235,6 +240,9 @@ def apply(mode="night", azim=None):
     after diorama.setup(): materials are tagged for the mark's light now and again when the render starts."""
     _tag_materials()
     _hook()
+    _MODE["mode"] = mode
+    if mode == "night":
+        lake_night()                                           # (again at render start, if the lake comes later)
     return _set(mode, azim=azim)
 
 
@@ -320,21 +328,117 @@ def mark_light(k, energy=6000.0, u=0.3, side="L", name="h9_mark_light", radius=0
 LIGHTHOUSE_AT = Vector((120.0, -720.0, 0.0))  # a rocky point on the far side of the lake (shore y -190, lake to -1500)
 
 
+def _cel_tex(name, col_node_fn, threshold=0.45):
+    """An anime cel material whose base colour comes from a texture network: col_node_fn(nt) -> colour socket."""
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    nt = m.node_tree
+    nt.nodes.clear()
+    L = nt.links.new
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    dif = nt.nodes.new("ShaderNodeBsdfDiffuse")
+    s2r = nt.nodes.new("ShaderNodeShaderToRGB")
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.interpolation = "CONSTANT"
+    ramp.color_ramp.elements[0].color = (*look.SHADOW_TINT, 1)
+    ramp.color_ramp.elements[1].position = threshold
+    mul = nt.nodes.new("ShaderNodeMix")
+    mul.data_type, mul.blend_type = "RGBA", "MULTIPLY"
+    mul.inputs["Factor"].default_value = 1.0
+    em = nt.nodes.new("ShaderNodeEmission")
+    L(dif.outputs[0], s2r.inputs[0])
+    L(s2r.outputs[0], ramp.inputs[0])
+    L(ramp.outputs[0], mul.inputs[6])
+    L(col_node_fn(nt), mul.inputs[7])
+    L(mul.outputs[2], em.inputs[0])
+    L(em.outputs[0], out.inputs[0])
+    return m
+
+
+def _stone_mat(name, a="#b4ad9f", b="#958d80", mortar="#5b5650", scale=0.22):
+    """Rough stone blocks: a brick pattern (staggered courses, dark mortar) with painted noise across the blocks."""
+    if name in bpy.data.materials:
+        return bpy.data.materials[name]
+
+    def col(nt):
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        br = nt.nodes.new("ShaderNodeTexBrick")
+        br.inputs["Scale"].default_value = scale
+        br.inputs["Mortar Size"].default_value = 0.035
+        br.inputs["Brick Width"].default_value = 1.6
+        br.inputs["Row Height"].default_value = 0.75
+        br.inputs["Color1"].default_value = _hex(a)
+        br.inputs["Color2"].default_value = _hex(b)
+        br.inputs["Mortar"].default_value = _hex(mortar)
+        nz = nt.nodes.new("ShaderNodeTexNoise")
+        nz.inputs["Scale"].default_value = 0.9
+        nz.inputs["Detail"].default_value = 3.0
+        mx = nt.nodes.new("ShaderNodeMix")
+        mx.data_type, mx.blend_type = "RGBA", "OVERLAY"
+        mx.inputs["Factor"].default_value = 0.35
+        mp = nt.nodes.new("ShaderNodeMapping")                    # bricks on the walls: (x, z), not the floor plane
+        mp.inputs["Rotation"].default_value = (math.pi / 2, 0, 0)
+        nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs[0], br.inputs["Vector"])
+        nt.links.new(tc.outputs["Object"], nz.inputs["Vector"])
+        nt.links.new(br.outputs["Color"], mx.inputs[6])
+        nt.links.new(nz.outputs["Color"], mx.inputs[7])
+        return mx.outputs[2]
+    return _cel_tex(name, col)
+
+
+def _halo_mat(name, col, strength):
+    """A soft additive glow ball: emission strongest where the surface faces the camera, transparent at the rim."""
+    if name in bpy.data.materials:
+        return bpy.data.materials[name]
+    m = bpy.data.materials.new(name)
+    m.use_nodes = True
+    if hasattr(m, "surface_render_method"):
+        m.surface_render_method = "BLENDED"
+    else:
+        m.blend_method = "BLEND"
+    nt = m.node_tree
+    nt.nodes.clear()
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    lw = nt.nodes.new("ShaderNodeLayerWeight")
+    lw.inputs["Blend"].default_value = 0.5
+    pw = nt.nodes.new("ShaderNodeMath")
+    pw.operation, pw.inputs[1].default_value = "POWER", 4.5
+    inv = nt.nodes.new("ShaderNodeMath")
+    inv.operation, inv.inputs[0].default_value = "SUBTRACT", 1.0
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs[0].default_value = col
+    em.inputs[1].default_value = strength
+    tr = nt.nodes.new("ShaderNodeBsdfTransparent")
+    add = nt.nodes.new("ShaderNodeMixShader")
+    nt.links.new(lw.outputs["Facing"], inv.inputs[1])            # 1 - facing: 1 at the centre, 0 at the rim
+    nt.links.new(inv.outputs[0], pw.inputs[0])
+    nt.links.new(pw.outputs[0], add.inputs[0])
+    nt.links.new(tr.outputs[0], add.inputs[1])
+    nt.links.new(em.outputs[0], add.inputs[2])
+    nt.links.new(add.outputs[0], out.inputs[0])
+    return m
+
+
 def lighthouse(at=LIGHTHOUSE_AT, scale=1.5, glow=1.0, name="h9_lighthouse"):
-    """The old lighthouse: a squat, tapering stone tower on a rocky point, its top broken off in a jagged ring, an open
-    lamp room with a faint coral glow (the mark's coral) and a small coral light inside that warms the broken stone.
-    About 46 units tall at scale 1 (the village huts are ~10). Returns dict(root, glow_light, lamp)."""
+    """The old lighthouse: a squat, tapering tower of rough stone blocks on a rocky point (moss at its foot), a small
+    dark door and one slit window, the top crumbled into an uneven broken ring with fallen stones on the rocks below,
+    and in the open lamp room a soft coral glow (a cracked lens, a coral light that warms the broken stone and a halo):
+    the only warm thing in its frame. About 46 units tall at scale 1 (the village huts are ~10).
+    Returns dict(root, glow_light, lamp, halo, top)."""
     import bmesh
     rnd = __import__("random").Random(7)
     S = scale
     root = bpy.data.objects.new(name, None)
     bpy.context.scene.collection.objects.link(root)
     root.location = at
-    stone = look.toon(f"{name}_stone", _hex("#b9b3a6"))
-    stone2 = look.toon(f"{name}_stone2", _hex("#9f988b"))
+    stone = _stone_mat(f"{name}_stone")
+    stone2 = _stone_mat(f"{name}_stone2", a="#a39b8d", b="#867f73")
     rock = look.toon(f"{name}_rock", _hex("#6f6a66"))
-    dark = look.toon(f"{name}_dark", _hex("#3b3a44"))
+    moss = look.toon(f"{name}_moss", _hex("#4f7a3c"))
+    dark = look.flat(f"{name}_dark", (0.015, 0.015, 0.03, 1))
     glow_m = look.flat(f"{name}_glow", (1.0, 0.40, 0.18, 1), strength=4.0 * glow)   # coral after the night tint
+    halo_m = _halo_mat(f"{name}_halo", (1.0, 0.36, 0.2, 1), 1.6 * glow)
 
     def obj(nm, bm, mat, line=0.06):
         me = bpy.data.meshes.new(nm)
@@ -353,70 +457,102 @@ def lighthouse(at=LIGHTHOUSE_AT, scale=1.5, glow=1.0, name="h9_lighthouse"):
                 pass
         return o
 
-    # the rocky point: a cluster of chunky boulders, the tower's plinth on top
-    for i in range(22):
+    def boulder(nm, r, pos, mat, line=0.05, squash=1.0):
         bm = bmesh.new()
-        r = (3 + rnd.random() * 3.5) * S * (1.3 if i == 0 else 1.0)
         bmesh.ops.create_icosphere(bm, subdivisions=1, radius=r)
         for v in bm.verts:
             v.co.x *= 1.0 + rnd.random() * 0.5
             v.co.y *= 1.0 + rnd.random() * 0.5
-            v.co.z *= 0.9 + rnd.random() * 0.5
+            v.co.z *= (0.9 + rnd.random() * 0.5) * squash
             v.co += Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-1, 1))) * r * 0.12
+        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector(pos))
+        return obj(nm, bm, mat, line)
+
+    # the rocky point: a cluster of chunky boulders, the tower's plinth on top, moss tufts in the cracks
+    for i in range(22):
+        r = (3 + rnd.random() * 3.5) * S * (1.3 if i == 0 else 1.0)
         a = rnd.random() * 2 * math.pi
         d = (0 if i == 0 else 4 + rnd.random() * 12) * S
-        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((math.cos(a) * d, math.sin(a) * d * 0.8,
-                                                           r * (0.35 if i else 0.5))))
-        obj(f"{name}_rock{i}", bm, rock, 0.05)
+        boulder(f"{name}_rock{i}", r, (math.cos(a) * d, math.sin(a) * d * 0.8, r * (0.35 if i else 0.5)), rock)
     base_z = 5.5 * S
-    # the tower: 4 tapering stone drums with darker bands, 12 sides, a little lean
     H, R0, R1 = 34.0 * S, 6.2 * S, 4.4 * S
+    for i in range(14):                                        # moss round the foot of the tower and on the rocks
+        a = rnd.random() * 2 * math.pi
+        d = R0 * (0.95 + rnd.random() * 0.5)
+        boulder(f"{name}_moss{i}", (0.9 + rnd.random() * 1.2) * S,
+                (math.cos(a) * d, math.sin(a) * d, base_z + rnd.uniform(-0.6, 0.6) * S), moss, 0.03, squash=0.45)
+    # the tower: 4 tapering drums of stone blocks with plain bands between, 14 sides
     drums = 4
     for i in range(drums):
         z0, z1 = base_z + H * i / drums, base_z + H * (i + 1) / drums
         r0, r1 = R0 + (R1 - R0) * i / drums, R0 + (R1 - R0) * (i + 1) / drums
         bm = bmesh.new()
-        bmesh.ops.create_cone(bm, cap_ends=True, segments=12, radius1=r0, radius2=r1, depth=z1 - z0)
+        bmesh.ops.create_cone(bm, cap_ends=True, segments=14, radius1=r0, radius2=r1, depth=z1 - z0)
         bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, (z0 + z1) / 2)))
         obj(f"{name}_drum{i}", bm, stone if i % 2 == 0 else stone2)
-        bm = bmesh.new()                                       # the band between drums
-        bmesh.ops.create_cone(bm, cap_ends=True, segments=12, radius1=r1 * 1.08, radius2=r1 * 1.08, depth=0.9 * S)
-        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, z1)))
-        obj(f"{name}_band{i}", bm, stone2)
-    # a door and two slit windows (dark)
-    for (zz, ww, hh) in ((base_z + 2.6 * S, 2.4 * S, 4.6 * S), (base_z + 14 * S, 1.0 * S, 2.6 * S),
-                         (base_z + 23 * S, 1.0 * S, 2.6 * S)):
+        if i < drums - 1:
+            bm = bmesh.new()
+            bmesh.ops.create_cone(bm, cap_ends=True, segments=14, radius1=r1 * 1.07, radius2=r1 * 1.07,
+                                  depth=0.8 * S)
+            bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, z1)))
+            obj(f"{name}_band{i}", bm, stone2)
+    # a small dark door at the foot and one slit window high up (on the -Y side: toward the village shore)
+    for (nm, zz, ww, hh) in (("door", base_z + 2.4 * S, 2.6 * S, 4.4 * S), ("slit", base_z + 21 * S, 0.9 * S, 3.2 * S)):
         rr = R0 + (R1 - R0) * (zz - base_z) / H
         bm = bmesh.new()
         bmesh.ops.create_cube(bm, size=1.0)
         bmesh.ops.scale(bm, vec=Vector((ww, 0.6 * S, hh)), verts=bm.verts)
-        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, -rr + 0.15 * S, zz)))
-        obj(f"{name}_hole{zz:.0f}", bm, dark, 0.0)
-    # the lamp room: a short open drum of 8 stone posts, its roof gone; the top of the wall broken into a jagged ring
+        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, -rr + 0.12 * S, zz)))
+        obj(f"{name}_{nm}", bm, dark, 0.0)
+    # the crumbled top: a broken wall ring of uneven blocks round the open lamp room (tall stubs and gaps)
     top = base_z + H
-    posts = 8
-    for i in range(posts):
-        a = 2 * math.pi * i / posts
-        hgt = (6.5 if i % 3 else 3.0) * S * (0.6 + rnd.random() * 0.5)   # broken posts at different heights
-        bm = bmesh.new()
-        bmesh.ops.create_cube(bm, size=1.0)
-        bmesh.ops.scale(bm, vec=Vector((1.3 * S, 1.3 * S, hgt)), verts=bm.verts)
-        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((math.cos(a) * R1 * 0.92, math.sin(a) * R1 * 0.92,
-                                                           top + hgt / 2)))
-        for v in bm.verts:                                     # jagged tops
-            if v.co.z > top + hgt * 0.9:
-                v.co.z += rnd.uniform(-0.9, 0.5) * S
-        obj(f"{name}_post{i}", bm, stone)
     bm = bmesh.new()                                           # the lamp room floor
-    bmesh.ops.create_cone(bm, cap_ends=True, segments=12, radius1=R1 * 1.15, radius2=R1 * 1.15, depth=0.8 * S)
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=14, radius1=R1 * 1.12, radius2=R1 * 1.12, depth=0.8 * S)
     bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, top)))
     obj(f"{name}_floor", bm, stone2)
-    # the glow: a soft coral core in the lamp room (an old cracked lens) + a warm light
+    blocks = 14
+    for i in range(blocks):
+        if i in (3, 9, 10):                                    # gaps where the wall fell away
+            continue
+        a = 2 * math.pi * (i + 0.5) / blocks
+        hgt = S * (1.2 + 7.0 * abs(math.sin(i * 1.7)) * rnd.uniform(0.5, 1.0))
+        bm = bmesh.new()
+        bmesh.ops.create_cube(bm, size=1.0)
+        bmesh.ops.scale(bm, vec=Vector((2.0 * S, 1.2 * S, hgt)), verts=bm.verts)
+        for v in bm.verts:                                     # a broken, slanted top on each stub
+            if v.co.z > 0:
+                v.co.z += rnd.uniform(-0.25, 0.25) * hgt
+        bmesh.ops.rotate(bm, verts=bm.verts, cent=Vector((0, 0, 0)),
+                         matrix=__import__("mathutils").Matrix.Rotation(a + math.pi / 2, 3, "Z"))
+        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((math.cos(a) * R1 * 0.95, math.sin(a) * R1 * 0.95,
+                                                           top + hgt / 2)))
+        obj(f"{name}_wall{i}", bm, stone)
+    for i in range(9):                                         # fallen stones: on the floor and down on the rocks
+        on_floor = i < 3
+        a = rnd.random() * 2 * math.pi
+        d = (rnd.uniform(0.3, 0.8) * R1) if on_floor else (R0 + rnd.uniform(1.5, 7.0) * S)
+        z = (top + 0.9 * S) if on_floor else (base_z + rnd.uniform(-2.5, 0.5) * S)
+        bm = bmesh.new()
+        bmesh.ops.create_cube(bm, size=1.0)
+        bmesh.ops.scale(bm, vec=Vector((1.8, 1.1, 0.9)) * S * rnd.uniform(0.7, 1.2), verts=bm.verts)
+        bmesh.ops.rotate(bm, verts=bm.verts, cent=Vector((0, 0, 0)),
+                         matrix=__import__("mathutils").Euler((rnd.uniform(-0.6, 0.6), rnd.uniform(-0.6, 0.6),
+                                                               rnd.uniform(0, 3))).to_matrix())
+        bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((math.cos(a) * d, math.sin(a) * d, z)))
+        obj(f"{name}_fallen{i}", bm, stone2, 0.04)
+    # the glow: a cracked coral lens, a halo round it, and a warm light that lights the broken stone from inside
     bm = bmesh.new()
-    bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.6 * S)
+    bmesh.ops.create_icosphere(bm, subdivisions=2, radius=1.5 * S)
     bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, top + 2.2 * S)))
     lamp = obj(f"{name}_lamp", bm, glow_m, 0.0)
-    lamp.visible_shadow = False                               # the glowing lens mustn't block its own light
+    lamp.visible_shadow = False
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=48, v_segments=24, radius=6.5 * S)
+    bmesh.ops.translate(bm, verts=bm.verts, vec=Vector((0, 0, top + 2.6 * S)))
+    halo = obj(f"{name}_halo", bm, halo_m, 0.0)
+    halo.visible_shadow = False
+    for p_ in halo.data.polygons:                              # smooth: a flat-shaded halo shows its facets
+        p_.use_smooth = True
     d = bpy.data.lights.new(f"{name}_light", "POINT")
     d.color = CORAL
     d.energy = 26000.0 * S * S * glow
@@ -426,4 +562,99 @@ def lighthouse(at=LIGHTHOUSE_AT, scale=1.5, glow=1.0, name="h9_lighthouse"):
     lt.parent = root
     lt.location = (0, 0, top + 2.6 * S)
     _tag_materials()
-    return dict(root=root, glow_light=lt, lamp=lamp, top=Vector(at) + Vector((0, 0, top + 2.2 * S)))
+    return dict(root=root, glow_light=lt, lamp=lamp, halo=halo, top=Vector(at) + Vector((0, 0, top + 2.2 * S)))
+
+
+# ------------------------------------------------------------------------------------------------- the night lake
+def lake_night(names=("h9_lake", "h9_lake_shallow"), navy="#0b1530", ripple="#7f97c9"):
+    """Helper 9's Ep 2 lake (diorama_ep02/helper9.village_and_lake) at night: deep navy-black with thin, broken moonlit
+    ripple lines (stretched noise, thresholded), still a cel material so the mark's / the lamp's light warms it."""
+    def col(nt):
+        tc = nt.nodes.new("ShaderNodeTexCoord")
+        mp = nt.nodes.new("ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (0.05, 0.9, 1.0)       # long in x: ripples run across the view
+        nz = nt.nodes.new("ShaderNodeTexNoise")
+        nz.inputs["Scale"].default_value = 1.6
+        nz.inputs["Detail"].default_value = 2.0
+        rp = nt.nodes.new("ShaderNodeValToRGB")
+        rp.color_ramp.interpolation = "CONSTANT"
+        rp.color_ramp.elements[0].color = _hex(navy)
+        rp.color_ramp.elements[1].position = 0.66
+        rp.color_ramp.elements[1].color = _hex(ripple)
+        e = rp.color_ramp.elements.new(0.69)
+        e.color = _hex(navy)
+        nt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
+        nt.links.new(mp.outputs[0], nz.inputs["Vector"])
+        nt.links.new(nz.outputs["Fac"], rp.inputs[0])
+        return rp.outputs[0]
+    m = bpy.data.materials.get("h9_lake_night") or _cel_tex("h9_lake_night", col, threshold=0.3)
+    for nm in names:
+        o = bpy.data.objects.get(nm)
+        if o is not None and o.type == "MESH":
+            o.data.materials.clear()
+            o.data.materials.append(m)
+    _tag_materials()
+    return m
+
+
+def reflection(src, toward, length=420.0, width=5.0, z=0.3, dashes=48, name="h9_reflect", strength=1.8, seed=3):
+    """The lamp's long coral reflection on the water: broken horizontal dashes on a line from below `src` (the light)
+    toward `toward` (the camera's position, projected on the water), wider and fainter as they come closer."""
+    import bmesh
+    rnd = __import__("random").Random(seed)
+    a = Vector((src[0], src[1], z))
+    b = Vector((toward[0], toward[1], z))
+    dirv = (b - a)
+    if dirv.length < 1e-3:
+        return None
+    dirv.normalize()
+    side = Vector((-dirv.y, dirv.x, 0))
+    bm = bmesh.new()
+    for i in range(dashes):
+        t = (i + rnd.random() * 0.6) / dashes
+        c = a + dirv * (length * t ** 1.4)
+        if rnd.random() < 0.18:                                # gaps: the water breaks the line up
+            continue
+        w = width * (0.4 + 2.2 * t) * rnd.uniform(0.3, 1.4)
+        h = (0.5 + 2.2 * t) * rnd.uniform(0.4, 1.0)
+        off = side * rnd.uniform(-0.6, 0.6) * width * (0.5 + 1.5 * t)
+        p = [c + off + side * (w / 2) * sx + dirv * (h / 2) * sy for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))]
+        vs = [bm.verts.new(q) for q in p]
+        bm.faces.new(vs)
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(o)
+    o.data.materials.append(look.flat(f"{name}_mat", (1.0, 0.36, 0.2, 1), strength=strength))
+    o.visible_shadow = False
+    return o
+
+
+def moon(az=200.0, el=24.0, dist=2600.0, r=55.0, name="h9_moon"):
+    """A pale moon disc low in the sky (az / el in degrees, az 0 = north (+Y), 90 = east) with a soft halo; the moonlight
+    (the scene's sun at night) comes from the same direction, so it rims what it lights."""
+    import bmesh
+    e, a = math.radians(el), math.radians(az)
+    d = Vector((math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e)))
+    pos = d * dist
+    out = {}
+    for nm, rad, mat in ((name, r, look.flat(f"{name}_mat", (2.2, 2.3, 2.6, 1), strength=1.4)),
+                         (f"{name}_halo", r * 3.2, _halo_mat(f"{name}_halo", (0.55, 0.65, 1.0, 1), 1.2))):
+        bm = bmesh.new()
+        bmesh.ops.create_uvsphere(bm, u_segments=64, v_segments=32, radius=rad)
+        me = bpy.data.meshes.new(nm)
+        bm.to_mesh(me)
+        bm.free()
+        for p_ in me.polygons:
+            p_.use_smooth = True
+        o = bpy.data.objects.new(nm, me)
+        bpy.context.scene.collection.objects.link(o)
+        o.data.materials.append(mat)
+        o.location = pos
+        o.visible_shadow = False
+        out[nm] = o
+    s = _sun()
+    if s is not None:                                          # the moonlight comes from the moon
+        s.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
+    return out
