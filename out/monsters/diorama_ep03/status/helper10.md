@@ -35,7 +35,11 @@
   the glow line landing on it) and `okstills/S12_f030.png` (the other side, its face toward us, still banked with its
   back to the light). These are half-res renders scaled up, with the 2D pass. The moth is 1.9x on S11's stage; about
   1.7 laps.
-- **S14:** rendering now (f1 = S13's end framing, f40 = mid-tumble, f66 = everyone landed).
+- **S14:** `okstills/S14_f001.png` (the held beat: S13's end framing, Kai on his back, the wrist glowing up, the
+  swarm circling above), `S14_f040.png` (moths rolled upside down and tumbling, the first ones landed with a dust
+  ring), `S14_f066.png` (everyone down on their backs round him, legs up, clear of the caption band). The plops are
+  at f32, f38 and f44. A mid-roll still (f24) is rendering and will be added. Half-res renders scaled up, with the 2D
+  dust puffs. The night lighting is still bGqrs's stand-in until helper 9's night grade lands.
 
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
 **Wait for the coordinator's OK on the S14 stills (noted below) before starting.** Then write your name next to a
