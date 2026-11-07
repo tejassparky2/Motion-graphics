@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~12:45 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~12:55 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -77,4 +77,5 @@ The picture is rebuilt with every other shot slated: 1298 frames, edge scan clea
   - rebuild the cut with placeholders;
   - push, and update this note.
 - Re-check the hook and the S01 captions on the S01 final. The A card and captions get placed on helper 3's S19top still, and B on helper 5's reframed S19bot. The cover frames get picked on the final renders.
+- **S15 captions move to y 300, from helper 5's OK still (f20/f50/f90).** That puts them in the dark sky over the trees, above Kai's cap (~480). At the 71% band they'd cross the upside-down moths' faces in the foreground, which is the laugh.
 - The S10 OK still (f40) is checked: the 71% captions fall on moths, not on Kai, and the swarm cover frame works, with Kai below the cover words.
