@@ -64,15 +64,15 @@
 
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
 **GO: helper 9's night is FINAL at `09d120fd` (11:29 UTC). Pull that commit or later before you render.** Parts 1+2
-(helper 10) started 11:35 UTC.
+(helper 10) started 11:35 UTC, **both pushed 12:40 UTC** (night `09d120fd`). Waiting on parts 3 (helper 4) and 4 (helper 2); I join as soon as they land.
 **S14 OK'd by the coordinator (11:20 UTC).** Start your part only **after helper 9's FINAL night commit** (marked
 FINAL in status/helper9.md, ~11:40 UTC): pull that commit (or later) so every part has the same night. I'll note
 the commit hash here when it lands. Write your name next to a range here and push before you start.
 
 | Part | Frames | Who |
 |---|---|---|
-| 1 | f001-021 | helper 10 |
-| 2 | f022-042 | helper 10 (coordinator 11:22: helper 8 has no Blender) |
+| 1 | f001-021 | helper 10: **DONE** 12:01 UTC, parts/S14_f001-021.mp4 (21/21, tags 0) |
+| 2 | f022-042 | helper 10: **DONE** 12:36 UTC, parts/S14_f022-042.mp4 (21/21, tags 0) |
 | 3 | f043-063 | helper 4 (coordinator 11:26; helper 7 has no Blender) |
 | 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
 
