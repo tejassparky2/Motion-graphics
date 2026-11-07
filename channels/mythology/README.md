@@ -5,7 +5,8 @@ reels in hindi and kannada for hindi the voice you already have and we try to ma
 chat". This channel has its own chat and its own branch, `ccr-56282fe5-evehq4-mythology`, in its own worktree
 (`<shorts research>/Motion-graphics-myth`). Don't switch the branch of the shared `Motion-graphics` checkout.
 
-**Owner decisions, still open:** channel name(s); Kannada voice (Suresh in use, Vidya the alternative). See Status.
+**Owner decisions, still open:** Hindi channel name (Kannada is "Namma Purana"); which cloned Kannada voice (owner's
+or brother's) re-voices the four Kannada reels. See Voices and Status.
 
 ## Owner instructions, 6 Nov 2026 (night)
 - "make me three 60 seconds or more videos all 3 with different approach animation scene etc in both kannada and
@@ -33,8 +34,12 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - The repo is **public** (tejassparky2/Motion-graphics). Never commit chat files, downloaded videos, keys or anything
   private. Pull before pushing. Commit messages end with `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 - Keys live in `<shorts research>/.env`. Never read or print them; the scripts load them.
-- **No voice cloning.** Never the owner's cloned voice, never any real person's voice (no famous narrator, no
-  TV-serial voice). Synthetic voices from Indic Parler-TTS named speakers only, spoken by IndicF5.
+- **Voice cloning: only the two consented Kannada voices.** On 7 Nov 2026 the owner approved clones of their own
+  voice ("this is mine") and their brother's ("the first one was from my brother and he agress") for the Kannada
+  reels. Nobody else is ever cloned (no famous narrator, no TV-serial voice). Hindi stays the synthetic Aman voice.
+  The recordings and references stay in `myth_assets/voice/` and never go in the repo. Suggested to the owner (not
+  yet decided): on upload, answer YouTube's "altered or synthetic content" question with yes and turn on Instagram's
+  AI label. Those are upload settings, not caption words, so the no-AI-wording rule still holds.
 - **No downloads** of new tools or models until the owner says "download". Explain the option and ask first.
 - **No AI wording** in captions, descriptions or upload sheets.
 - **Credits as names, never links.** Sources line: texts, translators, years. Art line 1: the sites the pictures came
@@ -77,7 +82,14 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   named speaker Aman made the prompt; IndicF5 speaks every line; tempo x1.15, studio chain v3.
   Known slips: "नए/नई" comes out "नहीं"; "तेज़ चली" comes out "tes chali" (use "तेज़ी से"); a line starting with
   "प्रिंटिंग" stutters. Whisper often hears dh as d and jh as j; check the raw take before retaking.
-- **Kannada: being chosen.** `kn_voice_search.py` voices a two-sentence original passage with the model card's
+- **Kannada (7 Nov 2026): a cloned real voice, the owner choosing which.** The owner rejected Suresh and Vidya
+  ("The both kannada voice is not good") and sent two recordings: `brother_v1` (the brother, from muruli.mp3) and
+  `tejas_v2` (the owner, from mine.mp3). Both had music under the voice: Demucs (HTDemucs) took it out, then a clean
+  4-9 s piece cut at the quietest points, padded with 0.1 s / 0.4 s of silence, became the IndicF5 reference with its
+  exact words in `<stem>.txt` beside it (channel.py reads it; choose with `MYTH_KN_VOICE`). A reference cut mid-word
+  makes IndicF5 repeat the last syllable at the start of a line. Resemblyzer similarity of each clone to its speaker:
+  0.93 (owner), 0.91 (brother). Turbo letter errors on the four sample lines: 4-34%, same range as Suresh.
+- Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best
   ones. The owner's ear decides, because Whisper is weak in Kannada. The pick becomes
