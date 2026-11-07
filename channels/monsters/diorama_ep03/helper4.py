@@ -111,7 +111,7 @@ def s01():
     feet = {"L": Vector((0.09, 0, 0)), "R": Vector((-0.09, 0, 0))}
 
     # Wren: a stumble two steps back (anticipation, a heel catch, arms out), then she holds the bell up, trembling
-    steps = [(1, 0.0), (5, 0.9), (9, 1.6), (13, 2.6), (17, 2.9), (21, 3.0)]   # (frame, distance back)
+    steps = [(1, 0.0), (5, 0.55), (9, 1.0), (13, 1.55), (17, 1.75), (21, 1.8)]   # (frame, distance back)
 
     def back_at(f):
         for (fa, da), (fb, db) in zip(steps[:-1], steps[1:]):
@@ -273,7 +273,7 @@ def s01():
     wren_head = w0 + fwd * 1.5 + up * 7.4
     c0 = wrist - fwd * float(os.environ.get("S01_BACK", "2.0")) + left * float(os.environ.get("S01_LEFT", "2.0")) \
         - up * float(os.environ.get("S01_LOW", "1.8"))
-    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.03")))
+    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.07")))
     c1 = c0.lerp(wrist, 0.10)
     cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "15")))
 
