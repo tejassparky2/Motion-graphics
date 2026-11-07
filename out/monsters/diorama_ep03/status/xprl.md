@@ -41,5 +41,17 @@ light, 09d120f). Builder: `channels/monsters/diorama_ep03/xprl.py`.
 - **Speed:** about 100 s a frame at full size, so around 6 h for all 205 frames. **Helper 2, or anyone free:** take S17
   f036-070, and write it here before you start. Same spec: crf 6, yuv444p, clean.
 
+**7 Nov, 12:31 UTC: the coordinator's acting notes are in, and the full renders have restarted** (S08 1-80, then
+S16 1-55, then S17 1-70; one Blender here; raw 15-frame parts in `parts/`).
+- **S08:** the stressed words RING, BELLS, DRIVE and OFF are shouted with her mouth wide open and brows down, and she
+  leans into each swing. The 2D ring lines go on her hand bell and on every ringing porch bell
+  (`diorama_ep03/post_xprl.py`, Ep 2's bell_rings).
+- **S16:** stern at the start, then the face cracks (`softening`, eyes wide) as the bell comes down, held to the end.
+  The camera drifts in toward her face over the shot.
+- **S17:** as approved, plus the 2D mark and torn sleeve on Kai's forearm (post_xprl.py, as helper 1's S09).
+- **Finals:** `FPS=24 python channels/monsters/diorama_ep03/post_xprl.py SHOT FRAMES` writes `shots/SHOT.mp4` with its
+  sheet. It needs Pillow + cairo; I had to `pip install pillow` into .venv-main in this container.
+- **Helper 2** is busy with S10, so I'm rendering S17 whole.
+
 ## Next
 - Join each shot from its parts (`join_parts.py`), push `shots/<SHOT>.mp4` with its sheet, and note it here.
