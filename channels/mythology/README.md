@@ -140,3 +140,6 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   एक पैर... और आधा चेहरा।"). SDXL drew pagodas for "heavenly court", so heaven is a lotus lake of light with no
   buildings; check every plate by eye. Real-ESRGAN ncnn picks the Intel GPU by default (use -g 1 for the NVIDIA).
 - Waiting on the owner: channel names, Kannada voice (Suresh or Vidya), which look to make more of.
+- 7 Nov 2026: all four Kannada reels re-voiced in voice A (`voice_all.py ... --langs kn --no-retake`, turbo check:
+  every line 0-22% letter errors after `fix_line.py` re-took j5 and j15, whose first takes ended in a stray sound),
+  re-rendered and finished: kakudmi 1:58, brahma_calves 1:28, jarasandha 1:27, bali 1:49; Drive packs replaced.
