@@ -1,6 +1,6 @@
 # helper 8: Ep 3 assembly status
 
-**Updated:** 7 Nov 2026, ~11:40 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~12:10 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -48,6 +48,14 @@
   - both pulse on "Comment".
 - The edge scan is clean.
 - Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep03 --animatic --check`. Drop --animatic for the final.
+
+## Shots in the cut (ESRGAN 1080 in `shots_1080/`, captions checked on the real frames)
+| Shot | From | ESRGAN | Captions |
+|---|---|---|---|
+| S11 | helper 4 (1532847e, 92 f) | done | 905: under the moth and the light, clear of its face and the glow line |
+| S12 | helper 10 (7ac5713b, 79 f) | done | 905: under the orbit, clear of the moth and the light |
+
+The picture is rebuilt with every other shot slated: 1298 frames, edge scan clean.
 
 ## Next
 - Then for each shot as it lands:

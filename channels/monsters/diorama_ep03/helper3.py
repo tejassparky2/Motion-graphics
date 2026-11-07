@@ -409,7 +409,13 @@ def s19top():
     n, W, seq, t0 = _timing("S19")
     X._world(n)
     sc = bpy.context.scene
-    h9e2.village_and_lake()
+    lake = h9e2.village_and_lake()
+    night_water = look.toon("h3_lake_night", look.hexc("#0e1f4a"), shade=0.85, rim=0.15)   # until helper 9's night lake
+    for key in ("lake", "shallow"):
+        o = lake.get(key)
+        if o is not None:
+            o.data.materials.clear()
+            o.data.materials.append(night_water)
     lh = N9.lighthouse()
     N9.night(n)
     from channels.monsters.mk import night as NG
@@ -512,9 +518,9 @@ def s19top():
     for f in range(1, n + 1):
         e = _smooth((f - 1) / max(1, n - 1))
         bc = boat_at(f) + Vector((0, 0, 3.2))
-        loc = bc - head * (26.0 - 3.0 * e) + side * 9.0 + Vector((0, 0, 6.5))
+        loc = bc - head * (31.0 - 3.0 * e) + side * 10.5 + Vector((0, 0, 7.5))
         tgt = bc + head * 10.0 + Vector((0, 0, 1.5))
-        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 32.0, (bc - loc).length, shift_y=-0.22, blur=4.0,
+        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 32.0, (bc - loc).length, shift_y=-0.27, blur=4.0,
                     haze=(6.0, 24.0))
     H9._linear(cam, cam.data)
     sc.render.use_border = True
