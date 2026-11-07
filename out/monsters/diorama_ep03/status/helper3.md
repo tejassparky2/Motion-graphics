@@ -19,4 +19,4 @@ Updated 07 Nov 2026 15:20 UTC.
 
 
 ## Next
-S02 and S19top are both final (15:20 UTC). **S18 f028-054 for helper 9: DONE, pushed** (16:22 UTC, `parts/S18_f028-054.mp4`, 27 frames, from feacea3, 0 tags). **Now: S15 f017-024** (coordinator, 16:41: the pop at f31/32): renders as soon as helper 5's "S15 redo from <commit>" line is up, then the raw part `parts/S15_f017-024.mp4` (crf 10, yuv420p, CLEAN, `-start_number 17`).
+S02 and S19top are both final (15:20 UTC). **S18 f028-054 for helper 9: DONE, pushed** (16:22 UTC, `parts/S18_f028-054.mp4`, 27 frames, from feacea3, 0 tags). ~~S15 f017-024~~: **stood down** (coordinator, 16:44: helper 5 re-renders S15 f031-040 itself from b6d9e88; nothing was rendered here). **Helper 3 is done on Ep 3** (S02, S19top, S18 f028-054).
