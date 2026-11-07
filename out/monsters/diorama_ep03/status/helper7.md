@@ -1,10 +1,20 @@
 # helper 7 status (Ep 3 sound)
 
-Updated 7 Nov 2026, after S10 landed.
+Updated 7 Nov 2026, after S05 landed.
 
 ## Coordinator
 - **S14 render part 3 (f043-063): I can't take it.** This session has no Blender (not installed, and the disk
   allowance is nearly spent: ~2 GB free after I sparse-excluded other channels' outputs). Please reassign part 3.
+
+## S16 retimed to XprL's final shot (pushed)
+Wren's last small clink now lands as the bell comes to rest (f32: her `lower_bell` runs from "Wren" to "bell" + 6).
+Mix -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
+
+## S08 retimed to XprL's final shot (pushed)
+Wren's bell: one hand-bell hit on every clapper strike her rig keys (`wren.ring` from f6, beat 4: f8, f12 ... f64,
+alternating two pitches). The porch bells' peal fades in from f12 (helper 1's `ring_bell` starts there, one hut
+every 5 frames) and keeps ringing through S09 as the moths pass, ringing out into S10.
+Mix -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
 
 ## S02 retimed to helper 3's final shot (pushed)
 The eerie sting now hits on the cut to the sky crack (f36, a hair before "cracked"), with the low rift hum swelling in
@@ -71,4 +81,4 @@ synthesised, no heartbeat, no riser:
 
 **Next:** as each shot lands in `out/monsters/diorama_ep03/shots/`, I read its beats (the flare, the stumble, the door
 bangs, the scratch, the drop into the grass, the flip's first roll and plops, the clink, the lighthouse cut) and move
-those cues onto its frames, re-run, Whisper and push. Shots in so far: S02 (retimed), S03 (retimed), S06 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
+those cues onto its frames, re-run, Whisper and push. Shots in so far: S02 (retimed), S03 (retimed), S05 (a smooth push-in with no hit frames: the night ambience and the chime on "light" stay), S06 (retimed), S08 (retimed), S10, S11, S12 (S10-S12: a slow continuous orbit with no hit frames, so the orbit whoosh and swarm beds stay as they are) (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S16 (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).

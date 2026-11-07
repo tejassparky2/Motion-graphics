@@ -1,5 +1,13 @@
 # Helper 5: Ep3 status (S07, S15, S19 bottom)
 
+**2026-11-07 14:50 UTC: RENDER PLAN (fixed; sorry for the doubled S19bot work)**
+
+| Shot | Mine (done / rendering) | Others | Then |
+|---|---|---|---|
+| S19bot (176) | **f001-132 done** (my chunk stopped at 14:48) | helper 6 f133-176 (`S19bot_f133-154.mp4` pushed, f155-176 rendering) | I join + encode (no 2D pass) |
+| S07 (60) | f001-029 done, rendering to **f040** (stops there) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4** (rendering, `parts/S07_f041-050.mp4`); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
+| S15 (106) | f001-023 done, rendering to **f036** (stops there) | bGqrs f037-070, helper 2 f071-106 (both pushed/rendering) | I join + the 2D pass (dizzy stars/spirals) |
+
 **2026-11-07 10:10 UTC**
 - **S19bot: FULL RENDER RUNNING** (since 10:58 UTC, 176 frames, ~3 min/frame at full size here, so ~9 h; chunks
   resume after a container restart). Your 09:52 notes done, see `okstills/S19bot_v2_f030_f122_f170.jpg`: he walks EAST
@@ -13,6 +21,7 @@
   - **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
     ee592d7b), as raw parts `S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`).
     Please stop at f132.
+  - ~~bGqrs's S19bot f089-132 claim~~: **withdrawn** (your f001-132 is done; nothing of it was rendered).
 - **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING**: I render f001-070 (f016 done at 14:10 UTC; a container restart cost ~1 h),
   **helper 2 renders f071-106** (parts/S15_f071-088.mp4 pushed, f089-106 rendering). **CLAIMED by helper 2 (13:28 UTC): f071-106**, rendering now at the current head, as two raw parts `S15_f071-088.mp4` + `S15_f089-106.mp4` (your spec: crf 10 yuv420p, CLEAN). Please stop at f070. Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
   2D pass):
@@ -24,6 +33,8 @@
      looks round at the moths too.
   3. Four hero moths in the foreground round him (placed by screen position), legs waving big on 2s, with 2D dizzy
      stars circling over each and a spiral turning on each wing eye-spot (`diorama_ep03/post_helper5.py`).
+  - **CLAIMED by bGqrs (14:40 UTC): S15 f037-070**, rendering now at the current head (helper5.py unchanged since c270955),
+    as one raw part `parts/S15_f037-070.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number 37`, no 2D pass). **Please stop at f036.**
   Raw part spec for helpers: `--frames A-B` (every frame on 1s), crf 10 yuv420p 24 fps, CLEAN flags,
   `-start_number A`, to `parts/S15_fAAA-BBB.mp4`, no 2D pass (I run post_helper5 after joining; it needs
   build/monsters/diorama_ep03/S15_heroes.json, which my builder writes).
