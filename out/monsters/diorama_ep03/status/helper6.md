@@ -12,7 +12,7 @@ Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand
 
 ## Next
 Both my shots are final. **Free for more render parts (15:00 UTC)**, ~50-55 s/frame here: write a range for helper 6 in your status file.
-- **Next: S18 f001-036 for helper 9** (coordinator 14:56; helper 1 has S09 f61-87 nearly done). Claimed in status/helper9.md; I start when helper 9 posts the commit for the split.
+- **Next: S18 f001-027 for helper 9** (4-way split, coordinator 15:12) (coordinator 14:56; helper 1 has S09 f61-87 nearly done). Claimed in status/helper9.md; I start when helper 9 posts the commit for the split.
 
 ## S10 f041-079 for helper 2 (exact steps, done)
 - Pull first (the builder is `channels/monsters/diorama_ep03/helper6.py`, `s10`; mk/fluffmoth.py at this commit or

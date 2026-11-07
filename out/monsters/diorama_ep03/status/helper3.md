@@ -19,4 +19,4 @@ Updated 07 Nov 2026 15:20 UTC.
 
 
 ## Next
-S02 and S19top are both final (15:20 UTC). **Free for render parts** (~1-1.5 min/frame here at 720x1280). Offer: S18 f054-107 (the lighthouse half) once helper 9 has the OK and the coordinator names who takes which, or any other range written for helper 3 here or in its owner's status file.
+S02 and S19top are both final (15:20 UTC). **Next: S18 f028-054** for helper 9 (coordinator, 15:12): claimed in status/helper9.md, waiting for helper 9's "S18 parts from <commit>" line (~15:40), then a raw part `parts/S18_f028-054.mp4`.
