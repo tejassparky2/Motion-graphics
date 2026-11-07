@@ -54,10 +54,10 @@ def _ground_glow(cr, x, y, lv, f):
     cr.save()
     cr.translate(x, y)
     cr.scale(1.0, 0.45)
-    fx2d._glow(cr, 0, 0, 230 * lv, CORAL, 0.42 * min(1.0, lv))
+    fx2d._glow(cr, 0, 0, 230 * lv, CORAL, 0.24 * min(1.0, lv))
     cr.restore()
-    fx2d._glow(cr, x, y, 90 * lv, CORAL_HOT, 0.55 * min(1.0, lv))
-    fx2d._glow(cr, x, y, 26 * lv, PINK_WHITE, 0.8 * min(1.0, lv))
+    fx2d._glow(cr, x, y, 60 * lv, CORAL_HOT, 0.32 * min(1.0, lv))
+    fx2d._glow(cr, x, y, 14 * lv, PINK_WHITE, 0.45 * min(1.0, lv))
 
 
 def _beam(cr, x, y, top, lv, f):
@@ -68,8 +68,8 @@ def _beam(cr, x, y, top, lv, f):
     cr.save()
     cr.set_operator(cairo.OPERATOR_ADD)
     g = cairo.LinearGradient(0, y, 0, top)
-    g.add_color_stop_rgba(0.0, *CORAL_HOT, 0.30 * lv)
-    g.add_color_stop_rgba(0.35, *CORAL, 0.14 * lv)
+    g.add_color_stop_rgba(0.0, *CORAL_HOT, 0.18 * lv)
+    g.add_color_stop_rgba(0.35, *CORAL, 0.09 * lv)
     g.add_color_stop_rgba(1.0, *CORAL, 0.0)
     cr.new_path()
     cr.move_to(x - 34, y)
@@ -102,22 +102,23 @@ def _beam(cr, x, y, top, lv, f):
 
 
 def _blades(cr, x, y, lv, seed=4):
-    """Dark grass blades standing in front of the glow's core, rimmed coral: the light comes up through the grass."""
+    """Thin dark-green grass blades standing in front of the glow's core, a faint coral rim: the light comes up
+    THROUGH the grass."""
     rnd = random.Random(seed)
-    for _ in range(11):
-        bx = x + rnd.uniform(-46, 46)
-        h = rnd.uniform(22, 44)
-        lean = rnd.uniform(-9, 9)
-        w = rnd.uniform(4, 7)
+    for _ in range(16):
+        bx = x + rnd.uniform(-40, 40)
+        h = rnd.uniform(12, 26)
+        lean = rnd.uniform(-7, 7)
+        w = rnd.uniform(2.2, 3.6)
         cr.new_path()
-        cr.move_to(bx - w / 2, y + 10)
-        cr.line_to(bx + w / 2, y + 10)
-        cr.line_to(bx + lean, y + 10 - h)
+        cr.move_to(bx - w / 2, y + 8)
+        cr.line_to(bx + w / 2, y + 8)
+        cr.line_to(bx + lean, y + 8 - h)
         cr.close_path()
-        cr.set_source_rgba(*CORAL_HOT, 0.75 * min(1.0, lv))
-        cr.set_line_width(2.4)
+        cr.set_source_rgba(*CORAL_HOT, 0.35 * min(1.0, lv))
+        cr.set_line_width(1.4)
         cr.stroke_preserve()
-        cr.set_source_rgba(*BLADE, 0.92)
+        cr.set_source_rgba(0.08, 0.2, 0.13, 0.72)
         cr.fill()
 
 
