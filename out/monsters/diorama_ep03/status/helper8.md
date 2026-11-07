@@ -1,6 +1,6 @@
 # helper 8: Ep 3 assembly status
 
-**Updated:** 7 Nov 2026, ~10:40 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~11:00 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -13,7 +13,11 @@
   - **The A/B split on S19:** S19top.mp4 above, S19bot.mp4 below, with the jagged divider.
     - The cards are A · GO TONIGHT and B · LEAVE AT DAWN, at 85% size. A pops on "Option A", B on "Option B", and both pulse on "Comment".
     - LEAVE AT DAWN is 513 px wide from its centre at 85%, so B's centre has to stay at x ≤ 197.
-    - Both cards start at x 124, straddling the divider (A at y 585, B at 715). They get re-placed on the S19 plates.
+    - **B card moved to (124, 880), placed on helper 5's S19bot OK still (f060/f124/f172).**
+      - Kai's head, the shrimp and the look back fill the dawn panel's top, just under the divider. At y 715 the B card covered all three.
+      - At 880 it sits over his waist, and his head, the shrimp and the look back stay clear. Its circle ends at y 951, above the Shorts UI line.
+      - The two layouts side by side, 715 on the left and 880 on the right: `status/helper8_s19_cards.jpg`.
+    - A stays at (124, 585), straddling the divider. It gets re-checked when helper 3's S19top still lands.
   - **Edge-band scan:** the same rule as Episode 2.
   - Regression check: Episode 2 still rebuilds byte-identical (sha 4926290880f2).
 - **`deliver_ep01v2.py --version diorama_ep03`** writes the final files for Episode 3:
