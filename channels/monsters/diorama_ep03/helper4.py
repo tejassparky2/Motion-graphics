@@ -165,9 +165,7 @@ def s01():
         PW.aim("upper_arm.R", (-0.10, -0.80, 0.25))                 # the bell up like a ward (S20bot v2's end pose)
         PW.aim("forearm.R", (-0.04, -1.05, 0.6))
         PW.aim("hand.R", (-0.04, -0.3, -1))
-        if stumbling:                                                # the free arm out a little for balance
-            PW.aim("upper_arm.L", (0.45, 0.05, -0.85 + 0.15 * math.sin(f * 0.7)))
-            PW.aim("forearm.L", (0.4, -0.2, -0.7))
+        # (her free left arm stays down at her side: out, it crossed the frame in front of Kai)
         lean = 12.0 if f < 13 else 12.0 * (1 - _smooth((f - 13) / 10))
         PW.rot("chest", (-10.0 - lean + 1.0 * math.sin(f / 20.0), 0, 0))
         PW.rot("head 1", (-8.0, 0, 0))
