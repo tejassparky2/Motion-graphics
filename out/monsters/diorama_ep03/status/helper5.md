@@ -34,7 +34,7 @@
      looks round at the moths too.
   3. Four hero moths in the foreground round him (placed by screen position), legs waving big on 2s, with 2D dizzy
      stars circling over each and a spiral turning on each wing eye-spot (`diorama_ep03/post_helper5.py`).
-  - **CLAIMED by bGqrs (14:40 UTC): S15 f037-070**, rendering now at the current head (helper5.py unchanged since c270955),
+  - **bGqrs: S15 f037-070 PUSHED 15:45 UTC** (`parts/S15_f037-070.mp4`, 34 f; f37-40 at 5d14f47, f41-70 at 79ccb50, no S15 code change between; was claimed 14:40),
     as one raw part `parts/S15_f037-070.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number 37`, no 2D pass). **Please stop at f036.**
   Raw part spec for helpers: `--frames A-B` (every frame on 1s), crf 10 yuv420p 24 fps, CLEAN flags,
   `-start_number A`, to `parts/S15_fAAA-BBB.mp4`, no 2D pass (I run post_helper5 after joining; it needs
