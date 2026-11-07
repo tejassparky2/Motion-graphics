@@ -1,17 +1,17 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 10:55 UTC.
+Updated 7 Nov 2026, 11:00 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **Building, OK stills next** (`diorama_ep03/bgqrs.py`, `s13`; 2D pass `post_bgqrs.py`). Stills at f1, f27 and f45 are rendering; they go to okstills/ with the 2D pass. | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **OK stills pushed** (with the 2D pass): `okstills/bgqrs_S13_f001.jpg` (standing, wrist up, the swarm round it), `_f027.jpg` (just after the bloom on "below") and `_f045.jpg` (the cut: on his back, the wrist glowing up through the grass, the swarm above). Half-size renders, upscaled. On helper 9's night()/mark() (WIP). **Next:** the full render once helper 9 marks the night FINAL (or on your OK). | shots/S13.mp4 (pending) |
 
 ### S13 staging (57 render frames; "below" at f26)
 - **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
 - **The drop (on 2s):** standing with the left wrist raised to the swarm (as S10 leaves him) -> a dip (f3) -> sits
   back (f8) -> flat on his back (f13, a small bounce) -> settled (f16). He lies **east-west, head to the west**, hips at
   (9, -140), LYING_V3's legs. The left arm goes out onto the grass f17-25 and ends **palm up** (the forearm rolled -90
-  degrees, so the mark faces the sky); the hand rests at about (5.9, -136.6). Cap pushed back 32 degrees; his head rolled
+  degrees, so the mark faces the sky); the hand rests at about (4.8, -137.1), up past his head. Cap pushed back 32 degrees; his head rolled
   toward the camera (north), eyes on the swarm, a determined face.
 - **The light:** the mark glows as in S10-S12 while it's up, then blooms on "below" (f26). The toon paint takes only the
   light's brightness, so the coral colour is drawn in 2D (`diorama_ep03/post_bgqrs.py`): the zigzag on the wrist, a coral
@@ -29,19 +29,31 @@ Updated 7 Nov 2026, 10:55 UTC.
   side. To f57: a slow push-in. The glowing wrist ends at y ~780, his face just above it, his body off to the left, and
   the swarm above to the top of the frame. Gentle blur (3 px), the night haze well behind him.
 - **Night:** helper 9's `N9.night(n)` and `N9.mark(k)` (in since 10:50; the stand-in grade only applies without them).
-- **Render cost here:** about 4.5 min to build and 2-2.5 min a frame at half size, so roughly 5 min a frame at full
-  size. 57 frames on 1s is about 5 h on one container, so I'll split S13 into parts below.
+- **Render cost here** (on helper 9's night): ~4.5 min to build, ~45 s a frame at half size, so roughly 2 min a frame
+  at full size: 57 frames on 1s (the camera moves) is about 2 h on one container.
+
+### S13 render parts (every frame renders on 1s, so any range works; write your name and push before starting)
+| Part | Frames | Who |
+|---|---|---|
+| 1 | f001-028 | bGqrs |
+| 2 | f029-057 | (free; else bGqrs) |
+
+- Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S13 OUT --frames 29-57` (pull first). Raw
+  part: libx264 crf 10 yuv420p 24 fps, CLEAN flags, `-start_number 29`, no 2D pass ->
+  `parts/S13_f029-057.mp4`. I join, run the 2D pass (it needs `build/monsters/diorama_ep03/S13_mark.json`, which every
+  render writes identically) and encode.
 
 ### Shared names for S14 (helper 10), S15 (helper 5), S16/S17 (XprL): pushed, import them
 `from channels.monsters.diorama_ep03 import bgqrs as B`. These are measured on S13's final pose and move with
 `B.S13_AT`.
-- `B.KAI_LIE` = (9, -140, 0): his hips on the grass. `B.KAI_HEAD` = (5.9, -140, 0.9). `B.KAI_FEET` = (12.3, -140.2, 0).
+- `B.KAI_LIE` = (9, -140, 0.65): his hips on the grass. `B.KAI_HEAD` = (5.9, -140, 0.9). `B.KAI_FEET` = (12.3, -140.2, 0).
 - `B.HEAD_DIR` = (-1, 0, 0): his head points **west** (`B.S13_HEAD` = 90 compass).
 - `B.FACING`: on his back, face up to the swarm, turned a little toward his left (north).
 - **Sides:** `B.LEFT_SIDE` = (0, 1, 0). His left (the mark, the laid-out arm) faces **north**, toward the meadow.
   `B.RIGHT_SIDE` = (0, -1, 0). His right faces **south, toward the village** (the square is at (6, -170)). So Wren
   comes up from the village behind his right side and walks round his head or feet to kneel at his left (north).
-- `B.WRIST` = (5.88, -136.56, 0.25): the left hand, palm up on the grass. `B.MARK` = (6.06, -137.41, 0.47): the mark
+- `B.WRIST` = (4.76, -137.1, 0.25): the left hand, palm up on the grass up past his head (11:00: moved so the glow
+  rises beside his face, not through it). `B.MARK` = (5.3, -137.78, 0.47): the mark
   (= `H9._forearm(k, H9.MARK_U)`), the light below them.
 - **Swarm:** `B.SWARM_CENTRE` = MARK + (0.4, -0.7, 0). `B.SWARM_HEIGHT` = (3.8, 10) above the mark. `B.SWARM_RADIUS` = 4.4
   east-west, x `B.SWARM_SQUASH` (0.38) north-south. 28 moths (`B.SWARM_N`) at `B.SWARM_SCALE` 0.42 (x 0.8-1.15).
