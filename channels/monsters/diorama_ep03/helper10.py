@@ -29,6 +29,7 @@ import sys
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep03")
+LANDINGS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "S14_landings.json")   # committed (S15, sound)
 try:
     import bpy
     from mathutils import Euler, Matrix, Vector
@@ -120,8 +121,8 @@ def _clear_wings(rig):
 
 # ---------------------------------------------------------------- S12
 S12_PERIOD = 40                     # frames per lap (~1.7 s): about 1.7 laps in the shot, "round and round"
-S12_SCALE = 1.5                     # one big moth (S11's explainer moth, the camera a little wider)
-S12_R, S12_DROP = 5.0, 5.5          # the ring's radius and how far below the light it flies: a ~42 degree bank
+S12_SCALE = 1.9                     # one big moth (S11's explainer moth, the camera a little wider)
+S12_R, S12_DROP = 5.2, 5.6          # the ring's radius and how far below the light it flies: a ~42 degree bank
 S12_EL = 16.0                       # the camera's elevation over the ring: side-on, the ring an ellipse
 
 
@@ -181,7 +182,7 @@ def build_s12():
     cam_d = bpy.data.cameras.new("S12cam")
     cam = bpy.data.objects.new("S12cam", cam_d)
     sc.collection.objects.link(cam)
-    c0 = tgt + 50.0 * Vector((-math.cos(el), 0.0, math.sin(el)))
+    c0 = tgt + 54.0 * Vector((-math.cos(el), 0.0, math.sin(el)))
     cam.location = c0
     cam.rotation_euler = (tgt - c0).to_track_quat("-Z", "Y").to_euler()
     cam_d.lens, cam_d.clip_end = 52.0, 400.0
@@ -248,25 +249,35 @@ def _swarm_layout(n_moths, seed=13):
     return out
 
 
-def _landing_spots(n_moths, wrist, hips, hd, seed=14):
-    """Where each moth lands on its back: a loose ring round the glowing wrist (1.5-5.5 units), none on Kai's body
-    (the strip from his feet to past his head) and not too close to each other."""
+def _landing_spots(n_moths, wrist, hips, hd, cam, n, seed=14):
+    """Where each moth lands on its back: spread round the glowing wrist (1.5-8 units), none on Kai's body (the strip
+    from his feet to past his head), ~1.5 apart (their splayed wings), and on screen at the shot's end inside
+    x 50-670, y 430-820 (above the caption band at 845)."""
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene
+    sc.frame_set(n)
     rnd = random.Random(seed)
     feet, crown = hips - hd * 4.2, hips + hd * 4.4
+    ab = crown - feet
     spots = []
-    tries = 0
-    while len(spots) < n_moths and tries < 20000:
-        tries += 1
-        a = rnd.uniform(0, 2 * math.pi)
-        r = 1.5 + 4.0 * math.sqrt(rnd.random())
-        p = Vector((wrist.x + r * math.cos(a), wrist.y + r * math.sin(a), 0.0))
-        ab = crown - feet
-        t = max(0.0, min(1.0, (p - feet).dot(ab) / ab.length_squared))
-        if (p - (feet + ab * t)).length < 1.5:                   # on his body
-            continue
-        if any((p - q).length < 0.85 for q in spots):
-            continue
-        spots.append(p)
+    for gap in (1.5, 1.25, 1.0):
+        tries = 0
+        while len(spots) < n_moths and tries < 6000:
+            tries += 1
+            a = rnd.uniform(0, 2 * math.pi)
+            r = 1.5 + 6.5 * math.sqrt(rnd.random())
+            p = Vector((wrist.x + r * math.cos(a), wrist.y + r * math.sin(a), 0.0))
+            t = max(0.0, min(1.0, (p - feet).dot(ab) / ab.length_squared))
+            if (p - (feet + ab * t)).length < 1.8:               # on his body
+                continue
+            if any((p - q).length < gap for q in spots):
+                continue
+            v = world_to_camera_view(sc, cam, p)
+            if not (50 < v.x * 720 < 670 and 430 < (1 - v.y) * 1280 < 820) or v.z <= 0:
+                continue
+            spots.append(p)
+    sc.frame_set(1)
+    print("S14 landing spots", len(spots), "of", n_moths)
     return spots
 
 
@@ -293,8 +304,20 @@ def build_s14():
     und.location = mark + Vector((0, 0, 1.6))
     light = mark + Vector((0, 0, 0.3))                            # what the moths keep their backs to
 
+    # camera: S13's end framing (north of him, toward his feet, looking south over the village; the light low, the
+    # swarm high), easing down and in to the grass as the moths fall; on 1s
+    body_mid = B.S13_AT + hd * 2.4
+    left = Vector((-hd.y, hd.x, 0)) * -1.0
+    c_dir = (left * 1.0 - hd * 0.32).normalized()
+    t0 = body_mid + hd * 0.4 + Vector((0, 0, 4.2))               # = S13's last frame (bGqrs's t1 / c1)
+    t1 = body_mid + hd * 0.6 + Vector((0, 0, 1.2))
+    c0 = t0 + c_dir * 21.0 + Vector((0, 0, 1.0))
+    c1 = t1 + c_dir * 19.0 + Vector((0, 0, 4.6))
+    cam = B._cam_from("S14cam", n, c0, c1, t0, t1, 30.0)
+    cam.data.clip_end = 600.0
+
     lay = _swarm_layout(B.SWARM_N)
-    spots = _landing_spots(len(lay), wrist, hips, hd)
+    spots = _landing_spots(len(lay), wrist, hips, hd, cam, n)
     rigs = fluffmoth.swarm(len(lay), lambda i, rnd: (Vector(light) + Vector((0, 0, lay[i]["h"])), lay[i]["s"]),
                            name="m14", seed=14, far=lambda i, loc, s: s < MOTH_S * 0.85)
 
@@ -361,7 +384,8 @@ def build_s14():
         anim.squash(rig["body"], f_land, -0.3, "CONSTANT")
         anim.squash(rig["body"], f_land + 2, 0.08, "CONSTANT")
         anim.squash(rig["body"], f_land + 4, 0.0, "CONSTANT")
-        landings.append(dict(moth=i, frame=f_land, at=[round(spot.x, 3), round(spot.y, 3), 0.0], scale=round(s, 3)))
+        landings.append(dict(moth=i, frame=f_land, at=[round(spot.x, 3), round(spot.y, 3), 0.0], scale=round(s, 3),
+                             yaw=round(root.rotation_euler.z, 4)))
 
     # Kai: determined (S13's end), eyes on the swarm, then following them down; on the plops, a grin starts
     acting.face_keys(k, 1, eye_brow_down=0.65, face_angry=0.2, mouth_short=0.2, face_happy=0.12)
@@ -370,32 +394,28 @@ def build_s14():
     acting.look_at(k, light + Vector((0, 0, 2.0)), S14_PLOPS[0] - 6, n, darts=True, seed=15)
     acting.blink(k, 1, n, every=(40, 64), seed=14, at=(S14_PLOPS[0] + 2,))
 
-    # camera: S13's end framing (north of him, toward his feet, looking south over the village; the light low, the
-    # swarm high), easing down and in to the grass as the moths fall; on 1s
-    body_mid = B.S13_AT + hd * 2.4
-    left = Vector((-hd.y, hd.x, 0)) * -1.0
-    c_dir = (left * 1.0 - hd * 0.32).normalized()
-    t0 = body_mid + hd * 0.4 + Vector((0, 0, 4.2))               # = S13's last frame (bGqrs's t1 / c1)
-    t1 = body_mid + hd * 0.6 + Vector((0, 0, 1.2))
-    c0 = t0 + c_dir * 21.0 + Vector((0, 0, 1.0))
-    c1 = t1 + c_dir * 19.0 + Vector((0, 0, 4.6))
-    cam = B._cam_from("S14cam", n, c0, c1, t0, t1, 30.0)
-    cam.data.clip_end = 600.0
-
     # for the 2D pass (dust puffs at each landing, on its frame), S15 (the landing spots) and the sound (plops)
     os.makedirs(BUILD, exist_ok=True)
     for d in landings:
         sc.frame_set(d["frame"])
         d["px"] = H9._px(cam, Vector(d["at"]))
     sc.frame_set(1)
-    with open(os.path.join(BUILD, "S14_landings.json"), "w") as fh:
-        json.dump(dict(plops=list(S14_PLOPS), hold=S14_HOLD, landings=sorted(landings, key=lambda d: d["frame"])),
-                  fh, indent=1)
+    data = dict(plops=list(S14_PLOPS), hold=S14_HOLD, landings=sorted(landings, key=lambda d: d["frame"]))
+    for path in (os.path.join(BUILD, "S14_landings.json"), LANDINGS):         # build/ isn't in git: a copy that is
+        with open(path, "w") as fh:
+            json.dump(data, fh, indent=1)
     if not _still():
         _mark_json("S14", k, cam, n, lambda f: 1.1 + 0.05 * math.sin(f / 5.0))
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n),
                 subject=[k["arm"], sh["root"]] + [r["root"] for r in rigs] + list(k.get("cap", [])))
+
+
+def s14_landings():
+    """S14's landings (for S15 and the sound), from the committed channels/monsters/diorama_ep03/S14_landings.json:
+    a list of dict(moth, frame, at=[x, y, 0], scale, yaw, px), sorted by frame. No Blender needed."""
+    with open(LANDINGS) as fh:
+        return json.load(fh)["landings"]
 
 
 SHOTS = {"S12": build_s12, "S14": build_s14}
