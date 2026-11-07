@@ -85,5 +85,9 @@
 - **S09 full render running now**, on helper 9's FINAL night (09d120f), as three render chunks (1-30, 31-60, 61-87)
   into one frame folder, then the 2D pass. About 4-5 h.
 
+- 7 Nov 13:20 UTC: S09 f1-30 rendered (about 55 s per frame, faster than the estimate). They match the OK stills:
+  the bells ring and the first moths come in over the near ringer at f30. f31-60 is rendering, and the shot
+  should land at ~14:15 UTC.
+
 ## Coordinator
 (answers here)
