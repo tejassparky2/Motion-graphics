@@ -222,7 +222,7 @@ def s02():
     # B: her eyeline to the crack: the sky due north, RIFT_EL up; a slow push
     camB = H9._new_cam("S02b", fb)
     fwd_r, _ = H9._rift_dir()
-    eye = w_face + up * 0.1
+    eye = w_face + fwd_r * 1.8                                     # just out in front of her face
     lens_b = H9.MATCH_PX / H9.RIFT_ANG * 36.0 / 1280 if hasattr(H9, "MATCH_PX") else 40.0
     for f in range(fb, fc):
         e = _smooth((f - fb) / max(1, fc - fb - 1))
