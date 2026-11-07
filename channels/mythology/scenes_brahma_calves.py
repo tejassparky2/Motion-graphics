@@ -1106,8 +1106,8 @@ def s_same(cr, t, tl, t0, t1):
     cr.restore()
     label(cr, t, t0 + 0.05, "THE REAL BOY", lx, 770, 30, fill=(0.35, 0.08, 0.10))
     label(cr, t, t0 + 0.25, "KRISHNA AS HIM", rx, 770, 30, fill=(0.06, 0.12, 0.30))
-    items = [("FACE", C(tl, "c8", "शक्ल", "ಮುಖ", 0.08)), ("CLOTHES", C(tl, "c8", "कपड़े", "ಡ್ರೆಸ್", 0.25)),
-             ("FLUTE", C(tl, "c8", "बांसुरी", "ಕೊಳಲು", 0.43)), ("HABITS", C(tl, "c8", "आदतें", "ಹ್ಯಾಬಿಟ್ಸ್", 0.6))]
+    items = [("FACE", C(tl, "c8", "शक्ल", "ಮುಖ", 0.08)), ("CLOTHES", C(tl, "c8", "कपड़े", "ಬಟ್ಟೆ", 0.25)),
+             ("FLUTE", C(tl, "c8", "बांसुरी", "ಕೊಳಲು", 0.43)), ("HABITS", C(tl, "c8", "आदतें", "ಅಭ್ಯಾಸ", 0.6))]
     for i, (word, tw) in enumerate(items):
         col, row = i % 2, i // 2
         x, y = 110 + col * 460, 270 + row * 120
@@ -1126,7 +1126,7 @@ def s_same(cr, t, tl, t0, t1):
         dxf = 25 if x == lx else 25
         ring(cr, x + dxf, face_y, 95, 95, prog(t, items[0][1] + 0.1, 0.4), 7, (0.62, 0.10, 0.08))
         ring(cr, x - 10, cloth_y, 150, 230, prog(t, items[1][1] + 0.1, 0.45), 6, (0.62, 0.10, 0.08))
-    tn = C(tl, "c8", "फ़र्क़", "ಎಕ್ಸಾಕ್ಟ್", 0.85)
+    tn = C(tl, "c8", "फ़र्क़", "ವ್ಯತ್ಯಾಸ", 0.85)
     stamp(cr, t, "NO DIFFERENCE", tn - 0.05, W / 2, 600, size=78, color=(0.62, 0.10, 0.08), rot=-0.05)
 
 
@@ -1440,7 +1440,7 @@ def s_end(cr, t, tl, t0, t1):
     dust(cr, t, 0.7, 50, seed_off=45)
     head2(cr, t, "IF YOU LIVED IN THAT VILLAGE,", "", t0 + 0.1, t0 + 99, y=250, small_size=56, center=True)
     head2(cr, t, "", "WOULD YOU KNOW?", 0, t0 + 0.6, y=330, big_size=150, big_color=GOLD_L, center=True)
-    ty = C(tl, "c17", "यस", "ಎಸ್", 0.6) - 0.3
+    ty = C(tl, "c17", "यस", "ಹೌದಾ", 0.6) - 0.3
     cr.save()
     cr.translate(W / 2, 1180)
     cr.scale(1.35, 1.35)
@@ -1536,7 +1536,7 @@ def sfx(tl):
            (C(tl, "c5", "छुपा", "ಬಚ್ಚಿಟ್ಟು", 0.9), "thud", 0.0),
            (C(tl, "c7", "हर एक बच्चा", "ಪ್ರತಿಯೊಬ್ಬ", 0.55) - 0.15, "shimmer", 1.6),
            (C(tl, "c7", "बछड़ा", "ಕರುವೂ", 0.85) - 0.15, "shimmer", 1.0),
-           (C(tl, "c8", "फ़र्क़", "ಎಕ್ಸಾಕ್ಟ್", 0.85) - 0.05, "thud", 0.0),
+           (C(tl, "c8", "फ़र्क़", "ವ್ಯತ್ಯಾಸ", 0.85) - 0.05, "thud", 0.0),
            (C(tl, "c9", "उमड़", "ಜಾಸ್ತಿ", 0.88) - 0.2, "shimmer", 1.2),
            (C(tl, "c10", "पता", "ಗೊತ್ತಾಗ್ಲಿಲ್ಲ", 0.75), "thud", 0.0),
            (C(tl, "c11", "पल", "ಕ್ಷಣ", 0.85) + 0.2, "scribble", 0.4),
@@ -1549,8 +1549,8 @@ def sfx(tl):
         ev.append((tl[bid].start + 0.6, "pop", 0.0))
     ev += [(C(tl, "c15", "जल्दी", "ಬೇಗ", 0.45) - 0.4, "pop", 0.0),
            (C(tl, "c15", "निवाला", "ತುತ್ತೂ", 0.85) - 0.6, "pop", 0.0)]
-    for i, (w_hi, w_kn, fr) in enumerate((("शक्ल", "ಮುಖ", 0.08), ("कपड़े", "ಡ್ರೆಸ್", 0.25), ("बांसुरी", "ಕೊಳಲು", 0.43),
-                                          ("आदतें", "ಹ್ಯಾಬಿಟ್ಸ್", 0.6))):
+    for i, (w_hi, w_kn, fr) in enumerate((("शक्ल", "ಮುಖ", 0.08), ("कपड़े", "ಬಟ್ಟೆ", 0.25), ("बांसुरी", "ಕೊಳಲು", 0.43),
+                                          ("आदतें", "ಅಭ್ಯಾಸ", 0.6))):
         ev.append((C(tl, "c8", w_hi, w_kn, fr) + 0.15, "tick", 0.0))
     for bid in ("c7", "c11", "c14", "c17"):
         ev.append((tl[bid].start - 0.35, "tick", 0.0))

@@ -13,7 +13,13 @@ chat". This channel has its own chat and its own branch, `ccr-56282fe5-evehq4-my
   hindi ... i want all videos ready till morning"; "3 videos with different approach different hook different
   animation". Built without script approval because the owner asked for them ready by morning.
 - Kannada: "normal everyday speaking kannada kanglish and standard kannada only city peoples taking kannada":
-  Bengaluru-style spoken Kannada with common English words, written in Kannada script (ಟೈಮ್, ಸ್ಟೋರಿ, ಶಾಕ್).
+  Bengaluru-style spoken Kannada, written in Kannada script.
+- **English only when needed** (owner, 7 Nov 2026: "Use English only when needed kanglish means not this much English
+  refer to shorts chat hinglish it does better"): as much English as our Hindi versions, no more. Kannada words and
+  verbs; English only for words city people really say in English (ಹಾಲಿವುಡ್, ಹಾರರ್, ಶಾಕ್, ಕಾಮೆಂಟ್, ಜೈಲು). Never an
+  English verb + ಮಾಡು (ಇಮ್ಯಾಜಿನ್ ಮಾಡಿ, ವೇಟ್ ಮಾಡಿ, ಸೆಲೆಕ್ಟ್ ಮಾಡಿ), and no ಜಸ್ಟ್, ಸ್ಟೋರಿ, ಪ್ರಾಮಿಸ್, ಫ್ಯಾಮಿಲಿ, ಹೈಟ್,
+  ಪ್ರಾಬ್ಲಮ್. Hook "ಯೋಚಿಸಿ..."; ending "ಹೌದಾ ಇಲ್ವಾ, ಕಾಮೆಂಟ್ ಮಾಡಿ ಹೇಳಿ." When a Kannada word changes, change its
+  cue word in the scene code too (cues are `{"hi": ..., "kn": ...}` or `C(tl, id, hi, kn, frac)`).
 - Voice: "clear calm and well understandable": tempo 1.05 (Hindi) and 1.0 (Kannada), clarity retakes only.
 - "Download everything is auto approved until my next message": SDXL checkpoint, Real-ESRGAN, ComfyUI's CUDA
   environment and the parallax helpers were downloaded under that approval. The Civitai miniature LoRA needs a login,
@@ -143,3 +149,5 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - 7 Nov 2026: all four Kannada reels re-voiced in voice A (`voice_all.py ... --langs kn --no-retake`, turbo check:
   every line 0-22% letter errors after `fix_line.py` re-took j5 and j15, whose first takes ended in a stray sound),
   re-rendered and finished: kakudmi 1:58, brahma_calves 1:28, jarasandha 1:27, bali 1:49; Drive packs replaced.
+- 7 Nov 2026, later: Kannada scripts and captions rewritten with English only where needed (see the rule above),
+  re-voiced (b18 and v15 re-taken), all 78 lines under 25% letter errors by turbo, re-rendered and finished again.
