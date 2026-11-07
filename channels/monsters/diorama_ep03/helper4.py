@@ -127,6 +127,7 @@ def _raised_arm(PK, k, fwd, up, u=1.0, tremble=0.0):
 def s01():
     from channels.monsters.diorama_ep02 import helper1 as h1
     from channels.monsters.diorama_ep02 import helper9 as H9
+    from channels.monsters.diorama_ep03 import helper3 as H3                 # S02's evening sky anchors (the match)
     n = _frames("S01", 72)
     W = _words("l1", [("you", 3, 8), ("said", 8, 14), ("show", 14, 22), ("her", 22, 30), ("so", 40, 45),
                       ("i", 45, 48), ("did", 48, 58)])
@@ -165,9 +166,7 @@ def s01():
         PW.aim("upper_arm.R", (-0.10, -0.80, 0.25))                 # the bell up like a ward (S20bot v2's end pose)
         PW.aim("forearm.R", (-0.04, -1.05, 0.6))
         PW.aim("hand.R", (-0.04, -0.3, -1))
-        if stumbling:                                                # the free arm out a little for balance
-            PW.aim("upper_arm.L", (0.45, 0.05, -0.85 + 0.15 * math.sin(f * 0.7)))
-            PW.aim("forearm.L", (0.4, -0.2, -0.7))
+        # (her free left arm stays down at her side: out, it crossed the frame in front of Kai)
         lean = 12.0 if f < 13 else 12.0 * (1 - _smooth((f - 13) / 10))
         PW.rot("chest", (-10.0 - lean + 1.0 * math.sin(f / 20.0), 0, 0))
         PW.rot("head 1", (-8.0, 0, 0))
@@ -190,8 +189,10 @@ def s01():
         _raised_arm(PK, k, fwd, up, 1.0, tremble=0.05 * math.sin(f * 1.7) + push)
         PK.rot("head 1", (-4.0, 0, 0))
         PK.key(f)
-    E2._face({"eye_brow_down": 0.9, "face_angry": 0.45, "mouth_wide": 0.35, "eye_zitome": 0.2}, 1)   # nervous, defiant
-    E2._face({"eye_brow_down": 0.4, "face_sad": 0.3, "mouth_short": 0.4}, f_so)   # "So I did.": a wince at what it cost
+    E2._face({"eye_brow_down": 1.0, "face_angry": 0.6, "mouth_wide": 0.45, "eye_zitome": 0.15,
+              "look_left": float(os.environ.get("S01_LOOK", "0.45"))}, 1)   # nervous, defiant; eyes on Wren
+    E2._face({"eye_brow_down": 0.8, "face_angry": 0.35, "face_sad": 0.25, "mouth_wide": 0.3,
+              "look_left": float(os.environ.get("S01_LOOK", "0.45"))}, f_so)   # "So I did.": still defiant, it cost him
 
     # the shrimp: on his right hand at his side, then a hop up onto his left shoulder ("So I did.")
     sh = puffshrimp.build((0, 0, 0))
@@ -204,7 +205,8 @@ def s01():
     for f in range(1, n + 1):
         sc.frame_set(f)
         hand = X._world_of(k, "hand.R") + up * 0.3
-        perch = E2._bone_world(k, "upper_arm.L") + up * 0.34 + fwd * 0.1 + X._side_vec(k) * 0.5   # helper 3's
+        perch = E2._bone_world(k, "upper_arm.L") + up * 0.18 + fwd * 0.1 + X._side_vec(k) * 0.85   # further out:
+        #                                                                     his whole face clear of the claw
         if f < f_hop0 + 3:
             p, sq = hand, (1.0, 1.0, 0.82 if f >= f_hop0 else 1.0)    # a crouch before the jump
         elif f < f_hop1:
@@ -328,6 +330,7 @@ def s01():
         ld.energy = S01_LIGHT * lvl
         ld.keyframe_insert("energy", frame=f)
         marks[f] = dict(H9._mark_geo(k, cam), level=round(lvl, 3), vis=_visible(cam, m, k["arm"], 1.0),
+                        sky=H3._sky_geo(cam),
                         w_eye_l=H9._px(cam, s3d.kai_point(w, "eye_l")), w_eye_r=H9._px(cam, s3d.kai_point(w, "eye_r")))
     os.makedirs(BUILD, exist_ok=True)
     with open(os.path.join(BUILD, "S01_mark.json"), "w") as fh:

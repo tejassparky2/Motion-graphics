@@ -63,6 +63,8 @@
   stills are gone). Half-res renders scaled up, with the 2D pass.
 
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
+**GO: helper 9's night is FINAL at `09d120fd` (11:29 UTC). Pull that commit or later before you render.** Parts 1+2
+(helper 10) started 11:35 UTC.
 **S14 OK'd by the coordinator (11:20 UTC).** Start your part only **after helper 9's FINAL night commit** (marked
 FINAL in status/helper9.md, ~11:40 UTC): pull that commit (or later) so every part has the same night. I'll note
 the commit hash here when it lands. Write your name next to a range here and push before you start.
@@ -71,7 +73,7 @@ the commit hash here when it lands. Write your name next to a range here and pus
 |---|---|---|
 | 1 | f001-021 | helper 10 |
 | 2 | f022-042 | helper 10 (coordinator 11:22: helper 8 has no Blender) |
-| 3 | f043-063 | (free) |
+| 3 | f043-063 | helper 4 (coordinator 11:26; helper 7 has no Blender). **Claimed, rendering from 09d120f (11:32 UTC)** |
 | 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
 
 - Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S14 OUT --frames A-B` (pull first).

@@ -231,11 +231,14 @@ def mark_s01():
     with open(os.path.join(BUILD, "S01_mark.json")) as fh:
         d = json.load(fh)
     A = {int(f): v for f, v in d["frames"].items()}
-    k_size = float(os.environ.get("S01_MARK_K", "1.6"))
+    k_size = float(os.environ.get("S01_MARK_K", "2.1"))
+
+    from channels.monsters.diorama_ep03 import post_helper3 as P3              # S02's evening sky + grade (the match)
 
     def draw(cr, t, start, end=None):
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
         g = A[f]
+        P3.evening(cr.get_target(), g.get("sky"), 1.0)                   # first: the mark stays the brightest thing
         if g.get("z", 1) <= 0 or not g.get("vis", True):                  # hidden behind someone: no 2D mark
             return
         geo = P9._on_arm(g)
@@ -243,9 +246,9 @@ def mark_s01():
         x, y = geo["c"]
         size = math.hypot(*geo["ey"])
         lvl = g["level"]
-        fx2d._glow(cr, x, y, size * 1.4, PINK, 0.5)
-        fx2d._glow(cr, x, y, size * 0.7, (1.0, 0.93, 0.88), 0.25 + 0.1 * math.sin(f / 4.0))
-        P9.mark(cr, geo, 1.0, 0.5, min(1.3, lvl), f, bold=2.6)
+        fx2d._glow(cr, x, y, size * 1.7, PINK, 0.6)                       # blazing: the brightest thing in frame
+        fx2d._glow(cr, x, y, size * 0.9, (1.0, 0.93, 0.88), 0.45 + 0.12 * math.sin(f / 4.0))
+        P9.mark(cr, geo, 1.0, 0.5, 1.3, f, bold=3.0)
         for j, t0 in enumerate(np_arange(-0.2, t + 0.01, 0.6)):
             fx2d.sparkles(cr, t, t0, x, y, n=5, radius=size * 0.95, size=size * 0.14,
                           cols=((1, 0.8, 0.7, 1), fx2d.WHITE, (1, 0.6, 0.5, 1)), life=1.0, seed=11 + j)

@@ -18,6 +18,7 @@ soft comic plop-plop-plops and tiny dazed trills); Wren's last bell clink; her w
 Turbo has no real whisper); the lake lapping; the lighthouse glow chime; the A/B stingers. Owner rules kept: every
 sound original and synthesised, no heartbeat, no riser.
 """
+import json
 import os
 import sys
 
@@ -38,8 +39,11 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
-S14_HUSH = 0.9             # seconds of held hush at the top of S14 before the first moth plops (placeholder)
-S14_PLOPS = 1.5            # seconds the tumble lasts (placeholder)
+# S14, the flip (helper 10, channels/monsters/diorama_ep03/S14_landings.json; 1-based shot frames, tail handle):
+# f1-12 the held beat, f12-40 the wave of rolls and stalls, hero plops f32/38/44, the patter f46-66.
+S14_LANDINGS = os.path.join(base.ROOT, "channels", "monsters", "diorama_ep03", "S14_landings.json")
+S14_HOLD = 12              # the held hush ends here; the rolls start
+S14_STALL = (14, 40)       # wings frantic in the stall
 
 
 # ---------------------------------------------------------------- the voice: l18 whispered, close
@@ -347,12 +351,13 @@ def build(timing, n, v):
 
     s = c.t
     twist = s("S14")
+    f14 = lambda f: c.shot["S14"]["first_frame"] / 24 + (f - 1) / 24   # S14's picture frame f (1-based)
 
     # --- the ambience: evening village S01-S03, the dusk S04, night from S05 (crickets; the hush in S14)
     amb(lambda d, k: base.meadow_wind(d, k), 0.0, s("S04"), -27, 0.02, 0.4)
     amb(lambda d, k: dusk(d, k), s("S04"), s("S05") + 0.3, -24, 0.3, 0.4)
     amb(lambda d, k: night(d, k), s("S05"), twist - 0.05, -25, 0.4, 0.25)
-    amb(lambda d, k: night(d, 10 + k), twist + S14_HUSH + 0.4, s("S18") + 1.0, -27, 1.2, 0.6)
+    amb(lambda d, k: night(d, 10 + k), f14(44), s("S18") + 1.0, -27, 1.2, 0.6)
     amb(lambda d, k: e2.lake(d, k), s("S18"), total, -22, 0.6, 0.02)        # the lake lapping, to the end
 
     # --- the mark: it blazes on frame 0 and hums under the whole night
@@ -411,11 +416,18 @@ def build(timing, n, v):
     bed(swarm(twist - orb_t1 + 0.2, (1.0, 1.1), 3), orb_t1, -21, 0.0)
     hit(drop_to_grass(), w("l13", "put"), -14, 0.0)
 
-    # --- S14: THE FLIP (TWIST): a held hush, then plop-plop-plop, then tiny dazed trills
-    plops_at = twist + S14_HUSH
-    hit(sfx.whoosh(1) * 0.6, plops_at - 0.25, -24, 0.0)                   # the whole swarm rolling over
-    bed(plops(S14_PLOPS, 18, 1), plops_at, -15, 0.0)
-    bed(dazed_trills(s("S16") - plops_at - S14_PLOPS + 0.5, 1), plops_at + S14_PLOPS * 0.7, -26, 0.1)
+    # --- S14: THE FLIP (TWIST): a held hush, then plop-plop-plop on helper 10's landing frames, then dazed trills
+    land = json.load(open(S14_LANDINGS))
+    hit(sfx.whoosh(1) * 0.6, f14(S14_HOLD), -25, 0.0)                     # the wave of rolls starts
+    stall = base.flutter(f14(S14_STALL[1]) - f14(S14_STALL[0]), 13)
+    stall = stall * np.sin(np.pi * np.linspace(0, 1, len(stall))) ** 0.7  # the stall: wings frantic, then dying
+    bed(stall, f14(S14_STALL[0]), -27, 0.0)
+    rp = _rng("land", 0)
+    for k, m in enumerate(sorted(land["landings"], key=lambda m: m["frame"])):
+        pan = float(np.clip((m["px"][0] / 1080 - 0.5) * 1.2, -0.6, 0.6))
+        hero = m["frame"] in land["plops"]
+        hit(plop(200 + k), f14(m["frame"]), -12 if hero else rp.uniform(-22, -18), pan)
+    bed(dazed_trills(s("S16") - f14(50) + 0.5, 1), f14(50), -26, 0.1)
 
     # --- S16-S18: the bell lowered (a last clink), Wren kneels, whispers; the lighthouse
     hit(last_clink(), w("l16", "bell", "end") + 0.1, -21, 0.2)

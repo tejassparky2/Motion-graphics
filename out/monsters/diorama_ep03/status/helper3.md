@@ -1,10 +1,18 @@
 # Helper 3 status (Ep 3)
 
-Updated 07 Nov 2026 10:51 UTC.
+Updated 07 Nov 2026 11:27 UTC.
 
 | Shot | State | Notes |
 |---|---|---|
 | S02 | **Your 3 fixes in, OK stills re-pushed** (okstills/S02_h3_sheet.jpg: f12, f30, f44, f62). **Full render running** (79 frames), then the 2D pass + encode. Your late-afternoon grade is in the 2D pass (greens -25% saturation, level -10%, peach highlights; okstills sheet updated). | 1) Evening sky: the 3D sky (one flat haze colour) is keyed out in the 2D pass and an evening sky painted behind: peach/orange low to deeper blue up top by real elevation, wispy warm-lit clouds fixed in the sky, the crack the darkest thing in it; a light warm cast over the frame. 2) The crack shot: treetops along the bottom, a tilt up into it. 3) The shrimp on the outer edge of Kai's left shoulder, beside his face, looking up with him. Note: to keep the shrimp off Wren's face in A, A's camera is wider of his shoulder, so his blurred forearm/mark is no longer in A's foreground (its coral light still is). |
-| S19 top (A) | **Waiting** for helper 9's lighthouse + night grade and XprL's boat pose. | Night, Kai and Wren in a small rowing boat to the lighthouse, his mark lighting the water. |
+| S19top | **OK stills pushed** (okstills/S19top_h3_sheet.jpg, f40 and f120, top panel). I render **f001-088** right after S02 (queued, ~2 h). **f089-176: claimed by bGqrs** (coordinator, 11:29; starts after bGqrs's S13, from helper 9's FINAL night commit): render `-- diorama_ep03 S19top OUT --frames 89-176` from this commit or later and push a RAW part `parts/S19top_f089-176.mp4` (crf 6, yuv444p, bitexact, `-start_number 89`, no tags; S19top is step=2, ones=(1,176): every frame renders, so f89 is a clean start). Say so in your status file. | Night on the lake: Kai rows a small wooden boat (facing the stern, his face to us, the shrimp on his left shoulder), Wren in the stern with the bell in her lap (wren.sit, worried, then stern with a small nod on 'go with Wren'), his mark (N9.mark) a coral pool on the water; the lighthouse's coral glow ahead. Camera behind the stern quarter, tracking, a slow push. Rendered rows 0-690 (border 0.46-1.0); framed in y 80-600. Water: a dark navy material until helper 9's night lake lands (I'll switch if it lands before the render). |
 
 ## Coordinator
+
+## From helper 8 (assembly), 7 Nov ~11:45 UTC
+- **S19top needs rows 0-800, not 0-690 (from helper 8, the assembler).**
+  - In the split the top plate shifts up 60 px and tilts, so the top band shows plate rows from 60 down to about 782 at the left edge.
+  - Tested on your OK stills: a render that stops at row 690 leaves a black sliver at the left edge just above the divider, screen y ~633-653, in frames 8-163. That fails the edge scan.
+  - Please render rows 0-800 (border about 0.375-1.0).
+  - Rows 0-60 are hidden by that shift, and the lighthouse's lamp sits at about row 40 in the stills, so it gets cut off at the top of the frame. Please frame it so the lamp is below row ~110.
+  - The test frame is `status/helper8_s19_split.jpg`.

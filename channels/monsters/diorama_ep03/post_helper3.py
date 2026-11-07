@@ -239,15 +239,30 @@ def join(shot, n):
         raise SystemExit(f"{shot}: missing frames {missing[0]}..{missing[-1]} ({len(missing)})")
 
 
+def _render_frames(shot):
+    with open(os.path.join(ROOT, "channels", "monsters", "ep03", "timing.json")) as fh:
+        t = json.load(fh)
+    base = re.sub(r"(top|bot)$", "", shot)
+    return next(s["render_frames"] for s in t["shots"] if s["shot"] == base)
+
+
 def run(shot):
-    meta, A = anchors(shot)
-    n = max(A)
-    join(shot, n)
+    """Join the parts, run the 2D pass (shots in DRAW), encode. S19top has no 2D pass: joined and encoded as is."""
     src_dir, out_frames = _src(shot), os.path.join(BUILD, f"{shot}_post")
+    if shot in DRAW:
+        meta, A = anchors(shot)
+        n = max(A)
+    else:
+        n = _render_frames(shot)
+    join(shot, n)
     shutil.rmtree(out_frames, ignore_errors=True)
     os.makedirs(out_frames)
     for f in range(1, n + 1):
-        frame(shot, f, os.path.join(src_dir, f"{f:04d}.png"), os.path.join(out_frames, f"{f:04d}.png"), meta, A)
+        src, dst = os.path.join(src_dir, f"{f:04d}.png"), os.path.join(out_frames, f"{f:04d}.png")
+        if shot in DRAW:
+            frame(shot, f, src, dst, meta, A)
+        else:
+            shutil.copyfile(src, dst)
     os.makedirs(SHOTS_OUT, exist_ok=True)
     mp4, tmp = os.path.join(SHOTS_OUT, f"{shot}.mp4"), os.path.join(BUILD, f"{shot}_enc.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", "24", "-i",
