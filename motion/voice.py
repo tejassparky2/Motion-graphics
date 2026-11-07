@@ -504,7 +504,7 @@ _NUMWORDS = set("zero one two three four five six seven eight nine ten eleven tw
 _checker = None
 
 
-SAME_SOUND = {"principle": "principal", "principles": "principals", "grey": "gray", "meter": "metre", "meters": "metres"}   # Whisper's spelling, not a mishearing
+SAME_SOUND = {"principle": "principal", "principles": "principals", "grey": "gray", "meter": "metre", "meters": "metres", "ren": "wren"}   # Whisper's spelling, not a mishearing
 _TAG_WORDS = {"chuckle", "laugh", "sigh", "gasp", "sniff", "groan", "cough", "shush", "jekyll", "chuckl"}
 _SOUNDS_HEARD = set("heh hehe hehehe ha hah haha hahaha hm hmm mm mhm uh um ugh huh ahem shh sh ah aah oh ooh phew sniff".split())
 
@@ -520,7 +520,7 @@ def _heard_ok(text, heard):
         if any(w.rstrip("s") in _TAG_WORDS and w not in t for w in h):
             return False
     for op, i1, i2, j1, j2 in difflib.SequenceMatcher(None, t, h).get_opcodes():
-        if op == "equal":
+        if op == "equal" or "".join(t[i1:i2]) == "".join(h[j1:j2]):   # a made-up compound heard as two words ("fluff moths")
             continue
         if all(w in _NUMWORDS for w in t[i1:i2]) and all(re.fullmatch(r"[0-9%.,]+|and|a", w) for w in h[j1:j2]):
             continue

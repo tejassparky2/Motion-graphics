@@ -325,7 +325,29 @@ def load(loc=(0, 0, 0), scale=1.0, rot_z=0.0, line=0.004):
         for c in o.users_collection:
             c.objects.unlink(o)
         col.objects.link(o)
-    rig.update(hood=o_hood, cape=o_cape, braids=o_braids, satchel=o_bag, strap=o_strap, bell=o_bell, clapper=o_clap)
+    # Ep 3: the cape's front edge, gathered in her left hand when she pulls the cape over her face (cape_up()). In the
+    # rest T-pose it hangs under the left forearm, so with the forearm across her face it drapes face to chest.
+    cape_m = bpy.data.materials["wren_cape"]
+    lin_m = bpy.data.materials["wren_cape_lining"]
+    fa = pb["forearm.L"].head
+    fc = Vector((fa.x + 0.07, fa.y - 0.03, fa.z - 0.1))
+    drape_o = sdf.E(fc, (0.16, 0.03, 0.13))
+    drape_i = sdf.E(fc + Vector((0, 0.012, 0)), (0.15, 0.026, 0.12))
+
+    def drape(p):
+        return np.maximum(np.maximum(drape_o(p), -drape_i(p)), p[..., 2] - (fa.z + 0.01))
+    drape.bounds = drape_o.bounds
+    hem = sdf.C(Vector((fc.x - 0.15, fc.y + 0.004, fc.z - 0.09)), Vector((fc.x + 0.15, fc.y + 0.004, fc.z - 0.09)),
+                0.012, 0.012)
+    o_drape = sdf.build("wren_cape_drape", [(drape, cape_m.name, None), (hem, lin_m.name, 0.006)],
+                        k=0.01, res=0.006, pad=0.03, smooth_iter=5)
+    _attach(o_drape, arm, "forearm.L", line)
+    o_drape.hide_render = o_drape.hide_viewport = True
+    for c in o_drape.users_collection:
+        c.objects.unlink(o_drape)
+    col.objects.link(o_drape)
+    rig.update(hood=o_hood, cape=o_cape, braids=o_braids, satchel=o_bag, strap=o_strap, bell=o_bell, clapper=o_clap,
+               drape=o_drape)
     arm.rotation_mode = "XYZ"
     arm.location = loc
     arm.scale = (scale, scale, scale)
@@ -340,6 +362,12 @@ FACES.update({
     "stern": {"face_angry": 0.85, "eye_zitome": 0.45, "eye_brow_down": 1.0},
     "stern_open": {"face_angry": 0.85, "eye_zitome": 0.4, "eye_brow_down": 1.0, "lip_a": 0.5},
     "softer": {"face_relax": 0.35, "eye_brow_up": 0.2},
+    # Ep 3
+    "shocked": {"face_surprise": 1.0, "eye_black_small": 0.55, "eye_brow_up": 0.9, "lip_o": 0.55},
+    "shout": {"face_angry": 0.7, "eye_brow_down": 1.0, "lip_a": 1.0, "mouth_wide": 0.35},
+    "softening": {"face_surprise": 0.65, "face_sad": 0.4, "eye_brow_up": 0.6},   # the stern face cracks, eyes wide
+    "worried": {"face_sad": 1.0, "lip_down": 0.6, "eye_no_hilight": 0.6, "face_surprise": 0.15, "eye_brow_up": 0.6},
+    "whisper": {"face_sad": 0.25, "eye_zitome": 0.3, "eye_brow_up": 0.35, "lip_u": 0.45},
 })
 _LIPS = ("lip_a", "lip_o", "lip_u", "lip_i", "lip_e", "mouth_short")
 
@@ -541,3 +569,173 @@ def contact_shadows(rig, size=(0.55, 0.85)):
     out.append(body)
     rig["shadows"] = out
     return out
+
+
+# ------------------------------------------------------------------------------------------------------ Ep 3 poses
+# All in armature space at scale 1 (she faces -Y, her left is +X; the hips sit at z ~0.80 standing). Each pose
+# function poses a reset ep01v2.xprl.Pose (P) and leaves the keying to the caller (P.key(f)); the finger and cape
+# helpers key on the rig directly. Combine them: e.g. kneel(P) then whisper(P, 1) then P.key(f).
+_UPPER = 0.255                                                   # upper_arm head -> forearm head
+_LOWER = 0.22                                                    # forearm head -> hand head (forearm + twist)
+
+
+def _ease(t):
+    t = max(0.0, min(1.0, t))
+    return t * t * (3 - 2 * t)
+
+
+def head_c(P):
+    """Her head centre (armature space) in the current pose."""
+    bpy.context.view_layer.update()
+    M = P.pb["head 1"].matrix
+    return M.translation + M.to_3x3() @ Vector((0, 0.07, -0.01))
+
+
+def reach(P, side, target, pole=(0, -1, 0), hand=None):
+    """Two-bone arm IK: put the wrist of arm `side` at `target` (armature space), the elbow bending towards `pole`
+    (a direction). `hand`: the hand's direction (defaults to straight on from the forearm)."""
+    bpy.context.view_layer.update()
+    H = P.pb[f"upper_arm.{side}"].matrix.translation.copy()
+    T = Vector(target)
+    d = min((T - H).length, (_UPPER + _LOWER) * 0.999)
+    u = (T - H).normalized()
+    pv = Vector(pole).normalized()
+    w = pv - pv.dot(u) * u
+    w = w.normalized() if w.length > 1e-4 else Vector((0, 0, -1))
+    cos_a = max(-1.0, min(1.0, (_UPPER ** 2 + d ** 2 - _LOWER ** 2) / (2 * _UPPER * d)))
+    K = H + _UPPER * (cos_a * u + math.sqrt(1 - cos_a ** 2) * w)
+    P.aim(f"upper_arm.{side}", K - H)
+    P.aim(f"forearm.{side}", H + u * d - K)
+    P.aim(f"hand.{side}", hand if hand is not None else (H + u * d - K))
+
+
+def cape_up(rig, f, on=True):
+    """Show (or hide) the cape edge gathered in her left hand, keyed at f (a snap, like a drawing change)."""
+    o = rig["drape"]
+    o.hide_render = o.hide_viewport = not on
+    o.keyframe_insert("hide_render", frame=f)
+    o.keyframe_insert("hide_viewport", frame=f)
+
+
+def shield(P, t=1.0):
+    """S07: she pulls the cape over her face: left forearm across her face (pair with cape_up), head ducked and
+    turned to her right, shoulders hunched; the bell hand stays down. t 0..1 blends from standing."""
+    e = _ease(t)
+    P.aim("upper_arm.R", (-0.17, 0.06, -1))
+    P.aim("forearm.R", (-0.06, -0.12, -1))
+    P.aim("hand.R", (-0.04, -0.15, -1))
+    P.rot("chest", (8 * e, 0, -10 * e))
+    P.rot("neck", (10 * e, 0, -8 * e))
+    P.rot("head 1", (14 * e, 4 * e, -16 * e))
+    hc = head_c(P)
+    rest = Vector((0.2, -0.05, 0.9))
+    tgt = rest.lerp(hc + Vector((-0.07, -0.13, -0.03)), e)
+    reach(P, "L", tgt, pole=(1, 0.2, -0.6), hand=(-1, -0.15, 0.25))
+
+
+def ring_hard(P, shake=0, lift=1.0):
+    """S08: both hands round the bell handle, held up in front of her face, shaken hard: shake = -1 / 0 / +1 (the
+    swing phase; alternate it on 2s), lift 0..1 from chest to above-head height. Pair with ring(rig, ..., swing=40,
+    beat=4) for the clapper, face 'shout'."""
+    P.rot("chest", (-6, 5 * shake, 0))
+    P.rot("head 1", (-6, 0, 0))
+    z = 1.1 + 0.12 * lift + 0.035 * abs(shake)
+    c = Vector((-0.22 + 0.02 * shake, -0.26, z))                 # up at her right shoulder: her face stays clear
+    reach(P, "R", c + Vector((-0.04 + 0.05 * shake, 0, 0.01)), pole=(-1, 0.3, -0.6), hand=(0.15 * shake, -0.15, -1))
+    reach(P, "L", c + Vector((0.035 + 0.05 * shake, 0.0, 0.055)), pole=(1, 0.3, -0.6), hand=(-0.9, -0.2, -0.2))
+
+
+def lower_bell(P, t):
+    """S16: the bell comes down slowly from held up (t 0) to hanging at her side (t 1), her shoulders easing and
+    head dropping a little."""
+    e = _ease(t)
+    hold_bell(P, 1.0 - e)
+    P.rot("chest", (5 * e, 0, 0))
+    P.rot("head 1", (6 * e, 0, 0))
+
+
+def kneel(P, front="L", depth=1.0, ankle_h=None):
+    """S17/S18: down on one knee (the `front` foot planted ahead, the other knee on the ground, toes behind), torso
+    upright. depth 0..1 blends from standing (crouch on the way down). Feet in armature space at ground z 0."""
+    e = _ease(depth)
+    ah = P.ankle_h if ankle_h is None else ankle_h
+    back = "R" if front == "L" else "L"
+    sx = {"L": 1, "R": -1}
+    P.hips((0, 0.04 * e, -0.39 * e))
+    P.leg(front, (sx[front] * 0.11, -0.26 * e, ah))
+    P.leg(back, (sx[back] * 0.1, 0.30 * e, ah + (0.04 - ah) * e * 0.4))
+    if e > 0.5:
+        P.aim(f"foot.{back}", (0, 0.55, -0.85))                  # toes tucked behind
+    P.rot("spine", (4 * e, 0, 0))
+    kneel_arms(P, front, e)
+
+
+def kneel_arms(P, front="L", e=1.0):
+    """Arms for the kneel: the hand on the front knee rests on it, the other (the bell hand when front is L) hangs by
+    the grounded knee with the bell just off the grass. Called by kneel(); whisper()/point() then re-pose the left."""
+    bpy.context.view_layer.update()
+    sx = {"L": 1, "R": -1}
+    back = "R" if front == "L" else "L"
+    knee = P.pb[f"shin.{front}"].matrix.translation
+    rest = Vector((sx[front] * 0.2, -0.05, 0.9 - 0.39 * e))
+    reach(P, front, rest.lerp(knee + Vector((sx[front] * 0.02, 0.03, 0.06)), e), pole=(sx[front], 0.4, -0.2),
+          hand=(0, -1, -0.5))
+    reach(P, back, Vector((sx[back] * 0.24, -0.08, 0.95 - 0.55 * e)), pole=(sx[back], 0.5, 0), hand=(0, -0.15, -1))
+
+
+def whisper(P, t=1.0, toward=(0, -1, 0)):
+    """S18: she leans in to whisper (chest and head forward and tipped), her left hand cupped beside her mouth.
+    t 0..1 blends in. `toward`: where the ear she whispers to is (a direction, armature space)."""
+    e = _ease(t)
+    tw = Vector(toward).normalized()
+    yaw = math.degrees(math.atan2(-tw.x, -tw.y))
+    P.rot("chest", (16 * e, 0, yaw * 0.4 * e))
+    P.rot("neck", (6 * e, 0, yaw * 0.3 * e))
+    P.rot("head 1", (6 * e, -8 * e, yaw * 0.3 * e))
+    hc = head_c(P)
+    rest = Vector((0.2, -0.05, 0.9))
+    reach(P, "L", rest.lerp(hc + Vector((0.075, -0.1, -0.075)), e), pole=(1, 0.3, -1), hand=(-0.35, -0.5, 0.8))
+
+
+def point(P, direction, t=1.0):
+    """S18: her left arm points along `direction` (armature space), straight, the hand on line. t 0..1 blends from
+    the arm down. Key point_fingers(rig, f) for the index finger."""
+    e = _ease(t)
+    d = Vector(direction).normalized()
+    down = Vector((0.17, 0.04, -1)).normalized()
+    a = down.lerp(d, e).normalized()
+    P.aim("upper_arm.L", a)
+    P.aim("forearm.L", a)
+    P.aim("hand.L", a)
+    P.rot("chest", (0, 0, math.degrees(math.atan2(-d.x, -d.y)) * 0.25 * e))
+
+
+def point_fingers(rig, f, side="L"):
+    """Index finger out, the others curled (keyed at f)."""
+    pb = rig["arm"].pose.bones
+    for fn, curl in (("index", 0.0), ("middle", 1.0), ("ring", 1.0), ("pinky", 1.0)):
+        for j, ang in ((1, 70), (2, 80), (3, 50)):
+            name = f"f_{fn}.0{j}.{side}"
+            if name not in pb:
+                continue
+            b = pb[name]
+            b.rotation_mode = "QUATERNION"
+            b.rotation_quaternion = Matrix.Rotation(math.radians(ang * curl), 4, "X").to_quaternion()
+            b.keyframe_insert("rotation_quaternion", frame=f, group=name)
+
+
+def sit(P, seat=0.42, feet_y=-0.36, bell_in_lap=True):
+    """S19 top: sitting on a boat thwart `seat` high (armature units above her soles), feet forward on the boat
+    floor, back straight; the bell hand rests in her lap, the left on her knee."""
+    hz = P.pb["hips"].matrix.translation.z
+    P.hips((0, 0.06, seat + 0.07 - hz))
+    for s, sx in (("L", 1), ("R", -1)):
+        P.leg(s, (sx * 0.12, feet_y, P.ankle_h))
+    P.rot("spine", (-3, 0, 0))
+    bpy.context.view_layer.update()
+    kL = P.pb["shin.L"].matrix.translation
+    kR = P.pb["shin.R"].matrix.translation
+    reach(P, "L", kL + Vector((0.0, 0.02, 0.06)), pole=(1, 0.2, -0.3), hand=(0, -1, -0.6))
+    if bell_in_lap:
+        reach(P, "R", Vector((kR.x * 0.4, kR.y * 0.45 + 0.02, seat + 0.2)), pole=(-1, 0.3, -0.3),
+              hand=(0.1, -0.2, -1))

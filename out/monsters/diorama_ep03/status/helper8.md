@@ -1,6 +1,6 @@
 # helper 8: Ep 3 assembly status
 
-**Updated:** 7 Nov 2026, ~09:40 UTC (branch at dce8b49+).
+**Updated:** 7 Nov 2026, ~10:40 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -8,7 +8,7 @@
     - the shots from `out/monsters/diorama_ep03/shots/`, preferring the ESRGAN `shots_1080/`;
     - the timing from `channels/monsters/ep03/timing.json`;
     - the output at 1080x1920 to `out/monsters/diorama_ep03/picture.mp4`.
-  - **Captions:** English, word-timed, 2-4 words each, on the 71% band (905) by default. They're placed per shot on the real frames as the shots land. S19 starts at y 520, in the A half above the divider. S14, the flip, has no words.
+  - **Captions:** English, word-timed, 2-4 words each, on the 71% band (905) by default. They're placed per shot on the real frames as the shots land. S19 is at y 490, in the A half above the A card (at 520 the captions touched the card's top). S14, the flip, has no words.
   - **Frame-0 hook:** THE VILLAGE / RAN FROM / MY WRIST (MY WRIST in red), shown until line 1 ends. It starts high (y 170, size 96) and gets placed on S01's OK still or final.
   - **The A/B split on S19:** S19top.mp4 above, S19bot.mp4 below, with the jagged divider.
     - The cards are A · GO TONIGHT and B · LEAVE AT DAWN, at 85% size. A pops on "Option A", B on "Option B", and both pulse on "Comment".
@@ -30,8 +30,17 @@
 
   None of them repeats the title.
 
+## The first animatic (pushed)
+`out/monsters/diorama_ep03/picture.mp4` + `picture_sheet.jpg`, rebuilt on the FINAL timing (8274b7a):
+- 1298 frames, 54.09 s, 1080x1920. All 19 shots are numbered slates showing each shot's line, and S19 is a split of two slates.
+- **Frame 0 shows the hook.** In S19:
+  - A pops on "Option A";
+  - B pops on "Option B", with LEAVE AT DAWN fully in frame;
+  - both pulse on "Comment".
+- The edge scan is clean.
+- Rebuild with `python channels/monsters/assemble_ep01v2.py --version diorama_ep03 --animatic --check`. Drop --animatic for the final.
+
 ## Next
-- When `ep03/timing.json` lands: build the first animatic with every shot as a numbered slate, and push it.
 - Then for each shot as it lands:
   - ESRGAN it to `shots_1080/`;
   - check its captions on the real frames, clear of faces;
