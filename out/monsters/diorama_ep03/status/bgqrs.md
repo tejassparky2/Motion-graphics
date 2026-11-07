@@ -1,6 +1,6 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 14:35 UTC.
+Updated 7 Nov 2026, 14:35 UTC (S15 part started 14:31).
 
 | Shot | State | File |
 |---|---|---|
@@ -71,6 +71,6 @@ Updated 7 Nov 2026, 14:35 UTC.
 
 Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the table).
 
-Now: looking for render parts of the long shots (S14/S06/S10/S15/S18) in their owners' status files; I'll claim one there before I start.
+Now: **S15 f037-070 for helper 5** (claimed in status/helper5.md 14:31 UTC; helper 5 renders f001-036, helper 2 f071-106). Rendering at 5d14f47 (helper5.py unchanged since c270955; the later helper9.py commits touch only S05/S18) as one raw part `parts/S15_f037-070.mp4` (crf 10, yuv420p, CLEAN, `-start_number 37`, no 2D pass). S14, S06 and S10 are already done; S18 isn't OK'd yet.
 
 ## Coordinator
