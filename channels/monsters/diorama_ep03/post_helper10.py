@@ -186,7 +186,7 @@ def _drawer(shot):
             A = {int(k): v for k, v in json.load(fh)["frames"].items()}
         return lambda cr, f: _s12(cr, min(max(1, f), max(A)), A)
     if shot == "S14":
-        with open(os.path.join(BUILD, "S14_landings.json")) as fh:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "S14_landings.json")) as fh:
             d = json.load(fh)
         return lambda cr, f: _s14(cr, f, d["landings"], set(d["plops"]))
     return None
