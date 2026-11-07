@@ -214,10 +214,22 @@ def _set(mode, frame=None, azim=None):
     return g
 
 
-def apply(mode="night", azim=None):
-    """The whole scene in `mode` ("day", "dusk" or "night"): sky, moon/sun, fill, haze and the grade. Call after the
-    set and the characters are built (materials are tagged for the mark's light now; call again if you add more)."""
+def _on_render(*_args):
     _tag_materials()
+
+
+def _hook():
+    """Tag materials again when a render starts, so characters and props built after apply() get the mark's light."""
+    h = bpy.app.handlers.render_init
+    if not any(getattr(f, "__name__", "") == "_on_render" for f in h):
+        h.append(_on_render)
+
+
+def apply(mode="night", azim=None):
+    """The whole scene in `mode` ("day", "dusk" or "night"): sky, moon/sun, fill, haze and the grade. Call it any time
+    after diorama.setup(): materials are tagged for the mark's light now and again when the render starts."""
+    _tag_materials()
+    _hook()
     return _set(mode, azim=azim)
 
 
@@ -225,6 +237,7 @@ def transition(f0, f1, a="day", b="dusk", c=None, f2=None, azim=None):
     """Key the scene from mode `a` at f0 to `b` at f1 (and on to `c` at f2): S04's sunset (day -> dusk -> night).
     The sun sinks with the modes' elevations. Linear between the keys."""
     _tag_materials()
+    _hook()
     _set(a, f0, azim)
     _set(b, f1, azim)
     if c is not None:
