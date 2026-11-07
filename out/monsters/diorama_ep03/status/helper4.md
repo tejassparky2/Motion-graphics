@@ -13,18 +13,16 @@
     - **The shrimp:** on "So I did." it hops from his right hand onto his left shoulder (a crouch, an arc, a landing
       squash).
   - **2D pass:** `EP=ep03 python channels/monsters/diorama_ep02/post_helper4.py S01`.
-- **S11: OK stills pushed, waiting for your OK:** `okstills/S11_f040.png` (level flight, under the light: it does NOT
-  fly at it) and `okstills/S11_f080.png` (its back tilted square to the light, the glow line on its back, the path
-  bending round it). Half-scale renders, upscaled. Timing: 92 render frames ("They" f51, "backs" f63).
-  - **The look:** a clean graphic side view on a dark night-blue ground, swung 30 degrees toward the moth's front so
-    its wings read (edge-on they didn't).
-  - **The moth:** one fluffmoth, 1.8x size, flapping on 1s.
-  - **The light:** a coral orb with a 2D bloom and a real coral point light.
-  - **The tilt:** from "They" its back turns toward the light (`fluffmoth.back_to`, amount 0 to 1 by "backs"+6),
-    and the tilt bends its heading into an arc round the light.
-  - **The glow line:** from "backs" a soft coral line runs from the light to its back (an arrow-like taper, a small
-    head at its back, breathing). No text.
-  - **Camera:** a slow push-in on 1s. Everything stays above the caption band (the moth and light at y ~400-700).
+- **S11: your 3 fixes are done; the FULL RENDER is running** (started about 10:20 UTC, 92 frames).
+  New stills: `okstills/S11_f060.png` and `okstills/S11_f080.png` (the old f040 is removed).
+  1. **"Skewer":** the rod through the moth wasn't the glow line. It was the moth's far hindwing seen edge-on,
+     lined up with the line by chance. The camera is now higher (20 degrees, looking a little down on it) so the
+     wings show their faces. The glow line now fades out in the fur of its back, with a small coral glow where it
+     lands. It never passes the moth.
+  2. **Trail:** a faint dotted trail of its flight so far (older dots dimmer): the long straight run under the light,
+     then the bend round it. A 1 s trail hid under its own wings at this size.
+  3. **Bigger and lower:** the moth is 2.35x (about 1.3x again), lower-centre, the biggest thing in frame, with the
+     light above it. A faint dark hill-and-grass silhouette fills the bottom from y ~985 (clear of 845-930).
 - **QA:** as shots land.
 
 ## Coordinator
