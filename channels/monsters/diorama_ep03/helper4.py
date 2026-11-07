@@ -119,7 +119,7 @@ def _raised_arm(PK, k, fwd, up, u=1.0, tremble=0.0):
     X._reach(PK, k, "R", waist)
     shoulder = E2._bone_world(k, "upper_arm.L")
     low = E2._bone_world(k, "chest") + fwd * 1.1 - up * 0.6 + side * 0.3
-    high = shoulder + fwd * 2.4 + up * (0.9 + tremble) + side * -0.25
+    high = shoulder + fwd * 2.2 + up * (1.5 + tremble) + side * -0.25
     X._reach(PK, k, "L", low.lerp(high, u), bend=(0, 0, 0.0))
     PK.twist("forearm.L", -80.0 * u)
 
@@ -306,11 +306,11 @@ def s01():
     bpy.context.view_layer.update()
     wrist = H9._forearm(k, H9.MARK_U)
     khead = s3d.kai_point(k, "eyes")
-    c0 = w0 + fwd * float(os.environ.get("S01_BACK", "3.8")) - L * float(os.environ.get("S01_SIDE", "1.5")) \
-        + up * float(os.environ.get("S01_H", "5.4"))
-    t0 = wrist.lerp(khead, float(os.environ.get("S01_AIM", "0.55"))) - up * float(os.environ.get("S01_DROP", "0.6"))
+    c0 = w0 + fwd * float(os.environ.get("S01_BACK", "4.5")) - L * float(os.environ.get("S01_SIDE", "2.8")) \
+        + up * float(os.environ.get("S01_H", "4.5"))
+    t0 = wrist.lerp(khead, float(os.environ.get("S01_AIM", "0.4"))) - up * float(os.environ.get("S01_DROP", "0.6"))
     c1 = c0.lerp(t0, 0.06)
-    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "32")))
+    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "40")))
 
     # the mark's light and its 2D anchors
     ld = bpy.data.lights.new("s01_mark_light", "POINT")
