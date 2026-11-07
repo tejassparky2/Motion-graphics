@@ -22,6 +22,7 @@ from mathutils import Vector
 
 from channels.monsters.diorama_ep02 import helper9 as H9
 from channels.monsters.diorama_ep02 import xprl as X
+from channels.monsters.diorama_ep03 import helper9 as N9
 from channels.monsters.diorama_ep03 import village as V
 from channels.monsters.ep01v2 import xprl as x3
 from channels.monsters.mk import anim, hero, look, puffshrimp
@@ -154,6 +155,7 @@ def _cam_pose(eye, tgt, lens, shift):
 
 
 # ------------------------------------------------------------------------------------- the night (a stand-in)
+# (superseded by helper 9's N9.night() / N9.mark() on 7 Nov; kept for a quick look without the night grade)
 def night_stub(dark=(0.055, 0.075, 0.19), glow=0.95, radius=0.46):
     """A stand-in night until helper 9's night grade lands: the frame multiplied down to a dark blue, then lifted back
     toward its own warm-tinted colours inside a soft circle round the mark (the mark is the only light; moved with
@@ -320,7 +322,7 @@ def vn():
     _kai_face({"eye_brow_down": 0.5, "eye_brow_up": 0.3}, 1)
     sh = _shoulder_shrimp(k, n, face)
     anim.on_twos(H9._shrimp_parts(sh), step=2)
-    _mark_light(k, n, energy=60.0)
+    N9.mark(k)
     vs = []
     v = V.villager(0, 40, net=True)                                     # backing off across the lane, net out
     V.back_off(v, V.LANE_AT + left * -3.5 + V.LANE_DIR * 3.0, V.LANE_AT + left * -6.5 + V.LANE_DIR * 6.0, 1, n,
@@ -329,7 +331,7 @@ def vn():
     v = V.villager(1, 41, net=False)                                    # scratching on hut 2's porch
     anim.key(v["root"], "location", 1, tuple(huts[2]["porch"] + V.LANE_DIR * 1.2), "CONSTANT")
     anim.key(v["root"], "rotation_euler", 1, (0, 0, V._yaw_to(huts[2]["porch"], VN_EYE)), "CONSTANT")
-    V.scratcher(v, 1, n)
+    scr = V.scratcher(v, 1, n)
     vs.append(v)
     for j, hi in enumerate((4, 0)):                                      # hand bells rung on porches
         v = V.villager(2 + j, 42 + j, net=False, bell=True)
@@ -355,13 +357,15 @@ def vn():
         a = _cam_pose(eye, tgt, 35.0, 0.0)
         b = _cam_pose(eye + (tgt - eye) * 0.08, tgt, 35.0, 0.0)
     cam = X._cam_move("cam_vn", n, a, b)
-    mask = night_stub()
-    _night_follow(mask, k, n)
+    V.bang_shutters(huts[3], 8, crack=0.06)                             # a cracked shutter with eyes peeking out
+    V.peek(huts[3], 14, blinks=(26,))
+    _anchors("VN", n, lambda f, c: dict(blotch=_px(c, scr["blotch"].matrix_world.translation)))
+    N9.night(n)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + [v["root"] for v in vs])
 
 
 # ------------------------------------------------------------------------------------------------------------ S09
-S09_RINGERS = ((1, -0.6), (0, 0.4), (3, 0.2))     # (hut, yaw tweak): porch bell-ringers, from the camera to Kai
+S09_RINGERS = ((1, -0.5), (3, 0.3), (4, 0.4))     # (hut, yaw tweak): porch bell-ringers, from the camera to Kai
 S09_MOTHS = 40
 
 
@@ -396,9 +400,12 @@ def s09():
     anim.key(sh["body"], "rotation_euler", f_see + 6, (0.45, 0, 0), "CONSTANT")    # it ducks behind his head
     anim.squash(sh["body"], f_see + 6, -0.25)
     anim.on_twos(H9._shrimp_parts(sh), step=2)
-    _mark_light(k, n, energy=70.0)
+    N9.mark(k)                                                          # helper 9's mark: the coral key light
     sc.frame_set(1)
     M = H9._forearm(k, H9.MARK_U)                                       # the light the swarm goes to
+    r0 = huts[S09_RINGERS[0][0]]["porch"] - V.LANE_DIR * 1.2                # the first ringer, foreground right
+    tgt = r0.lerp(V.LANE_AT, 0.45) + UP * 4.5
+    eye0 = r0 - V.LANE_DIR * 15.0 + east * 5.5 + UP * 8.0
     # the bell-ringers on their porches (faces up the lane, ringing hard, never stopping) and every porch bell
     vs, ring_at = [], {}
     for j, (hi, tw) in enumerate(S09_RINGERS):
@@ -406,7 +413,8 @@ def s09():
         hut = huts[hi]
         at = hut["porch"] - V.LANE_DIR * 1.2
         anim.key(v["root"], "location", 1, tuple(at), "CONSTANT")
-        anim.key(v["root"], "rotation_euler", 1, (0, 0, V._yaw_to(at, at - V.LANE_DIR * 10) + tw), "CONSTANT")
+        look_to = at - V.LANE_DIR * 10 if j else at.lerp(eye0, 0.5) - V.LANE_DIR * 6   # the near one: 3/4 to us
+        anim.key(v["root"], "rotation_euler", 1, (0, 0, V._yaw_to(at, look_to) + tw), "CONSTANT")
         for f in range(1, n + 1, 2):
             anim.key(v["bell"], "rotation_euler", f, (0, math.radians(34 * math.sin(f * 1.5 + j * 2)), 0),
                      "CONSTANT")
@@ -420,8 +428,6 @@ def s09():
         V.ring_bell(h, 3 + j, n, amp=32.0, seed=j)
         ring_at[f"porch{j}"] = h["bell"]
     # the camera: low behind the first bell-ringer's porch, up the lane, looking down it at Kai; a slow push-in
-    tgt = V.LANE_AT + UP * 5.0 - V.LANE_DIR * 3.0
-    eye0 = V.LANE_AT - V.LANE_DIR * 26.0 - east * 5.5 + UP * 6.5
     a = _cam_pose(eye0, tgt, 32.0, -0.03)
     b = _cam_pose(eye0 + (tgt - eye0).normalized() * 3.0, tgt, 32.0, -0.03)
     cam = X._cam_move("cam_s09", n, a, b)
@@ -442,13 +448,13 @@ def s09():
     for i, r in enumerate(sw):
         p0 = r["root"].location.copy()
         past = ring_pts[i % len(ring_pts)] + east * rnd.uniform(-2.5, 2.5) - V.LANE_DIR * rnd.uniform(-2, 2)
-        rad, th0 = rnd.uniform(2.4, 5.5), rnd.uniform(0, math.tau)
-        hz = rnd.uniform(-1.2, 2.2)
+        rad, th0 = rnd.uniform(3.2, 6.2), rnd.uniform(0, math.tau)     # (wide enough to leave his face)
+        hz = rnd.uniform(-2.6, 1.0)
         entry = M + Vector((math.cos(th0) * rad, math.sin(th0) * rad, hz))
         c1 = p0.lerp(past, 0.6) + UP * rnd.uniform(-1, 1)
         c2 = past.lerp(entry, 0.5) + UP * rnd.uniform(0, 2.5) + east * rnd.uniform(-3, 3)
-        t0 = int(rnd.uniform(18, 40))
-        dur = int(rnd.uniform(28, 40))
+        t0 = int(rnd.uniform(8, 28))
+        dur = int(rnd.uniform(30, 42))
         w = rnd.choice((-1, 1)) * rnd.uniform(1.6, 2.6) / rad           # orbit speed (rad/s), inner ones faster
         prev, last = None, p0
         for f in range(1, n + 3, 2):
@@ -473,8 +479,7 @@ def s09():
     _anchors("S09", n, lambda f, c: dict(_arm_anchors(k, c),
                                          **{f"bell_{nm}": _px(c, o.matrix_world @ Vector((0, 0, -1.2)))
                                             for nm, o in ring_at.items()}))
-    mask = night_stub()
-    _night_follow(mask, k, n)
+    N9.night(n)                                                         # helper 9's night grade
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + [v["root"] for v in vs] +
                 [r["root"] for r in sw])
 

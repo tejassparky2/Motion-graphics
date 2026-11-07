@@ -145,7 +145,10 @@ def _village_backdrop(shut=None):
     if shut is not None:
         for h in huts:
             V.set_door(h, shut, 0.0)
-            V.set_shutters(h, shut, CRACK)
+            if hasattr(V, "peek"):                                        # helper 1's cracked shutters (~7 degrees)
+                V.bang_shutters(h, shut - 11, crack=0.06)
+            else:
+                V.set_shutters(h, shut, CRACK)
     return huts
 
 
@@ -208,7 +211,7 @@ def _mark_light(k, n, toward, energy=MARK_W, seed=5):
     return lt
 
 
-def _offscreen_mark(pos, n, energy=None):
+def _offscreen_mark(pos, n, energy=None, k=1.0):
     """Kai's mark lighting a shot he isn't in (S08, S16): a coral point light at his wrist's spot, pulsing (helper
     9's mark power and no shadows once the night grade is in: the grade warms what the coral light reaches)."""
     N9 = _optional("helper9")
@@ -218,6 +221,7 @@ def _offscreen_mark(pos, n, energy=None):
     d.color = CORAL
     d.shadow_soft_size = 0.3
     d.use_shadow = N9 is None
+    energy *= k
     lt = bpy.data.objects.new("x3_mark_off", d)
     bpy.context.scene.collection.objects.link(lt)
     lt.location = pos
@@ -310,6 +314,30 @@ def _clear_near(cam, radius):
                 o.hide_render = True
 
 
+def _px(cam, p):
+    from bpy_extras.object_utils import world_to_camera_view
+    q = world_to_camera_view(bpy.context.scene, cam, p)
+    return [round(q.x * 720, 1), round((1 - q.y) * 1280, 1), round(q.z, 2)]
+
+
+def _write_anchors(shot, n, bells, extra=None):
+    """build/monsters/diorama_ep03/<shot>_anchors.json: per frame, each ringing bell's screen point (720x1280) and
+    its ring span ({"spans": {name: [f0, f1]}}), for the 2D ring lines (diorama_ep03/post_xprl.py)."""
+    sc = bpy.context.scene
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        bpy.context.view_layer.update()
+        out[f] = {nm: _px(sc.camera, o.matrix_world @ off) for nm, (o, off, a, b) in bells.items()}
+        if extra is not None:
+            out[f].update(extra(f, sc.camera))
+    sc.frame_set(1)
+    d = os.path.join(ROOT, "build", "monsters", "diorama_ep03")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, f"{shot}_anchors.json"), "w") as fh:
+        json.dump(dict(frames=out, spans={nm: [a, b] for nm, (o, off, a, b) in bells.items()}), fh)
+
+
 def _cam(name, n, a, b):
     """A slow camera move on 1s (X._cam_move: target, dist, tilt, yaw, lens, shift_y)."""
     return X._cam_move(name, n, a, b)
@@ -338,13 +366,14 @@ def s16():
     wren.face(w, "softening", f_crack)
     wren.blink(w, 1, n, every=(200, 201), at=(f_crack + 10,))
     wren.contact_shadows(w)
-    _offscreen_mark(KAI_SIT + Vector((1.2, 0.6, 2.6)), n)
+    _offscreen_mark(KAI_SIT + Vector((1.2, 0.6, 2.6)), n, k=0.5)              # softer: she is close to it
     _dazed_moths(n, [(WREN_S16.x - 2.2, WREN_S16.y + 2.0), (WREN_S16.x + 2.6, WREN_S16.y + 1.2),
                      (WREN_S16.x + 0.8, WREN_S16.y + 3.4)])
     # close (chest-up), from Kai's side (north-west of her), a slow push-in
     tgt = WREN_S16 + Vector((1.0, 0, 6.3))                                    # her bell side (east) in frame
     yaw = 176.0
-    _cam("S16cam", n, (tgt, 9.2, 3, yaw, 44, 0.0), (tgt, 8.2, 3, yaw, 44, 0.0))
+    face_tgt = WREN_S16 + Vector((0.4, 0, 7.7))                                # ends closer, on her face
+    _cam("S16cam", n, (tgt, 9.2, 3, yaw, 44, 0.0), (face_tgt, 7.0, 3, yaw, 44, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 
@@ -353,9 +382,13 @@ def s17():
     n = frames("S17")
     _night(n)
     huts = _village_backdrop(shut=1)
+    V = _optional("village")
     for i, h in enumerate(huts):                                   # the village peeking through its shutters
         if (h["root"].location - KAI_SIT).length < 45:
-            _peeking_eyes(h, n, seed=i)
+            if V is not None and hasattr(V, "peek"):
+                V.peek(h, 1, n, blinks=(9 + 7 * i, 40 + 5 * i))
+            else:
+                _peeking_eyes(h, n, seed=i)
     k = _kai_sitting(n, look_at=WREN_KNEEL + Vector((0, 0, 5.0)))
     _shoulder_shrimp(k, n)
     hero.face(k, "worried", 1) if "worried" in hero.FACES else hero.face(k, "sad", 1)
@@ -378,9 +411,9 @@ def s17():
         wren.kneel(P, front="L", depth=d)
         if f_back <= f < f_return + 4:                                            # the glance back at the village
             g = _ease((f - f_back) / 5) * (1 - _ease((f - f_return) / 4))
-            P.rot("chest", (0, 0, 10 * g))                                    # over her left shoulder (south)
-            P.rot("neck", (0, 0, 15 * g))
-            P.rot("head 1", (0, 0, 22 * g))
+            P.rot("chest", (0, 0, 5 * g))                                     # over her left shoulder (south):
+            P.rot("neck", (0, 0, 10 * g))                                     # a glance, her profile to us
+            P.rot("head 1", (0, 0, 20 * g))
         else:
             P.rot("head 1", (8, 0, 0))                                            # looking down at him
         P.key(f)
@@ -398,11 +431,13 @@ def s17():
     yaw = 180.0                                                               # from the north: Wren clear of his head
     _cam("S17cam", n, (mid, 14.5, 7, yaw, 40, 0.0), (mid, 13.0, 7, yaw, 40, 0.0))
     _clear_near(bpy.context.scene.camera, 9.0)
+    _write_anchors("S17", n, {}, extra=lambda f, c: dict(mark=H9._mark_geo(k, c), elbow=_px(c, H9._forearm(k, 0.0)),
+                                                          wrist=_px(c, H9._forearm(k, 1.0))))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
 
 # ------------------------------------------------------------------------------------------------------------ S08
-PORCH_HUT = 3                       # helper 1's lane: hut 3 (west side, its porch facing the lane, near Kai's spot)
+PORCH_HUT = 2                       # helper 1's lane: hut 2 (east side, the porch nearest Kai's spot; helper 1)
 
 
 def s08():
@@ -414,6 +449,8 @@ def s08():
         h = huts[PORCH_HUT]
         face = Vector(h["face"])
         spot = Vector(h["doorstep"]) + face * 0.7 + Vector((0, 0, 0.5))       # on the deck, near the door
+        if hasattr(V, "porch"):                                               # helper 1's porch(): deck height
+            spot.z = V.porch(PORCH_HUT)[2]
         kai_at = V.LANE_AT
     else:                                                                     # no lane yet: a spot by the track
         face = Vector((1.0, 0.0, 0.0))
@@ -435,6 +472,7 @@ def s08():
             s = 1 if ((f - f_ring) // 2) % 2 == 0 else -1
             P.hips((0, 0, -0.012 * (1 if s > 0 else 0)))
             wren.ring_hard(P, s, lift=1.0)
+            P.rot("spine", (6 if s > 0 else 2, 0, 0))                          # she leans into each swing
         else:
             u = _ease((f - f_stop) / 8)
             wren.ring_hard(P, 0, lift=1.0 - 0.3 * u)
@@ -445,6 +483,12 @@ def s08():
     wren.face(w, "stern", 1)
     wren.face(w, "shout", f_ring)
     wren.talk_words(w, words_, t0, first=1, amount=1.0)
+    head = w["head"]
+    for wd, a, b in words("S08"):                                             # RING, BELLS, DRIVE, OFF: wide open
+        if wd in ("ring", "bells", "drive", "off"):
+            for k, v in (("lip_a", 1.0), ("mouth_wide", 0.6), ("lip_i", 0.0), ("lip_u", 0.0), ("lip_o", 0.0),
+                         ("lip_e", 0.0), ("mouth_short", 0.0)):
+                wren._key(head, k, a, v)
     wren.face(w, "stern", f_stop + 2)
     wren.blink(w, 1, n, every=(200, 201), at=(f_stop + 6,))
     wren.contact_shadows(w)
@@ -455,12 +499,18 @@ def s08():
     _offscreen_mark(Vector(kai_at) + Vector((0, 0, 3.0)), n)
     # low, in front of her and a little to the lane's north (her left): she fills the frame, the porch post and bell
     # and the lane's other porches beyond; a slow push-in
-    tgt = spot + Vector((0, 0, 6.6))
     side = Vector((-face.y, face.x, 0))
+    tgt = spot + Vector((0, 0, 6.6)) - side * 1.3                              # toward her bell hand (her right)
     cdir = (face * 0.9 + side * 0.44).normalized()                           # her bell side: her face stays clear
     cyaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
     _cam("S08cam", n, (tgt, 12.0, -7, cyaw, 46, 0.0), (tgt, 10.8, -7, cyaw, 46, 0.0))
     _clear_near(bpy.context.scene.camera, 9.0)
+    bells = {"bell_wren": (w["bell"], Vector((0, 0, -0.07)), f_ring, f_stop)}
+    if V is not None and huts:
+        for i, h in enumerate(huts):
+            if i != PORCH_HUT and not any(c.hide_render for c in h["bell"].children):
+                bells[f"bell_hut{i}"] = (h["bell"], Vector((0, 0, -1.2)), f_ring + 6 + 5 * i, f_stop)
+    _write_anchors("S08", n, bells)
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 

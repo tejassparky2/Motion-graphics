@@ -152,11 +152,11 @@ def s04():
     anim.on_twos(H2._shrimp_parts(sh), step=2)
     # the sky: day (S03) -> dusk on "down" -> night by the end; the sun disc sinks behind the trees to the west
     NG.transition(1, f_dusk, "day", "dusk", "night", f_night, azim=-15.0)   # light from the sunset, behind him
-    SUN_AZ = 196.0                                                         # over the far hills across the lake
+    SUN_AZ = 172.0                                                         # over the far hills across the lake
     sd, halo = _disc("h9_setting_sun", _dir(SUN_AZ, 5.0) * 2400.0, 70.0, (1.0, 0.55, 0.22, 1), 3.0, halo=3.4,
                      halo_col=(1.0, 0.45, 0.18, 1), halo_s=1.6)
     for f in range(1, n + 1):
-        el = 5.5 - 9.5 * _smooth((f - 1) / (f_down + 4 - 1))               # gone below the treeline after "down"
+        el = 9.0 - 13.0 * _smooth((f - 1) / (f_down + 4 - 1))              # gone below the hills after "down"
         p = Vector(V.LANE_AT) + _dir(SUN_AZ, el) * 2400.0
         for o in (sd, halo):
             o.location = p
@@ -167,10 +167,10 @@ def s04():
     # camera: low, from up the lane (north), looking south down it: Kai facing us, the square, the lake and the far
     # hills behind him with the sun sinking behind them; a slow push-in
     cam = H2._new_cam("S04cam", 1)
-    tgt = Vector(V.LANE_AT) + Vector(V.LANE_DIR) * 8.0 + Vector((0.8, 0, 6.6))
+    tgt = Vector(V.LANE_AT) + Vector(V.LANE_DIR) * 8.0 + Vector((-0.6, 0, 6.6))
     for f in range(1, n + 1):
         u = _smooth((f - 1) / (n - 1))
-        loc, rot = H2._orbit(tgt, 22.0 - 2.5 * u, 3.0, 180.0 + 8.0)       # from the north, looking south
+        loc, rot = H2._orbit(tgt, 23.0 - 2.5 * u, 4.0, 170.0)             # from the north, on the lane's middle
         H2._key_cam(cam, f, loc, rot, 32.0, (Vector(V.LANE_AT) + Vector((0, 0, 5)) - loc).length,
                     shift_y=-0.06, blur=2.0, haze=(4.0, 10.0))
     H2._linear(cam, cam.data)
@@ -271,8 +271,9 @@ def s18():
     mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
     for f in range(1, f_cut):
         u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, 13.5 - 1.5 * u, 6.0, -90.0 - 12.0)      # from the east (he faces east)
-        H2._key_cam(camA, f, loc, rot, 40.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
+        loc, rot = H2._orbit(mid, 9.6 - 1.0 * u, 8.0, 247.5)              # from the ENE: her point to the lighthouse
+                                                                            # crosses the frame (screen left), clear of him
+        H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)
     eye0 = lh["top"] + Vector((-55, 250, -38))
@@ -282,7 +283,7 @@ def s18():
         d = (lh["top"] - Vector((0, 0, 24))) - eye
         H2._key_cam(camB, f, eye, H2._look(d), 58.0, d.length, blur=1.0, haze=(1.5, 3.0))
     NG.reflection(lh["top"], eye0)
-    NG.moon(az=158.0, el=15.0, r=34.0)                                     # up and left of the lamp, small
+    NG.moon(az=161.5, el=14.5, r=30.0, origin=eye0)                        # up and left of the lamp, small
     hl = bpy.data.lights[f"h9_lighthouse_light"]                            # the glow swells on "lighthouse"
     gm = bpy.data.materials["h9_lighthouse_glow"].node_tree.nodes["Emission"].inputs[1]
     hm = [nd for nd in bpy.data.materials["h9_lighthouse_halo"].node_tree.nodes if nd.bl_idname == "ShaderNodeEmission"][0].inputs[1]

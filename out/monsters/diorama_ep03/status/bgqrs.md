@@ -1,10 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 11:45 UTC.
+Updated 7 Nov 2026, 12:30 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **Full render running** (started 11:29 UTC at 62572f2, on helper 9's FINAL night/mark @ 09d120f). Re-stills at full size on the FINAL night, with the 2D pass: `okstills/bgqrs_S13_final_f0027.jpg` and `_f0045.jpg`. Only ~55 s a frame at full size, so it should finish around 12:30 UTC; then the 2D pass and shots/S13.mp4. | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **FINAL, pushed.** 57/57 frames, 720x1280 at 24 fps, crf 10, bitexact + stream-copy remux, 0 encoder tags. Rendered at 62572f2 on helper 9's FINAL night/mark (09d120f), ~55 s/frame. 2D pass: `post_bgqrs.py` (the zigzag, the coral #ff8466 cone and rays with a hot white core, grass blades, sparks). Beats: dip f3, flat f13, settled f16, arm out f17-25, the bloom on "below" f26. | shots/S13.mp4 + S13_sheet.jpg |
 
 ### S13 staging (57 render frames; "below" at f26)
 - **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
