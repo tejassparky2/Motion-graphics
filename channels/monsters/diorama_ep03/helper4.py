@@ -271,11 +271,11 @@ def s01():
     wrist = H9._forearm(k, H9.MARK_U)
     left = Vector((-fwd.y, fwd.x, 0))
     wren_head = w0 + fwd * 1.5 + up * 7.4
-    c0 = wrist - fwd * float(os.environ.get("S01_BACK", "4.0")) + left * float(os.environ.get("S01_LEFT", "-1.2")) \
-        - up * float(os.environ.get("S01_LOW", "1.5"))
-    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.2")))
+    c0 = wrist - fwd * float(os.environ.get("S01_BACK", "2.0")) + left * float(os.environ.get("S01_LEFT", "2.0")) \
+        - up * float(os.environ.get("S01_LOW", "1.8"))
+    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.03")))
     c1 = c0.lerp(wrist, 0.10)
-    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "20")))
+    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "17")))
 
     # the mark's light and its 2D anchors
     ld = bpy.data.lights.new("s01_mark_light", "POINT")
