@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~12:10 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~12:25 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -29,7 +29,13 @@
       - The cards stack on the divider: A just above it, B in the dawn sky just under it. B clears his head, the shrimp and the look back, and only the end of its pill crosses the sun's edge.
       - The other layout I tried put B low, at 880, where it covered his waist and hands.
       - Both layouts side by side, 880 on the left and the pick on the right: `status/helper8_s19_cards.jpg`.
-      - A at 515 sits on the bottom of the boat panel. It gets re-checked when helper 3's S19top still lands.
+      - **Checked on helper 3's S19top OK stills (f40, f120) together with S19bot v2:** `status/helper8_s19_split.jpg`.
+        - The A card sits on the water under the boat's glow, clear of Kai, Wren and the shrimp.
+        - The captions at y 430 sit on the hull's glow under the characters. At y 160 they covered Kai's head.
+        - Cards and captions stay where they are.
+      - **Two things for helper 3's render (also noted in status/helper3.md):**
+        1. S19top is rendered to row 690, but the split's top band needs rows 0-800. On the stills the short render leaves a black sliver at the left edge above the divider, which fails the edge scan.
+        2. The lighthouse's lamp is at about plate row 40, inside the 60 px the split hides at the top. It should sit below row ~110.
   - **Edge-band scan:** the same rule as Episode 2.
   - Regression check: Episode 2 still rebuilds byte-identical (sha 4926290880f2).
 - **`deliver_ep01v2.py --version diorama_ep03`** writes the final files for Episode 3:
