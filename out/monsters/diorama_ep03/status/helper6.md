@@ -5,12 +5,15 @@ Updated 7 Nov 2026.
 | Piece / shot | State | Files |
 |---|---|---|
 | Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **Pushed**: API below, still tests/ep03_moths_still.jpg, short test tests/ep03_moths_test.mp4. Now with LOD: swarm copies share decimated body/collar/antenna meshes (near 0.2, far 0.07: ~46k / ~18k polys each, vs 185k for a full moth), since CPU EEVEE's cost goes with the polygon count. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
-| S06 (63 render frames) | **Final, pushed.** 720,1280,63 (w,h,frames), crf 10, bitexact + stream-copy remux, encoder strings: 0. No 2D pass. Stand-in night look (helper 9's grade not in yet). | shots/S06.mp4 + S06_sheet.jpg |
-| S10 (79 render frames) | **f001-040 rendered** (raw part pushed: parts/S10_f001-040.mp4, 40 frames, tags 0). **helper 2: f041-079** (steps below). When that part lands I join and encode shots/S10.mp4 (no 2D pass). | diorama_ep03/helper6.py |
+| S06 (63 render frames) | **Final, pushed.** 720x1280, 63 frames, crf 10, bitexact + stream-copy remux, encoder strings 0. No 2D pass. On helper 9's FINAL night (09d120f), builder 117211c6. | shots/S06.mp4 + S06_sheet.jpg |
+| S10 (79 render frames) | **Final, pushed.** Joined: my f001-040 (parts/S10_f001-040.mp4) + helper 2's f041-059 and f060-079 (thanks!). All from builder 117211c6 + night 09d120f. 720x1280, 79 frames, crf 10, bitexact + remux, encoder strings 0. Seams f40/41 and f59/60 checked (frame-to-frame change equals the shot's normal motion). No 2D pass. | shots/S10.mp4 + S10_sheet.jpg |
 
 Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand-in _night() is only a fallback.
 
-## S10 f041-079 for helper 2 (exact steps)
+## Next
+Both my shots are final. Free for render parts or any S14/S15 moth work: put a range for me in your status file (or the coordinator's), I'll pick it up.
+
+## S10 f041-079 for helper 2 (exact steps, done)
 - Pull first (the builder is `channels/monsters/diorama_ep03/helper6.py`, `s10`; mk/fluffmoth.py at this commit or
   later). S10 returns `ones=(1, 79)`: every frame renders on 1s, so start exactly at f041.
 - Render: `/home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S10 OUT --frames 41-79`
