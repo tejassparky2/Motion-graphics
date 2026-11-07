@@ -294,7 +294,7 @@ def s07():
     v["root"].rotation_euler = (0, 0, facing(vp) - math.radians(12))
     anim.key(v["body"], "rotation_euler", 1, (math.radians(-6), 0, 0), "CONSTANT")
     anim.key(v["body"], "rotation_euler", f_sting - 8, (math.radians(-16), 0, 0), "CONSTANT")   # head back: looking up
-    V.scratcher(v, f_sting, n)
+    scr = V.scratcher(v, f_sting, n)
 
     # a few moths fluttering just over the awning, shedding the dust
     top = porch + Vector((0, 0, 0))
@@ -323,6 +323,7 @@ def s07():
     look_dir = (-face).lerp((porch - kai_at).normalized(), 0.15).normalized()
     cy = math.degrees(math.atan2(look_dir.x, look_dir.y))
     _cam("cam_s07", 1, n, (tgt, 15.0, 6.0, cy), (tgt, 12.5, 5.0, cy), lens=32.0, blur=4.0, shift_y=-0.06)
+    _px_anchors("S07", n, dict(blotch=scr["blotch"]))                   # helper 1's itch squiggles (post_helper5)
     LAST.update(w=w, v=v)
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"], v["root"]])
 
@@ -399,6 +400,29 @@ def _ground_at_px(cam, x, y, W=720, H=1280):
     d = p - o
     t = -o.z / d.z if abs(d.z) > 1e-6 else 0.0
     return o + d * t
+
+
+def _px_anchors(shot, n, objs):
+    """build/monsters/diorama_ep03/<shot>_anchors.json: per frame, each named object's position on the 720x1280 frame
+    as [x, y, depth] (helper 1's post_helper1.itch reads this layout)."""
+    import json
+    import os
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        row = {}
+        for nm, o in objs.items():
+            v = world_to_camera_view(sc, sc.camera, o.matrix_world.translation)
+            row[nm] = [round(v.x * 720, 1), round((1 - v.y) * 1280, 1), round(v.z, 2)]
+        out[f] = row
+    sc.frame_set(1)
+    root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
+    d = os.path.join(root, "build", "monsters", "diorama_ep03")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, f"{shot}_anchors.json"), "w") as fh:
+        json.dump(out, fh)
 
 
 def _hero_anchors(shot, n, rigs):
