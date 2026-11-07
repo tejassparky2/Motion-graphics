@@ -1,9 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 14:35 UTC (S15 part started 14:31).
+Updated 7 Nov 2026, 15:45 UTC.
 
 | Shot | State | File |
 |---|---|---|
+| S15 f037-070 (for helper 5) | **Raw part, pushed.** 34 frames (f37-70), 720x1280 at 24 fps, libx264 crf 10, yuv420p, CLEAN (bitexact + stream-copy remux), `-start_number 37`, no 2D pass, 0 encoder tags. f37-40 rendered at 5d14f47, then a container restart; f41-70 at 79ccb50 (no S15 code change between them; the f40/f41 seam steps like every other on-2s pose change). f37 matches helper 5's OK still at f36, f70 matches its f70. ~80-105 s/frame. | parts/S15_f037-070.mp4 |
 | S19top f089-176 (for helper 3) | **Raw part, pushed.** 88 frames (f89-176), 720x1280 at 24 fps, libx264 crf 6, yuv444p, bitexact + stream-copy remux, `-start_number 89`, no 2D pass, 0 encoder tags. Rendered from helper 3's **framing FINAL @ 61f6f756** (HEAD 8a63ed2 contains it), 13:08-14:30 UTC, ~50 s/frame. The bf89da0 frames (old framing) were thrown away. The lighthouse lamp is near the top, the content is in rows 0-800 and black below, as in helper 3's probe. | parts/S19top_f089-176.mp4 |
 | S13 "So I put the light below them." | **FINAL, pushed.** 57/57 frames, 720x1280 at 24 fps, crf 10, bitexact + stream-copy remux, 0 encoder tags. Rendered at 62572f2 on helper 9's FINAL night/mark (09d120f), ~55 s/frame. 2D pass: `post_bgqrs.py` (the zigzag, the coral #ff8466 cone and rays with a hot white core, grass blades, sparks). Beats: dip f3, flat f13, settled f16, arm out f17-25, the bloom on "below" f26. | shots/S13.mp4 + S13_sheet.jpg |
 
@@ -71,8 +72,8 @@ Updated 7 Nov 2026, 14:35 UTC (S15 part started 14:31).
 
 Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the table).
 
-Now: **S15 f037-070 for helper 5** (claimed in status/helper5.md 14:31 UTC; helper 5 renders f001-036, helper 2 f071-106). Rendering at 5d14f47 (helper5.py unchanged since c270955; the later helper9.py commits touch only S05/S18) as one raw part `parts/S15_f037-070.mp4` (crf 10, yuv420p, CLEAN, `-start_number 37`, no 2D pass). A container restart at ~14:42 stopped it after f040; resumed from f041 at 79ccb50 (no S15 code change since 5d14f47), done ~15:25 UTC. S14, S06 and S10 are already done; S18 isn't OK'd yet.
+Done: **S15 f037-070** for helper 5 (15:40 UTC) and **S19top f089-176** for helper 3 (14:35 UTC); see the table. The S19bot f089-132 claim was withdrawn (helper 5 had already rendered it).
 
-Next: the S19bot f089-132 claim is **withdrawn** (helper 5's f001-132 was already done; I rendered none of it). After S15 I'll take helper 9's S05 if status/helper9.md offers it ("S05 for bGqrs from <commit>"). **Coordinator: if it doesn't, I'm free from ~15:25 UTC; please give me a range here.**
+**Free now (15:45 UTC).** Helper 9's S05 is delivered and S18 is split without me, so: **coordinator, please give me a range here** (any shot: I render raw parts to your spec). Meanwhile I'm checking the status files for open ranges and will claim one in its owner's file before starting.
 
 ## Coordinator
