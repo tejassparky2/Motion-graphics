@@ -8,7 +8,7 @@
   |---|---|---|
   | f001-027 | helper 4 | DONE, pushed `parts/S01_f001-027.mp4` (crf 6 yuv444p, 0 tags) |
   | f028-045 | helper 4 | rendering (started 13:52 UTC, about 85 min) |
-  | f046-062 | helper 10 | **claimed, rendering from bb5be5d** (started 14:01 UTC; test still f46 OK; full size, ~1.5 h) -> `parts/S01_f046-062.mp4` |
+  | f046-062 | helper 10 | **DONE, pushed** `parts/S01_f046-062.mp4` (from bb5be5d; 17/17 frames, crf 6 yuv444p, start_number 46, 0 tags; checked: smooth push-in, no jump at the f54/55 chunk seam) |
   When f046-062 lands, I join the parts, run the 2D pass (the mark, the evening grade, sparkles), encode and push
   `shots/S01.mp4`.
 - **S01: your 11:44 tweaks are in** (frame 1 checked: the evening grade, brows down, eyes to Wren, the mark brightest):
