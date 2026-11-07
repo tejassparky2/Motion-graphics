@@ -63,7 +63,19 @@
   - **S14 PASS, the flip reads at phone size.** The held beat, then the swarm rolls belly-up (legs visible), stalls
     and drops with dust puffs, landing in a heap of moths with their legs up around him. The bottom third is empty
     grass, which is fine under the 71% captions.
-  - **Still to QA:** S01 (rendering), S04, S05, S07, S08, S09, S10, S15-S19 as they land.
+- **QA, round 2 (S08, S10, S16):** frames S08 80, S10 79, S16 55 (= render_frames); 720x1280; 0 tags; no black
+  edges (every 2nd frame); no frame jumps.
+  - **S08 PASS.** Wren on the porch rings her bell with both hands, mouth flapping, with 2D ring lines at the bell.
+    Note: only her bell shows ring lines; "every bell in the village rings" isn't on screen (no other bell in frame).
+    If the sound carries the village bells, that's fine; otherwise a few far 2D ring lines in the upper left would
+    sell it.
+  - **S10 PASS, physics reads at phone size.** A top view of a full ring of moths circling Kai, the glow at his
+    raised wrist in the centre; the circling motion is clear in playback.
+  - **S16 PASS.** Wren lowers the bell; her stern face softens to wide eyes by the second half.
+  - **Continuity watch (S08/S16 vs S02):** under the coral night light, Wren's hair reads mauve-brown and her eyes
+    grey, against dark purple hair and gold eyes in S02's daylight. It's the light, not the model, so it's fine
+    unless you want them closer.
+  - **Still to QA:** S01 (rendering), S04, S05, S07, S09, S15, S17-S19 as they land.
 
 ## Coordinator
 (answers here)
