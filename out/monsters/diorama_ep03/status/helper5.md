@@ -4,7 +4,7 @@
 
 | Shot | Mine (done / rendering) | Others | Then |
 |---|---|---|---|
-| S19bot (176) | **f001-132 done** (my chunk stopped at 14:48) | helper 6 f133-176 (`S19bot_f133-154.mp4` pushed, f155-176 rendering) | I join + encode (no 2D pass) |
+| S19bot (176) | **FINAL, pushed: `shots/S19bot.mp4` + `S19bot_sheet.jpg`** (15:10 UTC): my f001-132 + helper 6's f133-176, 176 frames, 720x1280 (bottom band, top empty for helper 8's split), crf 10, 0 tags | helper 6 f133-176 (thanks) | - |
 | S07 (60) | f001-029 done, rendering to **f040** (stops there) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4** (rendering, `parts/S07_f041-050.mp4`); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
 | S15 (106) | f001-023 done, rendering to **f036** (stops there) | bGqrs f037-070, helper 2 f071-106 (both pushed/rendering) | I join + the 2D pass (dizzy stars/spirals) |
 
