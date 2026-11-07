@@ -1,5 +1,18 @@
 # Helper 5: Ep3 status (S07, S15, S19 bottom)
 
+**2026-11-07 14:42 UTC: RENDER RANGES (for helper 4 / XprL)** — all from commit **2872e3e** or later (helper5.py
+unchanged since): `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 SHOT DIR --frames A-B` (every
+frame renders on 1s: no step-multiple start). Raw part: libx264 crf 10, yuv420p, 24 fps, the CLEAN flags,
+`-start_number A`, no 2D pass, to `parts/SHOT_fAAA-BBB.mp4`. Write your claim here.
+
+| Shot | Done here (14:42) | My running chunk stops at | **Free to claim** | Speed here (3 renders at once) |
+|---|---|---|---|---|
+| S19bot (176) | f001-144 | f159 | **f160-176** | ~100 s/frame |
+| S07 (60) | f001-029 | f040 | **f041-060** | ~170 s/frame |
+| S15 (106) | f001-023 | f051 (then f052-070) | **f052-070** (helper 2 has f071-106) | ~4-5 min/frame |
+
+If nobody claims a range by the time my chunk reaches it, I'll render it myself and say so here.
+
 **2026-11-07 10:10 UTC**
 - **S19bot: FULL RENDER RUNNING** (since 10:58 UTC, 176 frames, ~3 min/frame at full size here, so ~9 h; chunks
   resume after a container restart). Your 09:52 notes done, see `okstills/S19bot_v2_f030_f122_f170.jpg`: he walks EAST
