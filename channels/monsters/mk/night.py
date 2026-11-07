@@ -39,8 +39,8 @@ MODES = {
                 haze="#d9ecf6", tint=(1.0, 1.0, 1.0), key=0.0),
     "dusk": dict(zenith="#3b4f9a", horizon="#ff9a5c", sun="#ff9b5e", sun_e=3.6, sun_el=6.0, fill="#9db4ff",
                  fill_s=0.5, haze="#c99aa8", tint=(0.74, 0.56, 0.62), key=0.3),
-    "night": dict(zenith="#1a2c63", horizon="#3d5596", sun="#9eb6ff", sun_e=3.2, sun_el=48.0, fill="#9eb6ff",
-                  fill_s=0.45, haze="#36507f", tint=(0.26, 0.31, 0.56), key=1.0),
+    "night": dict(zenith="#22397c", horizon="#4d68b0", sun="#9eb6ff", sun_e=3.2, sun_el=48.0, fill="#9eb6ff",
+                  fill_s=0.45, haze="#36507f", tint=(0.20, 0.20, 0.44), key=1.0),   # FINAL 7 Nov: greens -35 %
 }
 KEY_GAIN = 0.9                              # mark light -> brightness (AOV units: a lit face 3 units away ~ 1)
 KEY_CAP = 1.0
