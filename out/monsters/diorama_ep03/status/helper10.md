@@ -26,6 +26,13 @@
   - helper 6: `upside_down` rests the body at `BACK_REST` unscaled (0.86). A 0.42 moth floats about 0.5 above the
     grass. I re-key the root at `BACK_REST * scale` after calling it; you may want to scale it inside.
 
+## OK stills
+- **S12:** `okstills/S12_f010.png` (the moth on one side of the ring, seen from behind: its back tilted to the light,
+  the glow line landing on it) and `okstills/S12_f030.png` (the other side, its face toward us, still banked with its
+  back to the light). These are half-res renders scaled up, with the 2D pass. The moth is 1.9x on S11's stage; about
+  1.7 laps.
+- **S14:** rendering now (f1 = S13's end framing, f40 = mid-tumble, f66 = everyone landed).
+
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
 **Wait for the coordinator's OK on the S14 stills (noted below) before starting.** Then write your name next to a
 range here and push before you start.
