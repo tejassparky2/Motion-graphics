@@ -324,7 +324,8 @@ def _hero_spots(wrist, cam_end, feet_dir):
     side = Vector((-to_cam.y, to_cam.x, 0))
     H = wrist + to_cam * 2.3 + Vector(feet_dir) * 2.6
     H.z = 0.0
-    return [H + side * -1.75, H + to_cam * -0.5, H + side * 1.8 + to_cam * 0.1, H + to_cam * 1.35 + side * 0.4], H
+    H = H + side * 1.1                                            # (screen right: clear of the frame's left edge)
+    return [H + side * -1.7, H + to_cam * -0.5, H + side * 1.7 + to_cam * 0.1, H + to_cam * 0.55 + side * 0.2], H
 
 
 def _ring_spots(n_spots, wrist, hips, hd, taken, cam_end, H, seed=14):
@@ -380,7 +381,7 @@ def build_s14():
         _lamp("h10_s14_key", B.S13_LIGHT * 2.0, 0.2).location = mark + Vector((0, 0, 0.5))
     und = _lamp("h10_s14_under", UNDER_W, 1.2, shadow=False)
     und.location = wrist + Vector((0, 0, 2.6))
-    _glow_cone(wrist)
+    # (the visible glow rising through the grass is drawn in the 2D pass: a 3D emission cone blew out in the grade)
     light = Vector(mark)                                          # what the moths keep their backs to (S13's centre)
 
     # camera: S13's last frame (bGqrs's camera_at(45)), then down and in to a low, close view of the landing spot in
@@ -436,6 +437,9 @@ def build_s14():
         return tuple(B.swarm_at(lay[i], S13_CUT + 1, light)), lay[i]["s"]
     rigs = fluffmoth.swarm(len(lay), place, name="m14_", seed=13, far=lambda i, loc, s: i not in heroes)
     # (no decimation: the heroes come close to the lens, and the copies share their meshes)
+    for o in bpy.data.objects:                                    # wings cast no moon shadows (big dark smudges)
+        if o.name.startswith("m14_") and ("_fore" in o.name or "_hind" in o.name):
+            o.visible_shadow = False
 
     landings, hero_track = [], {}
     rnd = random.Random(15)
@@ -522,6 +526,14 @@ def build_s14():
     for d in landings:
         sc.frame_set(d["frame"])
         d["px"] = H9._px(cam, Vector(d["at"]))
+    wrist_px = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        w = H9._px(cam, wrist)
+        top = H9._px(cam, wrist + Vector((0, 0, 3.4)))             # the glow column's top (3.4 above the wrist)
+        wrist_px[f] = [w[0], w[1], top[0], top[1], w[2]]
+    with open(os.path.join(BUILD, "S14_wrist.json"), "w") as fh:
+        json.dump(wrist_px, fh)
     heroes_px = {}
     for i, hdat in hero_track.items():
         rows = {}
