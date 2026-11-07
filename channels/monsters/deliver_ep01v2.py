@@ -2,7 +2,7 @@
 with the sound (helper 7's ep01v2_sound.py -> out/monsters/ep01v2/mix.wav), then checks it the way the channel rules
 ask before anything goes to the owner:
 
-    /home/user/.venv-main/bin/python channels/monsters/deliver_ep01v2.py [--version diorama|diorama_v3|diorama_ep02] [--no-whisper]
+    /home/user/.venv-main/bin/python channels/monsters/deliver_ep01v2.py [--version diorama|diorama_v3|diorama_ep02|diorama_ep03] [--no-whisper]
 
 writes out/monsters/ep01v2.mp4, ep01v2_preview.mp4 (small, for a phone), ep01v2_cover.jpg (frame 0, the hook
 frame), ep01v2_metadata.md (the upload sheet) and ep01v2_check.md (the QA report):
@@ -37,8 +37,13 @@ VERSION = sys.argv[sys.argv.index("--version") + 1] if "--version" in sys.argv e
 DIORAMA = VERSION == "diorama"
 V3 = VERSION == "diorama_v3"             # Episode 1 v3, 2.5D (DIORAMA_EP01_V3.md): its own script, timing and mix
 EP2 = VERSION == "diorama_ep02"          # Episode 2, 2.5D (DIORAMA_EP02.md): the SAVE branch
-EPDIR = "ep02" if EP2 else ("ep01v3" if V3 else "ep01v2")
-EPNUM = 2 if EP2 else 1
+EP3 = VERSION == "diorama_ep03"          # Episode 3, 2.5D (DIORAMA_EP03.md): the viewers' B, "show her the mark"
+EPDIR = "ep03" if EP3 else ("ep02" if EP2 else ("ep01v3" if V3 else "ep01v2"))
+EPNUM = 3 if EP3 else (2 if EP2 else 1)
+# what the cover shows, for the upload sheet's video facts
+COVER_NOTE = {"diorama_ep03": "Kai's glowing wrist (the cover words come from ep01v2_cover.py --ep03)",
+              "diorama_ep02": 'S05 with "I SAVED / MY KILLER"',
+              "diorama_v3": 'S01 with "THIS SHRIMP ERASED A FOREST"'}.get(VERSION, 'S01 with "IT ERASED A FOREST"')
 D = os.path.join(ROOT, "out", "monsters", "ep01v2")
 OUT = os.path.join(ROOT, "out", "monsters", "ep01v2.mp4")
 picture, mix = os.path.join(D, "picture.mp4"), os.path.join(D, "mix.wav")
@@ -59,12 +64,17 @@ if EP2:
     OUT = os.path.join(ROOT, "out", "monsters", "ep02_diorama.mp4")
     picture, cover_src = os.path.join(DD, "picture.mp4"), os.path.join(DD, "cover.jpg")
     mix = os.path.join(ROOT, "out", "monsters", "ep02", "mix.wav")
+if EP3:
+    DD = os.path.join(ROOT, "out", "monsters", "diorama_ep03")
+    OUT = os.path.join(ROOT, "out", "monsters", "ep03_diorama.mp4")
+    picture, cover_src = os.path.join(DD, "picture.mp4"), os.path.join(DD, "cover.jpg")
+    mix = os.path.join(ROOT, "out", "monsters", "ep03", "mix.wav")
 timing = json.load(open(os.path.join(ROOT, "channels", "monsters", EPDIR, "timing.json")))
 spec = importlib.util.spec_from_file_location("ep01_episode", os.path.join(ROOT, "channels", "monsters", EPDIR,
                                                                            "episode.py"))
 ep = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(ep)
-report = [("# Episode 2 (2.5D)" if EP2 else "# Episode 1 v3 (2.5D)" if V3 else "# Episode 1 v2" + (" (diorama 2.5D)" if DIORAMA else ""))
+report = [(f"# Episode {EPNUM} (2.5D)" if (EP2 or EP3) else "# Episode 1 v3 (2.5D)" if V3 else "# Episode 1 v2" + (" (diorama 2.5D)" if DIORAMA else ""))
           + ": delivery check", ""]
 
 
@@ -144,7 +154,7 @@ with open(OUT[:-4] + "_metadata.md", "w") as f:
     f.write(f"**Video facts:** {timing['total']:.1f} s. Narrated with Chatterbox Turbo (synthetic voice; nobody real "
             "is cloned). Music and sound effects are original. Made for kids: **No** (comments stay on for the vote). "
             "Altered or synthetic content: **No** (fully animated fantasy). "
-            f"Cover: {os.path.basename(cover)} (S01 with \"{'I SAVED THE SHRIMP THAT TRIED TO KILL ME' if EP2 else 'THIS SHRIMP ERASED A FOREST' if V3 else 'IT ERASED A FOREST'}\"); where the app can't take a custom "
+            f"Cover: {os.path.basename(cover)} ({COVER_NOTE}); where the app can't take a custom "
             "Shorts cover, pick frame 0, the hook frame.\n")
 say(f"- wrote {os.path.relpath(OUT[:-4] + '_metadata.md', ROOT)}")
 

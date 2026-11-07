@@ -30,6 +30,9 @@ WHITE, CREAM, MINT, PEACH = "#fdfbff", "#fff0d4", "#a6ecd0", "#ffc6a6"
 INK, PLUM, SCLERA, CORAL, TEAL, BLUSH = "#1b1830", "#3a2842", "#fff8ea", "#ff8466", "#2fae96", "#ffaabd"
 CRESCENT = "#7b8cf0"     # the lighter colour low in the face eyes (anime eyes)
 HOVER = 1.9                     # body centre above the ground
+LEG_Y = (-0.3, 0.02, 0.32)      # the three leg pairs along the body (front to back)
+LEG_SPLAY = 0.55                # how far the legs lean out from the body (radians)
+BACK_REST = 0.86                # body centre above the ground when it lies on its back
 FORE_UP, HIND_UP = 0.12, -0.12   # resting wing tilt (radians, + = tip up)
 FORE_SWEEP, HIND_SWEEP = 0.32, 0.42   # resting sweep back (radians)
 
@@ -350,6 +353,17 @@ def build(loc=(0, 0, 0), name="moth"):
         wings[2 + k], spots[2 + k] = _wing(f"{name}_hind{sx}", sx, HIND, HIND_SPOT, HIND_DOTS, peach, hind_spot, mint,
                                            body, (sx * 0.46, 0.4, -0.12), HIND_UP, HIND_SWEEP, 0.0)
         _sphere(f"{name}_wingfluff{sx}", (sx * 0.6, 0.34, 0.02), (0.24, 0.22, 0.3), white, body, 0.016, 20)
+    # six short stubby legs under the body (Ep 3): each on a hip pivot, folded away (scale ~0) in flight; show_legs()
+    # brings them out and upside_down() waves them
+    legs = []
+    foot_m = look.toon(f"{name}_foot", hx(CORAL))
+    for i, (sx, y) in enumerate([(sx, y) for y in LEG_Y for sx in (-1, 1)]):
+        piv = _empty(f"{name}_legpiv{i}", (sx * 0.3, y, -0.6), body)
+        piv.rotation_euler = (0.0, -sx * LEG_SPLAY, 0.0)       # R_y(-a) swings -Z out to +X
+        _sphere(f"{name}_leg{i}", (0, 0, -0.26), (0.09, 0.09, 0.3), peach, piv, 0.016, 16)
+        _sphere(f"{name}_foot{i}", (0, 0, -0.56), (0.11, 0.11, 0.085), foot_m, piv, 0.014, 14)
+        piv.scale = (0.001, 0.001, 0.001)
+        legs.append(piv)
     # the outline shells enclose the body and would shadow it (EEVEE shadows ignore backface culling): lines cast none
     for m in bpy.data.materials:
         if m.name.startswith(f"line_{name}_"):
@@ -357,7 +371,7 @@ def build(loc=(0, 0, 0), name="moth"):
     bpy.context.view_layer.update()
     shadow = look.blob_shadow(f"{name}_shadow", (loc[0], loc[1] + 0.1, loc[2] + 0.03), (1.1, 0.8), root)
     return dict(root=root, hover=hover, body=body, wings=wings, spots=spots, eyes=eyes, antennae=antennae,
-                shadow=shadow)
+                shadow=shadow, legs=legs, name=name)
 
 
 # --- posing and animation -------------------------------------------------------------------------------------------
@@ -459,3 +473,174 @@ def s14c(rig, f0, frames=22, step=2):
         spot_lid(rig, f1 + 4 + d, 0.0, [s])
     anim.on_twos([hov, rig["body"], *rig["antennae"], *rig["spots"]], step)
     return f1
+
+
+# --- Episode 3: legs, flight, back-to-the-light, upside down, the swarm ---------------------------------------------
+def show_legs(rig, f, on=True, interp="CONSTANT"):
+    """Legs out (on) or folded away at frame f."""
+    for lp in rig.get("legs", []):
+        anim.key(lp, "scale", f, 1.0 if on else 0.001, interp)
+
+
+def flight_mode(rig):
+    """Ready the rig to fly free: the root is the body centre (hover at 0), no ground shadow, legs folded. Animate the
+    root's location and use back_to() / face() for its rotation."""
+    rig["hover"].location = (0, 0, 0)
+    if rig.get("shadow") is not None:
+        rig["shadow"].hide_render = True
+    for lp in rig.get("legs", []):
+        lp.scale = (0.001,) * 3
+    rig["root"].rotation_mode = "XYZ"
+
+
+def _basis(up, fwd):
+    """Rotation whose +Z is `up` and whose facing (-Y, where the moth looks) is `fwd` made perpendicular to up."""
+    from mathutils import Matrix, Vector
+    up = Vector(up).normalized()
+    fwd = Vector(fwd)
+    fwd = fwd - up * fwd.dot(up)
+    if fwd.length < 1e-6:                                            # heading straight along up: any side will do
+        fwd = up.orthogonal()
+    fwd.normalize()
+    y = -fwd
+    x = y.cross(up)
+    return Matrix((x, y, up)).transposed()
+
+
+def back_to(rig, frame, light, heading, amount=1.0, interp="LINEAR", prev=None):
+    """Orient the moth at `frame` so its BACK (the top of the body, the wings' upper side) faces the point `light`,
+    while it still heads along `heading` (its flight direction). amount 0 = level flight (back to the sky), 1 = back
+    square to the light: the real moth's rule, which bends its path into an orbit round a light above it and flips it
+    over when the light is below. Returns the euler it keyed (pass it back as `prev` for continuous angles)."""
+    from mathutils import Vector
+    root = rig["root"]
+    to_light = Vector(light) - root.location
+    up = Vector((0, 0, 1)).lerp(to_light.normalized(), amount)
+    if up.length < 1e-6:
+        up = to_light.normalized()
+    e = _basis(up, heading).to_euler("XYZ", prev) if prev is not None else _basis(up, heading).to_euler("XYZ")
+    anim.key(root, "rotation_euler", frame, tuple(e), interp)
+    return e
+
+
+def face(rig, frame, heading, bank=0.0, interp="LINEAR", prev=None):
+    """Level flight along `heading` with an optional bank (radians, + = roll to its right)."""
+    from mathutils import Matrix
+    m = _basis((0, 0, 1), heading) @ Matrix.Rotation(-bank, 3, "Y")
+    e = m.to_euler("XYZ", prev) if prev is not None else m.to_euler("XYZ")
+    anim.key(rig["root"], "rotation_euler", frame, tuple(e), interp)
+    return e
+
+
+def flap(rig, phase=0, amp=1.0, f0=1, fold=0.0):
+    """Cheap endless wing beats (the 4-frame WING_BEAT on 1s, a CYCLES modifier): `phase` 0-3 offsets the beat, amp
+    scales it, fold sweeps the wings back. Keys only one beat per wing, so 60 moths cost nothing."""
+    for k in range(5):
+        ph = k % 4
+        f = f0 + phase + k
+        wing_pose(rig, f, amp * WING_BEAT[ph], amp * WING_BEAT[(ph - 1) % 4] * 0.8, fold + 0.12 * amp * (ph == 2))
+    for w in rig["wings"]:
+        for fc in anim.all_fcurves(w.animation_data.action):
+            if not any(m.type == "CYCLES" for m in fc.modifiers):
+                fc.modifiers.new("CYCLES")
+
+
+def upside_down(rig, f0, f1, land_at=None, wave=True, dizzy=True, seed=3, interp="CONSTANT"):
+    """Lying on its back from f0 (the S14 payoff, S15's comic hold): rolled over (face still to -Y, upside down),
+    body resting on the ground, wings splayed flat, legs out and waving in the air on 2s, the eye-spots half shut and
+    blinking out of step (dazed), and now and then a little wriggle. `land_at`: the ground point (default: where the
+    root is). Use on a flight_mode() rig (or a ground rig: the hover is set here)."""
+    from mathutils import Vector
+    rnd = random.Random(seed)
+    root, hov, body = rig["root"], rig["hover"], rig["body"]
+    p = Vector(land_at) if land_at is not None else root.location.copy()
+    if rig.get("shadow") is not None:                                       # (it would flip up with the body)
+        rig["shadow"].hide_render = True
+    anim.key(root, "location", f0, (p.x, p.y, BACK_REST), interp)
+    yaw = root.rotation_euler.z
+    anim.key(root, "rotation_euler", f0, (0.0, math.pi, yaw), interp)      # rolled onto its back
+    anim.key(hov, "location", f0, (0, 0, 0), interp)
+    for f in range(f0, f1 + 1, 2):                                          # wings splayed flat, a weak twitch
+        tw = 0.06 * math.sin(f * 0.9 + seed)
+        wing_pose(rig, f, -0.28 + tw, -0.3 + tw, 0.25)
+    show_legs(rig, f0, True)
+    for i, lp in enumerate(rig.get("legs", [])):
+        sx = -1 if i % 2 == 0 else 1
+        base = (0.0, -sx * LEG_SPLAY, 0.0)
+        ph = rnd.uniform(0, 2 * math.pi)
+        sp = rnd.uniform(0.55, 0.85)
+        for f in range(f0, f1 + 1, 2):
+            if not wave:
+                anim.key(lp, "rotation_euler", f, base, "CONSTANT")
+                continue
+            a = math.sin(f * sp + ph)
+            b = math.sin(f * sp * 0.7 + ph * 1.3)
+            anim.key(lp, "rotation_euler", f, (0.35 * a, base[1] - sx * 0.25 * b, 0.0), "CONSTANT")
+    if dizzy:
+        for s, d in zip(rig["spots"], (0, 5, 3, 8)):
+            f = f0 + d
+            while f < f1:
+                spot_lid(rig, f, 0.45, [s], "CONSTANT")
+                spot_lid(rig, f + 6, 0.85, [s], "CONSTANT")
+                spot_lid(rig, f + 10, 0.45, [s], "CONSTANT")
+                f += rnd.randint(18, 30)
+    f = f0 + rnd.randint(6, 14)
+    while f < f1 - 8:                                                       # a wriggle: rocks side to side
+        anim.key(body, "rotation_euler", f, (0, 0, 0), "CONSTANT")
+        anim.key(body, "rotation_euler", f + 2, (0, 0.12, 0), "CONSTANT")
+        anim.key(body, "rotation_euler", f + 4, (0, -0.1, 0), "CONSTANT")
+        anim.key(body, "rotation_euler", f + 6, (0, 0, 0), "CONSTANT")
+        f += rnd.randint(20, 36)
+
+
+FAR_SKIP = ("_dot", "_hi-1", "_hi1", "_hi2-1", "_hi21", "_cres", "_blush", "_mouth", "_tuft", "_leg", "_foot",
+            "_shadow")                                     # (exact: "_hi" alone would catch the "_hind" wings)
+
+
+def _copy_tree(o, parent, suffix, skip):
+    if any(t in o.name for t in skip):
+        return {}
+    c = o.copy()                                                     # linked: shares the mesh and materials
+    c.name = o.name + suffix
+    for col in o.users_collection:
+        col.objects.link(c)
+    c.parent = parent
+    c.matrix_parent_inverse = o.matrix_parent_inverse.copy()
+    c.animation_data_clear()
+    out = {o.name: c}
+    for ch in o.children:
+        out.update(_copy_tree(ch, c, suffix, skip))
+    return out
+
+
+def swarm(n, place, name="swarm", seed=11, far=None):
+    """n fluffmoths for a swarm, cheap: ONE moth is built, the others are linked copies of its objects (shared meshes
+    and materials, own transforms and animation). Every member is in flight_mode with its own endless wing beat
+    (random phase and strength). `place(i, rnd)` returns (location, scale) for member i; `far(i, loc, scale)` -> True
+    drops the small details (spots' dots, face highlights, legs) on far, small moths. Returns the list of rigs (the
+    same dicts as build(); the first is the master). Animate each root (location; back_to/face for rotation)."""
+    rnd = random.Random(seed)
+    master = build((0, 0, 0), name=f"{name}0")
+    flight_mode(master)
+    rigs = []
+    for i in range(n):
+        loc, sc = place(i, rnd)
+        if i == 0:
+            r = master
+        else:
+            skip = FAR_SKIP if far and far(i, loc, sc) else ("_shadow",)
+            m = _copy_tree(master["root"], None, f".{i:03d}", skip)
+
+            def g(o):
+                return m.get(o.name) if o is not None else None
+            r = dict(root=g(master["root"]), hover=g(master["hover"]), body=g(master["body"]),
+                     wings=[g(w) for w in master["wings"]], spots=[g(s) for s in master["spots"]],
+                     eyes=[g(e) for e in master["eyes"]], antennae=[g(a) for a in master["antennae"]],
+                     legs=[g(lp) for lp in master["legs"] if g(lp) is not None], shadow=None, name=f"{name}{i}")
+            for s in r["spots"]:
+                s["lid"], s["glow"] = 0.0, 0.0
+        r["root"].location = loc
+        r["root"].scale = (sc, sc, sc)
+        flap(r, phase=rnd.randrange(4), amp=rnd.uniform(0.85, 1.15))
+        rigs.append(r)
+    return rigs

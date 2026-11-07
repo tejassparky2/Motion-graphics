@@ -1,6 +1,7 @@
 """Episode 1 v2 picture assembler: shot mp4s in, the silent 720x1280 picture out.
 
-    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama|diorama_v3|diorama_ep02] [--animatic]
+    FPS=24 python channels/monsters/assemble_ep01v2.py [--version ep01v2|diorama|diorama_v3|diorama_ep02|diorama_ep03]
+                                                       [--animatic]
                                                        [--check]
                                                        [--shots DIR] [--out PATH]
 
@@ -15,7 +16,9 @@
 - Nothing else goes in the picture: no HUD, no logos, no series chip.
 - Episode 2 (--version diorama_ep02, channels/monsters/DIORAMA_EP02.md): its own timing (ep02/timing.json), no rewind
   (its S02 is a plain shot), captions on every spoken shot, the hook I SAVED THE SHRIMP THAT TRIED TO KILL ME, and the
-  A/B split on S20 (S20top.mp4 = A · HAND OVER, S20bot.mp4 = B · HIDE). Per-version settings: the *_VERSION tables.
+  A/B split on S20 (S20top.mp4 = A · HAND OVER, S20bot.mp4 = B · SHOW MARK). Per-version settings: the *_VERSION tables.
+- Episode 3 (--version diorama_ep03, channels/monsters/DIORAMA_EP03.md): the same way, with ep03/timing.json, the hook
+  THE VILLAGE RAN FROM MY WRIST and the A/B split on S19 (S19top.mp4 = A · GO TONIGHT, S19bot.mp4 = B · LEAVE AT DAWN).
 - Every frame's outer 3 px are scanned for unpainted black: a run of 24+ px along an edge (a render that shows past
   the world's edge, or a gap in the composite). Deliberate black frames are skipped. The frames and edges are printed.
 
@@ -46,15 +49,18 @@ TIMING = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 VERSIONS = {"ep01v2": os.path.join(ROOT, "out", "monsters", "ep01v2"),
             "diorama": os.path.join(ROOT, "out", "monsters", "diorama"),
             "diorama_v3": os.path.join(ROOT, "out", "monsters", "diorama_v3"),
-            "diorama_ep02": os.path.join(ROOT, "out", "monsters", "diorama_ep02")}
+            "diorama_ep02": os.path.join(ROOT, "out", "monsters", "diorama_ep02"),
+            "diorama_ep03": os.path.join(ROOT, "out", "monsters", "diorama_ep03")}
 # v3 (channels/monsters/DIORAMA_EP01_V3.md) has its own script and timing; the first two share ep01v2's.
 TIMINGS = {"ep01v2": TIMING, "diorama": TIMING,
            "diorama_v3": os.path.join(ROOT, "channels", "monsters", "ep01v3", "timing.json"),
-           "diorama_ep02": os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json")}
-AB_VERSIONS = {"diorama_v3", "diorama_ep02"}   # the split carries big A / B letters on "Option A", "Option B", "Comment"
-SPLIT_SHOT_VERSION = {"diorama_ep02": "S20"}   # the A/B split shot (<SHOT>top.mp4 above, <SHOT>bot.mp4 below); else S24
+           "diorama_ep02": os.path.join(ROOT, "channels", "monsters", "ep02", "timing.json"),
+           "diorama_ep03": os.path.join(ROOT, "channels", "monsters", "ep03", "timing.json")}
+AB_VERSIONS = {"diorama_v3", "diorama_ep02", "diorama_ep03"}   # the split carries big A / B letters on "Option A", "Option B", "Comment"
+SPLIT_SHOT_VERSION = {"diorama_ep02": "S20", "diorama_ep03": "S19"}   # the A/B split shot (<SHOT>top.mp4 above, <SHOT>bot.mp4 below); else S24
 REWIND_VERSIONS = {"ep01v2", "diorama", "diorama_v3"}   # S02 is S01's glitch rewind (Episode 1 only)
-AB_LABELS_VERSION = {"diorama_v3": ("SAVE", "RUN"), "diorama_ep02": ("HAND OVER", "SHOW MARK")}
+AB_LABELS_VERSION = {"diorama_v3": ("SAVE", "RUN"), "diorama_ep02": ("HAND OVER", "SHOW MARK"),
+                     "diorama_ep03": ("GO TONIGHT", "LEAVE AT DAWN")}
 AB_LABELS = ("SAVE", "RUN")
 SHOTS = os.path.join(VERSIONS["ep01v2"], "shots")
 OUT = os.path.join(VERSIONS["ep01v2"], "picture.mp4")
@@ -71,9 +77,12 @@ HOOK_SIZE = 108
 # Episode 2's frame-0 hook: four short lines, the threat in red. S01 keeps Kai's face and the diving bird in the top
 # third and the shrimp at y 745+, so the hook sits in the middle band (over his legs and the tree trunk).
 HOOK_VERSION = {"diorama_ep02": dict(lines=[("I SAVED", ()), ("THE SHRIMP", ()), ("THAT TRIED", ()),
-                                            ("TO KILL ME", ("TO KILL ME",))], y=480, size=80)}
+                                            ("TO KILL ME", ("TO KILL ME",))], y=480, size=80),
+                # Episode 3: three lines, the wrist in red; placed on S01's OK still / final when it lands
+                "diorama_ep03": dict(lines=[("THE VILLAGE", ()), ("RAN FROM", ()), ("MY WRIST", ("MY WRIST",))],
+                                     y=170, size=96)}
 NO_CAPTIONS = {"S15"}        # Episode 1's snap; Episode 2's wordless S09 has no words to caption anyway
-NO_CAPTIONS_VERSION = {"diorama_ep02": set()}
+NO_CAPTIONS_VERSION = {"diorama_ep02": set(), "diorama_ep03": set()}   # ep03's S14 (the flip) has no words
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
 CAP_SIZE = 60
 CAP_MAX_W = 560              # clear of the right rail
@@ -113,12 +122,16 @@ CAP_Y_VERSION["diorama_ep02"] = {
     "S20": 520,              # the B half puts Kai's face in the 71% band and the hide at chest height: the captions go
                              # in the A half, under the net (the shrimp is high, then inside it) and above the A card
 }
+# Episode 3: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
+CAP_Y_VERSION["diorama_ep03"] = {
+    "S19": 490,              # the split: the captions sit in the A half above the A card (re-checked on the plates)
+}
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
 SLATE = (0.08, 0.085, 0.11)
 # Output resolution: the overlays are designed on the 720x1280 canvas (W, H) and drawn under cr.scale(SCALE), so the
 # text stays sharp at 1080x1920. v3 is delivered at 1080 (Q4: shots_1080/ from esrgan_shot.py, else lanczos).
-RES = {"diorama_v3": 1.5, "diorama_ep02": 1.5}
+RES = {"diorama_v3": 1.5, "diorama_ep02": 1.5, "diorama_ep03": 1.5}
 SCALE = 1.0
 OW, OH = W, H
 SHOTS_HI = None              # the 1080 shots folder, preferred over SHOTS when SCALE > 1
@@ -134,8 +147,12 @@ AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)},
                   # ep02's S20 halves are full of Kai, Wren, the net and the shrimp: both cards straddle the divider,
                   # A over Kai's shins and the stump, B (SHOW MARK, 422 px wide at 85%) at x 286 so it stays in frame: in the sky
                   # right of Kai's cap, above his raised glowing arm and Wren's face (S20bot v2 stills, 2 Nov)
-                  "diorama_ep02": {"A": (124, 585), "B": (286, 715)}}
-AB_SCALE_VERSION = {"diorama_ep02": 0.85}
+                  "diorama_ep02": {"A": (124, 585), "B": (286, 715)},
+                  # ep03: LEAVE AT DAWN is 513 px right of its centre at 85%, so B's centre stays at x <= 197. A
+                  # straddles the divider; B sits low in the dawn panel over Kai's waist, because his head, the shrimp
+                  # and the look back fill the panel's top under the divider (helper 5's S19bot OK still, 7 Nov)
+                  "diorama_ep03": {"A": (124, 585), "B": (124, 880)}}
+AB_SCALE_VERSION = {"diorama_ep02": 0.85, "diorama_ep03": 0.85}
 # Frames whose black edges are drawn on purpose, per version: {shot: (first, last) frame in the shot, why}. The scan
 # reports them as intended instead of as a problem; re-check the range if the shot is re-rendered.
 EDGE_OK_VERSION = {"diorama_ep02": {"S09": (28, 40, "the snap's ink impact frames (black ground, white speed lines)")}}   # the cards' size per version (1 = fx2d_ab's 168 px badge)
