@@ -41,6 +41,7 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
 S01_STEPS = (5, 9, 13, 17) # S01 (helper 4): Wren's stumble back, each foot down (1-based shot frames)
 S01_HOP, S01_PERCH = 20, 29  # the shrimp jumps from his hand, lands on his shoulder ("So" f31 - 14 + 3, - 2)
+S07_SHIELD, S07_CAPE, S07_ITCH = 6, 12, 22             # S07 (helper 5): the shield, the cape, the itch
 S08_STRIKES = list(range(8, 66, 4))                   # S08 (XprL): Wren's clapper strikes (wren.ring f6-f66, beat 4)
 S08_PORCH = 12                                         # the first porch bell joins (V.ring_bell from f_ring + 6)
 S19TOP_STROKE = 40                                    # S19 top (helper 3): one oar stroke (frames)
@@ -465,8 +466,13 @@ def build(timing, n, v):
     for k, (f, pan) in enumerate(zip(S06_EYESPOTS, (-0.3, 0.3, 0.0))):
         hit(eyespot_open(k), fr("S06", f), -25 + 2 * k, pan)
     bed(glitter(s("S08") - s("S07"), 2), s("S07"), -28, 0.0)
-    hit(scratch(4, 1), w("l7", "stings"), -20, 0.4)
-    hit(e2.cloth_swish(0.4, 7), w("l7", "nettles"), -22, -0.3)           # Wren pulls her cape over her face
+    # S07 (helper 5, final): Wren's forearm up f6-f15 and the cape drapes over her face f12; the villager's itch
+    # from "stings" (f22): a rub on every 2s step (village.scratcher), the bigger rub every 3rd cycle of 8 frames
+    hit(e2.cloth_swish(0.4, 7), fr("S07", S07_SHIELD), -27, -0.3)
+    hit(e2.cloth_swish(0.3, 15), fr("S07", S07_CAPE), -27, -0.4)
+    for f in range(S07_ITCH, c.shot["S07"]["frames"] + 1, 2):
+        big = ((f - S07_ITCH) // 8) % 3 == 2
+        hit(scratch(1, f), fr("S07", f), -20 if big else -23, 0.4)
     # S08 (XprL, final): Wren's clapper strikes every 4 frames f8-f64 (wren.ring from f6); the porch bells join one by
     # one from f12; they all keep ringing through S09 as the moths pass
     bells_from = fr("S08", S08_STRIKES[0])
