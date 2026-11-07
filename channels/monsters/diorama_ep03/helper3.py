@@ -514,7 +514,7 @@ def s19top():
         bc = boat_at(f) + Vector((0, 0, 3.2))
         loc = bc - head * (26.0 - 3.0 * e) + side * 9.0 + Vector((0, 0, 6.5))
         tgt = bc + head * 10.0 + Vector((0, 0, 1.5))
-        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 32.0, (bc - loc).length, shift_y=0.2, blur=4.0,
+        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 32.0, (bc - loc).length, shift_y=-0.22, blur=4.0,
                     haze=(6.0, 24.0))
     H9._linear(cam, cam.data)
     sc.render.use_border = True
