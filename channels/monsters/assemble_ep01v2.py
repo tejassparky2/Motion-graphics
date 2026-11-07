@@ -124,7 +124,7 @@ CAP_Y_VERSION["diorama_ep02"] = {
 }
 # Episode 3: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
 CAP_Y_VERSION["diorama_ep03"] = {
-    "S19": 520,              # the split: the captions sit in the A half above the divider (re-checked on the plates)
+    "S19": 490,              # the split: the captions sit in the A half above the A card (re-checked on the plates)
 }
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
