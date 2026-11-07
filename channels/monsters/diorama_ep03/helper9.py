@@ -167,10 +167,10 @@ def s04():
     # camera: low, from up the lane (north), looking south down it: Kai facing us, the square, the lake and the far
     # hills behind him with the sun sinking behind them; a slow push-in
     cam = H2._new_cam("S04cam", 1)
-    tgt = Vector(V.LANE_AT) + Vector(V.LANE_DIR) * 8.0 + Vector((0.8, 0, 6.6))
+    tgt = Vector(V.LANE_AT) + Vector(V.LANE_DIR) * 8.0 + Vector((-0.6, 0, 6.6))
     for f in range(1, n + 1):
         u = _smooth((f - 1) / (n - 1))
-        loc, rot = H2._orbit(tgt, 22.0 - 2.5 * u, 3.0, 180.0 + 8.0)       # from the north, looking south
+        loc, rot = H2._orbit(tgt, 23.0 - 2.5 * u, 4.0, 170.0)             # from the north, on the lane's middle
         H2._key_cam(cam, f, loc, rot, 32.0, (Vector(V.LANE_AT) + Vector((0, 0, 5)) - loc).length,
                     shift_y=-0.06, blur=2.0, haze=(4.0, 10.0))
     H2._linear(cam, cam.data)
@@ -271,7 +271,7 @@ def s18():
     mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
     for f in range(1, f_cut):
         u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, 13.5 - 1.5 * u, 6.0, -90.0 - 12.0)      # from the east (he faces east)
+        loc, rot = H2._orbit(mid, 14.0 - 1.5 * u, 7.0, 225.0)             # from the north-east: both faces 3/4
         H2._key_cam(camA, f, loc, rot, 40.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)

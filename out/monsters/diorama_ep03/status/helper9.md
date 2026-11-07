@@ -32,6 +32,12 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 13:10 UTC: per the coordinator's notes: the lighthouse's lamp room has a hot near-white core, a stronger coral
+  halo and the warm light on the broken stones; in S18 the moon is smaller and up-left of the lamp. S05 is darker
+  (shot tint), and the 2D pass (`diorama_ep03/post_helper9.py`) adds the coral bloom on the village dot (S05) and on the
+  lamp (S18, swelling on "lighthouse"). S04 is restaged: from up the lane looking south, Kai facing us, the sun
+  sinking behind the far hills across the lake. S18's two-shot is now from the north-east so both faces read (3/4).
+  **Full-res OK stills are rendering** (S04 f6/f22/f40, S05 f60, S18 f26/f50/f80).
 - 2026-11-07 12:30 UTC: my shots are written in `diorama_ep03/helper9.py` (S04, S05, S18); test stills are rendering, then OK stills.
   - S04 (44 frames): Kai alone in the lane, side-on from the east (S03's spot and slump). The sun disc sinks behind the
     western treeline as the scene goes day -> dusk (on "down") -> night (`night.transition`). On "down" he lifts his
