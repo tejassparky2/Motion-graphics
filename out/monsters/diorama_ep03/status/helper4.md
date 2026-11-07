@@ -1,5 +1,39 @@
 # Helper 4 status (Ep 3)
 
+## VERDICT (16:45 UTC): picture.mp4 (5e7bff18) PASSES; ship it. One fix recommended: the S15 f32 pop (helper 5)
+- **Checked:** `picture.mp4` at 5e7bff18 (md5 6ec83c71). It's the build with S18 in; the 16:32 file before it still
+  had the grey S18 placeholder card.
+- **File:** 1080x1920, 24 fps, 1298 frames = 54.08 s (= timing 8274b7a), 0 Lavf/Lavc/x264 strings.
+- **Every cut (18) lands on the timing.json boundaries** (50 117 172 204 271 322 370 438 513 580 660 727 772 844 938
+  981 1039 1134), checked frame-by-frame. The other frame jumps are all planned or motion:
+  - S02's two internal cuts (f85, f96) and S18's cut to the lighthouse (f1091);
+  - the flip's fast tumble (S14, f792-828);
+  - S13's drop (f737-739), and a caption change in S05 (f304);
+  - **plus one glitch: f876 = S15 local f32.**
+- **Continuity across cuts:** fine. The coral mark and the shrimp on his shoulder hold from S03 on. The dusk in S04
+  leads into the night in S05 and every night shot after it. Wren's look holds from S16 to S18.
+  - Known look changes, not blockers: S02/S03 are brighter than S01's evening, and under the coral light Wren's
+    hair reads mauve (noted in rounds 1 and 2).
+- **Hook:** THE VILLAGE / RAN FROM / MY WRIST at the top over the sky on frame 0, clear of Kai's face and the
+  blazing mark; MY WRIST is red.
+- **Captions:** word-timed, yellow on the spoken word, never over a face. Checked on the S01 chest line, the S11
+  "backs to it." beat, the S18 lines, and S19's line at y 430 in the A half above the cards.
+- **A/B:** A · GO TONIGHT pops on "Option A" (f1148), B · LEAVE AT DAWN on "Option B" (f1205), and both are held
+  through "Comment A or B" to the last frame. The panels slide in over f1134-1136 from an empty slate frame (the
+  assembler's designed entrance, as in Ep 2).
+- **Edge scan (every frame):** clean, except seven short "bottom" hits in S18's lighthouse half (f1093-1132, up to
+  48 px). These are the painted night water (RGB ~0,0,24, deep navy with coral reflection streaks), not unpainted
+  canvas. The source shots/S18.mp4 has the same pixels. Not a defect.
+- **The one fix (helper 5, S15):** at local f31 to f32 (picture f876), three things change in one frame:
+  1. the pile of upside-down moths round Kai's head and chest vanishes;
+  2. the light snaps from the coral glow to a warm yellow pool;
+  3. Kai jumps from lying flat to half sat up.
+  - It reads as a pop in the laugh hold. Fix: ease the light change and the sit-up over ~6 frames, and keep the
+    moths by his head until he sits up through them. Or, cheapest, hold f31 for 2 frames and let the sit-up start
+    on f33 with the light easing.
+  - If there's no time, it's watchable: it lands right where he sits up, so it can pass as a comic snap.
+
+
 ## Now
 - **S01: FINAL, pushed** (`shots/S01.mp4` + `S01_sheet.jpg`). It joins my f001-045 and helper 10's f046-062 (thanks),
   with the 2D pass: the evening sky and grade, the blazing mark, the halo, the bloom and the sparkles.
@@ -99,7 +133,18 @@
     coral pool on the water, the lighthouse with its coral glow on the far shore. The bottom half is black on
     purpose (for the split). The edge scan skipped it, since the frame is dark overall. Note: the boat and the two
     of them take up ~200 px, so it reads as a wide shot; fine for the A/B split.
-  - **Still to QA:** S04, S07, S15, S17, S18 as they land.
+- **QA, round 4 (S04, S07, S15, S17, S18):** frames S04 44, S07 60, S15 106, S17 70, S18 107 (= render_frames);
+  720x1280; 0 tags; no black edges.
+  - **S04 PASS.** A quick dusk: the sun sinks and the sky goes blue to rose to navy; the lane darkens and his
+    mark's coral glow grows on the path. His face is under the cap brim, looking down.
+  - **S07 PASS.** Glittering wing dust; Wren throws her cape over her face; the villager scratches with the 2D itch
+    squiggles; moths above the awning. No jump at the f040/041 or f050/051 part seams.
+  - **S15 FIX RECOMMENDED** (see the verdict): the f31/32 pop. Otherwise good: the field of belly-up moths with
+    dizzy spirals and stars, Kai sitting up into a grin.
+  - **S17 PASS.** Wren kneels by Kai and glances back at the village on "village", then turns back to him. Note:
+    the eyes in the window cracks don't read at phone size; the huts behind are small and soft.
+  - **S18 PASS.** She leans in, then points across the lake; the cut (local f52) goes to the lighthouse on the
+    rocks with a coral glow at the top and reflections on the water.
 
 ## Coordinator
 (answers here)
