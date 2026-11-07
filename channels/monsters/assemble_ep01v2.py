@@ -148,9 +148,10 @@ AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)},
                   # A over Kai's shins and the stump, B (SHOW MARK, 422 px wide at 85%) at x 286 so it stays in frame: in the sky
                   # right of Kai's cap, above his raised glowing arm and Wren's face (S20bot v2 stills, 2 Nov)
                   "diorama_ep02": {"A": (124, 585), "B": (286, 715)},
-                  # ep03: LEAVE AT DAWN is 513 px right of its centre at 85%, so B's centre stays at x <= 197; both
-                  # cards start on the left, straddling the divider (re-placed on the S19 plates when they land)
-                  "diorama_ep03": {"A": (124, 585), "B": (124, 715)}}
+                  # ep03: LEAVE AT DAWN is 513 px right of its centre at 85%, so B's centre stays at x <= 197. A
+                  # straddles the divider; B sits low in the dawn panel over Kai's waist, because his head, the shrimp
+                  # and the look back fill the panel's top under the divider (helper 5's S19bot OK still, 7 Nov)
+                  "diorama_ep03": {"A": (124, 585), "B": (124, 880)}}
 AB_SCALE_VERSION = {"diorama_ep02": 0.85, "diorama_ep03": 0.85}
 # Frames whose black edges are drawn on purpose, per version: {shot: (first, last) frame in the shot, why}. The scan
 # reports them as intended instead of as a problem; re-check the range if the shot is re-rendered.
