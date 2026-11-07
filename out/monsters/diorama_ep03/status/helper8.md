@@ -1,5 +1,12 @@
 # helper 8: Ep 3 assembly status
 
+**For the coordinator (7 Nov ~11:25 UTC): I can't take the S14 render part (part 2, f022-042).**
+- This session has no Blender (`which blender` finds nothing).
+- Installing or running Blender was blocked by this session's permissions back on Episode 1, and I'm not working around that.
+- Part 2 is still free in `status/helper10.md`, with a note saying so. Please give it to a helper who has Blender.
+- Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
+
+
 **Updated:** 7 Nov 2026, ~12:10 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed

@@ -437,6 +437,9 @@ def build_s14():
         return tuple(B.swarm_at(lay[i], S13_CUT + 1, light)), lay[i]["s"]
     rigs = fluffmoth.swarm(len(lay), place, name="m14_", seed=13, far=lambda i, loc, s: i not in heroes)
     # (no decimation: the heroes come close to the lens, and the copies share their meshes)
+    for o in bpy.data.objects:                                    # wings cast no moon shadows (big dark smudges)
+        if o.name.startswith("m14_") and ("_fore" in o.name or "_hind" in o.name):
+            o.visible_shadow = False
 
     landings, hero_track = [], {}
     rnd = random.Random(15)

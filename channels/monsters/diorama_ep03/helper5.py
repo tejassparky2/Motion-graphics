@@ -316,6 +316,18 @@ def s07():
 
 # ------------------------------------------------------------------------------------------------------ S15
 S15_MOTH_SCALE = 0.42                                                    # bGqrs's S13 swarm size
+# sitting on the grass (XprL's S16/S17 pose, so the cut matches): the left knee up with the left forearm resting on it
+# (palm up: the mark faces the sky), the right leg out along the grass, the right hand propped behind him; head up.
+# Directions in Kai's own frame (helper 10's _pose spec): +X his right, +Y forward, +Z toward his head.
+S15_SIT = [("spine", (0, 0.12, 1)), ("chest", (0, 0.06, 1)), ("neck", (0, 0.04, 1)), ("head", (0, 0.12, 1)),
+           ("left_upper_arm", (-0.28, 0.55, -0.78)), ("left_lower_arm", (-0.05, 1.0, 0.12)),
+           ("left_hand", (0.0, 1.0, 0.05)),
+           ("right_upper_arm", (0.35, -0.55, -0.75)), ("right_lower_arm", (0.22, -0.45, -0.86)),
+           ("right_hand", (0.12, -0.5, -0.86)),
+           ("left_upper_leg", (-0.12, 0.72, 0.6)), ("left_lower_leg", (-0.04, 0.32, -0.95)),
+           ("left_foot", (-0.08, 1, -0.25)),
+           ("right_upper_leg", (0.2, 1.0, -0.04)), ("right_lower_leg", (0.12, 1.0, -0.06)),
+           ("right_foot", (0.12, 0.35, 1))]
 
 
 def _s15_landings(B, wrist, hips, hd, n_moths=34, seed=15):
@@ -325,14 +337,18 @@ def _s15_landings(B, wrist, hips, hd, n_moths=34, seed=15):
     import json
     import os
     import random
-    pth = os.path.join(B.BUILD, "S14_landings.json")
+    pth = os.path.join(os.path.dirname(os.path.abspath(__file__)), "S14_landings.json")
+    if not os.path.exists(pth):
+        pth = os.path.join(B.BUILD, "S14_landings.json")
     if os.path.exists(pth):
         with open(pth) as fh:
             d = json.load(fh)
         pts = d.get("landings", d) if isinstance(d, dict) else d
         out = []
         for q in pts:
-            if isinstance(q, dict):
+            if isinstance(q, dict) and "at" in q:                       # helper 10's format
+                out.append((q["at"][0], q["at"][1], q.get("yaw", 0.0), q.get("scale", S15_MOTH_SCALE)))
+            elif isinstance(q, dict):
                 out.append((q["x"], q["y"], q.get("yaw", 0.0), q.get("scale", S15_MOTH_SCALE)))
             else:
                 out.append((q[0], q[1], q[2] if len(q) > 2 else 0.0, q[3] if len(q) > 3 else S15_MOTH_SCALE))
@@ -359,10 +375,11 @@ def s15():
     from channels.monsters.diorama_ep03 import bgqrs as B
     from channels.monsters.ep01v2 import helper10 as s15p
     from channels.monsters.mk import fluffmoth
+    from channels.monsters.diorama_ep03 import helper9 as N9
     n = _frames("S15", 106)
     f_up = _word("l15", "landed", shot="S15") - 3                        # he sits up on "landed"
     X._world(n)
-    B._night()
+    N9.night(n)
     sc = bpy.context.scene
     try:
         H9.village_and_lake()
@@ -375,9 +392,11 @@ def s15():
     rot_lie = (math.radians(90.0), 0, yaw)
     s15p._pose(k, B._with_arm(B.LIE, 1.0), (0, 0, 0), rot_lie)
     twist = B._twist_for_palm_up(k)[0]
-    UP = [(nm, d) for nm, d in B.SIT if not nm.startswith("left_upper_arm") and not nm.startswith("left_lower_arm")
-          and nm != "left_hand"] + [("left_upper_arm", (-0.45, 0.55, -0.35)), ("left_lower_arm", (-0.2, 0.9, 0.1)),
-                                    ("left_hand", (-0.1, 0.9, 0.2))]   # sitting up, the left hand on his knee
+    s15p._pose(k, [x for x in S15_SIT if x[0] != "left_hand"], (0, 0, 0), (math.radians(10.0), 0, yaw))
+    sit_roll = B._twist_for_palm_up(k)                                   # the palm (the mark) up on his knee
+    print("S15 sit palm-up roll", sit_roll)
+    sit_roll = sit_roll[0]
+    UP = S15_SIT
     lie = B._with_arm(B.LIE, 1.0)
     # (frame, spec, theta (90 = flat on his back), arm-out amount)
     keys = [(1, lie, 90.0, 1.0), (f_up, lie, 90.0, 1.0), (f_up + 6, B._blend(lie, UP, 0.7), 40.0, 0.4),
@@ -400,8 +419,7 @@ def s15():
             look = 0.55 * math.sin(min(1.0, t / 40.0) * 2 * math.pi) * (1 - _ease((t - 40) / 12))
         r = Euler((math.radians(theta), 0, yaw)).to_matrix()
         s15p._pose(k, [x for x in spec if x[0] != "left_hand"], (0, 0, 0), (math.radians(theta), 0, yaw))
-        if v > 0:
-            B._twist(k, "left_lower_arm", twist * v)
+        B._twist(k, "left_lower_arm", twist * v + sit_roll * (1 - v))   # palm (the mark) up, lying or sitting
         s15p._aim(k, "left_hand", r @ Vector(dict(spec)["left_hand"]))
         if look:
             hb = k["arm"].pose.bones.get("head 1") or s15p._bone(k, "head")
@@ -445,29 +463,19 @@ def s15():
         anim.key(e, "scale", f_peek + 10, (1, 1, 1), "CONSTANT")
     anim.blink(sh, f_peek + 30)
 
-    # the mark: the coral key at his wrist, as S13 left it (dimmer once he sits up and it's off the grass)
-    key = bpy.data.lights.new("s15_mark_key", "POINT")
-    key.color = H9.CORAL
-    key.shadow_soft_size = 0.2
-    lk = bpy.data.objects.new("s15_mark_key", key)
-    sc.collection.objects.link(lk)
-    und = bpy.data.lights.new("s15_mark_fill", "POINT")                  # the glow over the field of moths
+    # the mark: helper 9's coral key on his left forearm (follows every pose), plus a soft coral glow over the moths
+    N9.mark(k)
+    und = bpy.data.lights.new("s15_mark_fill", "POINT")
     und.color = H9.CORAL
     und.shadow_soft_size = 3.0
     und.use_shadow = False
+    und.energy = 2000.0
     lu = bpy.data.objects.new("s15_mark_fill", und)
     sc.collection.objects.link(lu)
-    for f in range(1, n + 1):
+    for f in range(1, n + 1, 2):
         sc.frame_set(f)
-        m = H9._forearm(k, H9.MARK_U)
-        lk.location = m + Vector((0, 0, 0.5))
-        lk.keyframe_insert("location", frame=f)
-        key.energy = B.S13_LIGHT * (1.1 + 0.05 * math.sin(f / 5.0))
-        key.keyframe_insert("energy", frame=f)
-        lu.location = m + Vector((0, 0, 3.0))
+        lu.location = H9._forearm(k, H9.MARK_U) + Vector((0, 0, 3.0))
         lu.keyframe_insert("location", frame=f)
-        und.energy = B.S13_UNDER * 0.7
-        und.keyframe_insert("energy", frame=f)
     sc.frame_set(1)
     wrist = H9._forearm(k, 1.0)
     hips = s15p._world(k, "hips")
@@ -487,6 +495,8 @@ def s15():
             w.animation_data_clear()
         rig["root"].rotation_euler = (0, 0, q[2])
         fluffmoth.upside_down(rig, 1, n, land_at=(q[0], q[1], 0.0), seed=100 + i)
+        anim.key(rig["root"], "location", 1, (q[0], q[1], fluffmoth.BACK_REST * q[3]), "CONSTANT")   # on the grass
+        #                                                                (helper 10's fix: BACK_REST is unscaled)
 
     # Kai's face: dazed, then bewildered as he looks round, then a small amazed half-smile; eyes on the moths
     acting.face_keys(k, 1, eye_brow_down=0.5, face_angry=0.15)
