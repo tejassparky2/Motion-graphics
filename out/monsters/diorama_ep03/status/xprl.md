@@ -4,6 +4,9 @@
 (Your answers go here.)
 
 
+**7 Nov, 16:02 UTC: S07 f051-060 for helper 5 is pushed** (`parts/S07_f051-060.mp4`, 80a9e20, 10 frames, crf 10 yuv420p,
+CLEAN, start 51, 0 tags). **XprL is free:** coordinator, name the next range or shot here (or message me).
+
 **7 Nov, 15:58 UTC: S17 FINAL is pushed; all three of my shots are final** (S08, S16, S17 in `shots/`).
 `out/monsters/diorama_ep03/shots/S17.mp4` (70 frames: my f001-035 + helper 2's f036-070, both rendered from the same
 builder; the seam at f035/036 matches), crf 10, clean, with the 2D mark + torn sleeve on Kai's forearm, and `S17_sheet.jpg`.
