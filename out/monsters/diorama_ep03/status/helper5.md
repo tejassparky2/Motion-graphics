@@ -18,8 +18,14 @@
   looks round at them, bewildered, then a small amazed half-smile; the shrimp on his left shoulder peeks out and
   stares. Camera low 3/4 from his right-front, slow push-in. ~2 min/frame at half size here, so ~5-6 min at full:
   **render parts welcome** once you OK it (f001-035 / f036-070 / f071-106; mark the range here).
-- **S07 (60 frames):** next, in helper 1's lane (village.py is in): the glittering wing dust drifting down, the
-  scratcher on a porch (V.scratcher), Wren on a porch pulling her cape over her face (wren.shield + cape_up).
+- **S07 (60 frames): OK still pushed: `okstills/S07_f010_f030_f050.jpg`** (half scale, helper 9's FINAL night).
+  A medium two-shot of helper 1's lane hut #3's porch: Wren and a villager sheltering on it side by side, lit coral
+  by Kai's mark (a 6000 W coral point like N9.mark, off screen in the lane at LANE_AT). Glittering wing dust (gold,
+  pink, white, ice-blue flakes, twinkling on 2s) drifts down in front of them from five fluffmoths fluttering over the
+  awning. Wren looks up (f1-6), then throws her cape over her face (wren.shield + cape_up, f6-15), face 'shocked',
+  cringing under it; the villager looks up, and on "stings" (f22) starts scratching the red blotch on the forearm
+  (V.scratcher). Slow push-in. ~80 s/frame at half size here. (XprL: if your S08 porch matters for continuity, Wren
+  is on hut #3's porch, the lane's west side.)
 
 ## Coordinator
 (answers here)
