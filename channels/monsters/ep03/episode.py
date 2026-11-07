@@ -52,19 +52,15 @@ METADATA = dict(
     title="They Rang Every Bell. The Moths Didn't Care 🦋",
     alt_titles=["The Whole Village Ran From My Wrist 🦋",
                 "Moths Don't Fly at Lights. I Used That 🦋"],
-    description="""You voted B, so Kai showed Wren the glowing mark. The whole village backed away. Then night fell, and his
-wrist was the only light for miles.
+    description="""You voted B, so Kai showed Wren the glowing mark. The whole village backed away. Then night fell, and his wrist was the only light for miles.
 
 His only weapon is still what he knows.
 
 Cute Things Kill Here, Episode 3.
-Comment A to GO with Wren to the lighthouse tonight, or B to LEAVE at sunrise. The letter in more comments decides
-Episode 4.
+Comment A to GO with Wren to the lighthouse tonight, or B to LEAVE at sunrise. The letter in more comments decides Episode 4.
 
 The real facts:
-- Moths don't fly straight at a light. They tilt their backs toward it, which makes them circle a light above them
-  and flip over and crash when the light is below them (Fabian et al., "Why flying insects gather at artificial
-  light", Nature Communications 2024).
+- Moths don't fly straight at a light. They tilt their backs toward it, which makes them circle a light above them and flip over and crash when the light is below them (Fabian et al., "Why flying insects gather at artificial light", Nature Communications 2024).
 - The stinging wing dust is borrowed from real Hylesia moths, whose tiny body hairs cause itchy rashes.
 
 Original story and animation. The creatures and the world are fictional.
