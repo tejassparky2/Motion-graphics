@@ -203,6 +203,7 @@ def s05():
     tint.inputs[2].default_value = (*S05_TINT, 1)
     lt = mark(k, energy=MARK_W)
     cam = H2._new_cam("S05cam", 1)
+    cam.data.clip_start = 20.0                       # 0.05 at 470 m let the lake z-fight the ground under it (green streaks)
     dot = Vector(V.LANE_AT) + Vector((0, 0, 5.5))
     tgt = Vector(V.VILLAGE) + Vector((0, 40, 0))
     for f in range(1, n + 1):
@@ -281,6 +282,7 @@ def s18():
         H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)
+    camB.data.clip_start = 5.0                       # far over the water: no lake/ground z-fighting
     eye0 = lh["top"] + Vector((-55, 250, -38))
     for f in range(f_cut, n + 1):
         u = _smooth((f - f_cut) / (n - f_cut))
