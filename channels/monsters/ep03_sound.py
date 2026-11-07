@@ -48,6 +48,7 @@ S19BOT_STEPS = (23, 44, 66, 87, 148, 157, 166)       # S19 bottom (helper 5): fo
 S19BOT_LOOK = 107                                      # the look back starts ("like" - 4)
 S09_PASS, S09_SEE = 8, 44                             # S09 (helper 1): the swarm over the camera, Kai sees it
 S15_UP, S15_PEEK = 30, 46                             # S15 (helper 5): sits up ("landed" - 3), shrimp peeks
+S17_KNEEL = (3, 15)                                   # S17 (XprL): Wren kneels (f_kneel0, f_kneel1)
 S16_REST = 32                                          # S16 (XprL): wren.lower_bell ends at "bell" + 6
 S02_CRACK, S02_ECHO = 36, 53                          # S02 (helper 3): the cut to the crack, the mark's echo
 # S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
@@ -513,6 +514,9 @@ def build(timing, n, v):
 
     # --- S16-S18: the bell lowered (a last clink), Wren kneels, whispers; the lighthouse
     hit(last_clink(), fr("S16", S16_REST), -21, 0.2)                       # the bell comes to rest (XprL f32)
+    # S17 (XprL, final): Wren kneels by him f3-f15 (her knee down in the grass on f15)
+    hit(e2.cloth_swish(0.5, 14), fr("S17", S17_KNEEL[0]), -25, 0.15)
+    hit(e2.footstep(140, 0.6), fr("S17", S17_KNEEL[1]), -26, 0.15)
     hit(lighthouse_chime(), w("l18", "lighthouse"), -19, 0.2)
 
     # --- S19: the A and B stingers on the letters; "Comment" blip
