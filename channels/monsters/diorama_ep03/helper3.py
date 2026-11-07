@@ -33,7 +33,7 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 BUILD = os.path.join(ROOT, "build", "monsters", "diorama_ep03")
 TIMING = os.path.join(ROOT, "channels", "monsters", "ep03", "timing.json")
 FPS = 24
-SHRIMP_K = 0.42                      # the puff-shrimp on his shoulder
+SHRIMP_K = 0.5                       # the puff-shrimp on his shoulder
 MARK_LIGHT = 55.0                    # the coral point light at the mark (watts at level 1)
 # until ep03/timing.json lands: S02's frames and word starts, estimated from the script (Wren, ~3.3 s, 0.5 s gap)
 FALLBACK = dict(n=94, words=dict(marked=6, the=26, sky=31, cracked=37, night=51, you=58, fell=63),
@@ -116,7 +116,9 @@ def _shoulder_shrimp(k, n, name="ep03_shrimp_s02"):
     for f in range(1, n + 1, 2):
         sc.frame_set(f)
         bpy.context.view_layer.update()
-        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.32))
+        fwd = (X.WREN_STOP - X.KAI_AT).normalized()
+        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.36)) + Vector((fwd.x, fwd.y, 0)).normalized() * 0.35 \
+            + X._side_vec(k) * 0.15                               # on the front of the shoulder, clear of the arm
         sh["root"].location = p
         sh["root"].keyframe_insert("location", frame=f)
     sc.frame_set(1)
@@ -126,6 +128,35 @@ def _shoulder_shrimp(k, n, name="ep03_shrimp_s02"):
     anim.blink(sh, 20)
     sh["name"] = name
     return sh
+
+
+# ------------------------------------------------------------------------------------------------------- the sky
+# The evening sky is painted in 2D behind the render (the compositor's haze turns the 3D sky into one flat colour):
+# a gradient by elevation and wispy clouds at fixed places in the sky, both from these per-frame screen anchors.
+CLOUDS = ((-38, 20, 0.22), (-14, 29, 0.17), (12, 17, 0.24), (31, 33, 0.15), (-27, 43, 0.13), (9, 47, 0.13),
+          (42, 13, 0.21), (-48, 11, 0.19), (22, 52, 0.11), (-5, 9, 0.2))    # (deg east of north, deg up, width rad)
+
+
+def _sky_geo(cam):
+    """Screen y (720x1280) of elevations 0-90 deg along the camera's own heading, and the clouds: [x, y, width px]."""
+    o = cam.matrix_world.translation
+    fwd = cam.matrix_world.to_3x3() @ Vector((0, 0, -1))
+    h = Vector((fwd.x, fwd.y, 0))
+    h = h.normalized() if h.length > 1e-4 else Vector((0, 1, 0))
+    els = []
+    for e in range(0, 91, 10):
+        r = math.radians(e)
+        p = H9._px(cam, o + (h * math.cos(r) + Vector((0, 0, math.sin(r)))) * 4000)
+        els.append(p[1] if p[2] > 0 else None)
+    cl = []
+    for az, el, wd in CLOUDS:
+        a, e = math.radians(az), math.radians(el)
+        d = Vector((math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e)))
+        d2 = Vector((math.sin(a + wd) * math.cos(e), math.cos(a + wd) * math.cos(e), math.sin(e)))
+        p, q = H9._px(cam, o + d * 4000), H9._px(cam, o + d2 * 4000)
+        if p[2] > 0 and q[2] > 0:
+            cl.append([p[0], p[1], round(math.hypot(q[0] - p[0], q[1] - p[1]), 1)])
+    return dict(el=els, clouds=cl)
 
 
 # ------------------------------------------------------------------------------------------------------------ S02
@@ -223,15 +254,15 @@ def s02():
     camB = H9._new_cam("S02b", fb)
     fwd_r, _ = H9._rift_dir()
     eye = w_face + fwd_r * 1.8                                     # just out in front of her face
-    lens_b = H9.MATCH_PX / H9.RIFT_ANG * 36.0 / 1280 if hasattr(H9, "MATCH_PX") else 40.0
     for f in range(fb, fc):
         e = _smooth((f - fb) / max(1, fc - fb - 1))
-        aim = (fwd_r + Vector((0, 0, -0.12 * (1 - e)))).normalized()   # a small tilt up as we hold
-        H9._key_cam(camB, f, eye, H9._look(aim), lens_b * (1 + 0.05 * e), 400.0, blur=2.0, haze=(0.5, 1.5))
+        p_ = math.radians(35.0 + 6.0 * e)                           # low enough for the treetops; a tilt up into it
+        aim = Vector((0, math.cos(p_), math.sin(p_)))
+        H9._key_cam(camB, f, eye, H9._look(aim), 30.0 * (1 + 0.04 * e), 60.0, blur=3.0, haze=(0.8, 2.0))
     # C: due south of Kai (her side; she's hidden for it), low, looking due north and up with a wide lens: his face
     # above the captions, the raised forearm (mark upright) beside it, the crack upright in the sky above him
     camC = H9._new_cam("S02c", fc)
-    pc = k_face + Vector((0, -7.0, -3.0)) + left * 0.6
+    pc = k_face + Vector((0, -7.0, -3.0)) + left * 1.7                # toward his left: the shrimp clear of his arm
     el_face = math.degrees(math.atan2(k_face.z - pc.z, (k_face - pc).xy.length))
     for f in range(fc, n + 1):
         e = _smooth((f - fc) / max(1, n - fc))
@@ -265,7 +296,7 @@ def s02():
         pass
 
     def geo(f, c):
-        return dict(mark=H9._mark_geo(k, c), rift=H9._rift_geo(c), level=round(level(f), 3))
+        return dict(mark=H9._mark_geo(k, c), rift=H9._rift_geo(c), level=round(level(f), 3), sky=_sky_geo(c))
     _write_anchors("S02", n, geo, dict(fb=fb, fc=fc, f_echo=f_echo, f_sky=f_sky))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]])
 
