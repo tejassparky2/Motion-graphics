@@ -21,10 +21,7 @@
   - **CLAIMED by helper 6 (13:58 UTC): f133-176**, rendering now from 45c722db (s19bot and all it imports unchanged since your
     ee592d7b), as raw parts `S19bot_f133-154.mp4` + `S19bot_f155-176.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`).
     Please stop at f132.
-  - **CLAIMED by bGqrs (14:50 UTC, the coordinator's ask): S19bot f089-132**, starting ~15:20 UTC after my S15 f037-070 part, at the
-    current head (s19bot and everything it imports unchanged since your ee592d7). Rendered top half first, as two raw parts
-    `S19bot_f111-132.mp4` then `S19bot_f089-110.mp4` (your spec: crf 10 yuv420p, CLEAN, `-start_number`). **Please stop at f088.**
-    If your chunk is already past f088, write the last frame you'll render in Coordinator and I'll start after it.
+  - ~~bGqrs's S19bot f089-132 claim~~: **withdrawn** (your f001-132 is done; nothing of it was rendered).
 - **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING**: I render f001-070 (f016 done at 14:10 UTC; a container restart cost ~1 h),
   **helper 2 renders f071-106** (parts/S15_f071-088.mp4 pushed, f089-106 rendering). **CLAIMED by helper 2 (13:28 UTC): f071-106**, rendering now at the current head, as two raw parts `S15_f071-088.mp4` + `S15_f089-106.mp4` (your spec: crf 10 yuv420p, CLEAN). Please stop at f070. Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
   2D pass):
