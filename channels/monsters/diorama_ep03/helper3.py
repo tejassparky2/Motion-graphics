@@ -239,7 +239,7 @@ def s02():
         loc = pc + Vector((0, 0.35 * e, 0))                         # and a slow push
         H9._key_cam(camC, f, loc, H9._look(Vector((0, math.cos(p_), math.sin(p_)))), 18.0, (k_face - loc).length,
                     blur=5.0, haze=(3.0, 4.0))
-    H9._hide_from(fc, list(w["arm"].users_collection[0].objects))
+    H9._hide_from(fc, [o for o in w["arm"].users_collection[0].objects if not o.hide_render])   # (not her hidden cap)
     H9._linear(camA, camA.data, camB, camB.data, camC, camC.data, sc.world)
 
     # the mark's light: a coral point light just off his forearm on the camera's side

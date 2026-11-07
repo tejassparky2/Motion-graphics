@@ -1,17 +1,25 @@
 # Helper 5: Ep3 status (S07, S15, S19 bottom)
 
-**2026-11-07 10:40 UTC**
-- **S19bot (B, dawn, 177 frames = all of S19):** builder in `channels/monsters/diorama_ep03/helper5.py` (`S19bot`).
-  Kai walks away north out of helper 9's Ep 2 village (through the gap between the last two huts, a worn dirt path),
-  the shrimp on his left shoulder (helper 4's S01 size and perch, bone-parented so it rides the walk). On "like they
-  said" he stops and looks back over his right shoulder (the shrimp turns round to look too), then walks on. Dawn:
-  low peach sun from the east, peach haze, warm grade. Renders only the bottom band (rows 486-1280), like Ep 2 S20bot.
-  **OK still pushed: `okstills/S19bot_f060_f124_f172.jpg`** (half scale, bottom band only; f60 walking away, f124 the
-  look back on "like they said", f172 walking on). Waiting for your OK before the full render (177 frames, ~40 s/frame
-  at half scale here, so ~2 h at full res).
-- **S07 / S15:** waiting on helper 1's night village/villagers (S07 is in the village lane), XprL's cape pose, helper 9's
-  night grade + mark light, and bGqrs's S13 staging + helper 10's `S14_landings.json` (S15 starts from S14's end).
-  helper 6's moth API (legs, upside_down) is in and works.
+**2026-11-07 10:10 UTC**
+- **S19bot:** your 09:52 notes taken. Reworked: he now walks EAST along the beach road out of the village (helper 9's
+  south shore), past the last hut, toward the sun coming up over the lake at the end of the road (a bright disc + a
+  soft glow, a little right of the road, over the water); the sun is low ahead, so his long soft shadow falls back
+  toward us. Camera further back and lower: his whole body at y ~700-1000, more road ahead; the near hut is gone
+  from the left. The look back on "like they said" stays (over his right shoulder; the shrimp turns to look too).
+  Frames from the final timing (S19 = 176 render frames). New stills rendering; the full render starts right after
+  they check out.
+- **S15 (106 frames):** draft builder in helper5.py (`S15`) from bGqrs's S13 staging: Kai flat on his back as S13
+  leaves him (head west, left arm out palm up, the mark glowing), the field of moths on their backs round him
+  (helper 6's swarm + upside_down; helper 10's `S14_landings.json` when it lands, a stand-in ring until then); on
+  "landed" he sits up, looks round, bewildered, then a small amazed half-smile; the shrimp peeks out. Test still
+  rendering.
+  - **For XprL (S16/S17):** he sits up IN PLACE, so his hips stay where bGqrs's S13 lays them: bgqrs.S13_AT +
+    HEAD_DIR * 3.0 = **(9.0, -140.0)**, facing EAST (left/mark side north, the village on his right). I'll end on
+    your pose: left knee up with the left forearm on it (mark up), right hand behind on the grass, the shrimp on his
+    left shoulder at 0.6. Your KAI_SIT (8, -140) puts his hips ~1.6 west of mine: please shift to my hips, or tell
+    me here and I'll move to yours.
+- **S07 (60 frames):** next, in helper 1's lane (village.py is in): the glittering wing dust drifting down, the
+  scratcher on a porch (V.scratcher), Wren on a porch pulling her cape over her face (wren.shield + cape_up).
 
 ## Coordinator
 (answers here)
