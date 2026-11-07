@@ -168,7 +168,7 @@ def _path_strip(name, pts, width=2.6, z=0.05):
 
 # ------------------------------------------------------------------------------------------------------ S07
 S07_HUT = 3                                 # helper 1's lane hut whose porch they share (west side of the lane)
-S07_SPREAD = 2.2                            # Wren and the villager this far either side of the porch's middle
+S07_SPREAD = 1.45                           # Wren and the villager this far either side of the porch's middle
 
 
 def _dust(n, box_lo, box_hi, count=220, seed=7, light=None):
@@ -210,7 +210,7 @@ def _dust(n, box_lo, box_hi, count=220, seed=7, light=None):
         z0 = rnd.uniform(lo.z, hi.z) + rnd.uniform(0, hi.z - lo.z) * 0.6
         fall = rnd.uniform(0.07, 0.16)                                   # units a frame: a slow drift down
         sway, ph, per = rnd.uniform(0.15, 0.5), rnd.uniform(0, 6.3), rnd.uniform(18, 34)
-        size = rnd.uniform(0.05, 0.12)
+        size = rnd.uniform(0.022, 0.055)
         for f in range(1, n + 1):
             z = z0 - fall * f
             while z < lo.z:
@@ -315,14 +315,14 @@ def s07():
     c = porch + face * 3.0
     lo = c - along * 7.5 - face * 4.0
     hi = c + along * 7.5 + face * 4.5
-    _dust(n, (min(lo.x, hi.x), min(lo.y, hi.y), 0.4), (max(lo.x, hi.x), max(lo.y, hi.y), 14.5), count=260)
+    _dust(n, (min(lo.x, hi.x), min(lo.y, hi.y), 0.4), (max(lo.x, hi.x), max(lo.y, hi.y), 14.5), count=340)
 
     # camera: from the lane, a little toward Kai's side (so the light comes from behind the lens, left), low; a slow
     # push-in on 1s. Both of them waist-up-ish, their faces above the caption band.
     tgt = porch + Vector((0, 0, 6.2))
-    look_dir = (-face).lerp((porch - kai_at).normalized(), 0.35).normalized()
+    look_dir = (-face).lerp((porch - kai_at).normalized(), 0.15).normalized()
     cy = math.degrees(math.atan2(look_dir.x, look_dir.y))
-    _cam("cam_s07", 1, n, (tgt, 19.0, 6.0, cy), (tgt, 16.0, 5.0, cy), lens=32.0, blur=4.0, shift_y=-0.06)
+    _cam("cam_s07", 1, n, (tgt, 15.0, 6.0, cy), (tgt, 12.5, 5.0, cy), lens=32.0, blur=4.0, shift_y=-0.06)
     LAST.update(w=w, v=v)
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"], v["root"]])
 
