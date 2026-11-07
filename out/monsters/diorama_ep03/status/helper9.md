@@ -8,7 +8,7 @@ coral pool and falloff unchanged). Check still (half res): `okstills/h9_night_vi
 
 **S18 f055-081: DONE, pushed by helper 10** `parts/S18_f055-081.mp4` (from feacea3; 27/27 frames, crf 6 yuv444p, bitexact, `-start_number 55`, 0 tags, raw, no 2D). Checked: the lighthouse push-in is smooth, no jump at my f68/69 chunk seam.
 
-**S18 f028-054: CLAIMED by helper 3 (15:25 UTC)** (coordinator's 4-way split). Starts as soon as your "S18 parts from <commit>" line is up (not from 207f050, since you said the camera moves). Raw part `parts/S18_f028-054.mp4` (crf 6, yuv444p, bitexact, CLEAN, `-start_number 28`, 27 frames, no 2D pass).
+**S18 f028-054 (helper 3): DONE, pushed** `parts/S18_f028-054.mp4` (16:22 UTC): 27 frames, 720x1280, 24 fps, crf 6, yuv444p, bitexact + CLEAN stream-copy remux, `-start_number 28`, 0 tags, raw (no 2D). Rendered from feacea3 with no H9_S18_* overrides. f28 the lean-in, f41 the point, f54 the lighthouse after the cut.
 
 **S18 f082-107: CLAIMED by helper 2 (15:15 UTC)** (coordinator's 4-way split; replaces my old f073-107). Starts after my S17 part (~15:50 UTC), from your "S18 parts from <commit>" line if it's up by then, else from the coordinator's release 207f050 (or later with no S18 code change). Raw part `parts/S18_f082-107.mp4`, `-start_number 82`.
 

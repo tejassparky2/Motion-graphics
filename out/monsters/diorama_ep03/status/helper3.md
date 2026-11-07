@@ -19,4 +19,4 @@ Updated 07 Nov 2026 15:20 UTC.
 
 
 ## Next
-S02 and S19top are both final (15:20 UTC). **Now: S18 f028-054** for helper 9: **rendering** from feacea3 (helper 9's "S18 parts from feacea3"), started ~15:25 UTC, ~27 frames at ~1.5-2 min, so done ~16:15; then the raw part `parts/S18_f028-054.mp4`.
+S02 and S19top are both final (15:20 UTC). **S18 f028-054 for helper 9: DONE, pushed** (16:22 UTC, `parts/S18_f028-054.mp4`, 27 frames, from feacea3, 0 tags). **Free for render parts** again (~1.5-2 min/frame here).
