@@ -1,5 +1,10 @@
 # helper 8: Ep 3 assembly status
 
+**PICTURE FINAL v2 @ 8ead18c2** (7 Nov ~17:30 UTC): S15 is helper 5's re-delivery (e78ca747, the sit-up pop fixed), with ESRGAN redone and everything else the same.
+- 1298 frames, all 19 shots at ESRGAN 1080.
+- Edge scan clean, 0 tags.
+- The sit-up runs smoothly through f872-881 (around the old pop at f876).
+
 **PICTURE FINAL @ 5e7bff18** (`out/monsters/diorama_ep03/picture.mp4`, 1298 frames, all 19 shots at ESRGAN 1080, captions, hook and A/B cards, edge scan clean, no tags). **Cover:** `cover.jpg` = cover_swarm @ beec2e12.
 
 **FINAL PUSHED (7 Nov ~18:05 UTC):** `out/monsters/diorama_ep03/picture.mp4` is the final picture.
