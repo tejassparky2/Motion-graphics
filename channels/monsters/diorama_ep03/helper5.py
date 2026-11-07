@@ -371,6 +371,42 @@ def _s15_landings(B, wrist, hips, hd, n_moths=34, seed=15):
     return out
 
 
+S15_HEROES = [(5.5, -4.6), (8.0, 3.8), (3.6, 5.6), (9.5, -0.6)]   # (toward the lens, across) from his middle
+
+
+def _hero_anchors(shot, n, rigs):
+    """build/monsters/diorama_ep03/<shot>_heroes.json: per frame, each hero moth's body centre, its two wing eye-spots
+    and a size (px per moth unit) on the 720x1280 frame, for the 2D dizzy stars and spirals (post_helper5.py)."""
+    import json
+    import os
+    from bpy_extras.object_utils import world_to_camera_view
+    sc = bpy.context.scene
+    cam = sc.camera
+    W, H = 720, 1280
+
+    def px(p):
+        v = world_to_camera_view(sc, cam, p)
+        return [round(v.x * W, 1), round((1 - v.y) * H, 1), round(v.z, 2)]
+    out = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        rows = []
+        for r in rigs:
+            c = r["body"].matrix_world.translation
+            right = cam.matrix_world.to_3x3() @ Vector((1, 0, 0))
+            s_ = r["root"].matrix_world.to_scale().x
+            a, b = px(c), px(c + right * s_ * 2.0)
+            rows.append(dict(c=a, size=round(abs(b[0] - a[0]) / 2.0, 1),
+                             spots=[px(sp.matrix_world.translation) for sp in r["spots"][:2]]))
+        out[f] = rows
+    sc.frame_set(1)
+    root = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
+    d = os.path.join(root, "build", "monsters", "diorama_ep03")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, f"{shot}_heroes.json"), "w") as fh:
+        json.dump(out, fh)
+
+
 def _s15_extra(spots, hips, hd, n_moths=12, seed=16):
     """Moths that came down just outside S14's view: on the camera side (south-east of him, toward his feet and his
     right), so the foreground is a field of legs in the air too."""
@@ -468,7 +504,10 @@ def s15():
         pt = B._bone_world(k, "upper_arm.L") + Vector((0, 0, 0.55 * sq)) + side * 0.25
         sh["root"].location = pt
         sh["root"].keyframe_insert("location", frame=f)
-        sh["root"].rotation_euler = (-0.55 * (1 - up), 0, yaw + math.pi + (0.5 if f >= f_peek + 20 else 0.0))
+        look = 0.0                                                       # it looks round at the moths: left, right
+        if f >= f_peek + 8:
+            look = (0.7, 0.7, -0.6, -0.6, 0.15)[min(4, (f - f_peek - 8) // 12)]
+        sh["root"].rotation_euler = (-0.55 * (1 - up), 0, yaw + math.pi + look)
         sh["root"].keyframe_insert("rotation_euler", frame=f)
         sh["root"].scale = (base * (1.18 if sq < 1 else 1.0), base * (1.18 if sq < 1 else 1.0), base * sq)
         sh["root"].keyframe_insert("scale", frame=f)
@@ -484,19 +523,9 @@ def s15():
         anim.key(e, "scale", f_peek + 10, (1, 1, 1), "CONSTANT")
     anim.blink(sh, f_peek + 30)
 
-    # the mark: helper 9's coral key on his left forearm (follows every pose), plus a soft coral glow over the moths
+    # the mark: helper 9's coral key on his left forearm at its default (as S13/S14 end), nothing else: a coral pool
+    # round his wrist that falls off to dark
     N9.mark(k)
-    und = bpy.data.lights.new("s15_mark_fill", "POINT")
-    und.color = H9.CORAL
-    und.shadow_soft_size = 3.0
-    und.use_shadow = False
-    und.energy = 2000.0
-    lu = bpy.data.objects.new("s15_mark_fill", und)
-    sc.collection.objects.link(lu)
-    for f in range(1, n + 1, 2):
-        sc.frame_set(f)
-        lu.location = H9._forearm(k, H9.MARK_U) + Vector((0, 0, 3.0))
-        lu.keyframe_insert("location", frame=f)
     sc.frame_set(1)
     wrist = H9._forearm(k, 1.0)
     hips = s15p._world(k, "hips")
@@ -508,6 +537,16 @@ def s15():
     # the field of moths on their backs (one built, linked copies), legs waving
     spots = _s15_landings(B, wrist, hips, hd)
     spots += _s15_extra(spots, hips, hd)                                 # more on the camera side: a whole field
+    # four hero moths in the foreground, between the lens and him: big, legs waving hard (+ 2D dizzy stars/spirals)
+    mid = hips - hd * 1.2
+    cy = math.degrees(math.atan2(hd.x, hd.y))                            # looking west, along his head direction
+    hdg = math.radians(cy + 38.0)
+    to_cam = -Vector((math.sin(hdg), math.cos(hdg), 0))
+    side = Vector((-to_cam.y, to_cam.x, 0))
+    heroes = [mid + to_cam * d + side * o for d, o in S15_HEROES]
+    spots = [q for q in spots if all((Vector((q[0], q[1], 0)) - Vector((h.x, h.y, 0))).length > 2.0 for h in heroes)]
+    n_field = len(spots)
+    spots += [(h.x, h.y, math.atan2(-to_cam.x, to_cam.y) + 0.5 * (i % 2 * 2 - 1), 0.52) for i, h in enumerate(heroes)]
     cam_side = hips - hd * 12.0                                          # roughly where the camera looks from
     rigs = fluffmoth.swarm(len(spots), lambda i, rnd: (Vector((spots[i][0], spots[i][1], 1.0)), spots[i][3]),
                            name="m15_", seed=15,
@@ -519,18 +558,34 @@ def s15():
         fluffmoth.upside_down(rig, 1, n, land_at=(q[0], q[1], 0.0), seed=100 + i)
         anim.key(rig["root"], "location", 1, (q[0], q[1], fluffmoth.BACK_REST * q[3]), "CONSTANT")   # on the grass
         #                                                                (helper 10's fix: BACK_REST is unscaled)
+        if i >= n_field:                                                 # a hero: the legs wave big and fast
+            import random as _r
+            rr = _r.Random(500 + i)
+            for j, lp in enumerate(rig.get("legs", [])):
+                sx = -1 if j % 2 == 0 else 1
+                ph, sp = rr.uniform(0, 6.3), rr.uniform(0.9, 1.2)
+                for f in range(1, n + 1, 2):
+                    a, b = math.sin(f * sp + ph), math.sin(f * sp * 0.7 + ph * 1.3)
+                    anim.key(lp, "rotation_euler", f, (0.75 * a, -sx * fluffmoth.LEG_SPLAY - sx * 0.45 * b, 0.0),
+                             "CONSTANT")
+    hero_rigs = rigs[n_field:]
 
-    # Kai's face: dazed, then bewildered as he looks round, then a small amazed half-smile; eyes on the moths
-    acting.face_keys(k, 1, eye_brow_down=0.5, face_angry=0.15)
-    acting.face_keys(k, f_up + 8, eye_brow_down=0.0, face_angry=0.0, face_surprise=0.7)
-    acting.face_keys(k, f_up + 40, face_surprise=0.35, face_happy=0.35)
-    acting.blink(k, 1, n, every=(40, 70), seed=8, at=(f_up + 12,))
+    # Kai's face: set and tense on his back; wide surprised eyes as he sits up; then, by the hold, a slow, slightly
+    # smug grin (he pulled it off): the grin creeps in over ~20 frames on 2s, the lids drop half way
+    acting.face_keys(k, 1, eye_brow_down=0.55, face_angry=0.2, face_surprise=0.0, face_happy=0.0, eye_zitome=0.0,
+                     eye_brow_up=0.0, eye_open=0.0)
+    acting.face_keys(k, f_up + 4, eye_brow_down=0.0, face_angry=0.0, face_surprise=1.0, eye_brow_up=0.8, eye_open=0.6)
+    g0 = f_up + 34
+    for j, f in enumerate(range(g0, g0 + 22, 2)):
+        u = (j + 1) / 11.0
+        acting.face_keys(k, f, face_surprise=1.0 - u, eye_brow_up=0.8 * (1 - u), eye_open=0.6 * (1 - u),
+                         face_happy=0.75 * u, eye_zitome=0.45 * u, eye_brow_down=0.2 * u)
+    acting.blink(k, 1, n, every=(40, 70), seed=8, at=(f_up + 26,))
 
     # camera: in front of him (east, toward his feet), low, the moths big in the foreground; a slow push-in on 1s
-    mid = hips - hd * 1.2
-    cy = math.degrees(math.atan2(hd.x, hd.y))                            # looking west, along his head direction
     _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.4)), 18.0, 13.0, cy + 40.0),
          (mid + Vector((0, 0, 3.8)), 14.5, 11.0, cy + 36.0), lens=35.0, blur=5.0, shift_y=-0.03)
+    _hero_anchors("S15", n, hero_rigs)
     LAST.update(k=k, sh=sh, moths=rigs)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + list(k.get("cap", [])))
 
