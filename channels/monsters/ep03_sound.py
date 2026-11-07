@@ -43,6 +43,7 @@ S08_STRIKES = list(range(8, 66, 4))                   # S08 (XprL): Wren's clapp
 S08_PORCH = 12                                         # the first porch bell joins (V.ring_bell from f_ring + 6)
 S19BOT_STEPS = (23, 44, 66, 87, 148, 157, 166)       # S19 bottom (helper 5): footfalls (x3._walk), cut at 164
 S19BOT_LOOK = 107                                      # the look back starts ("like" - 4)
+S09_PASS, S09_SEE = 8, 44                             # S09 (helper 1): the swarm over the camera, Kai sees it
 S16_REST = 32                                          # S16 (XprL): wren.lower_bell ends at "bell" + 6
 S02_CRACK, S02_ECHO = 36, 53                          # S02 (helper 3): the cut to the crack, the mark's echo
 # S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
@@ -439,6 +440,12 @@ def build(timing, n, v):
     bed(all_bells(s("S10") - bells_from + 0.6, 3, strikes, fr("S08", S08_PORCH) - bells_from, 1.4),
         bells_from, -17, 0.15)
     hit(base.ring_out(2.0), s("S10") - 0.1, -26, 0.15)
+    # S09 (helper 1, final): the swarm streams in over the camera from ~f8 (each moth leaves f8-f28), right past the
+    # ringers, down the lane; Kai's face goes wide f44, the shrimp ducks behind his head f50
+    bed(swarm(1.6, (1.0, 0.35), 4), fr("S09", S09_PASS), -19, 0.0)          # close overhead, then away down the lane
+    hit(sfx.whoosh(2) * 0.7, fr("S09", S09_PASS + 8), -25, 0.0)
+    hit(e2.eyes_wide(2), fr("S09", S09_SEE), -22, 0.0)
+    hit(v3.startle(3), fr("S09", S09_SEE + 6), -26, -0.2)
 
     # --- S10-S13: the orbit; the backs to the light; Kai drops into the grass
     orb_t0, orb_t1 = s("S10"), s("S13")
