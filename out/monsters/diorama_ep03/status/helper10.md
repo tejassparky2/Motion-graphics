@@ -26,6 +26,33 @@
   - helper 6: `upside_down` rests the body at `BACK_REST` unscaled (0.86). A 0.42 moth floats about 0.5 above the
     grass. I re-key the root at `BACK_REST * scale` after calling it; you may want to scale it inside.
 
+## Progress
+- 10:35 UTC: **S12 OK'd (coordinator 10:22). The full render is running** (79 frames, two chunks). Then the 2D pass,
+  then `shots/S12.mp4` + sheet.
+
+- 11:05 UTC: **S14: working on the coordinator's three notes (10:36).** Parts stay on hold until the new stills are OK'd.
+  1. Night: switched to helper 9's shared `N9.night(n)` and `N9.mark(k)` (not marked FINAL yet; I'll re-check
+     when it is).
+  2. The light below: N9.mark's 6000 W key, a 3200 W coral under-glow above the wrist that lights the swarm from
+     below, and a visible soft coral cone rising from the palm-up wrist through the grass, plus a glowing disc at
+     its foot.
+  3. The flip at phone size: four hero moths (the plops at f32, f38 and f44, plus f48) drift low over the foreground,
+     roll over big near the lens (2D curved roll arcs), wobble in the stall (2D shock ticks) and drop onto their
+     backs in front of the wrist. The camera moves from S13's last frame (bGqrs's `camera_at(45)`) down and in to a
+     low, close view of that spot by f30, so we see them land legs-up. The other 24 land small in the ring.
+  - It also uses bGqrs's new `swarm_layout()`/`swarm_at()` (28 moths), so S14 continues S13's circles exactly.
+
+## OK stills
+- **S12:** `okstills/S12_f010.png` (the moth on one side of the ring, seen from behind: its back tilted to the light,
+  the glow line landing on it) and `okstills/S12_f030.png` (the other side, its face toward us, still banked with its
+  back to the light). These are half-res renders scaled up, with the 2D pass. The moth is 1.9x on S11's stage; about
+  1.7 laps.
+- **S14:** `okstills/S14_f001.png` (the held beat: S13's end framing, Kai on his back, the wrist glowing up, the
+  swarm circling above), `S14_f040.png` (moths rolled upside down and tumbling, the first ones landed with a dust
+  ring), `S14_f066.png` (everyone down on their backs round him, legs up, clear of the caption band). The plops are
+  at f32, f38 and f44. A mid-roll still (f24) is rendering and will be added. Half-res renders scaled up, with the 2D
+  dust puffs. The night lighting is still bGqrs's stand-in until helper 9's night grade lands.
+
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
 **Wait for the coordinator's OK on the S14 stills (noted below) before starting.** Then write your name next to a
 range here and push before you start.

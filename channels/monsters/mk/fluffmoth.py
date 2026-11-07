@@ -597,10 +597,34 @@ FAR_SKIP = ("_dot", "_hi-1", "_hi1", "_hi2-1", "_hi21", "_cres", "_blush", "_mou
             "_shadow")                                     # (exact: "_hi" alone would catch the "_hind" wings)
 
 
-def _copy_tree(o, parent, suffix, skip):
+_LOD = {}
+
+
+def _low(me, ratio, min_polys=1500):
+    """A decimated copy of a dense mesh (the SDF body, collar, antennae), cached per (mesh, ratio); flat wings and small
+    spheres are left as they are."""
+    if ratio >= 1.0 or len(me.polygons) < min_polys:
+        return me
+    key = (me.name, ratio)
+    if key not in _LOD:
+        tmp = bpy.data.objects.new("_lod_tmp", me)
+        bpy.context.scene.collection.objects.link(tmp)
+        d = tmp.modifiers.new("dec", "DECIMATE")
+        d.ratio = ratio
+        dg = bpy.context.evaluated_depsgraph_get()
+        low = bpy.data.meshes.new_from_object(tmp.evaluated_get(dg))
+        low.name = f"{me.name}_lod{int(ratio * 100)}"
+        bpy.data.objects.remove(tmp)
+        _LOD[key] = low
+    return _LOD[key]
+
+
+def _copy_tree(o, parent, suffix, skip, lod=1.0):
     if any(t in o.name for t in skip):
         return {}
     c = o.copy()                                                     # linked: shares the mesh and materials
+    if c.type == "MESH" and lod < 1.0:
+        c.data = _low(o.data, lod)
     c.name = o.name + suffix
     for col in o.users_collection:
         col.objects.link(c)
@@ -609,15 +633,17 @@ def _copy_tree(o, parent, suffix, skip):
     c.animation_data_clear()
     out = {o.name: c}
     for ch in o.children:
-        out.update(_copy_tree(ch, c, suffix, skip))
+        out.update(_copy_tree(ch, c, suffix, skip, lod))
     return out
 
 
-def swarm(n, place, name="swarm", seed=11, far=None):
+def swarm(n, place, name="swarm", seed=11, far=None, lod=(0.2, 0.07)):
     """n fluffmoths for a swarm, cheap: ONE moth is built, the others are linked copies of its objects (shared meshes
     and materials, own transforms and animation). Every member is in flight_mode with its own endless wing beat
     (random phase and strength). `place(i, rnd)` returns (location, scale) for member i; `far(i, loc, scale)` -> True
-    drops the small details (spots' dots, face highlights, legs) on far, small moths. Returns the list of rigs (the
+    drops the small details (spots' dots, face highlights, legs) on far, small moths. lod = (near, far) decimation of
+    the copies' dense meshes (body, collar, antennae): the CPU renderer's cost goes with the polygon count, and a
+    swarm moth never needs the close-up mesh (build() a separate moth for a close-up). Returns the list of rigs (the
     same dicts as build(); the first is the master). Animate each root (location; back_to/face for rotation)."""
     rnd = random.Random(seed)
     master = build((0, 0, 0), name=f"{name}0")
@@ -628,8 +654,9 @@ def swarm(n, place, name="swarm", seed=11, far=None):
         if i == 0:
             r = master
         else:
-            skip = FAR_SKIP if far and far(i, loc, sc) else ("_shadow",)
-            m = _copy_tree(master["root"], None, f".{i:03d}", skip)
+            is_far = bool(far and far(i, loc, sc))
+            m = _copy_tree(master["root"], None, f".{i:03d}", FAR_SKIP if is_far else ("_shadow",),
+                           lod[1] if is_far else lod[0])
 
             def g(o):
                 return m.get(o.name) if o is not None else None
@@ -643,4 +670,7 @@ def swarm(n, place, name="swarm", seed=11, far=None):
         r["root"].scale = (sc, sc, sc)
         flap(r, phase=rnd.randrange(4), amp=rnd.uniform(0.85, 1.15))
         rigs.append(r)
+    for o in master["root"].children_recursive:                      # the master flies too: near LOD (after copying)
+        if o.type == "MESH":
+            o.data = _low(o.data, lod[0])
     return rigs

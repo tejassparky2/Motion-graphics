@@ -76,6 +76,18 @@ def _cam_from(name, n, c0, c1, t0, t1, lens):
 S01_LIGHT = 140.0                               # the mark's coral point light (close up, daylight: it has to show)
 
 
+def _late_afternoon(fwd):
+    """A warm low sun from behind Wren's side (onto Kai's face), the sky a touch warmer: late afternoon (S01; the
+    mark still the brightest thing)."""
+    sc = bpy.context.scene
+    for o in sc.objects:
+        if o.type == "LIGHT" and o.data.type == "SUN":
+            o.data.color = (1.0, 0.78, 0.55)
+            o.data.energy *= 0.85
+            d = (fwd * 1.0 + Vector((0, 0, math.tan(math.radians(16.0))))).normalized()   # from her side, 16 deg up
+            o.rotation_euler = (-d).to_track_quat("-Z", "Y").to_euler()
+
+
 def _raised_arm(PK, k, fwd, up, u=1.0, tremble=0.0):
     """S20bot v2's end pose: the left forearm up toward Wren at face height, the inner wrist turned out; the right
     hand down at his side (the shrimp on it)."""
@@ -101,8 +113,9 @@ def s01():
     f_so = fw.get("so", [(int(n * 0.55), 0)])[0][0]                  # "So I did.": the shrimp hops
     X._world(n)
     h1.hill()
-    k = X._kai()
     d = (X.WREN_STOP - X.KAI_AT).normalized()
+    _late_afternoon(Vector((d.x, d.y, 0)).normalized())
+    k = X._kai()
     fwd = Vector((d.x, d.y, 0)).normalized()
     up = Vector((0, 0, 1))
     w0 = X.WREN_STOP + fwd * 0.75                                    # where S20bot v2 leaves her (half a step back)
@@ -111,7 +124,7 @@ def s01():
     feet = {"L": Vector((0.09, 0, 0)), "R": Vector((-0.09, 0, 0))}
 
     # Wren: a stumble two steps back (anticipation, a heel catch, arms out), then she holds the bell up, trembling
-    steps = [(1, 0.0), (5, 0.9), (9, 1.6), (13, 2.6), (17, 2.9), (21, 3.0)]   # (frame, distance back)
+    steps = [(1, 0.0), (5, 0.55), (9, 1.0), (13, 1.55), (17, 1.75), (21, 1.8)]   # (frame, distance back)
 
     def back_at(f):
         for (fa, da), (fb, db) in zip(steps[:-1], steps[1:]):
@@ -154,21 +167,21 @@ def s01():
         _raised_arm(PK, k, fwd, up, 1.0, tremble=0.05 * math.sin(f * 1.7) + push)
         PK.rot("head 1", (-4.0, 0, 0))
         PK.key(f)
-    E2._face({"eye_brow_down": 0.7, "face_angry": 0.25}, 1)          # steady
+    E2._face({"eye_brow_down": 0.55, "face_angry": 0.2, "mouth_short": 0.35, "eye_brow_up": 0.0}, 1)   # nervous, defiant
     E2._face({"eye_brow_down": 0.4, "face_sad": 0.3, "mouth_short": 0.4}, f_so)   # "So I did.": a wince at what it cost
 
     # the shrimp: on his right hand at his side, then a hop up onto his left shoulder ("So I did.")
     sh = puffshrimp.build((0, 0, 0))
     s3d._fix_pivots(sh)
-    sh["root"].scale = (E2.SHRIMP_IN_HAND,) * 3
+    sh["root"].scale = (0.5,) * 3                                     # helper 3's SHRIMP_K (it rides there from S02)
     sh["root"].rotation_euler = (0, 0, math.radians(X.KAI_YAW))      # facing out, with him
     sc = bpy.context.scene
-    f_hop0, f_hop1 = f_so - 3, f_so + 9                              # crouch, jump, land
+    f_hop0, f_hop1 = f_so - 14, f_so - 2                             # crouch, jump, land (on his shoulder by ~f30)
     base = Vector(sh["root"].scale)
     for f in range(1, n + 1):
         sc.frame_set(f)
         hand = X._world_of(k, "hand.R") + up * 0.3
-        perch = E2._bone_world(k, "upper_arm.L") + up * 0.75 - fwd * 0.1
+        perch = E2._bone_world(k, "upper_arm.L") + up * 0.34 + fwd * 0.1 + X._side_vec(k) * 0.5   # helper 3's
         if f < f_hop0 + 3:
             p, sq = hand, (1.0, 1.0, 0.82 if f >= f_hop0 else 1.0)    # a crouch before the jump
         elif f < f_hop1:
@@ -190,34 +203,32 @@ def s01():
     anim.key(sh["hinge"], "rotation_euler", 1, (0.15, 0.0, 0.0), "CONSTANT")
     anim.blink(sh, 40)
 
-    # the villagers: where S17 left them (a loose group on the rise behind Wren); they flinch, turn and run back up the
-    # path, dropping their nets
+    # the villagers: behind Kai (on the meadow past him, clear of the pond), flinching, then scattering sideways and
+    # away, nets dropping
     sc.frame_set(1)
-    away_pt = Vector((X.KAI_AT.x, X.KAI_AT.y - 60.0, 0))
+    L = Vector((-fwd.y, fwd.x, 0))                                    # Kai's left
+    SPOTS = [(13.0, -7.5), (16.0, -3.0), (14.5, 3.5), (18.5, 8.0), (21.0, -10.5), (22.5, 1.0), (12.0, 9.5)]
     for i, (dx, y0, delay, has_net, bell) in enumerate(h1.VILLAGERS):
         v = h1.villager(i, 11 + i * 7, net=has_net, bell=bell)
-        x0 = diorama._path_x(y0) + dx
-        target = Vector((X.KAI_AT.x + dx * 0.4, X.KAI_AT.y - 6.0, 0))
-        start = Vector((x0, y0, 0))
-        dd = (target - start).normalized()
-        stop_at = 16.0 + 2.2 * i
-        p0 = start + dd * max(0.0, (target - start).length - stop_at)
+        back_d, side_d = SPOTS[i]
+        p0 = X.KAI_AT - fwd * back_d + L * side_d
+        dd = (X.KAI_AT - p0)
+        dd.z = 0
+        dd = dd.normalized()                                         # facing Kai
         face_in = math.atan2(dd.x, -dd.y)
-        run = (away_pt + Vector((dx * 1.6, 0, 0)) - p0)
-        run.z = 0
-        run = run.normalized()
+        run = (-dd * 0.6 + L * (1.0 if side_d >= 0 else -1.0)).normalized()
         face_out = math.atan2(run.x, -run.y)
-        f_flinch = 2 + i % 3 * 2
-        f_turn0 = f_flinch + 4
-        f_run = f_turn0 + 6
+        f_flinch = 1 + i % 3 * 2
+        f_turn0 = f_flinch + 3
+        f_run = f_turn0 + 5
         for f in range(1, n + 1, 2):
             if f < f_run:
                 p = p0 - dd * (0.25 if f >= f_flinch else 0.0)
             else:
-                p = p0 - dd * 0.25 + run * 0.55 * (f - f_run) * min(1.0, (f - f_run) / 6.0)
+                p = p0 - dd * 0.25 + run * 0.5 * (f - f_run) * min(1.0, (f - f_run) / 6.0)
             p.z = h1.hill_height(p.x, p.y)
             anim.key(v["root"], "location", f, tuple(p), "CONSTANT")
-            u = _smooth((f - f_turn0) / 6.0)
+            u = _smooth((f - f_turn0) / 5.0)
             dz = (face_out - face_in + math.pi) % (2 * math.pi) - math.pi
             anim.key(v["root"], "rotation_euler", f, (0, 0, face_in + dz * u), "CONSTANT")
             hop = 0.45 * abs(math.sin(f * 0.55 + i)) if f >= f_run else (0.3 if f_flinch <= f < f_flinch + 2 else 0.0)
@@ -265,17 +276,18 @@ def s01():
     X.v2._twos([k["arm"], w["arm"], sh["body"], sh["hinge"]] + sh["eyes"])
 
     LAST.update(k=k, w=w, sh=sh, fwd=fwd, up=up, w0=w0)
-    # camera: low and close behind Kai's left side, looking up past the raised wrist at Wren; a slow push-in on 1s
+    # camera: low, over Wren's left shoulder, looking up at Kai's face and raised wrist (she stumbles back toward the
+    # lens: her hood and bell soft in the near foreground); a slow push-in on 1s
+    LAST.update(k=k, w=w, sh=sh, fwd=fwd, up=up, w0=w0)
     sc.frame_set(1)
     bpy.context.view_layer.update()
     wrist = H9._forearm(k, H9.MARK_U)
-    left = Vector((-fwd.y, fwd.x, 0))
-    wren_head = w0 + fwd * 1.5 + up * 7.4
-    c0 = wrist - fwd * float(os.environ.get("S01_BACK", "2.0")) + left * float(os.environ.get("S01_LEFT", "2.0")) \
-        - up * float(os.environ.get("S01_LOW", "1.8"))
-    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.03")))
-    c1 = c0.lerp(wrist, 0.10)
-    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "17")))
+    khead = s3d.kai_point(k, "eyes")
+    c0 = w0 + fwd * float(os.environ.get("S01_BACK", "3.8")) - L * float(os.environ.get("S01_SIDE", "1.5")) \
+        + up * float(os.environ.get("S01_H", "5.4"))
+    t0 = wrist.lerp(khead, float(os.environ.get("S01_AIM", "0.55"))) - up * float(os.environ.get("S01_DROP", "0.6"))
+    c1 = c0.lerp(t0, 0.06)
+    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "32")))
 
     # the mark's light and its 2D anchors
     ld = bpy.data.lights.new("s01_mark_light", "POINT")
@@ -296,7 +308,7 @@ def s01():
                         w_eye_l=H9._px(cam, s3d.kai_point(w, "eye_l")), w_eye_r=H9._px(cam, s3d.kai_point(w, "eye_r")))
     os.makedirs(BUILD, exist_ok=True)
     with open(os.path.join(BUILD, "S01_mark.json"), "w") as fh:
-        json.dump(dict(meta=dict(f_so=f_so, f_fear=1), frames=marks), fh)
+        json.dump(dict(meta=dict(f_so=f_so, f_fear=1, wren_eyes=False), frames=marks), fh)
     sc.frame_set(1)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]],
                 beats=dict(so=f_so, hop=(f_hop0, f_hop1)))
@@ -332,7 +344,7 @@ def s11():
     def P(sx, sz, depth=0.0):                                        # screen-right / up in the side view
         return origin + Vector((depth, -sx, sz))
 
-    light = P(2.4, 7.6)
+    light = P(2.4, 9.0)
     bpy.ops.mesh.primitive_uv_sphere_add(radius=0.42, location=light, segments=32, ring_count=16)
     orb = bpy.context.object
     orb.name = "s11_orb"
@@ -349,8 +361,8 @@ def s11():
     fm.flap(m)
     # its path: level flight to screen right; from "They" its back tilts to the light (amount 0 -> 1 by "backs"+6)
     # and the tilt turns it: the heading swings round the light (an orbit starting)
-    pos = P(-5.5, 2.4)
-    speed = 0.17
+    pos = P(-5.0, 2.4)
+    speed = 0.15
     heading = Vector((0, -1, 0))                                     # screen right
     prev = None
     track = {}

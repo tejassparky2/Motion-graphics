@@ -168,7 +168,63 @@ def _puff(cr, x, y, age, size, seed):
         _glow(cr, bx, by, r * 1.8, DUST, 0.18 * fade)
 
 
-def _s14(cr, f, land, plops):
+def _roll_arc(cr, x, y, r, u, spin, alpha):
+    """A curved motion line round a rolling moth: a tapered white arc sweeping the way it rolls (u 0..1 through the
+    roll), with a small arrow-like head."""
+    cairo = _cairo()
+    a0 = -math.pi * 0.9 + spin * math.pi * 0.6 * u
+    span = math.pi * 1.15
+    R = r * 1.55
+    for k in range(10):
+        t0 = a0 + spin * span * k / 10
+        t1 = a0 + spin * span * (k + 1) / 10
+        cr.new_path()
+        cr.arc(x, y, R, min(t0, t1), max(t0, t1))
+        cr.set_line_width(1.5 + 4.5 * k / 9)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.set_source_rgba(1, 1, 1, alpha * (0.2 + 0.8 * k / 9))
+        cr.stroke()
+    te = a0 + spin * span
+    hx, hy = x + R * math.cos(te), y + R * math.sin(te)
+    tx, ty = -math.sin(te) * spin, math.cos(te) * spin              # the arc's direction at its end
+    cr.new_path()
+    cr.move_to(hx + tx * 11, hy + ty * 11)
+    cr.line_to(hx - tx * 3 + math.cos(te) * 7, hy - ty * 3 + math.sin(te) * 7)
+    cr.line_to(hx - tx * 3 - math.cos(te) * 7, hy - ty * 3 - math.sin(te) * 7)
+    cr.close_path()
+    cr.set_source_rgba(1, 1, 1, alpha)
+    cr.fill()
+
+
+def _wobble_ticks(cr, x, y, r, f, alpha):
+    """The stall: three short shock ticks over its head, jittering on 2s (a "!" beat, no text)."""
+    cairo = _cairo()
+    j = 3 if (f // 2) % 2 else -3
+    for k, ang in enumerate((-0.5, 0.0, 0.5)):
+        a = -math.pi / 2 + ang
+        x0, y0 = x + j + math.cos(a) * r * 1.25, y + math.sin(a) * r * 1.25
+        x1, y1 = x + j + math.cos(a) * r * 1.75, y + math.sin(a) * r * 1.75
+        cr.new_path()
+        cr.move_to(x0, y0)
+        cr.line_to(x1, y1)
+        cr.set_line_width(4.0)
+        cr.set_line_cap(cairo.LINE_CAP_ROUND)
+        cr.set_source_rgba(1, 1, 1, alpha)
+        cr.stroke()
+
+
+def _s14(cr, f, land, plops, heroes=None):
+    for i, h in (heroes or {}).items():
+        g = h["px"].get(str(f - f % 2)) or h["px"].get(str(f))
+        if g is None:
+            continue
+        x, y, r = g
+        r = max(10.0, r)
+        if h["roll"] <= f < h["roll"] + 8:                        # the roll (and a beat after)
+            u = (f - h["roll"]) / 8.0
+            _roll_arc(cr, x, y, r, u, 1 if int(i) % 2 else -1, 0.85 * (1 - 0.5 * u))
+        elif h["stall"] <= f < h["drop"] + 2:
+            _wobble_ticks(cr, x, y, r, f, 0.9)
     for d in land:
         age = f - d["frame"]
         age -= age % 2                                            # on 2s
@@ -186,9 +242,11 @@ def _drawer(shot):
             A = {int(k): v for k, v in json.load(fh)["frames"].items()}
         return lambda cr, f: _s12(cr, min(max(1, f), max(A)), A)
     if shot == "S14":
-        with open(os.path.join(BUILD, "S14_landings.json")) as fh:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "S14_landings.json")) as fh:
             d = json.load(fh)
-        return lambda cr, f: _s14(cr, f, d["landings"], set(d["plops"]))
+        hp = os.path.join(BUILD, "S14_heroes.json")
+        heroes = json.load(open(hp)) if os.path.exists(hp) else {}
+        return lambda cr, f: _s14(cr, f, d["landings"], set(d.get("heroes", d["plops"])), heroes)
     return None
 
 

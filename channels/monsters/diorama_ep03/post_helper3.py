@@ -24,6 +24,8 @@ import shutil
 import subprocess
 import sys
 
+import numpy as np
+
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 sys.path.insert(0, ROOT)
 
@@ -37,6 +39,10 @@ SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama_ep03", "shots")
 PARTS = os.path.join(ROOT, "out", "monsters", "diorama_ep03", "parts")
 CLEAN = P9.CLEAN
 ECHO = 9                                   # frames for the echo to rise from the mark to the crack
+SKY_KEY = (183, 219, 244)                  # the flat colour the compositor's haze makes of the 3D sky (RGB)
+# the evening sky by elevation (deg): peach low, rose, lilac, deeper blue up top (S04's sunset is the next line)
+SKY_STOPS = ((0, (255, 192, 142)), (7, (250, 168, 128)), (18, (226, 158, 166)), (32, (160, 146, 200)),
+             (52, (92, 112, 192)), (80, (54, 74, 152)))
 
 
 def anchors(shot, still=False):
@@ -107,6 +113,86 @@ def s02(cr, f, meta, A, k):
 DRAW = {"S02": s02}
 
 
+def _sky_rows(els, h, k):
+    """The evening gradient's colour per screen row, from the rows of elevations 0, 10, ... 90 (None = off-screen)."""
+    pts = [(y * k, e * 10) for e, y in enumerate(els) if y is not None]
+    rows = np.arange(h, dtype=np.float32)
+    if len(pts) < 2:
+        el = np.full(h, 30.0, np.float32)
+    else:
+        ys = np.array([p[0] for p in pts], np.float32)
+        es = np.array([p[1] for p in pts], np.float32)
+        order = np.argsort(ys)
+        ys, es = ys[order], es[order]
+        el = np.interp(rows, ys, es)                                 # flat beyond the last marker...
+        slope = (es[-1] - es[0]) / (ys[-1] - ys[0])                  # ...so extend linearly instead
+        el = np.where(rows < ys[0], es[0] + (rows - ys[0]) * slope, el)
+        el = np.where(rows > ys[-1], es[-1] + (rows - ys[-1]) * slope, el)
+    el = np.clip(el, 0, 90)
+    se = np.array([e for e, _ in SKY_STOPS], np.float32)
+    out = np.stack([np.interp(el, se, np.array([c[i] for _, c in SKY_STOPS], np.float32)) for i in range(3)], 1)
+    return out
+
+
+def _clouds(surf, clouds, k):
+    """Wispy, flat-bottomed clouds catching the low warm light: lilac tops, peach undersides, soft edges."""
+    cr = cairo.Context(surf)
+    for i, (x, y, wd) in enumerate(clouds):
+        x, y, wd = x * k, y * k, max(20.0 * k, wd * k)
+        rnd = np.random.default_rng(i + 7)
+        for j in range(6):
+            dx = (j - 2.5) / 2.5 * wd * 0.42 + rnd.uniform(-0.05, 0.05) * wd
+            rw, rh = wd * rnd.uniform(0.26, 0.4), wd * rnd.uniform(0.08, 0.13)
+            for (oy, col, a) in ((-rh * 0.35, (0.84, 0.74, 0.88), 0.30), (rh * 0.25, (1.0, 0.8, 0.66), 0.42)):
+                cr.save()
+                cr.translate(x + dx, y + oy)
+                cr.scale(rw, rh)
+                g = cairo.RadialGradient(0, 0, 0, 0, 0, 1)
+                g.add_color_stop_rgba(0, *col, a)
+                g.add_color_stop_rgba(0.6, *col, a * 0.6)
+                g.add_color_stop_rgba(1, *col, 0)
+                cr.set_source(g)
+                cr.arc(0, 0, 1, 0, 2 * math.pi)
+                cr.fill()
+                cr.restore()
+
+
+def late_afternoon(rgb):
+    """The coordinator's grade, flowing into helper 9's S04 sunset: greens ~25% less saturated, the level ~10% down,
+    the highlights warmed toward peach."""
+    lum = rgb @ np.array([0.299, 0.587, 0.114], np.float32)
+    g_dom = np.clip((rgb[..., 1] - np.maximum(rgb[..., 0], rgb[..., 2])) / 50.0, 0, 1)[..., None]
+    rgb = rgb + 0.25 * g_dom * (lum[..., None] - rgb)
+    rgb = rgb * 0.9
+    hi = (np.clip((lum - 120.0) / 135.0, 0, 1) ** 1.5)[..., None]
+    return rgb + hi * np.array([16.0, 5.0, -12.0], np.float32)
+
+
+def evening(surf, sky, k):
+    """Key out the flat 3D sky and paint the evening sky behind everything (a soft key, so blurred treetops blend);
+    then the late-afternoon grade over the whole frame."""
+    surf.flush()
+    h, w = surf.get_height(), surf.get_width()
+    arr = np.ndarray((h, w, 4), np.uint8, buffer=surf.get_data(), strides=(surf.get_stride(), 4, 1))
+    rgb = arr[..., 2::-1].astype(np.float32)                         # cairo is BGRA in memory
+    if sky:
+        d = np.abs(rgb - np.array(SKY_KEY, np.float32)).sum(axis=2)
+        a = np.clip(1.0 - (d - 8.0) / 42.0, 0, 1)[..., None]
+        if a.max() > 0:
+            paint = np.repeat(_sky_rows(sky["el"], h, k)[:, None, :], w, axis=1)
+            cl = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+            _clouds(cl, sky.get("clouds", []), k)
+            cl.flush()
+            ca = np.ndarray((h, w, 4), np.uint8, buffer=cl.get_data(), strides=(cl.get_stride(), 4, 1))
+            cal = ca[..., 3:4].astype(np.float32) / 255.0
+            crgb = ca[..., 2::-1].astype(np.float32)                 # premultiplied
+            paint = paint * (1 - cal) + crgb
+            rgb = rgb + a * (paint - np.array(SKY_KEY, np.float32))
+    rgb = late_afternoon(rgb)
+    arr[..., 2::-1] = np.clip(rgb, 0, 255).astype(np.uint8)
+    surf.mark_dirty()
+
+
 def frame(shot, f, src, dst, meta, A):
     surf = cairo.ImageSurface.create_from_png(src)
     if surf.get_format() != cairo.FORMAT_ARGB32:
@@ -115,6 +201,8 @@ def frame(shot, f, src, dst, meta, A):
         c2.set_source_surface(surf)
         c2.paint()
         surf = s2
+    if shot == "S02":
+        evening(surf, A[f].get("sky"), surf.get_width() / 720)
     cr = cairo.Context(surf)
     DRAW[shot](cr, f, meta, A, surf.get_width() / 720)
     surf.flush()
