@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~14:10 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~14:25 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -68,6 +68,7 @@
 | S02 | helper 3 (98eacbe3, 79 f) | done (two halves) | 905 for Wren's "Marked." (under her face, over the bell) and "The sky cracked" (over the treetops). From 1.80 s ("the night you fell.") the top, y 150: after the cut to Kai looking up, the band crossed his face and the shrimp. At the top it's above the crack and his raised hand, and only touches the crack's tip in the crack shot's last 3 frames. |
 | S03 | helper 1 (f71ec920, 67 f) | done (two halves) | 905: on the empty path below Kai, clear of his face and the villagers |
 | S06 | helper 6 (63 f) | done | 905: under the close-up moth's face and the mushrooms; it only brushes a few small far moths in the pour |
+| S10 | helper 6 + helper 2 (797624e1, 79 f) | done (two halves) | 905: over the swarm below Kai, clear of him and the glowing wrist |
 | S11 | helper 4 (1532847e, 92 f) | done | 905: under the moth and the light, clear of its face and the glow line |
 | S12 | helper 10 (7ac5713b, 79 f) | done | 905: under the orbit, clear of the moth and the light |
 | S13 | bGqrs (9fdf70df, 57 f) | done (two halves) | 905: on the grass below Kai, clear of his face, the wrist glow and the swarm |

@@ -19,7 +19,7 @@ import random
 import sys
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 from channels.monsters.mk import night as NG
 
@@ -217,8 +217,8 @@ def s05():
 
 
 # ------------------------------------------------------------------------------------------------------------ S18
-S18_AZ = float(os.environ.get("H9_S18_AZ", 247.5))
-S18_D = float(os.environ.get("H9_S18_D", 9.6))
+S18_AZ = float(os.environ.get("H9_S18_AZ", 160.0))
+S18_D = float(os.environ.get("H9_S18_D", 11.0))
 S18_EL = float(os.environ.get("H9_S18_EL", 8.0))
 
 
@@ -251,19 +251,38 @@ def s18():
     to_kai = (M_inv @ ((XP.KAI_SIT + Vector((0, 0, 7.0))) - (XP.WREN_KNEEL + Vector((0, 0, 6.0))))).normalized()
     to_lh = (M_inv @ (lh["top"] - (XP.WREN_KNEEL + Vector((0, 0, 6.0))))).normalized()
     words_, t0 = XP._line_words("S18")
-    for f in range(1, n + 1, 2):
-        P.reset()
-        wren.kneel(P, front="L", depth=1.0)
-        lean = _smooth((f - f_lean0) / (f_lean1 - f_lean0)) * (1 - _smooth((f - f_point0) / 6))
-        pt = _smooth((f - f_point0) / (f_point1 - f_point0))
-        if pt > 0.01:
-            wren.point(P, to_lh, pt)
-        if lean > 0.01:
-            wren.whisper(P, lean, toward=to_kai)
-        P.rot("chest", (0.8 * math.sin(f / 8.0), 0, 0))
-        if f_point1 <= f < f_point1 + 6:                                       # a small overshoot on the point
-            P.rot("chest", (0, 0, 3.0 * math.sin(math.pi * (f - f_point1) / 6)))
-        P.key(f)
+
+    def key_wren(aim):
+        for f in range(1, n + 1, 2):
+            P.reset()
+            wren.kneel(P, front="L", depth=1.0)
+            lean = _smooth((f - f_lean0) / (f_lean1 - f_lean0)) * (1 - _smooth((f - f_point0) / 6))
+            pt = _smooth((f - f_point0) / (f_point1 - f_point0))
+            if pt > 0.01:
+                wren.point(P, aim, pt)
+            if lean > 0.01:
+                wren.whisper(P, lean, toward=to_kai)
+            P.rot("chest", (0.8 * math.sin(f / 8.0), 0, 0))
+            if f_point1 <= f < f_point1 + 6:                                   # a small overshoot on the point
+                P.rot("chest", (0, 0, 3.0 * math.sin(math.pi * (f - f_point1) / 6)))
+            P.key(f)
+
+    # wren.point's chest turn swings the arm off the aim (~38 deg here): measure the hand's heading once the point
+    # has settled and pre-turn the aim by the error (twice), so her finger really lines up with the lamp room
+    aim = to_lh.copy()
+    want = lh["top"]
+    for _ in range(2):
+        key_wren(aim)
+        sc.frame_set(f_point1 + 8)
+        hb = w["arm"].pose.bones["hand.L"]
+        h, t = w["arm"].matrix_world @ hb.head, w["arm"].matrix_world @ hb.tail
+        got, des = (t - h), (want - h)
+        err = math.atan2(des.y, des.x) - math.atan2(got.y, got.x)
+        err = (err + math.pi) % (2 * math.pi) - math.pi
+        aim = (Matrix.Rotation(err, 3, "Z") @ aim).normalized()
+        print("S18 point heading error", round(math.degrees(err), 1))
+    key_wren(aim)
+    sc.frame_set(1)
     wren.grip(w, 1)
     wren.face(w, "whisper", 1)
     wren.face(w, "worried", f_point0 + 2)
@@ -277,8 +296,8 @@ def s18():
     mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
     for f in range(1, f_cut):
         u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, S18_D - 1.0 * u, S18_EL, S18_AZ)              # from the ENE: her point to the lighthouse
-                                                                            # crosses the frame (screen left), clear of him
+        loc, rot = H2._orbit(mid, S18_D - 1.0 * u, S18_EL, S18_AZ)  # from the NNW over his shoulder: she faces us,
+                                                                            # the lighthouse small on the far shore behind her
         H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)
