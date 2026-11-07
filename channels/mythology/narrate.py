@@ -120,7 +120,7 @@ def _parler_batch(jobs, cfg):
 
 def _raw_path(text, cfg):
     """Raw engine output, keyed only by what changes the generated voice (not by pace or the studio chain)."""
-    gen = {k: v for k, v in cfg.items() if k not in ("studio", "pace_wps", "pitch_expand", "tempo")}
+    gen = {k: v for k, v in cfg.items() if k not in ("studio", "pace_wps", "pitch_expand", "tempo", "gap", "qgap")}
     return os.path.join(CACHE, f"raw_{_hash(text, gen)}.wav")
 
 
@@ -248,8 +248,109 @@ def _f5(text, cfg):
     return open(raw, "rb").read(), None
 
 
-BATCH = {"parler": _parler_batch, "f5": _f5_batch}
-ENGINES = {"edge": _edge, "sarvam": _sarvam, "eleven": _eleven, "parler": _parler, "f5": _f5}
+OMNI_PY = os.path.join(os.path.dirname(ROOT), "tools", ".venv-omni", "Scripts", "python.exe")
+
+
+def _omni_batch(jobs, cfg):
+    """Voice [(text, wav_path), ...] with OmniVoice (k2-fsa, Apache-2.0) in one run of omni_say.py, from the cloned
+    reference (cfg ref_audio / ref_text). Owner, 7 Nov 2026: "Style 2" (OmniVoice, Hemanth's voice, flowing)."""
+    spec = {"ref_audio": cfg["ref_audio"], "ref_text": cfg["ref_text"], "num_step": cfg.get("num_step", 32),
+            "speed": cfg.get("speed", 1.0), "jobs": [{"text": t, "out": o} for t, o in jobs]}
+    subprocess.run([OMNI_PY, "-I", "-X", "utf8", "-W", "ignore", os.path.join(HERE, "omni_say.py")],
+                   input=json.dumps(spec, ensure_ascii=False).encode("utf-8"), check=True)
+
+
+def _omni(text, cfg):
+    raw = _raw_path(text, cfg)
+    if not os.path.exists(raw):
+        _omni_batch([(text, raw)], cfg)
+    return open(raw, "rb").read(), None
+
+
+BATCH = {"parler": _parler_batch, "f5": _f5_batch, "omni": _omni_batch}
+ENGINES = {"edge": _edge, "sarvam": _sarvam, "eleven": _eleven, "parler": _parler, "f5": _f5, "omni": _omni}
+
+
+def _letters(s):
+    return max(1, sum(1 for c in s if c.isalnum()))
+
+
+def split_take(a, sr, texts, min_pause=0.08):
+    """Cut one take that reads several lines in a row back into one piece per line (owner, 7 Nov 2026: "copy same
+    style continuity narration": lines read in one go keep the voice flowing from sentence to sentence). Each cut
+    goes in the middle of a pause near where that line should end by its share of the letters; longer pauses near
+    the expected point win. Returns a list of arrays, or None when the take has too few pauses to cut safely."""
+    if len(texts) == 1:
+        return [a]
+    hop = int(0.01 * sr)
+    env = np.array([np.sqrt(np.mean(a[i:i + hop] ** 2)) for i in range(0, len(a) - hop, hop)])
+    quiet = env < max(1e-4, env.max() * 0.03)
+    loud = np.flatnonzero(~quiet)
+    s0, s1 = loud[0], loud[-1]
+    runs, i = [], s0
+    while i < s1:
+        if quiet[i]:
+            j = i
+            while j < s1 and quiet[j]:
+                j += 1
+            if (j - i) * 0.01 >= min_pause:
+                runs.append(((i + j) / 2, (j - i) * 0.01))
+            i = j
+        else:
+            i += 1
+    if len(runs) < len(texts) - 1:
+        return None
+    total = sum(_letters(t) for t in texts)
+    cum, cuts, used = 0, [], -1
+    longest = max(r[1] for r in runs)
+    for k, t in enumerate(texts[:-1]):
+        cum += _letters(t)
+        want = s0 + (s1 - s0) * cum / total
+        left = len(texts) - 2 - k                     # cuts still needed after this one
+        cand = [(r[1] / longest - abs(r[0] - want) / (0.12 * (s1 - s0)), n) for n, r in enumerate(runs)
+                if n > used and n < len(runs) - left]
+        if not cand:
+            return None
+        used = max(cand)[1]
+        cuts.append(int(runs[used][0] * hop))
+    edges = [0] + cuts + [len(a)]
+    return [a[edges[n]:edges[n + 1]] for n in range(len(texts))]
+
+
+def _groups(script, size, max_letters=260):
+    """Lines read together in one take: up to `size` lines, closed early after a line with its own pause (a reveal)."""
+    out, cur = [], []
+    for line in script:
+        cur.append(line["text"])
+        if len(cur) >= size or "gap" in line or sum(_letters(t) for t in cur) > max_letters:
+            out.append(cur)
+            cur = []
+    if cur:
+        out.append(cur)
+    return out
+
+
+def _prefetch_groups(script, cfg):
+    """Voice uncached lines group by group and split each take into its lines' raw files."""
+    import soundfile as sf
+    todo = [g for g in _groups(script, cfg["group"]) if any(not os.path.exists(_raw_path(t, cfg)) and
+                                                             not os.path.exists(os.path.join(CACHE, f"{_hash(t, cfg)}.wav"))
+                                                             for t in g)]
+    jobs = [(" ".join(g), os.path.join(CACHE, f"group_{_hash(' '.join(g), cfg)}.wav")) for g in todo]
+    jobs = [j for j in jobs if not os.path.exists(j[1])]
+    if jobs:
+        BATCH[cfg["engine"]](jobs, cfg)
+    single = []
+    for g in todo:
+        a, sr = sf.read(os.path.join(CACHE, f"group_{_hash(' '.join(g), cfg)}.wav"), dtype="float32")
+        parts = split_take(a, sr, g)
+        if parts is None:                             # too few pauses: voice these lines one by one
+            single += [(t, _raw_path(t, cfg)) for t in g]
+            continue
+        for t, p in zip(g, parts):
+            sf.write(_raw_path(t, cfg), p, sr)
+    if single:
+        BATCH[cfg["engine"]](single, cfg)
 
 
 def _hash(text, cfg):
@@ -261,6 +362,9 @@ def prefetch(script, cfg):
     if cfg["engine"] not in BATCH:
         return
     os.makedirs(CACHE, exist_ok=True)
+    if cfg.get("group", 1) > 1:
+        _prefetch_groups(script, cfg)
+        return
     jobs = [(l["text"], _raw_path(l["text"], cfg)) for l in script
             if not os.path.exists(os.path.join(CACHE, f"{_hash(l['text'], cfg)}.wav"))
             and not os.path.exists(_raw_path(l["text"], cfg))]
@@ -336,7 +440,8 @@ class Timeline:
             self.by_id[b.id] = b
             self._clips.append((t, a))
             last = i == len(script) - 1
-            t = b.end + (tail if last else line.get("gap", QGAP if line["text"].rstrip().endswith("?") else GAP))
+            q = line["text"].rstrip().endswith("?")       # a voice may bring its own pauses (cfg gap / qgap)
+            t = b.end + (tail if last else line.get("gap", cfg.get("qgap", QGAP) if q else cfg.get("gap", GAP)))
         self.total = t
 
     def __getitem__(self, k):

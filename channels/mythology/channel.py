@@ -20,7 +20,11 @@ KN_REF_TEXT = ("ಯೋಚಿಸಿ, ಸಾವಿರಾರು ವರ್ಷಗಳ�
                "ಆದರೆ ಅದರ ಒಂದು ಭಾಗ, ಹೆಚ್ಚಿನವರಿಗೆ ಗೊತ್ತೇ ಇಲ್ಲ.")
 # Owner's pick, 7 Nov 2026 ("A"): designed voice A, Indic Parler's speaker Aman reading Kannada with the Hindi
 # narrator's own description, seed 11 (kn_voice_design.py), as the IndicF5 prompt. Was Suresh s42 on 6 Nov.
-KN_VOICE = os.environ.get("MYTH_KN_VOICE", "design_aman_orig_s11")    # file stem in _KN_VOICES
+# Owner, 7 Nov 2026: "Style 2": OmniVoice speaking in Hemanth's cloned voice (consented), lines read in groups of three
+# with his own short pauses ("copy same style continuity narration"). Voice A (design_aman_orig_s11, IndicF5) stays
+# available with MYTH_KN_VOICE=design_aman_orig_s11 MYTH_KN_ENGINE=f5.
+KN_VOICE = os.environ.get("MYTH_KN_VOICE", "hemanth_v1")    # file stem in _KN_VOICES
+KN_ENGINE = os.environ.get("MYTH_KN_ENGINE", "omni")
 # consented clones: the owner, the owner's brother, and (7 Nov 2026, "Clone this voice it's my friend's and he
 # agrees") the owner's friend Darshan; his reference keeps his own delivery ("Copy the same narration style")
 # and (7 Nov 2026, "Try cloning this" / "Yes hemanth said yes") the owner's friend Hemanth
@@ -39,12 +43,13 @@ NARRATORS = {
     "hi": dict(engine="f5", studio="v3", tempo=1.05,
                ref_audio=os.path.join(_HI_VOICES, "named_aman_s3_ref.wav"),
                ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।"),
-    "kn": dict(engine="f5", studio="v3", tempo=1.0,
-               ref_audio=os.path.join(_KN_VOICES, f"{KN_VOICE}.wav"), ref_text=KN_REF_TEXT),
+    "kn": dict(engine=KN_ENGINE, studio="v3", tempo=1.0,
+               ref_audio=os.path.join(_KN_VOICES, f"{KN_VOICE}.wav"), ref_text=KN_REF_TEXT,
+               **(dict(group=3, gap=0.20, qgap=0.28) if KN_ENGINE == "omni" else {})),
 }
 VOICE_REFS = {k: v["ref_audio"] for k, v in NARRATORS.items()}
 NARRATOR_LABEL = ("synthetic narrators: Indic Parler-TTS named speakers (Apache-2.0; datasets CC BY 4.0) as voice "
-                  "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain" +
+                  "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain" + ("; Kannada spoken by OmniVoice (k2-fsa, Apache-2.0)" if KN_ENGINE == "omni" else "") +
                   (f"; Kannada: a consented clone of a real voice ({KN_VOICE})"
                    if KN_VOICE in CLONED else "; nobody is cloned"))   # records only
 MUSIC = "tanpura"   # calm drone for story narration (motion/audio.py tanpura), ~18 dB under the voice

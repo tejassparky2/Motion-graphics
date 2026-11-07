@@ -9,7 +9,7 @@ import importlib.util, json, os, re, shutil, subprocess, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [HERE, os.path.dirname(os.path.dirname(HERE))]
-from channel import OUT_ROOT, ROOT  # noqa: E402
+from channel import CLONED, KN_VOICE, OUT_ROOT, ROOT  # noqa: E402
 
 PY = sys.executable
 PHONE = os.path.join(ROOT, "channel_tools", "phone_copy.py")
@@ -81,8 +81,10 @@ def pack(mod, name, lang, n, folder, dur, files):
         "Title:", "```", m["yt_title"], "```",
         "Description:", "```", f"{m['yt_description'].strip()}\n\n{second}\n\n{tags}", "```",
         "Tags:", "```", yt_tags, "```",
-        "Settings: Made for kids: No. Category: Entertainment. Altered or synthetic content: No (this is clearly "
-        "animated, so YouTube does not ask for it).", "",
+        "Settings: Made for kids: No. Category: Entertainment. Altered or synthetic content: " +
+        ("Yes (the narration is a real person's voice, cloned with his consent: YouTube asks creators to say so; on "
+         "Instagram, turn on the AI label)." if lang == "kn" and KN_VOICE in CLONED else
+         "No (this is clearly animated, so YouTube does not ask for it)."), "",
         "## First hour",
         "- Reply to the first comments with a question back (" + ("\"Nimge yaava bhaaga tumba shock anistu?\"" if lang == "kn"
                                                                  else "\"Tumhe kaunsa part sabse ajeeb laga?\"") + ").",

@@ -130,6 +130,13 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   so the voice carries from sentence to sentence. On Kakudmi's first six lines both tools land on his pattern:
   median pause 0.24 s, pitch movement 93-95, likeness 0.92, turbo errors 6-11%; 32 s (IndicF5) / 35 s (OmniVoice)
   against voice A's 31 s. Line ends inside a multi-line take must be found again (pauses) for the visual cues.
+- **Owner's pick, 7 Nov 2026: "Style 2"** = OmniVoice + Hemanth's clone + flowing narration. channel.py: Kannada
+  `engine="omni"`, `group=3` (narrate reads up to three lines in one take, cut back into lines at the pauses nearest
+  each line's share of the letters, `split_take`; a line with its own `gap` closes a group), `gap=0.20`, `qgap=0.28`.
+  Kannada runs longer at his calm pace (Ravana: 2:10 against Hindi 1:46). A cloned voice makes finish.py's upload
+  sheet tick YouTube's "altered or synthetic content" (Yes) and Instagram's AI label. Whisper turbo often loops on a
+  line that ends right on its last word (it repeats that word): the CER blows up but the words are right; check the
+  text it heard before re-taking.
 - **OmniVoice** (k2-fsa, Apache-2.0, 2026; owner: "And try omni voice because it is latest", taken as the download
   approval for it alone): `tools/.venv-omni` (torch 2.14.1+cu126, omnivoice 0.2.1; model k2-fsa/OmniVoice, 3.1 GB in
   the Hugging Face cache), runner `omni_say.py` (JSON job on stdin, like f5_say.py). fp16 on the 4 GB GPU used
