@@ -7,9 +7,12 @@
         below: the light is now clearly BELOW the moths. A determined face, eyes on the swarm; the shrimp ducks flat on
         his left shoulder, then peeks up. A slow push-in on 1s, the characters on 2s.
 
-Night look: helper 9's night grade when it lands (diorama_ep03/helper9.py), a stand-in until then. The swarm: helper
-6's mk/fluffmoth.swarm() when it lands, stand-in fluffmoths until then. The 2D pass (the coral zigzag on his wrist,
-helper 9's post_helper9.mark, and its glow up through the grass) reads build/monsters/diorama_ep03/S13_mark.json.
+Night look and the key light: helper 9's N9.night(n) and N9.mark(k) (a stand-in grade and light without them). The
+swarm: helper 6's mk/fluffmoth.swarm() (linked copies), its shared meshes decimated for this shot. The 2D pass
+(diorama_ep03/post_bgqrs.py: the coral zigzag on his wrist, helper 9's post_helper9.mark, and its glow, beam and rays up
+through the grass into the swarm) reads build/monsters/diorama_ep03/S13_mark.json. S14-S17 import S13's staging as plain
+names (KAI_LIE, HEAD_DIR, WRIST, MARK, SWARM_*, LEFT_SIDE/RIGHT_SIDE) and functions (lie_spec, swarm_layout, swarm_at,
+camera_poses, camera_at).
 
     blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S13 OUT_DIR [--frames A-B] [--still N --scale 0.5]
 """
@@ -50,14 +53,14 @@ SWARM_SCALE = 0.42                       # (helper 6's test uses 0.4)
 # these; measured on S13's final pose with S13_AT = (12, -140), so they move with S13_AT)
 _OFF = S13_AT - Vector((12.0, -140.0, 0.0))
 HEAD_DIR = Vector((-1.0, 0.0, 0.0))                 # where his head points as he lies: west (compass S13_HEAD = 90)
-KAI_LIE = Vector((9.0, -140.0, 0.0)) + _OFF         # his hips on the grass (S13_AT + 3 x HEAD_DIR)
+KAI_LIE = Vector((9.0, -140.0, 0.65)) + _OFF        # his hips on the grass (S13_AT + 3 x HEAD_DIR)
 KAI_HEAD = Vector((5.9, -140.0, 0.9)) + _OFF        # his head
 KAI_FEET = Vector((12.3, -140.2, 0.0)) + _OFF       # between his feet (the left knee is up)
 FACING = "on his back, face up to the swarm, turned a little toward his left (north)"
 LEFT_SIDE = Vector((0.0, 1.0, 0.0))                 # his left (the mark, the laid-out arm) faces NORTH, the meadow
 RIGHT_SIDE = Vector((0.0, -1.0, 0.0))               # his right faces SOUTH: the village (square at (6, -170))
-WRIST = Vector((5.88, -136.56, 0.25)) + _OFF        # the left hand on the grass, palm up
-MARK = Vector((6.06, -137.41, 0.47)) + _OFF         # the mark (H9._forearm(k, H9.MARK_U)): the light below them
+WRIST = Vector((4.76, -137.1, 0.25)) + _OFF         # the left hand on the grass up past his head, palm up
+MARK = Vector((5.3, -137.78, 0.47)) + _OFF          # the mark (H9._forearm(k, H9.MARK_U)): the light below them
 SWARM_CENTRE = MARK + Vector((0.4, -0.7, 0.0))      # the vertical the swarm circles (MARK + SWARM_SHIFT)
 SWARM_HEIGHT = (3.8, 10.0)                          # its moths' heights above the mark
 SWARM_RADIUS = 4.4                                  # its widest orbit across (east-west); x 0.38 north-south
@@ -189,8 +192,9 @@ LIE = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("neck", (0, 0.1, 1)), ("h
        ("left_foot", (-0.1, 0.4, -1)),
        ("right_upper_leg", (0.2, 0.2, -1)), ("right_lower_leg", (0.12, -0.05, -1)), ("right_foot", (0.35, 1, -0.3))]
 ARM_IN = [("left_upper_arm", (-0.45, 0.6, 0.3)), ("left_lower_arm", (0.1, 0.85, 0.4)), ("left_hand", (0.2, 0.7, 0.6))]
-ARM_OUT = [("left_upper_arm", (-0.95, -0.2, 0.22)), ("left_lower_arm", (-0.78, -0.16, 0.6)),
-           ("left_hand", (-0.62, -0.12, 0.78))]           # laid out on the grass beside his head, the hand flat
+ARM_OUT = [("left_upper_arm", (-0.74, -0.2, 0.62)), ("left_lower_arm", (-0.42, -0.16, 0.88)),
+           ("left_hand", (-0.28, -0.12, 0.96))]           # laid out on the grass up past his head (on screen the glow
+                                                          # rises beside his face, not through it), the hand flat
 
 
 def lie_spec():
@@ -531,6 +535,9 @@ def s13():
     # the wrist at rest (for the grass, the light and the swarm's centre)
     sc.frame_set(n)
     wrist_end = H9._forearm(k, 1.0)
+    print("S13 END", "hips", tuple(round(x, 2) for x in s15._world(k, "hips")), "head",
+          tuple(round(x, 2) for x in s15._world(k, "head")), "wrist", tuple(round(x, 2) for x in wrist_end),
+          "mark", tuple(round(x, 2) for x in H9._forearm(k, H9.MARK_U)), flush=True)
     _grass_at(wrist_end)
     acting.grass_round(s15._world(k, "hips"), _head_dir())
     sc.frame_set(1)
@@ -593,7 +600,7 @@ def s13():
     # face: tense, then determined (brows down, mouth set) from the drop on; eyes on the swarm
     acting.face_keys(k, 1, eye_brow_down=0.35, face_angry=0.1)
     acting.face_keys(k, beats["dip"], eye_brow_down=0.75, face_angry=0.3, mouth_short=0.35)
-    acting.face_keys(k, beats["glow"], eye_brow_down=0.65, face_angry=0.2, mouth_short=0.2, face_happy=0.12)
+    acting.face_keys(k, beats["glow"], eye_brow_down=0.6, face_angry=0.12, mouth_short=0.25)
     swarm_mid = centres[n] + Vector((0, 0, 7.5))
     acting.look_at(k, swarm_mid, 1, n, darts=True, seed=4)
     acting.blink(k, 1, n, every=(48, 80), seed=6, at=(beats["land"],))

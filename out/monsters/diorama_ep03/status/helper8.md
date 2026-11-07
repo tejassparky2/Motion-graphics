@@ -10,6 +10,7 @@
     - the output at 1080x1920 to `out/monsters/diorama_ep03/picture.mp4`.
   - **Captions:** English, word-timed, 2-4 words each, on the 71% band (905) by default. They're placed per shot on the real frames as the shots land. S19 is at y 490, in the A half above the A card (at 520 the captions touched the card's top). S14, the flip, has no words.
   - **Frame-0 hook:** THE VILLAGE / RAN FROM / MY WRIST (MY WRIST in red), shown until line 1 ends.
+    - **To redo: S01 is being re-staged (coordinator, 7 Nov ~10:52).** The new camera is low over Wren's shoulder, looking up at Kai's face and his raised wrist, with little sky. I'll re-place the hook on helper 4's next OK stills: still at the top, clear of his face and the mark. The placement below was for the old stills.
     - **Placed on helper 4's S01 OK stills (f1, f36):** in the open sky top left, centred at x 255, size 76, lines at y 200/278/355. That puts the text at about x 15-495, y 150-365.
     - Kai's head and the shrimp on his shoulder come in from the top right (x 530+), and his glowing arm crosses at y 560-650. The hook stays clear of all three, so the blazing wrist is the frame's focus.
     - Both stills with the hook: `status/helper8_s01_hook.jpg`. The assembler has a new per-version hook x for this.
