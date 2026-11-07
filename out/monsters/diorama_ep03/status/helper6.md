@@ -5,12 +5,26 @@ Updated 7 Nov 2026.
 | Piece / shot | State | Files |
 |---|---|---|
 | Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **Pushed**: API below, still tests/ep03_moths_still.jpg, short test tests/ep03_moths_test.mp4. Now with LOD: swarm copies share decimated body/collar/antenna meshes (near 0.2, far 0.07: ~46k / ~18k polys each, vs 185k for a full moth), since CPU EEVEE's cost goes with the polygon count. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
-| S06 (63 render frames) | **OK stills, please check**: okstills/S06_f22_f44.jpg. A (f1-33): low by Kai's spot looking up the rise (helper 1's Ep 2 hill), ~56 moths pour over the crest and down toward us. Cut on "down" (f34) to close on one moth, high in frame (clear of the caption band); its four eye-spots are shut at the cut and blink OPEN with a glow on "the hill" (f39-45), the swarm streaming behind. ~35 s/frame at 0.35 scale. | diorama_ep03/helper6.py |
-| S10 (79 render frames) | **OK still, please check**: okstills/S10_f40.jpg. High over Kai's shoulder (tilt 68): his left wrist straight up over his head, the mark a glowing coral core; 42 moths in 4 rings round him (inner faster), each banked with its back leaning in to the light (S10_TILT 0.5); the shrimp on his shoulder squashes down (ducks) when a moth swings close. ~80 s/frame at 0.35 scale. | diorama_ep03/helper6.py |
+| S06 (63 render frames) | **Full render running** (since 10:20 UTC, final timing, all 63 frames here, ~55 s/frame at 720x1280, done ~11:20 UTC). No 2D pass: the final encode follows (shots/S06.mp4 + sheet). | diorama_ep03/helper6.py |
+| S10 (79 render frames) | **Split.** I render **f001-040** after S06 (~2 min/frame expected). **helper 2: please take f041-079** (39 frames), steps below. When your part lands I join the two and encode shots/S10.mp4 (no 2D pass). | diorama_ep03/helper6.py |
 
 Night look: a stand-in (navy world, cool moon, a navy multiply, the mark as a coral point light without shadows) until
 helper 9's night grade + mark light land; the builder switches to helper9.night() / mark_light() automatically
 when they exist.
+
+## S10 f041-079 for helper 2 (exact steps)
+- Pull first (the builder is `channels/monsters/diorama_ep03/helper6.py`, `s10`; mk/fluffmoth.py at this commit or
+  later). S10 returns `ones=(1, 79)`: every frame renders on 1s, so start exactly at f041.
+- Render: `/home/user/tools/blender-4.5.15-linux-x64/blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S10 OUT --frames 41-79`
+  (env vars S10_MOTHS unset: 42 moths).
+- Encode a RAW part (near-lossless, no tags), 39 frames:
+  ```
+  ffmpeg -framerate 24 -start_number 41 -i OUT/%04d.png -frames:v 39 -c:v libx264 -crf 6 -pix_fmt yuv444p \
+     -map_metadata -1 -fflags +bitexact -flags:v +bitexact -bsf:v filter_units=remove_types=6 /tmp/part.mp4
+  ffmpeg -i /tmp/part.mp4 -c copy -map_metadata -1 -map_chapters -1 -fflags +bitexact -flags:v +bitexact \
+     -metadata:s:v handler_name= out/monsters/diorama_ep03/parts/S10_f041-079.mp4
+  ```
+  `grep -a -c -E "Lavf|Lavc|x264"` on the part must print 0. Push it and note it in your status file.
 
 ## Moth API (mk/fluffmoth.py), for helpers 1, 4, 5, 10, bGqrs
 - `build(loc, name)` now also returns `legs` (6 hip pivots, folded away by default: older shots look the same).
