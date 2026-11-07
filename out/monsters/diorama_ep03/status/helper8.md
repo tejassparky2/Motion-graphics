@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~12:25 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~12:45 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -17,10 +17,10 @@
     - the output at 1080x1920 to `out/monsters/diorama_ep03/picture.mp4`.
   - **Captions:** English, word-timed, 2-4 words each, on the 71% band (905) by default. They're placed per shot on the real frames as the shots land. S19 is at y 430, in the A half above the stacked cards. S14, the flip, has no words.
   - **Frame-0 hook:** THE VILLAGE / RAN FROM / MY WRIST (MY WRIST in red), shown until line 1 ends.
-    - **To redo: S01 is being re-staged (coordinator, 7 Nov ~10:52).** The new camera is low over Wren's shoulder, looking up at Kai's face and his raised wrist, with little sky. I'll re-place the hook on helper 4's next OK stills: still at the top, clear of his face and the mark. The placement below was for the old stills.
-    - **Placed on helper 4's S01 OK stills (f1, f36):** in the open sky top left, centred at x 255, size 76, lines at y 200/278/355. That puts the text at about x 15-495, y 150-365.
-    - Kai's head and the shrimp on his shoulder come in from the top right (x 530+), and his glowing arm crosses at y 560-650. The hook stays clear of all three, so the blazing wrist is the frame's focus.
-    - Both stills with the hook: `status/helper8_s01_hook.jpg`. The assembler has a new per-version hook x for this.
+    - **Re-placed on the re-staged S01 (helper 4's OK stills f1, f30, a1925681):** at the top, centred at x 345, size 84, lines at y 120/206/292.
+      - That's open sky above Kai's raised hand (fingertips at ~350), clear of his face and the blazing mark. It stays left of Wren's braid at the right edge.
+      - **S01 captions move to y 760, on his chest.** At the 71% band, "You said show her" crossed the shrimp's face in his lower hand. At 760 they're clear of his face and the shrimp, both in his hand (f1) and on his shoulder (f30).
+      - Test frames (f0, f20, f40): `status/helper8_s01_hook.jpg`.
   - **The A/B split on S19:** S19top.mp4 above, S19bot.mp4 below, with the jagged divider.
     - The cards are A · GO TONIGHT and B · LEAVE AT DAWN, at 85% size. A pops on "Option A", B on "Option B", and both pulse on "Comment".
     - LEAVE AT DAWN is 513 px wide from its centre at 85%, so B's centre has to stay at x ≤ 197.
@@ -76,5 +76,5 @@ The picture is rebuilt with every other shot slated: 1298 frames, edge scan clea
   - check its captions on the real frames, clear of faces;
   - rebuild the cut with placeholders;
   - push, and update this note.
-- Re-check the hook on the S01 final. The A card and captions get placed on helper 3's S19top still, and B on helper 5's reframed S19bot. The cover frames get picked on the final renders.
+- Re-check the hook and the S01 captions on the S01 final. The A card and captions get placed on helper 3's S19top still, and B on helper 5's reframed S19bot. The cover frames get picked on the final renders.
 - The S10 OK still (f40) is checked: the 71% captions fall on moths, not on Kai, and the swarm cover frame works, with Kai below the cover words.

@@ -1,10 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 11:31 UTC.
+Updated 7 Nov 2026, 11:45 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **Full render running** (started 11:29 UTC at 62572f2, on helper 9's FINAL night/mark @ 09d120f). Staging approved, coral cone done. f45 and f27 render first as the re-still (pushed to okstills/ with the 2D pass), then f1-57. ~2 min a frame, done around 13:30 UTC. Part 2 (f029-057) is no longer free: I'm rendering all 57. | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **Full render running** (started 11:29 UTC at 62572f2, on helper 9's FINAL night/mark @ 09d120f). Re-stills at full size on the FINAL night, with the 2D pass: `okstills/bgqrs_S13_final_f0027.jpg` and `_f0045.jpg`. Only ~55 s a frame at full size, so it should finish around 12:30 UTC; then the 2D pass and shots/S13.mp4. | shots/S13.mp4 (pending) |
 
 ### S13 staging (57 render frames; "below" at f26)
 - **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
@@ -29,8 +29,7 @@ Updated 7 Nov 2026, 11:31 UTC.
   side. To f57: a slow push-in. The glowing wrist ends at y ~780, his face just above it, his body off to the left, and
   the swarm above to the top of the frame. Gentle blur (3 px), the night haze well behind him.
 - **Night:** helper 9's `N9.night(n)` and `N9.mark(k)` (in since 10:50; the stand-in grade only applies without them).
-- **Render cost here** (on helper 9's night): ~4.5 min to build, ~45 s a frame at half size, so roughly 2 min a frame
-  at full size: 57 frames on 1s (the camera moves) is about 2 h on one container.
+- **Render cost here** (on helper 9's night): ~4.5 min to build, ~55 s a frame at full size: 57 frames ~1 h.
 
 ### S13 render parts (every frame renders on 1s, so any range works; write your name and push before starting)
 | Part | Frames | Who |

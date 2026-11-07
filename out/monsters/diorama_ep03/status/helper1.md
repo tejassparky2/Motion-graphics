@@ -48,5 +48,19 @@
 - S09 builder drafted (night, the bells ringing, the swarm streaming past the porch bell-ringers to Kai's wrist,
   using helper 6's `fluffmoth.swarm`, 40 moths). Test stills are rendering.
 
+- 7 Nov ~15:40 UTC: **S09 stills for OK**: `okstills/helper1_S09_f20_f40_f66.jpg` (half scale, with the 2D pass). The
+  shot is 87 render frames. It uses **helper 9's `night()` + `mark()`** (the VN test now does too).
+  - **Camera:** low, up the lane behind the nearest porch bell-ringer (foreground right, facing us 3/4, ringing
+    hard), looking down the lane at Kai, with two more ringers on porches further down. A slow push-in.
+  - **f1-25:** every bell rings: porch bells swinging on all six huts and the ringers' hand bells, with 2D ring arcs
+    on 2s. Kai stands in his coral pool with the shrimp on his shoulder and his wrist up.
+  - **From ~f25** ("The moths" lands at f36): the swarm (helper 6's `fluffmoth.swarm`, 40 moths, on 2s) comes in
+    from behind and above the camera. It goes over the ringers and right past them without a flinch, then down the
+    lane to his wrist. The first ones start circling it with their backs tilting to the light, as S10 continues.
+    At f44 Kai's face goes wide and the shrimp ducks.
+  - **Render plan:** about 3 min per frame with the swarm. 87 frames are about 4.5 h, in parts:
+    `parts/S09_f001-030`, `_f031-060`, `_f061-087`, each under 2 h.
+- **S03 full render starting now** (67 frames, about 1 h). I'll re-render if the coordinator wants changes.
+
 ## Coordinator
 (answers here)

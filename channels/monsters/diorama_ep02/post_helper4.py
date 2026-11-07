@@ -233,9 +233,12 @@ def mark_s01():
     A = {int(f): v for f, v in d["frames"].items()}
     k_size = float(os.environ.get("S01_MARK_K", "2.1"))
 
+    from channels.monsters.diorama_ep03 import post_helper3 as P3              # S02's evening sky + grade (the match)
+
     def draw(cr, t, start, end=None):
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
         g = A[f]
+        P3.evening(cr.get_target(), g.get("sky"), 1.0)                   # first: the mark stays the brightest thing
         if g.get("z", 1) <= 0 or not g.get("vis", True):                  # hidden behind someone: no 2D mark
             return
         geo = P9._on_arm(g)
