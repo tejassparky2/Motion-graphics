@@ -228,14 +228,18 @@ def s02():
         e = _smooth((f - fb) / max(1, fc - fb - 1))
         aim = (fwd_r + Vector((0, 0, -0.12 * (1 - e)))).normalized()   # a small tilt up as we hold
         H9._key_cam(camB, f, eye, H9._look(aim), lens_b * (1 + 0.05 * e), 400.0, blur=2.0, haze=(0.5, 1.5))
-    # C: low in front of Kai (her side, beside her), looking up past his face and raised wrist to the crack above
+    # C: due south of Kai (her side; she's hidden for it), low, looking due north and up with a wide lens: his face
+    # above the captions, the raised forearm (mark upright) beside it, the crack upright in the sky above him
     camC = H9._new_cam("S02c", fc)
-    pc = X.KAI_AT + fwd * 4.6 - left * 1.6 + up * 2.6
+    pc = k_face + Vector((0, -7.0, -3.0)) + left * 0.6
+    el_face = math.degrees(math.atan2(k_face.z - pc.z, (k_face - pc).xy.length))
     for f in range(fc, n + 1):
         e = _smooth((f - fc) / max(1, n - fc))
-        tgt = k_face + up * (3.2 + 0.6 * e)                         # tilting up a touch as the echo lands
-        loc = pc.lerp(k_face, 0.06 * e)
-        H9._key_cam(camC, f, loc, H9._look(tgt - loc), 22.0, (k_face - loc).length, blur=6.0, haze=(3.0, 4.0))
+        p_ = math.radians(el_face + 15.0 + 3.0 * e)                  # tilting up a touch as the echo lands
+        loc = pc + Vector((0, 0.35 * e, 0))                         # and a slow push
+        H9._key_cam(camC, f, loc, H9._look(Vector((0, math.cos(p_), math.sin(p_)))), 18.0, (k_face - loc).length,
+                    blur=5.0, haze=(3.0, 4.0))
+    H9._hide_from(fc, [o for o in w["arm"].users_collection[0].objects if not o.hide_render])   # (not her hidden cap)
     H9._linear(camA, camA.data, camB, camB.data, camC, camC.data, sc.world)
 
     # the mark's light: a coral point light just off his forearm on the camera's side

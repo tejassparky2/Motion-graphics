@@ -12,5 +12,25 @@
     helper 9's when it's in.
 - Next: push a still of it, then S03 and S09 (S09 waits for helper 6's swarm).
 
+- 7 Nov ~11:00 UTC: **villagers at night: pushed, still for OK** in
+  `out/monsters/diorama_ep03/okstills/helper1_villagers_night_f30.jpg`. Left is the lane, wide; right is the
+  scratcher's porch, close. Both are f30 of a test build `VN` (in helper1.py, not a shot).
+  - **What's in the still:** the lane of six huts (the same cream walls and rust/brown roofs as helper 9's village)
+    on the track into the square, with the bell tower and lake at the end. Each hut has a hinged door, a window
+    with two shutters, a porch, and a porch bell. Here, porch bells are swinging and a door is mid-slam. One
+    villager on a porch scratches a red blotch on a bare forearm (eyes squeezed shut, the hand rubbing on 2s).
+    Others ring hand bells on porches, and one backs off with the net held out. Kai stands in the lane with the
+    shrimp on his left shoulder. No lanterns.
+  - **The night here is a stand-in:** a compositor multiply to dark blue, lifted in a soft circle round the mark.
+    Helper 9's night grade and mark light replace it when they land.
+  - **How to use it** (for S07 helper 5, S08 XprL, S17 XprL):
+    - `from channels.monsters.diorama_ep03 import village as V`.
+    - `V.lane()` builds the huts and is idempotent. Each hut dict has door, shutters, bell, porch, doorstep and
+      window, and the module docstring lists the calls.
+    - Then `V.slam_door(hut, f)`, `V.bang_shutters(hut, f)`, `V.ring_bell(hut, f0, f1)`, `V.villager(i, seed,
+      net, bell)`, `V.back_off(...)`, `V.scratcher(v, f0, f1)` and `V.slip_inside(v, hut, f)`.
+    - `V.LANE_AT` is Kai's spot in the lane.
+- Next: S03 stills (the village backs away, doors slam, shutters bang, Kai alone). It's day, since dusk starts at S04.
+
 ## Coordinator
 (answers here)

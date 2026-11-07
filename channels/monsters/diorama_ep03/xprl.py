@@ -39,17 +39,23 @@ FPS = 24
 SCALE = X.SCALE
 CORAL = (1.0, 0.48, 0.36)
 MOON = (0.62, 0.72, 1.0)
-SHRIMP_K = 0.42                     # the puff-shrimp on his shoulder (helper 3's size)
+SHRIMP_K = 0.6                      # the puff-shrimp on his shoulder (helper 4's S01 / bGqrs's S13)
 MARK_W = 60.0                       # the mark light's energy (helper 9's Ep 2 'full')
-MOTH_K = 0.5                        # the dazed upside-down moths left from S14/S15
+MOTH_K = 0.42                       # the dazed upside-down moths left from S14/S15 (bGqrs's size)
 
-# --- staging (stand-ins until bGqrs's S13 names and helper 1's village.py land) --------------------------------------
-KAI_SIT = Vector((3.0, -141.0, 0.0))                 # on the track into the Ep 2 village (helper 9's VILLAGE, south)
-KAI_YAW3 = -90.0                                     # facing west: his left (+X local) points south, to the village
+# --- staging: bGqrs's S13 spot (diorama_ep03/bgqrs.py S13_AT / S13_HEAD): Kai fell back to the west, so he lies with
+# his head west; S15 sits him up facing EAST, his left (the mark) side north, the village (helper 9's Ep 2 village;
+# helper 1's lane when it lands) to the south, on his right. Wren comes up from the village and kneels on that side.
+try:
+    from channels.monsters.diorama_ep03.bgqrs import S13_AT as _AT
+except ImportError:                                  # pragma: no cover (bgqrs.py is in the repo)
+    _AT = Vector((12.0, -140.0, 0.0))
+KAI_SIT = Vector(_AT) + Vector((-4.0, 0.0, 0.0))     # his armature origin sitting (hips ~0.6 west of it)
+KAI_YAW3 = 90.0                                      # facing east; his left (+X local) points north
 TO_VILLAGE = Vector((0.0, -1.0, 0.0))
-WREN_KNEEL = KAI_SIT + Vector((0.4, -3.1, 0.0))      # at his left side, facing him (north)
+WREN_KNEEL = KAI_SIT + Vector((0.6, -3.1, 0.0))      # at his right side (the village side), facing him (north)
 WREN_YAW3 = 180.0
-WREN_S16 = KAI_SIT + Vector((0.8, -8.5, 0.0))        # S16: standing a few steps off, facing him
+WREN_S16 = KAI_SIT + Vector((0.8, -6.5, 0.0))        # S16: standing a few steps off on the village side, facing him
 
 
 # ------------------------------------------------------------------------------------------------------------ timing
@@ -103,13 +109,9 @@ def _bone_world(rig, name, tail=False):
 # ------------------------------------------------------------------------------------------------------------ world
 def _optional(name):
     """Another helper's diorama_ep03 module if it has landed, else None (only a missing module is tolerated)."""
-    full = f"channels.monsters.diorama_ep03.{name}"
-    try:
-        return importlib.import_module(full)
-    except ModuleNotFoundError as e:
-        if e.name != full:
-            raise
+    if not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"{name}.py")):
         return None
+    return importlib.import_module(f"channels.monsters.diorama_ep03.{name}")
 
 
 def _night(n):
@@ -119,12 +121,7 @@ def _night(n):
     N9 = _optional("helper9")
     if N9 is not None and hasattr(N9, "night"):
         return N9.night(n)
-    look.world(sky="#0c1533", horizon="#1b2a52", fill="#2b3f78", fill_strength=0.4)
-    for o in bpy.data.objects:
-        if o.type == "LIGHT" and o.data.type == "SUN":
-            o.data.energy = 0.55
-            o.data.color = MOON
-    return None
+    return _optional("bgqrs")._night()                 # bGqrs's stand-in (the same look as S13) until then
 
 
 def _village_backdrop():
@@ -271,7 +268,7 @@ def s16():
     wren.face(w, "softening", f_crack)
     wren.blink(w, 1, n, every=(200, 201), at=(f_crack + 10,))
     wren.contact_shadows(w)
-    _offscreen_mark(KAI_SIT + Vector((-1.2, 0.0, 2.6)), n)
+    _offscreen_mark(KAI_SIT + Vector((1.2, 0.6, 2.6)), n)
     _dazed_moths(n, [(WREN_S16.x - 2.2, WREN_S16.y + 2.0), (WREN_S16.x + 2.6, WREN_S16.y + 1.2),
                      (WREN_S16.x + 0.8, WREN_S16.y + 3.4)])
     # close (chest-up), from Kai's side (north-west of her), a slow push-in
@@ -319,11 +316,12 @@ def s17():
     wren.talk_words(w, words_, t0, first=1)
     wren.blink(w, 1, n, every=(200, 201), at=(f_back - 3, f_return + 8))
     wren.contact_shadows(w)
-    _dazed_moths(n, [(KAI_SIT.x - 3.0, KAI_SIT.y + 2.4), (KAI_SIT.x - 4.4, KAI_SIT.y - 1.6),
-                     (KAI_SIT.x + 2.4, KAI_SIT.y + 3.6), (KAI_SIT.x - 1.6, KAI_SIT.y - 5.6)])
-    # the two of them from the north-west, Wren facing camera-left, the village behind her; slow push-in
+    _dazed_moths(n, [(KAI_SIT.x + 4.0, KAI_SIT.y + 2.0), (KAI_SIT.x - 2.6, KAI_SIT.y + 3.4),
+                     (KAI_SIT.x + 5.2, KAI_SIT.y - 2.4), (KAI_SIT.x - 3.4, KAI_SIT.y - 4.2),
+                     (KAI_SIT.x + 2.4, KAI_SIT.y + 5.0)])
+    # the two of them from the north-east: Kai's front-left 3/4, Wren's face, the village behind her; slow push-in
     mid = KAI_SIT.lerp(WREN_KNEEL, 0.55) + Vector((0, 0, 4.0))
-    yaw = 125.0
+    yaw = 217.0
     _cam("S17cam", n, (mid, 15.0, 6, yaw, 38, 0.0), (mid, 13.4, 6, yaw, 38, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
