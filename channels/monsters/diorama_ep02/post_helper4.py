@@ -265,6 +265,9 @@ def mark_s01():
     return [(draw, dict(start=0.0)), (eyes, dict(start=0.0, end=(n - 1) / FPS))]
 
 
+S11_SHIFT = (70.0, 90.0)                                                    # px left, px up (the whole frame)
+
+
 def s11_pass():
     """Ep 3 S11 (the explainer): a soft bloom round the coral light all through; from "backs" a soft glow line from the
     light to the moth's back (an arrow-like taper ending in a small head at its back), drawing on over 6 frames and
@@ -318,10 +321,39 @@ def s11_pass():
             cr.set_source_rgba(0.9, 0.92, 1.0, min(1.0, a * 1.8))
             cr.fill()
 
+    def shift_frame(cr):
+        """Move the whole render S11_SHIFT px (left, up), off the Shorts right rail and out of the caption band
+        (coordinator, 7 Nov); the exposed right/bottom take the sky's own navy (sampled at the top-right corner)."""
+        dx, dy = S11_SHIFT
+        src = cr.get_target()
+        src.flush()
+        w, h = src.get_width(), src.get_height()
+        data = src.get_data()
+        stride = src.get_stride()
+        i = 2 * stride + (w - 3) * 4                                     # BGRA, premultiplied (opaque here)
+        b, g_, r = data[i] / 255.0, data[i + 1] / 255.0, data[i + 2] / 255.0
+        copy = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        c2 = cairo.Context(copy)
+        c2.set_source_surface(src, 0, 0)
+        c2.paint()
+        cr.save()
+        cr.set_source_rgb(r, g_, b)
+        cr.paint()
+        cr.set_source_surface(copy, -dx, -dy)
+        cr.paint()
+        cr.restore()
+
     def draw(cr, t, start, end=None):
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
         g = A[f]
+        shift_frame(cr)
         ground(cr)
+        cr.save()
+        cr.translate(-S11_SHIFT[0], -S11_SHIFT[1])                       # the drawn layers move with the render
+        draw_rest(cr, f, g)
+        cr.restore()
+
+    def draw_rest(cr, f, g):
         trail(cr, f)
         lx, ly = g["light"][:2]
         rr = abs(g["r_orb"][1] - ly) or 12.0
