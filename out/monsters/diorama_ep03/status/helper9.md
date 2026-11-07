@@ -32,6 +32,12 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 15:05 UTC: **S05 DELIVERED**: `shots/S05.mp4` (79 frames, 720x1280, 24 fps, no encoder strings) +
+  `shots/S05_sheet.jpg`. The z-fight streaks are gone (f1-24 re-rendered with the clip fix; the rest is the approved
+  look). **S18:** working on your note: Wren already starts in XprL's exact S17-end kneel (same spot, same bones: right
+  knee on the grass, hips 2.35; checked against S17 f60), but Kai's body hid her legs, so she read as standing. Now:
+  the camera shows the kneel, she whispers from it, rises up off the knee as she points, and the point is aimed (in
+  screen space) at the tiny lighthouse behind her. New stills, then the full render.
 - 2026-11-07 14:40 UTC: **S18 OK stills** in `okstills/`: `h9_S18_f026.png` (Wren leans in and whispers, hand cupped;
   Kai in the foreground over his shoulder, the shrimp on it, the mark glowing on his wrist), `h9_S18_f050.png` (on
   "left" she points across the dark lake; the ruined lighthouse's small coral glow sits on the far shore in the same
