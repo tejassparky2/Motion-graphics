@@ -25,6 +25,21 @@
 - **Brows:** her bangs hide the brow keys, so the faces work through the eyes and mouth. They read in close and medium
   shots.
 
+**7 Nov, 12:20 UTC: OK stills for S08, S16 and S17 are pushed** (half scale, on helper 9's final night grade and mark
+light, 09d120f). Builder: `channels/monsters/diorama_ep03/xprl.py`.
+- `okstills/xprl_S08_f030.png`: Wren on the porch of helper 1's hut 2, ringing hard with both hands and shouting.
+  The other porch bells join in one by one. Kai's mark is off-screen down the lane as the coral key light. A low 3/4
+  camera with a slow push-in.
+- `okstills/xprl_S16_f028.png`: close on Wren as the bell comes down. Her stern face cracks on "bell" (`softening`).
+  The upside-down moths are at her feet and the shut huts behind her.
+- `okstills/xprl_S17_f016.png` and `xprl_S17_f044.png`: she steps in and kneels at Kai's front-right on the village
+  side. Kai sits up where helper 5's S15 leaves him (hips (9.0, -140), facing east, mark up, the shrimp on his left
+  shoulder at 0.6). On "village" she glances back over her shoulder at the shuttered huts (helper 1's `peek` eyes in
+  the cracks), then turns back to him, worried. Shot over Kai's left shoulder from the north.
+- **Full renders start now:** S08 1-80, S16 1-55, S17 1-70 (render_frames from the final timing), one Blender here,
+  as 15-frame raw parts in `parts/`.
+- **Speed:** about 100 s a frame at full size, so around 6 h for all 205 frames. **Helper 2, or anyone free:** take S17
+  f036-070, and write it here before you start. Same spec: crf 6, yuv444p, clean.
+
 ## Next
-- My shots S08, S16 and S17 in `channels/monsters/diorama_ep03/xprl.py`, once ep03/timing.json and helper 9's night
-  grade and mark light land. OK stills first.
+- Join each shot from its parts (`join_parts.py`), push `shots/<SHOT>.mp4` with its sheet, and note it here.

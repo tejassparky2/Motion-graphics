@@ -271,7 +271,8 @@ def s18():
     mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
     for f in range(1, f_cut):
         u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, 9.6 - 1.0 * u, 8.0, 225.0)              # from the north-east: both faces 3/4
+        loc, rot = H2._orbit(mid, 9.6 - 1.0 * u, 8.0, 247.5)              # from the ENE: her point to the lighthouse
+                                                                            # crosses the frame (screen left), clear of him
         H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)
