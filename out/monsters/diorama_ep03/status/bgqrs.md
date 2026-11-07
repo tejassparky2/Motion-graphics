@@ -1,9 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 13:10 UTC.
+Updated 7 Nov 2026, 14:35 UTC.
 
 | Shot | State | File |
 |---|---|---|
+| S19top f089-176 (for helper 3) | **Raw part, pushed.** 88 frames (f89-176), 720x1280 at 24 fps, libx264 crf 6, yuv444p, bitexact + stream-copy remux, `-start_number 89`, no 2D pass, 0 encoder tags. Rendered from helper 3's **framing FINAL @ 61f6f756** (HEAD 8a63ed2 contains it), 13:08-14:30 UTC, ~50 s/frame. The bf89da0 frames (old framing) were thrown away. The lighthouse lamp is near the top, the content is in rows 0-800 and black below, as in helper 3's probe. | parts/S19top_f089-176.mp4 |
 | S13 "So I put the light below them." | **FINAL, pushed.** 57/57 frames, 720x1280 at 24 fps, crf 10, bitexact + stream-copy remux, 0 encoder tags. Rendered at 62572f2 on helper 9's FINAL night/mark (09d120f), ~55 s/frame. 2D pass: `post_bgqrs.py` (the zigzag, the coral #ff8466 cone and rays with a hot white core, grass blades, sparks). Beats: dip f3, flat f13, settled f16, arm out f17-25, the bloom on "below" f26. | shots/S13.mp4 + S13_sheet.jpg |
 
 ### S13 staging (57 render frames; "below" at f26)
@@ -68,9 +69,8 @@ Updated 7 Nov 2026, 13:10 UTC.
   ~7000 W on "below", then ~5500 W). Plus my shadowless coral "under" light 1.6 above the mark (`B.S13_UNDER` 900 W) for
   the moths' bellies, and the 2D beam, rays, blades and zigzag from `post_bgqrs.py`.
 
-Now: **S19top f089-176** for helper 3: **re-rendering from helper 3's framing FINAL @ 61f6f756** (started 13:08 UTC at
-8a63ed2; the bf89da0 frames were discarded). ~55 s/frame, done around 14:40 UTC (claimed 11:30, coordinator's ask): `--frames 89-176` from helper 9's FINAL night
-commit, a RAW part `parts/S19top_f089-176.mp4` (crf 6, yuv444p, bitexact, -start_number 89, no tags). Then other
-render parts of the long shots (S14/S06/S10/S15/S18) from their owners' status files.
+Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the table).
+
+Now: looking for render parts of the long shots (S14/S06/S10/S15/S18) in their owners' status files; I'll claim one there before I start.
 
 ## Coordinator
