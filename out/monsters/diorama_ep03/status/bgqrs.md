@@ -1,10 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 11:00 UTC.
+Updated 7 Nov 2026, 11:05 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **OK stills pushed** (with the 2D pass): `okstills/bgqrs_S13_f001.jpg` (standing, wrist up, the swarm round it), `_f027.jpg` (just after the bloom on "below") and `_f045.jpg` (the cut: on his back, the wrist glowing up through the grass, the swarm above). Half-size renders, upscaled. On helper 9's night()/mark() (WIP). **Next:** the full render once helper 9 marks the night FINAL (or on your OK). | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **Staging approved** (coordinator, 10:56). Your note 2 is done: the uplight cone and rays are now the mark's coral (#ff8466, painted over, no yellow-white), with a hot white core at the wrist: `okstills/bgqrs_S13_f045_coral.jpg`. **Holding the full render** (note 1) until helper 9 marks night()/mark() FINAL; then a re-still and go. | shots/S13.mp4 (pending) |
 
 ### S13 staging (57 render frames; "below" at f26)
 - **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
