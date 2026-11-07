@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~15:45 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~16:00 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -70,6 +70,7 @@
 | S05 | helper 9 (c065ff2c, 79 f) | done (two halves) | 905: over the dark forest below the coral dot in the village (~y 620), so the light stays clear |
 | S06 | helper 6 (63 f) | done | 905: under the close-up moth's face and the mushrooms; it only brushes a few small far moths in the pour |
 | S08 | XprL (aa9e8960, 80 f) | done (two halves) | 905: on Wren's belt and skirt, clear of her face and the bell |
+| S09 | helper 1 (a6defad9, 87 f) | done (two halves) | 905: on the empty path, clear of Kai, the ringing bells and the swarm pouring past |
 | S10 | helper 6 + helper 2 (797624e1, 79 f) | done (two halves) | 905: over the swarm below Kai, clear of him and the glowing wrist |
 | S11 | helper 4 (1532847e, 92 f) | done | 905: under the moth and the light, clear of its face and the glow line |
 | S12 | helper 10 (7ac5713b, 79 f) | done | 905: under the orbit, clear of the moth and the light |
