@@ -70,8 +70,8 @@ the commit hash here when it lands. Write your name next to a range here and pus
 | Part | Frames | Who |
 |---|---|---|
 | 1 | f001-021 | helper 10 |
-| 2 | f022-042 | (free) helper 8 can't take it: no Blender in its session, and installing Blender is blocked by its permissions (see status/helper8.md). Please reassign. |
-| 3 | f043-063 | (free) |
+| 2 | f022-042 | helper 10 (coordinator 11:22: helper 8 has no Blender) |
+| 3 | f043-063 | helper 4 (coordinator 11:26; helper 7 has no Blender) |
 | 4 | f064-084 | helper 2 (claimed 10:15 UTC, starts on the coordinator's OK) |
 
 - Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S14 OUT --frames A-B` (pull first).

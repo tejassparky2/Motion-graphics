@@ -154,7 +154,7 @@ def _peeking_eyes(hut, n, seed=0):
     and sliding a little to look."""
     rnd = random.Random(seed)
     win = bpy.data.objects[hut["root"].name + "_win"]
-    white = look.flat("x3_eye_white", look.hexc("#f4efe2"))
+    white = look.flat("x3_eye_white", look.hexc("#f4efe2"), strength=4.0)      # glows through the night grade
     ink = look.flat("x3_eye_ink", look.hexc("#140f18"))
     out = []
     for sx in (-1, 1):
@@ -184,7 +184,11 @@ def _peeking_eyes(hut, n, seed=0):
 
 
 def _mark_light(k, n, toward, energy=MARK_W, seed=5):
-    """The coral point light at Kai's left wrist (the key light at night), a slow uneven pulse."""
+    """Kai's mark, the key light at night: helper 9's N9.mark(k) (on his left forearm, calibrated for the night
+    grade) once it is in; until then a coral point light at the wrist with a slow uneven pulse."""
+    N9 = _optional("helper9")
+    if N9 is not None and hasattr(N9, "mark"):
+        return N9.mark(k)
     d = bpy.data.lights.new("x3_mark_light", "POINT")
     d.color = CORAL
     d.shadow_soft_size = 0.2
@@ -204,11 +208,16 @@ def _mark_light(k, n, toward, energy=MARK_W, seed=5):
     return lt
 
 
-def _offscreen_mark(pos, n, energy=MARK_W * 1.6):
-    """Kai's mark lighting a shot he isn't in (S08, S16): a coral point light at his wrist's spot, pulsing."""
+def _offscreen_mark(pos, n, energy=None):
+    """Kai's mark lighting a shot he isn't in (S08, S16): a coral point light at his wrist's spot, pulsing (helper
+    9's mark power and no shadows once the night grade is in: the grade warms what the coral light reaches)."""
+    N9 = _optional("helper9")
+    if energy is None:
+        energy = getattr(N9, "MARK_W", MARK_W * 1.6) if N9 is not None else MARK_W * 1.6
     d = bpy.data.lights.new("x3_mark_off", "POINT")
     d.color = CORAL
     d.shadow_soft_size = 0.3
+    d.use_shadow = N9 is None
     lt = bpy.data.objects.new("x3_mark_off", d)
     bpy.context.scene.collection.objects.link(lt)
     lt.location = pos
@@ -291,6 +300,16 @@ def _shoulder_shrimp(k, n, name="x3_shrimp"):
     return sh
 
 
+def _clear_near(cam, radius):
+    """Hide the lane's porch bells and brackets right in front of the lens (soft blobs across the frame)."""
+    bpy.context.scene.frame_set(1)
+    c = cam.matrix_world.translation
+    for o in bpy.data.objects:
+        if o.name.startswith("vhut") and any(k in o.name for k in ("_bell", "_bracket", "_clapper")):
+            if (o.matrix_world.translation - c).length < radius:
+                o.hide_render = True
+
+
 def _cam(name, n, a, b):
     """A slow camera move on 1s (X._cam_move: target, dist, tilt, yaw, lens, shift_y)."""
     return X._cam_move(name, n, a, b)
@@ -359,9 +378,9 @@ def s17():
         wren.kneel(P, front="L", depth=d)
         if f_back <= f < f_return + 4:                                            # the glance back at the village
             g = _ease((f - f_back) / 5) * (1 - _ease((f - f_return) / 4))
-            P.rot("chest", (0, 0, 18 * g))                                    # over her left shoulder (south)
-            P.rot("neck", (0, 0, 25 * g))
-            P.rot("head 1", (0, 0, 30 * g))
+            P.rot("chest", (0, 0, 10 * g))                                    # over her left shoulder (south)
+            P.rot("neck", (0, 0, 15 * g))
+            P.rot("head 1", (0, 0, 22 * g))
         else:
             P.rot("head 1", (8, 0, 0))                                            # looking down at him
         P.key(f)
@@ -378,6 +397,7 @@ def s17():
     mid = KAI_SIT.lerp(WREN_KNEEL, 0.7) + Vector((0, 0, 4.2))
     yaw = 180.0                                                               # from the north: Wren clear of his head
     _cam("S17cam", n, (mid, 14.5, 7, yaw, 40, 0.0), (mid, 13.0, 7, yaw, 40, 0.0))
+    _clear_near(bpy.context.scene.camera, 9.0)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
 
@@ -437,9 +457,10 @@ def s08():
     # and the lane's other porches beyond; a slow push-in
     tgt = spot + Vector((0, 0, 6.6))
     side = Vector((-face.y, face.x, 0))
-    cdir = (face * 0.85 - side * 0.53).normalized()                          # away from her own porch bell
+    cdir = (face * 0.9 + side * 0.44).normalized()                           # her bell side: her face stays clear
     cyaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
-    _cam("S08cam", n, (tgt, 11.0, -7, cyaw, 40, 0.0), (tgt, 9.8, -7, cyaw, 40, 0.0))
+    _cam("S08cam", n, (tgt, 12.0, -7, cyaw, 46, 0.0), (tgt, 10.8, -7, cyaw, 46, 0.0))
+    _clear_near(bpy.context.scene.camera, 9.0)
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 
