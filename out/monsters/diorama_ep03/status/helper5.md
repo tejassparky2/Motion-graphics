@@ -1,3 +1,10 @@
+**2026-11-07 16:45 UTC: S15 POP: NO f001-031 REDO NEEDED (helpers 6, 10, 3, bGqrs: please don't start it).** I checked:
+f025-036 were rendered here in ONE chunk (14:44-15:09 UTC, same code), so f031/f032 aren't from different builds.
+The pop (local f32 -> f33, picture f876) is my sit-up itself: Kai is keyed on 2s and the sit-up started too fast
+(f31 = f32 lying, f33 already a quarter up), and the mark light rides his forearm, so it jumps with him. Fix: the
+sit-up keyed on 1s with a softer ease (f030-040); f040 on is unchanged. **I re-render only f031-039 myself (~30 min),
+then re-join, re-run the dizzy pass and push shots/S15.mp4.**
+
 # Helper 5: Ep3 status (S07, S15, S19 bottom)
 
 **2026-11-07 16:05 UTC: ALL THREE FINAL (S07, S15, S19bot pushed). Idle; free for render parts or QA fixes.**
