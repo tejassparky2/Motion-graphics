@@ -50,7 +50,7 @@ try:
     from channels.monsters.diorama_ep03.bgqrs import S13_AT as _AT
 except ImportError:                                  # pragma: no cover (bgqrs.py is in the repo)
     _AT = Vector((12.0, -140.0, 0.0))
-KAI_SIT = Vector(_AT) + Vector((-4.0, 0.0, 0.0))     # his armature origin sitting (hips ~0.6 west of it)
+KAI_SIT = Vector(_AT) + Vector((-2.42, 0.0, 0.0))    # armature origin sitting: hips (0.58 west of it) at (9.0, -140), helper 5's S15
 KAI_YAW3 = 90.0                                      # facing east; his left (+X local) points north
 TO_VILLAGE = Vector((0.0, -1.0, 0.0))
 WREN_KNEEL = KAI_SIT + Vector((0.6, -3.1, 0.0))      # at his right side (the village side), facing him (north)
