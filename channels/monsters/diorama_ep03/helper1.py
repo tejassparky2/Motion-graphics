@@ -132,6 +132,12 @@ def _anchors(shot, n, fn):
         json.dump(dict(frames=out), fh)
 
 
+def _arm_anchors(k, c):
+    """The mark (helper 9's geometry for post_helper9.mark) and his left forearm (elbow, wrist: Ep 2's three thin
+    scratch marks, drawn by the 2D pass), on screen."""
+    return dict(mark=H9._mark_geo(k, c), elbow=_px(c, H9._forearm(k, 0.0)), wrist=_px(c, H9._forearm(k, 1.0)))
+
+
 def _px(cam, p):
     from bpy_extras.object_utils import world_to_camera_view
     q = world_to_camera_view(bpy.context.scene, cam, p)
@@ -222,9 +228,10 @@ def _pose_kai(P, k, f, face, arm_up=1.0, look=0.0, slump=0.0):
 
 # ------------------------------------------------------------------------------------------------------------ S03
 # who goes where: (hut, start: lane offset (across, along) from Kai, delay to start backing, frames to reach the door)
-S03_CAST = [(0, (5.0, -9.0), 0, 22), (1, (-5.5, -7.5), 3, 22), (2, (6.0, 3.0), 5, 20), (3, (-6.0, 4.0), 8, 20),
-            (4, (5.0, 12.0), 11, 22), (5, (-4.5, 13.5), 14, 22)]
-S03_RUNNER = ((1.0, 9.0), 18)        # the last one: backs off up the lane, then turns and runs out of sight
+S03_CAST = [(2, (6.0, -2.0), 0, 15), (3, (-6.0, -1.0), 2, 15), (4, (5.0, 0.0), 4, 16), (5, (-4.5, 0.0), 6, 16),
+            (4, (8.0, 4.0), 10, 16), (5, (-8.0, 4.0), 12, 16)]   # all beyond him from the camera: faces to camera
+S03_NEAR = ((0, 12, 18), (1, 16, 24))  # the two huts by the camera: (hut, door slams, shutters bang) from inside
+S03_RUNNER = ((1.0, 9.0), 12)        # (S03 is 55 frames: every door shut by ~f32, the shutters by ~f47)        # the last one: backs off up the lane, then turns and runs out of sight
 
 
 def s03():
@@ -235,7 +242,7 @@ def s03():
     k = _kai(V.LANE_AT, face)
     hero.line_width(k, 0.0028)
     P = x3.Pose(k)
-    f_alone = n - 18                                                    # the last door is shut: he is alone
+    f_alone = 40                                                        # the last door is shut: he is alone
     for f in range(1, n + 1, 2):
         look = 0.9 * math.sin(f / 9.0) * (1 - _smooth((f - f_alone) / 8))   # he looks from one to the next
         _pose_kai(P, k, f, face, arm_up=1.0 - 0.25 * _smooth((f - 20) / 20), look=look,
@@ -255,33 +262,42 @@ def s03():
     vs = []
     for i, (hi, (ax, al), delay, dur) in enumerate(S03_CAST):
         v = V.villager(i, 40 + i, net=(i % 3 != 2), bell=(i % 3 == 2))
-        p0 = V.LANE_AT + left * ax + V.LANE_DIR * al
         hut = huts[hi]
+        p0 = hut["doorstep"].lerp(V.LANE_AT, 0.6) + left * ax * 0.15 + V.LANE_DIR * al * 0.1   # close round him
         f0, f1 = 1 + delay, 1 + delay + dur
         V.back_off(v, p0, hut["doorstep"], f0, f1, V.LANE_AT + UP * 6)
         V.slip_inside(v, hut, f1 + 2)
-        V.slam_door(hut, f1 + 5)
-        V.bang_shutters(hut, f1 + 11 + rnd.randrange(0, 5))
         vs.append(v)
+        if i in (2, 3):                                                 # huts 4 and 5 take two: the second shuts it
+            continue
+        V.slam_door(hut, f1 + 5)
+        V.bang_shutters(hut, f1 + 9 + rnd.randrange(0, 4))
+    for hi, fd, fs in S03_NEAR:
+        V.slam_door(huts[hi], fd)
+        V.bang_shutters(huts[hi], fs)
     (ax, al), delay = S03_RUNNER
     v = V.villager(6, 46, net=True)
-    p0 = V.LANE_AT + left * ax - V.LANE_DIR * al
-    p1 = p0 - V.LANE_DIR * 4.0
+    p0 = V.LANE_AT + left * ax + V.LANE_DIR * al * 0.7
+    p1 = p0 + V.LANE_DIR * 4.0
     V.back_off(v, p0, p1, 1 + delay, 1 + delay + 10, V.LANE_AT + UP * 6)
-    for f in range(delay + 13, n + 1, 2):                               # turns and runs up the lane, out of sight
-        u = (f - delay - 13) / 14.0
-        anim.key(v["root"], "location", f, tuple(p1 - V.LANE_DIR * 14.0 * u), "CONSTANT")
-        anim.key(v["root"], "rotation_euler", f, (0, 0, math.radians(_yaw_deg(-V.LANE_DIR))), "CONSTANT")
+    for f in range(delay + 13, n + 1, 2):                               # turns and runs off down the lane
+        u = (f - delay - 13) / 12.0
+        anim.key(v["root"], "location", f, tuple(p1 + V.LANE_DIR * 16.0 * u), "CONSTANT")
+        anim.key(v["root"], "rotation_euler", f, (0, 0, math.radians(_yaw_deg(V.LANE_DIR))), "CONSTANT")
         anim.key(v["body"], "location", f, (0, 0, 0.35 * (((f - delay) // 2) % 2)), "CONSTANT")
     vs.append(v)
-    # camera: medium on Kai from up the lane (3/4, the square and the lake behind him), a slow crane up and back
-    yaw = math.degrees(math.atan2(V.LANE_DIR.x, V.LANE_DIR.y)) - 18.0
-    tgt = V.LANE_AT + UP * 5.0
-    a = (tuple(tgt), 30.0, 10.0, yaw, 35.0, -0.06)
-    b = (tuple(tgt + UP * 1.0), 40.0, 22.0, yaw + 6.0, 35.0, -0.06)
+    # camera: high 3/4 from up the lane (the square, the tower and the lake behind him), a slow crane up and back
+    east = -left
+    tgt = V.LANE_AT + UP * 3.0 + V.LANE_DIR * 3.0
+    a = _cam_pose(V.LANE_AT - V.LANE_DIR * 27.0 + east * 5.0 + UP * 17.0, tgt, 35.0, -0.04)
+    b = _cam_pose(V.LANE_AT - V.LANE_DIR * 35.0 + east * 6.0 + UP * 25.0, tgt, 35.0, -0.04)
     cam = X._cam_move("cam_s03", n, a, b)
-    _anchors("S03", n, lambda f, c: dict(mark=_px(c, H9._forearm(k, H9.MARK_U)),
-                                         doors=[_px(c, h["doorstep"] + UP * 4) for h in huts]))
+    from channels.monsters.diorama_v3.helper1 import _clear_view
+    keep = {o for o in bpy.data.objects if o.name.startswith(("vhut", "vil"))}
+    for r in [k["arm"], sh["root"]]:
+        keep.update([r, *r.children_recursive])
+    _clear_view(cam, list(range(1, n + 1, 6)) + [n], V.LANE_AT, keep, reach=0.92)
+    _anchors("S03", n, lambda f, c: _arm_anchors(k, c))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + [v["root"] for v in vs])
 
 
@@ -344,4 +360,123 @@ def vn():
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + [v["root"] for v in vs])
 
 
-SHOTS = {"S03": s03, "VN": vn}
+# ------------------------------------------------------------------------------------------------------------ S09
+S09_RINGERS = ((1, -0.6), (0, 0.4), (3, 0.2))     # (hut, yaw tweak): porch bell-ringers, from the camera to Kai
+S09_MOTHS = 40
+
+
+def _bez(p0, p1, p2, p3, u):
+    a = 1 - u
+    return p0 * a ** 3 + p1 * 3 * a * a * u + p2 * 3 * a * u * u + p3 * u ** 3
+
+
+def s09():
+    """S09 "The bells rang. The moths didn't even notice."  Night in the lane. Every bell rings from the first frames
+    (porch bells and hand bells on the porches, the 2D ring lines in post); then, from behind the camera, the swarm
+    streams in over the bell-ringers' heads and right past them without a flinch, down the lane to Kai's raised
+    glowing wrist, where the first arrivals begin to circle it (backs tilting toward the light: S10's orbit)."""
+    from channels.monsters.mk import fluffmoth as fm
+    n = _frames("S09")
+    huts = _world(n)
+    sc = bpy.context.scene
+    face = -V.LANE_DIR                                                  # he faces up the lane, toward the hill
+    left = Vector((-face.y, face.x, 0))
+    east = -left
+    k = _kai(V.LANE_AT, face)
+    hero.line_width(k, 0.0028)
+    P = x3.Pose(k)
+    f_see = 44                                                          # he sees them coming at him
+    for f in range(1, n + 1, 2):
+        _pose_kai(P, k, f, face, arm_up=1.0 + 0.15 * _smooth((f - 6) / 10), look=0.15 * math.sin(f / 11.0))
+    X.v2._twos([k["arm"]])
+    _kai_face({"eye_brow_down": 0.5, "eye_brow_up": 0.2}, 1)           # the wrist up, braced
+    _kai_face({"face_surprise": 0.8, "eye_brow_up": 0.9, "eye_black_small": 0.5}, f_see)
+    sh = _shoulder_shrimp(k, n, face)
+    anim.key(sh["body"], "rotation_euler", 1, (0, 0, 0), "CONSTANT")
+    anim.key(sh["body"], "rotation_euler", f_see + 6, (0.45, 0, 0), "CONSTANT")    # it ducks behind his head
+    anim.squash(sh["body"], f_see + 6, -0.25)
+    anim.on_twos(H9._shrimp_parts(sh), step=2)
+    _mark_light(k, n, energy=70.0)
+    sc.frame_set(1)
+    M = H9._forearm(k, H9.MARK_U)                                       # the light the swarm goes to
+    # the bell-ringers on their porches (faces up the lane, ringing hard, never stopping) and every porch bell
+    vs, ring_at = [], {}
+    for j, (hi, tw) in enumerate(S09_RINGERS):
+        v = V.villager(j, 60 + j, net=False, bell=True)
+        hut = huts[hi]
+        at = hut["porch"] - V.LANE_DIR * 1.2
+        anim.key(v["root"], "location", 1, tuple(at), "CONSTANT")
+        anim.key(v["root"], "rotation_euler", 1, (0, 0, V._yaw_to(at, at - V.LANE_DIR * 10) + tw), "CONSTANT")
+        for f in range(1, n + 1, 2):
+            anim.key(v["bell"], "rotation_euler", f, (0, math.radians(34 * math.sin(f * 1.5 + j * 2)), 0),
+                     "CONSTANT")
+            anim.key(v["body"], "rotation_euler", f, (0, 0, math.radians(4 * math.sin(f * 1.5 + j * 2))),
+                     "CONSTANT")
+        for sx in (-1, 1):                                              # eyes wide: they are ringing for their lives
+            anim.key(bpy.data.objects[f"vil{j}_eye{sx}"], "scale", 1, (1.25, 0.5, 1.6), "CONSTANT")
+        vs.append(v)
+        ring_at[f"hand{j}"] = v["bell"]
+    for j, h in enumerate(huts):
+        V.ring_bell(h, 3 + j, n, amp=32.0, seed=j)
+        ring_at[f"porch{j}"] = h["bell"]
+    # the camera: low behind the first bell-ringer's porch, up the lane, looking down it at Kai; a slow push-in
+    tgt = V.LANE_AT + UP * 5.0 - V.LANE_DIR * 3.0
+    eye0 = V.LANE_AT - V.LANE_DIR * 26.0 - east * 5.5 + UP * 6.5
+    a = _cam_pose(eye0, tgt, 32.0, -0.03)
+    b = _cam_pose(eye0 + (tgt - eye0).normalized() * 3.0, tgt, 32.0, -0.03)
+    cam = X._cam_move("cam_s09", n, a, b)
+    from channels.monsters.diorama_v3.helper1 import _clear_view
+    keep = {o for o in bpy.data.objects if o.name.startswith(("vhut", "vil"))}
+    for r in [k["arm"], sh["root"]]:
+        keep.update([r, *r.children_recursive])
+    _clear_view(cam, [1, n], V.LANE_AT, keep, reach=0.95)
+    # the swarm: from behind and above the camera, over and right past the ringers, down the lane to the wrist
+    rnd = random.Random(9)
+    ring_pts = [huts[hi]["porch"] - V.LANE_DIR * 1.2 + UP * rnd.uniform(9.0, 11.0) for hi, _ in S09_RINGERS]
+
+    def place(i, r):
+        return eye0 - V.LANE_DIR * r.uniform(6, 18) + east * r.uniform(-9, 9) + UP * r.uniform(3, 10), \
+            r.uniform(0.36, 0.48)
+    sw = fm.swarm(S09_MOTHS, place, name="s09m", seed=13,
+                  far=lambda i, loc, s: False)
+    for i, r in enumerate(sw):
+        p0 = r["root"].location.copy()
+        past = ring_pts[i % len(ring_pts)] + east * rnd.uniform(-2.5, 2.5) - V.LANE_DIR * rnd.uniform(-2, 2)
+        rad, th0 = rnd.uniform(2.4, 5.5), rnd.uniform(0, math.tau)
+        hz = rnd.uniform(-1.2, 2.2)
+        entry = M + Vector((math.cos(th0) * rad, math.sin(th0) * rad, hz))
+        c1 = p0.lerp(past, 0.6) + UP * rnd.uniform(-1, 1)
+        c2 = past.lerp(entry, 0.5) + UP * rnd.uniform(0, 2.5) + east * rnd.uniform(-3, 3)
+        t0 = int(rnd.uniform(18, 40))
+        dur = int(rnd.uniform(28, 40))
+        w = rnd.choice((-1, 1)) * rnd.uniform(1.6, 2.6) / rad           # orbit speed (rad/s), inner ones faster
+        prev, last = None, p0
+        for f in range(1, n + 3, 2):
+            if f <= t0:
+                p = p0
+            elif f <= t0 + dur:
+                u = (f - t0) / dur
+                u = u * u * (3 - 2 * u) * 0.5 + u * 0.5                 # a little ease, mostly steady
+                p = _bez(p0, c1, c2, entry, u)
+            else:
+                th = th0 + w * (f - t0 - dur) / 24.0
+                p = M + Vector((math.cos(th) * rad, math.sin(th) * rad, hz + 0.25 * math.sin(f * 0.3 + i)))
+            anim.key(r["root"], "location", f, tuple(p), "CONSTANT")       # on 2s, like the characters
+            hd = (p - last) if (p - last).length > 1e-4 else -V.LANE_DIR
+            if f > t0 + dur * 0.7:                                       # nearing the light: the back tilts to it
+                amt = min(0.7, 0.7 * (f - t0 - dur * 0.7) / (dur * 0.5))
+                r["root"].location = p
+                prev = fm.back_to(r, f, M, hd, amount=amt, interp="CONSTANT", prev=prev)
+            else:
+                prev = fm.face(r, f, hd, bank=0.25 * math.sin(f * 0.2 + i), interp="CONSTANT", prev=prev)
+            last = p
+    _anchors("S09", n, lambda f, c: dict(_arm_anchors(k, c),
+                                         **{f"bell_{nm}": _px(c, o.matrix_world @ Vector((0, 0, -1.2)))
+                                            for nm, o in ring_at.items()}))
+    mask = night_stub()
+    _night_follow(mask, k, n)
+    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + [v["root"] for v in vs] +
+                [r["root"] for r in sw])
+
+
+SHOTS = {"S03": s03, "S09": s09, "VN": vn}
