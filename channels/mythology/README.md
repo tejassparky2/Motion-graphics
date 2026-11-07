@@ -47,8 +47,9 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - Keys live in `<shorts research>/.env`. Never read or print them; the scripts load them.
 - **Voice cloning: only the consented Kannada voices.** On 7 Nov 2026 the owner approved clones of their own
   voice ("this is mine"), their brother's ("the first one was from my brother and he agress") and their friend
-  Darshan's ("Clone this voice it's my friend's and he agrees", "Copy the same narration style from this voice") for
-  the Kannada reels. Nobody else is ever cloned (no famous narrator, no TV-serial voice). Hindi stays synthetic Aman.
+  Darshan's ("Clone this voice it's my friend's and he agrees", "Copy the same narration style from this voice") and
+  their friend Hemanth's ("Try cloning this", then "Yes hemanth said yes") for the Kannada reels. Always confirm the
+  person agreed before cloning (Hemanth's recording came without a word on consent; we asked first). Nobody else is ever cloned (no famous narrator, no TV-serial voice). Hindi stays synthetic Aman.
   The recordings and references stay in `myth_assets/voice/` and never go in the repo. Suggested to the owner (not
   yet decided): on upload, answer YouTube's "altered or synthetic content" question with yes and turn on Instagram's
   AI label. Those are upload settings, not caption words, so the no-AI-wording rule still holds.
@@ -118,6 +119,11 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   reference (`darshan_short`) came out too fast (17.9 letters/s) and less clear. **Rejected** (owner, 7 Nov 2026:
   "New voice a only looks good the clone is not good"): voice A stays the Kannada narrator. All three clones (owner,
   brother, Darshan) were judged worse than voice A by the owner's ear; don't offer clones again unless asked.
+- **Hemanth clone (7 Nov 2026)**, asked for by the owner, consent confirmed. His recording is the cleanest so far
+  (56 s, music 12 dB under him, real 0.25 s pauses between phrases). Reference `hemanth_v1` = 5.80-13.64 s, three
+  complete sentences ("ನಾವು ಕಾರ್ ನೋಡಿದಾಗ..."). Turbo errors 5% mean / 11% worst (voice A: 5% / 18%), likeness 0.93,
+  pitch movement 78 (= voice A), 11.5 letters/s. The 13.6 s reference (`hemanth_v2`) was less clear (16% / 28%).
+  Lesson: a clean recording with pauses matters more than the tool. Waiting on the owner's ear.
 - Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best
