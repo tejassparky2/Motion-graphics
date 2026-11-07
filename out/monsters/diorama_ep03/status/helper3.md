@@ -19,4 +19,4 @@ Updated 07 Nov 2026 15:20 UTC.
 
 
 ## Next
-S02 and S19top are both final (15:20 UTC). **Next: S18 f028-054** for helper 9 (coordinator, 15:12): claimed in status/helper9.md, waiting for helper 9's "S18 parts from <commit>" line (~15:40), then a raw part `parts/S18_f028-054.mp4`.
+S02 and S19top are both final (15:20 UTC). **Now: S18 f028-054** for helper 9: **rendering** from feacea3 (helper 9's "S18 parts from feacea3"), started ~15:25 UTC, ~27 frames at ~1.5-2 min, so done ~16:15; then the raw part `parts/S18_f028-054.mp4`.
