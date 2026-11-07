@@ -275,7 +275,7 @@ def s01():
         - up * float(os.environ.get("S01_LOW", "1.8"))
     t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.03")))
     c1 = c0.lerp(wrist, 0.10)
-    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "17")))
+    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "15")))
 
     # the mark's light and its 2D anchors
     ld = bpy.data.lights.new("s01_mark_light", "POINT")
@@ -332,7 +332,7 @@ def s11():
     def P(sx, sz, depth=0.0):                                        # screen-right / up in the side view
         return origin + Vector((depth, -sx, sz))
 
-    light = P(2.4, 7.6)
+    light = P(2.4, 9.0)
     bpy.ops.mesh.primitive_uv_sphere_add(radius=0.42, location=light, segments=32, ring_count=16)
     orb = bpy.context.object
     orb.name = "s11_orb"
@@ -349,8 +349,8 @@ def s11():
     fm.flap(m)
     # its path: level flight to screen right; from "They" its back tilts to the light (amount 0 -> 1 by "backs"+6)
     # and the tilt turns it: the heading swings round the light (an orbit starting)
-    pos = P(-5.5, 2.4)
-    speed = 0.17
+    pos = P(-5.0, 2.4)
+    speed = 0.15
     heading = Vector((0, -1, 0))                                     # screen right
     prev = None
     track = {}
