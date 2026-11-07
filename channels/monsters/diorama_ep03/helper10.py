@@ -254,7 +254,7 @@ def _night_set(n):
     sc.frame_start, sc.frame_end = 1, n
 
 
-def _glow_cone(at, height=4.2, r0=0.25, r1=1.9, name="h10_uplight"):
+def _glow_cone(at, height=3.4, r0=0.3, r1=1.5, peak=0.3, name="h10_uplight"):
     """The light below, made visible: a soft coral cone of glow rising from the palm-up wrist through the grass (an
     additive, height-faded emission shell, no shadows), and a bright glowing disc on the grass at its foot."""
     import bmesh
@@ -285,7 +285,7 @@ def _glow_cone(at, height=4.2, r0=0.25, r1=1.9, name="h10_uplight"):
     tc = nt.nodes.new("ShaderNodeTexCoord")
     sep = nt.nodes.new("ShaderNodeSeparateXYZ")
     ramp = nt.nodes.new("ShaderNodeValToRGB")                 # bright at the foot, gone at the top
-    ramp.color_ramp.elements[0].position, ramp.color_ramp.elements[0].color = 0.0, (1.6, 1.6, 1.6, 1)
+    ramp.color_ramp.elements[0].position, ramp.color_ramp.elements[0].color = 0.0, (peak, peak, peak, 1)
     ramp.color_ramp.elements[1].position, ramp.color_ramp.elements[1].color = 1.0, (0, 0, 0, 1)
     lw = nt.nodes.new("ShaderNodeLayerWeight")                # softer at the silhouette edges
     lw.inputs["Blend"].default_value = 0.35
@@ -308,21 +308,21 @@ def _glow_cone(at, height=4.2, r0=0.25, r1=1.9, name="h10_uplight"):
     disc = bpy.data.objects.new(name + "_foot", bpy.data.meshes.new(name + "_foot"))
     bpy.context.scene.collection.objects.link(disc)
     bm = bmesh.new()
-    bmesh.ops.create_circle(bm, cap_ends=True, segments=32, radius=1.1)
+    bmesh.ops.create_circle(bm, cap_ends=True, segments=32, radius=0.7)
     bm.to_mesh(disc.data)
     bm.free()
     disc.location = Vector(at) + Vector((0, 0, 0.04))
-    disc.data.materials.append(look.flat(name + "_foot", (*H9.CORAL, 1.0), strength=3.0))
+    disc.data.materials.append(look.flat(name + "_foot", (*H9.CORAL, 1.0), strength=1.0))
     disc.visible_shadow = False
     return o
 
 
-def _hero_spots(wrist, cam_end):
-    """The four hero moths land in the foreground, between the camera's last position and the glowing wrist: a loose
-    row ~1.7 apart, the nearest a little toward the lens (the biggest), ~2.5 north of the wrist."""
+def _hero_spots(wrist, cam_end, feet_dir):
+    """The four hero moths land in the foreground, in front of the glowing wrist and a little along toward his feet
+    (so his head and the glow stay clear behind them): a loose row ~1.7 apart, the nearest toward the lens."""
     to_cam = Vector((cam_end.x - wrist.x, cam_end.y - wrist.y, 0)).normalized()
     side = Vector((-to_cam.y, to_cam.x, 0))
-    H = wrist + to_cam * 2.6
+    H = wrist + to_cam * 2.3 + Vector(feet_dir) * 2.6
     H.z = 0.0
     return [H + side * -1.75, H + to_cam * -0.5, H + side * 1.8 + to_cam * 0.1, H + to_cam * 1.35 + side * 0.4], H
 
@@ -389,12 +389,13 @@ def build_s14():
     poses = B.camera_poses(B._frames("S13", 57), beats13)
     c0, t0, lens0, _ = B.camera_at(S13_CUT, poses)
     cam_end_guess = wrist + Vector((c0.x - wrist.x, c0.y - wrist.y, 0)).normalized() * 9.5
-    hero_spots, H = _hero_spots(wrist, cam_end_guess)
+    hero_spots, H = _hero_spots(wrist, cam_end_guess, -hd)
     to_cam = Vector((c0.x - H.x, c0.y - H.y, 0)).normalized()
     c1 = H + to_cam * 7.6 + Vector((0, 0, 2.1))
-    t1 = H.lerp(wrist, 0.35) + Vector((0, 0, 0.9))
+    head = s15._world(k, "head")
+    t1 = H.lerp(head, 0.45) + Vector((0, 0, 0.9))
     c2 = H + to_cam * 7.0 + Vector((0, 0, 1.9))
-    t2 = H.lerp(wrist, 0.4) + Vector((0, 0, 0.8))
+    t2 = H.lerp(head, 0.5) + Vector((0, 0, 0.8))
     old_blur = X.v2.BLUR
     X.v2.BLUR = 3.0
     cam = None
@@ -434,8 +435,7 @@ def build_s14():
     def place(i, rnd):
         return tuple(B.swarm_at(lay[i], S13_CUT + 1, light)), lay[i]["s"]
     rigs = fluffmoth.swarm(len(lay), place, name="m14_", seed=13, far=lambda i, loc, s: i not in heroes)
-    if hasattr(B, "_decimate_shared"):
-        B._decimate_shared([o for o in bpy.data.objects if o.name.startswith("m14_")])
+    # (no decimation: the heroes come close to the lens, and the copies share their meshes)
 
     landings, hero_track = [], {}
     rnd = random.Random(15)
@@ -544,6 +544,8 @@ def build_s14():
     for d in landings:
         if d["hero"]:
             print("S14 hero lands", d["frame"], "at px", d["px"])
+    sc.frame_set(n)
+    print("S14 end: head px", H9._px(cam, s15._world(k, "head")), "wrist px", H9._px(cam, wrist))
     if not _still():
         _mark_json("S14", k, cam, n, lambda f: 1.1 + 0.05 * math.sin(f / 5.0))
     sc.frame_set(1)
