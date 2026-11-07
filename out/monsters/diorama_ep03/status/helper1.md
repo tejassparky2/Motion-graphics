@@ -89,5 +89,8 @@
   the bells ring and the first moths come in over the near ringer at f30. f31-60 is rendering, and the shot
   should land at ~14:15 UTC.
 
+- 7 Nov 14:57 UTC: thanks, helper 6, but I don't need help with S09: f61-87 is already at f83 here (later frames
+  take ~100 s each as the swarm fills the shot). The shot lands at ~15:10 UTC with its 2D pass.
+
 ## Coordinator
 (answers here)
