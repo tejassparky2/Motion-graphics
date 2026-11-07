@@ -76,6 +76,29 @@ def _cam_from(name, n, c0, c1, t0, t1, lens):
 S01_LIGHT = 140.0                               # the mark's coral point light (close up, daylight: it has to show)
 
 
+def _owner(o):
+    while o is not None:
+        if o.type == "ARMATURE":
+            return o
+        a = o.find_armature() if o.type == "MESH" else None
+        if a is not None:
+            return a
+        o = o.parent
+    return None
+
+
+def _visible(cam, p, rig, tol):
+    """Is world point p (on `rig`) seen by cam, or hidden behind something else (or deep inside its own body)?"""
+    sc = bpy.context.scene
+    dg = bpy.context.evaluated_depsgraph_get()
+    o = cam.matrix_world.translation
+    d = p - o
+    hit, loc, _n, _i, ob, _m = sc.ray_cast(dg, o, d.normalized(), distance=d.length)
+    if not hit or (loc - o).length >= d.length - 0.2:
+        return True
+    return _owner(ob) == rig and (loc - o).length >= d.length - tol
+
+
 def _late_afternoon(fwd):
     """A warm low sun from behind Wren's side (onto Kai's face), the sky a touch warmer: late afternoon (S01; the
     mark still the brightest thing)."""
@@ -304,7 +327,7 @@ def s01():
         lvl = 1.15 + 0.12 * math.sin(f / 4.0)
         ld.energy = S01_LIGHT * lvl
         ld.keyframe_insert("energy", frame=f)
-        marks[f] = dict(H9._mark_geo(k, cam), level=round(lvl, 3),
+        marks[f] = dict(H9._mark_geo(k, cam), level=round(lvl, 3), vis=_visible(cam, m, k["arm"], 1.0),
                         w_eye_l=H9._px(cam, s3d.kai_point(w, "eye_l")), w_eye_r=H9._px(cam, s3d.kai_point(w, "eye_r")))
     os.makedirs(BUILD, exist_ok=True)
     with open(os.path.join(BUILD, "S01_mark.json"), "w") as fh:

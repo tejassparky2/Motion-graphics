@@ -42,6 +42,12 @@
      low, close view of that spot by f30, so we see them land legs-up. The other 24 land small in the ring.
   - It also uses bGqrs's new `swarm_layout()`/`swarm_at()` (28 moths), so S14 continues S13's circles exactly.
 
+- 11:45 UTC: **S12 done and pushed: `shots/S12.mp4` + `S12_sheet.jpg`**, 79/79 frames, crf 10, no tags. The 2D pass
+  (the glow line, the bloom, the dotted ring, the hill) is from `post_helper10.py`.
+- S14: new stills rendering with the fixes (no decimation on the close heroes, which caused the speckles; the
+  visible uplight is now a 2D coral column, because the 3D cone blew out in the grade; the heroes land clear of his face and
+  above the caption band).
+
 ## OK stills
 - **S12:** `okstills/S12_f010.png` (the moth on one side of the ring, seen from behind: its back tilted to the light,
   the glow line landing on it) and `okstills/S12_f030.png` (the other side, its face toward us, still banked with its
