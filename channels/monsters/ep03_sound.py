@@ -44,6 +44,7 @@ S01_HOP, S01_PERCH = 20, 29  # the shrimp jumps from his hand, lands on his shou
 S07_SHIELD, S07_CAPE, S07_ITCH = 6, 12, 22             # S07 (helper 5): the shield, the cape, the itch
 S08_STRIKES = list(range(8, 66, 4))                   # S08 (XprL): Wren's clapper strikes (wren.ring f6-f66, beat 4)
 S08_PORCH = 12                                         # the first porch bell joins (V.ring_bell from f_ring + 6)
+S18_POINT, S18_CUT = 36, 53                           # S18 (helper 9): her point, the cut to the lighthouse
 S19TOP_STROKE = 40                                    # S19 top (helper 3): one oar stroke (frames)
 S19BOT_STEPS = (23, 44, 66, 87, 148, 157, 166)       # S19 bottom (helper 5): footfalls (x3._walk), cut at 164
 S19BOT_LOOK = 107                                      # the look back starts ("like" - 4)
@@ -523,7 +524,9 @@ def build(timing, n, v):
     # S17 (XprL, final): Wren kneels by him f3-f15 (her knee down in the grass on f15)
     hit(e2.cloth_swish(0.5, 14), fr("S17", S17_KNEEL[0]), -25, 0.15)
     hit(e2.footstep(140, 0.6), fr("S17", S17_KNEEL[1]), -26, 0.15)
-    hit(lighthouse_chime(), w("l18", "lighthouse"), -19, 0.2)
+    # S18 (helper 9, final): Wren leans in f28, points across the lake f36-f41, cut to the lighthouse f53
+    hit(e2.cloth_swish(0.35, 16), fr("S18", S18_POINT), -28, 0.3)
+    hit(lighthouse_chime(), fr("S18", S18_CUT), -21, 0.2)                     # the lamp's glow on the cut
 
     # --- S19: the A and B stingers on the letters; "Comment" blip
     wl = words["l19"]
