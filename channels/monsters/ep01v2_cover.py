@@ -50,13 +50,16 @@ EP02 = {
 }
 EP02_PICK = "fear"   # re-picked on the real renders (2 Nov): his terror eyes clear under the words, the shrimp in front
 # Episode 3 (DIORAMA_EP03.md): Kai's glowing wrist with the swarm, or the field of upside-down moths; never the title
-# ("They Rang Every Bell. The Moths Didn't Care") repeated. Frames are placeholders: re-pick them on the real renders.
+# ("They Rang Every Bell. The Moths Didn't Care") repeated. Frames picked on the final renders (7 Nov).
 EP03 = {
     "swarm": ("S10", 40, [("THEY CIRCLED", WHITE), ("MY WRIST", HOT)]),   # top view: the spiral round his glowing wrist
     "flip": ("S15", 30, [("EVERY MOTH", WHITE), ("FLIPPED", HOT)]),       # the field of upside-down moths, legs waving
     "hook": ("S01", 12, [("THE VILLAGE", WHITE), ("RAN", HOT)]),          # the raised wrist blazing, Wren stumbling back
+    "situp": ("S15", 95, [("EVERY MOTH", WHITE), ("FLIPPED", HOT)]),      # Kai sitting up among the upside-down moths
+    "uplight": ("S13", 45, [("THEY CIRCLED", WHITE), ("MY WRIST", HOT)]), # flat on his back, the wrist glowing up at the swarm
+    "tumble": ("S14", 20, [("EVERY MOTH", WHITE), ("FLIPPED", HOT)]),     # the swarm rolling over above the uplight
 }
-EP03_PICK = "swarm"
+EP03_PICK = "swarm"   # coordinator, 7 Nov: the tension and the question; "EVERY MOTH FLIPPED" spoils the payoff
 TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 
 

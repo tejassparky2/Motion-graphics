@@ -41,7 +41,7 @@ EP3 = VERSION == "diorama_ep03"          # Episode 3, 2.5D (DIORAMA_EP03.md): th
 EPDIR = "ep03" if EP3 else ("ep02" if EP2 else ("ep01v3" if V3 else "ep01v2"))
 EPNUM = 3 if EP3 else (2 if EP2 else 1)
 # what the cover shows, for the upload sheet's video facts
-COVER_NOTE = {"diorama_ep03": "Kai's glowing wrist (the cover words come from ep01v2_cover.py --ep03)",
+COVER_NOTE = {"diorama_ep03": 'S10 with "THEY CIRCLED / MY WRIST"',
               "diorama_ep02": 'S05 with "I SAVED / MY KILLER"',
               "diorama_v3": 'S01 with "THIS SHRIMP ERASED A FOREST"'}.get(VERSION, 'S01 with "IT ERASED A FOREST"')
 D = os.path.join(ROOT, "out", "monsters", "ep01v2")
