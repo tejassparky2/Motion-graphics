@@ -1,0 +1,1077 @@
+{
+ "fps": 24,
+ "total": 54.106,
+ "total_frames": 1299,
+ "handle": 12,
+ "lines": [
+  {
+   "id": "l1",
+   "scene": "S01",
+   "text": "You said show her. So I did.",
+   "start": 0.12,
+   "end": 1.871,
+   "words": [
+    {
+     "w": "You",
+     "start": 0.12,
+     "end": 0.24
+    },
+    {
+     "w": "said",
+     "start": 0.24,
+     "end": 0.4
+    },
+    {
+     "w": "show",
+     "start": 0.4,
+     "end": 0.66
+    },
+    {
+     "w": "her.",
+     "start": 0.66,
+     "end": 0.8
+    },
+    {
+     "w": "So",
+     "start": 1.245,
+     "end": 1.385
+    },
+    {
+     "w": "I",
+     "start": 1.385,
+     "end": 1.525
+    },
+    {
+     "w": "did.",
+     "start": 1.525,
+     "end": 1.705
+    }
+   ]
+  },
+  {
+   "id": "l2",
+   "scene": "S02",
+   "text": "Marked. The sky cracked the night you fell.",
+   "start": 2.371,
+   "end": 4.745,
+   "words": [
+    {
+     "w": "Marked.",
+     "start": 2.371,
+     "end": 2.851
+    },
+    {
+     "w": "The",
+     "start": 3.245,
+     "end": 3.365
+    },
+    {
+     "w": "sky",
+     "start": 3.365,
+     "end": 3.625
+    },
+    {
+     "w": "cracked",
+     "start": 3.625,
+     "end": 3.945
+    },
+    {
+     "w": "the",
+     "start": 3.945,
+     "end": 4.105
+    },
+    {
+     "w": "night",
+     "start": 4.105,
+     "end": 4.265
+    },
+    {
+     "w": "you",
+     "start": 4.265,
+     "end": 4.405
+    },
+    {
+     "w": "fell.",
+     "start": 4.405,
+     "end": 4.645
+    }
+   ]
+  },
+  {
+   "id": "l3",
+   "scene": "S03",
+   "text": "The whole village backed away from me.",
+   "start": 5.245,
+   "end": 6.824,
+   "words": [
+    {
+     "w": "The",
+     "start": 5.245,
+     "end": 5.365
+    },
+    {
+     "w": "whole",
+     "start": 5.365,
+     "end": 5.565
+    },
+    {
+     "w": "village",
+     "start": 5.565,
+     "end": 5.845
+    },
+    {
+     "w": "backed",
+     "start": 5.845,
+     "end": 6.125
+    },
+    {
+     "w": "away",
+     "start": 6.125,
+     "end": 6.345
+    },
+    {
+     "w": "from",
+     "start": 6.345,
+     "end": 6.565
+    },
+    {
+     "w": "me.",
+     "start": 6.565,
+     "end": 6.725
+    }
+   ]
+  },
+  {
+   "id": "l4",
+   "scene": "S04",
+   "text": "Then the sun went down.",
+   "start": 7.424,
+   "end": 8.363,
+   "words": [
+    {
+     "w": "Then",
+     "start": 7.424,
+     "end": 7.564
+    },
+    {
+     "w": "the",
+     "start": 7.564,
+     "end": 7.644
+    },
+    {
+     "w": "sun",
+     "start": 7.644,
+     "end": 7.804
+    },
+    {
+     "w": "went",
+     "start": 7.804,
+     "end": 7.984
+    },
+    {
+     "w": "down.",
+     "start": 7.984,
+     "end": 8.244
+    }
+   ]
+  },
+  {
+   "id": "l5",
+   "scene": "S05",
+   "text": "And my wrist was the only light for miles.",
+   "start": 8.763,
+   "end": 10.906,
+   "words": [
+    {
+     "w": "And",
+     "start": 8.763,
+     "end": 8.903
+    },
+    {
+     "w": "my",
+     "start": 8.903,
+     "end": 9.063
+    },
+    {
+     "w": "wrist",
+     "start": 9.063,
+     "end": 9.283
+    },
+    {
+     "w": "was",
+     "start": 9.283,
+     "end": 9.503
+    },
+    {
+     "w": "the",
+     "start": 9.503,
+     "end": 9.623
+    },
+    {
+     "w": "only",
+     "start": 9.623,
+     "end": 9.843
+    },
+    {
+     "w": "light",
+     "start": 9.843,
+     "end": 10.043
+    },
+    {
+     "w": "for",
+     "start": 10.043,
+     "end": 10.243
+    },
+    {
+     "w": "miles.",
+     "start": 10.243,
+     "end": 10.543
+    }
+   ]
+  },
+  {
+   "id": "l6",
+   "scene": "S06",
+   "text": "That's when the fluffmoths came down the hill.",
+   "start": 11.606,
+   "end": 13.319,
+   "words": [
+    {
+     "w": "That's",
+     "start": 11.606,
+     "end": 11.806
+    },
+    {
+     "w": "when",
+     "start": 11.806,
+     "end": 11.906
+    },
+    {
+     "w": "the",
+     "start": 11.906,
+     "end": 12.026
+    },
+    {
+     "w": "fluffmoths",
+     "start": 12.026,
+     "end": 12.506
+    },
+    {
+     "w": "came",
+     "start": 12.506,
+     "end": 12.726
+    },
+    {
+     "w": "down",
+     "start": 12.726,
+     "end": 12.926
+    },
+    {
+     "w": "the",
+     "start": 12.926,
+     "end": 13.046
+    },
+    {
+     "w": "hill.",
+     "start": 13.046,
+     "end": 13.186
+    }
+   ]
+  },
+  {
+   "id": "l7",
+   "scene": "S07",
+   "text": "Their wing dust stings like nettles.",
+   "start": 13.719,
+   "end": 15.298,
+   "words": [
+    {
+     "w": "Their",
+     "start": 13.719,
+     "end": 13.939
+    },
+    {
+     "w": "wing",
+     "start": 13.939,
+     "end": 14.099
+    },
+    {
+     "w": "dust",
+     "start": 14.099,
+     "end": 14.279
+    },
+    {
+     "w": "stings",
+     "start": 14.279,
+     "end": 14.619
+    },
+    {
+     "w": "like",
+     "start": 14.619,
+     "end": 14.819
+    },
+    {
+     "w": "nettles.",
+     "start": 14.819,
+     "end": 15.179
+    }
+   ]
+  },
+  {
+   "id": "l8",
+   "scene": "S08",
+   "text": "Ring the bells! Bells drive them off!",
+   "start": 15.698,
+   "end": 17.623,
+   "words": [
+    {
+     "w": "Ring",
+     "start": 15.698,
+     "end": 15.858
+    },
+    {
+     "w": "the",
+     "start": 15.858,
+     "end": 15.998
+    },
+    {
+     "w": "bells!",
+     "start": 15.998,
+     "end": 16.198
+    },
+    {
+     "w": "Bells",
+     "start": 16.723,
+     "end": 17.023
+    },
+    {
+     "w": "drive",
+     "start": 17.023,
+     "end": 17.183
+    },
+    {
+     "w": "them",
+     "start": 17.183,
+     "end": 17.343
+    },
+    {
+     "w": "off!",
+     "start": 17.343,
+     "end": 17.563
+    }
+   ]
+  },
+  {
+   "id": "l9",
+   "scene": "S09",
+   "text": "The bells rang. The moths didn't even notice.",
+   "start": 18.523,
+   "end": 20.92,
+   "words": [
+    {
+     "w": "The",
+     "start": 18.523,
+     "end": 18.643
+    },
+    {
+     "w": "bells",
+     "start": 18.643,
+     "end": 18.863
+    },
+    {
+     "w": "rang.",
+     "start": 18.863,
+     "end": 19.103
+    },
+    {
+     "w": "The",
+     "start": 19.587,
+     "end": 19.707
+    },
+    {
+     "w": "moths",
+     "start": 19.707,
+     "end": 19.987
+    },
+    {
+     "w": "didn't",
+     "start": 19.987,
+     "end": 20.267
+    },
+    {
+     "w": "even",
+     "start": 20.267,
+     "end": 20.387
+    },
+    {
+     "w": "notice.",
+     "start": 20.387,
+     "end": 20.647
+    }
+   ]
+  },
+  {
+   "id": "l10",
+   "scene": "S10",
+   "text": "They were circling my wrist. Round and round.",
+   "start": 21.42,
+   "end": 23.882,
+   "words": [
+    {
+     "w": "They",
+     "start": 21.42,
+     "end": 21.54
+    },
+    {
+     "w": "were",
+     "start": 21.54,
+     "end": 21.64
+    },
+    {
+     "w": "circling",
+     "start": 21.64,
+     "end": 21.94
+    },
+    {
+     "w": "my",
+     "start": 21.94,
+     "end": 22.16
+    },
+    {
+     "w": "wrist.",
+     "start": 22.16,
+     "end": 22.36
+    },
+    {
+     "w": "Round",
+     "start": 22.924,
+     "end": 23.224
+    },
+    {
+     "w": "and",
+     "start": 23.224,
+     "end": 23.464
+    },
+    {
+     "w": "round.",
+     "start": 23.464,
+     "end": 23.684
+    }
+   ]
+  },
+  {
+   "id": "l11",
+   "scene": "S11",
+   "text": "Moths don't fly at a light. They keep their backs to it.",
+   "start": 24.482,
+   "end": 27.427,
+   "words": [
+    {
+     "w": "Moths",
+     "start": 24.482,
+     "end": 24.782
+    },
+    {
+     "w": "don't",
+     "start": 24.782,
+     "end": 25.162
+    },
+    {
+     "w": "fly",
+     "start": 25.162,
+     "end": 25.322
+    },
+    {
+     "w": "at",
+     "start": 25.322,
+     "end": 25.502
+    },
+    {
+     "w": "a",
+     "start": 25.502,
+     "end": 25.582
+    },
+    {
+     "w": "light.",
+     "start": 25.582,
+     "end": 25.742
+    },
+    {
+     "w": "They",
+     "start": 26.263,
+     "end": 26.423
+    },
+    {
+     "w": "keep",
+     "start": 26.423,
+     "end": 26.623
+    },
+    {
+     "w": "their",
+     "start": 26.623,
+     "end": 26.763
+    },
+    {
+     "w": "backs",
+     "start": 26.763,
+     "end": 27.023
+    },
+    {
+     "w": "to",
+     "start": 27.023,
+     "end": 27.183
+    },
+    {
+     "w": "it.",
+     "start": 27.183,
+     "end": 27.323
+    }
+   ]
+  },
+  {
+   "id": "l12",
+   "scene": "S12",
+   "text": "So when the light is above them, they circle it.",
+   "start": 27.827,
+   "end": 30.093,
+   "words": [
+    {
+     "w": "So",
+     "start": 27.827,
+     "end": 28.007
+    },
+    {
+     "w": "when",
+     "start": 28.007,
+     "end": 28.127
+    },
+    {
+     "w": "the",
+     "start": 28.127,
+     "end": 28.227
+    },
+    {
+     "w": "light",
+     "start": 28.227,
+     "end": 28.387
+    },
+    {
+     "w": "is",
+     "start": 28.387,
+     "end": 28.527
+    },
+    {
+     "w": "above",
+     "start": 28.527,
+     "end": 28.767
+    },
+    {
+     "w": "them,",
+     "start": 28.767,
+     "end": 29.047
+    },
+    {
+     "w": "they",
+     "start": 29.327,
+     "end": 29.447
+    },
+    {
+     "w": "circle",
+     "start": 29.447,
+     "end": 29.727
+    },
+    {
+     "w": "it.",
+     "start": 29.727,
+     "end": 30.007
+    }
+   ]
+  },
+  {
+   "id": "l13",
+   "scene": "S13",
+   "text": "So I put the light below them.",
+   "start": 30.593,
+   "end": 31.968,
+   "words": [
+    {
+     "w": "So",
+     "start": 30.593,
+     "end": 30.733
+    },
+    {
+     "w": "I",
+     "start": 30.733,
+     "end": 30.833
+    },
+    {
+     "w": "put",
+     "start": 30.833,
+     "end": 30.953
+    },
+    {
+     "w": "the",
+     "start": 30.953,
+     "end": 31.113
+    },
+    {
+     "w": "light",
+     "start": 31.113,
+     "end": 31.333
+    },
+    {
+     "w": "below",
+     "start": 31.333,
+     "end": 31.613
+    },
+    {
+     "w": "them.",
+     "start": 31.613,
+     "end": 31.833
+    }
+   ]
+  },
+  {
+   "id": "l14",
+   "scene": "S14",
+   "text": "",
+   "start": 32.468,
+   "end": 35.068,
+   "words": []
+  },
+  {
+   "id": "l15",
+   "scene": "S15",
+   "text": "Every single moth landed on its back.",
+   "start": 35.468,
+   "end": 37.588,
+   "words": [
+    {
+     "w": "Every",
+     "start": 35.468,
+     "end": 35.868
+    },
+    {
+     "w": "single",
+     "start": 35.868,
+     "end": 36.188
+    },
+    {
+     "w": "moth",
+     "start": 36.188,
+     "end": 36.508
+    },
+    {
+     "w": "landed",
+     "start": 36.508,
+     "end": 36.788
+    },
+    {
+     "w": "on",
+     "start": 36.788,
+     "end": 37.068
+    },
+    {
+     "w": "its",
+     "start": 37.068,
+     "end": 37.188
+    },
+    {
+     "w": "back.",
+     "start": 37.188,
+     "end": 37.468
+    }
+   ]
+  },
+  {
+   "id": "l16",
+   "scene": "S16",
+   "text": "Wren lowered her bell.",
+   "start": 39.388,
+   "end": 40.507,
+   "words": [
+    {
+     "w": "Wren",
+     "start": 39.388,
+     "end": 39.628
+    },
+    {
+     "w": "lowered",
+     "start": 39.628,
+     "end": 39.948
+    },
+    {
+     "w": "her",
+     "start": 39.948,
+     "end": 40.128
+    },
+    {
+     "w": "bell.",
+     "start": 40.128,
+     "end": 40.348
+    }
+   ]
+  },
+  {
+   "id": "l17",
+   "scene": "S17",
+   "text": "The village wants you gone by sunrise.",
+   "start": 41.207,
+   "end": 42.922,
+   "words": [
+    {
+     "w": "The",
+     "start": 41.207,
+     "end": 41.327
+    },
+    {
+     "w": "village",
+     "start": 41.327,
+     "end": 41.547
+    },
+    {
+     "w": "wants",
+     "start": 41.547,
+     "end": 41.807
+    },
+    {
+     "w": "you",
+     "start": 41.807,
+     "end": 41.987
+    },
+    {
+     "w": "gone",
+     "start": 41.987,
+     "end": 42.187
+    },
+    {
+     "w": "by",
+     "start": 42.187,
+     "end": 42.367
+    },
+    {
+     "w": "sunrise.",
+     "start": 42.367,
+     "end": 42.647
+    }
+   ]
+  },
+  {
+   "id": "l18",
+   "scene": "S18",
+   "text": "But the last marked one left something at the old lighthouse.",
+   "start": 43.622,
+   "end": 46.755,
+   "words": [
+    {
+     "w": "But",
+     "start": 43.622,
+     "end": 43.762
+    },
+    {
+     "w": "the",
+     "start": 43.762,
+     "end": 43.882
+    },
+    {
+     "w": "last",
+     "start": 43.882,
+     "end": 44.162
+    },
+    {
+     "w": "marked",
+     "start": 44.162,
+     "end": 44.442
+    },
+    {
+     "w": "one",
+     "start": 44.442,
+     "end": 44.842
+    },
+    {
+     "w": "left",
+     "start": 44.842,
+     "end": 45.282
+    },
+    {
+     "w": "something",
+     "start": 45.282,
+     "end": 45.562
+    },
+    {
+     "w": "at",
+     "start": 45.562,
+     "end": 45.802
+    },
+    {
+     "w": "the",
+     "start": 45.802,
+     "end": 45.922
+    },
+    {
+     "w": "old",
+     "start": 45.922,
+     "end": 46.142
+    },
+    {
+     "w": "lighthouse.",
+     "start": 46.142,
+     "end": 46.442
+    }
+   ]
+  },
+  {
+   "id": "l19",
+   "scene": "S19",
+   "text": "Option A: go with Wren tonight. Option B: leave at sunrise, like they said. Comment A or B.",
+   "start": 47.555,
+   "end": 53.756,
+   "words": [
+    {
+     "w": "Option",
+     "start": 47.555,
+     "end": 47.835
+    },
+    {
+     "w": "A:",
+     "start": 47.835,
+     "end": 48.115
+    },
+    {
+     "w": "go",
+     "start": 48.646,
+     "end": 48.766
+    },
+    {
+     "w": "with",
+     "start": 48.766,
+     "end": 48.886
+    },
+    {
+     "w": "Wren",
+     "start": 48.886,
+     "end": 49.126
+    },
+    {
+     "w": "tonight.",
+     "start": 49.126,
+     "end": 49.386
+    },
+    {
+     "w": "Option",
+     "start": 49.954,
+     "end": 50.214
+    },
+    {
+     "w": "B:",
+     "start": 50.214,
+     "end": 50.434
+    },
+    {
+     "w": "leave",
+     "start": 50.958,
+     "end": 51.198
+    },
+    {
+     "w": "at",
+     "start": 51.198,
+     "end": 51.318
+    },
+    {
+     "w": "sunrise,",
+     "start": 51.318,
+     "end": 51.678
+    },
+    {
+     "w": "like",
+     "start": 51.858,
+     "end": 51.938
+    },
+    {
+     "w": "they",
+     "start": 51.938,
+     "end": 52.078
+    },
+    {
+     "w": "said.",
+     "start": 52.078,
+     "end": 52.318
+    },
+    {
+     "w": "Comment",
+     "start": 52.79,
+     "end": 53.03
+    },
+    {
+     "w": "A",
+     "start": 53.03,
+     "end": 53.31
+    },
+    {
+     "w": "or",
+     "start": 53.31,
+     "end": 53.43
+    },
+    {
+     "w": "B.",
+     "start": 53.43,
+     "end": 53.59
+    }
+   ]
+  }
+ ],
+ "shots": [
+  {
+   "shot": "S01",
+   "start": 0.0,
+   "first_frame": 0,
+   "frames": 50,
+   "seconds": 2.083,
+   "render_frames": 62
+  },
+  {
+   "shot": "S02",
+   "start": 2.071,
+   "first_frame": 50,
+   "frames": 69,
+   "seconds": 2.875,
+   "render_frames": 81
+  },
+  {
+   "shot": "S03",
+   "start": 4.945,
+   "first_frame": 119,
+   "frames": 52,
+   "seconds": 2.167,
+   "render_frames": 64
+  },
+  {
+   "shot": "S04",
+   "start": 7.124,
+   "first_frame": 171,
+   "frames": 32,
+   "seconds": 1.333,
+   "render_frames": 44
+  },
+  {
+   "shot": "S05",
+   "start": 8.463,
+   "first_frame": 203,
+   "frames": 68,
+   "seconds": 2.833,
+   "render_frames": 80
+  },
+  {
+   "shot": "S06",
+   "start": 11.306,
+   "first_frame": 271,
+   "frames": 51,
+   "seconds": 2.125,
+   "render_frames": 63
+  },
+  {
+   "shot": "S07",
+   "start": 13.419,
+   "first_frame": 322,
+   "frames": 48,
+   "seconds": 2.0,
+   "render_frames": 60
+  },
+  {
+   "shot": "S08",
+   "start": 15.398,
+   "first_frame": 370,
+   "frames": 67,
+   "seconds": 2.792,
+   "render_frames": 79
+  },
+  {
+   "shot": "S09",
+   "start": 18.223,
+   "first_frame": 437,
+   "frames": 70,
+   "seconds": 2.917,
+   "render_frames": 82
+  },
+  {
+   "shot": "S10",
+   "start": 21.12,
+   "first_frame": 507,
+   "frames": 73,
+   "seconds": 3.042,
+   "render_frames": 85
+  },
+  {
+   "shot": "S11",
+   "start": 24.182,
+   "first_frame": 580,
+   "frames": 81,
+   "seconds": 3.375,
+   "render_frames": 93
+  },
+  {
+   "shot": "S12",
+   "start": 27.527,
+   "first_frame": 661,
+   "frames": 66,
+   "seconds": 2.75,
+   "render_frames": 78
+  },
+  {
+   "shot": "S13",
+   "start": 30.293,
+   "first_frame": 727,
+   "frames": 45,
+   "seconds": 1.875,
+   "render_frames": 57
+  },
+  {
+   "shot": "S14",
+   "start": 32.168,
+   "first_frame": 772,
+   "frames": 72,
+   "seconds": 3.0,
+   "render_frames": 84
+  },
+  {
+   "shot": "S15",
+   "start": 35.168,
+   "first_frame": 844,
+   "frames": 94,
+   "seconds": 3.917,
+   "render_frames": 106
+  },
+  {
+   "shot": "S16",
+   "start": 39.088,
+   "first_frame": 938,
+   "frames": 44,
+   "seconds": 1.833,
+   "render_frames": 56
+  },
+  {
+   "shot": "S17",
+   "start": 40.907,
+   "first_frame": 982,
+   "frames": 58,
+   "seconds": 2.417,
+   "render_frames": 70
+  },
+  {
+   "shot": "S18",
+   "start": 43.322,
+   "first_frame": 1040,
+   "frames": 94,
+   "seconds": 3.917,
+   "render_frames": 106
+  },
+  {
+   "shot": "S19",
+   "start": 47.255,
+   "first_frame": 1134,
+   "frames": 165,
+   "seconds": 6.875,
+   "render_frames": 177
+  }
+ ]
+}
