@@ -637,13 +637,13 @@ def reflection(src, toward, length=420.0, width=5.0, z=0.3, dashes=48, name="h9_
     return o
 
 
-def moon(az=200.0, el=24.0, dist=2600.0, r=55.0, name="h9_moon"):
+def moon(az=200.0, el=24.0, dist=2600.0, r=55.0, name="h9_moon", origin=(0, 0, 0)):
     """A pale moon disc low in the sky (az / el in degrees, az 0 = north (+Y), 90 = east) with a soft halo; the moonlight
     (the scene's sun at night) comes from the same direction, so it rims what it lights."""
     import bmesh
     e, a = math.radians(el), math.radians(az)
     d = Vector((math.sin(a) * math.cos(e), math.cos(a) * math.cos(e), math.sin(e)))
-    pos = d * dist
+    pos = Vector(origin) + d * dist                            # origin: e.g. the camera, to frame it exactly
     out = {}
     for nm, rad, mat in ((name, r, look.flat(f"{name}_mat", (2.2, 2.3, 2.6, 1), strength=1.4)),
                          (f"{name}_halo", r * 3.2, _halo_mat(f"{name}_halo", (0.55, 0.65, 1.0, 1), 1.2))):

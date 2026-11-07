@@ -32,6 +32,11 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 13:45 UTC: **OK stills for S04 and S05** are in `okstills/`: `h9_S04_f006.png` (day: S03's end, Kai alone in the lane facing
+  us), `h9_S04_f022.png` (dusk on "down"), `h9_S04_f040.png` (night, the mark lights the lane coral), and `h9_S05_f060.png`
+  (the dark island, the one coral dot with its bloom). The S04 sun disc is being moved into frame (it sat just off the
+  right edge); a re-check is rendering. **S18:** the north-east two-shot camera was inside a lane hut (a flat grey
+  frame); it's fixed (closer, wider lens) and re-rendering, along with the moon placed up-left of the lamp. S18 OK stills next.
 - 2026-11-07 13:10 UTC: per the coordinator's notes: the lighthouse's lamp room has a hot near-white core, a stronger coral
   halo and the warm light on the broken stones; in S18 the moon is smaller and up-left of the lamp. S05 is darker
   (shot tint), and the 2D pass (`diorama_ep03/post_helper9.py`) adds the coral bloom on the village dot (S05) and on the
