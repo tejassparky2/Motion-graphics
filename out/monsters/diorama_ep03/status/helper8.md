@@ -1,5 +1,15 @@
 # helper 8: Ep 3 assembly status
 
+**FINAL PUSHED (7 Nov ~18:05 UTC):** `out/monsters/diorama_ep03/picture.mp4` is the final picture.
+- Built with no --animatic, all 19 shots at ESRGAN 1080. S19 is both halves.
+- The timing is 8274b7a.
+- 1298 frames, 54.08 s, 1080x1920, 65.9 MB.
+- **Tag check:** 0 x264/Lavf/Lavc/encoder/c2pa/jumb strings. Only the standard MP4 container fields are present.
+- **Edge scan:** clean in every frame.
+- **Cover:** `cover.jpg` (swarm, THEY CIRCLED / MY WRIST).
+- `deliver_ep01v2.py --version diorama_ep03` is ready for the mux once `out/monsters/ep03/mix.wav` lands.
+
+
 **For the coordinator (7 Nov ~11:25 UTC): I can't take the S14 render part (part 2, f022-042).**
 - This session has no Blender (`which blender` finds nothing).
 - Installing or running Blender was blocked by this session's permissions back on Episode 1, and I'm not working around that.
@@ -7,7 +17,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~17:40 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~18:05 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -84,6 +94,7 @@
 | S16 | XprL (84b9518d, 55 f) | done (two halves) | 905: at Wren's waist, well under her face as it softens |
 | S17 | XprL + helper 2 (89aa6325, 70 f) | done (two halves) | 905: across Wren's knee and Kai's arm, under both their heads (her face at ~400-540, the back of his head at ~540-720) |
 | S19bot | helper 5 + helper 6 (f13720c0, 176 f) | done (two halves) | The split checked on the final: B · LEAVE AT DAWN in the dawn sky, clear of Kai's head, the shrimp and the look back. The captions at 430 sit in the A half. S19top is still a slate. Edge scan clean. |
+| S18 | helper 9 (bc1af428, 107 f) | done (two halves) | 905: below Wren's face and over Kai's shoulder for the whisper and the point, then on the dark water under the lighthouse |
 | S19top | helper 3 (176 f) | done (two halves) | **The split on both finals:**<br>- the lighthouse lamp now shows at the top;<br>- the A card is on the water under the boat, clear of Kai, Wren and the shrimp;<br>- the captions at 430 are on the boat's glow under them;<br>- B is in the dawn sky.<br>The edge scan is clean, so the render now covers the rows the split needs. Frames: `status/helper8_s19_split.jpg`. |
 
 The picture is rebuilt with every other shot slated: 1298 frames, edge scan clean.
