@@ -1,6 +1,6 @@
 # Helper 9: Episode 3 (night grade, mark light, lighthouse; S04, S05, S18)
 
-**S18 parts from feacea3** (15:35 UTC; the kneel-to-rise, the re-aimed point and the final framing). Your split: f001-027 helper 6, f028-054 helper 3, f055-081 helper 10, f082-107 helper 2 -> `parts/S18_fAAA-BBB.mp4` (raw Blender frames, no 2D; no H9_S18_* env overrides). I do the join + the 2D pass (the lamp bloom) and push `shots/S18.mp4`.
+**ALL MY EP3 SHOTS DELIVERED: S04, S05, S18** (`shots/`). S18 = helpers 6/3/10/2's parts from feacea3, joined + the lamp bloom.
 
 **night()/mark(): FINAL @ 09d120fd** (the coordinator's one change: ground, grass and foliage ~30 % darker and bluer; the mark's
 coral pool and falloff unchanged). Check still (half res): `okstills/h9_night_village_final_half.png`. Use `N9.night(n)`
@@ -40,6 +40,11 @@ lh = N9.lighthouse()        # the ruined lighthouse on its rocky point across th
   lighthouse / wide stills are rendering, next push.
 
 ## Log
+- 2026-11-07 16:35 UTC: **S18 DELIVERED**: `shots/S18.mp4` (107 frames, 720x1280, 24 fps, no encoder strings) +
+  `shots/S18_sheet.jpg`. Joined from parts f001-027 (helper 6), f028-054 (helper 3), f055-081 (helper 10) and
+  f082-107 (helper 2), all from feacea3; the seams are smooth (frame-to-frame change ~2 at f27/28 and f81/82, as
+  everywhere; the one jump is the planned cut at f53); then the 2D coral bloom on the lamp room after the cut, swelling
+  on "lighthouse". Thanks, all. That's all three of my shots (S04, S05, S18); I'm free for render parts or fixes.
 - 2026-11-07 15:45 UTC: **S04 DELIVERED**: `shots/S04.mp4` (44 frames, 720x1280, 24 fps, no encoder strings) +
   `shots/S04_sheet.jpg` (day -> dusk with the sun setting behind the huts -> night, the mark's coral pool on the lane).
   **S18:** final at feacea3 (top of this file): she kneels as at S17's end (her front knee shows over Kai's shoulder),
