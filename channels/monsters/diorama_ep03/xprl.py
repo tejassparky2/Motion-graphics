@@ -211,7 +211,7 @@ def _mark_light(k, n, toward, energy=MARK_W, seed=5):
     return lt
 
 
-def _offscreen_mark(pos, n, energy=None):
+def _offscreen_mark(pos, n, energy=None, k=1.0):
     """Kai's mark lighting a shot he isn't in (S08, S16): a coral point light at his wrist's spot, pulsing (helper
     9's mark power and no shadows once the night grade is in: the grade warms what the coral light reaches)."""
     N9 = _optional("helper9")
@@ -221,6 +221,7 @@ def _offscreen_mark(pos, n, energy=None):
     d.color = CORAL
     d.shadow_soft_size = 0.3
     d.use_shadow = N9 is None
+    energy *= k
     lt = bpy.data.objects.new("x3_mark_off", d)
     bpy.context.scene.collection.objects.link(lt)
     lt.location = pos
@@ -341,7 +342,7 @@ def s16():
     wren.face(w, "softening", f_crack)
     wren.blink(w, 1, n, every=(200, 201), at=(f_crack + 10,))
     wren.contact_shadows(w)
-    _offscreen_mark(KAI_SIT + Vector((1.2, 0.6, 2.6)), n)
+    _offscreen_mark(KAI_SIT + Vector((1.2, 0.6, 2.6)), n, k=0.5)              # softer: she is close to it
     _dazed_moths(n, [(WREN_S16.x - 2.2, WREN_S16.y + 2.0), (WREN_S16.x + 2.6, WREN_S16.y + 1.2),
                      (WREN_S16.x + 0.8, WREN_S16.y + 3.4)])
     # close (chest-up), from Kai's side (north-west of her), a slow push-in
