@@ -47,6 +47,7 @@ S19TOP_STROKE = 40                                    # S19 top (helper 3): one 
 S19BOT_STEPS = (23, 44, 66, 87, 148, 157, 166)       # S19 bottom (helper 5): footfalls (x3._walk), cut at 164
 S19BOT_LOOK = 107                                      # the look back starts ("like" - 4)
 S09_PASS, S09_SEE = 8, 44                             # S09 (helper 1): the swarm over the camera, Kai sees it
+S15_UP, S15_PEEK = 30, 46                             # S15 (helper 5): sits up ("landed" - 3), shrimp peeks
 S16_REST = 32                                          # S16 (XprL): wren.lower_bell ends at "bell" + 6
 S02_CRACK, S02_ECHO = 36, 53                          # S02 (helper 3): the cut to the crack, the mark's echo
 # S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
@@ -506,6 +507,9 @@ def build(timing, n, v):
         hero = m["frame"] in land["plops"]
         hit(plop(200 + k), f14(m["frame"]), -12 if hero else rp.uniform(-22, -18), pan)
     bed(dazed_trills(s("S16") - f14(50) + 0.5, 1), f14(50), -26, 0.1)
+    # S15 (helper 5, final): Kai sits up among them on "landed" (f30-f40), the shrimp pops up out of its squeeze f46
+    hit(e2.cloth_swish(0.5, 12), fr("S15", S15_UP), -24, 0.0)
+    hit(sfx.cute_chirp(1.6, 13) * 0.5, fr("S15", S15_PEEK), -26, -0.2)
 
     # --- S16-S18: the bell lowered (a last clink), Wren kneels, whispers; the lighthouse
     hit(last_clink(), fr("S16", S16_REST), -21, 0.2)                       # the bell comes to rest (XprL f32)
