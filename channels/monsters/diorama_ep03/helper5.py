@@ -371,6 +371,26 @@ def _s15_landings(B, wrist, hips, hd, n_moths=34, seed=15):
     return out
 
 
+def _s15_extra(spots, hips, hd, n_moths=12, seed=16):
+    """Moths that came down just outside S14's view: on the camera side (south-east of him, toward his feet and his
+    right), so the foreground is a field of legs in the air too."""
+    import random
+    rnd = random.Random(seed)
+    right = Vector((-hd.y, hd.x, 0))                                     # his right once he sits up (the south)
+    feet = hips - hd * 4.0
+    out = []
+    tries = 0
+    while len(out) < n_moths and tries < 4000:
+        tries += 1
+        p = feet + right * rnd.uniform(-1.0, 9.0) - hd * rnd.uniform(-2.0, 8.0)
+        if (p - hips).length < 3.0:
+            continue
+        if any((p - Vector((q[0], q[1], 0))).length < 1.8 for q in spots + out):
+            continue
+        out.append((p.x, p.y, rnd.uniform(-math.pi, math.pi), S15_MOTH_SCALE * rnd.uniform(0.85, 1.05)))
+    return out
+
+
 def s15():
     from channels.monsters.diorama_ep03 import bgqrs as B
     from channels.monsters.ep01v2 import helper10 as s15p
@@ -486,6 +506,7 @@ def s15():
 
     # the field of moths on their backs (one built, linked copies), legs waving
     spots = _s15_landings(B, wrist, hips, hd)
+    spots += _s15_extra(spots, hips, hd)                                 # more on the camera side: a whole field
     cam_side = hips - hd * 12.0                                          # roughly where the camera looks from
     rigs = fluffmoth.swarm(len(spots), lambda i, rnd: (Vector((spots[i][0], spots[i][1], 1.0)), spots[i][3]),
                            name="m15_", seed=15,
@@ -507,8 +528,8 @@ def s15():
     # camera: in front of him (east, toward his feet), low, the moths big in the foreground; a slow push-in on 1s
     mid = hips - hd * 1.2
     cy = math.degrees(math.atan2(hd.x, hd.y))                            # looking west, along his head direction
-    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.2)), 19.0, 20.0, cy + 16.0),
-         (mid + Vector((0, 0, 3.6)), 15.5, 18.0, cy + 12.0), lens=35.0, blur=5.0, shift_y=-0.03)
+    _cam("cam_s15", 1, n, (mid + Vector((0, 0, 3.4)), 18.0, 13.0, cy + 40.0),
+         (mid + Vector((0, 0, 3.8)), 14.5, 11.0, cy + 36.0), lens=35.0, blur=5.0, shift_y=-0.03)
     LAST.update(k=k, sh=sh, moths=rigs)
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], sh["root"]] + list(k.get("cap", [])))
 

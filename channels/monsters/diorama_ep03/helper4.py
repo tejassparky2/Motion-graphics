@@ -73,7 +73,7 @@ def _cam_from(name, n, c0, c1, t0, t1, lens):
 
 
 # ------------------------------------------------------------------------------------------------------------ S01
-S01_LIGHT = 140.0                               # the mark's coral point light (close up, daylight: it has to show)
+S01_LIGHT = 420.0                               # the mark's coral point light (close up, daylight: it has to show)
 
 
 def _owner(o):
@@ -165,9 +165,9 @@ def s01():
         PW.aim("upper_arm.R", (-0.10, -0.80, 0.25))                 # the bell up like a ward (S20bot v2's end pose)
         PW.aim("forearm.R", (-0.04, -1.05, 0.6))
         PW.aim("hand.R", (-0.04, -0.3, -1))
-        if stumbling:                                                # the free arm flung out for balance
-            PW.aim("upper_arm.L", (0.9, -0.1, -0.2 + 0.3 * math.sin(f * 0.7)))
-            PW.aim("forearm.L", (0.8, -0.4, 0.1))
+        if stumbling:                                                # the free arm out a little for balance
+            PW.aim("upper_arm.L", (0.45, 0.05, -0.85 + 0.15 * math.sin(f * 0.7)))
+            PW.aim("forearm.L", (0.4, -0.2, -0.7))
         lean = 12.0 if f < 13 else 12.0 * (1 - _smooth((f - 13) / 10))
         PW.rot("chest", (-10.0 - lean + 1.0 * math.sin(f / 20.0), 0, 0))
         PW.rot("head 1", (-8.0, 0, 0))
@@ -190,7 +190,7 @@ def s01():
         _raised_arm(PK, k, fwd, up, 1.0, tremble=0.05 * math.sin(f * 1.7) + push)
         PK.rot("head 1", (-4.0, 0, 0))
         PK.key(f)
-    E2._face({"eye_brow_down": 0.55, "face_angry": 0.2, "mouth_short": 0.35, "eye_brow_up": 0.0}, 1)   # nervous, defiant
+    E2._face({"eye_brow_down": 0.9, "face_angry": 0.45, "mouth_wide": 0.35, "eye_zitome": 0.2}, 1)   # nervous, defiant
     E2._face({"eye_brow_down": 0.4, "face_sad": 0.3, "mouth_short": 0.4}, f_so)   # "So I did.": a wince at what it cost
 
     # the shrimp: on his right hand at his side, then a hop up onto his left shoulder ("So I did.")
@@ -306,7 +306,7 @@ def s01():
     bpy.context.view_layer.update()
     wrist = H9._forearm(k, H9.MARK_U)
     khead = s3d.kai_point(k, "eyes")
-    c0 = w0 + fwd * float(os.environ.get("S01_BACK", "4.5")) - L * float(os.environ.get("S01_SIDE", "2.8")) \
+    c0 = w0 + fwd * float(os.environ.get("S01_BACK", "4.5")) - L * float(os.environ.get("S01_SIDE", "4.0")) \
         + up * float(os.environ.get("S01_H", "4.5"))
     t0 = wrist.lerp(khead, float(os.environ.get("S01_AIM", "0.4"))) - up * float(os.environ.get("S01_DROP", "0.6"))
     c1 = c0.lerp(t0, 0.06)
@@ -322,7 +322,7 @@ def s01():
     for f in range(1, n + 1):
         sc.frame_set(f)
         m = H9._forearm(k, H9.MARK_U)
-        lt.location = m + (cam.matrix_world.translation - m).normalized() * 0.45
+        lt.location = m.lerp(s3d.kai_point(k, "eyes"), 0.35) + (cam.matrix_world.translation - m).normalized() * 0.45
         lt.keyframe_insert("location", frame=f)
         lvl = 1.15 + 0.12 * math.sin(f / 4.0)
         ld.energy = S01_LIGHT * lvl
