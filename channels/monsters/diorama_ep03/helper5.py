@@ -13,7 +13,9 @@
         Ep 2's S20bot; helper 8 crops it under the jagged divider). Dawn: the low sun just up in the east, long
         shadows, a pink-gold sky. Kai walks away from us up the dirt track out of the bell-keepers' village (helper 9's
         Ep 2 village on the south shore), between the last huts toward the meadow, the shrimp riding on his left
-        shoulder. On "like they said" he stops and looks back over his right shoulder at the village once (the shrimp
+        shoulder. (Coordinator's notes: the whole of him at y ~700-1000, the road ahead, the sun low at the end of
+        it.) He walks east along the beach road out of the village, past the last hut, toward the sun coming up over
+        the lake; long soft shadows fall back toward us. On "like they said" he stops and looks back over his right shoulder at the village once (the shrimp
         turns round on his left shoulder to look too), then faces front and walks on. A slow push after him on 1s; characters on 2s.
 
     blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S19bot OUT_DIR [--frames A-B] [--still N --scale 0.5]
@@ -336,7 +338,7 @@ DAWN_SUN = "#ffb487"            # a low peach-gold sun
 DAWN_SKY = ("#8fb6e6", "#ffd2b0", "#ffd9c4")   # zenith, horizon, fill
 
 
-def dawn():
+def dawn(azim=75.0, elev=9.0):
     """Turn the day island into the first minutes after sunrise: the sun low in the east (long shadows across the
     track), a pink-gold horizon, a cooler blue zenith, the haze warmed."""
     sc = bpy.context.scene
@@ -344,7 +346,7 @@ def dawn():
         if o.type == "LIGHT" and o.data.type == "SUN":
             bpy.data.objects.remove(o, do_unlink=True)
     look.world(sky=DAWN_SKY[0], horizon=DAWN_SKY[1], fill=DAWN_SKY[2], fill_strength=0.55)
-    s = look.sun(elev=9, azim=75, energy=3.6, color=DAWN_SUN)
+    s = look.sun(elev=elev, azim=azim, energy=3.6, color=DAWN_SUN)
     s.data.angle = math.radians(4)
     nt = sc.node_tree
     for n in nt.nodes:                                                   # the haze colour: peach instead of sky blue
@@ -360,13 +362,15 @@ def dawn():
 def s19bot():
     n = _frames("S19", 177)                                          # the whole S19 (both panels)
     X._world(n)
-    dawn()
+    dawn(azim=82.0, elev=6.0)                                            # the sun ahead of him, low in the east
     H9.village_and_lake()
     sc = bpy.context.scene
-    # the way out of the village: from the square north through the gap between the last two huts (helper 9's huts
-    # 3 and 4 stand at (19.6, -153.4) and (2.5, -152.3)), up toward the meadow; a worn dirt path under his feet
-    p0, p1 = Vector((11.0, -160.0, 0.0)), Vector((6.5, -126.0, 0.0))
-    _path_strip("h5_s19_path", [p0 + (p0 - p1).normalized() * 6.0, p0, p1, p1 + (p1 - p0).normalized() * 40.0])
+    # the road out of the village: east along the beach above the waterline (helper 9's south shore), past the last
+    # hut (helper 9's hut at (32.2, -177)), toward the sun coming up over the lake at the end of the road
+    p0, p1 = Vector((2.0, -180.5, 0.0)), Vector((28.0, -182.0, 0.0))
+    far = p1 + (p1 - p0).normalized() * 120.0
+    far.y = H9._shore(far.x) + 5.0
+    _path_strip("h5_s19_path", [p0 + (p0 - p1).normalized() * 50.0, p0, p1, (p1 + far) / 2, far], width=2.2)
     d = (p1 - p0).normalized()
     yaw = math.degrees(math.atan2(d.x, -d.y))                            # rot_z so the model's -Y points along d
     k = hero.load((0, 0, 0), scale=X.SCALE, outfit="world")
@@ -422,12 +426,68 @@ def s19bot():
     sc.render.use_crop_to_border = False
     sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
     sc.render.border_min_y, sc.render.border_max_y = 0.0, 0.62
-    # the camera: low in the square behind him, looking up the track; it follows him, slowly gaining
-    mid0 = p0 + Vector((0, 0, 5.0))
-    mid1 = p0.lerp(p1, 0.55) + Vector((0, 0, 5.0))
+    # the camera: low on the beach behind him (west), looking east down the road; it follows him, slowly losing
+    # ground so the road opens up ahead. His whole body sits at y ~700-1000 of the 1280 frame.
+    mid0 = p0 + Vector((0, 0, 4.3))
+    mid1 = p0.lerp(p1, 0.5) + Vector((0, 0, 4.3))
     cy = math.degrees(math.atan2(d.x, d.y))
-    _cam("cam_s19bot", 1, n, (mid0, 17.0, 8.0, cy), (mid1, 24.0, 7.0, cy + 2.0), lens=40.0, blur=4.0,
-         shift_y=0.19)                                                   # him in the middle of the bottom band
+    _cam("cam_s19bot", 1, n, (mid0, 42.0, 5.0, cy), (mid1, 48.0, 5.0, cy + 1.0), lens=40.0, blur=3.0,
+         haze=(6.0, 6.0), shift_y=0.16)
+    # the sun on the horizon at the end of the road (a little right, over the water): a bright disc the bloom haloes
+    cam = sc.camera
+    sc.frame_set(1)
+    ce = cam.matrix_world.translation.copy()
+    hdg = math.radians(cy + 8.0)
+    sun_at = ce + Vector((math.sin(hdg), math.cos(hdg), 0)) * 330.0
+    sun_at.z = ce.z + 330.0 * math.tan(math.radians(3.2))
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=8.5, segments=32, ring_count=16, location=sun_at)
+    disc = bpy.context.object
+    disc.name = "h5_dawn_sun"
+    m = bpy.data.materials.new("h5_dawn_sun")
+    m.use_nodes = True
+    nt = m.node_tree
+    for nd in list(nt.nodes):
+        nt.nodes.remove(nd)
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = look.hexc("#fff1c9")
+    em.inputs["Strength"].default_value = 9.0
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    nt.links.new(em.outputs[0], out.inputs["Surface"])
+    disc.data.materials.append(m)
+    disc.visible_shadow = False
+    for i, (r, st) in enumerate(((19.0, 1.6), (34.0, 0.7))):           # a soft glow round it
+        bpy.ops.mesh.primitive_circle_add(vertices=48, radius=r, fill_type="TRIANGLE_FAN", location=sun_at)
+        g = bpy.context.object
+        g.name = f"h5_dawn_glow{i}"
+        g.rotation_euler = (math.pi / 2, 0, -hdg)
+        g.location = sun_at + Vector((math.sin(hdg), math.cos(hdg), 0)) * (6.0 + i * 4)
+        gm = bpy.data.materials.new(f"h5_dawn_glow{i}")
+        gm.use_nodes = True
+        gt = gm.node_tree
+        for nd in list(gt.nodes):
+            gt.nodes.remove(nd)
+        tc = gt.nodes.new("ShaderNodeTexCoord")
+        gr = gt.nodes.new("ShaderNodeTexGradient")
+        gr.gradient_type = "SPHERICAL"
+        mp = gt.nodes.new("ShaderNodeMapping")
+        mp.inputs["Scale"].default_value = (1.0 / r, 1.0 / r, 1.0 / r)
+        gt.links.new(tc.outputs["Object"], mp.inputs["Vector"])
+        gt.links.new(mp.outputs[0], gr.inputs["Vector"])
+        e2 = gt.nodes.new("ShaderNodeEmission")
+        e2.inputs["Color"].default_value = look.hexc("#ffd59a")
+        e2.inputs["Strength"].default_value = st
+        tr = gt.nodes.new("ShaderNodeBsdfTransparent")
+        mx = gt.nodes.new("ShaderNodeMixShader")
+        gt.links.new(gr.outputs["Fac"], mx.inputs[0])
+        gt.links.new(tr.outputs[0], mx.inputs[1])
+        gt.links.new(e2.outputs[0], mx.inputs[2])
+        o2 = gt.nodes.new("ShaderNodeOutputMaterial")
+        gt.links.new(mx.outputs[0], o2.inputs["Surface"])
+        gm.blend_method = "BLEND" if hasattr(gm, "blend_method") else None
+        if hasattr(gm, "surface_render_method"):
+            gm.surface_render_method = "BLENDED"
+        g.data.materials.append(gm)
+        g.visible_shadow = False
     LAST.update(k=k, sh=sh)
     return dict(frames=n, step=2, ones=(1, n), subject=[arm, sh["root"]])
 
