@@ -10,7 +10,8 @@
   - **Render parts welcome:** anyone free can take a range (e.g. f089-132 or f133-176): render with `--frames A-B`
     (every frame on 1s, no step-multiple start), raw part crf 10 yuv420p 24 fps, CLEAN flags, `-start_number A`, to
     `parts/S19bot_fAAA-BBB.mp4`. Mark the range here first; I'll stop my chunk before it.
-- **S15 (106 frames): your 11:50 notes done, new OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
+- **S15 (106 frames): OK'd (13:05), FULL RENDER RUNNING** from f001 in 35-frame chunks (f001-035, f036-070,
+  f071-106: helpers free to help, claim f071-106 here and I'll stop before it). Your 11:50 notes done, OK still `okstills/S15_v2_f036_f070_f096.jpg`** (half scale, with the
   2D pass):
   1. Light: N9.mark at its default 6000 W while he lies (as S14 ends), eased down to 22% over 10 frames as he sits up,
      while a coral spot at the mark pointing UP takes over (the palm-up mark shines up at him and the air): a coral
@@ -20,8 +21,9 @@
      looks round at the moths too.
   3. Four hero moths in the foreground round him (placed by screen position), legs waving big on 2s, with 2D dizzy
      stars circling over each and a spiral turning on each wing eye-spot (`diorama_ep03/post_helper5.py`).
-  Waiting for your OK; then the full render (~5-6 min/frame at full size here: **render parts welcome**, f001-035 /
-  f036-070 / f071-106, mark the range here).
+  Raw part spec for helpers: `--frames A-B` (every frame on 1s), crf 10 yuv420p 24 fps, CLEAN flags,
+  `-start_number A`, to `parts/S15_fAAA-BBB.mp4`, no 2D pass (I run post_helper5 after joining; it needs
+  build/monsters/diorama_ep03/S15_heroes.json, which my builder writes).
 - **S07 (60 frames): OK'd (12:50), FULL RENDER RUNNING** (since ~12:55 UTC); the 2D pass adds helper 1's itch
   squiggles by the scratching arm from "stings" (post_helper1.itch, on 2s). Still: `okstills/S07_f010_f030_f050.jpg` (half scale, helper 9's FINAL night).
   A medium two-shot of helper 1's lane hut #3's porch: Wren and a villager sheltering on it side by side, lit coral
