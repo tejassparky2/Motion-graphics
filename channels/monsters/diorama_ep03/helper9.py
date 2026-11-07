@@ -218,9 +218,9 @@ def s05():
 
 # ------------------------------------------------------------------------------------------------------------ S18
 S18_AZ = float(os.environ.get("H9_S18_AZ", 160.0))
-S18_D = float(os.environ.get("H9_S18_D", 11.0))
-S18_EL = float(os.environ.get("H9_S18_EL", 8.0))
-S18_MID = float(os.environ.get("H9_S18_MID", 0.45))
+S18_D = float(os.environ.get("H9_S18_D", 12.0))
+S18_EL = float(os.environ.get("H9_S18_EL", 16.0))
+S18_MID = float(os.environ.get("H9_S18_MID", 0.6))
 
 
 def s18():
