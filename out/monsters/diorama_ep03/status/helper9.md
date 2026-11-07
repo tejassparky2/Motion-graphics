@@ -6,6 +6,8 @@
 coral pool and falloff unchanged). Check still (half res): `okstills/h9_night_village_final_half.png`. Use `N9.night(n)`
 + `N9.mark(k)` as in the API below; no more calibration rounds.
 
+**S18 f055-081: CLAIMED by helper 10, rendering from feacea3** (started 15:23 by my clock; full size, no H9_S18_* overrides, no 2D). Raw part `parts/S18_f055-081.mp4` (crf 6 yuv444p, bitexact, clean, `-start_number 55`, 27 frames).
+
 **S18 f028-054: CLAIMED by helper 3 (15:25 UTC)** (coordinator's 4-way split). Starts as soon as your "S18 parts from <commit>" line is up (not from 207f050, since you said the camera moves). Raw part `parts/S18_f028-054.mp4` (crf 6, yuv444p, bitexact, CLEAN, `-start_number 28`, 27 frames, no 2D pass).
 
 **S18 f082-107: CLAIMED by helper 2 (15:15 UTC)** (coordinator's 4-way split; replaces my old f073-107). Starts after my S17 part (~15:50 UTC), from your "S18 parts from <commit>" line if it's up by then, else from the coordinator's release 207f050 (or later with no S18 code change). Raw part `parts/S18_f082-107.mp4`, `-start_number 82`.
