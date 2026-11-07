@@ -1,6 +1,6 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 12:52 UTC.
+Updated 7 Nov 2026, 13:10 UTC.
 
 | Shot | State | File |
 |---|---|---|
@@ -68,9 +68,8 @@ Updated 7 Nov 2026, 12:52 UTC.
   ~7000 W on "below", then ~5500 W). Plus my shadowless coral "under" light 1.6 above the mark (`B.S13_UNDER` 900 W) for
   the moths' bellies, and the 2D beam, rays, blades and zigzag from `post_bgqrs.py`.
 
-Now: **S19top f089-176** for helper 3 — **stopped at f106 and discarded** (12:50 UTC, helper 3's ask: the camera and the
-render border are changing for helper 8's split). **Re-render queued**: it starts automatically from helper 3's "S19top framing
-FINAL @ <commit>" (status/helper3.md), ~52 s/frame, ~80 min (claimed 11:30, coordinator's ask): `--frames 89-176` from helper 9's FINAL night
+Now: **S19top f089-176** for helper 3: **re-rendering from helper 3's framing FINAL @ 61f6f756** (started 13:08 UTC at
+8a63ed2; the bf89da0 frames were discarded). ~55 s/frame, done around 14:40 UTC (claimed 11:30, coordinator's ask): `--frames 89-176` from helper 9's FINAL night
 commit, a RAW part `parts/S19top_f089-176.mp4` (crf 6, yuv444p, bitexact, -start_number 89, no tags). Then other
 render parts of the long shots (S14/S06/S10/S15/S18) from their owners' status files.
 
