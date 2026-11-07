@@ -271,11 +271,11 @@ def s01():
     wrist = H9._forearm(k, H9.MARK_U)
     left = Vector((-fwd.y, fwd.x, 0))
     wren_head = w0 + fwd * 1.5 + up * 7.4
-    c0 = wrist - fwd * float(os.environ.get("S01_BACK", "3.6")) + left * float(os.environ.get("S01_LEFT", "1.6")) \
-        - up * float(os.environ.get("S01_LOW", "1.4"))
-    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.55")))
+    c0 = wrist - fwd * float(os.environ.get("S01_BACK", "4.0")) + left * float(os.environ.get("S01_LEFT", "-1.2")) \
+        - up * float(os.environ.get("S01_LOW", "1.5"))
+    t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.2")))
     c1 = c0.lerp(wrist, 0.10)
-    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "24")))
+    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "20")))
 
     # the mark's light and its 2D anchors
     ld = bpy.data.lights.new("s01_mark_light", "POINT")
@@ -345,7 +345,7 @@ def s11():
 
     m = fm.build((0, 0, 0), name="s11moth")
     fm.flight_mode(m)
-    m["root"].scale = (1.8,) * 3                                     # read big on a wider frame
+    m["root"].scale = (2.35,) * 3                                    # the biggest thing in frame
     fm.flap(m)
     # its path: level flight to screen right; from "They" its back tilts to the light (amount 0 -> 1 by "backs"+6)
     # and the tilt turns it: the heading swings round the light (an orbit starting)
@@ -379,16 +379,16 @@ def s11():
     fm.spot_blink(m, 30) if hasattr(fm, "spot_blink") else None
 
     # the camera: side-on from -X, level, a long lens, a slow push-in on 1s; everything above the caption band
-    tgt = P(1.4, 5.0)
+    tgt = P(1.0, 5.6)
     az = math.radians(float(os.environ.get("S11_AZ", "30")))          # swung toward the moth's front: the wings
-    el = math.radians(float(os.environ.get("S11_EL", "8")))           # show their faces, not edge-on
+    el = math.radians(float(os.environ.get("S11_EL", "20")))           # show their faces, not edge-on
     bpy.ops.object.camera_add(location=tgt + 52.0 * Vector((-math.cos(az) * math.cos(el), -math.sin(az) * math.cos(el),
                                                              math.sin(el))))
     cam = bpy.context.object
     cam.name = "S11cam"
     cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
     cam.data.lens = float(os.environ.get("S11_LENS", "52"))
-    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.10"))
+    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.04"))
     cam.data.clip_end = 400
     sc.camera = cam
     c0 = cam.location.copy()

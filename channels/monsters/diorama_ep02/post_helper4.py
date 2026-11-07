@@ -16,6 +16,7 @@ diorama_ep02/helper4.py). Writes out/monsters/diorama_ep02/shots/<SHOT>.mp4 + <S
 """
 import json
 import math
+import random
 import os
 import shutil
 import subprocess
@@ -264,6 +265,9 @@ def mark_s01():
     return [(draw, dict(start=0.0)), (eyes, dict(start=0.0, end=(n - 1) / FPS))]
 
 
+S11_SHIFT = (70.0, 90.0)                                                    # px left, px up (the whole frame)
+
+
 def s11_pass():
     """Ep 3 S11 (the explainer): a soft bloom round the coral light all through; from "backs" a soft glow line from the
     light to the moth's back (an arrow-like taper ending in a small head at its back), drawing on over 6 frames and
@@ -275,9 +279,82 @@ def s11_pass():
     f0 = meta["f_backs"] - 4
     coral, hot = (1.0, 0.52, 0.40), (1.0, 0.86, 0.78)
 
+    def ground(cr):
+        """A faint dark hill-and-grass silhouette across the bottom (below the caption band), so it isn't a void."""
+        top = 985.0
+        cr.save()
+        cr.new_path()
+        cr.move_to(-10, 1290)
+        for x in range(-10, 740, 10):
+            y = top + 22 * math.sin(x / 140.0) + 10 * math.sin(x / 47.0 + 1.3)
+            cr.line_to(x, y)
+        cr.line_to(740, 1290)
+        cr.close_path()
+        cr.set_source_rgba(0.035, 0.05, 0.11, 1.0)
+        cr.fill()
+        rnd = random.Random(7)
+        for i in range(70):                                              # grass blades on the ridge
+            x = rnd.uniform(-5, 725)
+            y = top + 22 * math.sin(x / 140.0) + 10 * math.sin(x / 47.0 + 1.3) + 3
+            h = rnd.uniform(10, 30)
+            lean = rnd.uniform(-7, 7)
+            cr.new_path()
+            cr.move_to(x - 2.5, y)
+            cr.line_to(x + lean, y - h)
+            cr.line_to(x + 2.5, y)
+            cr.close_path()
+            cr.fill()
+        cr.restore()
+
+    def trail(cr, f):
+        """Its flight so far as faint soft dots, older ones dimmer: the long straight run, then the bend round the
+        light (the moth is big, so a short trail would hide under its own wings)."""
+        for j in range(f - 1, 5, -4):
+            g0 = A.get(f - j)
+            if g0 is None:
+                continue
+            x, y = g0["body"][:2]
+            a = 0.18 + 0.35 * (1 - min(1.0, j / 60.0))
+            fx2d._glow(cr, x, y, 12.0, (0.85, 0.88, 1.0), a)
+            cr.new_path()
+            cr.arc(x, y, 4.0, 0, 2 * math.pi)
+            cr.set_source_rgba(0.9, 0.92, 1.0, min(1.0, a * 1.8))
+            cr.fill()
+
+    def shift_frame(cr):
+        """Move the whole render S11_SHIFT px (left, up), off the Shorts right rail and out of the caption band
+        (coordinator, 7 Nov); the exposed right/bottom take the sky's own navy (sampled at the top-right corner)."""
+        dx, dy = S11_SHIFT
+        src = cr.get_target()
+        src.flush()
+        w, h = src.get_width(), src.get_height()
+        data = src.get_data()
+        stride = src.get_stride()
+        i = 2 * stride + (w - 3) * 4                                     # BGRA, premultiplied (opaque here)
+        b, g_, r = data[i] / 255.0, data[i + 1] / 255.0, data[i + 2] / 255.0
+        copy = cairo.ImageSurface(cairo.FORMAT_ARGB32, w, h)
+        c2 = cairo.Context(copy)
+        c2.set_source_surface(src, 0, 0)
+        c2.paint()
+        cr.save()
+        cr.set_source_rgb(r, g_, b)
+        cr.paint()
+        cr.set_source_surface(copy, -dx, -dy)
+        cr.paint()
+        cr.restore()
+
     def draw(cr, t, start, end=None):
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
         g = A[f]
+        shift_frame(cr)
+        ground(cr)
+        cr.save()
+        cr.translate(-S11_SHIFT[0], -S11_SHIFT[1])                       # the drawn layers move with the render
+        draw_rest(cr, f, g)
+        cr.restore()
+
+    def draw_rest(cr, f, g):
+        trail(cr, f)
         lx, ly = g["light"][:2]
         rr = abs(g["r_orb"][1] - ly) or 12.0
         fx2d._glow(cr, lx, ly, rr * 7.0, coral, 0.45)                   # the light's bloom
@@ -291,30 +368,28 @@ def s11_pass():
             return
         ang = math.atan2(by - ly, bx - lx)
         r0 = rr * 1.4                                                   # start just outside the orb
-        r1 = r0 + (L - r0 - 6) * u                                      # the tip races out to its back
+        r1 = r0 + (L - r0 - 6 - 22) * u                                 # the tip stops in the fur of its back
         breathe = 0.85 + 0.15 * math.sin(f / 3.0)
         cr.save()
         cr.translate(lx, ly)
         cr.rotate(ang)
+        grad = cairo.LinearGradient(r0, 0, r1, 0)                        # full at the light, fading into its fur
         for wdt, a in ((22.0, 0.10), (12.0, 0.22), (5.0, 0.75)):        # a soft glowing line, tapered
+            grad = cairo.LinearGradient(r0, 0, r1, 0)
+            grad.add_color_stop_rgba(0.0, *coral, a * breathe)
+            grad.add_color_stop_rgba(0.75, *coral, a * breathe)
+            grad.add_color_stop_rgba(1.0, *coral, 0.0)
             cr.new_path()
             cr.move_to(r0, -wdt * 0.25)
-            cr.line_to(r1 - 10, -wdt * 0.5)
-            cr.line_to(r1 - 10, wdt * 0.5)
+            cr.line_to(r1, -wdt * 0.5)
+            cr.line_to(r1, wdt * 0.5)
             cr.line_to(r0, wdt * 0.25)
             cr.close_path()
-            cr.set_source_rgba(*coral, a * breathe)
-            cr.fill()
-        if u > 0.6:                                                     # the head, at its back
-            cr.new_path()
-            cr.move_to(r1 + 4, 0)
-            cr.line_to(r1 - 16, -11)
-            cr.line_to(r1 - 16, 11)
-            cr.close_path()
-            cr.set_source_rgba(*hot, min(1.0, (u - 0.6) / 0.4) * breathe)
+            cr.set_source(grad)
             cr.fill()
         cr.restore()
-        fx2d._glow(cr, bx, by, 26.0, coral, 0.35 * u * breathe)          # where it lands: its back lit
+        fx2d._glow(cr, bx, by, 34.0, coral, 0.45 * u * breathe)          # where it lands: its back lit
+        fx2d._glow(cr, bx, by, 14.0, hot, 0.35 * u * breathe)
     return [(draw, dict(start=0.0))]
 
 
