@@ -44,6 +44,47 @@ PROMPTS = {
         "street": "street of an ancient Indian town, small houses with clay tile roofs, market stalls with brass pots "
                   "and baskets, a huge banyan tree, soft morning light, dusty road in the foreground",
     },
+    # video 4 (owner, 7 Nov 2026: "make it like this", the painted-diorama Diwali reel)
+    "bali": {
+        "yajna": "an ancient Indian royal yajna site outdoors, a square brick fire altar with bright flames, brass "
+                 "vessels and ghee pots, marigold garlands, a carved wooden canopy on pillars, a calm river behind, "
+                 "warm morning light",
+        "swarga": "the golden city of heaven on the clouds, grand Indian palace gates with carved arches and kalasha "
+                  "tops, white marble steps, celestial light, garlands, serene",
+        "cosmos": "the planet Earth floating in deep space, stars and a soft violet nebula, a faint golden glowing "
+                  "shell curving around the edge of the universe, cosmic and vast",
+        "sutala": "a magnificent underground jewelled palace hall, pillars inlaid with rubies and emeralds, gold "
+                  "floors, glowing blue and gold light, lotus pools, serene and beautiful",
+        "village": "a south Indian village street at night during Deepavali, rows of glowing clay diyas on steps and "
+                   "walls, colourful rangoli on the ground, clay tile roofs, warm festive glow",
+    },
+}
+
+# Characters for the painted-diorama look: one full-body figure each on a plain ground, cut out (bc_cut / rembg) and
+# reused shot to shot so a character never changes. Deities are drawn only in their standard iconography; every
+# image is checked by eye before use (owner, 7 Nov 2026: "You, on the laptop").
+CHAR_STYLE = ("full body shot from head to toe, standing on the ground, both feet visible, the whole figure small "
+              "enough to fit in the frame with space around it, plain flat light grey background, no scenery, Indian "
+              "storybook illustration, detailed digital painting, clean outline, soft shading, rich colours")
+CHAR_NEG = ("portrait, close-up, headshot, bust, half body, upper body, cropped, cut off feet, cut off head, arch, pillars, "
+            "scenery, landscape, room, multiple people, crowd, text, watermark, signature, frame, border, extra arms, "
+            "extra fingers, deformed hands, deformed face, photo, photorealistic, 3d render, blurry, lowres, western "
+            "clothing, chinese, japanese")
+CHARS = {
+    "bali": {
+        "bali": "a majestic Indian emperor, King Bali, young regal man with a thin black moustache, warm brown skin, "
+                "tall golden crown with rubies, layered gold and pearl necklaces, gold armlets, red and gold silk dhoti, "
+                "saffron silk shawl, holding a golden water pot in his right hand, calm generous smile",
+        "vamana": "Vamana, a small Hindu brahmin boy, golden-brown skin, shaved head with a small tuft of hair, sacred "
+                  "white thread across his bare chest, saffron dhoti, a deerskin over one shoulder, holding a small "
+                  "wooden umbrella in one hand and a brass water pot in the other, gentle smile, sandalwood tilak",
+        "shukra": "an old Hindu sage, Shukracharya, long white beard, white hair tied in a top knot, saffron robes, "
+                  "rudraksha bead necklace, holding a wooden staff, stern worried face, raising one hand in warning",
+        "aditi": "a graceful Hindu goddess mother, Aditi, kneeling with folded hands in prayer, cream and gold silk saree, "
+                 "gold jewellery, long black hair, serene face, eyes closed",
+        "foot": "a single giant divine bare foot with a gold anklet and red alta on the sole edge, stepping down, seen "
+                "from the side, glowing softly, nothing else",
+    },
 }
 
 
@@ -76,11 +117,11 @@ def server():
     raise RuntimeError("ComfyUI did not start")
 
 
-def workflow(prompt, seed, prefix, w=768, h=1344, steps=6):
+def workflow(prompt, seed, prefix, w=768, h=1344, steps=6, style=None, neg=None):
     return {
         "1": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": CKPT}},
-        "2": {"class_type": "CLIPTextEncode", "inputs": {"text": f"{prompt}, {STYLE}", "clip": ["1", 1]}},
-        "3": {"class_type": "CLIPTextEncode", "inputs": {"text": NEG, "clip": ["1", 1]}},
+        "2": {"class_type": "CLIPTextEncode", "inputs": {"text": f"{prompt}, {style or STYLE}", "clip": ["1", 1]}},
+        "3": {"class_type": "CLIPTextEncode", "inputs": {"text": neg or NEG, "clip": ["1", 1]}},
         "4": {"class_type": "EmptyLatentImage", "inputs": {"width": w, "height": h, "batch_size": 1}},
         "5": {"class_type": "KSampler", "inputs": {"model": ["1", 0], "positive": ["2", 0], "negative": ["3", 0],
                                                    "latent_image": ["4", 0], "seed": seed, "steps": steps, "cfg": 2.0,
@@ -91,8 +132,8 @@ def workflow(prompt, seed, prefix, w=768, h=1344, steps=6):
     }
 
 
-def generate(prompt, seed, out_png):
-    pid = post("/prompt", {"prompt": workflow(prompt, seed, "myth")})["prompt_id"]
+def generate(prompt, seed, out_png, **kw):
+    pid = post("/prompt", {"prompt": workflow(prompt, seed, "myth", **kw)})["prompt_id"]
     for _ in range(900):
         time.sleep(1)
         h = json.loads(get(f"/history/{pid}"))
@@ -118,8 +159,52 @@ def fit(raw_png, out_png, tw=1242, th=2208):
     os.remove(up)
 
 
+def cutout(raw_png, out_png):
+    """Cut a generated character out of its plain ground (BiRefNet-lite through rembg, MIT; never rembg's default
+    model, which needs a paid licence) and crop to the figure."""
+    from PIL import Image
+    from rembg import new_session, remove
+    global _SESSION
+    if "_SESSION" not in globals():
+        _SESSION = new_session("birefnet-general-lite")
+    im = remove(Image.open(raw_png).convert("RGB"), session=_SESSION)
+    a = im.getchannel("A").point(lambda v: 255 if v > 100 else (0 if v < 20 else v))
+    im.putalpha(a)
+    im.crop(a.getbbox()).save(out_png)
+
+
+def characters(video, names, seeds):
+    raw_dir = os.path.join(ASSETS_ROOT, video, "chars_raw")
+    out_dir = os.path.join(ASSETS_ROOT, video, "chars")
+    os.makedirs(raw_dir, exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
+    proc = server()
+    try:
+        for name in names:
+            for k in range(seeds):
+                seed = 2000 + 31 * k
+                raw = os.path.join(raw_dir, f"{name}_s{seed}.png")
+                if not os.path.exists(raw):
+                    t = time.time()
+                    generate("full body illustration of " + CHARS[video][name], seed, raw, w=768, h=1344, style=CHAR_STYLE, neg=CHAR_NEG)
+                    print(f"{name} seed {seed}: {time.time() - t:.0f} s", flush=True)
+    finally:
+        if proc:
+            proc.terminate()
+    for name in names:
+        for k in range(seeds):
+            seed = 2000 + 31 * k
+            cutout(os.path.join(raw_dir, f"{name}_s{seed}.png"), os.path.join(out_dir, f"{name}_s{seed}.png"))
+    print("cutouts done", flush=True)
+
+
 def main():
     video = sys.argv[1]
+    if "--chars" in sys.argv:
+        seeds = int(sys.argv[sys.argv.index("--seeds") + 1]) if "--seeds" in sys.argv else 3
+        names = [a for a in sys.argv[2:] if not a.startswith("--") and not a.isdigit()] or list(CHARS[video])
+        characters(video, names, seeds)
+        return
     args = [a for a in sys.argv[2:] if not a.startswith("--")]
     seeds = int(sys.argv[sys.argv.index("--seeds") + 1]) if "--seeds" in sys.argv else 2
     picks = dict(a.split("=") for a in args if "=" in a)

@@ -93,6 +93,20 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - Masters: x264 crf 14, AAC 256k. The phone copy is a separate two-pass encode under 29 MB
   (`<shorts research>/channel_tools/phone_copy.py`).
 
+## Video 4 and the "painted diorama" look (7 Nov 2026)
+- Owner sent a reference reel (a Hindi Diwali-series reel, "Lakshmi has an elder sister") and said "make it like this";
+  then chose "A new story" and "You, on the laptop" for the characters, and approved the script ("ok").
+- `videos/bali.py` + `scenes_bali.py` + `diorama.py`: King Bali and Vamana (Bhagavata Purana 8.19-8.23, 5.17.1),
+  timed for Bali Padyami. Painted characters generated once each with SDXL (`plates.py <video> --chars`, full-body
+  prompt on a plain ground, cut out with BiRefNet-lite) and reused shot to shot; painted sets; the reference's paper
+  devices (label row with FIG. n, torn tag, torn notes, calendar, checklist, target rings, dotted paths, paper clouds,
+  fold lines). The warning beat uses a CC0 1700s Pahari painting of the scene (Cleveland Museum of Art 167578).
+- Lessons: SDXL makes half-length portraits unless the prompt starts with "full body illustration of" and asks for
+  feet and a plain ground; generated feet came out as a woman's adorned feet, and a code-drawn foot read as a boot, so
+  the giant step reuses the Vamana cut-out at huge scale; reject any image with a sexualised goddess or wrong
+  iconography; `plates.py` rewrites `credits.json`, so re-add museum credits after it runs.
+- Windows treats `CUDA_VISIBLE_DEVICES=""` as unset; use `-1` to force the voice model onto the CPU.
+
 ## Status (6 Nov 2026, morning)
 - Six reels finished: kakudmi (1:44 hi / 2:00 kn), brahma_calves (1:22 / 1:30), jarasandha (1:22 / 1:28), each with
   master, phone copy (< 29 MB), cover and upload pack in `myth_out/upload_<video>_<lang>/`, and on Drive under
