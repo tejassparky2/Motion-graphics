@@ -1,7 +1,17 @@
 # Helper 4 status (Ep 3)
 
 ## Now
-- **S01: your 11:44 tweaks are in, and the FULL RENDER is running** (62 frames, started 11:50 UTC):
+- **S01 parts from bb5be5d** (split per the coordinator, 13:49 UTC). Run
+  `render_shot.py -- diorama_ep03 S01 OUT --frames A-B` at full size (720x1280, about 4.8 min a frame), raw 3D only;
+  the 2D pass is mine at the join.
+  | Part | Who | State |
+  |---|---|---|
+  | f001-027 | helper 4 | DONE, pushed `parts/S01_f001-027.mp4` (crf 6 yuv444p, 0 tags) |
+  | f028-045 | helper 4 | rendering (started 13:52 UTC, about 85 min) |
+  | f046-062 | helper 10 | yours: push `parts/S01_f046-062.mp4` (crf 6 yuv444p, `-start_number 46`, clean remux) |
+  When f046-062 lands, I join the parts, run the 2D pass (the mark, the evening grade, sparkles), encode and push
+  `shots/S01.mp4`.
+- **S01: your 11:44 tweaks are in** (frame 1 checked: the evening grade, brows down, eyes to Wren, the mark brightest):
   1. **Face:** a nervous-defiant face (brows down and together, angry 0.6, a small grit), eyes toward Wren.
   2. **Shrimp:** further out and lower on his shoulder, so his whole face stays clear.
   3. **Grade:** S02's evening sky and late-afternoon grade, through helper 3's own `post_helper3.evening()`, applied
@@ -34,7 +44,26 @@
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
 - **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
-- **QA:** as shots land.
+- **QA, round 1 (S02, S03, S06, S12, S13, S14 as landed; S11 is mine, already checked):**
+  - **Files:** all 720x1280; frames S02 79, S03 67, S06 63, S12 79, S13 57, S14 84; 0 Lavf/Lavc/x264 strings each.
+  - **Edge-band scan:** every 2nd frame of each shot; no unpainted black at any edge.
+  - **Cut check:** no frame jumps, except S02's two planned cuts (f35 Wren to the sky, f46 to Kai).
+  - **S02 PASS.** Wren is steady with her bell up, the zigzag sky crack, and Kai looks up with his raised wrist;
+    the mark/crack match reads. Note: Wren's half is bright daytime green, while the sky half and S01 are evening.
+  - **S03 PASS.** The villagers back away and the shutters close; Kai is left alone in the lane, the shrimp on his
+    shoulder, the 2D mark on. Note: it is bright midday (blue sea, hard light) between S01/S02's evening and
+    S04's sunset. If there's time, a late-afternoon grade (`post_helper3.late_afternoon`) would match.
+  - **S06 PASS.** A night swarm pours down the hill path toward camera; in the close-up a wing eye-spot blinks open.
+  - **S12 PASS, physics reads at phone size.** Side-on, the light glows and the line runs to the moth's back while
+    the dotted trail goes round. Weak spot: the light is only ~60 px above the moth at 720 wide, so "above them"
+    rests on the line's angle. Not a blocker.
+  - **S13 PASS, physics reads.** Kai drops flat with his wrist on the ground; a coral glow cone points up into the
+    swarm. Weak spot: his "determined face" is too small to read at phone size (his head is ~40 px). Not a
+    blocker, since the action carries it.
+  - **S14 PASS, the flip reads at phone size.** The held beat, then the swarm rolls belly-up (legs visible), stalls
+    and drops with dust puffs, landing in a heap of moths with their legs up around him. The bottom third is empty
+    grass, which is fine under the 71% captions.
+  - **Still to QA:** S01 (rendering), S04, S05, S07, S08, S09, S10, S15-S19 as they land.
 
 ## Coordinator
 (answers here)
