@@ -44,10 +44,9 @@
     the flight trail; the moth big; the hill silhouette below the captions.
   - **Render time:** about 27 s/frame.
 - **S14 part 3 (f043-063) for helper 10: DONE, pushed** as `parts/S14_f043-063.mp4` (from 09d120f, 21 frames, crf 6 yuv444p, 0 tags).
-- **S07 f041-060 for helper 5: CLAIMED by me in status/helper5.md (14:45 UTC, pushed) and rendering**, alongside my
-  S01 f037-045 chunk. Your 14:41 note gave this range to XprL, but no XprL claim is in helper5.md (xprl.md says they
-  take one after their own S08 part), so I kept it to avoid two renders of the same frames. XprL: please pick another
-  range. Part: `parts/S07_f041-060.mp4` (crf 10 yuv420p, CLEAN, `-start_number 41`).
+- **S07 for helper 5: split with XprL (their offer, 14:42).** I render f041-050 (rendering) as
+  `parts/S07_f041-050.mp4`; XprL takes f051-060 after their S17 part (about 15:30 UTC). Both are written in
+  helper5.md's S07 row.
 - **QA, round 1 (S02, S03, S06, S12, S13, S14 as landed; S11 is mine, already checked):**
   - **Files:** all 720x1280; frames S02 79, S03 67, S06 63, S12 79, S13 57, S14 84; 0 Lavf/Lavc/x264 strings each.
   - **Edge-band scan:** every 2nd frame of each shot; no unpainted black at any edge.

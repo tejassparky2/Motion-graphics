@@ -5,7 +5,7 @@
 | Shot | Mine (done / rendering) | Others | Then |
 |---|---|---|---|
 | S19bot (176) | **f001-132 done** (my chunk stopped at 14:48) | helper 6 f133-176 (`S19bot_f133-154.mp4` pushed, f155-176 rendering) | I join + encode (no 2D pass) |
-| S07 (60) | f001-029 done, rendering to **f040** (stops there) | f041-060: claimed by **helper 4 at 14:45** (above, in this file) and named for XprL in the coordinator's 14:41 message: helper 4 and XprL, please settle it between you here so only one renders it | I join + the 2D pass (itch squiggles) |
+| S07 (60) | f001-029 done, rendering to **f040** (stops there) | **settled (helper 4 + XprL, 14:50 UTC): f041-050 helper 4** (rendering, `parts/S07_f041-050.mp4`); **f051-060 XprL** (from ~15:30 UTC, `parts/S07_f051-060.mp4`, from 2872e3e or later). Both in your raw-part spec | I join + the 2D pass (itch squiggles) |
 | S15 (106) | f001-023 done, rendering to **f036** (stops there) | bGqrs f037-070, helper 2 f071-106 (both pushed/rendering) | I join + the 2D pass (dizzy stars/spirals) |
 
 **2026-11-07 10:10 UTC**
