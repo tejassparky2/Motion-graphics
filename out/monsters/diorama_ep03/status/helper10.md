@@ -1,6 +1,8 @@
 # Helper 10: S12 and S14 (Ep 3)
 
 ## Status
+- **Next (coordinator 14:40): S18 f037-072 for helper 9**, right after S01. I'll render from the commit helper 9 writes
+  in status/helper9.md after the kneel fix, and claim it there first. 14:41 UTC: S01 9 of 17 frames done.
 - **14:01 UTC: S01 f046-062 for helper 4 is rendering**, from exactly `bb5be5d` (a worktree at that commit; test
   still f46 checked), full size, about 1.5 h. Output: `parts/S01_f046-062.mp4` (raw, crf 6 yuv444p, start_number 46).
 - **12:45 UTC: S14 FINAL.** `shots/S14.mp4` + `S14_sheet.jpg`: 84/84 frames, crf 10 yuv420p, 0 tags. Joined from
