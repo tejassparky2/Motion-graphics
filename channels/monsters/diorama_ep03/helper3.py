@@ -117,8 +117,8 @@ def _shoulder_shrimp(k, n, name="ep03_shrimp_s02"):
         sc.frame_set(f)
         bpy.context.view_layer.update()
         fwd = (X.WREN_STOP - X.KAI_AT).normalized()
-        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.36)) + Vector((fwd.x, fwd.y, 0)).normalized() * 0.35 \
-            + X._side_vec(k) * 0.15                               # on the front of the shoulder, clear of the arm
+        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.34)) + Vector((fwd.x, fwd.y, 0)).normalized() * 0.1 \
+            + X._side_vec(k) * 0.5                                # on the outer edge of the shoulder: beside his face
         sh["root"].location = p
         sh["root"].keyframe_insert("location", frame=f)
     sc.frame_set(1)
@@ -262,7 +262,7 @@ def s02():
     # C: due south of Kai (her side; she's hidden for it), low, looking due north and up with a wide lens: his face
     # above the captions, the raised forearm (mark upright) beside it, the crack upright in the sky above him
     camC = H9._new_cam("S02c", fc)
-    pc = k_face + Vector((0, -7.0, -3.0)) + left * 1.7                # toward his left: the shrimp clear of his arm
+    pc = k_face + Vector((0, -7.0, -3.0)) + left * 1.1                # toward his left: the shrimp beside his face
     el_face = math.degrees(math.atan2(k_face.z - pc.z, (k_face - pc).xy.length))
     for f in range(fc, n + 1):
         e = _smooth((f - fc) / max(1, n - fc))

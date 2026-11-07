@@ -22,6 +22,7 @@ import sys
 import bpy
 from mathutils import Euler, Matrix, Vector
 
+from channels.monsters.diorama import helper1 as d1               # _tilt_cap
 from channels.monsters.diorama_ep02 import helper4 as E2         # SHRIMP_IN_HAND (one shrimp size everywhere)
 from channels.monsters.diorama_ep02 import helper9 as H9         # CORAL, MARK_U, _forearm, _mark_geo, _px, village
 from channels.monsters.diorama_ep02 import xprl as X             # _world, _cam_move
@@ -39,10 +40,10 @@ SCALE = 5.8
 # the track). He falls backward to the west, so he lies east-west, his head west, his left side (the mark) north.
 S13_AT = Vector((12.0, -140.0, 0.0))     # his feet when he stands at frame 1
 S13_HEAD = 90.0                          # compass of his head once he lies (0 = +Y, 90 = -X: west)
-S13_LIGHT = 220.0                        # the mark's coral point light at full, at night (the key light)
+S13_LIGHT = 120.0                        # the mark's coral point light at full, at night (the key light)
 S13_UNDER = 900.0                        # the broad coral glow just above the wrist that lights the swarm's bellies
-SWARM_N = 26                             # stand-in moths (helper 6's swarm replaces them)
-SWARM_SCALE = 0.42
+SWARM_N = 28                             # helper 6's swarm (linked copies), decimated for this shot
+SWARM_SCALE = 0.42                       # (helper 6's test uses 0.4)
 
 
 def _timing():
@@ -99,7 +100,33 @@ def _night():
     for nd in nt.nodes:
         if nd.type == "MIX_RGB":
             nd.inputs[2].default_value = look.hexc("#1a2552")
+    _night_grade(nt)
     return None
+
+
+NIGHT_GAIN = (0.34, 0.42, 0.78)          # the stand-in night grade (the painted toon bands ignore light colour and
+NIGHT_GAMMA = (1.08, 1.04, 0.96)         # never go darker than their shadow band, so night is a compositor grade)
+
+
+def _night_grade(nt):
+    """Insert a lift/gamma/gain grade in front of the compositor output: everything to a dark moonlit blue (the 2D pass
+    adds the coral glow afterwards)."""
+    outs = [nd for nd in nt.nodes if nd.type == "COMPOSITE"]
+    if not outs:
+        return
+    o = outs[0]
+    if not o.inputs[0].links:
+        return
+    src = o.inputs[0].links[0].from_socket
+    cb = nt.nodes.new("CompositorNodeColorBalance")
+    cb.correction_method = "LIFT_GAMMA_GAIN"
+    cb.gain = NIGHT_GAIN
+    cb.gamma = NIGHT_GAMMA
+    nt.links.new(src, cb.inputs[1])
+    nt.links.new(cb.outputs[0], o.inputs[0])
+    for v in nt.nodes:
+        if v.type == "VIEWER" and v.inputs[0].links:
+            nt.links.new(cb.outputs[0], v.inputs[0])
 
 
 # ------------------------------------------------------------------------------------------------------------ Kai
@@ -138,7 +165,7 @@ LANDED = [("spine", (0, 0.1, 1)), ("chest", (0, 0.12, 1)), ("neck", (0, 0.35, 1)
           ("right_foot", (0.15, 0.4, -1))]
 # on his back: LYING_V3's legs (the left knee up, the right leg out), the right arm loose by his side, the head rolled
 # to his left (toward the wrist and the camera), chin up to watch the swarm; the left arm is set by _arm_out()
-LIE = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("neck", (-0.08, 0.15, 1)), ("head", (-0.4, 0.45, 1)),
+LIE = [("spine", (0, 0, 1)), ("chest", (0, 0.05, 1)), ("neck", (-0.2, 0.15, 1)), ("head", (-0.8, 0.55, 1)),
        ("left_upper_arm", (-0.45, 0.6, 0.3)), ("left_lower_arm", (0.1, 0.85, 0.4)), ("left_hand", (0.2, 0.7, 0.6)),
        ("right_upper_arm", (0.45, -0.12, -1)), ("right_lower_arm", (0.3, -0.08, -1)), ("right_hand", (0.25, 0, -1)),
        ("left_upper_leg", (-0.12, 0.85, -0.55)), ("left_lower_leg", (-0.05, -0.75, -0.7)),
@@ -280,7 +307,10 @@ def _shoulder_shrimp(k, n, beats, name="ep03_shrimp_s13"):
         sc.frame_set(f)
         sq = 0.62 if f_duck <= f < f_peek else 1.0
         side = (k["arm"].matrix_world.to_3x3() @ Vector((1, 0, 0))).normalized()    # his left (the model faces -Y)
-        p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.55 * sq)) + side * 0.25
+        down = (k["arm"].matrix_world.to_3x3() @ Vector((0, 0, -1))).normalized()   # toward his feet
+        lie = _ease((f - beats["sit"]) / max(1, beats["land"] - beats["sit"]))
+        p = (_bone_world(k, "upper_arm.L") + Vector((0, 0, 0.55 * sq)) + side * 0.25 * (1 - lie)
+             + down * 1.0 * lie)                                    # lying: on his chest, below the shoulder
         sh["root"].location = p
         sh["root"].keyframe_insert("location", frame=f)
         lie = _ease((f - beats["sit"]) / max(1, lying_from - beats["sit"]))
@@ -303,41 +333,97 @@ def _shoulder_shrimp(k, n, beats, name="ep03_shrimp_s13"):
 
 
 # ------------------------------------------------------------------------------------------------------------ swarm
-def _swarm(n, centre_at, seed=13):
-    """The fluffmoths circling the light: helper 6's swarm() if it has landed, else stand-in fluffmoths in a loose
-    dome round the vertical through the light, following it down (centre_at(f) -> the light's world position) and
-    circling slowly; wings on 1s, the rest on 2s. Returns the moth roots."""
+def _decimate_shared(objs, ratio=0.12, over=2500):
+    """Collapse-decimate every heavy mesh the swarm shares (a linked copy shares its mesh, so each mesh is done once):
+    one stand-in moth is ~93k polygons and they're small on screen; this cuts the swarm's render cost several times."""
+    dg = bpy.context.evaluated_depsgraph_get()
+    done = {}
+    for o in objs:
+        if o.type != "MESH" or len(o.data.polygons) < over or o.data.name in done:
+            continue
+        old = o.data
+        md = o.modifiers.new("s13_dec", "DECIMATE")
+        md.ratio = ratio
+        dg.update()
+        new = bpy.data.meshes.new_from_object(o.evaluated_get(dg))
+        o.modifiers.remove(md)
+        done[old.name] = new
+    for o in objs:
+        if o.type == "MESH" and o.data.name in done:
+            o.data = done[o.data.name]
+
+
+SWARM_SHIFT = Vector((0.4, -0.7, 0.0))   # the orbit's centre: a little behind the light, toward his body
+SWARM_SQUASH = 0.38                      # the orbit's depth (toward the camera) vs its width: none fly at the lens
+
+
+def swarm_layout(seed=13):
+    """S13's swarm, member by member: dict(r, h, a0, w, s) = orbit radius across the frame, height above the light,
+    start angle, turn rate (radians/frame) and scale. S14 (helper 10) continues these circles."""
     rnd = random.Random(seed)
-    moths = []
-    sc = bpy.context.scene
-    for i in range(SWARM_N):
-        rig = fluffmoth.build((0, 0, 0), name=f"m13_{i}")
-        s = SWARM_SCALE * rnd.uniform(0.75, 1.15)
-        rig["root"].scale = (s, s, s)
-        r = rnd.uniform(2.2, 7.5)
-        h = rnd.uniform(4.5, 11.0)
-        a0 = rnd.uniform(0, 2 * math.pi)
-        w = rnd.choice((-1, 1)) * rnd.uniform(0.9, 1.6) * 2 * math.pi / (FPS * 6.0)   # a turn every ~4-7 s
-        rig["shadow"].hide_render = True
+    return [dict(r=rnd.uniform(1.4, 4.4), h=rnd.uniform(3.8, 10.0), a0=rnd.uniform(0, 2 * math.pi),
+                 w=rnd.choice((-1, 1)) * rnd.uniform(0.9, 1.6) * 2 * math.pi / (FPS * 6.0),
+                 s=SWARM_SCALE * rnd.uniform(0.8, 1.15)) for _ in range(SWARM_N)]
+
+
+def swarm_at(m, f, light):
+    """Where member m (from swarm_layout) is at frame f, circling the light at world point `light`."""
+    a = m["a0"] + m["w"] * f
+    c = Vector(light) + SWARM_SHIFT
+    i = int(m["a0"] * 1000) % 7
+    return Vector((c.x + math.cos(a) * m["r"], c.y + math.sin(a) * m["r"] * SWARM_SQUASH,
+                   c.z + m["h"] + 0.3 * math.sin(f / 9.0 + i)))
+
+
+def swarm_heading(m, f):
+    a = m["a0"] + m["w"] * f
+    return Vector((-math.sin(a), math.cos(a) * SWARM_SQUASH, 0)).normalized() * (1 if m["w"] > 0 else -1)
+
+
+def camera_poses(n, beats):
+    """S13's camera keys (frame, camera position, aim point, lens), world space: standing wide, following the drop
+    down to his left side by settle+2, then a slow push-in to the end. S14 can start from camera_at(45, ...)."""
+    off = S13_AT - Vector((12.0, -140.0, 0.0))                   # (the framing was solved for S13_AT = (12, -140))
+    return [(1, Vector((11.0, -120.0, 8.0)) + off, Vector((10.5, -139.0, 7.5)) + off, 24.0, 0.0),
+            (beats["settle"] + 2, Vector((9.0, -121.0, 9.0)) + off, Vector((6.0, -139.0, 3.0)) + off, 27.0, -0.05),
+            (n, Vector((8.5, -123.0, 9.5)) + off, Vector((6.0, -139.0, 3.2)) + off, 28.0, -0.055)]
+
+
+def camera_at(f, poses):
+    """(camera position, aim point, lens, shift_y) at frame f (eased between camera_poses' keys)."""
+    i = max(j for j in range(len(poses)) if poses[j][0] <= f)
+    a, b = poses[i], poses[min(i + 1, len(poses) - 1)]
+    u = _ease((f - a[0]) / max(1, b[0] - a[0])) if b is not a else 1.0
+    return a[1].lerp(b[1], u), a[2].lerp(b[2], u), a[3] + (b[3] - a[3]) * u, a[4] + (b[4] - a[4]) * u
+
+
+def _swarm(n, centre_at, beats, seed=13):
+    """The fluffmoths circling the light (helper 6's fluffmoth.swarm: one moth, linked copies, cyclic wing beats): a
+    loose dome round the vertical through the light that follows it down as he drops, circling slowly; their backs
+    tilted to the light while it's above them (back_to), then nearly level once it's below (the flip is S14's), with a
+    first wobble. Roots on 2s. Returns the rigs."""
+    lay = swarm_layout(seed)
+
+    def place(i, rnd):
+        return tuple(swarm_at(lay[i], 1, centre_at(1))), lay[i]["s"]
+
+    rigs = fluffmoth.swarm(SWARM_N, place, name="m13_", seed=seed, far=lambda i, loc, sc: i > 2)
+    objs = [o for o in bpy.data.objects if o.name.startswith("m13_")]
+    _decimate_shared(objs)
+    for i, rig in enumerate(rigs):
+        m = lay[i]
+        prev = None
         for f in range(1, n + 1, 2):
-            c = centre_at(f)
-            a = a0 + w * f
-            bob = 0.35 * math.sin(f / 9.0 + i)
-            rig["root"].location = (c.x + math.cos(a) * r, c.y + math.sin(a) * r, c.z + h + bob)
-            rig["root"].keyframe_insert("location", frame=f)
-            # its front along the circle, banked a little in toward the light (its back tilted to it)
-            tang = Vector((-math.sin(a), math.cos(a), 0)) * (1 if w > 0 else -1)
-            yaw = math.atan2(-tang.x, tang.y) + math.pi
-            rig["root"].rotation_euler = (0.0, 0.32 * (1 if w > 0 else -1), yaw)
-            rig["root"].keyframe_insert("rotation_euler", frame=f)
-        fluffmoth.idle(rig, 1, n, seed=seed + i)
-        moths.append(rig)
-    for rig in moths:
-        for fc in anim.all_fcurves(rig["root"].animation_data.action):
-            for kp in fc.keyframe_points:
-                kp.interpolation = "CONSTANT"
-    sc.frame_set(1)
-    return moths
+            loc = swarm_at(m, f, centre_at(f))
+            rig["root"].location = loc
+            anim.key(rig["root"], "location", f, tuple(loc), "CONSTANT")
+            if f < beats["land"]:
+                amount = 0.7                                         # the light above: backs tilted to it, an orbit
+            else:                                                    # below: nearly level, a first wobble
+                amount = 0.12 + 0.08 * math.sin(f / 3.0 + i) * _ease((f - beats["glow"]) / 10)
+            prev = fluffmoth.back_to(rig, f, centre_at(f), swarm_heading(m, f), amount, interp="CONSTANT", prev=prev)
+    bpy.context.scene.frame_set(1)
+    return rigs
 
 
 # ------------------------------------------------------------------------------------------------------------ S13
@@ -357,17 +443,23 @@ def _grass_at(p, seed=5):
         o.data.materials.append(blade)
 
 
-def s13():
-    n = _frames("S13", 60)
-    W = _words("S13")
+def s13_beats():
+    """(render frames, beats) of S13 from ep03/timing.json: dip, sit, land, settle (the drop), arm0-arm1 (the arm
+    laid out), glow (the bloom, on "below")."""
+    n = _frames("S13", 57)
     fw = {}
-    for w_, a_, b_ in W:
+    for w_, a_, b_ in _words("S13"):
         fw.setdefault(w_, []).append((a_, b_))
-    f_below = fw.get("below", [(int(n * 0.55), 0)])[0][0]         # the glow blooms on "below"
-    beats = dict(dip=4, sit=10, land=15, settle=18)
-    beats["arm0"] = max(beats["settle"] + 2, f_below - 12)
-    beats["arm1"] = beats["arm0"] + 9
-    beats["glow"] = beats["arm1"] - 1
+    f_below = fw.get("below", [(26, 0)])[0][0]
+    beats = dict(dip=3, sit=8, land=13, settle=16)
+    beats["arm0"] = max(beats["settle"] + 1, f_below - 9)
+    beats["arm1"] = beats["arm0"] + 8
+    beats["glow"] = max(beats["arm1"] - 1, f_below)
+    return n, beats
+
+
+def s13():
+    n, beats = s13_beats()
     X._world(n)
     _night()
     sc = bpy.context.scene
@@ -378,6 +470,7 @@ def s13():
 
     k = hero.load((0, 0, 0), scale=SCALE, outfit="world")
     k["arm"].rotation_mode = "XYZ"
+    d1._tilt_cap(k, 32)                                           # brim up: his face reads
     _kai_drop(k, n, beats)
 
     # the wrist at rest (for the grass, the light and the swarm's centre)
@@ -424,7 +517,7 @@ def s13():
         und.keyframe_insert("energy", frame=f)
 
     centres = {f: mark_at(f) for f in range(1, n + 1)}
-    moths = _swarm(n, lambda f: centres[f])
+    moths = _swarm(n, lambda f: centres[f], beats)
     sh = _shoulder_shrimp(k, n, beats)
 
     # face: tense, then determined (brows down, mouth set) from the drop on; eyes on the swarm
@@ -435,21 +528,30 @@ def s13():
     acting.look_at(k, swarm_mid, 1, n, darts=True, seed=4)
     acting.blink(k, 1, n, every=(48, 80), seed=6, at=(beats["land"],))
 
-    # camera: north of him, a little toward his feet, looking south over the village: he drops from a profile (facing
-    # east, frame right) to lying across the frame, the light low, the swarm high; a slow push-in on 1s
-    hd = _head_dir()
-    left = Vector((-hd.y, hd.x, 0)) * -1.0                       # his left once lying: north
-    body_mid = S13_AT + hd * 2.4
-    c_dir = (left * 1.0 - hd * 0.32).normalized()
-    t0 = body_mid + Vector((0, 0, 5.2))
-    t1 = body_mid + hd * 0.4 + Vector((0, 0, 4.2))
-    c0 = t0 + c_dir * 24.0 + Vector((0, 0, 1.2))
-    c1 = t1 + c_dir * 21.0 + Vector((0, 0, 1.0))
-    cam = _cam_from("S13cam", n, c0, c1, t0, t1, 30.0)
+    # camera: north-east of him, looking south-west over the village roofs: at frame 1 he stands in profile facing
+    # frame left-ish with his wrist up; the camera follows the drop down (on 1s), then a slow push-in on the light, his
+    # face and the swarm (the framing from a projection search: the wrist at y ~800, the swarm up to the top)
+    poses = camera_poses(n, beats)
+    old_blur = X.v2.BLUR
+    X.v2.BLUR = 3.0                                               # a gentle tilt-shift: the swarm has to read
+    cam = None
+    ms = sc.world.mist_settings
+    for f in range(1, n + 1):
+        c, t, ln, sy = camera_at(f, poses)
+        v = c - t
+        dist = v.length
+        tilt = math.degrees(math.asin(max(-1.0, min(1.0, v.z / dist))))
+        yaw = math.degrees(math.atan2(-v.x, -v.y))
+        cam = X.v2._cam("S13cam", f, tuple(t), dist, tilt, yaw, ln, (0.0, sy), cam)
+        ms.start, ms.depth = dist * 2.5, dist * 2.0                 # the night haze well behind him
+        ms.keyframe_insert("start", frame=f)
+        ms.keyframe_insert("depth", frame=f)
+    X.v2.BLUR = old_blur
+    sc.camera = cam
     sc.frame_set(1)
 
     # the 2D pass: the mark on screen per frame, its glow level, the wrist point
-    if "--still" not in sys.argv:
+    if not os.environ.get("S13_NO_MARK"):                      # (stills too: the 2D preview needs it)
         out = {}
         for f in range(1, n + 1):
             sc.frame_set(f)
