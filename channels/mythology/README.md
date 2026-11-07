@@ -137,6 +137,14 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   sheet tick YouTube's "altered or synthetic content" (Yes) and Instagram's AI label. Whisper turbo often loops on a
   line that ends right on its last word (it repeats that word): the CER blows up but the words are right; check the
   text it heard before re-taking.
+- **Faster (8 Nov 2026, owner: "Can you speed up voice")**: Kannada `tempo=1.12` (pitch kept; pauses keep their
+  length). Ravana 2:10 -> 1:57, Kakudmi 2:08 -> 1:56, Bali 2:05 -> 1:52.
+- `render_all.py` no longer runs the Whisper-medium `--check` for Kannada: it can't judge Kannada (turbo does, in
+  `kn_asr_check.py`), and sharing the 4 GB GPU with the turbo aligner it once ran 2.3 hours on one reel.
+- **Video 6, Kaikeyi** (owner, 8 Nov 2026: the Ravana reel was "Not good"; wanted "mind blowing ... a questionable
+  one from ramayana"; script approved "Ok"): "Was Kaikeyi really the villain?", Ayodhya Kanda 2.107.3 (bride-price
+  promise, told by Rama himself), 2.4.25, 2.1.46 against the 14-year exile; shadow puppets with a balance scale
+  (`videos/kaikeyi.py`, `kaikeyi_cast.py`, `scenes_kaikeyi.py`). Debate topics like this are the direction now.
 - **OmniVoice** (k2-fsa, Apache-2.0, 2026; owner: "And try omni voice because it is latest", taken as the download
   approval for it alone): `tools/.venv-omni` (torch 2.14.1+cu126, omnivoice 0.2.1; model k2-fsa/OmniVoice, 3.1 GB in
   the Hugging Face cache), runner `omni_say.py` (JSON job on stdin, like f5_say.py). fp16 on the 4 GB GPU used

@@ -34,7 +34,8 @@ with open(os.path.join(OUT_ROOT, "render_all.log"), "a", encoding="utf-8") as lo
             if run([os.path.join(HERE, "render_myth.py"), "--video", name, "--lang", lang], log):
                 print(f"FAILED render {name} {lang}", flush=True)
                 continue
-            run([os.path.join(HERE, "render_myth.py"), "--video", name, "--lang", lang, "--check"], log)
+            if lang != "kn":   # Whisper medium can't judge Kannada (kn_asr_check.py with turbo does) and it hogs the GPU
+                run([os.path.join(HERE, "render_myth.py"), "--video", name, "--lang", lang, "--check"], log)
             if run([os.path.join(HERE, "finish.py"), name, lang, n], log):
                 print(f"FAILED finish {name} {lang}", flush=True)
             else:
