@@ -283,11 +283,16 @@ def s18():
             if lean > 0.01:
                 wren.whisper(P, lean, toward=to_kai)
             P.rot("chest", (0.8 * math.sin(f / 8.0), 0, 0))
+            if pt > 0.01:                                                      # re-aim the arm after every chest
+                e = _smooth(pt)                                                # turn, so it lies exactly on `aim`
+                a = Vector((0.17, 0.04, -1)).normalized().lerp(aim, e).normalized()
+                for bn in ("upper_arm.L", "forearm.L", "hand.L"):
+                    P.aim(bn, a)
             P.key(f)
 
-    # aim the point ON SCREEN at the tiny lighthouse behind her (the eye runs down her arm to it before the cut): turn
-    # the aim about the camera's view axis by the on-screen angle error, keeping its depth (so the arm isn't twisted
-    # backwards: the true direction is behind her right shoulder)
+    # aim the point ON SCREEN at the tiny lighthouse behind her (the eye runs down her arm to it before the cut): at a
+    # point on the camera's sight line to the lamp room at her shoulder's depth, so the arm lies side-on and lines up
+    # with the lamp in the picture (the true direction is behind her right shoulder and would twist the arm backwards)
     from bpy_extras.object_utils import world_to_camera_view as w2c
 
     def scr(p):
@@ -295,7 +300,7 @@ def s18():
         return Vector((v.x * 720, v.y * 1280))
     aim = to_lh.copy()
     fm = f_point1 + 8
-    for _ in range(3):
+    for _ in range(2):                                     # (twice: the rise moves the shoulder a little with the aim)
         key_wren(aim)
         sc.frame_set(fm)
         ab = w["arm"].pose.bones
@@ -303,13 +308,18 @@ def s18():
         hd = w["arm"].matrix_world @ ab["hand.L"].tail
         got, des = scr(hd) - scr(sh), scr(lh["top"]) - scr(sh)
         err = math.atan2(des.y, des.x) - math.atan2(got.y, got.x)
-        err = (err + math.pi) % (2 * math.pi) - math.pi
-        print("S18 point screen error", round(math.degrees(err), 1))
-        if abs(err) < math.radians(2):
-            break
-        axis = (M_inv @ (camA.matrix_world.to_3x3() @ Vector((0, 0, 1)))).normalized()
-        aim = (Matrix.Rotation(err, 3, axis) @ aim).normalized()
+        print("S18 point screen error", round(math.degrees((err + math.pi) % (2 * math.pi) - math.pi), 1))
+        eye = camA.matrix_world.translation
+        ray = (lh["top"] - eye).normalized()
+        T = eye + ray * ((sh - eye).length + 1.0)                          # on the lamp sight line, just past her (arm side-on, reads)
+        aim = (M_inv @ (T - sh)).normalized()
     key_wren(aim)
+    sc.frame_set(fm)
+    ab = w["arm"].pose.bones
+    sh = w["arm"].matrix_world @ ab["upper_arm.L"].head
+    got = scr(w["arm"].matrix_world @ ab["hand.L"].tail) - scr(sh)
+    des = scr(lh["top"]) - scr(sh)
+    print("S18 point screen error (final)", round(math.degrees(got.angle_signed(des)) if hasattr(got, "angle_signed") else 0, 1))
     sc.frame_set(1)
     wren.grip(w, 1)
     wren.face(w, "whisper", 1)
