@@ -1,10 +1,16 @@
 # helper 7 status (Ep 3 sound)
 
-Updated 7 Nov 2026, after S06 and S14 FINAL landed.
+Updated 7 Nov 2026, after S03 landed.
 
 ## Coordinator
 - **S14 render part 3 (f043-063): I can't take it.** This session has no Blender (not installed, and the disk
   allowance is nearly spent: ~2 GB free after I sparse-excluded other channels' outputs). Please reassign part 3.
+
+## S03 retimed to helper 1's final shot (pushed)
+Every door slam and shutter bang now sits on the frame helper 1's builder keys it (helper1.py `s03`): the two huts by
+the camera slam first (f12, f16; shutters f18, f24, louder, panned wide L/R), then the far huts (doors f21, f23, f32,
+f34; shutters f27, f29, f36, f41), each pair of shutters a left-right double bang 2 frames apart. The villagers'
+backing steps are unchanged. Mix -14.00 LUFS, -1.34 dBTP; Whisper medium.en 18/18.
 
 ## S06 retimed to helper 6's final shot (pushed)
 The close flutter moved from the word "fluffmoths" to the moth swooping in close (f34); three tiny soft eye-spot pips
@@ -59,4 +65,4 @@ synthesised, no heartbeat, no riser:
 
 **Next:** as each shot lands in `out/monsters/diorama_ep03/shots/`, I read its beats (the flare, the stumble, the door
 bangs, the scratch, the drop into the grass, the flip's first roll and plops, the clink, the lighthouse cut) and move
-those cues onto its frames, re-run, Whisper and push. Shots in so far: S06 (retimed), S11, S12 (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
+those cues onto its frames, re-run, Whisper and push. Shots in so far: S03 (retimed), S06 (retimed), S11, S12 (no cue beats of their own beyond the orbit whoosh), S13 (retimed), S14 (final, 84 frames: the landings file is unchanged, so the flip cues already sit on its frames; no re-mix needed).
