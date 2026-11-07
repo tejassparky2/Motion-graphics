@@ -6,7 +6,11 @@
         stumbles back two steps, bell up like a ward (her 2D terror eyes carry on from Ep 2); the villagers flinch,
         turn and run back up the path, dropping their nets in the grass. Moving from frame 0 (a slow push-in on 1s,
         the characters on 2s). On "So I did." the shrimp hops from his right hand up onto his left shoulder.
-    S11 (the explainer, later)
+    S11 "Moths don't fly at a light. They keep their backs to it."  The explainer, a clean graphic side view on a dark
+        night ground (like Ep 2's S06): ONE fluffmoth flies level from the left past a coral glow (above and ahead of
+        it): it does NOT fly at it. On "They keep their backs to it" its back tilts square to the glow
+        (fluffmoth.back_to, helper 6) and that tilt bends its path into an arc round the light; a soft 2D glow line
+        runs from the light to its back (post_helper4, EP=ep03). No text. A slow push-in on 1s, the moth on 2s.
 
 The 2D passes are drawn by diorama_ep02/post_helper4.py (EP=ep03) from build/monsters/diorama_ep03/<SHOT>_mark.json.
 
@@ -296,4 +300,111 @@ def s01():
                 beats=dict(so=f_so, hop=(f_hop0, f_hop1)))
 
 
-SHOTS = {"S01": s01}
+# ------------------------------------------------------------------------------------------------------------ S11
+S11_BG = "#0e1430"                                # the night ground (dark blue, the island's night tone)
+S11_ORB = "#ff8466"                               # the glow: the mark's coral
+
+
+def s11():
+    from channels.monsters.diorama_ep02.helper4 import _backdrop
+    from channels.monsters.diorama_ep02.helper9 import _px
+    from channels.monsters.mk import diorama, fluffmoth as fm, look
+    n = _frames("S11", 92)
+    W = _words("l11", [("moths", 8, 15), ("they", 51, 55), ("backs", 63, 69)])
+    fw = {}
+    for w_, a_, b_ in W:
+        fw.setdefault(w_, []).append((a_, b_))
+    f_they = fw["they"][0][0]                                        # 51
+    f_backs = fw["backs"][0][0]                                      # 63
+    diorama.setup()
+    sc = bpy.context.scene
+    sc.frame_start, sc.frame_end = 1, n
+    sc.world.mist_settings.start, sc.world.mist_settings.depth = 500.0, 100.0
+    for o in list(sc.objects):                                       # night: the sun down to a faint cool fill
+        if o.type == "LIGHT" and o.data.type == "SUN":
+            o.data.energy *= 0.12
+            o.data.color = (0.6, 0.7, 1.0)
+    origin = Vector((0.0, -20.0, 0.0))
+    _backdrop(S11_BG).location = origin + Vector((0, 0, -6.0))
+
+    def P(sx, sz, depth=0.0):                                        # screen-right / up in the side view
+        return origin + Vector((depth, -sx, sz))
+
+    light = P(2.4, 6.2)
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=0.42, location=light, segments=32, ring_count=16)
+    orb = bpy.context.object
+    orb.name = "s11_orb"
+    orb.data.materials.append(look.flat("s11_orb", look.hexc("#ffe3d8"), 4.0))
+    ld = bpy.data.lights.new("s11_orb_light", "POINT")
+    ld.color, ld.energy, ld.shadow_soft_size = look.hexc(S11_ORB)[:3], 1400.0, 0.4
+    lo = bpy.data.objects.new("s11_orb_light", ld)
+    sc.collection.objects.link(lo)
+    lo.location = light
+
+    m = fm.build((0, 0, 0), name="s11moth")
+    fm.flight_mode(m)
+    fm.flap(m)
+    # its path: level flight to screen right; from "They" its back tilts to the light (amount 0 -> 1 by "backs"+6)
+    # and the tilt turns it: the heading swings round the light (an orbit starting)
+    pos = P(-6.6, 2.4)
+    speed = 0.17
+    heading = Vector((0, -1, 0))                                     # screen right
+    prev = None
+    track = {}
+    for f in range(1, n + 1):
+        amt = _smooth((f - f_they) / max(1, f_backs + 6 - f_they))
+        if f > 1:
+            to_l = light - pos
+            r = max(1.0, to_l.length)
+            turn = amt * speed / r                                   # radians a frame: the tilt bends the path
+            ax = Vector((1, 0, 0))                                   # the side view's normal (turn in the YZ plane)
+            # turn the heading toward the light's side (counter-clockwise on screen when the light is above)
+            from mathutils import Matrix
+            sign = 1.0 if heading.cross(to_l).x > 0 else -1.0
+            heading = (Matrix.Rotation(sign * turn, 3, ax) @ heading).normalized()
+            pos = pos + heading * speed
+        bob = 0.08 * math.sin(f * 0.5)
+        track[f] = (pos + Vector((0, 0, bob)), heading.copy(), amt)
+    for f in range(1, n + 1, 2):
+        p, h, amt = track[f]
+        m["root"].location = p
+        m["root"].keyframe_insert("location", frame=f)
+        prev = fm.back_to(m, f, light, h, amount=amt, prev=prev)
+    for fc in anim.all_fcurves(m["root"].animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    fm.spot_blink(m, 30) if hasattr(fm, "spot_blink") else None
+
+    # the camera: side-on from -X, level, a long lens, a slow push-in on 1s; everything above the caption band
+    tgt = P(-0.6, 5.0)
+    bpy.ops.object.camera_add(location=tgt + Vector((-52.0, 0.0, 0.0)))
+    cam = bpy.context.object
+    cam.name = "S11cam"
+    cam.rotation_euler = (tgt - cam.location).to_track_quat("-Z", "Y").to_euler()
+    cam.data.lens = float(os.environ.get("S11_LENS", "95"))
+    cam.data.shift_y = float(os.environ.get("S11_SHIFT", "-0.12"))
+    cam.data.clip_end = 400
+    sc.camera = cam
+    c0 = cam.location.copy()
+    for f in range(1, n + 1):
+        cam.location = c0.lerp(tgt, 0.06 * _smooth((f - 1) / max(1, n - 1)))
+        cam.keyframe_insert("location", frame=f)
+
+    # the 2D pass's anchors: the light, the moth's body and its back (a point on the body's top)
+    anchors = {}
+    for f in range(1, n + 1):
+        sc.frame_set(f)
+        bpy.context.view_layer.update()
+        R = m["root"].matrix_world
+        body = R.translation
+        back = R @ Vector((0, 0, 0.55))
+        anchors[f] = dict(light=_px(cam, light), body=_px(cam, body), back=_px(cam, back), r_orb=_px(
+            cam, light + Vector((0, 0, 0.42))))
+    os.makedirs(BUILD, exist_ok=True)
+    with open(os.path.join(BUILD, "S11_anchors.json"), "w") as fh:
+        json.dump(dict(meta=dict(f_they=f_they, f_backs=f_backs), frames=anchors), fh)
+    sc.frame_set(1)
+    return dict(frames=n, step=1, subject=[m["root"]], beats=dict(they=f_they, backs=f_backs))
+
+
+SHOTS = {"S01": s01, "S11": s11}
