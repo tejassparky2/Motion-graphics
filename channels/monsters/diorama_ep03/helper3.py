@@ -154,7 +154,7 @@ def s02():
         for sd in ("L", "R"):
             PW.leg(sd, feet[sd] + Vector((0, 0, PW.ankle_h)))
         r = 1.0 - 0.35 * _smooth((f - f_marked) / 18)
-        wren.hold_bell(PW, 1.0, shake=1.6 * math.sin(f * 1.3) * (1 - 0.6 * _smooth((f - f_marked) / 20)))
+        wren.hold_bell(PW, 0.9, shake=1.6 * math.sin(f * 1.3) * (1 - 0.6 * _smooth((f - f_marked) / 20)))
         PW.aim("upper_arm.R", (-0.10, -0.55 - 0.25 * r, -1 + 1.25 * r))
         PW.aim("forearm.R", (-0.04, -0.85 - 0.2 * r, -0.2 + 0.8 * r))
         PW.aim("hand.R", (-0.04, -0.3, -1))
@@ -189,11 +189,9 @@ def s02():
         PK.key(f)
 
     # faces
-    wren.FACES.setdefault("fear", {"face_surprise": 1.0, "eye_black_small": 0.8, "eye_brow_up": 1.0, "lip_o": 0.5})
-    wren.FACES["steady"] = {"face_surprise": 0.35, "eye_black_small": 0.3, "eye_brow_up": 0.7, "face_angry": 0.25}
-    wren.face(w, "fear", 1, value=0.85)                            # where S01 leaves her
-    wren.face(w, "steady", f_marked - 2)                           # afraid but steady
-    wren.face(w, "fear", f_sky + 2, value=0.6)                     # she looks up at it
+    wren.face(w, "shocked", 1, value=0.85)                         # where S01 leaves her (XprL's Ep 3 faces)
+    wren.face(w, "stern", f_marked - 2)                            # afraid but steady
+    wren.face(w, "shocked", f_sky + 2, value=0.6)                  # she looks up at it
     wren.grip(w, 1)
     wren.blink(w, 1, f_sky - 6, at=(f_marked + 10,))
     words = [dict(w=wd, start=(a - 1) / FPS, end=(b - 1) / FPS) for wd, a, b in seq]
