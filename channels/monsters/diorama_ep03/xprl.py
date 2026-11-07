@@ -40,7 +40,7 @@ SCALE = X.SCALE
 CORAL = (1.0, 0.48, 0.36)
 MOON = (0.62, 0.72, 1.0)
 SHRIMP_K = 0.6                      # the puff-shrimp on his shoulder (helper 4's S01 / bGqrs's S13)
-MARK_W = 60.0                       # the mark light's energy (helper 9's Ep 2 'full')
+MARK_W = 220.0                      # the mark light at night (bGqrs's S13_LIGHT)
 MOTH_K = 0.42                       # the dazed upside-down moths left from S14/S15 (bGqrs's size)
 
 # --- staging: bGqrs's S13 spot (diorama_ep03/bgqrs.py S13_AT / S13_HEAD): Kai fell back to the west, so he lies with
@@ -319,9 +319,10 @@ def s17():
     _dazed_moths(n, [(KAI_SIT.x + 4.0, KAI_SIT.y + 2.0), (KAI_SIT.x - 2.6, KAI_SIT.y + 3.4),
                      (KAI_SIT.x + 5.2, KAI_SIT.y - 2.4), (KAI_SIT.x - 3.4, KAI_SIT.y - 4.2),
                      (KAI_SIT.x + 2.4, KAI_SIT.y + 5.0)])
-    # the two of them from the north-east: Kai's front-left 3/4, Wren's face, the village behind her; slow push-in
+    # from in front of Kai (east, a little north): his face (the shrimp beside it), Wren in 3/4 at his right, the
+    # village behind her at frame left; a slow push-in
     mid = KAI_SIT.lerp(WREN_KNEEL, 0.55) + Vector((0, 0, 4.0))
-    yaw = 217.0
+    yaw = 256.0
     _cam("S17cam", n, (mid, 15.0, 6, yaw, 38, 0.0), (mid, 13.4, 6, yaw, 38, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
