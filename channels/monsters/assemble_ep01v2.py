@@ -128,6 +128,8 @@ CAP_Y_VERSION["diorama_ep02"] = {
 # Episode 3: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
 CAP_Y_VERSION["diorama_ep03"] = {
     "S01": 760,              # over Kai's chest: at the band the line crosses the shrimp's face in his lower hand
+    "S02": [(0.0, CAP_Y), (1.80, 150)],   # Wren and the sky crack keep the band; from "the night you" (the cut to
+                             # Kai looking up, his face and the shrimp in the band) the top, above the crack and his hand
     "S15": 300,              # in the dark sky over the trees: the band crosses the upside-down moths' faces (the laugh)
     "S19": 430,              # the split: the captions sit in the A half above the stacked A/B cards
 }
