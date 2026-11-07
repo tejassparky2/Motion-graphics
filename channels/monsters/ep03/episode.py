@@ -26,7 +26,7 @@ SCRIPT = [
     dict(id="l5", scene="S05", text="And my wrist was the only light for miles.", gap=0.4),
     dict(id="l6", scene="S06", text="That's when the fluffmoths came down the hill.", gap=0.7),
     dict(id="l7", scene="S07", text="Their wing dust stings like nettles.", gap=0.4),
-    dict(id="l8", scene="S08", text="Ring the bells! Bells drive them off!", gap=0.4,
+    dict(id="l8", scene="S08", text="Ring the bells! Bells will drive them off!", gap=0.4,   # was "Bells drive" (heard "Bell stride")
          speaker="wren", speaker_from="Ring"),
     dict(id="l9", scene="S09", text="The bells rang. The moths didn't even notice.", gap=0.9),   # the bells ring first
     dict(id="l10", scene="S10", text="They were circling my wrist. Round and round.", gap=0.5),

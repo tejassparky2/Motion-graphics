@@ -91,7 +91,7 @@ def s02(cr, f, meta, A, k):
     land = fe + ECHO
     pulse = max(0.0, 1 - abs(f - land) / 6)
     if g.get("mark") and g["mark"]["z"] > 0:
-        P9.mark(cr, P9._on_arm(g["mark"]), k, 0.5, lvl + 0.35 * pulse, f, bold=1.4)
+        P9.mark(cr, P9._on_arm(g["mark"]), k, 0.5, lvl + 0.35 * pulse, f, bold=2.2)
     r = g.get("rift")
     if r and pulse > 0:
         fx2d._glow(cr, r["c"][0] * k, r["c"][1] * k, math.hypot(*r["ey"]) * k * 0.8, P9.CORAL_HOT, 0.35 * pulse)
@@ -99,8 +99,9 @@ def s02(cr, f, meta, A, k):
         u = min(1.0, (f - fe) / ECHO)
         e = u * u * (3 - 2 * u)
         geo = P9._lerp_geo(P9._on_arm(g["mark"]), r, e)
-        _outline(cr, geo, k, P9.CORAL_HOT, (1 - 0.6 * e) if f <= land else 0.4 * (land + 2 - f) / 2,
-                 max(2.0 * k, 3.0 * k * (1 - e) + 2.0 * k))
+        _outline(cr, geo, k, P9.CORAL_HOT, (1 - 0.35 * e) if f <= land else 0.6 * (land + 2 - f) / 2,
+                 4.5 * k)
+        fx2d._glow(cr, geo["c"][0] * k, geo["c"][1] * k, math.hypot(*geo["ey"]) * k * 0.5, P9.CORAL, 0.25)
 
 
 DRAW = {"S02": s02}

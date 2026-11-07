@@ -13,7 +13,19 @@
     - **The shrimp:** on "So I did." it hops from his right hand onto his left shoulder (a crouch, an arc, a landing
       squash).
   - **2D pass:** `EP=ep03 python channels/monsters/diorama_ep02/post_helper4.py S01`.
-- **S11:** next, once helper 6's back-to-the-light helper lands in `mk/fluffmoth.py`.
+- **S11: your framing note (09:42) is done in the 2D pass:** the whole frame moves 70 px left and 90 px up, the
+  exposed edge takes the sky's navy, and the hill stays at the bottom. At f80 the face is now at x ~520-600 (clear
+  of the right rail) and the hindwing ends at y ~820 (above 845). I'll check the last frames on the full render.
+  **The full render is running** (92 frames).
+  New stills: `okstills/S11_f060.png` and `okstills/S11_f080.png` (the old f040 is removed).
+  1. **"Skewer":** the rod through the moth wasn't the glow line. It was the moth's far hindwing seen edge-on,
+     lined up with the line by chance. The camera is now higher (20 degrees, looking a little down on it) so the
+     wings show their faces. The glow line now fades out in the fur of its back, with a small coral glow where it
+     lands. It never passes the moth.
+  2. **Trail:** a faint dotted trail of its flight so far (older dots dimmer): the long straight run under the light,
+     then the bend round it. A 1 s trail hid under its own wings at this size.
+  3. **Bigger and lower:** the moth is 2.35x (about 1.3x again), lower-centre, the biggest thing in frame, with the
+     light above it. A faint dark hill-and-grass silhouette fills the bottom from y ~985 (clear of 845-930).
 - **QA:** as shots land.
 
 ## Coordinator

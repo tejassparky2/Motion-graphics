@@ -1,7 +1,7 @@
 {
  "fps": 24,
- "total": 54.106,
- "total_frames": 1299,
+ "total": 54.09,
+ "total_frames": 1298,
  "handle": 12,
  "lines": [
   {
@@ -53,47 +53,47 @@
    "scene": "S02",
    "text": "Marked. The sky cracked the night you fell.",
    "start": 2.371,
-   "end": 4.745,
+   "end": 4.687,
    "words": [
     {
      "w": "Marked.",
      "start": 2.371,
-     "end": 2.851
+     "end": 2.791
     },
     {
      "w": "The",
-     "start": 3.245,
-     "end": 3.365
+     "start": 3.187,
+     "end": 3.307
     },
     {
      "w": "sky",
-     "start": 3.365,
-     "end": 3.625
+     "start": 3.307,
+     "end": 3.567
     },
     {
      "w": "cracked",
-     "start": 3.625,
-     "end": 3.945
+     "start": 3.567,
+     "end": 3.887
     },
     {
      "w": "the",
-     "start": 3.945,
-     "end": 4.105
+     "start": 3.887,
+     "end": 4.047
     },
     {
      "w": "night",
-     "start": 4.105,
-     "end": 4.265
+     "start": 4.047,
+     "end": 4.207
     },
     {
      "w": "you",
-     "start": 4.265,
-     "end": 4.405
+     "start": 4.207,
+     "end": 4.347
     },
     {
      "w": "fell.",
-     "start": 4.405,
-     "end": 4.645
+     "start": 4.347,
+     "end": 4.587
     }
    ]
   },
@@ -101,43 +101,43 @@
    "id": "l3",
    "scene": "S03",
    "text": "The whole village backed away from me.",
-   "start": 5.245,
-   "end": 6.824,
+   "start": 5.187,
+   "end": 6.856,
    "words": [
     {
      "w": "The",
-     "start": 5.245,
-     "end": 5.365
+     "start": 5.187,
+     "end": 5.307
     },
     {
      "w": "whole",
-     "start": 5.365,
-     "end": 5.565
+     "start": 5.307,
+     "end": 5.567
     },
     {
      "w": "village",
-     "start": 5.565,
-     "end": 5.845
+     "start": 5.567,
+     "end": 5.887
     },
     {
      "w": "backed",
-     "start": 5.845,
-     "end": 6.125
+     "start": 5.887,
+     "end": 6.187
     },
     {
      "w": "away",
-     "start": 6.125,
-     "end": 6.345
+     "start": 6.187,
+     "end": 6.387
     },
     {
      "w": "from",
-     "start": 6.345,
-     "end": 6.565
+     "start": 6.387,
+     "end": 6.587
     },
     {
      "w": "me.",
-     "start": 6.565,
-     "end": 6.725
+     "start": 6.587,
+     "end": 6.747
     }
    ]
   },
@@ -145,33 +145,33 @@
    "id": "l4",
    "scene": "S04",
    "text": "Then the sun went down.",
-   "start": 7.424,
-   "end": 8.363,
+   "start": 7.456,
+   "end": 8.396,
    "words": [
     {
      "w": "Then",
-     "start": 7.424,
-     "end": 7.564
+     "start": 7.456,
+     "end": 7.596
     },
     {
      "w": "the",
-     "start": 7.564,
-     "end": 7.644
+     "start": 7.596,
+     "end": 7.676
     },
     {
      "w": "sun",
-     "start": 7.644,
-     "end": 7.804
+     "start": 7.676,
+     "end": 7.836
     },
     {
      "w": "went",
-     "start": 7.804,
-     "end": 7.984
+     "start": 7.836,
+     "end": 8.016
     },
     {
      "w": "down.",
-     "start": 7.984,
-     "end": 8.244
+     "start": 8.016,
+     "end": 8.276
     }
    ]
   },
@@ -179,53 +179,53 @@
    "id": "l5",
    "scene": "S05",
    "text": "And my wrist was the only light for miles.",
-   "start": 8.763,
-   "end": 10.906,
+   "start": 8.796,
+   "end": 10.884,
    "words": [
     {
      "w": "And",
-     "start": 8.763,
-     "end": 8.903
+     "start": 8.796,
+     "end": 8.936
     },
     {
      "w": "my",
-     "start": 8.903,
-     "end": 9.063
+     "start": 8.936,
+     "end": 9.096
     },
     {
      "w": "wrist",
-     "start": 9.063,
-     "end": 9.283
+     "start": 9.096,
+     "end": 9.336
     },
     {
      "w": "was",
-     "start": 9.283,
-     "end": 9.503
+     "start": 9.336,
+     "end": 9.536
     },
     {
      "w": "the",
-     "start": 9.503,
-     "end": 9.623
+     "start": 9.536,
+     "end": 9.676
     },
     {
      "w": "only",
-     "start": 9.623,
-     "end": 9.843
+     "start": 9.676,
+     "end": 9.856
     },
     {
      "w": "light",
-     "start": 9.843,
-     "end": 10.043
+     "start": 9.856,
+     "end": 10.096
     },
     {
      "w": "for",
-     "start": 10.043,
-     "end": 10.243
+     "start": 10.096,
+     "end": 10.316
     },
     {
      "w": "miles.",
-     "start": 10.243,
-     "end": 10.543
+     "start": 10.316,
+     "end": 10.596
     }
    ]
   },
@@ -233,48 +233,48 @@
    "id": "l6",
    "scene": "S06",
    "text": "That's when the fluffmoths came down the hill.",
-   "start": 11.606,
-   "end": 13.319,
+   "start": 11.584,
+   "end": 13.328,
    "words": [
     {
      "w": "That's",
-     "start": 11.606,
-     "end": 11.806
+     "start": 11.584,
+     "end": 11.844
     },
     {
      "w": "when",
-     "start": 11.806,
-     "end": 11.906
+     "start": 11.844,
+     "end": 11.924
     },
     {
      "w": "the",
-     "start": 11.906,
-     "end": 12.026
+     "start": 11.924,
+     "end": 12.044
     },
     {
      "w": "fluffmoths",
-     "start": 12.026,
-     "end": 12.506
+     "start": 12.044,
+     "end": 12.444
     },
     {
      "w": "came",
-     "start": 12.506,
-     "end": 12.726
+     "start": 12.444,
+     "end": 12.664
     },
     {
      "w": "down",
-     "start": 12.726,
-     "end": 12.926
+     "start": 12.664,
+     "end": 12.884
     },
     {
      "w": "the",
-     "start": 12.926,
-     "end": 13.046
+     "start": 12.884,
+     "end": 13.004
     },
     {
      "w": "hill.",
-     "start": 13.046,
-     "end": 13.186
+     "start": 13.004,
+     "end": 13.184
     }
    ]
   },
@@ -282,82 +282,87 @@
    "id": "l7",
    "scene": "S07",
    "text": "Their wing dust stings like nettles.",
-   "start": 13.719,
-   "end": 15.298,
+   "start": 13.728,
+   "end": 15.308,
    "words": [
     {
      "w": "Their",
-     "start": 13.719,
-     "end": 13.939
+     "start": 13.728,
+     "end": 13.948
     },
     {
      "w": "wing",
-     "start": 13.939,
-     "end": 14.099
+     "start": 13.948,
+     "end": 14.108
     },
     {
      "w": "dust",
-     "start": 14.099,
-     "end": 14.279
+     "start": 14.108,
+     "end": 14.288
     },
     {
      "w": "stings",
-     "start": 14.279,
-     "end": 14.619
+     "start": 14.288,
+     "end": 14.628
     },
     {
      "w": "like",
-     "start": 14.619,
-     "end": 14.819
+     "start": 14.628,
+     "end": 14.828
     },
     {
      "w": "nettles.",
-     "start": 14.819,
-     "end": 15.179
+     "start": 14.828,
+     "end": 15.188
     }
    ]
   },
   {
    "id": "l8",
    "scene": "S08",
-   "text": "Ring the bells! Bells drive them off!",
-   "start": 15.698,
-   "end": 17.623,
+   "text": "Ring the bells! Bells will drive them off!",
+   "start": 15.708,
+   "end": 17.652,
    "words": [
     {
      "w": "Ring",
-     "start": 15.698,
-     "end": 15.858
+     "start": 15.708,
+     "end": 15.868
     },
     {
      "w": "the",
-     "start": 15.858,
-     "end": 15.998
+     "start": 15.868,
+     "end": 16.008
     },
     {
      "w": "bells!",
-     "start": 15.998,
-     "end": 16.198
+     "start": 16.008,
+     "end": 16.208
     },
     {
      "w": "Bells",
-     "start": 16.723,
-     "end": 17.023
+     "start": 16.732,
+     "end": 17.012
+    },
+    {
+     "w": "will",
+     "start": 17.012,
+     "end": 17.092
     },
     {
      "w": "drive",
-     "start": 17.023,
-     "end": 17.183
+     "start": 17.092,
+     "end": 17.312
     },
     {
      "w": "them",
-     "start": 17.183,
-     "end": 17.343
+     "start": 17.312,
+     "end": 17.472
     },
     {
      "w": "off!",
-     "start": 17.343,
-     "end": 17.563
+     "start": 17.472,
+     "end": 17.612
     }
    ]
   },
@@ -365,48 +370,48 @@
    "id": "l9",
    "scene": "S09",
    "text": "The bells rang. The moths didn't even notice.",
-   "start": 18.523,
-   "end": 20.92,
+   "start": 18.552,
+   "end": 21.181,
    "words": [
     {
      "w": "The",
-     "start": 18.523,
-     "end": 18.643
+     "start": 18.552,
+     "end": 18.672
     },
     {
      "w": "bells",
-     "start": 18.643,
-     "end": 18.863
+     "start": 18.672,
+     "end": 18.852
     },
     {
      "w": "rang.",
-     "start": 18.863,
-     "end": 19.103
+     "start": 18.852,
+     "end": 19.112
     },
     {
      "w": "The",
-     "start": 19.587,
-     "end": 19.707
+     "start": 19.607,
+     "end": 19.727
     },
     {
      "w": "moths",
-     "start": 19.707,
-     "end": 19.987
+     "start": 19.727,
+     "end": 20.127
     },
     {
      "w": "didn't",
-     "start": 19.987,
-     "end": 20.267
+     "start": 20.127,
+     "end": 20.527
     },
     {
      "w": "even",
-     "start": 20.267,
-     "end": 20.387
+     "start": 20.527,
+     "end": 20.627
     },
     {
      "w": "notice.",
-     "start": 20.387,
-     "end": 20.647
+     "start": 20.627,
+     "end": 20.907
     }
    ]
   },
@@ -414,48 +419,48 @@
    "id": "l10",
    "scene": "S10",
    "text": "They were circling my wrist. Round and round.",
-   "start": 21.42,
-   "end": 23.882,
+   "start": 21.681,
+   "end": 23.866,
    "words": [
     {
      "w": "They",
-     "start": 21.42,
-     "end": 21.54
+     "start": 21.681,
+     "end": 21.801
     },
     {
      "w": "were",
-     "start": 21.54,
-     "end": 21.64
+     "start": 21.801,
+     "end": 21.901
     },
     {
      "w": "circling",
-     "start": 21.64,
-     "end": 21.94
+     "start": 21.901,
+     "end": 22.201
     },
     {
      "w": "my",
-     "start": 21.94,
-     "end": 22.16
+     "start": 22.201,
+     "end": 22.421
     },
     {
      "w": "wrist.",
-     "start": 22.16,
-     "end": 22.36
+     "start": 22.421,
+     "end": 22.621
     },
     {
      "w": "Round",
-     "start": 22.924,
-     "end": 23.224
+     "start": 23.185,
+     "end": 23.385
     },
     {
      "w": "and",
-     "start": 23.224,
-     "end": 23.464
+     "start": 23.385,
+     "end": 23.505
     },
     {
      "w": "round.",
-     "start": 23.464,
-     "end": 23.684
+     "start": 23.505,
+     "end": 23.685
     }
    ]
   },
@@ -463,68 +468,68 @@
    "id": "l11",
    "scene": "S11",
    "text": "Moths don't fly at a light. They keep their backs to it.",
-   "start": 24.482,
-   "end": 27.427,
+   "start": 24.466,
+   "end": 27.411,
    "words": [
     {
      "w": "Moths",
-     "start": 24.482,
-     "end": 24.782
+     "start": 24.466,
+     "end": 24.766
     },
     {
      "w": "don't",
-     "start": 24.782,
-     "end": 25.162
+     "start": 24.766,
+     "end": 25.146
     },
     {
      "w": "fly",
-     "start": 25.162,
-     "end": 25.322
+     "start": 25.146,
+     "end": 25.306
     },
     {
      "w": "at",
-     "start": 25.322,
-     "end": 25.502
+     "start": 25.306,
+     "end": 25.486
     },
     {
      "w": "a",
-     "start": 25.502,
-     "end": 25.582
+     "start": 25.486,
+     "end": 25.566
     },
     {
      "w": "light.",
-     "start": 25.582,
-     "end": 25.742
+     "start": 25.566,
+     "end": 25.726
     },
     {
      "w": "They",
-     "start": 26.263,
-     "end": 26.423
+     "start": 26.247,
+     "end": 26.407
     },
     {
      "w": "keep",
-     "start": 26.423,
-     "end": 26.623
+     "start": 26.407,
+     "end": 26.607
     },
     {
      "w": "their",
-     "start": 26.623,
-     "end": 26.763
+     "start": 26.607,
+     "end": 26.747
     },
     {
      "w": "backs",
-     "start": 26.763,
-     "end": 27.023
+     "start": 26.747,
+     "end": 27.007
     },
     {
      "w": "to",
-     "start": 27.023,
-     "end": 27.183
+     "start": 27.007,
+     "end": 27.167
     },
     {
      "w": "it.",
-     "start": 27.183,
-     "end": 27.323
+     "start": 27.167,
+     "end": 27.307
     }
    ]
   },
@@ -532,58 +537,58 @@
    "id": "l12",
    "scene": "S12",
    "text": "So when the light is above them, they circle it.",
-   "start": 27.827,
-   "end": 30.093,
+   "start": 27.811,
+   "end": 30.077,
    "words": [
     {
      "w": "So",
-     "start": 27.827,
-     "end": 28.007
+     "start": 27.811,
+     "end": 27.991
     },
     {
      "w": "when",
-     "start": 28.007,
-     "end": 28.127
+     "start": 27.991,
+     "end": 28.111
     },
     {
      "w": "the",
-     "start": 28.127,
-     "end": 28.227
+     "start": 28.111,
+     "end": 28.211
     },
     {
      "w": "light",
-     "start": 28.227,
-     "end": 28.387
+     "start": 28.211,
+     "end": 28.371
     },
     {
      "w": "is",
-     "start": 28.387,
-     "end": 28.527
+     "start": 28.371,
+     "end": 28.511
     },
     {
      "w": "above",
-     "start": 28.527,
-     "end": 28.767
+     "start": 28.511,
+     "end": 28.751
     },
     {
      "w": "them,",
-     "start": 28.767,
-     "end": 29.047
+     "start": 28.751,
+     "end": 29.031
     },
     {
      "w": "they",
-     "start": 29.327,
-     "end": 29.447
+     "start": 29.311,
+     "end": 29.431
     },
     {
      "w": "circle",
-     "start": 29.447,
-     "end": 29.727
+     "start": 29.431,
+     "end": 29.711
     },
     {
      "w": "it.",
-     "start": 29.727,
-     "end": 30.007
+     "start": 29.711,
+     "end": 29.991
     }
    ]
   },
@@ -591,43 +596,43 @@
    "id": "l13",
    "scene": "S13",
    "text": "So I put the light below them.",
-   "start": 30.593,
-   "end": 31.968,
+   "start": 30.577,
+   "end": 31.952,
    "words": [
     {
      "w": "So",
-     "start": 30.593,
-     "end": 30.733
+     "start": 30.577,
+     "end": 30.717
     },
     {
      "w": "I",
-     "start": 30.733,
-     "end": 30.833
+     "start": 30.717,
+     "end": 30.817
     },
     {
      "w": "put",
-     "start": 30.833,
-     "end": 30.953
+     "start": 30.817,
+     "end": 30.937
     },
     {
      "w": "the",
-     "start": 30.953,
-     "end": 31.113
+     "start": 30.937,
+     "end": 31.097
     },
     {
      "w": "light",
-     "start": 31.113,
-     "end": 31.333
+     "start": 31.097,
+     "end": 31.317
     },
     {
      "w": "below",
-     "start": 31.333,
-     "end": 31.613
+     "start": 31.317,
+     "end": 31.597
     },
     {
      "w": "them.",
-     "start": 31.613,
-     "end": 31.833
+     "start": 31.597,
+     "end": 31.817
     }
    ]
   },
@@ -635,51 +640,51 @@
    "id": "l14",
    "scene": "S14",
    "text": "",
-   "start": 32.468,
-   "end": 35.068,
+   "start": 32.452,
+   "end": 35.052,
    "words": []
   },
   {
    "id": "l15",
    "scene": "S15",
    "text": "Every single moth landed on its back.",
-   "start": 35.468,
-   "end": 37.588,
+   "start": 35.452,
+   "end": 37.572,
    "words": [
     {
      "w": "Every",
-     "start": 35.468,
-     "end": 35.868
+     "start": 35.452,
+     "end": 35.852
     },
     {
      "w": "single",
-     "start": 35.868,
-     "end": 36.188
+     "start": 35.852,
+     "end": 36.172
     },
     {
      "w": "moth",
-     "start": 36.188,
-     "end": 36.508
+     "start": 36.172,
+     "end": 36.492
     },
     {
      "w": "landed",
-     "start": 36.508,
-     "end": 36.788
+     "start": 36.492,
+     "end": 36.772
     },
     {
      "w": "on",
-     "start": 36.788,
-     "end": 37.068
+     "start": 36.772,
+     "end": 37.052
     },
     {
      "w": "its",
-     "start": 37.068,
-     "end": 37.188
+     "start": 37.052,
+     "end": 37.172
     },
     {
      "w": "back.",
-     "start": 37.188,
-     "end": 37.468
+     "start": 37.172,
+     "end": 37.452
     }
    ]
   },
@@ -687,28 +692,28 @@
    "id": "l16",
    "scene": "S16",
    "text": "Wren lowered her bell.",
-   "start": 39.388,
-   "end": 40.507,
+   "start": 39.372,
+   "end": 40.491,
    "words": [
     {
      "w": "Wren",
-     "start": 39.388,
-     "end": 39.628
+     "start": 39.372,
+     "end": 39.612
     },
     {
      "w": "lowered",
-     "start": 39.628,
-     "end": 39.948
+     "start": 39.612,
+     "end": 39.932
     },
     {
      "w": "her",
-     "start": 39.948,
-     "end": 40.128
+     "start": 39.932,
+     "end": 40.112
     },
     {
      "w": "bell.",
-     "start": 40.128,
-     "end": 40.348
+     "start": 40.112,
+     "end": 40.332
     }
    ]
   },
@@ -716,43 +721,43 @@
    "id": "l17",
    "scene": "S17",
    "text": "The village wants you gone by sunrise.",
-   "start": 41.207,
-   "end": 42.922,
+   "start": 41.191,
+   "end": 42.906,
    "words": [
     {
      "w": "The",
-     "start": 41.207,
-     "end": 41.327
+     "start": 41.191,
+     "end": 41.311
     },
     {
      "w": "village",
-     "start": 41.327,
-     "end": 41.547
+     "start": 41.311,
+     "end": 41.531
     },
     {
      "w": "wants",
-     "start": 41.547,
-     "end": 41.807
+     "start": 41.531,
+     "end": 41.791
     },
     {
      "w": "you",
-     "start": 41.807,
-     "end": 41.987
+     "start": 41.791,
+     "end": 41.971
     },
     {
      "w": "gone",
-     "start": 41.987,
-     "end": 42.187
+     "start": 41.971,
+     "end": 42.171
     },
     {
      "w": "by",
-     "start": 42.187,
-     "end": 42.367
+     "start": 42.171,
+     "end": 42.351
     },
     {
      "w": "sunrise.",
-     "start": 42.367,
-     "end": 42.647
+     "start": 42.351,
+     "end": 42.631
     }
    ]
   },
@@ -760,63 +765,63 @@
    "id": "l18",
    "scene": "S18",
    "text": "But the last marked one left something at the old lighthouse.",
-   "start": 43.622,
-   "end": 46.755,
+   "start": 43.606,
+   "end": 46.74,
    "words": [
     {
      "w": "But",
-     "start": 43.622,
-     "end": 43.762
+     "start": 43.606,
+     "end": 43.746
     },
     {
      "w": "the",
-     "start": 43.762,
-     "end": 43.882
+     "start": 43.746,
+     "end": 43.866
     },
     {
      "w": "last",
-     "start": 43.882,
-     "end": 44.162
+     "start": 43.866,
+     "end": 44.146
     },
     {
      "w": "marked",
-     "start": 44.162,
-     "end": 44.442
+     "start": 44.146,
+     "end": 44.426
     },
     {
      "w": "one",
-     "start": 44.442,
-     "end": 44.842
+     "start": 44.426,
+     "end": 44.826
     },
     {
      "w": "left",
-     "start": 44.842,
-     "end": 45.282
+     "start": 44.826,
+     "end": 45.266
     },
     {
      "w": "something",
-     "start": 45.282,
-     "end": 45.562
+     "start": 45.266,
+     "end": 45.546
     },
     {
      "w": "at",
-     "start": 45.562,
-     "end": 45.802
+     "start": 45.546,
+     "end": 45.786
     },
     {
      "w": "the",
-     "start": 45.802,
-     "end": 45.922
+     "start": 45.786,
+     "end": 45.906
     },
     {
      "w": "old",
-     "start": 45.922,
-     "end": 46.142
+     "start": 45.906,
+     "end": 46.126
     },
     {
      "w": "lighthouse.",
-     "start": 46.142,
-     "end": 46.442
+     "start": 46.126,
+     "end": 46.426
     }
    ]
   },
@@ -824,98 +829,98 @@
    "id": "l19",
    "scene": "S19",
    "text": "Option A: go with Wren tonight. Option B: leave at sunrise, like they said. Comment A or B.",
-   "start": 47.555,
-   "end": 53.756,
+   "start": 47.54,
+   "end": 53.74,
    "words": [
     {
      "w": "Option",
-     "start": 47.555,
-     "end": 47.835
+     "start": 47.54,
+     "end": 47.82
     },
     {
      "w": "A:",
-     "start": 47.835,
-     "end": 48.115
+     "start": 47.82,
+     "end": 48.1
     },
     {
      "w": "go",
-     "start": 48.646,
-     "end": 48.766
+     "start": 48.63,
+     "end": 48.75
     },
     {
      "w": "with",
-     "start": 48.766,
-     "end": 48.886
+     "start": 48.75,
+     "end": 48.87
     },
     {
      "w": "Wren",
-     "start": 48.886,
-     "end": 49.126
+     "start": 48.87,
+     "end": 49.11
     },
     {
      "w": "tonight.",
-     "start": 49.126,
-     "end": 49.386
+     "start": 49.11,
+     "end": 49.37
     },
     {
      "w": "Option",
-     "start": 49.954,
-     "end": 50.214
+     "start": 49.938,
+     "end": 50.198
     },
     {
      "w": "B:",
-     "start": 50.214,
-     "end": 50.434
+     "start": 50.198,
+     "end": 50.418
     },
     {
      "w": "leave",
-     "start": 50.958,
-     "end": 51.198
+     "start": 50.942,
+     "end": 51.182
     },
     {
      "w": "at",
-     "start": 51.198,
-     "end": 51.318
+     "start": 51.182,
+     "end": 51.302
     },
     {
      "w": "sunrise,",
-     "start": 51.318,
-     "end": 51.678
+     "start": 51.302,
+     "end": 51.662
     },
     {
      "w": "like",
-     "start": 51.858,
-     "end": 51.938
+     "start": 51.842,
+     "end": 51.922
     },
     {
      "w": "they",
-     "start": 51.938,
-     "end": 52.078
+     "start": 51.922,
+     "end": 52.062
     },
     {
      "w": "said.",
-     "start": 52.078,
-     "end": 52.318
+     "start": 52.062,
+     "end": 52.302
     },
     {
      "w": "Comment",
-     "start": 52.79,
-     "end": 53.03
+     "start": 52.774,
+     "end": 53.014
     },
     {
      "w": "A",
-     "start": 53.03,
-     "end": 53.31
+     "start": 53.014,
+     "end": 53.294
     },
     {
      "w": "or",
-     "start": 53.31,
-     "end": 53.43
+     "start": 53.294,
+     "end": 53.414
     },
     {
      "w": "B.",
-     "start": 53.43,
-     "end": 53.59
+     "start": 53.414,
+     "end": 53.574
     }
    ]
   }
@@ -933,37 +938,37 @@
    "shot": "S02",
    "start": 2.071,
    "first_frame": 50,
-   "frames": 69,
-   "seconds": 2.875,
-   "render_frames": 81
+   "frames": 67,
+   "seconds": 2.792,
+   "render_frames": 79
   },
   {
    "shot": "S03",
-   "start": 4.945,
-   "first_frame": 119,
-   "frames": 52,
-   "seconds": 2.167,
-   "render_frames": 64
+   "start": 4.887,
+   "first_frame": 117,
+   "frames": 55,
+   "seconds": 2.292,
+   "render_frames": 67
   },
   {
    "shot": "S04",
-   "start": 7.124,
-   "first_frame": 171,
+   "start": 7.156,
+   "first_frame": 172,
    "frames": 32,
    "seconds": 1.333,
    "render_frames": 44
   },
   {
    "shot": "S05",
-   "start": 8.463,
-   "first_frame": 203,
-   "frames": 68,
-   "seconds": 2.833,
-   "render_frames": 80
+   "start": 8.496,
+   "first_frame": 204,
+   "frames": 67,
+   "seconds": 2.792,
+   "render_frames": 79
   },
   {
    "shot": "S06",
-   "start": 11.306,
+   "start": 11.284,
    "first_frame": 271,
    "frames": 51,
    "seconds": 2.125,
@@ -971,7 +976,7 @@
   },
   {
    "shot": "S07",
-   "start": 13.419,
+   "start": 13.428,
    "first_frame": 322,
    "frames": 48,
    "seconds": 2.0,
@@ -979,47 +984,47 @@
   },
   {
    "shot": "S08",
-   "start": 15.398,
+   "start": 15.408,
    "first_frame": 370,
+   "frames": 68,
+   "seconds": 2.833,
+   "render_frames": 80
+  },
+  {
+   "shot": "S09",
+   "start": 18.252,
+   "first_frame": 438,
+   "frames": 75,
+   "seconds": 3.125,
+   "render_frames": 87
+  },
+  {
+   "shot": "S10",
+   "start": 21.381,
+   "first_frame": 513,
    "frames": 67,
    "seconds": 2.792,
    "render_frames": 79
   },
   {
-   "shot": "S09",
-   "start": 18.223,
-   "first_frame": 437,
-   "frames": 70,
-   "seconds": 2.917,
-   "render_frames": 82
-  },
-  {
-   "shot": "S10",
-   "start": 21.12,
-   "first_frame": 507,
-   "frames": 73,
-   "seconds": 3.042,
-   "render_frames": 85
-  },
-  {
    "shot": "S11",
-   "start": 24.182,
+   "start": 24.166,
    "first_frame": 580,
-   "frames": 81,
-   "seconds": 3.375,
-   "render_frames": 93
+   "frames": 80,
+   "seconds": 3.333,
+   "render_frames": 92
   },
   {
    "shot": "S12",
-   "start": 27.527,
-   "first_frame": 661,
-   "frames": 66,
-   "seconds": 2.75,
-   "render_frames": 78
+   "start": 27.511,
+   "first_frame": 660,
+   "frames": 67,
+   "seconds": 2.792,
+   "render_frames": 79
   },
   {
    "shot": "S13",
-   "start": 30.293,
+   "start": 30.277,
    "first_frame": 727,
    "frames": 45,
    "seconds": 1.875,
@@ -1027,7 +1032,7 @@
   },
   {
    "shot": "S14",
-   "start": 32.168,
+   "start": 32.152,
    "first_frame": 772,
    "frames": 72,
    "seconds": 3.0,
@@ -1035,7 +1040,7 @@
   },
   {
    "shot": "S15",
-   "start": 35.168,
+   "start": 35.152,
    "first_frame": 844,
    "frames": 94,
    "seconds": 3.917,
@@ -1043,35 +1048,35 @@
   },
   {
    "shot": "S16",
-   "start": 39.088,
+   "start": 39.072,
    "first_frame": 938,
-   "frames": 44,
-   "seconds": 1.833,
-   "render_frames": 56
+   "frames": 43,
+   "seconds": 1.792,
+   "render_frames": 55
   },
   {
    "shot": "S17",
-   "start": 40.907,
-   "first_frame": 982,
+   "start": 40.891,
+   "first_frame": 981,
    "frames": 58,
    "seconds": 2.417,
    "render_frames": 70
   },
   {
    "shot": "S18",
-   "start": 43.322,
-   "first_frame": 1040,
-   "frames": 94,
-   "seconds": 3.917,
-   "render_frames": 106
+   "start": 43.306,
+   "first_frame": 1039,
+   "frames": 95,
+   "seconds": 3.958,
+   "render_frames": 107
   },
   {
    "shot": "S19",
-   "start": 47.255,
+   "start": 47.24,
    "first_frame": 1134,
-   "frames": 165,
-   "seconds": 6.875,
-   "render_frames": 177
+   "frames": 164,
+   "seconds": 6.833,
+   "render_frames": 176
   }
  ]
 }
