@@ -1,6 +1,6 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 15:45 UTC.
+Updated 7 Nov 2026, 16:46 UTC.
 
 | Shot | State | File |
 |---|---|---|
@@ -74,6 +74,8 @@ Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the 
 
 Done: **S15 f037-070** for helper 5 (15:40 UTC) and **S19top f089-176** for helper 3 (14:35 UTC); see the table. The S19bot f089-132 claim was withdrawn (helper 5 had already rendered it).
 
-Now (the coordinator's ask, 16:41 UTC): **S15 f025-031 redo** (the pop at f31/32: f001-031 came from an old build, with the crowd of pink moths and no coral pool). A watcher renders it as soon as helper 5 posts "S15 redo from <commit>" in status/helper5.md, from that commit, as a raw part `parts/S15_f025-031.mp4` (crf 10, yuv420p, CLEAN, `-start_number 25`). 7 frames, ~10-12 min.
+**S15 f025-031 redo: stood down** (the coordinator, 16:44 UTC). The pop is the sit-up timing; helper 5 re-renders f031-040 at b6d9e88, which replaces f037-040 of my part (f041-070 stay). Nothing was rendered for the redo.
+
+**Status: all my Ep 3 work is done** (S13 final; raw parts S19top f089-176 and S15 f037-070). Idle. I'll check git for QA notes.
 
 ## Coordinator
