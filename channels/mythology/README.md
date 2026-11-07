@@ -89,6 +89,15 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   exact words in `<stem>.txt` beside it (channel.py reads it; choose with `MYTH_KN_VOICE`). A reference cut mid-word
   makes IndicF5 repeat the last syllable at the start of a line. Resemblyzer similarity of each clone to its speaker:
   0.93 (owner), 0.91 (brother). Turbo letter errors on the four sample lines: 4-34%, same range as Suresh.
+- **Designed Kannada voices (7 Nov 2026)**, owner: "Try created new voice with description like we did in our shorts
+  chat for hindi voice i want clear good voice similar to our hindi one", then "I want voice to feel human likeness".
+  `kn_voice_design.py` (Indic Parler descriptions x seeds) -> `kn_voice_design_score.py` (turbo letter errors, pitch,
+  pitch movement, Resemblyzer likeness to Aman) -> `kn_design_sample.py` (the Kakudmi teaser through IndicF5 and the
+  studio chain). Findings: Parler's speaker **Aman reading Kannada** works (7-22% errors on the passage, 0.81-0.91
+  like Aman); descriptions with no named speaker came out as gibberish in Kannada; IndicF5 prompted straight from the
+  Hindi Aman clip also speaks clear Kannada. Through IndicF5 the best samples scored 5-7% mean errors (the clones:
+  up to 44%). Sent as A `aman_orig_s11` (most pitch movement), B `aman_hindi` (the Hindi voice itself, 0.88 like
+  Aman), C `aman_calm_s42` (calmer, flatter). The owner is choosing. More pitch movement reads as more human.
 - Earlier, synthetic Kannada: `kn_voice_search.py` voices a two-sentence original passage with the model card's
   Kannada speakers (Suresh, Chetan, Anu, Vidya) x 4 seeds; `kn_voice_pick.py score` ranks them with Whisper medium
   (`language="kn"`) and pitch movement; `kn_voice_pick.py sample` voices a 15-20 s sample with IndicF5 from the best
