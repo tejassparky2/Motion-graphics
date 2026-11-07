@@ -4,9 +4,13 @@ Updated 7 Nov 2026.
 
 | Piece / shot | State | Files |
 |---|---|---|
-| Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **API pushed** (still: tests/ep03_moths_still.jpg, left = a 40-moth swarm orbiting a light with backs tilted to it + a level moth + one on its back; right = close on the one on its back). Short test video rendering next. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
-| S06 (swarm down the hillside, eye-spots blink open) | Next, after the shared piece. | diorama_ep03/helper6.py |
-| S10 (top view, the spiral round Kai's raised left wrist) | Next. | diorama_ep03/helper6.py |
+| Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **Pushed**: API below, still tests/ep03_moths_still.jpg, short test tests/ep03_moths_test.mp4. Now with LOD: swarm copies share decimated body/collar/antenna meshes (near 0.2, far 0.07: ~46k / ~18k polys each, vs 185k for a full moth), since CPU EEVEE's cost goes with the polygon count. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
+| S06 (63 render frames) | **OK stills, please check**: okstills/S06_f22_f44.jpg. A (f1-33): low by Kai's spot looking up the rise (helper 1's Ep 2 hill), ~56 moths pour over the crest and down toward us. Cut on "down" (f34) to close on one moth, high in frame (clear of the caption band); its four eye-spots are shut at the cut and blink OPEN with a glow on "the hill" (f39-45), the swarm streaming behind. ~35 s/frame at 0.35 scale. | diorama_ep03/helper6.py |
+| S10 (79 render frames) | **OK still, please check**: okstills/S10_f40.jpg. High over Kai's shoulder (tilt 68): his left wrist straight up over his head, the mark a glowing coral core; 42 moths in 4 rings round him (inner faster), each banked with its back leaning in to the light (S10_TILT 0.5); the shrimp on his shoulder squashes down (ducks) when a moth swings close. ~80 s/frame at 0.35 scale. | diorama_ep03/helper6.py |
+
+Night look: a stand-in (navy world, cool moon, a navy multiply, the mark as a coral point light without shadows) until
+helper 9's night grade + mark light land; the builder switches to helper9.night() / mark_light() automatically
+when they exist.
 
 ## Moth API (mk/fluffmoth.py), for helpers 1, 4, 5, 10, bGqrs
 - `build(loc, name)` now also returns `legs` (6 hip pivots, folded away by default: older shots look the same).
