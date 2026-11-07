@@ -130,6 +130,22 @@ def _word(lid, w, shot="S19"):
     return int(round((t - start) * d.get("fps", 24))) + 1
 
 
+def _drop_huts(centres, r=7.5):
+    """Remove helper 9's village huts (walls and roofs, merged meshes) standing at `centres` (x, y): the ones that
+    would sit right in front of a low camera inside the village."""
+    import bmesh
+    for o in list(bpy.data.objects):
+        if not (o.name.startswith("h9_hut_walls") or o.name.startswith("h9_roofs")) or o.type != "MESH":
+            continue
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        kill = [v for v in bm.verts if any(math.hypot((o.matrix_world @ v.co).x - cx, (o.matrix_world @ v.co).y - cy) < r
+                                           for cx, cy in centres)]
+        bmesh.ops.delete(bm, geom=kill, context="VERTS")
+        bm.to_mesh(o.data)
+        bm.free()
+
+
 def _path_strip(name, pts, width=2.6, z=0.05):
     """A dirt path (helper 9's track colour) along the polyline `pts`."""
     import bmesh
@@ -462,8 +478,10 @@ def s15():
 
     # the field of moths on their backs (one built, linked copies), legs waving
     spots = _s15_landings(B, wrist, hips, hd)
+    cam_side = hips - hd * 12.0                                          # roughly where the camera looks from
     rigs = fluffmoth.swarm(len(spots), lambda i, rnd: (Vector((spots[i][0], spots[i][1], 1.0)), spots[i][3]),
-                           name="m15_", seed=15, far=lambda i, loc, scl: False)
+                           name="m15_", seed=15,
+                           far=lambda i, loc, scl: (Vector((loc.x, loc.y, 0)) - cam_side).length > 15.0)
     for i, (rig, q) in enumerate(zip(rigs, spots)):
         for w in rig["wings"]:                                           # no flight beat: they lie still
             w.animation_data_clear()
@@ -516,6 +534,10 @@ def s19bot():
     X._world(n)
     dawn(azim=82.0, elev=6.0)                                            # the sun ahead of him, low in the east
     H9.village_and_lake()
+    _drop_huts([(-23.1, -173.4), (-17.7, -185.9)])                       # the two west huts behind him (in the lens)
+    for nm in ("h9_tower", "h9_bell"):                                   # its posts and cut-off bell read as a second sun
+        if nm in bpy.data.objects:
+            bpy.data.objects[nm].hide_render = True
     sc = bpy.context.scene
     # the road out of the village: east along the beach above the waterline (helper 9's south shore), past the last
     # hut (helper 9's hut at (32.2, -177)), toward the sun coming up over the lake at the end of the road
@@ -590,9 +612,10 @@ def s19bot():
     sc.frame_set(1)
     ce = cam.matrix_world.translation.copy()
     hdg = math.radians(cy + 8.0)
-    sun_at = ce + Vector((math.sin(hdg), math.cos(hdg), 0)) * 330.0
-    sun_at.z = ce.z + 330.0 * math.tan(math.radians(3.2))
-    bpy.ops.mesh.primitive_uv_sphere_add(radius=8.5, segments=32, ring_count=16, location=sun_at)
+    SUN_D = 0.8 * cam.data.clip_end                                      # inside the far clip
+    sun_at = ce + Vector((math.sin(hdg), math.cos(hdg), 0)) * SUN_D
+    sun_at.z = ce.z + SUN_D * math.tan(math.radians(3.0))
+    bpy.ops.mesh.primitive_uv_sphere_add(radius=SUN_D * 0.026, segments=32, ring_count=16, location=sun_at)
     disc = bpy.context.object
     disc.name = "h5_dawn_sun"
     m = bpy.data.materials.new("h5_dawn_sun")
@@ -607,8 +630,8 @@ def s19bot():
     nt.links.new(em.outputs[0], out.inputs["Surface"])
     disc.data.materials.append(m)
     disc.visible_shadow = False
-    for i, (r, st) in enumerate(((19.0, 1.6), (34.0, 0.7))):           # a soft glow round it
-        bpy.ops.mesh.primitive_circle_add(vertices=48, radius=r, fill_type="TRIANGLE_FAN", location=sun_at)
+    for i, (r, st) in enumerate(((SUN_D * 0.058, 1.6), (SUN_D * 0.1, 0.7))):   # a soft glow round it
+        bpy.ops.mesh.primitive_circle_add(vertices=48, radius=r, fill_type="TRIFAN", location=sun_at)
         g = bpy.context.object
         g.name = f"h5_dawn_glow{i}"
         g.rotation_euler = (math.pi / 2, 0, -hdg)
