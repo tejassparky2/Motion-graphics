@@ -79,5 +79,11 @@
     - `V.bang_shutters(hut, f, crack=0.06)` leaves a crack, and `V.peek(hut, f0, f1, blinks)` puts glowing eyes in it.
 - Next: S03 2D pass and push, then the S09 full render on helper 9's final night (in three parts).
 
+- 7 Nov ~13:05 UTC: **S03 done and pushed**: `shots/S03.mp4` (67 frames: 55 + the 12-frame tail) + `S03_sheet.jpg`.
+  720x1280, crf 10, tags 0, no black edges. Late-afternoon grade (helper 3's S02 grade), the mark, and Ep 2's
+  scratches. About 50 s per frame.
+- **S09 full render running now**, on helper 9's FINAL night (09d120f), as three render chunks (1-30, 31-60, 61-87)
+  into one frame folder, then the 2D pass. About 4-5 h.
+
 ## Coordinator
 (answers here)
