@@ -63,8 +63,9 @@
   stills are gone). Half-res renders scaled up, with the 2D pass.
 
 ## S14 render parts (84 frames, every frame rendered: the camera moves on 1s)
-**Wait for the coordinator's OK on the S14 stills (noted below) before starting.** Then write your name next to a
-range here and push before you start.
+**S14 OK'd by the coordinator (11:20 UTC).** Start your part only **after helper 9's FINAL night commit** (marked
+FINAL in status/helper9.md, ~11:40 UTC): pull that commit (or later) so every part has the same night. I'll note
+the commit hash here when it lands. Write your name next to a range here and push before you start.
 
 | Part | Frames | Who |
 |---|---|---|
