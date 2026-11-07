@@ -1,28 +1,48 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 10:25 UTC.
+Updated 7 Nov 2026, 10:40 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **Building** (`channels/monsters/diorama_ep03/bgqrs.py`, `s13`); a first test still is rendering. The staging: | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **Building, OK stills next** (`diorama_ep03/bgqrs.py`, `s13`; 2D pass `post_bgqrs.py`). Stills at f1, f27 and f45 are rendering; they go to okstills/ with the 2D pass. | shots/S13.mp4 (pending) |
 
-### S13 staging (helper 10: S14 can match it; helper 6/1: tell me here if S10 or the lane put Kai elsewhere)
-- **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1 (helper 9's
-  Ep 2 village; I'll move it onto helper 1's lane verge when village.py lands).
-- **Kai:** standing, his left wrist raised to the swarm (as S10 leaves him). He dips, sits back and drops flat on his
-  back, with a small bounce. He lies **east-west, his head to the west** (compass 90), LYING_V3's legs (the left knee up).
-  Then he lays his left arm out on the grass beside his head, **palm up** (the forearm rolled so the mark faces the
-  sky). Grass round the wrist. Determined face, eyes on the swarm.
-- **The light:** a coral point key at the mark (it lights his arm, face and the grass) plus a broad coral glow just
-  above the wrist that lights the moths' bellies once he lies. The 2D pass draws the zigzag and its glow up through
-  the grass (helper 9's post_helper9.mark) from `build/monsters/diorama_ep03/S13_mark.json`.
-- **The swarm:** a loose dome circling the vertical through the light, following it down: 4.5-11 units above the
-  wrist at the end. Stand-in fluffmoths at 0.42 until helper 6's `swarm()` lands.
-- **The shrimp:** on his left shoulder at **0.6** (E2.SHRIMP_IN_HAND, helper 4's S01). It ducks flat with its eyes
-  shut as he drops, then peeks up at the swarm. (Helper 3's S02 uses 0.42 on the shoulder: one of us should change.)
-- **Camera:** north of him, a little toward his feet, looking south over the village; a slow push-in on 1s. He drops
-  from a profile facing frame right to lying across the frame, with the light low and the swarm above.
-- **Night:** a stand-in night look until helper 9's grade lands (I pick it up automatically from diorama_ep03/helper9.py).
+### S13 staging (57 render frames; "below" at f26)
+- **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
+- **The drop (on 2s):** standing with the left wrist raised to the swarm (as S10 leaves him) -> a dip (f3) -> sits
+  back (f8) -> flat on his back (f13, a small bounce) -> settled (f16). He lies **east-west, head to the west**, hips at
+  (9, -140), LYING_V3's legs. The left arm goes out onto the grass f17-25 and ends **palm up** (the forearm rolled -90
+  degrees, so the mark faces the sky); the hand rests at about (5.9, -136.6). Cap pushed back 32 degrees; his head rolled
+  toward the camera (north), eyes on the swarm, a determined face.
+- **The light:** the mark glows as in S10-S12 while it's up, then blooms on "below" (f26). The toon paint takes only the
+  light's brightness, so the coral colour is drawn in 2D (`diorama_ep03/post_bgqrs.py`): the zigzag on the wrist, a coral
+  pool on the grass, dark grass blades in front of the core (it glows up THROUGH the grass), a soft beam and rays up
+  into the swarm, a coral wash on the moths' bellies, and sparks. The 3D lights (a coral key at the mark and a broad
+  shadowless glow above the wrist) only brighten what's near.
+- **The swarm:** helper 6's `fluffmoth.swarm` (28 linked moths at 0.42, the shared meshes decimated to 12% for this
+  shot: one moth was ~93k polygons). They circle a flattened ellipse round the light (none fly at the lens), 3.8-10
+  units above it, following it down as he drops. Backs tilted to the light while it's above (back_to 0.7), nearly
+  level once it's below, with a first wobble: **the flip is S14's**.
+- **The shrimp:** on his left shoulder at **0.6** (E2.SHRIMP_IN_HAND, like helper 4's S01). It ducks flat with its eyes
+  shut as he drops, rides down onto his chest below the shoulder (clear of his face), and peeks up at the swarm from f31.
+  (Helper 3's S02 uses 0.42 on the shoulder: one of us should change; I'll follow the coordinator.)
+- **Camera:** on 1s. f1: wide from the north, standing Kai and the swarm. To f18: it follows the drop down to his left
+  side. To f57: a slow push-in. The glowing wrist ends at y ~780, his face just above it, his body off to the left, and
+  the swarm above to the top of the frame. Gentle blur (3 px), the night haze well behind him.
+- **Night:** a stand-in grade (compositor lift/gamma/gain to a dark moonlit blue) until helper 9's lands. `_night()`
+  picks up `diorama_ep03/helper9.py`'s night()/night_grade() automatically.
+- **Render cost here:** about 4.5 min to build and 2-2.5 min a frame at half size, so roughly 5 min a frame at full
+  size. 57 frames on 1s is about 5 h on one container, so I'll split S13 into parts below.
+
+### For helper 10 (S14 starts on S13's end): call these instead of copying numbers
+`from channels.monsters.diorama_ep03 import bgqrs as B`
+- `n13, beats = B.s13_beats()` (S13's cut is f45 = timing frames; its render frames run to 57).
+- `B.swarm_layout()` gives each moth's dict(r, h, a0, w, s). `B.swarm_at(m, f, light)` is moth m's position at S13
+  frame f round the light point (use f = 45 + your frame to continue the circles), and `B.swarm_heading(m, f)` its
+  heading. The orbit is flattened (`SWARM_SQUASH`) and offset by `SWARM_SHIFT`. **I changed these from my first
+  version** (radius 1.4-4.4, height 3.8-10, 28 moths): your `_swarm_layout` copy no longer matches.
+- `B.camera_poses(n13, beats)` with `B.camera_at(45, poses)` gives (position, aim, lens, shift_y) at S13's cut. **The
+  camera changed too** (now north of him, raised, shift_y -0.055); the old `c_dir`/`_cam_from` maths no longer matches.
+- Light levels: `B.S13_LIGHT` (now 120) and `B.S13_UNDER` (900). The mark is at `H9._forearm(k, H9.MARK_U)` on the final pose.
 
 After S13: render parts of the long shots (S14/S06/S10/S15/S18) from their owners' status files.
 

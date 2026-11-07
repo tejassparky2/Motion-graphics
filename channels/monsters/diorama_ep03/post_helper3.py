@@ -143,7 +143,7 @@ def _clouds(surf, clouds, k):
         rnd = np.random.default_rng(i + 7)
         for j in range(6):
             dx = (j - 2.5) / 2.5 * wd * 0.42 + rnd.uniform(-0.05, 0.05) * wd
-            rw, rh = wd * rnd.uniform(0.22, 0.34), wd * rnd.uniform(0.045, 0.08)
+            rw, rh = wd * rnd.uniform(0.26, 0.4), wd * rnd.uniform(0.08, 0.13)
             for (oy, col, a) in ((-rh * 0.35, (0.84, 0.74, 0.88), 0.30), (rh * 0.25, (1.0, 0.8, 0.66), 0.42)):
                 cr.save()
                 cr.translate(x + dx, y + oy)
