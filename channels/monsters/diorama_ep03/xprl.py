@@ -103,13 +103,9 @@ def _bone_world(rig, name, tail=False):
 # ------------------------------------------------------------------------------------------------------------ world
 def _optional(name):
     """Another helper's diorama_ep03 module if it has landed, else None (only a missing module is tolerated)."""
-    full = f"channels.monsters.diorama_ep03.{name}"
-    try:
-        return importlib.import_module(full)
-    except ModuleNotFoundError as e:
-        if e.name != full:
-            raise
+    if not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"{name}.py")):
         return None
+    return importlib.import_module(f"channels.monsters.diorama_ep03.{name}")
 
 
 def _night(n):
