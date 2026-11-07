@@ -40,13 +40,15 @@ MODES = {
     "dusk": dict(zenith="#3b4f9a", horizon="#ff9a5c", sun="#ff9b5e", sun_e=3.6, sun_el=6.0, fill="#9db4ff",
                  fill_s=0.5, haze="#c99aa8", tint=(0.86, 0.68, 0.72), key=0.55),
     "night": dict(zenith="#1a2c63", horizon="#3d5596", sun="#9eb6ff", sun_e=3.2, sun_el=48.0, fill="#9eb6ff",
-                  fill_s=0.45, haze="#36507f", tint=(0.30, 0.36, 0.62), key=1.0),
+                  fill_s=0.45, haze="#36507f", tint=(0.26, 0.31, 0.56), key=1.0),
 }
-KEY_GAIN = 0.6                              # mark light -> brightness (AOV units: a lit face 3 units away ~ 1)
-KEY_CAP = 0.9
-KEY_TINT = (1.0, 0.40, 0.32)                # what the mark's light multiplies (deeper than CORAL: green grass
+KEY_GAIN = 0.9                              # mark light -> brightness (AOV units: a lit face 3 units away ~ 1)
+KEY_CAP = 1.0
+KEY_POW = 1.7                               # > 1: bright at the wrist, dark a few units out
+KEY_TINT = (1.0, 0.27, 0.16)                # what the mark's light multiplies (deeper than CORAL: green grass
                                             # x CORAL reads yellow)
-KEY_ADD = 0.30                              # + a little coral on top, whatever the surface colour
+KEY_ADD = 0.45 
+KEY_COL = (1.0, 0.235, 0.133)               # #ff8466 in linear: the pool's colour (CORAL is the light's)                             # + a little coral on top, whatever the surface colour
 
 
 def _hex(h):
@@ -139,14 +141,17 @@ def _grade_nodes():
     nt.links.new(ad.outputs[0], sc_.inputs[0])
     cl = N("CompositorNodeMath")
     cl.operation, cl.inputs[1].default_value = "MINIMUM", KEY_CAP
-    nt.links.new(sc_.outputs[0], cl.inputs[0])
     cl0 = N("CompositorNodeMath")
     cl0.operation, cl0.inputs[1].default_value = "MAXIMUM", 0.0
-    nt.links.new(cl.outputs[0], cl0.inputs[0])
+    nt.links.new(sc_.outputs[0], cl0.inputs[0])
+    pw = N("CompositorNodeMath")                               # a steeper falloff than the light's own 1/d^2
+    pw.operation, pw.inputs[1].default_value = "POWER", KEY_POW
+    nt.links.new(cl0.outputs[0], pw.inputs[0])
+    nt.links.new(pw.outputs[0], cl.inputs[0])
     key = N("CompositorNodeMath")                              # x the mode's key strength (keyable)
     key.name, key.operation = "h9n_key", "MULTIPLY"
     key.inputs[1].default_value = 0.0
-    nt.links.new(cl0.outputs[0], key.inputs[0])
+    nt.links.new(cl.outputs[0], key.inputs[0])
     lit = N("CompositorNodeMixRGB")                            # img * m
     lit.blend_type = "MULTIPLY"
     lit.inputs[0].default_value = 1.0
@@ -160,7 +165,7 @@ def _grade_nodes():
     glow = N("CompositorNodeMixRGB")                           # + coral * m * KEY_ADD
     glow.blend_type = "MULTIPLY"
     glow.inputs[0].default_value = 1.0
-    glow.inputs[1].default_value = (CORAL[0] * KEY_ADD, CORAL[1] * KEY_ADD, CORAL[2] * KEY_ADD, 1)
+    glow.inputs[1].default_value = (KEY_COL[0] * KEY_ADD, KEY_COL[1] * KEY_ADD, KEY_COL[2] * KEY_ADD, 1)
     nt.links.new(key.outputs[0], glow.inputs[2])
     add0 = N("CompositorNodeMixRGB")
     add0.blend_type = "ADD"
@@ -261,7 +266,7 @@ def _fcurves(action):
 
 
 # ------------------------------------------------------------------------------------------------- the mark light
-def mark_light(k, energy=6000.0, u=0.3, side="L", name="h9_mark_light", radius=0.25, key=None):
+def mark_light(k, energy=6000.0, u=0.3, side="L", name="h9_mark_light", radius=0.25, key=None, core=0.13):
     """Kai's wrist mark as a light: a coral point light just off the inside of his left forearm (u of the way from
     the elbow to the wrist, as helper 9's Ep 2 mark), parented to the forearm bone so it follows every pose.
     `key` = [(frame, energy), ...] keys its power (a flare, a dim). Returns the light object."""
@@ -291,6 +296,23 @@ def mark_light(k, energy=6000.0, u=0.3, side="L", name="h9_mark_light", radius=0
     for f, e in key or []:
         d.energy = e
         d.keyframe_insert("energy", frame=f)
+    if core:                                                   # the mark itself: a small hot coral core (blooms)
+        import bmesh
+        bm = bmesh.new()
+        bmesh.ops.create_icosphere(bm, subdivisions=2, radius=core)
+        me = bpy.data.meshes.new(f"{name}_core")
+        bm.to_mesh(me)
+        bm.free()
+        c = bpy.data.objects.new(f"{name}_core", me)
+        bpy.context.scene.collection.objects.link(c)
+        c.data.materials.append(look.flat(f"{name}_core", (1.0, 0.30, 0.17, 1), strength=14.0))
+        c.visible_shadow = False
+        c.parent = arm
+        c.parent_type = "BONE"
+        c.parent_bone = f"forearm.{side}"
+        bpy.context.view_layer.update()
+        c.matrix_world = c.matrix_world.__class__.Translation(w_mark + w_up * 0.12)
+        lt["core"] = c.name
     return lt
 
 

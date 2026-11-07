@@ -231,7 +231,7 @@ def mark_s01():
     with open(os.path.join(BUILD, "S01_mark.json")) as fh:
         d = json.load(fh)
     A = {int(f): v for f, v in d["frames"].items()}
-    k_size = float(os.environ.get("S01_MARK_K", "1.3"))
+    k_size = float(os.environ.get("S01_MARK_K", "1.6"))
 
     def draw(cr, t, start, end=None):
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
@@ -251,6 +251,8 @@ def mark_s01():
                           cols=((1, 0.8, 0.7, 1), fx2d.WHITE, (1, 0.6, 0.5, 1)), life=1.0, seed=11 + j)
 
     def eyes(cr, t, start, end=None):
+        if not d["meta"].get("wren_eyes", True):                          # v2: we're behind her
+            return
         f = min(max(1, int(round(t * FPS)) + 1), max(A))
         (lx, ly, lz), (rx, ry, _) = A[f]["w_eye_l"], A[f]["w_eye_r"]
         if lz <= 0:

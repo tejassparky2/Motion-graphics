@@ -107,16 +107,16 @@ def _write_anchors(shot, n, fn, meta):
         json.dump(dict(meta=meta, frames=out), fh)
 
 
-def _shoulder_shrimp(k, n, name="ep03_shrimp_s02"):
+def _shoulder_shrimp(k, n, name="ep03_shrimp_s02", facing=None, yaw=None):
     """The puff-shrimp riding on Kai's left shoulder, facing where he faces, breathing, blinking."""
     sh = puffshrimp.build((0, 0, 0), name=name)
     sh["root"].scale = (SHRIMP_K,) * 3
-    sh["root"].rotation_euler = (0, 0, math.radians(X.KAI_YAW))
+    sh["root"].rotation_euler = (0, 0, math.radians(X.KAI_YAW if yaw is None else yaw))
     sc = bpy.context.scene
     for f in range(1, n + 1, 2):
         sc.frame_set(f)
         bpy.context.view_layer.update()
-        fwd = (X.WREN_STOP - X.KAI_AT).normalized()
+        fwd = facing if facing is not None else (X.WREN_STOP - X.KAI_AT).normalized()
         p = _bone_world(k, "upper_arm.L") + Vector((0, 0, 0.34)) + Vector((fwd.x, fwd.y, 0)).normalized() * 0.1 \
             + X._side_vec(k) * 0.5                                # on the outer edge of the shoulder: beside his face
         sh["root"].location = p
@@ -301,4 +301,228 @@ def s02():
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]])
 
 
-SHOTS = {"S02": s02}
+# ------------------------------------------------------------------------------------------------------- S19 top
+def _yaw_facing(F):
+    """Armature rot_z (deg) so the model's front (-Y) points along world direction F."""
+    return math.degrees(math.atan2(F.x, -F.y))
+
+
+def _boat(name="h3_boat"):
+    """A small wooden rowing boat (boat space: +Y the bow, origin on the floor boards, ~19 long, ~6 wide): a round-
+    bottomed hull, a gunwale strip, three thwarts, two oarlocks. Toon wood with outlines. Returns dict(root, ...)."""
+    import bmesh
+    from mathutils import Matrix
+    from channels.monsters.mk import look
+    wood = look.toon(f"{name}_wood", look.hexc("#8a5a34"))
+    plank = look.toon(f"{name}_plank", look.hexc("#a8744a"))
+    dark = look.toon(f"{name}_inside", look.hexc("#6a4226"))
+    root = bpy.data.objects.new(name, None)
+    bpy.context.scene.collection.objects.link(root)
+
+    def mesh(nm, bm, mat, line=0.05):
+        me = bpy.data.meshes.new(nm)
+        bm.to_mesh(me)
+        bm.free()
+        o = bpy.data.objects.new(nm, me)
+        bpy.context.scene.collection.objects.link(o)
+        o.data.materials.append(mat)
+        o.parent = root
+        if line:
+            mod = o.modifiers.new("line", "SOLIDIFY")
+            mod.thickness = -line
+            mod.use_flip_normals = True
+            mod.material_offset = 1
+            o.data.materials.append(look.flat(f"{nm}_line", (0.16, 0.09, 0.05, 1)))
+        return o
+    # the hull: the lower half of a stretched sphere, pinched to a point at the bow, a little up at both ends
+    bm = bmesh.new()
+    bmesh.ops.create_uvsphere(bm, u_segments=28, v_segments=14, radius=1.0)
+    for v in list(bm.verts):
+        if v.co.z > 0.02:
+            bm.verts.remove(v)
+    for v in bm.verts:
+        x, y, z = v.co
+        pinch = 1.0 - 0.55 * max(0.0, y) ** 2                     # a narrower bow
+        v.co = Vector((x * 3.1 * pinch, y * 9.6, 2.6 + z * 3.0 + 0.35 * y * y))   # rim 2.6 over the floor, keel -0.4
+    bmesh.ops.reverse_faces(bm, faces=bm.faces)                   # its inside faces the camera from above
+    hull = mesh(f"{name}_hull", bm, wood)
+    bm = bmesh.new()                                              # the floor boards
+    bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Diagonal((2.9, 12.0, 0.18, 1)))
+    floor = mesh(f"{name}_floor", bm, dark, line=0.0)
+    floor.location = (0, 0, -0.05)
+    bm = bmesh.new()                                              # the gunwale: a ring round the rim
+    pts = []
+    for i in range(48):
+        a = 2 * math.pi * i / 48
+        y = math.sin(a)
+        pinch = 1.0 - 0.55 * max(0.0, y) ** 2
+        pts.append(Vector((math.cos(a) * 3.1 * pinch, y * 9.6, 2.6 + 0.35 * y * y)))
+    for i in range(48):
+        p0, p1 = pts[i], pts[(i + 1) % 48]
+        d = (p1 - p0)
+        m = Matrix.Translation((p0 + p1) / 2) @ Matrix.Rotation(math.atan2(d.y, d.x), 4, "Z") @ \
+            Matrix.Diagonal((d.length + 0.08, 0.32, 0.3, 1))
+        bmesh.ops.create_cube(bm, size=1.0, matrix=m)
+    rim = mesh(f"{name}_rim", bm, plank, line=0.04)
+    bm = bmesh.new()                                              # thwarts (seats) and the oarlocks
+    for y, w_ in ((1.2, 5.2), (-6.0, 4.0), (6.4, 3.2)):
+        bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((0, y, 2.45)) @ Matrix.Diagonal((w_, 1.3, 0.25, 1)))
+        for sx in (-1, 1):
+            bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((sx * w_ * 0.42, y, 1.3)) @
+                                  Matrix.Diagonal((0.3, 0.3, 2.3, 1)))
+    for sx in (-1, 1):
+        bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((sx * 3.05, -0.4, 2.95)) @
+                              Matrix.Diagonal((0.25, 0.25, 0.7, 1)))
+    seats = mesh(f"{name}_seats", bm, plank, line=0.04)
+    return dict(root=root, hull=hull, rim=rim, seats=seats, kai_seat=Vector((0, 1.2, 0)), wren_seat=Vector((0, -6.0, 0)),
+                locks=(Vector((3.05, -0.4, 3.2)), Vector((-3.05, -0.4, 3.2))))
+
+
+def _oar(name, wood_mat):
+    """An oar along its local +Y from the handle (origin) out to the blade, ~11.5 long."""
+    import bmesh
+    from mathutils import Matrix
+    bm = bmesh.new()
+    bmesh.ops.create_cone(bm, cap_ends=True, segments=8, radius1=0.12, radius2=0.12, depth=9.0,
+                          matrix=Matrix.Translation((0, 4.5, 0)) @ Matrix.Rotation(math.radians(90), 4, "X"))
+    bmesh.ops.create_cube(bm, size=1.0, matrix=Matrix.Translation((0, 10.2, 0)) @ Matrix.Diagonal((0.12, 2.6, 0.75, 1)))
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    o = bpy.data.objects.new(name, me)
+    bpy.context.scene.collection.objects.link(o)
+    o.data.materials.append(wood_mat)
+    o.rotation_mode = "QUATERNION"
+    return o
+
+
+def s19top():
+    """S19 top (A): "Option A: go with Wren tonight." Night on the lake: Kai and Wren in a small rowing boat heading
+    across the dark water to the old lighthouse. Kai rows (facing the stern, his face to us), the shrimp on his left
+    shoulder; Wren sits in the stern with the bell in her lap (XprL's wren.sit), looking ahead past him. His mark is
+    the key light (helper 9's N9.mark): a coral pool on the water round the boat and on their faces. Seen from behind
+    the stern quarter, tracking with the boat, the lighthouse's coral glow ahead. Rendered in the top panel only
+    (rows 0-690); the characters on 2s, the camera on 1s."""
+    from channels.monsters.diorama_ep02 import helper9 as h9e2
+    from channels.monsters.diorama_ep03 import helper9 as N9
+    from channels.monsters.mk import acting, look
+    n, W, seq, t0 = _timing("S19")
+    X._world(n)
+    sc = bpy.context.scene
+    h9e2.village_and_lake()
+    lh = N9.lighthouse()
+    N9.night(n)
+    from channels.monsters.mk import night as NG
+    lh_top = Vector(lh["top"]) if "top" in lh else (lh["lamp"].matrix_world.translation.copy() if lh.get("lamp")
+                                                     else Vector(NG.LIGHTHOUSE_AT) + Vector((0, 0, 60)))
+    start = Vector((h9e2.VILLAGE.x - 4.0, h9e2.SHORE_Y - 70.0, 0.0))
+    head = Vector((lh_top.x - start.x, lh_top.y - start.y, 0)).normalized()     # the heading: the lighthouse
+    side = Vector((head.y, -head.x, 0))                                          # starboard
+    yaw_b = math.atan2(-head.x, head.y)                                          # boat +Y along the heading
+    b = _boat()
+    b["root"].rotation_euler = (0, 0, yaw_b)
+    WATER = 0.06
+    FLOOR = WATER + 0.9                                                          # the hull draws ~1.3
+    period = 40                                                                  # one stroke (frames)
+
+    def surge(f):
+        return 0.16 * f + 0.6 * math.sin(2 * math.pi * f / period - 1.2)          # glides on, a push on each drive
+
+    def boat_at(f):
+        return start + head * surge(f) + Vector((0, 0, FLOOR + 0.12 * math.sin(f / 9.0)))
+
+    for f in range(1, n + 1):
+        b["root"].location = boat_at(f)
+        b["root"].rotation_euler = (math.radians(0.9 * math.sin(f / 11.0)), math.radians(1.6 * math.sin(f / 13.0)),
+                                    yaw_b)
+        b["root"].keyframe_insert("location", frame=f)
+        b["root"].keyframe_insert("rotation_euler", frame=f)
+    H9._linear(b["root"])
+
+    def bw(p, f):                                                                # boat space -> world at frame f
+        sc.frame_set(f)
+        bpy.context.view_layer.update()
+        return b["root"].matrix_world @ Vector(p)
+
+    # the characters, parented to the boat so they ride it
+    k = hero.load((0, 0, 0), scale=X.SCALE, outfit="world")
+    w = wren.load((0, 0, 0), scale=X.SCALE)
+    for rig, seat, facing in ((k, b["kai_seat"], Vector((0, -1, 0))), (w, b["wren_seat"], Vector((0, 1, 0)))):
+        arm = rig["arm"]
+        arm.parent = b["root"]
+        arm.rotation_mode = "XYZ"
+        arm.rotation_euler = (0, 0, math.radians(_yaw_facing(facing)))
+        arm.location = seat - facing * 0.35 + Vector((0, 0, 0.0))                # the thwart under the hips
+        arm.scale = (X.SCALE,) * 3
+    bpy.context.view_layer.update()
+    PK, PW = x3.Pose(k), x3.Pose(w)
+    wood = bpy.data.materials.get("h3_boat_plank")
+    oars = [_oar("h3_oar_L", wood), _oar("h3_oar_R", wood)]
+    for o in oars:
+        o.parent = b["root"]
+    f_go = W.get("go", 34)
+    for f in range(1, n + 1, 2):
+        u = ((f - 1) % period) / period                                           # 0 catch, 0.45 finish
+        if u < 0.45:
+            v = _smooth(u / 0.45)
+            hy, hz = -1.3 + 1.9 * v, 4.35 + 0.15 * math.sin(math.pi * v)           # the drive: blades in
+            lean = 12 - 22 * v
+        else:
+            v = _smooth((u - 0.45) / 0.55)
+            hy, hz = 0.6 - 1.9 * v, 3.85                                          # the recovery: blades out
+            lean = -10 + 22 * v
+        # Kai: seated, rowing (hands in boat space, then into his armature space for the IK)
+        PK.reset()
+        wren.sit(PK, bell_in_lap=False)
+        PK.rot("spine", (lean * 0.5, 0, 0))
+        PK.rot("chest", (lean * 0.5, 0, 0))
+        PK.rot("head 1", (-lean * 0.6 - 4, 0, 0))
+        M = k["arm"].matrix_local.inverted()                                     # boat space -> his armature space
+        for sd, sx in (("L", -1), ("R", 1)):                                     # he faces -Y: his left is boat -X
+            wren.reach(PK, sd, M @ Vector((sx * 0.75, hy, hz)), pole=(-sx * 1, 0.4, -0.4), hand=(0, -1, 0))
+        PK.key(f)
+        # the oars: from each hand through its oarlock out to the blade
+        for i, (sd, sx) in enumerate((("L", -1), ("R", 1))):
+            H = Vector((sx * 0.75, hy, hz))
+            lock = b["locks"][0] if sx > 0 else b["locks"][1]
+            d = (lock - H).normalized()
+            oars[i].location = H
+            oars[i].rotation_quaternion = Vector((0, 1, 0)).rotation_difference(d)
+            oars[i].keyframe_insert("location", frame=f)
+            oars[i].keyframe_insert("rotation_quaternion", frame=f)
+        # Wren: seated in the stern, the bell in her lap, a slow breath; a small nod on "go with Wren"
+        PW.reset()
+        wren.sit(PW)
+        nod = 6.0 * math.sin(math.pi * min(1.0, max(0.0, (f - f_go - 6) / 10)))
+        PW.rot("chest", (1.2 * math.sin(f / 22.0), 0, 0))
+        PW.rot("head 1", (-6 + nod, 0, 0))
+        PW.key(f)
+    X.v2._twos([k["arm"], w["arm"]] + oars)
+    wren.grip(w, 1)
+    wren.face(w, "worried", 1)
+    wren.face(w, "stern", f_go + 4)
+    wren.blink(w, 1, n, at=(f_go + 2,))
+    _kai_face({"eye_brow_down": 0.5, "face_angry": 0.2}, 1)                         # set on it
+    acting.blink(k, 1, n, seed=11)
+    sh = _shoulder_shrimp(k, n, name="ep03_shrimp_s19", facing=head * -1, yaw=math.degrees(yaw_b) + 180)
+    anim.on_twos(H9._shrimp_parts(sh), step=2)
+    lt = N9.mark(k)                                                               # the coral key light
+    # the camera: behind the stern quarter, low over the water, the boat and the lighthouse ahead; tracking
+    cam = H9._new_cam("S19Acam", 1)
+    for f in range(1, n + 1):
+        e = _smooth((f - 1) / max(1, n - 1))
+        bc = boat_at(f) + Vector((0, 0, 3.2))
+        loc = bc - head * (26.0 - 3.0 * e) + side * 9.0 + Vector((0, 0, 6.5))
+        tgt = bc + head * 10.0 + Vector((0, 0, 1.5))
+        H9._key_cam(cam, f, loc, H9._look(tgt - loc), 32.0, (bc - loc).length, shift_y=-0.22, blur=4.0,
+                    haze=(6.0, 24.0))
+    H9._linear(cam, cam.data)
+    sc.render.use_border = True
+    sc.render.use_crop_to_border = False
+    sc.render.border_min_x, sc.render.border_max_x = 0.0, 1.0
+    sc.render.border_min_y, sc.render.border_max_y = 0.46, 1.0                # rows 0-691: the top panel
+    sc.frame_set(1)
+    return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"], sh["root"]])
+
+
+SHOTS = {"S02": s02, "S19top": s19top}
