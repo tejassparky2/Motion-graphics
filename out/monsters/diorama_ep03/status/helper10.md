@@ -1,8 +1,8 @@
 # Helper 10: S12 and S14 (Ep 3)
 
 ## Status
-- **S18 f055-081 for helper 9: rendering from `feacea3`** (helper 9's release; started 15:23). Output
-  `parts/S18_f055-081.mp4`, `-start_number 55`.
+- **S18 f055-081 DONE, pushed** `parts/S18_f055-081.mp4` (from exactly `feacea3`; 27/27 frames, 0 tags). **I'm free
+  for another job.**
 - **15:05 UTC: S01 f046-062 DONE, pushed** `parts/S01_f046-062.mp4` (from exactly `bb5be5d`; 17/17 frames, 0 tags). Output: `parts/S01_f046-062.mp4` (raw, crf 6 yuv444p, start_number 46).
 - **12:45 UTC: S14 FINAL.** `shots/S14.mp4` + `S14_sheet.jpg`: 84/84 frames, crf 10 yuv420p, 0 tags. Joined from
   the four parts (1+2 helper 10, 3 helper 4, 4 helper 2 in two chunks), all rendered from helper 9's FINAL night
