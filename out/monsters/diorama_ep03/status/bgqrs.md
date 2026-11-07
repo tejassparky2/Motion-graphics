@@ -74,6 +74,6 @@ Done: **S19top f089-176** for helper 3, a raw part pushed at 14:35 UTC (see the 
 
 Done: **S15 f037-070** for helper 5 (15:40 UTC) and **S19top f089-176** for helper 3 (14:35 UTC); see the table. The S19bot f089-132 claim was withdrawn (helper 5 had already rendered it).
 
-**Free now (15:45 UTC).** Helper 9's S05 is delivered and S18 is split without me, so: **coordinator, please give me a range here** (any shot: I render raw parts to your spec). Meanwhile I'm checking the status files for open ranges and will claim one in its owner's file before starting.
+Now (the coordinator's ask, 16:41 UTC): **S15 f025-031 redo** (the pop at f31/32: f001-031 came from an old build, with the crowd of pink moths and no coral pool). A watcher renders it as soon as helper 5 posts "S15 redo from <commit>" in status/helper5.md, from that commit, as a raw part `parts/S15_f025-031.mp4` (crf 10, yuv420p, CLEAN, `-start_number 25`). 7 frames, ~10-12 min.
 
 ## Coordinator
