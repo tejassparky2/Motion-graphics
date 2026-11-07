@@ -264,6 +264,60 @@ def mark_s01():
     return [(draw, dict(start=0.0)), (eyes, dict(start=0.0, end=(n - 1) / FPS))]
 
 
+def s11_pass():
+    """Ep 3 S11 (the explainer): a soft bloom round the coral light all through; from "backs" a soft glow line from the
+    light to the moth's back (an arrow-like taper ending in a small head at its back), drawing on over 6 frames and
+    breathing. No text."""
+    from channels.monsters import fx2d
+    with open(os.path.join(BUILD, "S11_anchors.json")) as fh:
+        d = json.load(fh)
+    meta, A = d["meta"], {int(f): v for f, v in d["frames"].items()}
+    f0 = meta["f_backs"] - 4
+    coral, hot = (1.0, 0.52, 0.40), (1.0, 0.86, 0.78)
+
+    def draw(cr, t, start, end=None):
+        f = min(max(1, int(round(t * FPS)) + 1), max(A))
+        g = A[f]
+        lx, ly = g["light"][:2]
+        rr = abs(g["r_orb"][1] - ly) or 12.0
+        fx2d._glow(cr, lx, ly, rr * 7.0, coral, 0.45)                   # the light's bloom
+        fx2d._glow(cr, lx, ly, rr * 2.6, hot, 0.6)
+        if f < f0:
+            return
+        u = _ease_out((f - f0) / 6.0)
+        bx, by = g["back"][:2]
+        L = math.hypot(bx - lx, by - ly)
+        if L < 1:
+            return
+        ang = math.atan2(by - ly, bx - lx)
+        r0 = rr * 1.4                                                   # start just outside the orb
+        r1 = r0 + (L - r0 - 6) * u                                      # the tip races out to its back
+        breathe = 0.85 + 0.15 * math.sin(f / 3.0)
+        cr.save()
+        cr.translate(lx, ly)
+        cr.rotate(ang)
+        for wdt, a in ((22.0, 0.10), (12.0, 0.22), (5.0, 0.75)):        # a soft glowing line, tapered
+            cr.new_path()
+            cr.move_to(r0, -wdt * 0.25)
+            cr.line_to(r1 - 10, -wdt * 0.5)
+            cr.line_to(r1 - 10, wdt * 0.5)
+            cr.line_to(r0, wdt * 0.25)
+            cr.close_path()
+            cr.set_source_rgba(*coral, a * breathe)
+            cr.fill()
+        if u > 0.6:                                                     # the head, at its back
+            cr.new_path()
+            cr.move_to(r1 + 4, 0)
+            cr.line_to(r1 - 16, -11)
+            cr.line_to(r1 - 16, 11)
+            cr.close_path()
+            cr.set_source_rgba(*hot, min(1.0, (u - 0.6) / 0.4) * breathe)
+            cr.fill()
+        cr.restore()
+        fx2d._glow(cr, bx, by, 26.0, coral, 0.35 * u * breathe)          # where it lands: its back lit
+    return [(draw, dict(start=0.0))]
+
+
 def np_arange(a, b, step):
     out, v = [], a
     while v < b:
@@ -275,6 +329,8 @@ def np_arange(a, b, step):
 def overlays(shot):
     if EP == "ep03" and shot == "S01":
         return mark_s01()
+    if EP == "ep03" and shot == "S11":
+        return s11_pass()
     if shot == "S20bot":
         fear, t0, t1 = wren_fear()
         return [(mark20(), dict(start=0.0)), (fear, dict(start=t0, end=t1))]
