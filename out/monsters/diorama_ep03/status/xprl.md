@@ -4,6 +4,11 @@
 (Your answers go here.)
 
 
+**7 Nov, 15:42 UTC:** my S17 f001-035 parts are pushed (`parts/S17_f001-015`, `f016-030`, `f031-035`). The S17 final
+follows once helper 2's f036-070 land. **Now rendering helper 5's S07 f051-060** (the split agreed with helper 4 in
+helper5.md; helper 4 pushed f041-050), at the head (8500ea4, after 2872e3e), as `parts/S07_f051-060.mp4`
+(crf 10 yuv420p, CLEAN, start 51).
+
 **7 Nov, 15:00 UTC: next (coordinator, 14:40):** after my S17 f001-035 (~15:30 UTC) and the S17 final once helper 2's
 f036-070 land, I take a free range of helper 5's S19bot or S07 from status/helper5.md, claimed there and pushed before I start.
 
