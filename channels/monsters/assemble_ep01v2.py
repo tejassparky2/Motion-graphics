@@ -127,7 +127,7 @@ CAP_Y_VERSION["diorama_ep02"] = {
 }
 # Episode 3: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
 CAP_Y_VERSION["diorama_ep03"] = {
-    "S19": 490,              # the split: the captions sit in the A half above the A card (re-checked on the plates)
+    "S19": 430,              # the split: the captions sit in the A half above the stacked A/B cards
 }
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
 HOOK_SHIFT = 0               # move the hook up (negative) if it touches Kai's eyes or the claw tip in S01
@@ -151,10 +151,11 @@ AB_POS_VERSION = {"diorama_v3": {"B": (200, 700)},
                   # A over Kai's shins and the stump, B (SHOW MARK, 422 px wide at 85%) at x 286 so it stays in frame: in the sky
                   # right of Kai's cap, above his raised glowing arm and Wren's face (S20bot v2 stills, 2 Nov)
                   "diorama_ep02": {"A": (124, 585), "B": (286, 715)},
-                  # ep03: LEAVE AT DAWN is 513 px right of its centre at 85%, so B's centre stays at x <= 197. A
-                  # straddles the divider; B sits low in the dawn panel over Kai's waist, because his head, the shrimp
-                  # and the look back fill the panel's top under the divider (helper 5's S19bot OK still, 7 Nov)
-                  "diorama_ep03": {"A": (124, 585), "B": (124, 880)}}
+                  # ep03: LEAVE AT DAWN is 513 px right of its centre at 85%, so B's centre stays at x <= 197. The
+                  # cards stack on the divider (A just above it, B in the dawn sky just under it): helper 5's S19bot v2
+                  # (beach road into the sunrise) has Kai's whole body at screen y ~716-1040, so B clears his head, the
+                  # shrimp and the look back; only the pill's end crosses the sun's edge
+                  "diorama_ep03": {"A": (124, 515), "B": (124, 655)}}
 AB_SCALE_VERSION = {"diorama_ep02": 0.85, "diorama_ep03": 0.85}
 # Frames whose black edges are drawn on purpose, per version: {shot: (first, last) frame in the shot, why}. The scan
 # reports them as intended instead of as a problem; re-check the range if the shot is re-rendered.

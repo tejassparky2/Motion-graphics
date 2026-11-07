@@ -54,9 +54,17 @@ except ImportError:                                  # pragma: no cover (bgqrs.p
 KAI_SIT = Vector(_AT) + Vector((-2.42, 0.0, 0.0))    # armature origin sitting: hips (0.58 west of it) at (9.0, -140), helper 5's S15
 KAI_YAW3 = 90.0                                      # facing east; his left (+X local) points north
 TO_VILLAGE = Vector((0.0, -1.0, 0.0))
-WREN_KNEEL = KAI_SIT + Vector((0.6, -3.1, 0.0))      # at his right side (the village side), facing him (north)
-WREN_YAW3 = 180.0
-WREN_S16 = KAI_SIT + Vector((0.8, -6.5, 0.0))        # S16: standing a few steps off on the village side, facing him
+WREN_KNEEL = KAI_SIT + Vector((2.0, -2.8, 0.0))      # at his front-right (the village side), turned to him
+WREN_S16 = KAI_SIT + Vector((1.6, -7.0, 0.0))        # S16: standing a few steps off on the village side, facing him
+
+
+def _yaw_to(src, dst):
+    """rot_z (degrees) that turns a character's front (-Y) from src toward dst."""
+    d = Vector(dst) - Vector(src)
+    return math.degrees(math.atan2(d.x, -d.y))
+
+
+WREN_YAW3 = _yaw_to(WREN_KNEEL, KAI_SIT)
 
 
 # ------------------------------------------------------------------------------------------------------------ timing
@@ -293,7 +301,7 @@ def s16():
     n = frames("S16")
     _night(n)
     _village_backdrop(shut=1)
-    w = _wren_at(WREN_S16, WREN_YAW3)
+    w = _wren_at(WREN_S16, _yaw_to(WREN_S16, KAI_SIT))
     P = x3.Pose(w)
     f_low0, f_low1 = max(1, at("S16", "wren") - 2), at("S16", "bell") + 6          # the bell comes down over the line
     f_crack = at("S16", "bell") - 2                                                  # her face cracks
@@ -351,9 +359,9 @@ def s17():
         wren.kneel(P, front="L", depth=d)
         if f_back <= f < f_return + 4:                                            # the glance back at the village
             g = _ease((f - f_back) / 5) * (1 - _ease((f - f_return) / 4))
-            P.rot("chest", (0, 0, -18 * g))
-            P.rot("neck", (0, 0, -25 * g))
-            P.rot("head 1", (0, 0, -30 * g))
+            P.rot("chest", (0, 0, 18 * g))                                    # over her left shoulder (south)
+            P.rot("neck", (0, 0, 25 * g))
+            P.rot("head 1", (0, 0, 30 * g))
         else:
             P.rot("head 1", (8, 0, 0))                                            # looking down at him
         P.key(f)
@@ -367,8 +375,8 @@ def s17():
                      (KAI_SIT.x + 2.4, KAI_SIT.y + 5.0)])
     # over Kai's left shoulder from the north (the shrimp in the soft foreground): Wren facing us, kneeling on the
     # village side, the huts behind her; on "village" she looks back at them. A slow push-in.
-    mid = KAI_SIT.lerp(WREN_KNEEL, 0.75) + Vector((0, 0, 4.2))
-    yaw = 150.0                                                               # from the north-west: Wren clear of his head
+    mid = KAI_SIT.lerp(WREN_KNEEL, 0.7) + Vector((0, 0, 4.2))
+    yaw = 180.0                                                               # from the north: Wren clear of his head
     _cam("S17cam", n, (mid, 14.5, 7, yaw, 40, 0.0), (mid, 13.0, 7, yaw, 40, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[k["arm"], w["arm"]])
 
@@ -385,7 +393,7 @@ def s08():
     if huts:
         h = huts[PORCH_HUT]
         face = Vector(h["face"])
-        spot = Vector(h["porch"]) + Vector((0, 0, 0.5))                       # on the deck boards
+        spot = Vector(h["doorstep"]) + face * 0.7 + Vector((0, 0, 0.5))       # on the deck, near the door
         kai_at = V.LANE_AT
     else:                                                                     # no lane yet: a spot by the track
         face = Vector((1.0, 0.0, 0.0))
@@ -429,9 +437,9 @@ def s08():
     # and the lane's other porches beyond; a slow push-in
     tgt = spot + Vector((0, 0, 6.6))
     side = Vector((-face.y, face.x, 0))
-    cdir = (face * 0.82 + side * 0.57).normalized()
+    cdir = (face * 0.85 - side * 0.53).normalized()                          # away from her own porch bell
     cyaw = math.degrees(math.atan2(-cdir.x, -cdir.y))
-    _cam("S08cam", n, (tgt, 11.0, -2, cyaw, 40, 0.0), (tgt, 9.8, -2, cyaw, 40, 0.0))
+    _cam("S08cam", n, (tgt, 11.0, -7, cyaw, 40, 0.0), (tgt, 9.8, -7, cyaw, 40, 0.0))
     return dict(frames=n, step=2, ones=(1, n), subject=[w["arm"]])
 
 

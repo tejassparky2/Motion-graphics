@@ -37,6 +37,8 @@ SHOTS_OUT = os.path.join(ROOT, "out", "monsters", "diorama_ep03", "shots")
 FPS = 24.0
 CORAL, CORAL_HOT, PINK_WHITE = P9.CORAL, P9.CORAL_HOT, P9.PINK_WHITE
 BLADE = (0.05, 0.09, 0.13)                 # the grass in front of the light, near-black blue-green
+BEAM = (1.0, 0.518, 0.4)                   # #ff8466, the mark's coral (painted OVER, so it stays coral, not
+WHITE_HOT = (1.0, 0.97, 0.95)              # yellow-white as an additive glow on a bright pool would)
 
 
 def marks(shot):
@@ -49,31 +51,46 @@ def _frame(t):
     return int(round(t * FPS)) + 1
 
 
+def _soft(cr, x, y, r, col, a):
+    """A soft radial glow painted OVER (the colour stays itself, unlike fx2d._glow's additive one)."""
+    if r <= 0 or a <= 0:
+        return
+    g = cairo.RadialGradient(x, y, 0, x, y, r)
+    g.add_color_stop_rgba(0, *col, a)
+    g.add_color_stop_rgba(0.4, *col, a * 0.45)
+    g.add_color_stop_rgba(1, *col, 0)
+    cr.set_source(g)
+    cr.arc(x, y, r, 0, 2 * math.pi)
+    cr.fill()
+
+
 def _ground_glow(cr, x, y, lv, f):
-    """The pool of coral light on the grass round the wrist (wide and flat) and its hot core."""
+    """The coral pool on the grass round the wrist (wide and flat) and the hot white core at the wrist."""
+    a = min(1.0, lv)
     cr.save()
     cr.translate(x, y)
     cr.scale(1.0, 0.45)
-    fx2d._glow(cr, 0, 0, 230 * lv, CORAL, 0.24 * min(1.0, lv))
+    _soft(cr, 0, 0, 220 * lv, BEAM, 0.30 * a)
     cr.restore()
-    fx2d._glow(cr, x, y, 60 * lv, CORAL_HOT, 0.32 * min(1.0, lv))
-    fx2d._glow(cr, x, y, 14 * lv, PINK_WHITE, 0.45 * min(1.0, lv))
+    _soft(cr, x, y, 52 * lv, BEAM, 0.55 * a)
+    fx2d._glow(cr, x, y, 22 * lv, WHITE_HOT, 0.85 * a)                  # the hot white core
+    fx2d._glow(cr, x, y, 8 * lv, WHITE_HOT, 1.0 * a)
 
 
 def _beam(cr, x, y, top, lv, f):
-    """A soft coral beam rising from the wrist to the swarm (widening, fading upward) and thin rays flickering on 2s."""
+    """The coral uplight cone rising from the wrist to the swarm (widening, fading upward) and soft rays flickering on
+    2s, all in the mark's coral (#ff8466), painted OVER."""
     h = y - top
     if h <= 10 or lv <= 0:
         return
     cr.save()
-    cr.set_operator(cairo.OPERATOR_ADD)
     g = cairo.LinearGradient(0, y, 0, top)
-    g.add_color_stop_rgba(0.0, *CORAL_HOT, 0.18 * lv)
-    g.add_color_stop_rgba(0.35, *CORAL, 0.09 * lv)
-    g.add_color_stop_rgba(1.0, *CORAL, 0.0)
+    g.add_color_stop_rgba(0.0, *BEAM, 0.42 * lv)
+    g.add_color_stop_rgba(0.3, *BEAM, 0.2 * lv)
+    g.add_color_stop_rgba(1.0, *BEAM, 0.0)
     cr.new_path()
-    cr.move_to(x - 34, y)
-    cr.line_to(x + 34, y)
+    cr.move_to(x - 30, y)
+    cr.line_to(x + 30, y)
     cr.line_to(x + 170, top)
     cr.line_to(x - 170, top)
     cr.close_path()
@@ -85,8 +102,8 @@ def _beam(cr, x, y, top, lv, f):
         ln = h * rnd.uniform(0.5, 0.85)
         w = rnd.uniform(10, 18)
         g = cairo.LinearGradient(x, y, x + math.sin(a) * ln, y - math.cos(a) * ln)
-        g.add_color_stop_rgba(0.0, *CORAL_HOT, 0.16 * lv)
-        g.add_color_stop_rgba(1.0, *CORAL, 0.0)
+        g.add_color_stop_rgba(0.0, *BEAM, 0.3 * lv)
+        g.add_color_stop_rgba(1.0, *BEAM, 0.0)
         cr.new_path()
         cr.move_to(x - w / 2, y)
         cr.line_to(x + w / 2, y)
@@ -97,7 +114,7 @@ def _beam(cr, x, y, top, lv, f):
     # the coral wash up in the swarm (their bellies lit from below)
     cr.translate(x, y - h * 0.62)
     cr.scale(1.0, 0.8)
-    fx2d._glow(cr, 0, 0, h * 0.62, CORAL, 0.16 * lv)
+    _soft(cr, 0, 0, h * 0.62, BEAM, 0.14 * lv)
     cr.restore()
 
 
@@ -132,8 +149,8 @@ def _sparks(cr, x, y, top, lv, f, n_=9):
         py = y - (y - top) * 0.7 * u
         a = (1 - u) * lv
         if a > 0.05:
-            fx2d._glow(cr, px, py, 9, CORAL_HOT, 0.7 * a)
-            fx2d._glow(cr, px, py, 3, PINK_WHITE, a)
+            _soft(cr, px, py, 9, BEAM, 0.7 * a)
+            fx2d._glow(cr, px, py, 3, WHITE_HOT, a)
 
 
 def s13_overlay(meta, M):
