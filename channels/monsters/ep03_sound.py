@@ -39,6 +39,9 @@ WHISPER = "l18"            # Wren leans in: quieter and closer
 # ---------------------------------------------------------------- picture beats (0-based frames in the cut)
 # None = that shot hasn't landed: the cue sits on its word (or a time into the shot) instead.
 S01_FLARE = 0              # the mark blazes from frame 0 (the hook)
+# S03 (helper 1): (door slam f, shutters f, pan, near the camera) per hut, 1-based shot frames
+S03_HUTS = [(12, 18, -0.6, True), (16, 24, 0.6, True), (21, 27, 0.35, False), (23, 29, -0.35, False),
+            (32, 36, 0.2, False), (34, 41, -0.2, False)]
 S06_CLOSE, S06_EYESPOTS = 34, (40, 42, 44)            # S06 (helper 6): the close moth, its eye-spots opening
 S13_DIP, S13_FLAT, S13_ARM, S13_BLOOM = 3, 13, 17, 26   # S13 (bGqrs): 1-based shot frames
 # S14, the flip (helper 10, channels/monsters/diorama_ep03/S14_landings.json; 1-based shot frames, tail handle):
@@ -399,10 +402,11 @@ def build(timing, n, v):
     # --- S03: the village backs away: steps, doors and shutters banging shut
     for k in range(8):
         hit(e2.footstep(80 + k, 0.8), s("S03") + 0.1 + 0.2 * k, -25, 0.6 - 0.15 * k)
-    bangs = [(0.5, False, -0.5), (0.9, True, 0.6), (1.3, False, 0.3), (1.65, True, -0.4), (2.1, True, 0.1)]
-    for k, (at, sh, pan) in enumerate(bangs):
-        if s("S03") + at < s("S04") - 0.1:
-            hit(door_slam(k, sh), s("S03") + at, -16 - 2 * (k % 2), pan)
+    # helper 1's S03 frames (diorama_ep03/helper1.py): each hut's door slams at f, its two shutters bang at g, g+2
+    for k, (door, shut, pan, near) in enumerate(S03_HUTS):
+        hit(door_slam(k), fr("S03", door), -15 if near else -19, pan)
+        for j in range(2):
+            hit(door_slam(10 + 2 * k + j, True), fr("S03", shut + 2 * j), (-19 if near else -23) - 2 * j, pan)
 
     # --- S04-S05: the sun goes down (the mark brightens), the only light for miles
     hit(e2.glow_chime(4), w("l4", "down"), -20, -0.1)
