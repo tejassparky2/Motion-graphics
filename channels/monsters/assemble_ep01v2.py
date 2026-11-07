@@ -79,11 +79,11 @@ HOOK_X = None                # centre x of the hook lines (default: the frame ce
 # third and the shrimp at y 745+, so the hook sits in the middle band (over his legs and the tree trunk).
 HOOK_VERSION = {"diorama_ep02": dict(lines=[("I SAVED", ()), ("THE SHRIMP", ()), ("THAT TRIED", ()),
                                             ("TO KILL ME", ("TO KILL ME",))], y=480, size=80),
-                # Episode 3: three lines, the wrist in red. S01 (helper 4's OK stills f1/f36) brings Kai's head and
-                # the shrimp on his shoulder in from the top right (x 530+, from y 170) and his glowing arm across at
-                # y 560-650, so the hook sits in the open sky top left: centred at x 255, x ~15-495, y ~150-365
+                # Episode 3: three lines, the wrist in red. The re-staged S01 (helper 4's OK stills f1/f30: low over
+                # Wren's shoulder, looking up at Kai) leaves open sky above his raised hand (top ~350) and Wren's braid
+                # at the right edge, so the hook sits at the top, a little left of centre
                 "diorama_ep03": dict(lines=[("THE VILLAGE", ()), ("RAN FROM", ()), ("MY WRIST", ("MY WRIST",))],
-                                     y=200, size=76, x=255)}
+                                     y=120, size=84, x=345)}
 NO_CAPTIONS = {"S15"}        # Episode 1's snap; Episode 2's wordless S09 has no words to caption anyway
 NO_CAPTIONS_VERSION = {"diorama_ep02": set(), "diorama_ep03": set()}   # ep03's S14 (the flip) has no words
 CAP_Y = 905                  # baseline in the 71% band (caption band 845-930)
@@ -127,6 +127,7 @@ CAP_Y_VERSION["diorama_ep02"] = {
 }
 # Episode 3: every shot starts on the 71% band; placements are checked on the real frames as the shots land.
 CAP_Y_VERSION["diorama_ep03"] = {
+    "S01": 760,              # over Kai's chest: at the band the line crosses the shrimp's face in his lower hand
     "S19": 430,              # the split: the captions sit in the A half above the stacked A/B cards
 }
 CAP_Y_SHOT = CAP_Y_VERSION["ep01v2"]
