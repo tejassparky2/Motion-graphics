@@ -7,7 +7,7 @@
 - Everything on the assembly side keeps going: ESRGAN, captions and cut rebuilds as the shots land.
 
 
-**Updated:** 7 Nov 2026, ~17:00 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
+**Updated:** 7 Nov 2026, ~17:10 UTC (FINAL timing 8274b7a: 1298 frames, 54.09 s).
 
 ## Done and pushed
 - **`assemble_ep01v2.py --version diorama_ep03`** is set up the way Episode 2's was (every setting is in the `*_VERSION` tables):
@@ -45,16 +45,11 @@
     - the mix is `out/monsters/ep03/mix.wav`;
     - the cover is `out/monsters/diorama_ep03/cover.jpg`;
   - the outputs: `out/monsters/ep03_diorama.mp4`, the preview, the cover, the upload sheet headed "Episode 3", and the check (frames, tags, Whisper medium.en).
-- **Cover (made on the final renders): `out/monsters/diorama_ep03/cover.jpg` = "situp", S15 f95: EVERY MOTH / FLIPPED.**
-  - Kai sits up among the dizzy upside-down moths with the shrimp on his shoulder. The words are in the night sky above, and his face is clear.
-  - It shows the payoff without spoiling how, and it doesn't repeat the title. It has no metadata.
-  - The other candidates and a phone grid are in `covers/`:
-    - **swarm:** S10, the top view. At phone size Kai is tiny in it.
-    - **flip:** S15 f30, Kai lying down. It reads dark.
-    - **hook:** S01. It's a clear read, but there are no moths in it.
-    - **uplight:** S13.
-    - **tumble:** S14.
-  - Remake it with `python channels/monsters/ep01v2_cover.py --ep03`. The upload sheet's cover line (deliver_ep01v2.py) says S15 with EVERY MOTH / FLIPPED.
+- **Cover (the coordinator's pick, 7 Nov): `out/monsters/diorama_ep03/cover.jpg` = "swarm", S10 f40: THEY CIRCLED / MY WRIST.** It's the top view of the moth ring round his glowing wrist: the tension and the question.
+  - The sit-up ("EVERY MOTH / FLIPPED") would give the payoff away, which breaks the channel rule against spoiling the twist in the packaging.
+  - The cover has no metadata.
+  - The alternates and a phone grid stay in `covers/`: flip, hook, situp, uplight, tumble.
+  - Remake it with `python channels/monsters/ep01v2_cover.py --ep03`. The upload sheet's cover line (deliver_ep01v2.py) says S10 with THEY CIRCLED / MY WRIST.
 
   None of them repeats the title.
 

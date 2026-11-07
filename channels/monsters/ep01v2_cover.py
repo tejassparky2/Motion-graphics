@@ -59,7 +59,7 @@ EP03 = {
     "uplight": ("S13", 45, [("THEY CIRCLED", WHITE), ("MY WRIST", HOT)]), # flat on his back, the wrist glowing up at the swarm
     "tumble": ("S14", 20, [("EVERY MOTH", WHITE), ("FLIPPED", HOT)]),     # the swarm rolling over above the uplight
 }
-EP03_PICK = "situp"   # picked on the finals (7 Nov): Kai sitting up among the dizzy upside-down moths, his face clear
+EP03_PICK = "swarm"   # coordinator, 7 Nov: the tension and the question; "EVERY MOTH FLIPPED" spoils the payoff
 TIMING_JSON = os.path.join(ROOT, "channels", "monsters", "ep01v2", "timing.json")
 
 
