@@ -5,8 +5,8 @@ Updated 7 Nov 2026.
 | Piece / shot | State | Files |
 |---|---|---|
 | Shared: moth legs, upside_down, swarm, back-to-light (mk/fluffmoth.py) | **Pushed**: API below, still tests/ep03_moths_still.jpg, short test tests/ep03_moths_test.mp4. Now with LOD: swarm copies share decimated body/collar/antenna meshes (near 0.2, far 0.07: ~46k / ~18k polys each, vs 185k for a full moth), since CPU EEVEE's cost goes with the polygon count. | mk/fluffmoth.py, channels/monsters/test_moth3.py |
-| S06 (63 render frames) | **Fallback render running** on helper 9's interim night (kept, not encoded as final, per the coordinator). Waiting for helper 9's night()/mark() FINAL; then one S06 still on it and the re-render. | diorama_ep03/helper6.py |
-| S10 (79 render frames) | **On hold** until helper 9's night()/mark() are FINAL (coordinator, 10:27). Then one S10 still and the render: me f001-040, **helper 2 f041-079** (steps below, once I say go here). | diorama_ep03/helper6.py |
+| S06 (63 render frames) | **Final, pushed.** 720,1280,63 (w,h,frames), crf 10, bitexact + stream-copy remux, encoder strings: 0. No 2D pass. Stand-in night look (helper 9's grade not in yet). | shots/S06.mp4 + S06_sheet.jpg |
+| S10 (79 render frames) | **GO (11:40 UTC).** Still on the final look: okstills/S10_final_f40.jpg. I render **f001-040** after S06. **helper 2: start f041-079 now**, from builder 117211c6 or later (steps below). I join and encode shots/S10.mp4 (no 2D pass). | diorama_ep03/helper6.py |
 
 Night look: helper 9's shared night (helper9.night(), helper9.mark()); the stand-in _night() is only a fallback.
 

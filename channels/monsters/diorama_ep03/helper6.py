@@ -36,8 +36,8 @@ MOTH_K = 0.42                      # a moth's size next to Kai (~a head across, 
 MARK_U = 0.3                       # helper 9's mark spot on the forearm (elbow -> wrist)
 S10_K = 0.5                        # S10's moths, a little bigger (close to the camera)
 S10_TILT = 0.5                     # how far each back leans in to the light (0 level .. 1 square to it)
-S10_MARK_W = 9000.0                # the mark light in S10 (helper 9's night default 6000): his wrist is high over
-                                   # his head here, and its light has to reach the ring and the grass round him
+S10_MARK_W = 6000.0                # the mark light in S10: helper 9's FINAL default (09d120f), so the pool and its
+                                   # falloff match every other night shot
 HERO_GLOW = 3.6                    # S06's close moth: its open eye-spots light up this bright (the material's 1.8)
 
 

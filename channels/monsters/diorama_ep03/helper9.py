@@ -151,12 +151,12 @@ def s04():
     anim.key(sh["body"], "rotation_euler", f_down + 4, (0.35, 0, 0.5), "CONSTANT")    # it turns to the glow
     anim.on_twos(H2._shrimp_parts(sh), step=2)
     # the sky: day (S03) -> dusk on "down" -> night by the end; the sun disc sinks behind the trees to the west
-    NG.transition(1, f_dusk, "day", "dusk", "night", f_night, azim=-90.0)
-    SUN_AZ = 268.0
+    NG.transition(1, f_dusk, "day", "dusk", "night", f_night, azim=-15.0)   # light from the sunset, behind him
+    SUN_AZ = 172.0                                                         # over the far hills across the lake
     sd, halo = _disc("h9_setting_sun", _dir(SUN_AZ, 5.0) * 2400.0, 70.0, (1.0, 0.55, 0.22, 1), 3.0, halo=3.4,
                      halo_col=(1.0, 0.45, 0.18, 1), halo_s=1.6)
     for f in range(1, n + 1):
-        el = 5.5 - 9.5 * _smooth((f - 1) / (f_down + 4 - 1))               # gone below the treeline after "down"
+        el = 9.0 - 13.0 * _smooth((f - 1) / (f_down + 4 - 1))              # gone below the hills after "down"
         p = Vector(V.LANE_AT) + _dir(SUN_AZ, el) * 2400.0
         for o in (sd, halo):
             o.location = p
@@ -164,13 +164,13 @@ def s04():
     H2._hide_from(f_night, [sd, halo])
     # the mark: dim in daylight, brightening as the light goes (the key at night)
     mark(k, energy=MARK_W, key=[(1, 400.0), (f_down, 1200.0), (f_down + 10, 4200.0), (n, MARK_W)])
-    # camera: side-on from the lane's east edge, low, Kai on the right third, the sunset behind him; a slow push-in
+    # camera: low, from up the lane (north), looking south down it: Kai facing us, the square, the lake and the far
+    # hills behind him with the sun sinking behind them; a slow push-in
     cam = H2._new_cam("S04cam", 1)
-    west = Vector((-1, 0, 0))
-    tgt = Vector(V.LANE_AT) + Vector((0, -3.5, 6.2)) + west * 6.0           # south of him: he sits on the right third
+    tgt = Vector(V.LANE_AT) + Vector(V.LANE_DIR) * 8.0 + Vector((-0.6, 0, 6.6))
     for f in range(1, n + 1):
         u = _smooth((f - 1) / (n - 1))
-        loc, rot = H2._orbit(tgt, 17.0 - 2.0 * u, 2.0, -90.0 + 8.0)       # from the east, looking west
+        loc, rot = H2._orbit(tgt, 23.0 - 2.5 * u, 4.0, 170.0)             # from the north, on the lane's middle
         H2._key_cam(cam, f, loc, rot, 32.0, (Vector(V.LANE_AT) + Vector((0, 0, 5)) - loc).length,
                     shift_y=-0.06, blur=2.0, haze=(4.0, 10.0))
     H2._linear(cam, cam.data)
@@ -178,7 +178,7 @@ def s04():
 
 
 # ------------------------------------------------------------------------------------------------------------ S05
-S05_TINT = (0.17, 0.21, 0.42)        # darker than the shared night: the dark island, the one coral dot
+S05_TINT = (0.11, 0.10, 0.27)        # darker than the shared night: the dark island, the one coral dot
 
 
 def s05():
@@ -271,8 +271,9 @@ def s18():
     mid = XP.KAI_SIT.lerp(XP.WREN_KNEEL, 0.45) + Vector((0, 0, 5.4))
     for f in range(1, f_cut):
         u = _smooth((f - 1) / (f_cut - 2))
-        loc, rot = H2._orbit(mid, 13.5 - 1.5 * u, 6.0, -90.0 - 12.0)      # from the east (he faces east)
-        H2._key_cam(camA, f, loc, rot, 40.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
+        loc, rot = H2._orbit(mid, 9.6 - 1.0 * u, 8.0, 247.5)              # from the ENE: her point to the lighthouse
+                                                                            # crosses the frame (screen left), clear of him
+        H2._key_cam(camA, f, loc, rot, 30.0, (mid - loc).length, blur=3.0, haze=(4.0, 9.0))
     # part B: the lighthouse from the near shore, across the dark water: the reflection runs to us; a slow push-in
     camB = H2._new_cam("S18b", f_cut)
     eye0 = lh["top"] + Vector((-55, 250, -38))
@@ -282,16 +283,16 @@ def s18():
         d = (lh["top"] - Vector((0, 0, 24))) - eye
         H2._key_cam(camB, f, eye, H2._look(d), 58.0, d.length, blur=1.0, haze=(1.5, 3.0))
     NG.reflection(lh["top"], eye0)
-    NG.moon(az=166.0, el=8.0)
+    NG.moon(az=161.5, el=14.5, r=30.0, origin=eye0)                        # up and left of the lamp, small
     hl = bpy.data.lights[f"h9_lighthouse_light"]                            # the glow swells on "lighthouse"
     gm = bpy.data.materials["h9_lighthouse_glow"].node_tree.nodes["Emission"].inputs[1]
     hm = [nd for nd in bpy.data.materials["h9_lighthouse_halo"].node_tree.nodes if nd.bl_idname == "ShaderNodeEmission"][0].inputs[1]
     for f, g in ((1, 0.8), (f_lh - 2, 0.8), (f_lh + 4, 1.5), (f_lh + 16, 1.1), (n, 1.15)):
         hl.energy = 26000.0 * 2.25 * g
         hl.keyframe_insert("energy", frame=f)
-        gm.default_value = 4.0 * g
+        gm.default_value = 6.5 * g
         gm.keyframe_insert("default_value", frame=f)
-        hm.default_value = 1.6 * g
+        hm.default_value = 2.4 * g
         hm.keyframe_insert("default_value", frame=f)
     H2._linear(camA, camA.data, camB, camB.data)
     _anchors("S18", lambda f, c: dict(lamp=H2._px(c, lh["top"])), meta=dict(f_cut=f_cut, f_lh=f_lh))

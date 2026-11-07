@@ -1,10 +1,10 @@
 # bGqrs status (Ep 3)
 
-Updated 7 Nov 2026, 11:30 UTC.
+Updated 7 Nov 2026, 12:35 UTC.
 
 | Shot | State | File |
 |---|---|---|
-| S13 "So I put the light below them." | **Staging approved** (coordinator, 10:56). Your note 2 is done: the uplight cone and rays are now the mark's coral (#ff8466, painted over, no yellow-white), with a hot white core at the wrist: `okstills/bgqrs_S13_f045_coral.jpg`. **Holding the full render** (note 1) until helper 9 marks night()/mark() FINAL; then a re-still and go. | shots/S13.mp4 (pending) |
+| S13 "So I put the light below them." | **FINAL, pushed.** 57/57 frames, 720x1280 at 24 fps, crf 10, bitexact + stream-copy remux, 0 encoder tags. Rendered at 62572f2 on helper 9's FINAL night/mark (09d120f), ~55 s/frame. 2D pass: `post_bgqrs.py` (the zigzag, the coral #ff8466 cone and rays with a hot white core, grass blades, sparks). Beats: dip f3, flat f13, settled f16, arm out f17-25, the bloom on "below" f26. | shots/S13.mp4 + S13_sheet.jpg |
 
 ### S13 staging (57 render frames; "below" at f26)
 - **Where:** the grass on the village's north edge, east of the track: his feet at **(12, -140)** at frame 1.
@@ -29,14 +29,13 @@ Updated 7 Nov 2026, 11:30 UTC.
   side. To f57: a slow push-in. The glowing wrist ends at y ~780, his face just above it, his body off to the left, and
   the swarm above to the top of the frame. Gentle blur (3 px), the night haze well behind him.
 - **Night:** helper 9's `N9.night(n)` and `N9.mark(k)` (in since 10:50; the stand-in grade only applies without them).
-- **Render cost here** (on helper 9's night): ~4.5 min to build, ~45 s a frame at half size, so roughly 2 min a frame
-  at full size: 57 frames on 1s (the camera moves) is about 2 h on one container.
+- **Render cost here** (on helper 9's night): ~4.5 min to build, ~55 s a frame at full size: 57 frames ~1 h.
 
 ### S13 render parts (every frame renders on 1s, so any range works; write your name and push before starting)
 | Part | Frames | Who |
 |---|---|---|
 | 1 | f001-028 | bGqrs |
-| 2 | f029-057 | (free; else bGqrs) |
+| 2 | f029-057 | bGqrs (one run, all 57 frames) |
 
 - Render: `blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S13 OUT --frames 29-57` (pull first). Raw
   part: libx264 crf 10 yuv420p 24 fps, CLEAN flags, `-start_number 29`, no 2D pass ->
@@ -69,7 +68,8 @@ Updated 7 Nov 2026, 11:30 UTC.
   ~7000 W on "below", then ~5500 W). Plus my shadowless coral "under" light 1.6 above the mark (`B.S13_UNDER` 900 W) for
   the moths' bellies, and the 2D beam, rays, blades and zigzag from `post_bgqrs.py`.
 
-After S13: **S19top f089-176** for helper 3 (claimed 11:30, coordinator's ask): `--frames 89-176` from helper 9's FINAL night
+Now: **S19top f089-176** for helper 3 — **rendering** (started 12:28 UTC at bf89da0, after helper 9's FINAL; ~52 s/frame, done
+around 13:50 UTC) (claimed 11:30, coordinator's ask): `--frames 89-176` from helper 9's FINAL night
 commit, a RAW part `parts/S19top_f089-176.mp4` (crf 6, yuv444p, bitexact, -start_number 89, no tags). Then other
 render parts of the long shots (S14/S06/S10/S15/S18) from their owners' status files.
 

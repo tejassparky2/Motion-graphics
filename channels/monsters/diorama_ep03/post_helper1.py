@@ -1,7 +1,10 @@
 """2D pass for helper 1's Episode 3 shots (DIORAMA_EP03.md), over the Blender frames with comp.py:
 
-    S03  the mark on his raised inner left forearm (helper 9's zigzag, post_helper9.mark: lit, soft pulse) and Ep 2's
-         three thin scratch marks beside it (post_helper1.torn_sleeve, no blood).
+    S03  the late-afternoon grade S02 uses (post_helper3.late_afternoon: greens -25% saturation, level -10%, peach
+         highlights), then the mark on his raised inner left forearm (helper 9's zigzag, post_helper9.mark: lit, soft
+         pulse) and Ep 2's three thin scratch marks beside it (post_helper1.torn_sleeve, no blood).
+    itch(a, name)  comic itch squiggles round an anchor (the scratcher's blotch: village.scratcher's "blotch"), for any
+         shot that shows the scratcher (S07).
     S09  the same, brighter (night: the only light), and the bells ringing: arcs pulsing out on both sides of every
          porch bell and hand bell, on 2s, from the first frames to the end.
 
@@ -57,15 +60,67 @@ def mark(a, level=0.9, bold=1.6, halo=0.0):
     return draw
 
 
+def grade_late_afternoon(cr, t, start, end=None):
+    """The whole frame through helper 3's S02 grade (so S03 cuts with S02; the sun sets on S04)."""
+    import numpy as np
+    from channels.monsters.diorama_ep03.post_helper3 import late_afternoon
+    surf = cr.get_target()
+    surf.flush()
+    h, w = surf.get_height(), surf.get_width()
+    arr = np.ndarray((h, w, 4), np.uint8, buffer=surf.get_data(), strides=(surf.get_stride(), 4, 1))
+    rgb = late_afternoon(arr[..., 2::-1].astype(np.float32))
+    arr[..., 2::-1] = np.clip(rgb, 0, 255).astype(np.uint8)
+    surf.mark_dirty()
+
+
+def itch(a, name="blotch", size=1.6):
+    """Comic itch squiggles: three short zigzag strokes popping round the anchor `name` on 2s (re-dealt each pair of
+    frames, at different angles), white with a dark edge so they read on the night grade. No text."""
+    import random
+
+    def draw(cr, t, start, end=None):
+        if t < start or (end is not None and t > end):
+            return
+        f = min(max(1, int(round(t * FPS)) + 1), max(a))
+        x, y, z = a[f][name]
+        if z <= 0:
+            return
+        f2 = f - f % 2
+        rnd = random.Random(f2 * 7 + 3)
+        for k in range(3):
+            ang = -math.pi / 2 + (k - 1) * 0.9 + rnd.uniform(-0.25, 0.25)
+            r0 = (26 + rnd.uniform(0, 8)) * size
+            L = (22 + rnd.uniform(0, 8)) * size
+            ux, uy = math.cos(ang), math.sin(ang)
+            nx, ny = -uy, ux
+            pts = []
+            for i in range(5):
+                d = r0 + L * i / 4
+                o = (5 * size) * (1 if i % 2 else -1)
+                pts.append((x + ux * d + nx * o, y + uy * d + ny * o))
+            for wdt, col in ((6.5 * size, (0.15, 0.1, 0.15, 0.85)), (3.0 * size, (1, 1, 1, 0.95))):
+                cr.new_path()
+                cr.move_to(*pts[0])
+                for q in pts[1:]:
+                    cr.line_to(*q)
+                cr.set_line_width(wdt)
+                cr.set_source_rgba(*col)
+                cr.stroke()
+    return draw
+
+
 def overlays(shot):
     a = anchors(shot)
     if shot == "S03":
-        return [(mark(a, 0.85, 1.8), dict(start=0.0)), (E2.torn_sleeve, dict(start=0.0, a=a))]
+        return [(grade_late_afternoon, dict(start=0.0)), (mark(a, 0.85, 1.8), dict(start=0.0)),
+                (E2.torn_sleeve, dict(start=0.0, a=a))]
     if shot == "S09":
         bells = [k for k in a[1] if k.startswith("bell_")]
         out = [(mark(a, 1.15, 2.2, halo=0.35), dict(start=0.0)), (E2.torn_sleeve, dict(start=0.0, a=a))]
         out += [(E2.bell_rings, dict(start=(2 + 2 * i) / FPS, a=a, name=nm)) for i, nm in enumerate(bells)]
         return out
+    if shot == "VN":
+        return [(itch(a, "blotch"), dict(start=0.0))]
     return []
 
 
