@@ -332,7 +332,7 @@ def s11():
     def P(sx, sz, depth=0.0):                                        # screen-right / up in the side view
         return origin + Vector((depth, -sx, sz))
 
-    light = P(2.4, 6.2)
+    light = P(2.4, 7.6)
     bpy.ops.mesh.primitive_uv_sphere_add(radius=0.42, location=light, segments=32, ring_count=16)
     orb = bpy.context.object
     orb.name = "s11_orb"
@@ -345,7 +345,7 @@ def s11():
 
     m = fm.build((0, 0, 0), name="s11moth")
     fm.flight_mode(m)
-    m["root"].scale = (1.3,) * 3                                     # read big on a wider frame
+    m["root"].scale = (1.8,) * 3                                     # read big on a wider frame
     fm.flap(m)
     # its path: level flight to screen right; from "They" its back tilts to the light (amount 0 -> 1 by "backs"+6)
     # and the tilt turns it: the heading swings round the light (an orbit starting)
@@ -379,7 +379,7 @@ def s11():
     fm.spot_blink(m, 30) if hasattr(fm, "spot_blink") else None
 
     # the camera: side-on from -X, level, a long lens, a slow push-in on 1s; everything above the caption band
-    tgt = P(1.4, 4.4)
+    tgt = P(1.4, 5.0)
     az = math.radians(float(os.environ.get("S11_AZ", "30")))          # swung toward the moth's front: the wings
     el = math.radians(float(os.environ.get("S11_EL", "8")))           # show their faces, not edge-on
     bpy.ops.object.camera_add(location=tgt + 52.0 * Vector((-math.cos(az) * math.cos(el), -math.sin(az) * math.cos(el),
