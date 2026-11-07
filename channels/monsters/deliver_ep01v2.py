@@ -161,7 +161,8 @@ say(f"- wrote {os.path.relpath(OUT[:-4] + '_metadata.md', ROOT)}")
 # 6. every line heard as written (Whisper medium.en)
 if "--no-whisper" not in sys.argv:
     from faster_whisper import WhisperModel
-    SAME = {"its": "it's", "didnt": "didn't", "dont": "don't", "thats": "that's"}
+    SAME = {"its": "it's", "didnt": "didn't", "dont": "don't", "thats": "that's",
+            "ren": "wren"}   # "Wren" and "Ren" sound the same: Whisper's spelling, not a mishearing
 
     def norm(s):
         return [SAME.get(w, w) for w in re.findall(r"[a-z0-9']+", s.lower().replace("-", " "))]
@@ -181,6 +182,8 @@ if "--no-whisper" not in sys.argv:
         a = audio[max(0, int((b["start"] - .3) * 16000)): int((b["end"] + .15) * 16000)]
         heard = " ".join(s.text for s in model.transcribe(a, language="en", beam_size=5)[0]).strip()
         r = difflib.SequenceMatcher(None, norm(b["text"]), norm(heard)).ratio()
+        if "".join(norm(b["text"])) == "".join(norm(heard)):   # a made-up compound heard as two words ("fluff moths")
+            r = 1.0
         bad += r < .9
         say(f"| {b['id']} | {r:.0%}{'' if r >= .9 else ' **BAD**'} | {heard} |")
     say("")
