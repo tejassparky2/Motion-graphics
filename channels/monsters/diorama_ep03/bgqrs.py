@@ -7,9 +7,12 @@
         below: the light is now clearly BELOW the moths. A determined face, eyes on the swarm; the shrimp ducks flat on
         his left shoulder, then peeks up. A slow push-in on 1s, the characters on 2s.
 
-Night look: helper 9's night grade when it lands (diorama_ep03/helper9.py), a stand-in until then. The swarm: helper
-6's mk/fluffmoth.swarm() when it lands, stand-in fluffmoths until then. The 2D pass (the coral zigzag on his wrist,
-helper 9's post_helper9.mark, and its glow up through the grass) reads build/monsters/diorama_ep03/S13_mark.json.
+Night look and the key light: helper 9's N9.night(n) and N9.mark(k) (a stand-in grade and light without them). The
+swarm: helper 6's mk/fluffmoth.swarm() (linked copies), its shared meshes decimated for this shot. The 2D pass
+(diorama_ep03/post_bgqrs.py: the coral zigzag on his wrist, helper 9's post_helper9.mark, and its glow, beam and rays up
+through the grass into the swarm) reads build/monsters/diorama_ep03/S13_mark.json. S14-S17 import S13's staging as plain
+names (KAI_LIE, HEAD_DIR, WRIST, MARK, SWARM_*, LEFT_SIDE/RIGHT_SIDE) and functions (lie_spec, swarm_layout, swarm_at,
+camera_poses, camera_at).
 
     blender -b -y -P channels/monsters/render_shot.py -- diorama_ep03 S13 OUT_DIR [--frames A-B] [--still N --scale 0.5]
 """
