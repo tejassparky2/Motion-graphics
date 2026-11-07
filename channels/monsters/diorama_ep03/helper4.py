@@ -275,7 +275,7 @@ def s01():
         - up * float(os.environ.get("S01_LOW", "1.8"))
     t0 = wrist.lerp(wren_head, float(os.environ.get("S01_AIM", "0.03")))
     c1 = c0.lerp(wrist, 0.10)
-    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "17")))
+    cam = _cam_from("S01cam", n, c0, c1, t0, t0, float(os.environ.get("S01_LENS", "15")))
 
     # the mark's light and its 2D anchors
     ld = bpy.data.lights.new("s01_mark_light", "POINT")
