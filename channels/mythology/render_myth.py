@@ -27,7 +27,7 @@ sys.path[:0] = [HERE, ROOT]
 
 import cairo  # noqa: E402
 import narrate  # noqa: E402
-from channel import LANGS, NARRATORS, OUT_ROOT, WHISPER_LANG  # noqa: E402
+from channel import LANGS, NARRATORS, OUT_ROOT, SFX_GAIN, SFX_KEEP, SFX_MIN_GAP, WHISPER_LANG  # noqa: E402
 from poster import FPS, H, W  # noqa: E402
 
 OUT = OUT_ROOT
@@ -147,12 +147,25 @@ def render(name, lang, audio=True):
     return out
 
 
+def calm_sfx(events):
+    """Only the sounds a story needs (owner, 8 Nov 2026: "only use sounds where necessary"): the most important kinds
+    first (SFX_KEEP order), each at least SFX_MIN_GAP s from any other kept sound; bed dips and hushes stay."""
+    rank = {n: i for i, n in enumerate(SFX_KEEP)}
+    ctrl = [e for e in events if e[1] in ("dip", "hush")]
+    kept = []
+    for e in sorted((e for e in events if e[1] in rank), key=lambda e: (rank[e[1]], e[0])):
+        if all(abs(e[0] - k[0]) >= SFX_MIN_GAP for k in kept):
+            kept.append(e)
+    return sorted(kept + ctrl, key=lambda e: e[0])
+
+
 def mux_audio(stem, mod, tl, total, silent, out):
     """Voice + music bed + sound effects at -14 LUFS, muxed onto the silent picture track (video stream copied)."""
     from motion.audio import build_soundtrack
     wav = os.path.join(BUILD, f"{stem}_soundtrack.wav")
-    events = mod.sfx(tl) if hasattr(mod, "sfx") else []
-    lufs = build_soundtrack(events, total, wav, tl.clips(), seed=stem, bed=getattr(mod, "MUSIC", "pad"))
+    events = calm_sfx(mod.sfx(tl) if hasattr(mod, "sfx") else [])
+    lufs = build_soundtrack(events, total, wav, tl.clips(), seed=stem, bed=getattr(mod, "MUSIC", "pad"),
+                            fx_gain=SFX_GAIN)
     print(f"soundtrack {lufs:.1f} LUFS", file=sys.stderr)
     subprocess.check_call(["ffmpeg", "-y", "-loglevel", "error", "-i", silent, "-i", wav, "-c:v", "copy", "-c:a", "aac",
                            "-b:a", "256k", "-shortest", *CLEAN, "-movflags", "+faststart", out])

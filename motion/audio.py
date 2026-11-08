@@ -506,7 +506,7 @@ GAINS = {"tick": 0.5, "sniff": 0.45, "gasp_in": 0.5, "sigh": 0.4, "pop": 0.35, "
          "fall": 0.8, "laugh": 0.0}
 
 
-def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
+def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks", fx_gain=1.0):
     """Mix music + sound effects (+ voice clips [(start, samples)]) into a -14 LUFS stereo WAV.
     bed="thriller": the suspense drone instead of the plucked loop; bed="pad": the soft ambient bed; bed="doc": the
     documentary bed (Hinglish channel), louder and less ducked; a "hush" cue silences bed and effects for its
@@ -537,6 +537,7 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         if 0 <= i < n:
             s = s[: n - i]
             fx[i:i + len(s)] += s
+    fx *= fx_gain
     rms = lambda x: np.sqrt(np.mean(x ** 2)) + 1e-9
     if clips:
         from .voice import narration_track
@@ -551,7 +552,8 @@ def build_soundtrack(events, total, path, clips=None, seed=None, bed="plucks"):
         v_rms = rms(voice[loud])
         # music sits ~22 dB under the voice while speaking (ducked 12 dB), ~10 dB under it in the tiny gaps; the
         # documentary bed sits ~16 dB under in gaps and ~20 dB under while speaking (ducked ~4 dB), like the reference
-        level, duck = {"pad": (-15, 0.75), "doc": (-16, 0.35), "tanpura": (-18, 0.4)}.get(style, (-10, 0.75))
+        # tanpura (mythology channel): -21 dB since 8 Nov 2026 (owner: "won't let hear story calmy"; was -18)
+        level, duck = {"pad": (-15, 0.75), "doc": (-16, 0.35), "tanpura": (-21, 0.4)}.get(style, (-10, 0.75))
         bed *= (v_rms * 10 ** (level / 20)) / rms(bed)
         mix = voice + bed * (1 - duck * speaking) + fx * (1 - 0.3 * speaking)
         if room is not None:                                      # ~32 dB under the voice, never ducked

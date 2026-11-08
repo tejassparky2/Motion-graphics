@@ -54,6 +54,12 @@ NARRATOR_LABEL = ("synthetic narrators: Indic Parler-TTS named speakers (Apache-
                   "prompts, spoken by AI4Bharat IndicF5 (MIT), studio chain" + ("; Kannada spoken by OmniVoice (k2-fsa, Apache-2.0)" if KN_ENGINE == "omni" else "") +
                   (f"; Kannada: a consented clone of a real voice ({KN_VOICE})"
                    if KN_VOICE in CLONED else "; nobody is cloned"))   # records only
-MUSIC = "tanpura"   # calm drone for story narration (motion/audio.py tanpura), ~18 dB under the voice
+MUSIC = "tanpura"   # calm drone for story narration (motion/audio.py tanpura), ~21 dB under the voice
+# Owner, 8 Nov 2026: "Reduce the number of background sounds it's irritating and won't let hear story calmy only use
+# sounds where necessary". The scenes still list every cue (the Lakshman Rekha reel had 144 in 65 s); render_myth
+# keeps only these, in this order of importance, at least SFX_MIN_GAP s apart, SFX_GAIN softer.
+SFX_KEEP = ["conch", "bell", "shimmer", "damaru", "hit"]   # big reveal, sacred beat/ending, magic, the hook's beat
+SFX_MIN_GAP = 8.0
+SFX_GAIN = 0.6                                                # about 4 dB quieter than before
 TAIL = 0.9
 REVEAL_GAP = 0.6       # the longer pause before a reveal

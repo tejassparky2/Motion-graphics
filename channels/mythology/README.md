@@ -145,6 +145,13 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   one from ramayana"; script approved "Ok"): "Was Kaikeyi really the villain?", Ayodhya Kanda 2.107.3 (bride-price
   promise, told by Rama himself), 2.4.25, 2.1.46 against the 14-year exile; shadow puppets with a balance scale
   (`videos/kaikeyi.py`, `kaikeyi_cast.py`, `scenes_kaikeyi.py`). Debate topics like this are the direction now.
+- **Video 7, Lakshman Rekha** (owner rejected the Kaikeyi reel: "Not good and hindi explanation not clear change
+  story"; approved this one, "Ok"): one simple idea, one step per sentence, verse numbers only as on-screen tags.
+- **Calm sound (8 Nov 2026)**, owner: "Reduce the number of background sounds it's irritating and won't let hear story
+  calmy only use sounds where necessary". The puppet reels' sfx() lists had 117-144 cues per reel (ticks, whooshes,
+  pops on every beat). `render_myth.calm_sfx` now keeps only `SFX_KEEP` (conch, bell, shimmer, damaru, hit, in that
+  order of importance) at least `SFX_MIN_GAP` = 8 s apart: about 6 per reel. Effects are `SFX_GAIN` 0.6 (~4 dB
+  softer) and the tanpura bed sits at -21 dB (was -18). Write new sfx() lists sparing anyway.
 - **OmniVoice** (k2-fsa, Apache-2.0, 2026; owner: "And try omni voice because it is latest", taken as the download
   approval for it alone): `tools/.venv-omni` (torch 2.14.1+cu126, omnivoice 0.2.1; model k2-fsa/OmniVoice, 3.1 GB in
   the Hugging Face cache), runner `omni_say.py` (JSON job on stdin, like f5_say.py). fp16 on the 4 GB GPU used
