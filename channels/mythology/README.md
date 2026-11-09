@@ -139,6 +139,12 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   text it heard before re-taking.
 - **Faster (8 Nov 2026, owner: "Can you speed up voice")**: Kannada `tempo=1.12` (pitch kept; pauses keep their
   length). Ravana 2:10 -> 1:57, Kakudmi 2:08 -> 1:56, Bali 2:05 -> 1:52.
+- **Undone for clarity (9 Nov 2026, owner: "The kannada voice is not clear")**: four takes of Jayadratha's lines
+  y9-y13 (A the 1.12x reels, B OmniVoice + Hemanth at his own speed, C Hemanth through IndicF5, D voice A through
+  IndicF5; turbo letter errors 12 / 11 / 10 / 8%). Owner: **"Clear b"**, so Kannada is back to `tempo=1.0`, same
+  takes, no stretch. Clarity beats length: the Kannada reels run ~12% longer again (up to ~2:10), which is fine
+  (Shorts and Reels allow 3 minutes). Don't speed Kannada up again without asking. Owner: "Not 7 only this one and
+  future ones": only Jayadratha (video 9) was re-rendered; videos 1-8 keep their 1.12x Kannada.
 - `render_all.py` no longer runs the Whisper-medium `--check` for Kannada: it can't judge Kannada (turbo does, in
   `kn_asr_check.py`), and sharing the 4 GB GPU with the turbo aligner it once ran 2.3 hours on one reel.
 - **Video 6, Kaikeyi** (owner, 8 Nov 2026: the Ravana reel was "Not good"; wanted "mind blowing ... a questionable

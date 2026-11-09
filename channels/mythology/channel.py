@@ -43,9 +43,9 @@ NARRATORS = {
     "hi": dict(engine="f5", studio="v3", tempo=1.05,
                ref_audio=os.path.join(_HI_VOICES, "named_aman_s3_ref.wav"),
                ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।"),
-    # owner, 8 Nov 2026: "Can you speed up voice": Hemanth's calm pace ran 2:05-2:10 a reel; 1.12x (pitch kept, the
-    # pauses keep their length) brings the Kannada reels under 2 minutes
-    "kn": dict(engine=KN_ENGINE, studio="v3", tempo=1.12 if KN_ENGINE == "omni" else 1.0,
+    # owner, 8 Nov 2026: "Can you speed up voice": 1.12x for a while; then 9 Nov 2026: "The kannada voice is not clear"
+    # and, from four samples of the same lines, "Clear b" = Hemanth's own speed, no stretch (the stretch blurred him)
+    "kn": dict(engine=KN_ENGINE, studio="v3", tempo=1.0,
                ref_audio=os.path.join(_KN_VOICES, f"{KN_VOICE}.wav"), ref_text=KN_REF_TEXT,
                **(dict(group=3, gap=0.20, qgap=0.28) if KN_ENGINE == "omni" else {})),
 }
