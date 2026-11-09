@@ -152,6 +152,14 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   pops on every beat). `render_myth.calm_sfx` now keeps only `SFX_KEEP` (conch, bell, shimmer, damaru, hit, in that
   order of importance) at least `SFX_MIN_GAP` = 8 s apart: about 6 per reel. Effects are `SFX_GAIN` 0.6 (~4 dB
   softer) and the tanpura bed sits at -21 dB (was -18). Write new sfx() lists sparing anyway.
+- **Topics (9 Nov 2026):** not well-known stories and not only birth stories (owner rejected Gandhari's 101 pots:
+  "no everyone knows it not only born type videos go for all any krishna intellegent sakuni history or any unknown
+  events").
+- **Narration and hooks (9 Nov 2026)**, owner sent a reference reel ("Raja Bali ki katha") with "Narration and hooks
+  like this": the character tells his own story in the FIRST PERSON; line 1 is a cold open on the climax's shouted
+  line; line 2 a proud impossible claim ("मुझे मारने के लिए... कृष्ण को सूरज छिपाना पड़ा"); short emotional sentences;
+  about 45-55 s; the last line is a twist reframe question ("अब बताओ, हारा कौन?"). Video 9 (`videos/jayadratha.py`)
+  is the first one written this way.
 - **OmniVoice** (k2-fsa, Apache-2.0, 2026; owner: "And try omni voice because it is latest", taken as the download
   approval for it alone): `tools/.venv-omni` (torch 2.14.1+cu126, omnivoice 0.2.1; model k2-fsa/OmniVoice, 3.1 GB in
   the Hugging Face cache), runner `omni_say.py` (JSON job on stdin, like f5_say.py). fp16 on the 4 GB GPU used
