@@ -23,8 +23,12 @@ KN_REF_TEXT = ("ಯೋಚಿಸಿ, ಸಾವಿರಾರು ವರ್ಷಗಳ�
 # Owner, 7 Nov 2026: "Style 2": OmniVoice speaking in Hemanth's cloned voice (consented), lines read in groups of three
 # with his own short pauses ("copy same style continuity narration"). Voice A (design_aman_orig_s11, IndicF5) stays
 # available with MYTH_KN_VOICE=design_aman_orig_s11 MYTH_KN_ENGINE=f5.
-KN_VOICE = os.environ.get("MYTH_KN_VOICE", "hemanth_v1")    # file stem in _KN_VOICES
-KN_ENGINE = os.environ.get("MYTH_KN_ENGINE", "omni")
+# Owner, 9 Nov 2026, after the four clarity samples (A now / B Hemanth natural speed / C Hemanth IndicF5 / D voice A
+# IndicF5): first "Clear b", then "use kannada clear D for jayadrantha this new one and future videos". So from
+# video 9 on, Kannada = voice A through IndicF5 at natural speed, one line per take (Whisper's clearest, 8%).
+# Videos 1-8 keep the voice they were made with (Hemanth: MYTH_KN_VOICE=hemanth_v1 MYTH_KN_ENGINE=omni).
+KN_VOICE = os.environ.get("MYTH_KN_VOICE", "design_aman_orig_s11")    # file stem in _KN_VOICES
+KN_ENGINE = os.environ.get("MYTH_KN_ENGINE", "f5")
 # consented clones: the owner, the owner's brother, and (7 Nov 2026, "Clone this voice it's my friend's and he
 # agrees") the owner's friend Darshan; his reference keeps his own delivery ("Copy the same narration style")
 # and (7 Nov 2026, "Try cloning this" / "Yes hemanth said yes") the owner's friend Hemanth
@@ -44,7 +48,7 @@ NARRATORS = {
                ref_audio=os.path.join(_HI_VOICES, "named_aman_s3_ref.wav"),
                ref_text="सोचो, एक ऐसा पौधा जो कीड़ों को खा जाता है। और ये कोई फ़िल्म का सीन नहीं है, ये बिल्कुल सच है।"),
     # owner, 8 Nov 2026: "Can you speed up voice": 1.12x for a while; then 9 Nov 2026: "The kannada voice is not clear"
-    # and, from four samples of the same lines, "Clear b" = Hemanth's own speed, no stretch (the stretch blurred him)
+    # and, from four samples of the same lines, "Clear b" (Hemanth's own speed), then D (voice A, IndicF5): no stretch
     "kn": dict(engine=KN_ENGINE, studio="v3", tempo=1.0,
                ref_audio=os.path.join(_KN_VOICES, f"{KN_VOICE}.wav"), ref_text=KN_REF_TEXT,
                **(dict(group=3, gap=0.20, qgap=0.28) if KN_ENGINE == "omni" else {})),

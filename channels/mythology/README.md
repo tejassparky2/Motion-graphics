@@ -145,6 +145,10 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   takes, no stretch. Clarity beats length: the Kannada reels run ~12% longer again (up to ~2:10), which is fine
   (Shorts and Reels allow 3 minutes). Don't speed Kannada up again without asking. Owner: "Not 7 only this one and
   future ones": only Jayadratha (video 9) was re-rendered; videos 1-8 keep their 1.12x Kannada.
+- **Then voice D (9 Nov 2026, owner: "use kannada clear D for jayadrantha this new one and future videos")**: from
+  video 9 on, Kannada = voice A (`design_aman_orig_s11`) through IndicF5, natural speed, one line per take
+  (channel.py defaults `MYTH_KN_VOICE=design_aman_orig_s11`, `MYTH_KN_ENGINE=f5`). Not a clone, so the upload sheet
+  no longer ticks "altered or synthetic content" for a cloned voice. Videos 1-8 keep Hemanth (OmniVoice 1.12x).
 - `render_all.py` no longer runs the Whisper-medium `--check` for Kannada: it can't judge Kannada (turbo does, in
   `kn_asr_check.py`), and sharing the 4 GB GPU with the turbo aligner it once ran 2.3 hours on one reel.
 - **Video 6, Kaikeyi** (owner, 8 Nov 2026: the Ravana reel was "Not good"; wanted "mind blowing ... a questionable
