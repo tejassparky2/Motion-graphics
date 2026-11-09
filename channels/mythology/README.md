@@ -155,11 +155,14 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - **Topics (9 Nov 2026):** not well-known stories and not only birth stories (owner rejected Gandhari's 101 pots:
   "no everyone knows it not only born type videos go for all any krishna intellegent sakuni history or any unknown
   events").
-- **Narration and hooks (9 Nov 2026)**, owner sent a reference reel ("Raja Bali ki katha") with "Narration and hooks
-  like this": the character tells his own story in the FIRST PERSON; line 1 is a cold open on the climax's shouted
-  line; line 2 a proud impossible claim ("मुझे मारने के लिए... कृष्ण को सूरज छिपाना पड़ा"); short emotional sentences;
-  about 45-55 s; the last line is a twist reframe question ("अब बताओ, हारा कौन?"). Video 9 (`videos/jayadratha.py`)
-  is the first one written this way.
+- **Narration (9 Nov 2026):** a first-person version (after the owner's "Raja Bali ki katha" reference, "Narration
+  and hooks like this") was rejected: "No make narration like before only". Keep the third-person narrator and the
+  "सोचो..." hook.
+- **Explain so a child can follow** (owner: "explain correctly so even who never saw Mahabaratha or even kid can
+  understand clearly"): introduce who is who, then say every cause-and-effect step plainly and put it on screen as a
+  simple label. Video 9 (`videos/jayadratha.py`, third script): the hidden sun only makes sense once the reel says the
+  day's battle stopped at sunset and Arjuna's vow had a sunset deadline, so everyone thought he had failed and
+  Jayadratha came out of hiding to watch him burn.
 - **OmniVoice** (k2-fsa, Apache-2.0, 2026; owner: "And try omni voice because it is latest", taken as the download
   approval for it alone): `tools/.venv-omni` (torch 2.14.1+cu126, omnivoice 0.2.1; model k2-fsa/OmniVoice, 3.1 GB in
   the Hugging Face cache), runner `omni_say.py` (JSON job on stdin, like f5_say.py). fp16 on the 4 GB GPU used
