@@ -60,6 +60,8 @@ def cover(name, lang, t, out_jpg, long=False):
 def chapters(mod, name, lang):
     """YouTube chapter lines ('0:00 Title') from the video's CHAPTERS and the real timeline."""
     ch = getattr(mod, "CHAPTERS", None)
+    if isinstance(ch, dict):                   # per-language chapter titles
+        ch = ch.get(lang)
     if not ch:
         return []
     tl = json.load(open(os.path.join(BUILD, f"{name}_{lang}_timeline.json"), encoding="utf-8"))

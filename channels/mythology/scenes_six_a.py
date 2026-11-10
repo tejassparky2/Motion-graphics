@@ -12,7 +12,8 @@ Respect: gods, sages and kings keep their dignity. No gore at all: the killings 
 flash, the asuras walk off), the fire is only a fire, Kacha comes out of his guru in a burst of light, Devayani drops
 out of sight into the well, nobody is hurt on screen. Faces are leather puppets, no actor likeness.
 
-Every frame is a pure function of t. Cues are words of the Hindi line with a fraction fallback and minimum gaps (CUES).
+Every frame is a pure function of t. Cues are words of the line in the timeline's language (Hindi: CUES, Kannada:
+CUES_KN) with a fraction fallback and minimum gaps. All on-screen words are English, shared by both languages.
 
 Shot list (line: what is on the screen)
   i1-i6 INTRO: one big framed shadow panel per claim, numbered (a row of six numbered medallions below fills up), each
@@ -224,16 +225,65 @@ CUES = {
 }
 
 
+# The same cues in the Kannada lines (videos/six_stories.py KN): {line: {cue name: Kannada word}}. Exact substrings of
+# the Kannada text; where Kannada puts a word earlier or later than Hindi, the CUES gaps keep the beats in order.
+CUES_KN = {
+    "i1": dict(S="ಶಿಷ್ಯ", P="ಹೊಟ್ಟೆ", B="ಮಾತಾಡಿದ"),
+    "i2": dict(R="ಋಷಿ", Y="ಯಮನಿಗೇ", Z="ಶಿಕ್ಷೆ"),
+    "i3": dict(R="ಋಷಿ", S="ಸಮುದ್ರವನ್ನೇ", P="ಕುಡಿದು"),
+    "i4": dict(L="ಹುಡುಗ", A="ಹೆಣ್ಣನ್ನೂ", N="ಇರಲಿಲ್ಲ"),
+    "i5": dict(C="ಹುಡುಗ", Y="ಯಮನ", M="ಸಾವಿನ", Q="ಕೇಳಿ"),
+    "i6": dict(F="ಅಪ್ಪ", B="ಮಗನ", J="ಯೌವನ"),
+    "i7": dict(C="ಆರು", S="ನಿಜವಾಗಲೂ", M="ಮಹಾಭಾರತ", R="ರಾಮಾಯಣ", U="ಉಪನಿಷತ್ತಿನಲ್ಲಿ"),
+    "i8": dict(D="ನೋಡಿ", P="ಮೊದಲನೇ", L="ಹುಡುಗಿ", A="ಕೊನೆಯ", F="ಬರ್ತಾಳೆ"),
+    "k1": dict(D="ದೇವತೆಗಳು", A="ಅಸುರರ", L="ಯುದ್ಧ"),
+    "k2": dict(S="ಶುಕ್ರಾಚಾರ್ಯರ", V="ವಿದ್ಯೆ", N="ಸಂಜೀವಿನಿ", D="ಸತ್ತ", Z="ಬದುಕಿಸ್ತಿದ್ರು"),
+    "k3": dict(N="ಇರಲಿಲ್ಲ", B="ಬೃಹಸ್ಪತಿಯ", K="ಕಚನನ್ನ", S="ಕಳಿಸಿದ್ರು"),
+    "k4": dict(W="ಶಿಷ್ಯ", V="ಸೇವೆ", D="ದೇವಯಾನಿಗೆ", L="ಇಷ್ಟ"),
+    "k5": dict(U="ಗೊತ್ತಾಯ್ತು", M="ಕೊಂದು", W="ತೋಳಗಳಿಗೆ"),
+    "k6": dict(C="ಅಳೋಕೆ", P="ಕರೆದ್ರು", Z="ಜೀವಂತವಾಗಿ"),
+    "k7": dict(M="ಕೊಂದ್ರು", P="ಅರೆದು", S="ಸಮುದ್ರದ", G="ಗುರು", Z="ಬದುಕಿಸಿದ್ರು"),
+    "k8": dict(T="ಮೂರನೇ", F="ಸುಟ್ಟು", R="ಬೂದಿಯನ್ನ", W="ಮದ್ಯದಲ್ಲಿ", C="ಶುಕ್ರಾಚಾರ್ಯರಿಗೇ", D="ಕುಡಿಸಿದ್ರು"),
+    "k9": dict(P="ಹೊಟ್ಟೆ", I="ಒಳಗಿದ್ದ"),
+    "k10": dict(C="ಅತ್ತಳು", P="ಕರೆದ್ರು", V="ಧ್ವನಿ", G="ಗುರುಗಳೇ", S="ಹೊಟ್ಟೆಯಲ್ಲಿದ್ದೀನಿ"),
+    "k11": dict(M="ಸಮಸ್ಯೆ", O="ಹೊರಗೆ", F="ಒಡೆಯುತ್ತೆ", D="ಸತ್ತು"),
+    "k12": dict(I="ಒಳಗೇ", N="ಸಂಜೀವಿನಿ", T="ಕಲಿಸಿಬಿಟ್ರು"),
+    "k13": dict(O="ಹೊರಗೆ", F="ಬಿದ್ರು", V="ವಿದ್ಯೆಯಿಂದ", Z="ಬದುಕಿಸಿದ"),
+    "k14": dict(N="ನಿಯಮ", B="ಬ್ರಾಹ್ಮಣ", W="ಮದ್ಯ", P="ಪಾಪಿ"),
+    "k15": dict(D="ದೇವಯಾನಿ", M="ಮದುವೆ", B="ಹೇಳಿದ", F="ನಿಮ್ಮಪ್ಪನ", J="ಹುಟ್ಟಿದ್ದೀನಿ", S="ತಂಗಿ"),
+    "k16": dict(A="ಕೋಪದಲ್ಲಿ", C="ಶಾಪ", Q="ಕಚನ", K="ಋಷಿಯ", N="ಆಗಲ್ಲ"),
+    "k17": dict(Y="ನೆನಪಿಟ್ಕೊಳ್ಳಿ", S="ಶಾಪ", L="ಕೊನೆಯ"),
+    "y1": dict(Y="ನೆನಪಿದೆಯಾ", D="ದೇವಯಾನಿ", C="ಋಷಿಯ", N="ಆಗಲ್ಲ"),
+    "y2": dict(R="ರಾಜಕುಮಾರಿ", S="ಶರ್ಮಿಷ್ಠೆ", F="ಜಗಳ", W="ಬಾವಿಗೆ", P="ತಳ್ಳಿಬಿಟ್ಳು"),
+    "y3": dict(Y="ಯಯಾತಿ", H="ಕೈ", O="ಎಳೆದ"),
+    "y4": dict(H="ಕೈ", M="ಮದುವೆ", K="ರಾಜ", R="ಋಷಿಯ", T="ನಿಜ"),
+    "y5": dict(C="ಗುಟ್ಟಾಗಿ", S="ಶರ್ಮಿಷ್ಠೆಯನ್ನೂ", B="ಮಕ್ಕಳಾದ್ರು"),
+    "y6": dict(P="ಗೊತ್ತಾದಾಗ", C="ಅಳ್ತಾ", F="ಅಪ್ಪ"),
+    "y7": dict(C="ಶಾಪ", A="ಈಗಲೇ", O="ಮುದುಕ"),
+    "y8": dict(R="ದಾರಿನೂ", J="ಯೌವನ", B="ಮುಪ್ಪನ್ನ"),
+    "y9": dict(B="ಮಕ್ಕಳಿಗೆ", J="ಯೌವನ", F="ನಾಲ್ಕು", N="ಬೇಡ"),
+    "y10": dict(C="ಚಿಕ್ಕ", P="ಪುರು", J="ಯೌವನ"),
+    "y11": dict(H="ಸಾವಿರ", Y="ಯುವಕ", O="ಮುದುಕ"),
+    "y12": dict(I="ಆಸೆ", N="ತೀರಲ್ಲ", G="ತುಪ್ಪ", F="ಉರಿಯುತ್ತೆ"),
+    "y13": dict(J="ಯೌವನ", L="ವಾಪಸ್", K="ರಾಜ"),
+    "y14": dict(T="ಟ್ವಿಸ್ಟ್", P="ಪುರುವಿನ", D="ಪಾಂಡವರು", K="ಕೌರವರು"),
+    "y15": dict(Y="ಯದುವಿನ", N="ಬೇಡ", K="ಕೃಷ್ಣ"),
+    "o1": dict(S="ಆರು", P1="ಶಿಷ್ಯ", P2="ಋಷಿ", P3="ಅಗಸ್ತ್ಯ", P4="ಹುಡುಗ", P5="ನಚಿಕೇತ", P6="ಯಯಾತಿ"),
+    "o2": dict(Q="ಶಾಕ್", N="ಆರರವರೆಗೆ", C="ಕಾಮೆಂಟ್"),
+}
+
+
 def cues(tl, bid):
-    """{name: time} for a line (cached on the timeline)."""
+    """{name: time} for a line in the timeline's language (cached on the timeline)."""
     cache = getattr(tl, "_six_a_cues", None)
     if cache is None:
         cache = {}
         tl._six_a_cues = cache
     if bid not in cache:
+        kn = getattr(tl, "lang", "hi") == "kn"
         out = {"t0": T(tl, bid)}
         for name, word, frac, cons in CUES[bid]:
-            v = cue(tl, bid, word, frac)
+            v = cue(tl, bid, CUES_KN[bid][name] if kn else word, frac)
             for after, gap in cons:
                 v = max(v, out[after] + gap)
             out[name] = v
