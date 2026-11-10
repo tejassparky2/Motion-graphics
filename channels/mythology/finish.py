@@ -13,7 +13,9 @@ from channel import CLONED, KN_VOICE, OUT_ROOT, ROOT  # noqa: E402
 
 PY = sys.executable
 PHONE = os.path.join(ROOT, "channel_tools", "phone_copy.py")
-DRIVE = r"H:\My Drive"
+# The owner moved uploads to a newer Google account on 10 Nov 2026 (H:, the old one, was full: the 2.7 GB long-video
+# masters never landed). Drive for desktop mounts it as I:; MYTH_DRIVE overrides if the letter changes.
+DRIVE = os.environ.get("MYTH_DRIVE", r"I:\My Drive")
 CHANNEL_DIR = "Mythology reels"          # renamed once the owner picks the channel names
 LANG_NAME = {"hi": "Hindi", "kn": "Kannada"}
 
