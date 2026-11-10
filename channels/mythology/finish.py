@@ -36,14 +36,39 @@ def duration(path):
                                           "csv=p=0", path]))
 
 
-def cover(name, lang, t, out_jpg):
+BUILD = os.path.join(os.path.dirname(os.path.dirname(HERE)), "build", "mythology")
+
+
+def is_long(mod):
+    return getattr(mod, "FORMAT", "portrait") == "landscape"
+
+
+def cover(name, lang, t, out_jpg, long=False):
     env = dict(os.environ)
     env.pop("MYTH_DRY", None)
+    env["MYTH_FORMAT"] = "landscape" if long else "portrait"
     subprocess.run([PY, "-I", "-X", "utf8", os.path.join(HERE, "render_myth.py"), "--video", name, "--lang", lang,
                     "--still", str(t)], check=True, env=env, capture_output=True)
-    png = os.path.join(os.path.dirname(os.path.dirname(HERE)), "build", "mythology", f"{name}_{lang}_still_{t}.png")
+    png = os.path.join(BUILD, f"{name}_{lang}_still_{t}.png")
     from PIL import Image
-    Image.open(png).convert("RGB").save(out_jpg, quality=95)
+    im = Image.open(png).convert("RGB")
+    if long:                                   # YouTube thumbnail: 1280x720, under 2 MB
+        im = im.resize((1280, 720), Image.LANCZOS)
+    im.save(out_jpg, quality=92 if long else 95)
+
+
+def chapters(mod, name, lang):
+    """YouTube chapter lines ('0:00 Title') from the video's CHAPTERS and the real timeline."""
+    ch = getattr(mod, "CHAPTERS", None)
+    if not ch:
+        return []
+    tl = json.load(open(os.path.join(BUILD, f"{name}_{lang}_timeline.json"), encoding="utf-8"))
+    start = {b["id"]: b["start"] for b in tl["beats"]}
+    out = []
+    for i, (bid, title) in enumerate(ch):
+        t = 0 if i == 0 else start[bid]
+        out.append(f"{int(t // 60)}:{int(t % 60):02d} {title}")
+    return out
 
 
 def pack(mod, name, lang, n, folder, dur, files):
@@ -61,15 +86,22 @@ def pack(mod, name, lang, n, folder, dur, files):
     tags = " ".join(m["hashtags"])
     yt_tags = ", ".join(t.lstrip("#") for t in m["hashtags"]) + (", kannada story, kannada" if lang == "kn" else
                                                                    ", hindi kahani, pauranik kahani")
+    long = is_long(mod)
+    chap = chapters(mod, name, lang) if long else []
+    when = (["- YouTube first (a normal long video, not a Short), around 6-7 PM IST.",
+             "- Thumbnail: `cover.jpg` (1280x720).",
+             "- Chapters are in the description below; keep the first line at 0:00 or YouTube ignores them.",
+             "- Optional: post a 60-second cut of story 1 as a Short/Reel that points to the full video."] if long else
+            ["- Instagram Reel first, around 6 PM IST; YouTube Short the same evening.",
+             "- Cover: `cover.jpg` (the important part sits inside Instagram's 3:4 grid crop)."])
     lines = [
-        f"# Upload pack: video {n}, {LANG_NAME[lang]}: {m['title']}", "",
+        f"# Upload pack: {'long video' if long else 'video'} {n}, {LANG_NAME[lang]}: {m['title']}", "",
         "## Files",
         *[f"- `{f}`" for f in files],
-        f"- Length: {dur:.0f} s (1080x1920, 30 fps). The master is the file to upload; the phone copy is only for "
-        f"checking on the phone.", "",
+        f"- Length: {int(dur // 60)}:{int(dur % 60):02d} ({'1920x1080' if long else '1080x1920'}, 30 fps). The master "
+        f"is the file to upload; the phone copy is only for checking on the phone.", "",
         "## When to post",
-        "- Instagram Reel first, around 6 PM IST; YouTube Short the same evening.",
-        "- Cover: `cover.jpg` (the important part sits inside Instagram's 3:4 grid crop).", "",
+        *when, "",
         "## The facts it rests on",
         facts(mod), "",
         "## Instagram",
@@ -79,7 +111,8 @@ def pack(mod, name, lang, n, folder, dur, files):
         "Second comment (credits and sources):", "```", second, "```", "",
         "## YouTube",
         "Title:", "```", m["yt_title"], "```",
-        "Description:", "```", f"{m['yt_description'].strip()}\n\n{second}\n\n{tags}", "```",
+        "Description:", "```", f"{m['yt_description'].strip()}\n\n" + ("\n".join(chap) + "\n\n" if chap else "") +
+        f"{second}\n\n{tags}", "```",
         "Tags:", "```", yt_tags, "```",
         "Settings: Made for kids: No. Category: Entertainment. Altered or synthetic content: " +
         ("Yes (the narration is a real person's voice, cloned with his consent: YouTube asks creators to say so; on "
@@ -91,7 +124,7 @@ def pack(mod, name, lang, n, folder, dur, files):
         "- Pin the comment above as soon as the reel is live.",
         "- Share it to your story with a poll sticker: YES / NO.",
     ]
-    path = os.path.join(folder, f"UPLOAD_VIDEO{n}_{name.upper()}_{lang.upper()}.md")
+    path = os.path.join(folder, f"UPLOAD_{'LONG' if long else 'VIDEO'}{n}_{name.upper()}_{lang.upper()}.md")
     open(path, "w", encoding="utf-8").write("\n".join(lines) + "\n")
     return path
 
@@ -100,6 +133,7 @@ def main():
     name, lang, n = sys.argv[1], sys.argv[2], int(sys.argv[3])
     cover_at = float(sys.argv[sys.argv.index("--cover-at") + 1]) if "--cover-at" in sys.argv else 2.6
     mod = load(name)
+    long = is_long(mod)
     master = os.path.join(OUT_ROOT, f"{name}_{lang}.mp4")
     folder = os.path.join(OUT_ROOT, f"upload_{name}_{lang}")
     os.makedirs(folder, exist_ok=True)
@@ -108,12 +142,13 @@ def main():
     if not pack_only:
         shutil.copy2(master, os.path.join(folder, os.path.basename(master)))
         subprocess.run([PY, "-I", "-X", "utf8", PHONE, master, phone], check=True)
-        cover(name, lang, cover_at, os.path.join(folder, "cover.jpg"))
+        cover(name, lang, cover_at, os.path.join(folder, "cover.jpg"), long)
     files = [os.path.basename(master), os.path.basename(phone), "cover.jpg"]
     p = pack(mod, name, lang, n, folder, duration(master), files)
     print("pack:", p, flush=True)
     if "--no-drive" not in sys.argv and os.path.isdir(DRIVE):
-        dst = os.path.join(DRIVE, CHANNEL_DIR, f"Video {n} {name.replace('_', ' ').title()} {LANG_NAME[lang]}")
+        dst = os.path.join(DRIVE, CHANNEL_DIR, f"{'Long' if long else 'Video'} {n} {name.replace('_', ' ').title()} "
+                                               f"{LANG_NAME[lang]}")
         os.makedirs(dst, exist_ok=True)
         for f in [os.path.basename(p)] if pack_only else os.listdir(folder):
             shutil.copy2(os.path.join(folder, f), os.path.join(dst, f))

@@ -145,6 +145,14 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
   takes, no stretch. Clarity beats length: the Kannada reels run ~12% longer again (up to ~2:10), which is fine
   (Shorts and Reels allow 3 minutes). Don't speed Kannada up again without asking. Owner: "Not 7 only this one and
   future ones": only Jayadratha (video 9) was re-rendered; videos 1-8 keep their 1.12x Kannada.
+- **Long videos (10 Nov 2026, owner: "make 1 long video ... first make long only in hindi then we make in kannada if
+  I liked it")**: a video module with `FORMAT = "landscape"` renders at 1920x1080 (poster.py reads `MYTH_FORMAT`,
+  which render_all.py and finish.py set from the module). finish.py then makes a 1280x720 thumbnail, writes YouTube
+  chapters from the module's `CHAPTERS` and the real timeline, and packs to Drive as `Long N <Name> <Lang>`. Long video
+  1 = `videos/six_stories.py`: six true stories of six different kinds (Kacha, Mandavya, Agastya, Rishyashringa,
+  Nachiketa, Yayati), ~9 min, Hindi only; scenes split across `scenes_six_a/b/c.py` behind the router
+  `scenes_six_stories.py`. Variety rule (owner: "i dont want you to focus on only one type of story"): rotate kinds
+  of story and source texts; never two of one kind in a row.
 - **Then voice D (9 Nov 2026, owner: "use kannada clear D for jayadrantha this new one and future videos")**: from
   video 9 on, Kannada = voice A (`design_aman_orig_s11`) through IndicF5, natural speed, one line per take
   (channel.py defaults `MYTH_KN_VOICE=design_aman_orig_s11`, `MYTH_KN_ENGINE=f5`). Not a clone, so the upload sheet

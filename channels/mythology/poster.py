@@ -12,7 +12,11 @@ import cairo
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-W, H, FPS = 1080, 1920, 30
+# Reels are 1080x1920. A long video (its module sets FORMAT = "landscape") is 1920x1080: render_all.py and finish.py
+# set MYTH_FORMAT=landscape before this module is imported (owner, 9 Nov 2026: "make 1 long video").
+FORMAT = os.environ.get("MYTH_FORMAT", "portrait")
+W, H = (1920, 1080) if FORMAT == "landscape" else (1080, 1920)
+FPS = 30
 HERE = os.path.dirname(os.path.abspath(__file__))
 FONTS = os.path.join(HERE, "fonts")
 HEAD_FONT = os.path.join(FONTS, "Anton-Regular.ttf")

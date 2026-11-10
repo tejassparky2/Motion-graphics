@@ -26,9 +26,16 @@ def run(args, log):
     return r.returncode
 
 
+def video_format(name):
+    """'landscape' for a long video whose module says FORMAT = "landscape" (poster.py reads MYTH_FORMAT)."""
+    src = open(os.path.join(HERE, "videos", f"{name}.py"), encoding="utf-8").read()
+    return "landscape" if 'FORMAT = "landscape"' in src else "portrait"
+
+
 with open(os.path.join(OUT_ROOT, "render_all.log"), "a", encoding="utf-8") as log:
     for item in [a for a in sys.argv[1:] if ":" in a]:
         name, n = item.split(":")
+        env["MYTH_FORMAT"] = video_format(name)
         for lang in langs:
             print(f"render {name} {lang}", flush=True)
             if run([os.path.join(HERE, "render_myth.py"), "--video", name, "--lang", lang], log):
