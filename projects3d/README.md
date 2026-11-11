@@ -36,6 +36,7 @@ Owner's standing preferences for every video made here (keep them unless the own
   from the owner's WhatsApp bot (12 Oct 2026). **Pricing rule (owner, 12 Oct 2026): products start from ₹3,599
   (single figurine); always lead with "from ₹3,599", never ₹5,999.** ₹5,999 / ₹6,999 / ₹7,999 (13 / 15 / 18 cm) are
   the couple prices: label them "couple" wherever they appear.
+  **Keychains (owner, 11 Nov 2026):** ₹999 for one, ₹599 each for 10 or more (bulk, e.g. return gifts).
   Delivery takes up to 7 days (owner, 20 Oct 2026: "within 7 days" is true).
   Sowmya says "7 to 10 days" in her reel 08/09 takes: owner (11 Nov 2026) "keep"; those sheets say 7–10 days.
 - Don't write "Pixar" in videos (trademark). **Style (owner, 2 Nov 2026): the figurines are semi-realistic, not

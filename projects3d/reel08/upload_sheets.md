@@ -52,6 +52,7 @@ daughter's birthday.
 Send the photos on WhatsApp, we restyle them as anime or cartoon characters with each name, and print them.
 
 📲 WhatsApp your photo: +91 91647 48401
+💰 Keychains ₹999 each · 10 or more at ₹599 each
 🚚 Free shipping across India
 💬 Comment below and we'll DM you
 
@@ -97,6 +98,7 @@ Cover: the figurine held up. Collaborator: @yours3dindia so both audiences see i
 A bulk order of return gifts 🎁 Custom name keychains and fridge magnets for a daughter's birthday.
 
 📲 WhatsApp your photos: +91 91647 48401
+💰 Keychains ₹999 each · 10 or more at ₹599 each
 🚚 Free shipping across India
 💬 Comment below and we'll DM you
 

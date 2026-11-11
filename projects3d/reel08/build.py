@@ -25,6 +25,7 @@ _spec.loader.exec_module(T)
 Seg = T.Seg
 
 WA = ("WHATSAPP +91 91647 48401", T.GREEN)
+KEY_PRICE = "KEYCHAINS ₹999 · 10+ AT ₹599 EACH"     # owner, 11 Nov 2026: "999 for 1 and 599 for 10+"
 
 
 def tag(text, at, y=250, colour=T.GOLD):
@@ -71,7 +72,8 @@ def reel09(m, magnet):
             "name. Also guys, if you need an anime base or a cartoon base with a name, also we can customize.",
             tags=[tag("1 PHOTO ON WHATSAPP", 1.0, colour=T.GREEN), tag("ANIME OR CARTOON + NAME", 6.4, y=345)]),
         Seg(m("5604"), 0.0, 7.3, "If you need this customized keychain, then WhatsApp your photo and get your "
-            "customization done today. Thank you.", tags=[tag(*WA[:1], 2.4, colour=WA[1])]),
+            "customization done today. Thank you.", tags=[tag(*WA[:1], 2.4, colour=WA[1]),
+                                                         tag(KEY_PRICE, 3.6, y=345)]),
     ]
 
 
@@ -88,7 +90,8 @@ def reel09_kn(m, magnet):
         Seg(k, 20.0, 29.0, "We can do a god design with the name, or a cartoon photo with the name."),
         Seg(k, 29.0, 37.3, "You can use it as a fridge magnet, or as a kitchen magnet.",
             tags=[tag("FRIDGE MAGNET", 0.6)]),
-        Seg(k, 37.3, 43.0, "Send your photos to our WhatsApp.", tags=[tag(*WA[:1], 0.5, colour=WA[1])]),
+        Seg(k, 37.3, 43.0, "Send your photos to our WhatsApp.", tags=[tag(*WA[:1], 0.5, colour=WA[1]),
+                                                                      tag(KEY_PRICE, 1.6, y=345)]),
         Seg(k, 43.0, 47.0, "Once you approve, we start printing."),
         Seg(k, 47.0, 49.95, "You'll receive it within 7 to 10 days."),
     ]
@@ -105,9 +108,11 @@ def main():
         "reel08": lambda: T.build("reel08", reel08(m), "A DAD'S GIFT FOR HIS SON"),
         "reel08_kn": lambda: T.build(os.path.join("kannada", "reel08_kn"), reel08_kn(m), "A DAD'S GIFT FOR HIS SON",
                                      whole=True, captions=False),
-        "reel09": lambda: T.build("reel09", reel09(m, magnet), "SHE SAW OUR REEL. THEN ORDERED IN BULK", price=False),
+        "reel09": lambda: T.build("reel09", reel09(m, magnet), "SHE SAW OUR REEL. THEN ORDERED IN BULK", price=False,
+                                  end_extra=KEY_PRICE),
         "reel09_kn": lambda: T.build(os.path.join("kannada", "reel09_kn"), reel09_kn(m, magnet),
-                                     "A BULK ORDER OF RETURN GIFTS", whole=True, price=False, captions=False),
+                                     "A BULK ORDER OF RETURN GIFTS", whole=True, price=False, captions=False,
+                                     end_extra=KEY_PRICE),
     }
     for w in which:
         jobs[w]()
