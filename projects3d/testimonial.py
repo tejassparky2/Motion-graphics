@@ -50,6 +50,7 @@ class Seg:
     tags: list = field(default_factory=list)
     hold: float = 0.0
     hold_frames: object = None      # factory for the hold (defaults to the take continuing)
+    overlays: list = field(default_factory=list)    # [(from, to, card image)]: a photo card over her take
 
 
 def words_for(path, start, end, caption, model):
@@ -202,6 +203,35 @@ def caption_line(frame, words, t, y, age):
         x += d.textlength(w + " ", font=f)
 
 
+def photo_card(im, width=780, border=8):
+    """A photo as a card: rounded corners, gold border, soft shadow (RGBA), to lay over a take."""
+    h = round(width * im.height / im.width)
+    pic = ImageOps.fit(im, (width, h), Image.LANCZOS)
+    card = Image.new("RGBA", (width + 2 * border + 40, h + 2 * border + 40), (0, 0, 0, 0))
+    sh = Image.new("L", card.size, 0)
+    ImageDraw.Draw(sh).rounded_rectangle((20, 26, 20 + width + 2 * border, 26 + h + 2 * border), radius=34, fill=150)
+    card.paste((0, 0, 0, 255), (0, 0), sh.filter(ImageFilter.GaussianBlur(14)))
+    ImageDraw.Draw(card).rounded_rectangle((20, 20, 20 + width + 2 * border, 20 + h + 2 * border), radius=34,
+                                           fill=GOLD + (255,))
+    mask = Image.new("L", (width, h), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, width - 1, h - 1), radius=28, fill=255)
+    card.paste(pic, (20 + border, 20 + border), mask)
+    return card
+
+
+def overlay(frame, card, age, life, cy=1040):
+    """The card pops in (scale + fade), holds, and fades out at the end of its life."""
+    if age < 0 or age > life:
+        return
+    a = min(v2.back(age / 0.35), 1.08) if age < 0.35 else 1.0
+    fade = min(1.0, age / 0.2, (life - age) / 0.25)
+    sc = 0.85 + 0.15 * a
+    c = card.resize((int(card.width * sc), int(card.height * sc)), Image.BILINEAR)
+    if fade < 1:
+        c.putalpha(c.getchannel("A").point(lambda v: int(v * fade)))
+    frame.paste(c, (int(W / 2 - c.width / 2), int(cy - c.height / 2)), c)
+
+
 def end_card(frame, t, t0, extra=None, price=True):
     if price:
         r3.end_card(frame, t, t0)
@@ -324,6 +354,8 @@ def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, 
                 r2.tag(fr, title, 250, tt - 0.15)
             if label and tt < 3.5:
                 r3.pill(fr, label, 335, tt - 0.4, (40, 38, 36), font(28), dark=False)
+            for a_, b_, card in s.overlays:
+                overlay(fr, card, local - a_, b_ - a_)
             for text, y, at, col in s.tags:
                 r3.pill(fr, text, y, local - at, col, ImageFont.truetype(r2.RUPEE, 40) if "₹" in text else font(44))
                 if abs(local - at) < 0.5 / FPS:

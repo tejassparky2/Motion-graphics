@@ -73,12 +73,12 @@ def reel08_kn(m):
     ]
 
 
-def reel09(m, magnet):
-    """Every complete English sentence; her cut-off "I'm so happy to..." (the take ends mid-word) is left out."""
-    hook = (0.0, 1.3, lambda n: T.v1.image_frames(magnet, n, mode="contain", zoom=(1.0, 1.06)))
+def reel09(m, card):
+    """Every complete English sentence; her cut-off "I'm so happy to..." (the take ends mid-word) is left out.
+    Owner, 11 Nov 2026: no full-screen photo at the start; the 4-keychain photo as an overlay for a few seconds."""
     return [
         Seg(m("5565"), 0.0, 4.1, "Hi guys, one of my customers saw my video and gave the bulk order to us.",
-            broll=[hook]),
+            overlays=[(0.15, 3.4, card)]),
         Seg(m("5567"), 0.0, 3.5, "They customized this cute little keychain for their daughter's birthday.",
             tags=[tag("RETURN GIFTS", 0.4)]),
         Seg(m("5591"), 0.0, 13.55, "They shared their photo to us on WhatsApp, then we restyled this with a base "
@@ -91,13 +91,12 @@ def reel09(m, magnet):
     ]
 
 
-def reel09_kn(m, magnet):
+def reel09_kn(m, card):
     """Her Kannada take start to end (she opens with the hook: "I got this bulk order"), minus the stumble
     over "our website" near the end."""
     k = m("5564")
-    hook = (0.0, 1.3, lambda n: T.v1.image_frames(magnet, n, mode="contain", zoom=(1.0, 1.06)))
     return [
-        Seg(k, 0.0, 4.0, "I'm so happy, I got this bulk order!", broll=[hook]),
+        Seg(k, 0.0, 4.0, "I'm so happy, I got this bulk order!", overlays=[(0.15, 3.4, card)]),
         Seg(k, 4.0, 10.0, "One of our clients ordered return gifts for his daughter's birthday.",
             tags=[tag("RETURN GIFTS", 0.5)]),
         Seg(k, 10.0, 13.0, "A bulk order, as return gifts."),
@@ -120,15 +119,18 @@ def main():
     which = sys.argv[2:] or ["reel08", "reel08_kn", "reel09", "reel09_kn"]
     m = lambda key: T.v1.media(mdir, key)          # noqa: E731
     T.FLIP = True       # all 14 takes are front-camera: "HARSHVARDHAN" and the keychain names read backwards
-    magnet = ImageOps.exif_transpose(Image.open(m("20261111_012927"))).convert("RGB")
+    four = ImageOps.exif_transpose(Image.open(os.path.join(os.path.dirname(mdir.rstrip("/")), "extra",
+                                                           "keychains_4.jpg"))).convert("RGB")
+    fw, fh = four.size
+    card = T.photo_card(four.crop((int(0.04 * fw), int(0.32 * fh), int(0.973 * fw), int(0.81 * fh))), width=800)
     os.makedirs(os.path.join(T.ROOT, "out", "3d", "kannada"), exist_ok=True)
     jobs = {
         "reel08": lambda: T.build("reel08", reel08(m), "A DAD'S GIFT FOR HIS SON"),
         "reel08_kn": lambda: T.build(os.path.join("kannada", "reel08_kn"), reel08_kn(m), "A DAD'S GIFT FOR HIS SON",
                                      whole=True, captions=False),
-        "reel09": lambda: T.build("reel09", reel09(m, magnet), "SHE SAW OUR REEL. THEN ORDERED IN BULK", price=False,
+        "reel09": lambda: T.build("reel09", reel09(m, card), "SHE SAW OUR REEL. THEN ORDERED IN BULK", price=False,
                                   end_extra=KEY_PRICE),
-        "reel09_kn": lambda: T.build(os.path.join("kannada", "reel09_kn"), reel09_kn(m, magnet),
+        "reel09_kn": lambda: T.build(os.path.join("kannada", "reel09_kn"), reel09_kn(m, card),
                                      "A BULK ORDER OF RETURN GIFTS", whole=True, price=False, captions=False,
                                      end_extra=KEY_PRICE),
     }
