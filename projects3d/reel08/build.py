@@ -51,10 +51,7 @@ def reel08(m):
             "India.", tags=[tag("FREE SHIPPING ACROSS INDIA", 3.8)]),
         Seg(m("5531"), 0.0, 7.95, "Then what are you waiting for? You need a customized figurine like this? Then "
             "WhatsApp us, and get your customization done today.", tags=[tag(*WA[:1], 4.8, colour=WA[1])]),
-        Seg(m("5536"), 0.0, 1.55, "Guys, what are you waiting for?"),
-        Seg(m("5536"), 1.95, 5.6, "Just send your photo to our WhatsApp, and get your customization."),
-        Seg(m("5554"), 0.0, 1.12, "Guys, hurry up!"),
-        Seg(m("5554"), 1.58, 4.6, "Send your photo, and get your customization today."),
+        # 5536 and 5554 are the same "what are you waiting for" ending again: owner, 11 Nov 2026, keep only one
     ]
 
 
