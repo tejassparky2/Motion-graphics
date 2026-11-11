@@ -62,7 +62,7 @@ def reel08_kn(m):
 
 
 def reel09(m, magnet):
-    hook = (0.0, 1.3, lambda n: T.still_frames(magnet, n, zoom=(1.06, 1.0)))
+    hook = (0.0, 1.3, lambda n: T.still_frames(magnet, n, zoom=(1.0, 1.06)))
     return [
         Seg(m("5565"), 0.0, 4.06, "Hi guys, one of my customers saw my video and gave the bulk order to us.",
             broll=[hook]),
@@ -79,7 +79,7 @@ def reel09(m, magnet):
 
 def reel09_kn(m, magnet):
     k = m("5564")
-    hook = (0.0, 1.3, lambda n: T.still_frames(magnet, n, zoom=(1.06, 1.0)))
+    hook = (0.0, 1.3, lambda n: T.still_frames(magnet, n, zoom=(1.0, 1.06)))
     return [
         Seg(k, 0.0, 4.0, "I'm so happy, I got this bulk order!", broll=[hook]),
         Seg(k, 4.0, 10.0, "One of our clients ordered return gifts for his daughter's birthday.",
