@@ -1,34 +1,19 @@
-# Reel 08 plan: "Bambu Lab A1 vs Snapmaker U1" (learning / versus reel, ~60 s)
+# Reel 08 plan: Sowmya, "From one reel to a bulk order" (English, her own voice, ~31 s)
 
-**Status: draft, waiting for the owner's approval and numbers.** Week 1, posts Fri 6 Nov, 7–9 PM IST, so the
-footage is needed by Wed 4 Nov night. Voice: the owner's cloned voice. [Brackets] come from the owner's own test
-and slicer screens; no number is guessed. Specs checked 27 Oct 2026: A1 + AMS lite has 4 filaments through one
-nozzle; the U1 has 4 separate toolheads, and Snapmaker (its own figure, not an independent test) says a swap takes
-about 5 s and cuts waste by up to 85%.
+**Status: plan sent to the owner 11 Nov 2026, waiting for approval.** Footage: owner's Drive, folder `Reel2`
+(`out/3d/reel08/raw/Reel2/`, not in git): five iPhone HDR takes of Sowmya (the owner's business partner) at the leaf
+wall. Four are in English; IMG_5558 (45 s) is the same story in Kannada.
 
-| # | Voice | On screen |
-|---|---|---|
-| 1 | Same figurine. Two printers. One of them threw away [X] grams of plastic. | **Frame 1 (0 s) reads as a test:** both waste piles on kitchen scales, grams visible, the two figurines behind. Text: "A1 vs U1 · WHICH WASTES MORE?" and a "SAVE IT" bookmark |
-| 2 | On the left, the Bambu Lab A one, with A M S lite. On the right, the Snapmaker U one. | Both printers side by side, name labels |
-| 3 | Both print in four colours. But they change colour in very different ways. | Split screen, both printing |
-| 4 | The A one has one nozzle. Every colour change, it cuts the filament, loads the next one, and pushes the old colour out as waste. | A1 colour change, purge dropping out, a counter of changes |
-| 5 | The U one has four separate toolheads, one for each colour. Snapmaker says it swaps heads in about five seconds. | U1 tool swap, "~5 s (Snapmaker)" |
-| 6 | So we ran a real test. Same model. Same size. Same filament. | Both slicer screens |
-| 7 | A one. [time]. [N] colour changes. [W] grams of waste. | Stat cards, the A1 waste on the scale |
-| 8 | U one. [time]. [N] tool changes. [W] grams of waste. | Stat cards, the U1 waste on the scale |
-| 9 | And the quality? Look at the face. And the colour edges. | Close-ups of both figurines, side by side |
-| 10 | [The owner's verdict, in their own words.] | Verdict card |
-| 11 | Which one would you pick? Tell me in the comments. | Both printers |
-| 12 | Comment [WASTE], to get our exact settings in your DM. | "COMMENT [WASTE]" card |
+| # | Take | Her words (Whisper medium) | On screen |
+|---|---|---|---|
+| 0 | IMG_5523 3.0–4.0 s | (no voice: 1 s cold open) | The baby figurine close up; title "FROM ONE REEL TO A BULK ORDER" |
+| 1 | IMG_5565 | "Guys, one of my customers saw my video and gave the bulk order to us. I'm so happy to do it." | Her, then the keychains; tag "BULK ORDER" |
+| 2 | IMG_5523 | "This is a cute story where the father gave the order to print a little cute son of them." | The figurine (name on the base: needs the parents' OK, else blurred) |
+| 3 | IMG_5531 | "Then what are you waiting for? If you need a customized figurine like this, then WhatsApp us and get your customization done today." | Figurine, WhatsApp tag |
+| 4 | IMG_5604 | "If you need this customized keychain, then WhatsApp your photo and get your customization done today. Thank you." | Keychain, wave; end card with WhatsApp and "from ₹3,599" |
 
-## Shots
-1. **Hook:** each printer's purge waste on a kitchen scale, grams clearly readable, the two figurines behind. 3 takes, 8 s.
-2. Slicer screenshots from both: print time, filament used, waste (flush / prime tower) and number of colour changes.
-3. Both printers running side by side: one wide shot, 10 s.
-4. A1 close-up: one colour change, with the cut and the purge coming out, 10–15 s.
-5. U1 close-up: one tool swap, 10 s.
-6. Both finished figurines side by side, plus close-ups of the face and the colour edges, 10 s each, same light.
-7. The verdict in 1–2 sentences (a text message is fine).
+Captions show her real words (lightly cleaned: "WhatsApp us" where she says it). Natural colour from the iPhone HDR
+(same fitted look as reels 05-06).
 
-Same model, same size, same filament brand on both printers. If the boy figurine from reel 07 was already printed on
-both, reuse it: the waste can be weighed from those prints if it was kept.
+Questions for the owner: the order; a Kannada version from IMG_5558; the parents' OK for "HARSHVARDHAN" on the base;
+the keychain price; delivery time (she says "7 to 10 days" in Kannada, the standing rule says "within 7 days").
