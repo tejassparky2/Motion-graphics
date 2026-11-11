@@ -155,6 +155,13 @@ def phone_still(photo, n, title="Yours3D India", appear=0.25):
         yield fr
 
 
+# Owner (11 Nov 2026): "send full quality version because it gets again compromise after upload". Instagram
+# re-compresses every upload, so the file we send is a high-bitrate master (~15-25 Mbit/s, 1080x1920 30 fps H.264
+# High, AAC 320k), not a delivery-size file; the re-compression then starts from the cleanest picture possible.
+VIDEO_Q = ["-preset", "slow", "-profile:v", "high", "-crf", "14", "-maxrate", "25M", "-bufsize", "50M", "-g", "60",
+           "-x264-params", "aq-mode=3"]
+AUDIO_BR = "320k"
+
 CHUNK_WORDS, CHUNK_W, CAP_SIZE = 4, 860, 62     # owner, 11 Nov 2026: "the caption filling all over the screen"
 
 
@@ -316,8 +323,7 @@ def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, 
     out = os.path.join(ROOT, "out", "3d", name + ".mp4")
     silent = out + ".video.mp4"
     enc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
-                            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "19",
-                            "-maxrate", "8M", "-bufsize", "16M", "-pix_fmt", "yuv420p", *CLEAN, silent],
+                            "-r", str(FPS), "-i", "-", "-c:v", "libx264", *VIDEO_Q, "-pix_fmt", "yuv420p", *CLEAN, silent],
                            stdin=subprocess.PIPE)
     cuts, pops = [], []
     f = 0
@@ -402,7 +408,7 @@ def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, 
     wav = out + ".mix.wav"
     soundfile.write(wav, mix, SR, subtype="PCM_16")
     subprocess.check_call(["ffmpeg", "-y", "-v", "error", "-i", silent, "-i", wav, "-map", "0:v:0", "-map", "1:a:0",
-                           "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+                           "-c:v", "copy", "-c:a", "aac", "-b:a", AUDIO_BR, "-ar", "48000",
                            "-af", "loudnorm=I=-14:TP=-1.5:LRA=11,alimiter=limit=0.75:level=false",
                            "-movflags", "+faststart", "-shortest", *CLEAN, out])
     os.remove(silent)

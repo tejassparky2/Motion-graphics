@@ -20,6 +20,9 @@ Owner's standing preferences for every video made here (keep them unless the own
   flag words the clone may mishear (write websites and numbers the way they should be spoken, e.g.
   "yours 3D India dot com", "zero point two"; captions show the written form).
 - **Platform:** Instagram Reels, 1080x1920, captions and graphics clear of the Reels UI (bottom ~380 px).
+- **Send masters (owner, 11 Nov 2026: "it gets again compromise after upload"):** high-bitrate files (H.264 High,
+  CRF 14, up to 25 Mbit/s, AAC 320k; `testimonial.VIDEO_Q`), sent as file attachments, not previews. Remind the owner
+  to turn on Instagram's "Upload at highest quality".
 - **Brand / call to action:** @yours3dindia · "Comment below to get a DM" (no keyword) · free preview on WhatsApp
   +91 91647 48401. WhatsApp replaces the website as the place to send people (owner, 12 Oct 2026): don't put
   yours3dindia.com in new videos unless the owner asks.
