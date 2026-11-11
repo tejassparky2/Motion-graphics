@@ -239,6 +239,37 @@ def overlay(frame, card, age, life, cy=1040):
     frame.paste(c, (int(W / 2 - c.width / 2), int(cy - c.height / 2)), c)
 
 
+BADGE_Y = 1378        # between her hands and the caption line; clear of the Reels buttons and the photo card
+
+
+def wa_badge(frame, text, age):
+    """The WhatsApp number, on screen for the whole reel (owner, 11 Nov 2026: "add whatsapp number throughout the
+    video"): a small green pill with a chat-bubble mark, a soft shadow so it reads on any background."""
+    if age < 0:
+        return
+    a = v2.ease(age / 0.3)
+    f = font(34)
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    tw = d.textlength(text, font=f)
+    icon, gap, padx, hh = 30, 12, 26, 28
+    w = icon + gap + tw + 2 * padx
+    x0, y = W / 2 - w / 2, BADGE_Y
+    sh = Image.new("L", (W, H), 0)
+    ImageDraw.Draw(sh).rounded_rectangle((x0, y - hh + 5, x0 + w, y + hh + 5), radius=hh, fill=140)
+    layer.paste((0, 0, 0, 255), (0, 0), sh.filter(ImageFilter.GaussianBlur(8)))
+    d.rounded_rectangle((x0, y - hh, x0 + w, y + hh), radius=hh, fill=GREEN + (255,))
+    cx, cy = x0 + padx + icon / 2, y
+    d.ellipse((cx - 15, cy - 15, cx + 15, cy + 15), fill=WHITE + (255,))                 # chat bubble
+    d.polygon([(cx - 13, cy + 6), (cx - 18, cy + 17), (cx - 4, cy + 13)], fill=WHITE + (255,))
+    d.ellipse((cx - 9, cy - 9, cx + 9, cy + 9), fill=GREEN + (255,))
+    d.ellipse((cx - 5, cy - 5, cx + 5, cy + 5), fill=WHITE + (255,))
+    d.text((x0 + padx + icon + gap, y), text, font=f, fill=INK + (255,), anchor="lm")
+    if a < 1:
+        layer.putalpha(layer.getchannel("A").point(lambda v: int(v * a)))
+    frame.paste(layer, (0, 0), layer)
+
+
 def end_card(frame, t, t0, extra=None, price=True):
     if price:
         r3.end_card(frame, t, t0)
@@ -259,7 +290,8 @@ def end_card(frame, t, t0, extra=None, price=True):
         r3.pill(frame, extra, 1490, t - t0 - 2.7, GOLD_LIGHT, ImageFont.truetype(r2.RUPEE, 36))
 
 
-def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, price=True, captions=True):
+def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, price=True, captions=True,
+          badge=None):
     """dub: one audio file per segment (her Hindi dub, made with her consent); each segment then runs as long as its
     dub line, cutaways and labels stretch with it, the take slows a little if it runs out, and the English caption
     (her real words) shows as a whole sentence. label: a small note under the title for the first seconds.
@@ -362,6 +394,8 @@ def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, 
                 r3.pill(fr, label, 335, tt - 0.4, (40, 38, 36), font(28), dark=False)
             for a_, b_, card in s.overlays:
                 overlay(fr, card, local - a_, b_ - a_)
+            if badge:
+                wa_badge(fr, badge, tt - 0.1)
             for text, y, at, col in s.tags:
                 r3.pill(fr, text, y, local - at, col, ImageFont.truetype(r2.RUPEE, 40) if "₹" in text else font(44))
                 if abs(local - at) < 0.5 / FPS:

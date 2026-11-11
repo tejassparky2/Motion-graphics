@@ -26,6 +26,7 @@ _spec.loader.exec_module(T)
 Seg = T.Seg
 
 WA = ("WHATSAPP +91 91647 48401", T.GREEN)
+BADGE = "WhatsApp  +91 91647 48401"      # on screen throughout (owner, 11 Nov 2026)
 KEY_PRICE = "KEYCHAINS ₹999 · 10+ AT ₹599 EACH"     # owner, 11 Nov 2026: "999 for 1 and 599 for 10+"
 
 
@@ -125,14 +126,14 @@ def main():
     card = T.photo_card(four.crop((int(0.04 * fw), int(0.32 * fh), int(0.973 * fw), int(0.81 * fh))), width=800)
     os.makedirs(os.path.join(T.ROOT, "out", "3d", "kannada"), exist_ok=True)
     jobs = {
-        "reel08": lambda: T.build("reel08", reel08(m), "A DAD'S GIFT FOR HIS SON"),
+        "reel08": lambda: T.build("reel08", reel08(m), "A DAD'S GIFT FOR HIS SON", badge=BADGE),
         "reel08_kn": lambda: T.build(os.path.join("kannada", "reel08_kn"), reel08_kn(m), "A DAD'S GIFT FOR HIS SON",
-                                     whole=True, captions=False),
+                                     whole=True, captions=False, badge=BADGE),
         "reel09": lambda: T.build("reel09", reel09(m, card), "SHE SAW OUR REEL. THEN ORDERED IN BULK", price=False,
-                                  end_extra=KEY_PRICE),
+                                  end_extra=KEY_PRICE, badge=BADGE),
         "reel09_kn": lambda: T.build(os.path.join("kannada", "reel09_kn"), reel09_kn(m, card),
                                      "A BULK ORDER OF RETURN GIFTS", whole=True, price=False, captions=False,
-                                     end_extra=KEY_PRICE),
+                                     end_extra=KEY_PRICE, badge=BADGE),
     }
     for w in which:
         jobs[w]()

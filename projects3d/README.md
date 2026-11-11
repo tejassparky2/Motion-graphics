@@ -20,6 +20,8 @@ Owner's standing preferences for every video made here (keep them unless the own
   flag words the clone may mishear (write websites and numbers the way they should be spoken, e.g.
   "yours 3D India dot com", "zero point two"; captions show the written form).
 - **Platform:** Instagram Reels, 1080x1920, captions and graphics clear of the Reels UI (bottom ~380 px).
+- **WhatsApp number on screen throughout (owner, 11 Nov 2026):** a small green pill "WhatsApp +91 91647 48401"
+  above the caption line for the whole reel (`testimonial.wa_badge`, `build(..., badge=...)`).
 - **Send masters (owner, 11 Nov 2026: "it gets again compromise after upload"):** high-bitrate files (H.264 High,
   CRF 14, up to 25 Mbit/s, AAC 320k; `testimonial.VIDEO_Q`), sent as file attachments, not previews. Remind the owner
   to turn on Instagram's "Upload at highest quality".
