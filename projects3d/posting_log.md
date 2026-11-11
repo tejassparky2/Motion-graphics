@@ -13,3 +13,7 @@ reels still waiting when they ask for pending uploads.
 | reel05_hi (Sowmya's Hindi dub, her cloned voice) | Hindi page | Waiting (sent 25 Oct 2026) |
 | reel06_hi (Sowmya's Hindi dub, her cloned voice) | Hindi page | Waiting (sent 25 Oct 2026) |
 | reel07 (learning: "Make your mini you", photo to 3D in 4 steps, Manya) | English (@yours3dindia) | Waiting (sent 2 Nov 2026). Post Wed 4 Nov 7–9 PM IST; set the "3D" comment-to-DM first. Keep reel05 (same figurine) for week 3 |
+| reel08 (Sowmya: "A dad's gift for his son", HARSHVARDHAN) | English (@yours3dindia) | Waiting (11 Nov 2026) |
+| reel09 (Sowmya: bulk order of name keychains, return gifts) | English (@yours3dindia) | Waiting (11 Nov 2026) |
+| reel08_kn (same story, Kannada, no captions) | Kannada page | Waiting (11 Nov 2026) |
+| reel09_kn (same story, Kannada, no captions) | Kannada page | Waiting (11 Nov 2026) |

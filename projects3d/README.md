@@ -37,7 +37,12 @@ Owner's standing preferences for every video made here (keep them unless the own
   (single figurine); always lead with "from ₹3,599", never ₹5,999.** ₹5,999 / ₹6,999 / ₹7,999 (13 / 15 / 18 cm) are
   the couple prices: label them "couple" wherever they appear.
   Delivery takes up to 7 days (owner, 20 Oct 2026: "within 7 days" is true).
+  Sowmya says "7 to 10 days" in her reel 08/09 takes: owner (11 Nov 2026) "keep"; those sheets say 7–10 days.
 - Don't write "Pixar" in videos (trademark). **Style (owner, 2 Nov 2026): the figurines are semi-realistic, not
   cartoon**; say "semi-realistic 3D design", and "mini you" for a figurine of the viewer.
 - Customer photos/names only with the customer's consent.
+- **Kannada page (owner, 11 Nov 2026):** a separate page for Sowmya's Kannada takes. Never mix languages in one reel;
+  open each reel with its best hook; Kannada reels have **no captions**, just a clean edit (titles and labels stay
+  English).
+- **Front-camera takes are mirrored:** check names on bases/keychains and flip (`testimonial.FLIP`).
 - Finished videos and the owner's raw footage stay out of git (`out/3d/` is ignored).
