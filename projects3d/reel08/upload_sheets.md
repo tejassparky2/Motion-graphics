@@ -63,7 +63,29 @@ full colour 🔑
 - **Title:** Custom Name Keychains from Your Photo 🔑 Birthday Return Gift Idea #shorts
 - Alternatives: "One Reel = One Bulk Order 😍 Custom 3D Printed Name Keychains" · "Your Photo → Cartoon
   Keychain with Your Name | Return Gifts India"
-- **Description:** the caption above, without the hashtags, then: #shorts #returngifts #customkeychain #3dprinting
+- **Description:**
+
+```
+Custom name keychains from your own photo 🔑 Perfect as birthday return gifts!
+
+A customer saw our video and ordered these in bulk for their daughter's birthday. Send us a photo, and we turn it into a cute cartoon, anime or god character with the name, 3D printed in full colour by Yours3D India.
+
+💰 Price: ₹999 each · ₹599 each for 10 or more
+📲 Order on WhatsApp: +91 91647 48401
+👉 https://wa.me/919164748401
+🚚 Free shipping across India
+
+How it works:
+1. Send your photo and the name on WhatsApp
+2. We restyle it as a cartoon, anime or god character
+3. You approve the design, we print it and ship it to you
+
+Also great as fridge magnets, party favours and gifts for friends and family.
+
+Follow us on Instagram: @yours3dindia
+
+#shorts #returngifts #customkeychain #3dprinting #birthdayreturngifts #personalisedgifts #yours3dindia
+```
 
 ### Alternative first lines
 - Return gifts nobody will throw away 🎁
