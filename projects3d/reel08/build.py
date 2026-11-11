@@ -79,7 +79,7 @@ def reel09(m, card):
     Owner, 11 Nov 2026: no full-screen photo at the start; the 4-keychain photo as an overlay for a few seconds."""
     return [
         Seg(m("5565"), 0.0, 4.1, "Hi guys, one of my customers saw my video and gave the bulk order to us.",
-            overlays=[(0.15, 3.4, card)]),
+            overlays=[(-0.35, 3.4, card)]),
         Seg(m("5567"), 0.0, 3.5, "They customized this cute little keychain for their daughter's birthday.",
             tags=[tag("RETURN GIFTS", 0.4)]),
         Seg(m("5591"), 0.0, 13.55, "They shared their photo to us on WhatsApp, then we restyled this with a base "
@@ -97,7 +97,7 @@ def reel09_kn(m, card):
     over "our website" near the end."""
     k = m("5564")
     return [
-        Seg(k, 0.0, 4.0, "I'm so happy, I got this bulk order!", overlays=[(0.15, 3.4, card)]),
+        Seg(k, 0.0, 4.0, "I'm so happy, I got this bulk order!", overlays=[(-0.35, 3.4, card)]),
         Seg(k, 4.0, 10.0, "One of our clients ordered return gifts for his daughter's birthday.",
             tags=[tag("RETURN GIFTS", 0.5)]),
         Seg(k, 10.0, 13.0, "A bulk order, as return gifts."),

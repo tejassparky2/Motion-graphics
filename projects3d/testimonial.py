@@ -389,13 +389,13 @@ def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, 
                 cuts.append(f)
             fr = v2.zoom_in_from(fr, local, amount=0.04, dur=0.25)
             if k == 0:
-                r2.tag(fr, title, 250, tt - 0.15)
+                r2.tag(fr, title, 250, tt + 0.3)          # already on screen in frame 1 (the cover, the scroll-past)
             if label and tt < 3.5:
                 r3.pill(fr, label, 335, tt - 0.4, (40, 38, 36), font(28), dark=False)
             for a_, b_, card in s.overlays:
                 overlay(fr, card, local - a_, b_ - a_)
             if badge:
-                wa_badge(fr, badge, tt - 0.1)
+                wa_badge(fr, badge, tt + 0.3)             # from frame 1 to the end card
             for text, y, at, col in s.tags:
                 r3.pill(fr, text, y, local - at, col, ImageFont.truetype(r2.RUPEE, 40) if "₹" in text else font(44))
                 if abs(local - at) < 0.5 / FPS:
