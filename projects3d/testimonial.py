@@ -85,10 +85,14 @@ def natural(fr):
     return Image.fromarray(np.stack([_LUT[c][a[..., c]] for c in range(3)], -1).astype(np.uint8))
 
 
+FLIP = False        # True for front-camera takes, which come out mirrored (names on bases/keychains read backwards)
+
+
 def take_frames(path, n, start, speed=1.0):
+    flip = ",hflip" if FLIP else ""
     if is_hdr(path):
-        return (natural(f) for f in v1.video_frames(path, n, start=start, speed=speed, post=HLG_TO_SDR))
-    return r2.clip(path, n, start, speed=speed)
+        return (natural(f) for f in v1.video_frames(path, n, start=start, speed=speed, post=HLG_TO_SDR + flip))
+    return r2.clip(path, n, start, speed=speed, post=flip[1:])
 
 
 def clip_len(path):
@@ -150,16 +154,33 @@ def phone_still(photo, n, title="Yours3D India", appear=0.25):
         yield fr
 
 
-def end_card(frame, t, t0, extra=None):
-    r3.end_card(frame, t, t0)
+def end_card(frame, t, t0, extra=None, price=True):
+    if price:
+        r3.end_card(frame, t, t0)
+    else:       # not a figurine (e.g. keychains): no "from ₹3,599", which is the figurine price
+        r2.logo_build(frame, t - t0 - 0.1)
+        d = ImageDraw.Draw(frame)
+        a = v2.ease((t - t0 - 1.5) / 0.4)
+        if a > 0:
+            col = tuple(int(INK[i] + (GOLD[i] - INK[i]) * a) for i in range(3))
+            d.text((W / 2, 790), "Yours3D", font=ImageFont.truetype(r2.SERIF_REG, 120), fill=col, anchor="mm")
+            d.line((W / 2 - 60 * a, 875, W / 2 + 60 * a, 875), fill=col, width=3)
+            d.text((W / 2, 925), "3 D   P R I N T I N G   S T U D I O   ·   I N D I A",
+                   font=ImageFont.truetype(r2.SERIF_REG, 30), fill=col, anchor="mm")
+        r3.pill(frame, "COMMENT TO GET A DM", 1060, t - t0 - 1.9, (40, 38, 36), font(48), dark=False)
+        r3.pill(frame, "FREE PREVIEW ON WHATSAPP", 1180, t - t0 - 2.2, GREEN, font(44))
+        r3.pill(frame, "+91 91647 48401", 1285, t - t0 - 2.35, GREEN, font(44))
     if extra:
         r3.pill(frame, extra, 1490, t - t0 - 2.7, GOLD_LIGHT, ImageFont.truetype(r2.RUPEE, 36))
 
 
-def build(name, segs, title, end_extra=None, dub=None, label=None):
+def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, price=True, captions=True):
     """dub: one audio file per segment (her Hindi dub, made with her consent); each segment then runs as long as its
     dub line, cutaways and labels stretch with it, the take slows a little if it runs out, and the English caption
-    (her real words) shows as a whole sentence. label: a small note under the title for the first seconds."""
+    (her real words) shows as a whole sentence. label: a small note under the title for the first seconds.
+    whole: she speaks another language (e.g. Kannada) and the caption is its English meaning, shown whole, no word
+    highlight. price=False: an end card without the figurine price (for other products). captions=False: no
+    subtitles at all (owner, 11 Nov 2026, for the Kannada reels: "no caption, just good edits")."""
     model = None
     # timeline
     plan, t = [], 0.0
@@ -174,6 +195,12 @@ def build(name, segs, title, end_extra=None, dub=None, label=None):
             words = [(w, tt[j], tt[j + 1]) for j, w in enumerate(ws)]
             s = Seg(s.clip, s.start, s.end, s.caption, broll=[(a * k, b * k, f) for a, b, f in s.broll],
                     tags=[(x, y, at * k, c) for x, y, at, c in s.tags], hold=s.hold, hold_frames=s.hold_frames)
+        elif whole:
+            dur = s.end - s.start
+            ws = s.caption.split()
+            lens = np.cumsum([0] + [len(w) + 1 for w in ws])
+            tt = 0.05 + (dur - 0.1) * lens / lens[-1]
+            words = [(w, tt[j], tt[j + 1]) for j, w in enumerate(ws)]
         else:
             if model is None:
                 from faster_whisper import WhisperModel
@@ -253,9 +280,10 @@ def build(name, segs, title, end_extra=None, dub=None, label=None):
                 r3.pill(fr, text, y, local - at, col, ImageFont.truetype(r2.RUPEE, 40) if "₹" in text else font(44))
                 if abs(local - at) < 0.5 / FPS:
                     pops.append(tt)
-            if j < n_talk + 4:
+            if captions and j < n_talk + 4:
                 sw_ = r3.sentence_at(ws, local)
-                v2.karaoke(fr, sw_, -1.0 if dub else local, CAP_Y, local - sw_[0][1])
+                v2.karaoke(fr, sw_ if not whole else ws, -1.0 if (dub or whole) else local, CAP_Y,
+                           local - (sw_ if not whole else ws)[0][1])
             enc.stdin.write(fr.tobytes())
             f += 1
     # end card
@@ -263,7 +291,7 @@ def build(name, segs, title, end_extra=None, dub=None, label=None):
     pops.append(t_card + 1.9)
     while f < nframes:
         fr = Image.new("RGB", (W, H), INK)
-        end_card(fr, f / FPS, t_card, end_extra)
+        end_card(fr, f / FPS, t_card, end_extra, price)
         if f - int(t_card * FPS) < v2.WIPE:
             fr = v2.wipe(fr, f - int(t_card * FPS))
         enc.stdin.write(fr.tobytes())
