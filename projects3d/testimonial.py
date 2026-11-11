@@ -154,6 +154,54 @@ def phone_still(photo, n, title="Yours3D India", appear=0.25):
         yield fr
 
 
+CHUNK_WORDS, CHUNK_W, CAP_SIZE = 4, 860, 62     # owner, 11 Nov 2026: "the caption filling all over the screen"
+
+
+def chunk_at(words, t, n=CHUNK_WORDS, maxw=CHUNK_W):
+    """Short captions: each phrase (split at commas and full stops) in even chunks of up to n words that fit on one
+    line; returns the chunk being spoken at t."""
+    import math
+    f = font(CAP_SIZE)
+    d = ImageDraw.Draw(Image.new("RGB", (8, 8)))
+    phrases, cur = [], []
+    for w in words:
+        cur.append(w)
+        if w[0][-1] in ",.?!":
+            phrases.append(cur)
+            cur = []
+    if cur:
+        phrases.append(cur)
+    chunks = []
+    for ph in phrases:
+        k = math.ceil(len(ph) / n)
+        while True:
+            size = math.ceil(len(ph) / k)
+            parts = [ph[i:i + size] for i in range(0, len(ph), size)]
+            if all(d.textlength(" ".join(x for x, _, _ in p), font=f) <= maxw for p in parts) or size == 1:
+                break
+            k += 1
+        chunks += parts
+    pick = chunks[0]
+    for c in chunks:
+        if c[0][1] <= t + 0.05:
+            pick = c
+    return pick
+
+
+def caption_line(frame, words, t, y, age):
+    """One short line, the word being spoken in gold; pops in like the old captions."""
+    d = ImageDraw.Draw(frame)
+    size = CAP_SIZE if age > 0.12 else int(CAP_SIZE * (0.85 + 0.15 * max(0.0, age) / 0.12))
+    f = font(size)
+    lw = d.textlength(" ".join(w for w, _, _ in words), font=f)
+    x = W / 2 - lw / 2
+    for w, a, b in words:
+        on = a <= t < b + 0.08
+        d.text((x, y), w, font=f, fill=GOLD_LIGHT if on else WHITE, anchor="lm", stroke_width=7,
+               stroke_fill=(20, 16, 14))
+        x += d.textlength(w + " ", font=f)
+
+
 def end_card(frame, t, t0, extra=None, price=True):
     if price:
         r3.end_card(frame, t, t0)
@@ -281,9 +329,8 @@ def build(name, segs, title, end_extra=None, dub=None, label=None, whole=False, 
                 if abs(local - at) < 0.5 / FPS:
                     pops.append(tt)
             if captions and j < n_talk + 4:
-                sw_ = r3.sentence_at(ws, local)
-                v2.karaoke(fr, sw_ if not whole else ws, -1.0 if (dub or whole) else local, CAP_Y,
-                           local - (sw_ if not whole else ws)[0][1])
+                sw_ = chunk_at(r3.sentence_at(ws, local) if not whole else ws, local)
+                caption_line(fr, sw_, -1.0 if (dub or whole) else local, CAP_Y + 40, local - sw_[0][1])
             enc.stdin.write(fr.tobytes())
             f += 1
     # end card

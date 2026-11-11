@@ -45,6 +45,8 @@ Owner's standing preferences for every video made here (keep them unless the own
 - **Kannada page (owner, 11 Nov 2026):** a separate page for Sowmya's Kannada takes. Never mix languages in one reel;
   open each reel with its best hook; Kannada reels have **no captions**, just a clean edit (titles and labels stay
   English).
+- **Captions (owner, 11 Nov 2026: "the caption filling all over the screen"):** short, one line, up to 4 words at a
+  time (split at commas and full stops), size 62, the spoken word in gold (`testimonial.chunk_at`, `caption_line`).
 - **Talking takes (owner, 11 Nov 2026):** keep every complete sentence she says (don't drop takes or lines), but
   cut where she stops, stumbles or says it wrong, half-finished endings, stray words and long pauses (jump cut).
 - **Front-camera takes are mirrored:** check names on bases/keychains and flip (`testimonial.FLIP`).
