@@ -1,10 +1,11 @@
 """Reels 08 and 09 (Yours3D): Sowmya's two stories in her own voice, each in English and in Kannada (owner, 11 Nov
 2026: "2 reels each in both languages, don't mix them, for hook keep which is best"; approved the same day).
+Owner, after the first cut: "why you cutted so much many words not even there", so every take now plays in full.
 
   reel08     English: "A dad's gift for his son" (the baby figurine HARSHVARDHAN; the parents agreed to the name)
-  reel08_kn  Kannada, same story (one take, from the father's part, not "Hi guys")
+  reel08_kn  Kannada, same story (her whole take; the father's part first as the hook)
   reel09     English: the bulk order of name keychains, return gifts for a daughter's birthday
-  reel09_kn  Kannada, same story (one take, cut before the "order on our website" ending: WhatsApp only)
+  reel09_kn  Kannada, same story (her whole take)
 
 Kannada reels: no captions (owner, 11 Nov 2026: "no caption for kannada ones just good edits"); the English lines in
 those segments are only notes of what she says (Whisper's translation), not shown.
@@ -33,51 +34,66 @@ def tag(text, at, y=250, colour=T.GOLD):
 
 
 def reel08(m):
+    """Every English take of this story, each played to its end (owner, 11 Nov 2026: "why you cutted so much"),
+    the best hook first, then her story in order."""
     return [
-        Seg(m("5523"), 0.0, 5.4, "This is a cute story, where the father gave the order to print a little cute son "
+        Seg(m("5523"), 0.0, 5.75, "This is a cute story, where the father gave the order to print a little cute son "
             "of them."),
-        Seg(m("5524"), 0.0, 6.6, "I think this is the best, most preserving gift, where the father or a parent "
-            "gifted to their children.", tags=[tag("A GIFT TO KEEP FOREVER", 1.0)]),
-        Seg(m("5542"), 0.0, 5.95, "After sending a photo, we'll be giving two options to select from. Once you "
+        Seg(m("5517"), 0.0, 13.62, "Hi guys, I recently shared a video related to 3D figurine on my Instagram. So "
+            "many people gave so much love and support to us, and even I got a bulk order among that."),
+        Seg(m("5524"), 0.0, 10.92, "I think this is the best, most preserving gift, where the father or a parent "
+            "gifted to their children. And recently we got so many orders.",
+            tags=[tag("A GIFT TO KEEP FOREVER", 1.0)]),
+        Seg(m("5542"), 0.0, 6.35, "After sending a photo, we'll be giving two options to select from. Once you "
             "approve, we'll be starting to print.", tags=[tag("2 FREE PREVIEWS", 2.2)]),
-        Seg(m("5553"), 0.0, 6.7, "We'll be shipping within 7 to 10 days, and there will be free shipping all over "
-            "India.", tags=[tag("FREE SHIPPING ACROSS INDIA", 3.8)]),
-        Seg(m("5531"), 0.0, 7.9, "Then what are you waiting for? You need a customized figurine like this? Then "
+        Seg(m("5553"), 0.0, 7.6, "We'll be shipping within 7 to 10 days, and there will be free shipping all over "
+            "India. Okay?", tags=[tag("FREE SHIPPING ACROSS INDIA", 3.8)]),
+        Seg(m("5531"), 0.0, 9.03, "Then what are you waiting for? You need a customized figurine like this? Then "
             "WhatsApp us, and get your customization done today.", tags=[tag(*WA[:1], 4.8, colour=WA[1])]),
+        Seg(m("5536"), 0.0, 5.85, "Guys, what are you waiting for? Just send your photo to our WhatsApp, and get "
+            "your customization."),
+        Seg(m("5554"), 0.0, 4.95, "Guys, hurry up! Send your photo, and get your customization today."),
     ]
 
 
 def reel08_kn(m):
+    """Her whole Kannada take: the father's part first as the hook (11.9-20.4 s), then her opening, then the rest."""
     k = m("5558")
     return [
         Seg(k, 11.9, 16.15, "A father gave the best gift to his son,"),
         Seg(k, 16.15, 20.4, "to keep his son's image forever. I really loved it."),
+        Seg(k, 0.0, 4.46, "Hi guys, recently I posted a video about 3D figurines,"),
+        Seg(k, 4.46, 10.35, "and got so much love and support. Thank you so much! I also got a bulk order."),
+        Seg(k, 10.35, 11.9, "This is so nice."),
         Seg(k, 20.4, 26.0, "You should get yours customized too. So why wait?"),
         Seg(k, 26.0, 31.5, "We give you 2 options to choose from.", tags=[tag("2 FREE PREVIEWS", 0.6)]),
         Seg(k, 31.5, 35.8, "Once you approve, we start printing."),
         Seg(k, 35.8, 38.5, "It reaches your home within 7 to 10 days.", tags=[tag("FREE DELIVERY · 7–10 DAYS", 0.4)]),
         Seg(k, 38.5, 43.85, "Want a figurine like this? WhatsApp us now.", tags=[tag(*WA[:1], 1.0, colour=WA[1])]),
-        Seg(k, 43.85, 45.2, "Tata!"),
+        Seg(k, 43.85, 45.45, "Tata!"),
     ]
 
 
 def reel09(m, magnet):
+    """Every English take of this story, played to its end."""
     hook = (0.0, 1.3, lambda n: T.v1.image_frames(magnet, n, mode="contain", zoom=(1.0, 1.06)))
     return [
-        Seg(m("5565"), 0.0, 4.06, "Hi guys, one of my customers saw my video and gave the bulk order to us.",
-            broll=[hook]),
-        Seg(m("5567"), 0.0, 3.45, "They customized this cute little keychain for their daughter's birthday.",
+        Seg(m("5565"), 0.0, 5.2, "Hi guys, one of my customers saw my video and gave the bulk order to us. I'm so "
+            "happy to…", broll=[hook]),
+        Seg(m("5567"), 0.0, 3.85, "They customized this cute little keychain for their daughter's birthday.",
             tags=[tag("RETURN GIFTS", 0.4)]),
-        Seg(m("5591"), 0.0, 9.8, "They shared their photo to us on WhatsApp, then we restyled this with a base "
-            "name. Also guys, if you need an anime base or a cartoon base with a name, also we can customize.",
-            tags=[tag("1 PHOTO ON WHATSAPP", 1.0, colour=T.GREEN), tag("ANIME OR CARTOON + NAME", 6.4, y=345)]),
-        Seg(m("5604"), 0.0, 7.3, "If you need this customized keychain, then WhatsApp your photo and get your "
+        Seg(m("5591"), 0.0, 14.25, "They shared their photo to us on WhatsApp, then we restyled this with a base "
+            "name. Also guys, if you need an anime base or a cartoon base with a name, also we can customize. Or "
+            "with a god, with base name, also we can customize.",
+            tags=[tag("1 PHOTO ON WHATSAPP", 1.0, colour=T.GREEN), tag("ANIME, CARTOON OR GOD + NAME", 6.4, y=345)]),
+        Seg(m("5604"), 0.0, 8.08, "If you need this customized keychain, then WhatsApp your photo and get your "
             "customization done today. Thank you.", tags=[tag(*WA[:1], 2.4, colour=WA[1]),
                                                          tag(KEY_PRICE, 3.6, y=345)]),
     ]
 
 
 def reel09_kn(m, magnet):
+    """Her whole Kannada take, start to end (she already opens with the hook: "I got this bulk order")."""
     k = m("5564")
     hook = (0.0, 1.3, lambda n: T.v1.image_frames(magnet, n, mode="contain", zoom=(1.0, 1.06)))
     return [
@@ -93,7 +109,10 @@ def reel09_kn(m, magnet):
         Seg(k, 37.3, 43.0, "Send your photos to our WhatsApp.", tags=[tag(*WA[:1], 0.5, colour=WA[1]),
                                                                       tag(KEY_PRICE, 1.6, y=345)]),
         Seg(k, 43.0, 47.0, "Once you approve, we start printing."),
-        Seg(k, 47.0, 49.95, "You'll receive it within 7 to 10 days."),
+        Seg(k, 47.0, 50.0, "You'll receive it within 7 to 10 days."),
+        Seg(k, 50.0, 55.0, "Send your photos to our WhatsApp."),
+        Seg(k, 55.0, 59.85, "Place your order."),
+        Seg(k, 59.85, 63.45, "Don't wait, place your order."),
     ]
 
 

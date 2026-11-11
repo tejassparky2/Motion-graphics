@@ -1,6 +1,7 @@
 # Reels 08 + 09 plan: Sowmya's two stories, each in English and in Kannada (4 reels)
 
-**Status: plan sent to the owner 11 Nov 2026, waiting for approval.** Footage: owner's Drive, folder `Reel2`
+**Status: approved 11 Nov 2026. After the first cut the owner said "why you cutted so much many words not even there":
+every take now plays in full (best hook first, then her story in order; Kannada: her whole take).** Footage: owner's Drive, folder `Reel2`
 (`out/3d/reel08/raw/Reel2/`, not in git): 14 iPhone HDR takes of Sowmya (the owner's business partner) at the leaf
 wall, plus a photo of the SOWMYA magnet and a cat design. Owner (11 Nov 2026): "there are 2 reels each in both
 languages, don't mix them, for hook keep which is best". Her own voice in every reel (no cloning, no dubbing);
