@@ -46,17 +46,24 @@ The figurine held up next to her face. Cover text: "A dad's gift for his son".
 ## Reel 09 (English): "She saw our reel. Then ordered in bulk"
 
 ### Caption
-One reel, one bulk order 🎉 A customer saw our video and ordered custom name keychains as return gifts for their
+One reel → one bulk order 🎁 A customer saw our video and ordered custom name keychains as return gifts for their
 daughter's birthday.
 
-Send the photos on WhatsApp, we restyle them as anime or cartoon characters with each name, and print them.
+Send a photo on WhatsApp, and we turn it into a cute cartoon, anime or god character with the name, 3D printed in
+full colour 🔑
 
+💰 ₹999 each · ₹599 each for 10 or more
 📲 WhatsApp your photo: +91 91647 48401
-💰 Keychains ₹999 each · 10 or more at ₹599 each
 🚚 Free shipping across India
 💬 Comment below and we'll DM you
 
 #returngifts #birthdayreturngifts #customkeychain #personalisedgifts #yours3dindia
+
+### YouTube Shorts
+- **Title:** Custom Name Keychains from Your Photo 🔑 Birthday Return Gift Idea #shorts
+- Alternatives: "One Reel = One Bulk Order 😍 Custom 3D Printed Name Keychains" · "Your Photo → Cartoon
+  Keychain with Your Name | Return Gifts India"
+- **Description:** the caption above, without the hashtags, then: #shorts #returngifts #customkeychain #3dprinting
 
 ### Alternative first lines
 - Return gifts nobody will throw away 🎁
