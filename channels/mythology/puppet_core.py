@@ -40,7 +40,9 @@ BROWN = (0.62, 0.36, 0.16)
 DARK = (0.30, 0.27, 0.32)
 SAFFRON = (1.0, 0.55, 0.10)
 VIOLET = (0.55, 0.30, 0.62)
-LAMP_XY = (540.0, 1010.0)
+LAND = W > H                     # a landscape long video (1920x1080): the lamp sits in the middle and spreads wide
+LAMP_XY = (960.0, 600.0) if LAND else (540.0, 1010.0)
+LAMP_R = (1150.0, 760.0) if LAND else (610.0, 1260.0)          # the cloth's light falloff (x, y)
 
 # ------------------------------------------------------------------ numpy <-> cairo
 
@@ -77,11 +79,12 @@ def screen_surface():
     a soft weave, two stitched panel seams, gentle creases and a few oil stains."""
     rng = np.random.default_rng(1729)
     yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
-    dx = (xx - LAMP_XY[0]) / 610.0
-    dy = (yy - LAMP_XY[1]) / 1260.0
+    dx = (xx - LAMP_XY[0]) / LAMP_R[0]
+    dy = (yy - LAMP_XY[1]) / LAMP_R[1]
     d2 = dx * dx + dy * dy
     L = np.exp(-1.55 * d2 ** 1.15)
-    hx, hy = (xx - 540) / 560.0, (yy - 440) / 420.0          # a second, smaller lamp lights the title area
+    tx, ty, trx, try_ = (960, 240, 900, 300) if LAND else (540, 440, 560, 420)
+    hx, hy = (xx - tx) / trx, (yy - ty) / try_                # a second, smaller lamp lights the title area
     L = L + 0.30 * np.exp(-(hx * hx + hy * hy) ** 1.1) * (1 - 0.6 * L)
     L *= 1 + 0.025 * _smooth_noise(rng, (H // 8 + 1, W // 8 + 1), 9).repeat(8, 0).repeat(8, 1)[:H, :W]
     # cloth: fine fibre noise, horizontal slubs, two vertical panel seams, a few creases
@@ -164,7 +167,7 @@ def lamp(cr, t, strength=1.0, night=0.0, flash=0.0):
     cr.save()
     cr.set_operator(cairo.OPERATOR_ADD)
     cr.translate(lx, ly)
-    cr.scale(820 / n, 1100 / n)
+    cr.scale((1500 if LAND else 820) / n, (800 if LAND else 1100) / n)
     cr.set_source_surface(hs, -n, -n)
     cr.get_source().set_filter(cairo.FILTER_BILINEAR)
     cr.paint_with_alpha(clamp(0.10 + 0.05 * f))
@@ -183,7 +186,7 @@ def lamp(cr, t, strength=1.0, night=0.0, flash=0.0):
         cr.save()
         cr.set_operator(cairo.OPERATOR_ADD)
         cr.translate(LAMP_XY[0], LAMP_XY[1] - 200)
-        cr.scale(1500 / n, 1700 / n)
+        cr.scale((2400 if LAND else 1500) / n, (1300 if LAND else 1700) / n)
         cr.set_source_surface(hs, -n, -n)
         cr.get_source().set_filter(cairo.FILTER_BILINEAR)
         cr.paint_with_alpha(clamp(flash) * 0.5)

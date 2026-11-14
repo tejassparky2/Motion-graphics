@@ -78,9 +78,21 @@ Finishing: `finish.py <video> <lang> <n>` makes the cover, the phone copy, the u
 - **Topics: little-known episodes**, the surprising detail most viewers have never heard, not the retelling everyone
   knows (owner, on the science channel: "Everyone knows this i want something unique and seems like unbelievable").
 - A visible change every 1-1.5 s, densest in seconds 3-15. A re-hook question at about 60%.
+- **No framing held more than ~2.6 s** (owner, 14 Nov 2026: "correct from next reel the same shot is still for many
+  seconds and video feels slow"; videos 25-26 held one set for 6-11 s while several lines played). Every scene
+  module's draw() takes its zoom from `camera_beats.camera(tl, t, t0, t1, opt)`: a new framing (wide / punch-in left
+  / punch-in right, or the shot's own `frames`) at every line start and extra cuts inside long lines. Shots with
+  cards drawn in the zoomed layer (the closing question) set `frames=[(1.0, focus)]` to stay wide. Still give every
+  line its own picture where the story allows; the camera beats are the floor, not the plan.
+- After each render run `pacing_check.py <video.mp4>`: it lists still stretches and held framings and fails if a
+  framing is held longer than 3 s (the closing card shot is the accepted exception).
 - Ending: a short awe line, then a yes/no question ("Yes ya no, comment mein batao" / "ಹೌದು ಅಥವಾ ಇಲ್ಲ, ಕಾಮೆಂಟ್‌ನಲ್ಲಿ
   ಹೇಳಿ"). No subscribe ask, no part 2.
-- Post on Instagram first, then YouTube the same evening, around 6 PM IST.
+- **Posting times (owner's analytics, 14 Nov 2026; "Now give me all future reels with time need to be uploaded"):**
+  Monday-Saturday Instagram 6:00 PM, YouTube 7:30 PM IST; Sunday Instagram 12:00 PM, YouTube 12:30 PM; one reel a
+  day per channel. `post_times.py` holds the times and a running calendar (`myth_out/posting_calendar.json`):
+  `finish.py` books each new reel on the next free day, writes that day and its times into the upload sheet, and
+  rewrites `POSTING_SCHEDULE.md` (also copied to Drive's Mythology reels folder).
 
 ## One module, two languages
 - `videos/<story>.py` holds `SCRIPTS = {"hi": [...], "kn": [...]}` with the **same line ids**, `METADATA = {"hi":

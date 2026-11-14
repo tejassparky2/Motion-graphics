@@ -10,6 +10,7 @@ import importlib.util, json, os, re, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path[:0] = [HERE, os.path.dirname(os.path.dirname(HERE))]
 from channel import CLONED, KN_VOICE, OUT_ROOT, ROOT  # noqa: E402
+import post_times  # noqa: E402
 
 PY = sys.executable
 PHONE = os.path.join(ROOT, "channel_tools", "phone_copy.py")
@@ -92,12 +93,13 @@ def pack(mod, name, lang, n, folder, dur, files):
                                                                    ", hindi kahani, pauranik kahani")
     long = is_long(mod)
     chap = chapters(mod, name, lang) if long else []
-    when = (["- YouTube first (a normal long video, not a Short), around 6-7 PM IST.",
-             "- Thumbnail: `cover.jpg` (1280x720).",
-             "- Chapters are in the description below; keep the first line at 0:00 or YouTube ignores them.",
-             "- Optional: post a 60-second cut of story 1 as a Short/Reel that points to the full video."] if long else
-            ["- Instagram Reel first, around 6 PM IST; YouTube Short the same evening.",
-             "- Cover: `cover.jpg` (the important part sits inside Instagram's 3:4 grid crop)."])
+    day = post_times.book(OUT_ROOT, name, lang, long=long)   # its own day (reels: one a day; long videos: Sundays)
+    when = post_times.when_lines(day, long) + (
+        ["- Thumbnail: `cover.jpg` (1280x720).",
+         "- Chapters are in the description below; keep the first line at 0:00 or YouTube ignores them.",
+         "- Optional: post a 60-second cut of story 1 as a Short/Reel that points to the full video."] if long else
+        ["- Cover: `cover.jpg` (the important part sits inside Instagram's 3:4 grid crop).",
+         "- The whole calendar: `POSTING_SCHEDULE.md` in the Mythology reels folder."])
     lines = [
         f"# Upload pack: {'long video' if long else 'video'} {n}, {LANG_NAME[lang]}: {m['title']}", "",
         "## Files",
@@ -148,15 +150,32 @@ def main():
         subprocess.run([PY, "-I", "-X", "utf8", PHONE, master, phone], check=True)
         cover(name, lang, cover_at, os.path.join(folder, "cover.jpg"), long)
     files = [os.path.basename(master), os.path.basename(phone), "cover.jpg"]
-    p = pack(mod, name, lang, n, folder, duration(master), files)
+    dst = os.path.join(DRIVE, CHANNEL_DIR, f"{'Long' if long else 'Video'} {n} {name.replace('_', ' ').title()} "
+                                           f"{LANG_NAME[lang]}")
+    # the PC master is deleted once Drive has it: a sheet-only rebuild reads the length from the Drive copy
+    src = master if os.path.exists(master) else os.path.join(dst, os.path.basename(master))
+    p = pack(mod, name, lang, n, folder, duration(src), files)
     print("pack:", p, flush=True)
+    sched = post_times.schedule_md(OUT_ROOT, scheduled_titles())
+    print("schedule:", sched, flush=True)
     if "--no-drive" not in sys.argv and os.path.isdir(DRIVE):
-        dst = os.path.join(DRIVE, CHANNEL_DIR, f"{'Long' if long else 'Video'} {n} {name.replace('_', ' ').title()} "
-                                               f"{LANG_NAME[lang]}")
         os.makedirs(dst, exist_ok=True)
         for f in [os.path.basename(p)] if pack_only else os.listdir(folder):
             shutil.copy2(os.path.join(folder, f), os.path.join(dst, f))
+        shutil.copy2(sched, os.path.join(DRIVE, CHANNEL_DIR, os.path.basename(sched)))
         print("drive:", dst, flush=True)
+
+
+def scheduled_titles():
+    """{(video, lang): its title} for every reel in the posting calendar (for POSTING_SCHEDULE.md)."""
+    out = {}
+    for lang, days in post_times.load(OUT_ROOT).items():
+        for v in days.values():
+            try:
+                out[(v, lang.replace("-long", ""))] = load(v).METADATA[lang.replace("-long", "")]["title"]
+            except Exception:                         # an older module without this language: keep the name
+                out[(v, lang.replace("-long", ""))] = v
+    return out
 
 
 if __name__ == "__main__":
